@@ -5,7 +5,8 @@
 	Date:		March 3, 2011
 	Desc:		Contact Information
 
-	Updated:	
+	Updated:	01/27/13 - Using cfinput instead of input saves text between quotes,
+				per instance  "Smith"
 					
 ----- ------------------------------------------------------------------------- --->
 
@@ -414,7 +415,7 @@
         <table width="100%" cellspacing="0" cellpadding="2" class="border">
             <tr>
                 <td class="label" width="110px"><h3>Family Name <span class="required">*</span></h3></td>
-                <td colspan="3"><input type="text" name="familylastname" id="familylastname" value="#FORM.familylastname#" class="xLargeField" maxlength="150"></td>
+                <td colspan="3"><cfinput type="text" name="familylastname" id="familylastname" value="#FORM.familylastname#" class="xLargeField" maxlength="150"></td>
             </tr>
             <tr bgcolor="##deeaf3">
                 <td class="label"><h3>Address <span class="required">*</span></h3></td>
@@ -433,11 +434,11 @@
             </tr>
             <tr bgcolor="##deeaf3">
                 <td></td>
-                <td colspan="3"><input type="text" name="address2" id="address2" value="#FORM.address2#" class="xLargeField" maxlength="150"></td>
+                <td colspan="3"><cfinput type="text" name="address2" id="address2" value="#FORM.address2#" class="xLargeField" maxlength="150"></td>
             </tr>
             <tr>			 
                 <td class="label"><h3>City <span class="required">*</span></h3></td>
-                <td colspan="3"><input type="text" name="city" id="city" value="#FORM.city#" class="xLargeField" maxlength="150"></td>
+                <td colspan="3"><cfinput type="text" name="city" id="city" value="#FORM.city#" class="xLargeField" maxlength="150"></td>
             </tr>
             <tr bgcolor="##deeaf3">
                 <td class="label"><h3>State <span class="required">*</span></h3></td>
@@ -447,7 +448,7 @@
                     </cfselect>
                 </td>
                 <td class="zip"><h3>Zip <span class="required">*</span></h3> </td>
-                <td><input type="text" name="zip" id="zip" value="#FORM.zip#" class="mediumField" maxlength="5"></td>
+                <td><cfinput type="text" name="zip" id="zip" value="#FORM.zip#" class="mediumField" maxlength="5"></td>
             </tr>
             <tr>
                 <td><h3>Phone <span class="required">+</span></h3></td>
@@ -455,13 +456,13 @@
             </tr>
             <tr bgcolor="##deeaf3">
                 <td><h3>Email</h3></td>
-                <td colspan="3"><input type="text" name="email" value="#FORM.email#" class="xLargeField" maxlength="200"></td>
+                <td colspan="3"><cfinput type="text" name="email" value="#FORM.email#" class="xLargeField" maxlength="200"></td>
             </tr>
             <!---
             <tr>
                 <td><h3>Password</h3></td>
                 <td colspan="3">
-                    <input type="text" name="password" value="#FORM.password#" class="xLargeField" maxlength="30"> 
+                    <cfinput type="text" name="password" value="#FORM.password#" class="xLargeField" maxlength="30"> 
                     <font size="1">6 characters minimum</font>
                 </td>
             </tr>
@@ -497,15 +498,15 @@
         <table width="100%" cellspacing="0" cellpadding="2" class="border">
             <tr bgcolor="##deeaf3">
                 <td class="label"><h3>Address <span class="required">*</span></h3></td>
-                <td colspan="3"><input type="text" name="mailaddress" id="mailaddress" value="#FORM.mailaddress#" class="xLargeField" maxlength="150"></td>
+                <td colspan="3"><cfinput type="text" name="mailaddress" id="mailaddress" value="#FORM.mailaddress#" class="xLargeField" maxlength="150"></td>
             </tr>
             <tr bgcolor="##deeaf3">
                 <td></td>
-                <td colspan="3"><input type="text" name="mailaddress2" id="mailaddress2" value="#FORM.mailaddress2#" class="xLargeField" maxlength="150"></td>
+                <td colspan="3"><cfinput type="text" name="mailaddress2" id="mailaddress2" value="#FORM.mailaddress2#" class="xLargeField" maxlength="150"></td>
             </tr>
             <tr>			 
                 <td class="label"><h3>City <span class="required">*</span></h3></td>
-                <td colspan="3"><input type="text" name="mailcity" id="mailcity" value="#FORM.mailcity#" class="xLargeField" maxlength="150"></td>
+                <td colspan="3"><cfinput type="text" name="mailcity" id="mailcity" value="#FORM.mailcity#" class="xLargeField" maxlength="150"></td>
             </tr>
             <tr bgcolor="##deeaf3">
                 <td class="label"><h3>State <span class="required">*</span></h3></td>
@@ -515,7 +516,7 @@
                     </cfselect>
                 </td>
                 <td class="zip"><h3>Zip <span class="required">*</span></h3> </td>
-                <td><input type="text" name="mailzip" id="mailzip" value="#FORM.mailzip#" class="smallField" maxlength="5"></td>
+                <td><cfinput type="text" name="mailzip" id="mailzip" value="#FORM.mailzip#" class="smallField" maxlength="5"></td>
             </tr>
         </table> <br />
         
@@ -524,15 +525,15 @@
         <table width="100%" cellspacing="0" cellpadding="2" class="border">
             <tr bgcolor="##deeaf3">
                 <td class="label"><h3>First Name</h3></td>
-                <td><input type="text" name="fatherFirstName" value="#FORM.fatherFirstName#" class="xLargeField" maxlength="150"></td>
+                <td><cfinput type="text" name="fatherFirstName" value="#FORM.fatherFirstName#" class="xLargeField" maxlength="150"></td>
             </tr>
             <tr>
                 <td class="label"><h3>Last Name</h3></td>
-                <td><input type="text" name="fatherlastname" value="#FORM.fatherlastname#" class="xLargeField" maxlength="150"></td>
+                <td><cfinput type="text" name="fatherlastname" value="#FORM.fatherlastname#" class="xLargeField" maxlength="150"></td>
             </tr>
             <tr>
                 <td class="label"><h3>Middle Name</h3></td>
-                <td><input type="text" name="fathermiddlename" value="#FORM.fathermiddlename#" class="xLargeField" maxlength="150"></td>
+                <td><cfinput type="text" name="fathermiddlename" value="#FORM.fathermiddlename#" class="xLargeField" maxlength="150"></td>
             </tr>
             <tr bgcolor="##deeaf3">
                 <td class="label"><h3>Date of Birth</h3></td>
@@ -541,14 +542,14 @@
             <tr>
                 <td class="label"><h3>Occupation</h3></td>
                 <td>
-                    <input type="text" name="fatherworktype" value="#FORM.fatherworktype#" class="xLargeField" maxlength="200"> 
+                    <cfinput type="text" name="fatherworktype" value="#FORM.fatherworktype#" class="xLargeField" maxlength="200"> 
                     <input name="fatherfullpart" id="fatherFullTime" type="radio" value="1" <cfif FORM.fatherfullpart eq 1>checked</cfif>> <label for="fatherFullTime">Full Time</label>
                     <input name="fatherfullpart" id="fatherPartTime" type="radio" value="0" <cfif FORM.fatherfullpart eq 0>checked</cfif>> <label for="fatherPartTime">Part Time</label>
                 </td>
             </tr>
             <tr>
                 <td class="label"><h3>Employer</h3></td>
-                <td><input type="text" name="fatherEmployeer" value="#FORM.fatherEmployeer#" class="xLargeField" maxlength="200"> </td>
+                <td><cfinput type="text" name="fatherEmployeer" value="#FORM.fatherEmployeer#" class="xLargeField" maxlength="200"> </td>
             </tr>
             <tr bgcolor="##deeaf3">
                 <td class="label"><h3>Cell Phone <span class="required">+</span></h3></td>
@@ -561,15 +562,15 @@
         <table width="100%" cellspacing="0" cellpadding="2" class="border">
             <tr bgcolor="##deeaf3">
                 <td class="label"><h3>First Name</h3></td>
-                <td><input type="text" name="motherFirstName" value="#FORM.motherFirstName#" class="xLargeField" maxlength="150"></td>
+                <td><cfinput type="text" name="motherFirstName" value="#FORM.motherFirstName#" class="xLargeField" maxlength="150"></td>
             </tr>
             <tr>
                 <td class="label"><h3>Last Name</h3></td>
-                <td><input type="text" name="motherlastname" value="#FORM.motherlastname#" class="xLargeField" maxlength="150"></td>
+                <td><cfinput type="text" name="motherlastname" value="#FORM.motherlastname#" class="xLargeField" maxlength="150"></td>
             </tr>
             <tr>
                 <td class="label"><h3>Middle Name</h3></td>
-                <td><input type="text" name="mothermiddlename" value="#FORM.mothermiddlename#" class="xLargeField" maxlength="150"></td>
+                <td><cfinput type="text" name="mothermiddlename" value="#FORM.mothermiddlename#" class="xLargeField" maxlength="150"></td>
             </tr>			
             <tr bgcolor="##deeaf3">
                 <td class="label"><h3>Date of Birth</h3></td>
@@ -579,14 +580,14 @@
             <tr>
                 <td class="label"><h3>Occupation</h3></td>
                 <td>
-                    <input type="text" name="motherworktype" value="#FORM.motherworktype#" class="xLargeField" maxlength="200">  
+                    <cfinput type="text" name="motherworktype" value="#FORM.motherworktype#" class="xLargeField" maxlength="200">  
                     <input name="motherfullpart" id="motherFullTime" type="radio" value="1" <cfif FORM.motherfullpart eq 1>checked</cfif>> <label for="motherFullTime">Full Time</label>
                     <input name="motherfullpart" id="motherPartTime" type="radio" value="0" <cfif FORM.motherfullpart eq 0>checked</cfif>> <label for="motherPartTime">Part Time</label>
                 </td>
             </tr>
             <tr>
                 <td class="label"><h3>Employer</h3></td>
-                <td><input type="text" name="motherEmployeer" value="#FORM.motherEmployeer#" class="xLargeField" maxlength="200"></td>
+                <td><cfinput type="text" name="motherEmployeer" value="#FORM.motherEmployeer#" class="xLargeField" maxlength="200"></td>
             </tr>
             <tr bgcolor="##deeaf3">
                 <td class="label"><h3>Cell Phone <span class="required">+</span></h3></td>
