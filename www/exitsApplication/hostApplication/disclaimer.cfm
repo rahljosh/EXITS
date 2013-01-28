@@ -67,7 +67,8 @@
                     UPDATE 
                         smg_hosts
                     SET 
-                        hostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="#vApprovedStatus#">
+                        hostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="#vApprovedStatus#">,
+                        dateApplicationSubmitted = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
                     WHERE
                         hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
                 </cfquery>
