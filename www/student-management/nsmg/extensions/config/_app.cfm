@@ -176,6 +176,7 @@
 	APPLICATION.PATH.profileFactPics = APPLICATION.PATH.uploadedFiles & "profileFactPics/";
 	APPLICATION.PATH.users = APPLICATION.PATH.uploadedFiles & "users/";
 	APPLICATION.PATH.hostApp = APPLICATION.PATH.uploadedFiles & "hostApp/";
+	APPLICATION.PATH.studentServices = APPLICATION.PATH.uploadedFiles & "student-services/";
 
 	// These are used in the student online application
 	APPLICATION.PATH.onlineApp = StructNew();
