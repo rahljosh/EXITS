@@ -165,7 +165,6 @@
                     familyLetter,
                     pictures,
                     applicationSent,
-                    applicationApproved,
                     applicationStarted,
                     previousHost,
                     home_first_call,
