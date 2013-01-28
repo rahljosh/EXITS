@@ -119,7 +119,7 @@
 			} else {
 				vCalculateAge = 0;
 			}
-		
+			
 			// Data Validation
 			
             // First Name
@@ -149,7 +149,7 @@
             }	
             
             // Birthdate
-            if ( vCalculateAge LTE 0 ) {
+            if ( isDate(FORM.birthdate) AND FORM.birthDate GT now() ) {
                 SESSION.formErrors.Add("The birthdate indicates this person has not been born yet.");				
             }	
             
@@ -332,12 +332,7 @@
         </cfloop>
         
     </table> <br />
-    
-	<!--- Finished with this page --->
-    <div style="display:block; float:right; margin-top:5px;">
-        <a href="index.cfm?section=cbcAuthorization">No <cfif qGetAllFamilyMembers.recordcount neq 0>other</cfif> family members to add</a>
-    </div>
-    
+        
     <cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" preloader="no">
     	<input type="hidden" name="submitted" value="1" />
         <input type="hidden" name="childID" value="#FORM.childID#" /> 
@@ -414,9 +409,9 @@
                 <td>
                     <select name="gradeInSchool" id="gradeInSchool" class="mediumField">
                         <option value=""></option>
-                        <option value="Not-Applicable">Not Applicable</option>
-                        <option value="Pre-Kindergarten">Pre-Kindergarten</option>
-                        <option value="Kindergarten">Kindergarten</option>
+                        <option value="Not-Applicable" <cfif FORM.gradeInSchool EQ "Not-Applicable"> selected</cfif>>Not Applicable</option>
+                        <option value="Pre-Kindergarten" <cfif FORM.gradeInSchool EQ "Pre-Kindergarten"> selected</cfif> >Pre-Kindergarten</option>
+                        <option value="Kindergarten" <cfif FORM.gradeInSchool EQ "Kindergarten"> selected</cfif>>Kindergarten</option>
                         <cfloop from="1" to="12" index="i">
                             <option value="#i#" <cfif FORM.gradeInSchool EQ i> selected</cfif>>
                                 <cfswitch expression="#i#">
@@ -454,6 +449,11 @@
         <table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
             <tr>
                 <td align="right">
+					<!--- Finished with this page --->
+                    <div style="margin:5px 25px 0 0; float:left;">
+                        <a href="index.cfm?section=cbcAuthorization">No <cfif qGetAllFamilyMembers.recordcount neq 0>other</cfif> family members to add</a>
+                    </div>
+                
                     <cfif VAL(qGetHostMemberInfo.childID)>
                         <a href="?section=familyMembers">
                         <img src="images/buttons/goBack_44.png" border="0"/></a> 

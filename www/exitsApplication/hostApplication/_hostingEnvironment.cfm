@@ -27,7 +27,7 @@
     <cfparam name="FORM.indoor" default="">
 	<!--- Form --->
     <cfparam name="FORM.pet_allergies" default="">
-    <cfparam name="FORM.share_room" default="0">
+    <cfparam name="FORM.isStudentSharingBedroom" default="">
     <cfparam name="FORM.sharingWithID" default="">
     <cfparam name="FORM.hostSmokes" default="">
     <cfparam name="FORM.smokeConditions" default="">
@@ -176,12 +176,12 @@
 			}
 
 			// Room Sharing
-			if ( qGetHostMembers.recordcount AND NOT LEN(FORM.share_room) ) {
+			if ( qGetHostMembers.recordcount AND NOT LEN(FORM.isStudentSharingBedroom) ) {
 				SESSION.formErrors.Add("Please indicate if the student is going to share a bedroom");
 			}
 
 			// Room Sharing
-			if ( FORM.share_room EQ 1 AND NOT VAL(FORM.sharingWithID) )  {
+			if ( FORM.isStudentSharingBedroom EQ 1 AND NOT VAL(FORM.sharingWithID) )  {
 				SESSION.formErrors.Add("You have indicated that the student will share a room, but have not indicated with whom they will share the room");
 			}
 			
@@ -235,7 +235,7 @@
 					FORM.smokeConditions = "";
 				}
 				
-				if ( NOT VAL(FORM.share_room) ) {
+				if ( NOT VAL(FORM.isStudentSharingBedroom) ) {
 					FORM.sharingWithID = "";
 				}
 
@@ -249,7 +249,7 @@
 			</cfscript>
             
 			<!--- share room --->
-            <cfif VAL(FORM.share_room) AND VAL(FORM.sharingWithID)>
+            <cfif VAL(FORM.isStudentSharingBedroom) AND VAL(FORM.sharingWithID)>
             
                 <cfquery datasource="#APPLICATION.DSN.Source#">
                     UPDATE 
@@ -280,6 +280,7 @@
                 	smg_hosts
                 SET
                 	pet_allergies = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pet_allergies#">,
+                    isStudentSharingBedroom = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.isStudentSharingBedroom#" null="#yesNoFormat(NOT LEN(FORM.isStudentSharingBedroom))#">,
                 	hostSmokes = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hostSmokes#">,
                     smokeconditions = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.smokeConditions#">,
                     famDietRest = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.famDietRest#">,
@@ -319,8 +320,10 @@
             FORM.threesquares = qGetHostFamilyInfo.threesquares;
 
 			if ( qGetWhoIsSharingRoom.recordcount ) {
-				FORM.share_room = 1;
+				FORM.isStudentSharingBedroom = 1;
 				FORM.sharingWithID = qGetWhoIsSharingRoom.childID;
+			} else {
+				FORM.isStudentSharingBedroom = qGetHostFamilyInfo.isStudentSharingBedroom;
 			}
         </cfscript>
     
@@ -462,15 +465,15 @@
                 <tr bgcolor="##deeaf3">
                     <td id="shareBedroom" width="50%">Will the student share a bedroom? <span class="required">*</span></td>
                     <td>
-                        <cfinput type="radio" name="share_room" id="share_room1" value="1" onclick="document.getElementById('showname').style.display='table-row';" checked="#FORM.share_room EQ 1#" />
-                        <label for="share_room1">Yes</label>
+                        <cfinput type="radio" name="isStudentSharingBedroom" id="isStudentSharingBedroom1" value="1" onclick="document.getElementById('showname').style.display='table-row';" checked="#FORM.isStudentSharingBedroom EQ 1#" />
+                        <label for="isStudentSharingBedroom1">Yes</label>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <cfinput type="radio" name="share_room" id="share_room0" value="0" onclick="document.getElementById('showname').style.display='none';" checked="#FORM.share_room EQ 0#" />
-                        <label for="share_room0">No</label>
+                        <cfinput type="radio" name="isStudentSharingBedroom" id="isStudentSharingBedroom0" value="0" onclick="document.getElementById('showname').style.display='none';" checked="#FORM.isStudentSharingBedroom EQ 0#" />
+                        <label for="isStudentSharingBedroom0">No</label>
                     </td>
                 </tr>
                 
-                <tr id="showname" <cfif FORM.share_room NEQ 1>class="displayNone"</cfif> >
+                <tr id="showname" <cfif FORM.isStudentSharingBedroom NEQ 1>class="displayNone"</cfif> >
                     <td width="50%">Who will they share a room with? <span class="required">*</span></td>
                     <td> 
                         <select name="sharingWithID" class="largeField">
