@@ -1138,7 +1138,11 @@
 				<tr>
 					<td width="50%">: : <a href="javascript:OpenLetter('reports/letter_student_orientation.cfm');">Student Orient. Sign Off</a></td>
 					<td width="50%">: : <a href="javascript:OpenLetter('reports/letter_host_orientation.cfm');">Family Orientation Sign Off</a></td>
-				</tr>				
+				</tr>			
+                <tr>
+					<td width="50%">: : <a href="javascript:OpenLetter('reports/labels_student_idcards.cfm?studentid=#studentid#');">Student ID Card</a></td>
+					<td width="50%"></td>
+				</tr>		
 			</table>
 			<table cellpadding="2" width="100%">
 				<tr bgcolor="##EAE8E8"><td colspan="2"><span class="get_attention"><b>:: </b></span>Double Placement Letters</td></tr>
