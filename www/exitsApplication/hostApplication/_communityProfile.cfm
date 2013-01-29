@@ -338,13 +338,13 @@
 
         <table width="100%" cellspacing="0" cellpadding="2" class="border">
             <tr>	
-                <td>Population of #qGetHostFamilyInfo.city# :</td>
-                <td class="form_text"><input type="text" size=15 name="population" value="#FORM.population#"/></td>
+                <td width="30%">Population of #qGetHostFamilyInfo.city# :</td>
+                <td class="form_text"><input type="text" name="population" value="#FORM.population#" class="largeField" maxlength="45"/></td>
             </tr>
             <tr bgcolor="##deeaf3">
             	<td class="label">Nearest Major City: <span class="required">*</span></td>
                 <td class="form_text">
-                    <select data-placeholder="Enter nearest large city (over 30,000)..." class="chzn-select" style="width:350px;" tabindex="2" name="nearbigCity" onchange="this.FORM.submit(closeCity);">
+                    <select name="nearbigCity" data-placeholder="Enter nearest large city (over 30,000)" class="chzn-select xxLargeField" tabindex="2" onchange="this.FORM.submit(closeCity);">
                         <option value=""></option>
                         <cfloop query="qGetCityState">
                             <option value="#city#, #state#" <cfif FORM.nearbigCity EQ '#city#, #state#'>selected</cfif>>#city#, #state# - (pop: #NumberFormat(population, '__,___')#)</option>
@@ -358,9 +358,9 @@
         
         <table width="100%" cellspacing="0" cellpadding="2" class="border">
             <tr bgcolor="##deeaf3" >
-                <td class="label">Major Airport: <span class="required">*</span></td>
+                <td  width="30%" class="label">Major Airport: <span class="required">*</span></td>
                 <td class="form_text">
-                    <select data-placeholder="Enter City, Airport or Airport Code" class="chzn-select" style="width:350px;" tabindex="2" name="major_air_code" >
+                    <select name="major_air_code" data-placeholder="Enter City, Airport or Airport Code" class="chzn-select xxxLargeField" tabindex="2">
                         <option value=""></option>
                         <cfloop query="qGetAirportList">
                             <option value="#airCode#" <cfif FORM.major_air_code eq airCode>selected</cfif>>#aircode# - #airportName# - #city#, #state#</option>
@@ -375,11 +375,11 @@
         <table  width="100%" cellspacing="0" cellpadding="2" class="border">
             <tr bgcolor="##deeaf3">
                 <td class="label" colspan="2">Avg temp in winter: <span class="required">*</span></td>
-                <td class="form_text" colspan="4"><input type="text" size="3" name="wintertemp" value=#FORM.wintertemp#><sup>o</sup>F</td>
+                <td class="form_text" colspan="4"><input type="text" size="3" name="wintertemp" value="#FORM.wintertemp#" maxlength="6"><sup>o</sup>F</td>
             </tr>
             <tr>
                 <td class="label" colspan="2">Avg temp in summer: <span class="required">*</span></td>
-                <td class="form_text" colspan="4"><input type="text" size="3" name="summertemp" value=#FORM.summertemp#><sup>o</sup>F</td>
+                <td class="form_text" colspan="4"><input type="text" size="3" name="summertemp" value="#FORM.summertemp#" maxlength="6"><sup>o</sup>F</td>
             </tr>
             <tr>
                 <td colspan="6"  bgcolor="##deeaf3">How would you describe your seasons?</td>
@@ -444,7 +444,7 @@
                             <td><input type="radio" name="terrain3" id="terrain3Lakeside" value="lakeside" <cfif FORM.terrain3 EQ "lakeside"> checked="checked" </cfif> /> <label for="terrain3Lakeside">Lakeside</label></td>
                             <td><input type="radio" name="terrain3" id="terrain3Riverside" value="riverside" <cfif FORM.terrain3 EQ "riverside"> checked="checked" </cfif> /> <label for="terrain3Riverside">Riverside</label></td>
                             <td><input type="radio" name="terrain3" id="terrain3Other" value="other" <cfif FORM.terrain3 EQ "other"> checked="checked" </cfif> /> <label for="terrain3Other">Other</label></td>
-                            <td><input type="text" name="terrain3_desc" size="15" value="#FORM.terrain3_desc#" maxlength="100"></td>                            
+                            <td><input type="text" name="terrain3_desc" class="largeField" value="#FORM.terrain3_desc#" maxlength="100"></td>                            
                         </tr>
 					</table>
 				</td>
@@ -458,13 +458,13 @@
                 <td class="label" colspan="2">Indicate particular clothes, sports equipment, etc. that your student should consider bringing: <span class="required">*</span></td>
             </tr>
             <tr bgcolor="##deeaf3">
-                <td><textarea cols="50" rows="4" name="special_cloths" placeholder="Winter coat, swimsuites, hiking boots, etc"><cfoutput>#FORM.special_cloths#</cfoutput></textarea></td>	
+                <td><textarea cols="50" rows="4" name="special_cloths" placeholder="Winter coat, swimsuites, hiking boots, etc">#FORM.special_cloths#</textarea></td>	
             </tr>
             <tr>
                 <td>Describe the points of interest in your area:</td>
             </tr>
             <tr>
-                <td><textarea cols="50" rows="4" name="point_interest" placeholder="Parks, museums, historical sites, local attractions"><cfoutput>#FORM.point_interest#</cfoutput></textarea></td>
+                <td><textarea cols="50" rows="4" name="point_interest" placeholder="Parks, museums, historical sites, local attractions">#FORM.point_interest#</textarea></td>
             </tr>
         </table>
         

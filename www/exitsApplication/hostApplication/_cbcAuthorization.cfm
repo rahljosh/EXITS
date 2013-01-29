@@ -445,7 +445,7 @@
                         <td><h3><cfif isDate(qGetHostFamilyInfo.fatherdob)>#DateDiff('yyyy', qGetHostFamilyInfo.fatherdob, now())#</cfif></h3></td> 
                         <td>
                             <cfif NOT LEN(qGetHostFamilyInfo.fatherSSN)>
-                                <cfinput type="text" name="fatherSSN" value="#FORM.fatherSSN#" mask="999-99-9999" class="mediumField">
+                                <cfinput type="text" name="fatherSSN" value="#FORM.fatherSSN#" mask="999-99-9999" class="mediumField" maxlength="50">
                             <cfelse>
                                 Submitted <!--- #FORM.fatherSSN# --->
                             </cfif>
@@ -466,7 +466,7 @@
                         <td><h3><cfif isDate(qGetHostFamilyInfo.motherdob)>#DateDiff('yyyy',qGetHostFamilyInfo.motherdob,now())#</cfif></h3></td> 
                         <td>
                             <cfif NOT LEN(qGetHostFamilyInfo.motherSSN)>
-                                <cfinput type="text" name="motherSSN" value="#FORM.motherSSN#" mask="999-99-9999" class="mediumField">
+                                <cfinput type="text" name="motherSSN" value="#FORM.motherSSN#" mask="999-99-9999" class="mediumField" maxlength="50">
                             <cfelse>
                                 Submitted <!--- #FORM.motherSSN# --->
                             </cfif>
@@ -506,7 +506,7 @@
                         <cfif qGetAllFamilyMembersAtHome.age GTE 18 AND qGetAllFamilyMembersAtHome.liveathome EQ 'yes'>
                             <td>	
                                 <cfif NOT LEN(qGetAllFamilyMembersAtHome.ssn)>
-                                    <cfinput type="text" name="#qGetAllFamilyMembersAtHome.childID#memberSSN" value="#FORM[qGetAllFamilyMembersAtHome.childID & 'memberSSN']#" mask="999-99-9999" class="mediumField">
+                                    <cfinput type="text" name="#qGetAllFamilyMembersAtHome.childID#memberSSN" value="#FORM[qGetAllFamilyMembersAtHome.childID & 'memberSSN']#" mask="999-99-9999" class="mediumField" maxlength="50">
                                 <cfelse>
                                     Submitted <!--- #FORM[qGetAllFamilyMembersAtHome.childID & 'memberSSN']# --->
                                 </cfif>

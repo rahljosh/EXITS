@@ -392,7 +392,7 @@
                 <td class="label"><h3>How Many?  <span class="required">*</span></h3></td>
             </tr>
             <tr>    
-                <td><input type="text" name="animalType" value="#FORM.animalType#" class="largeField"></td>
+                <td><input type="text" name="animalType" value="#FORM.animalType#" class="largeField" maxlength="150"></td>
                 <td>
                     <input type="radio" name="indoor" id="indoor" value="indoor" <cfif FORM.indoor EQ "indoor">checked="checked"</cfif> > <label for="indoor">Indoor</label>
                     <input type="radio" name="indoor" id="outdoor" value="outdoor" <cfif FORM.indoor EQ "outdoor">checked="checked"</cfif> > <label for="outdoor">Outdoor</label> 

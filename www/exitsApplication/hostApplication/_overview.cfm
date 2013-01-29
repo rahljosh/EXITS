@@ -164,7 +164,7 @@
                 
                 <p>
                     <strong>Region:</strong>
-                    <cfif qGetHostFamilyInfo.regionID eq 0>
+                    <cfif NOT VAL(qGetHostFamilyInfo.regionID)>
                         Not Assigned
                     <cfelse>
                         #qGetHostFamilyInfo.regionname#
@@ -173,7 +173,7 @@
                 
                 <p>
                     <strong>Regional Manager:</strong> 
-                    <cfif qGetHostFamilyInfo.regionID eq 0>
+                    <cfif NOT VAL(qGetHostFamilyInfo.regionID)>
                         Not Assigned
                     <cfelse>
                         #qGetRegionalManager.firstName# #qGetRegionalManager.lastName#  
@@ -182,7 +182,7 @@
                 
                 <p>
                     <strong>Area Representative:</strong> 
-                    <cfif qGetHostFamilyInfo.regionID eq 0>
+                    <cfif NOT VAL(qGetHostFamilyInfo.regionID)>
                         Not Assigned
                     <cfelse>
                         #qGetHostFamilyInfo.repFirst# #qGetHostFamilyInfo.repLast# 

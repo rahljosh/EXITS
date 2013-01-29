@@ -103,21 +103,41 @@
         <cfscript>
         	// Data Validation
 		
-			// Family Last Name
+			// First Name
 			if ( NOT LEN(TRIM(FORM.firstName)) ) {
 				SESSION.formErrors.Add("Please enter the first name.");
 			}			
 			
-			// Address
+			// Last name
 			if ( NOT LEN(TRIM(FORM.lastName)) ) {
 				SESSION.formErrors.Add("Please enter the last name.");
 			}	
 			
-			// Family Last Name
+			// Address
+			if ( NOT LEN(TRIM(FORM.address)) ) {
+				SESSION.formErrors.Add("Please enter the address.");
+			}			
+
+			// City
+			if ( NOT LEN(TRIM(FORM.city)) ) {
+				SESSION.formErrors.Add("Please enter the city.");
+			}	
+			
+			// State
+			if ( NOT LEN(TRIM(FORM.state)) ) {
+				SESSION.formErrors.Add("Please select a state.");
+			}	
+
+			// Zip
+			if ( NOT LEN(TRIM(FORM.Zip)) ) {
+				SESSION.formErrors.Add("Please enter the zip code.");
+			}	
+
+			// Phone Number
 			if ( NOT LEN(TRIM(FORM.phone)) ) {
 				SESSION.formErrors.Add("Please enter the phone number.");
-			}			
-        </cfscript>    
+			}	
+		</cfscript>    
         
         <!--- No Errors Found --->
 		<cfif NOT SESSION.formErrors.length()>
@@ -309,7 +329,7 @@
                 <td colspan="3"><cfinput type="text" name="phone" value="#FORM.phone#" class="mediumField" placeholder="(999) 999-9999" maxlength="14" mask="(999) 999-9999"></td>
             </tr>
             <tr>
-                <td class="label"><h3>Address </h3></td>
+                <td class="label"><h3>Address <span class="required">*</span></h3></td>
                 <td colspan="2">
             		<input type="text" name="address" value="#FORM.address#" class="xLargeField" maxlength="150">
            			<font size="1">NO PO BOXES</font> 
@@ -320,11 +340,11 @@
                 <td colspan="3"><input type="text" name="address2" value="#FORM.address2#" class="xLargeField" maxlength="150"></td>
             </tr>
             <tr bgcolor="##deeaf3" >			 
-                <td class="label"><h3>City</h3></td>
+                <td class="label"><h3>City <span class="required">*</span></h3></td>
                 <td colspan="3"><input type="text" name="city" value="#FORM.city#" class="largeField" maxlength="150"></td>
             </tr>
             <tr>
-                <td class="label"><h3>State </h3></td>
+                <td class="label"><h3>State <span class="required">*</span></h3></td>
                 <td>
                     <select name="state" class="mediumField">
                         <option></option>
@@ -333,12 +353,12 @@
                         </cfloop>
                     </select>
                 </td>
-                <td class="zip"><h3>Zip</h3></td>
-                <td><input type="text" name="zip" value="#FORM.zip#" class="smallField" maxlength="5"></td>
+                <td class="zip"><h3>Zip <span class="required">*</span></h3></td>
+                <td><input type="text" name="zip" value="#FORM.zip#" class="smallField" maxlength="10"></td>
             </tr>
             <tr bgcolor="##deeaf3">
                 <td><h3>Email</h3></td>
-                <td colspan="3"><input type="text" name="email" value="#FORM.email#" class="xLargeField" maxlength="200" ></td>
+                <td colspan="3"><input type="text" name="email" value="#FORM.email#" class="xLargeField" maxlength="100"></td>
             </tr>
 		</table>
         

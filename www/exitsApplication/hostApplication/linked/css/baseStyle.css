@@ -378,6 +378,16 @@ div.errors ol {
 	border:1px solid #999;	
 }
 
+.xxLargeField {
+	width : 310px;
+	border:1px solid #999;	
+}
+
+.xxxLargeField {
+	width : 360px;
+	border:1px solid #999;	
+}
+
 .largeTextArea {
 	height: 60px;
 	width : 300px;
