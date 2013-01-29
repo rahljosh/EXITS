@@ -58,8 +58,8 @@
         <cfloop query="qGetUploadedImages">
         	
             <cfscript>
-				// Update Description
-				APPLICATION.CFC.DOCUMENT.updateDocumentDescriptionByID(ID=qGetUploadedImages.ID,description=FORM['desc_' & qGetUploadedImages.ID]);
+				// Update Description - Allow up to 500 chars
+				APPLICATION.CFC.DOCUMENT.updateDocumentDescriptionByID(ID=qGetUploadedImages.ID,description=LEFT(FORM['desc_' & qGetUploadedImages.ID], 500));
 			</cfscript>
             
         </cfloop>

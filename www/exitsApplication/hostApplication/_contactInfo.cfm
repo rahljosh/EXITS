@@ -448,11 +448,11 @@
                     </cfselect>
                 </td>
                 <td class="zip"><h3>Zip <span class="required">*</span></h3> </td>
-                <td><cfinput type="text" name="zip" id="zip" value="#FORM.zip#" class="mediumField" maxlength="5"></td>
+                <td><cfinput type="text" name="zip" id="zip" value="#FORM.zip#" class="mediumField" maxlength="10"></td>
             </tr>
             <tr>
                 <td><h3>Phone <span class="required">+</span></h3></td>
-                <td colspan="3"><cfinput type="text" name="phone" value="#FORM.phone#" class="mediumField" placeholder="(999) 999-9999" maxlength="14" mask="(999) 999-9999"></td>
+                <td colspan="3"><cfinput type="text" name="phone" value="#FORM.phone#" class="mediumField" placeholder="(999) 999-9999" mask="(999) 999-9999" maxlength="14"></td>
             </tr>
             <tr bgcolor="##deeaf3">
                 <td><h3>Email</h3></td>
@@ -491,8 +491,11 @@
         </table> <br />
         
         <h3>
-            Mailing Address <input name="ShipSame" id="ShipSame" type="checkbox" class="formCheckbox" onClick="FillFields(this)" value="Same"<cfif IsDefined('FORM.ShipSame')> checked</cfif>>
-            <label for="ShipSame"><font size="-1">Use Home Address</font></label>
+            Mailing Address 
+            <cfif NOT LEN(FORM.mailaddress)>
+                <input name="ShipSame" id="ShipSame" type="checkbox" class="formCheckbox" onClick="FillFields(this)" value="Same"<cfif IsDefined('FORM.ShipSame')> checked</cfif>>
+                <label for="ShipSame"><font size="-1">Use Home Address</font></label>
+            </cfif>
         </h3>
         
         <table width="100%" cellspacing="0" cellpadding="2" class="border">
@@ -516,7 +519,7 @@
                     </cfselect>
                 </td>
                 <td class="zip"><h3>Zip <span class="required">*</span></h3> </td>
-                <td><cfinput type="text" name="mailzip" id="mailzip" value="#FORM.mailzip#" class="smallField" maxlength="5"></td>
+                <td><cfinput type="text" name="mailzip" id="mailzip" value="#FORM.mailzip#" class="smallField" maxlength="10"></td>
             </tr>
         </table> <br />
         
@@ -549,7 +552,7 @@
             </tr>
             <tr>
                 <td class="label"><h3>Employer</h3></td>
-                <td><cfinput type="text" name="fatherEmployeer" value="#FORM.fatherEmployeer#" class="xLargeField" maxlength="200"> </td>
+                <td><cfinput type="text" name="fatherEmployeer" value="#FORM.fatherEmployeer#" class="xLargeField" maxlength="100"> </td>
             </tr>
             <tr bgcolor="##deeaf3">
                 <td class="label"><h3>Cell Phone <span class="required">+</span></h3></td>
@@ -587,7 +590,7 @@
             </tr>
             <tr>
                 <td class="label"><h3>Employer</h3></td>
-                <td><cfinput type="text" name="motherEmployeer" value="#FORM.motherEmployeer#" class="xLargeField" maxlength="200"></td>
+                <td><cfinput type="text" name="motherEmployeer" value="#FORM.motherEmployeer#" class="xLargeField" maxlength="100"></td>
             </tr>
             <tr bgcolor="##deeaf3">
                 <td class="label"><h3>Cell Phone <span class="required">+</span></h3></td>

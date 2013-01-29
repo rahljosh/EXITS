@@ -29,8 +29,8 @@
     <cfparam name="FORM.principal" default="">
     <cfparam name="FORM.phone" default="">
     <cfparam name="FORM.email" default="">
-    <cfparam name="FORM.schoolType" default="">
-    <cfparam name="FORM.schoolFees" default="">
+    <cfparam name="FORM.type" default="">
+    <cfparam name="FORM.tuition" default="">
 	<!--- School Details --->
     <cfparam name="FORM.schoolWorks" default="">
     <cfparam name="FORM.schoolWorksExpl" default="">
@@ -104,7 +104,7 @@
 				}	
 				
 				// type
-				if ( NOT LEN(TRIM(FORM.schoolType) ) )  {
+				if ( NOT LEN(TRIM(FORM.type) ) )  {
 					SESSION.formErrors.Add("Please indicate if this is a public or private school.");
 				}
 				
@@ -184,8 +184,8 @@
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.phone)#">,
                     	<cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.email)#">, 
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.principal)#">, 
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.schoolType)#">, 
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.schoolFees)#">
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.type)#">, 
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.tuition)#">
                     )
                 </cfquery>
             	
@@ -313,19 +313,19 @@
             <table width="100%" cellspacing="0" cellpadding="2" class="border">
                 <tr bgcolor="##deeaf3">
                 	<td class="label"><h3>School Name <span class="required">*</span></h3></td>
-                    <td class="form_text" colspan="3"><input type="text" name="schoolname" class="largeField" value="#FORM.schoolname#"></td>
+                    <td class="form_text" colspan="3"><input type="text" name="schoolname" class="largeField" value="#FORM.schoolname#" maxlength="100"></td>
                 </tr>
                 <tr>
                 	<td class="label"><h3>Address <span class="required">*</span></h3></td>
-                    <td colspan="3" class="form_text"><input type="text" name="address" class="largeField" value="#FORM.address#"></td>
+                    <td colspan="3" class="form_text"><input type="text" name="address" class="largeField" value="#FORM.address#" maxlength="100"></td>
                 </tr>
                 <tr>
                 	<td></td>
-                    <td colspan="3" class="form_text"> <input type="text" name="address2" class="largeField" value="#FORM.address2#"></td>
+                    <td colspan="3" class="form_text"> <input type="text" name="address2" class="largeField" value="#FORM.address2#" maxlength="100"></td>
                 </tr>
                 <tr bgcolor="##deeaf3">			 
                 	<td class="label"><h3>City <span class="required">*</span></h3></td>
-                    <td colspan="3" class="form_text"><input type="text" name="city" class="largeField" value="#FORM.city#"></td>
+                    <td colspan="3" class="form_text"><input type="text" name="city" class="largeField" value="#FORM.city#" maxlength="100"></td>
                 </tr> 
                 <tr>	
                		<td class="label"><h3>State <span class="required">*</span></h3></td>
@@ -338,31 +338,31 @@
                         </select>
                 	</td>
                     <td class="zip"><h3>Zip <span class="required">*</span></h3></td>
-                    <td class="form_text"><input type="text" name="zip" class="smallField" value="#FORM.zip#"></td>
+                    <td class="form_text"><input type="text" name="zip" class="smallField" value="#FORM.zip#" maxlength="10"></td>
                 </tr>
                 <tr bgcolor="##deeaf3">
                     <td class="label"><h3>Contact</h3></td>
-                    <td class="form_text" colspan="3"><input type="text" name="principal" class="largeField" value="#FORM.principal#"></td>
+                    <td class="form_text" colspan="3"><input type="text" name="principal" class="largeField" value="#FORM.principal#" maxlength="100"></td>
                 </tr>
                 <tr>			
                 	<td class="label"><h3>Phone</h3></td>
-                    <td class="form_text" colspan="3"><cfinput type="text" name="phone" class="largeField" value="#FORM.phone#" placeholder="(999) 999-9999" mask='(999) 999-9999'></td>
+                    <td class="form_text" colspan="3"><cfinput type="text" name="phone" class="largeField" value="#FORM.phone#" placeholder="(999) 999-9999" mask='(999) 999-9999' maxlength="14"></td>
                 </tr>
                 <tr bgcolor="##deeaf3">
                 	<td class="label"><h3>Contact Email</h3></td>
-                    <td class="form_text" colspan="3"> <input name="email" class="largeField" type="text" value="#FORM.email#" placeholder="contact@school.edu"></td>
+                    <td class="form_text" colspan="3"> <input name="email" class="largeField" type="text" value="#FORM.email#" placeholder="contact@school.edu" maxlength="100"></td>
                 </tr>
                 <tr>
                 	<td class="label"><h3>School Type <span class="required">*</span></h3></td>
                 	<td  colspan="3">
-                    	<input type="radio" value="public" name="schoolType" id="schoolTypePublic" <cfif FORM.schooltype EQ 'public'>checked</cfif> /> <label for="schoolTypePublic">Public</label>
+                    	<input type="radio" value="public" name="type" id="typePublic" <cfif FORM.type EQ 'public'>checked</cfif> /> <label for="typePublic">Public</label>
                         &nbsp;&nbsp; 
-                        <input type="radio" value="private" name="schoolType" id="schoolTypePrivate" <cfif FORM.schooltype EQ 'private'>checked</cfif>   /> <label for="schoolTypePrivate">Private</label>  
+                        <input type="radio" value="private" name="type" id="typePrivate" <cfif FORM.type EQ 'private'>checked</cfif>   /> <label for="typePrivate">Private</label>  
                     </td>
                 </tr>
                 <tr bgcolor="##deeaf3">
                 	<td class="label"><h3>School Fees</h3></td>
-                    <td  colspan="3"><input type="text" name="schoolFees" size=25 placeholder="amount of tution or fees" value="#FORM.schoolFees#" /></td>
+                    <td  colspan="3"><input type="text" name="tuition" class="largeField" placeholder="amount of tution or fees" value="#FORM.tuition#" maxlength="45" /></td>
                 </tr>
             </table> 
             
@@ -420,8 +420,11 @@
                 <td class="form_text"><cfinput type="radio" name="schoolTransportation" id="schoolTransportation3" value="Walk" checked="#FORM.schoolTransportation EQ 'Walk'#"><label for="schoolTransportation3">Walk</label></td>
             </tr>
             <tr>
-                <td class="label"> <cfinput type="radio" name="schoolTransportation" value="Public Transportation" checked="#FORM.schoolTransportation EQ 'Public Transportation'#">Public Transportation<br /></td>
-                <td><cfinput type="radio" name="schoolTransportation" value="Other" checked="#FORM.schoolTransportation EQ 'Other'#" >Other: <cfinput type="text" name="schoolTransportationOther" size="10" value="#FORM.schoolTransportationOther#"> </td>
+                <td class="label"><cfinput type="radio" name="schoolTransportation" value="Public Transportation" checked="#FORM.schoolTransportation EQ 'Public Transportation'#">Public Transportation<br /></td>
+                <td>
+                	<cfinput type="radio" name="schoolTransportation" value="Other" checked="#FORM.schoolTransportation EQ 'Other'#" > 
+                    Other: <cfinput type="text" name="schoolTransportationOther" class="mediumField" value="#FORM.schoolTransportationOther#" maxlength="100"> 
+                </td>
                 <td>&nbsp;</td>
             </tr>
             <tr bgcolor="##deeaf3">
