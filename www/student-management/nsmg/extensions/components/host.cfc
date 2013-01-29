@@ -882,6 +882,15 @@
         <cfargument name="seasonID" default="#APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID#" hint="Gets current paperwork season ID">
         <cfargument name="whoViews" default="" hint="whoViews is not required">
         <cfargument name="itemID" default="" hint="itemID is not required">
+        <cfargument name="facilitatorStatus" default="" hint="facilitatorStatus is not required">
+        <cfargument name="sortBy" type="string" default="listOrder" hint="sortBy is not required">
+        <cfargument name="sortOrder" type="string" default="ASC" hint="sortOrder is not required">
+
+        <cfscript>
+			if ( NOT ListFind("ASC,DESC", ARGUMENTS.sortOrder ) ) {
+				ARGUMENTS.sortOrder = 'ASC';			  
+			}
+		</cfscript>
        
         <cfquery 
 			name="qGetApplicationApprovalHistory" 
@@ -929,9 +938,25 @@
                 	AND
                     	ap.ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.itemID)#">
                 </cfif>
+                
+                <cfif LEN(ARGUMENTS.facilitatorStatus)>
+                	AND
+                    	h.facilitatorStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.facilitatorStatus#">
+                </cfif>
+				
+                ORDER BY
+                <cfswitch expression="#ARGUMENTS.sortBy#">
+                
+                	<cfcase value="listOrder,facilitatorDateStatus">
+                    	#ARGUMENTS.sortBy# #ARGUMENTS.sortOrder#                        
+                    </cfcase>
 
-				ORDER BY
-                	ap.listOrder                                
+                    <cfdefaultcase>
+                		listOrder #ARGUMENTS.sortOrder#
+					</cfdefaultcase>
+				
+                </cfswitch>
+                                                                                           
 		</cfquery>
 		   
 		<cfreturn qGetApplicationApprovalHistory>
@@ -1380,6 +1405,10 @@
 						vEmailTo = qGetHostInfo.regionalManagerEmail;
 						vSetEmailTemplate = "applicationApproved";
 						stReturnMessage.pageMessages = "Application has been approved. Thank you.";
+						
+						// Check if there is a student assigned to this host family and copy data to placement management
+						setPlacementManagementPaperwork(hostID=ARGUMENTS.hostID,dateApproved=now());
+						
 					// Denied
 					} else {
 						// Reject to RM
@@ -1621,7 +1650,152 @@
 		</cfscript>
 
 	</cffunction>     
+
+
+	<cffunction name="setPlacementManagementPaperwork" access="public" returntype="void" output="false" hint="Copy paperwork data upon HF approval or student placement">
+        <cfargument name="hostID" default="" hint="HostID is not required">
+        <cfargument name="dateApproved" default="" hint="dateApproved is not required">
+
+        <cfscript>	
+			// Get List of Host Family Applications
+			var	qGetHostInfo = APPLICATION.CFC.HOST.getApplicationList(hostID=ARGUMENTS.hostID);	
+
+			// Date submitted by Host Family
+			var vDateFamilySubmitted = qGetHostInfo.dateApplicationSubmitted;
+			
+			// Date of office approval
+			var vDateOfficeApproved = ARGUMENTS.dateApproved;
+			
+			// Reference Questionnaire
+			var vDateReferenceInterviewed1 = "";
+			var vDateReferenceInterviewed2 = "";
+
+			// Get Host Family Headquarters Most Recent Approval Date
+			if ( NOT isDate(vDateOfficeApproved) ) {
+				// Get Application Approval History
+				qGetApprovalHistory = APPLICATION.CFC.HOST.getApplicationApprovalHistory(hostID=ARGUMENTS.hostID, whoViews=CLIENT.userType, sortBy="facilitatorDateStatus", sortOrder="DESC");
+				vDateOfficeApproved = qGetApprovalHistory.facilitatorDateStatus;
+			}				
+			
+			// Check if there is a student assigned to this host family (same season)
+			var stCheckFamily = isFamilyCurrentlyHosting(hostID=ARGUMENTS.hostID);
+			
+			// Family Hosting - Update Paperwork
+			if ( stCheckFamily.isHosting ) {
+				
+				// Get References
+				qGetReferences = APPLICATION.CFC.HOST.getReferences(hostID=ARGUMENTS.hostID);
+				
+				// Try to get Reference 1
+				try {
+					vDateReferenceInterviewed1 = qGetReferences.dateInterview[1];
+				} catch( any error ) {
+					// Error Found
+				}
+
+				// Try to get Reference 2
+				try {
+					vDateReferenceInterviewed2 = qGetReferences.dateInterview[2];
+				} catch( any error ) {
+					// Error Found
+				}
+				
+				// Get Confidential Visit Form
+				qGetConfidentialVisitForm = APPLICATION.CFC.PROGRESSREPORT.getVisitInformation(hostID=ARGUMENTS.hostID,reportType=5);
+				
+				// Loop Through History ID list to update placement paperwork
+	            For ( i=1; i LTE ListLen(stCheckFamily.hostHistoryListID); i++ ) {
+					
+					// Update Student Placement Paperwork
+					APPLICATION.CFC.STUDENT.updatePlacementPaperworkUponHostFamilyAppApproval(
+						historyID= ListGetAt(stCheckFamily.hostHistoryListID, i),																	  
+						dateReceived=vDateOfficeApproved,																  
+						doc_host_app_page1_date=vDateOfficeApproved,
+						doc_host_app_page2_date=vDateOfficeApproved,	
+						doc_letter_rec_date=vDateOfficeApproved,	
+						doc_photos_rec_date=vDateOfficeApproved,	
+						doc_bedroom_photo=vDateOfficeApproved,	
+						doc_bathroom_photo=vDateOfficeApproved,	
+						doc_kitchen_photo=vDateOfficeApproved,	
+						doc_living_room_photo=vDateOfficeApproved,	
+						doc_outside_photo=vDateOfficeApproved,	
+						doc_rules_rec_date=vDateOfficeApproved,	
+						doc_rules_sign_date=vDateFamilySubmitted, // Date HF submitted application	
+						doc_school_profile_rec=vDateOfficeApproved,	
+						doc_income_ver_date=vDateOfficeApproved,	
+						doc_conf_host_rec=vDateOfficeApproved,	
+						doc_date_of_visit=qGetConfidentialVisitForm.dateOfVisit, // Date of Visit from form
+						doc_ref_form_1=vDateOfficeApproved,	
+						doc_ref_check1=vDateReferenceInterviewed1, // Date of questionnaire
+						doc_ref_form_2=vDateOfficeApproved,	
+						doc_ref_check2=vDateReferenceInterviewed2 // Date of questionnaire	
+					);	
+				
+				}
+
+			}
+		</cfscript>
+            
+    </cffunction>  
     
+    
+	<cffunction name="isFamilyCurrentlyHosting" access="public" returntype="struct" output="false" hint="Checks if a host family is linked to an active student">
+        <cfargument name="hostID" default="" hint="HostID is not required">
+        <cfargument name="seasonID" default="#APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID#" hint="seasonID is not required">
+		
+        <cfscript>
+			// Check for students that are assigned to programs on the same season and are currently being hosted by hostID
+			// Return struct with true/false statament and a list of history IDs
+			var stResult = StructNew();
+			
+			stResult.isHosting = false;
+			stResult.hostHistoryListID = false;
+		</cfscript>
+        
+        <cfquery 
+			name="qIsFamilyCurrentlyHosting" 
+			datasource="#APPLICATION.DSN#">
+				SELECT DISTINCT
+                	s.studentID,
+                    h.historyID
+                FROM
+                	smg_students s
+       			INNER JOIN
+                	smg_programs p ON p.programID = s.programID
+                    AND
+                    	p.smgSeasonID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(ARGUMENTS.seasonID)#">  
+				INNER JOIN
+                	smg_hostHistory h ON h.studentID = s.studentID
+                    AND
+                    	h.isActive = 1
+                    AND
+                		h.hostID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(ARGUMENTS.hostID)#"> 
+					<!--- Do not get PHP students --->
+                    AND
+                		h.assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">  
+				WHERE                        
+					<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+                        s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(APPLICATION.SETTINGS.COMPANYLIST.ISESMG)#" list="yes"> )
+                    <cfelseif VAL(CLIENT.companyID)>
+                        s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyID)#"> 
+                    </cfif>
+        </cfquery>
+
+        <cfscript>
+			// Populate Results
+			if ( qIsFamilyCurrentlyHosting.recordCount ) {
+				stResult.isHosting = true;
+				// This is the list of IDS that we are going to update paperwork
+				stResult.hostHistoryListID = ValueList(qIsFamilyCurrentlyHosting.historyID);
+			}
+		
+			// Return Query
+			return stResult;
+		</cfscript>
+            	
+    </cffunction>  
+
+        
 
 	<!--- ------------------------------------------------------------------------- ----
 		END OF HOST FAMILY APPLICATION
