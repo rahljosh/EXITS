@@ -1472,6 +1472,8 @@
         <cfargument name="regionIDList" default="" hint="List of Region IDs">
         <cfargument name="is2ndVisitIncluded" default="0" type="numeric" hint="is2ndVisitIncluded is not required">
         <cfargument name="includeUserIDs" default="" hint="area reps will be able to see themselves and current assigned users on the list">
+        <cfargument name="excludeUserIDs" default="" hint="area reps that will NOT be showen in the drop down, not required">
+        
         
         <cfscript>
 			// Get Current Paperwork Season ID
@@ -1523,10 +1525,15 @@
                         sup.dateAccessGranted IS NOT NULL
 					--->						
 
-                    <!--- Include Current Assigned User --->
+                    <!--- Include Current Assigned User--->
                     <cfif LEN(ARGUMENTS.includeUserIDs)>
                     	OR
                             u.userID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.includeUserIDs#" list="yes"> )
+                    </cfif>
+                     
+                    <cfif LEN(ARGUMENTS.excludeUserIDs)>
+                        AND
+                        	u.userID != <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.excludeUserIDs#">
                     </cfif>
                     
                     GROUP BY
