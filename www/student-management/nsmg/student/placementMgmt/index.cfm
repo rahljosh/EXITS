@@ -35,7 +35,7 @@
 
     <cfscript>
 		// Users allowed to delete placement history - Marcus Melo | 
-		vDeleteHistoryAllowed = '510';
+		vDeleteHistoryAllowed = '510,1';
 	
 		// Store Section on FORM Variable
 		if ( LEN(URL.action) ) {
@@ -63,13 +63,17 @@
 			// Student is unplaced 
 			qGetPlacementHistoryByID = APPLICATION.CFC.STUDENT.getHostHistoryByID(studentID=qGetStudentInfo.studentID, historyID=0);
 		};
-
+    
+    
 		// Set a list of current reps assigned to student
 		vCurrentUsersAssigned = '';
 		vCurrentUsersAssigned = ListAppend(vCurrentUsersAssigned, qGetPlacementHistoryByID.areaRepID);
 		vCurrentUsersAssigned = ListAppend(vCurrentUsersAssigned, qGetPlacementHistoryByID.placeRepID);
 		
-		// Get list of states that USERS and HOST FAMILIES are assigned to
+		vExcludeUsers = '';
+		vExcludeUsers = vExcludeUsers = ListAppend(vExcludeUsers, qGetPlacementHistoryByID.placeRepID);
+			
+	
 		vListOfStates = APPLICATION.CFC.HOST.getHostStateListByRegionID(regionID=qGetStudentInfo.regionassigned);
 		vListOfUserStates = APPLICATION.CFC.USER.getUserStateListByRegionID(regionID=qGetStudentInfo.regionassigned);
 
@@ -120,21 +124,23 @@
 			userType=CLIENT.userType, 
 			userID=CLIENT.userID, 
 			regionID=qGetStudentInfo.regionAssigned, 
-			is2ndVisitIncluded=1, 
-			includeUserIDs=qGetPlacementHistoryByID.secondVisitRepID);
+			is2ndVisitIncluded=1,
+			excludeUserIDs = vExcludeUsers);
 
 		// Get Program Information
 		qGetProgramInfo = APPLICATION.CFC.PROGRAM.getPrograms(programID=qGetStudentInfo.programID);
 		
 		// Get Region Assigned - Used in the hostFamily
 		qGetRegionAssigned = APPLICATION.CFC.REGION.getRegions(qGetStudentInfo.regionAssigned);
-			
-		// Get Host Family Information
-		qGetHostInfo = APPLICATION.CFC.HOST.getHosts(hostID=qGetPlacementHistoryByID.hostID);
 		
-		// Get Host Kids at Home
-		qGetHostKidsAtHome = APPLICATION.CFC.HOST.getHostMemberByID(hostID=qGetPlacementHistoryByID.hostID,liveAtHome='yes');
 		
+		if ( VAL(qGetPlacementHistoryByID.hostID) ) {
+			// Get Host Family Information
+			qGetHostInfo = APPLICATION.CFC.HOST.getHosts(hostID=qGetPlacementHistoryByID.hostID);
+				
+			// Get Host Kids at Home
+			qGetHostKidsAtHome = APPLICATION.CFC.HOST.getHostMemberByID(hostID=qGetPlacementHistoryByID.hostID,liveAtHome='yes');
+		}
 		// Get Area Rep
 		qGetAreaRepInfo = APPLICATION.CFC.USER.getUserByID(userID=qGetPlacementHistoryByID.areaRepID);
 
@@ -156,17 +162,18 @@
 		// Calculate total of family members
 		vTotalFamilyMembers = 0;
 		
-		if ( LEN(qGetHostInfo.fatherFirstName) ) {
-			vTotalFamilyMembers = vTotalFamilyMembers + 1;
+		if ( VAL(qGetPlacementHistoryByID.hostID) ) {
+			if ( LEN(qGetHostInfo.fatherFirstName) ) {
+				vTotalFamilyMembers = vTotalFamilyMembers + 1;
+			}
+			
+			if ( LEN(qGetHostInfo.motherFirstName) ) {
+				vTotalFamilyMembers = vTotalFamilyMembers + 1;
+			}
+			
+			vTotalFamilyMembers = vTotalFamilyMembers + VAL(qGetHostKidsAtHome.recordCount);
+			// End of Calculate total of family members
 		}
-		
-		if ( LEN(qGetHostInfo.motherFirstName) ) {
-			vTotalFamilyMembers = vTotalFamilyMembers + 1;
-		}
-		
-		vTotalFamilyMembers = vTotalFamilyMembers + VAL(qGetHostKidsAtHome.recordCount);
-		// End of Calculate total of family members
-		
 		
 		// Set Placement Status (Unplaced / Rejected / Approved / Pending / Incomplete)
 		vPlacementStatus = '';
@@ -348,6 +355,9 @@
 </cfsilent>
 	
 <cfoutput>
+
+
+
 	
 	<!--- Page Header --->
     <gui:pageHeader
@@ -415,7 +425,8 @@
                 </th>
             </tr>
 		</table>
-        
+      
+       
         <table width="90%" cellpadding="4" cellspacing="0" class="section" align="center" style="background-color:##edeff4; padding:5px 0px 5px 0px;">  
             <tr>
                 <td width="12.5%" align="center">
