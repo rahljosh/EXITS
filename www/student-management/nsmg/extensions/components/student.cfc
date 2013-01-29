@@ -780,6 +780,15 @@
 				);
 			
 			}
+			
+			
+			/***** MARCUS MELO - REMOVE COMMENT AFTER APPLICATION IS LAUNCHED ***/
+			
+			// Check if there is an approved HF App and copy the paperwork
+			if ( VAL(vHasHostIDChanged) ) {
+				// SET PAPERWORK AUTOMATICALLY
+				//APPLICATION.CFC.HOST.setPlacementManagementPaperwork(hostID=ARGUMENTS.hostID);
+			}
 		</cfscript>
 	
 	</cffunction>
@@ -2803,6 +2812,85 @@
 		</cfquery>
         
 	</cffunction>
+    
+    
+	<!--- Placement Paperwork - Update upon host family app approved or student is placed with an approved host family --->
+	<cffunction name="updatePlacementPaperworkUponHostFamilyAppApproval" access="public" returntype="void" output="false" hint="Update Placement Paperwork">
+        <cfargument name="historyID" default="0" hint="historyID is not required">
+        <!--- Date Received --->
+        <cfargument name="dateReceived" default="" hint="dateReceived is not required">
+		<!--- Page 1 --->
+        <cfargument name="doc_host_app_page1_date" default="" hint="doc_host_app_page1_date is not required">
+        <!--- Page 2 --->
+        <cfargument name="doc_host_app_page2_date" default="" hint="doc_host_app_page2_date is not required">
+        <!--- Page 3 - Letter --->
+        <cfargument name="doc_letter_rec_date" default="" hint="doc_letter_rec_date is not required">
+        <!--- Page 4,5,6 - Photos --->
+        <cfargument name="doc_photos_rec_date" default="" hint="doc_photos_rec_date is not required">
+        <cfargument name="doc_bedroom_photo" default="" hint="doc_bedroom_photo is not required">
+        <cfargument name="doc_bathroom_photo" default="" hint="doc_bathroom_photo is not required">
+        <cfargument name="doc_kitchen_photo" default="" hint="doc_kitchen_photo is not required">
+        <cfargument name="doc_living_room_photo" default="" hint="doc_living_room_photo is not required">
+        <cfargument name="doc_outside_photo" default="" hint="doc_outside_photo is not required">
+        <!--- Page 7 - HF Rules --->
+        <cfargument name="doc_rules_rec_date" default="" hint="doc_rules_rec_date is not required">
+        <cfargument name="doc_rules_sign_date" default="" hint="doc_rules_sign_date is not required">
+        <!--- Page 8 - School & Community Profile --->
+        <cfargument name="doc_school_profile_rec" default="" hint="doc_school_profile_rec is not required">
+        <!--- Page 9 - Income Verification --->
+        <cfargument name="doc_income_ver_date" default="" hint="doc_income_ver_date is not required">
+        <!--- Page 10 - Confidential HF Visit ---> 
+        <cfargument name="doc_conf_host_rec" default="" hint="doc_conf_host_rec is not required">
+        <cfargument name="doc_date_of_visit" default="" hint="doc_date_of_visit is not required">
+        <!--- Page 11 - Reference 1 --->
+        <cfargument name="doc_ref_form_1" default="" hint="doc_ref_form_1 is not required">
+        <cfargument name="doc_ref_check1" default="" hint="doc_ref_check1 is not required">
+        <!--- Page 12 - Reference 2 --->
+        <cfargument name="doc_ref_form_2" default="" hint="doc_ref_form_2 is not required">
+        <cfargument name="doc_ref_check2" default="" hint="doc_ref_check2 is not required">
+        
+        <!--- Update Host History Documents --->
+        <cfquery 
+			datasource="#APPLICATION.DSN#">
+                UPDATE
+	                smg_hosthistory
+                SET 
+                	<!--- Date Received --->
+                    dateReceived = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateReceived#" null="#NOT IsDate(ARGUMENTS.dateReceived)#">,
+                    <!--- Page 1 --->
+                    doc_host_app_page1_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_host_app_page1_date#" null="#NOT IsDate(ARGUMENTS.doc_host_app_page1_date)#">,
+                    <!--- Page 2 --->
+                    doc_host_app_page2_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_host_app_page2_date#" null="#NOT IsDate(ARGUMENTS.doc_host_app_page2_date)#">,
+                    <!--- Page 3 - Letter --->
+                    doc_letter_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_letter_rec_date#" null="#NOT IsDate(ARGUMENTS.doc_letter_rec_date)#">,
+                    <!--- Page 4,5,6 - Photos --->
+                    doc_photos_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_photos_rec_date#" null="#NOT IsDate(ARGUMENTS.doc_photos_rec_date)#">,
+                    doc_bedroom_photo = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_bedroom_photo#" null="#NOT IsDate(ARGUMENTS.doc_bedroom_photo)#">,
+                    doc_bathroom_photo = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_bathroom_photo#" null="#NOT IsDate(ARGUMENTS.doc_bathroom_photo)#">,
+                    doc_kitchen_photo = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_kitchen_photo#" null="#NOT IsDate(ARGUMENTS.doc_kitchen_photo)#">,
+                    doc_living_room_photo = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_living_room_photo#" null="#NOT IsDate(ARGUMENTS.doc_living_room_photo)#">,
+                    doc_outside_photo = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_outside_photo#" null="#NOT IsDate(ARGUMENTS.doc_outside_photo)#">,
+                    <!--- Page 7 - HF Rules --->
+                    doc_rules_rec_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_rules_rec_date#" null="#NOT IsDate(ARGUMENTS.doc_rules_rec_date)#">,
+                    doc_rules_sign_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_rules_sign_date#" null="#NOT IsDate(ARGUMENTS.doc_rules_sign_date)#">,
+                    <!--- Page 8 - School & Community Profile --->
+                    doc_school_profile_rec = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_school_profile_rec#" null="#NOT IsDate(ARGUMENTS.doc_school_profile_rec)#">,
+					<!--- Page 9 - Income Verification ---> 
+                    doc_income_ver_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_income_ver_date#" null="#NOT IsDate(ARGUMENTS.doc_income_ver_date)#">,
+					<!--- Page 10 - Confidential HF Visit --->
+                    doc_conf_host_rec = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_conf_host_rec#" null="#NOT IsDate(ARGUMENTS.doc_conf_host_rec)#">,
+                    doc_date_of_visit = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_date_of_visit#" null="#NOT IsDate(ARGUMENTS.doc_date_of_visit)#">,
+                    <!--- Page 11 - Reference 1 --->
+                    doc_ref_form_1 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_ref_form_1#" null="#NOT IsDate(ARGUMENTS.doc_ref_form_1)#">,
+                    doc_ref_check1 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_ref_check1#" null="#NOT IsDate(ARGUMENTS.doc_ref_check1)#">,
+                    <!--- Page 12 - Reference 2 ---> 
+                    doc_ref_form_2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_ref_form_2#" null="#NOT IsDate(ARGUMENTS.doc_ref_form_2)#">,
+                    doc_ref_check2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_ref_check2#" null="#NOT IsDate(ARGUMENTS.doc_ref_check2)#">
+                WHERE 
+                    historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.historyID)#">                                	
+		</cfquery>
+        
+	</cffunction>    
 
 
 	<cffunction name="checkPlacementPaperwork" access="public" returntype="string" output="false" hint="Check if placement paperwork was received by deadline">
