@@ -17,7 +17,7 @@
 	-->
 </style>
 
-<cfquery name="user_compliance" datasource="MySql">
+<cfquery name="user_compliance" datasource="#application.dsn#">
 	SELECT userid, compliance
 	FROM smg_users
 	WHERE userid = <cfqueryparam value="#VAL(client.userid)#" cfsqltype="cf_sql_integer">
@@ -46,13 +46,15 @@
     <cfif ListFind("1,2,3,4", CLIENT.userType)>
         <tr bgcolor="e2efc7"><td colspan="2"><span class="get_attention"><b>::</b></span> Reports Available for Office Users</td></tr>
         <tr>
-            <td width="50%"><a href="?curdoc=reports/acceptance_select_pro">Acceptance Letter and Missing Documents Report</a></td>
+            
             <td width="50%"><a href="?curdoc=reports/labels_select_pro">Labels (Avery 5160), Student ID Cards (Avery 5371) and Bulk Letters</a></td>
+       		<td><a href="?curdoc=reports/overall_reports_menu">Overall Reports</a></td>
         </tr>
-    
+     </cfif>
+    <!---- 
         <tr>
-            <td><a href="?curdoc=userPayment/index&action=bonusReport">Bonus Report (Representative Payments)</a></td>	        
-            <td><a href="?curdoc=reports/overall_reports_menu">Overall Reports</a></td>
+           <td><a href="?curdoc=userPayment/index&action=bonusReport">Bonus Report (Representative Payments)</a></td>	        
+            <td width="50%"><a href="?curdoc=reports/acceptance_select_pro">Acceptance Letter and Missing Documents Report</a></td>
         </tr>
         
         <tr>
@@ -107,10 +109,10 @@
             <td></td>
         </tr>
     </cfif>
-
+---->
 	<!---- FIELD ---->
     <cfif client.usertype GTE '5'>
-        <cfquery name="list_regions" datasource="MySql"> <!--- GET USERS REGION --->
+        <cfquery name="list_regions" datasource="#application.dsn#"> <!--- GET USERS REGION --->
             SELECT 
             	user_access_rights.regionid,
                 smg_regions.regionname
@@ -130,7 +132,7 @@
         <cfif NOT IsDefined('url.regionid')><cfset url.regionid = '#list_regions.regionid#'></cfif>
         
         <!--- Check url.region EQ region from client.companyid --->
-        <cfquery name="check_region" datasource="MySql">
+        <cfquery name="check_region" datasource="#application.dsn#">
             SELECT uar.regionid, uar.usertype, u.usertype as user_access
             FROM user_access_rights uar
             INNER JOIN smg_usertype u ON u.usertypeid = uar.usertype
@@ -143,7 +145,7 @@
             <cfset url.regionid = '#list_regions.regionid#'>
         </cfif>
         
-        <cfquery name="get_user_region" datasource="MySql"> <!--- GET USERTYPE --->
+        <cfquery name="get_user_region" datasource="#application.dsn#"> <!--- GET USERTYPE --->
             SELECT user_access_rights.regionid, user_access_rights.usertype, u.usertype as user_access
             FROM user_access_rights
             INNER JOIN smg_usertype u ON u.usertypeid = user_access_rights.usertype
@@ -175,16 +177,16 @@
 	<!--- Reports for Managers --->
     <cfif ListFind("1,2,3,4,5", CLIENT.userType)>
         <tr bgcolor="e2efc7"><td colspan="2"><span class="get_attention"><b>::</b></span> Reports Available for Managers</td></tr>
-        <tr>
+        <!----<tr>
             <td><a href="?curdoc=reports/HostFam_select_region">Host Family Spreadsheet</a></td>
             <td><a href="?curdoc=reports/select_region">Regional Hierarchy</a></td>
-        </tr>
+        </tr>---->
         <tr>
             <td><a href="?curdoc=cbc/managers_menu">CBC Form Authorization Not Received</a></td>
-            <td><a href="?curdoc=reports/userTrainingReports">Training Reports</a></td>
+            <td><!----<a href="?curdoc=reports/userTrainingReports">Training Reports</a>----></td>
         </tr>	
     </cfif>
-    
+    <!---
     <!--- Reports for Advisors --->
     <cfif ListFind("1,2,3,4,5,6", CLIENT.userType)> 
         <tr bgcolor="e2efc7"><td colspan="2"><span class="get_attention"><b>::</b></span> Reports Available for Advisors</td></tr>
@@ -215,7 +217,7 @@
     </cfif>
     
 </table>
-
+---->
 <table width=100% cellpadding=0 cellspacing=0 border=0>
 	<tr valign=bottom >
 		<td width=9 valign="top" height=12><img src="pics/footer_leftcap.gif" ></td>

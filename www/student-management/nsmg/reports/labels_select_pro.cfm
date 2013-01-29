@@ -98,8 +98,9 @@
             <table class="nav_bar" cellpadding="6" cellspacing="0" align="center" width="95%">
                 <tr><th colspan="2" bgcolor="##e2efc7">Student ID Cards <font size="-2">(Ordered by Agent)</font></th></tr>
                 <tr align="center">
+                 <!----
                     <td width="50%" valign="top">
-                        
+                       
                         <cfform action="reports/labels_student_idcards_batchid.cfm" method="post" target="_blank">
                         <Table class="nav_bar" cellpadding="6" cellspacing="0" width="90%">
                             <tr><th colspan="2" bgcolor="##e2efc7">Students ID Cards per Batch ID</th></tr>
@@ -135,6 +136,7 @@
                         </cfform>
                         
                     </td>
+					---->
                     <td width="50%" valign="top">
                         
                         <cfform action="reports/labels_student_idcards_batchid_list.cfm" method="post" target="_blank">
@@ -170,7 +172,10 @@
                         </cfform>
                         
                     </td>
+                    <td width=50%>
+                    </td>
                 </tr>
+                <!----
                 <tr align="center">
                     <td width="50%" valign="top">
                         
@@ -256,7 +261,7 @@
                                 
                     </td>
                 </tr>
-                
+                ---->
                 <tr> 
                     <td colspan="2">
                     	<div align="justify">
@@ -269,7 +274,7 @@
             </table>
             
             <br /><br />
-     
+     <!----
             <table class="nav_bar" cellpadding="6" cellspacing="0" align="center" width="95%">
                 <tr><th colspan="2" bgcolor="##e2efc7">Insurance Cards <font size="-2">(Ordered by Agent)</font></th></tr>
                 <tr align="center">
@@ -531,6 +536,7 @@
             </table>
           
             <br /><br />
+            ---->
 
             <!--- BULK MAILING - LABELS + WELCOME LETTERS --->
             <table class="nav_bar" cellpadding="6" cellspacing="0" align="center" width="95%">
@@ -697,7 +703,7 @@
             </table>
             
             <br /><br />
-                
+                <!----
             <table class="nav_bar" cellpadding="6" cellspacing="0" align="center" width="95%">
                 <tr><th colspan="2" bgcolor="##e2efc7">MAILING LABELS</th></tr>
                 <tr align="center">
@@ -836,7 +842,7 @@
                     </td>
                 </tr>
             </table>
-            
+            ---->
             <br /><br />
                 
     	</td>

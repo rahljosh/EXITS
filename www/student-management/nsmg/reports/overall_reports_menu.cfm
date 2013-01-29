@@ -68,6 +68,7 @@
 <table border="0" cellpadding="8" cellspacing="2" width=100% class="section">
 
     <tr>
+    <!----
         <td width="50%" valign="top">
 
             <form action="reports/students_per_region.cfm" method="POST" target="blank">
@@ -144,7 +145,7 @@
             </form>
                 
         </td>
-
+	---->
         <td width="50%" valign="top">
             
             <form action="reports/students_per_intl_rep.cfm" method="POST" target="blank">
@@ -219,8 +220,9 @@
             </form>
 
         </td>
+        <td width=50%></td>
     </tr>
-    
+    <!----
     <!--- ROW 2 - 2 boxes --->  
     <tr>
         <td width="50%" valign="top">
@@ -596,7 +598,7 @@
 
         </td>
     </tr>
-    
+    ---->
     <!--- ROW 7 - 2 boxes --->  
     <tr>
         <td width="50%" valign="top">
@@ -638,9 +640,9 @@
             </cfform>
 
         </td>
-
+			
         <td width="50%" valign="top">
-    
+    		<!----
             <cfform action="reports/student_unplaced_days.cfm" method="POST" target="blank">
                 <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
                     <tr><td colspan="2" class="reportTitle">Total of Unplaced Days</td></tr>
@@ -667,10 +669,10 @@
                     </tr>
                 </table>
             </cfform>		
-
+			---->
         </td>
     </tr>
-    
+    <!----
     <!--- ROW 8 - 2 boxes --->  
     <tr>
         <td width="50%" valign="top">
@@ -964,7 +966,7 @@
 
         </td>
     </tr>
-    
+    ---->
     <!--- ROW 12 - 2 boxes --->  
     <tr>
         <td width="50%" valign="top">
@@ -1011,7 +1013,7 @@
         </td>
 
         <td width="50%" valign="top">
-    
+    <!----
             <cfform action="reports/continent_report_region.cfm" method="POST" target="blank">
                 <table class="nav_bar" cellpadding="6" cellspacing="0" width="100%">
                     <tr><td colspan="2" class="reportTitle">Continent Report By Region</td></tr>
@@ -1050,10 +1052,10 @@
                     <tr><td colspan="2" class="reportTitle"><input type="image" src="pics/view.gif" align="center" border="0"></td></tr>
                 </table>
             </cfform>
-
+---->
         </td>
     </tr>
-    
+    <!----
     <!--- ROW 13 - 2 boxes --->  
     <tr>
         <td width="50%" valign="top">
@@ -1196,7 +1198,7 @@
         </tr>
                         
     </cfif>
-
+---->
 </table>
 
 </cfoutput>
