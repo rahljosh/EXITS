@@ -108,7 +108,7 @@
     <cfif VAL(qGetTrainingApproved.recordCount)>
     	<cfquery datasource="#APPLICATION.DSN#">
         	UPDATE php_rep_season
-            SET approvedTraining = <cfqueryparam cfsqltype="cf_sql_integer" value="#EVALUATE('FORM.training_#seasonID#')#">
+            SET approvedTraining = <cfqueryparam cfsqltype="cf_sql_integer" value="#EVALUATE('FORM.training_#programID#')#">
             WHERE userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.userID)#">
             AND programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(programID)#">
         </cfquery>
