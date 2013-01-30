@@ -31,15 +31,6 @@
 	LIMIT 1
 </cfquery>
 
-<!--- UPDATE CBC FORM RECEIVED INFORMATION IN HOST FAMILY TABLE --->
-<cfquery name="update_cbc_host" datasource="caseusa">
-	UPDATE smg_hosts
-	SET fathercbc_form = <cfif form.fathercbc_form NEQ ''>#CreateODBCDate(form.fathercbc_form)#<cfelse>NULL</cfif>,
-		mothercbc_form = <cfif form.mothercbc_form NEQ ''>#CreateODBCDate(form.mothercbc_form)#<cfelse>NULL</cfif>
-	WHERE hostid = '#form.hostid#'
-	LIMIT 1
-</cfquery>
-
 <!--- UPDATE CBC FORM RECEIVED INFORMATION IN HOST MEMBERS TABLE --->
 <cfloop From = "1" To = "#form.total_members#" Index = "x">
 	<cfquery name="update_cbc_host" datasource="caseusa">
