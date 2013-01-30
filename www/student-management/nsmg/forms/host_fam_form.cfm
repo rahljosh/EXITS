@@ -54,7 +54,8 @@
 
 	<cfscript>
 		// Set Regions or users or user type that can start host app
-		allowedUsers = '1,12313,8747,17972,17791,8731,12431,17438,17767,15045,10133,6617,16552,16718,10631,9974,510';	
+		//allowedUsers = '1,12313,8747,17972,17791,8731,12431,17438,17767,15045,10133,6617,16552,16718,10631,9974,510';	
+		allowedUsers = "13538";
 		
 		// Check if we have a valid URL.hostID
 		if ( VAL(URL.hostID) AND NOT VAL(FORM.hostID) ) {
@@ -292,7 +293,6 @@
                         <!--- Create Online Application --->
                         <cfif FORM.subAction EQ 'eHost'>
                             HostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="9">,
-                            arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">,
                             applicationSent = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
                         </cfif>
                         password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#strPassword#">,
@@ -350,10 +350,8 @@
                         <!--- Create Online Application ---> 
                         <cfif FORM.subAction EQ 'eHost'>
                             HostAppStatus,
-                            arearepid,
                             applicationSent,
                         </cfif>
-                        applicationStarted,
                         arearepid
                     )
                     VALUES 
@@ -394,10 +392,8 @@
                         <!--- Create Online Application --->
 						<cfif FORM.subAction EQ 'eHost'>
                             <cfqueryparam cfsqltype="cf_sql_integer" value="9">,
-                            <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">,
                             <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
                         </cfif>
-                        <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
                     )  
                 </cfquery>
@@ -891,8 +887,9 @@
                         </a>
                      </td>
                	</cfif>
-           	
-				<cfif APPLICATION.CFC.USER.isOfficeUser() AND NOT VAL(qGetHostFamilyInfo.hostAppStatus)>
+           		
+                <!--- Remove Office Access --->
+				<cfif ( APPLICATION.CFC.USER.isOfficeUser() OR listFind(allowedUsers, CLIENT.userID) ) AND NOT VAL(qGetHostFamilyInfo.hostAppStatus)>
                     <td valing="top" align="center">
                         <input name="subAction" id="submiteHost" type="submit" value="eHost"  alt="Start E-App" border="0" class="buttonBlue" onclick="verifyAddress('submiteHost'); return false;" /> <br />
                         <cfif VAL(FORM.hostID)>
