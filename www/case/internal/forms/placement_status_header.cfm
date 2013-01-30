@@ -39,8 +39,8 @@
 <cfif hostid NEQ '0'>
 	<!--- CHECK CBCS --->
 	<cfquery name="get_host" datasource="caseusa">
-		SELECT hostid, familylastname, fatherfirstname, fatherlastname, fatherdob, fathercbc_form, 
-			motherfirstname, motherlastname, motherdob, mothercbc_form
+		SELECT hostid, familylastname, fatherfirstname, fatherlastname, fatherdob, 
+			motherfirstname, motherlastname, motherdob
 		FROM smg_hosts
 		WHERE hostid = '#get_student_info.hostid#'
 	</cfquery>
@@ -63,7 +63,7 @@
 	<cfif date_pis_received NEQ '' AND doc_full_host_app_date NEQ '' AND doc_letter_rec_date NEQ ''
 		AND doc_rules_rec_date NEQ '' AND doc_photos_rec_date NEQ '' AND doc_school_accept_date NEQ ''
 		AND doc_school_profile_rec NEQ '' AND doc_conf_host_rec NEQ '' AND doc_ref_form_1 NEQ ''
-		AND doc_ref_form_2 NEQ '' AND get_host.fathercbc_form NEQ '' AND get_host.mothercbc_form NEQ '' AND member_missing EQ 0>	
+		AND doc_ref_form_2 NEQ '' AND member_missing EQ 0>	
 		<cfif stu_arrival_orientation NEQ '' AND host_arrival_orientation NEQ ''>
 			<cfset paperwork_image = 'paperwork_4'>  <!--- paperwork complete image --->
 		<cfelse>

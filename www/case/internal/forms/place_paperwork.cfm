@@ -36,8 +36,8 @@
 </cfquery>
 
 <cfquery name="get_host" datasource="caseusa">
-	SELECT hostid, familylastname, fatherfirstname, fatherlastname, fatherdob, fathercbc_form, 
-		motherfirstname, motherlastname, motherdob, mothercbc_form
+	SELECT hostid, familylastname, fatherfirstname, fatherlastname, fatherdob,  
+		motherfirstname, motherlastname, motherdob
 	FROM smg_hosts
 	WHERE hostid = '#get_student_info.hostid#'
 </cfquery>
@@ -224,20 +224,6 @@
 		<td>Date of Signature</td>
 		<td align="left">Date: &nbsp;<input type="text" name="doc_school_sign_date" size=9 value="#DateFormat(doc_school_sign_date, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
 	</tr>	
-	
-	<tr>
-		<td colspan=3>CBC Forms</td>
-	</tr>	
-	<tr>
-		<td><input type="checkbox" name="fathercbc_form_check" OnClick="CheckDates('fathercbc_form_check', 'fathercbc_form');" <cfif get_host.fathercbc_form NEQ''>checked</cfif> <cfif edit is 'no'>disabled</cfif>></td>
-		<td>Host Father</td>
-		<td align="left">Date: &nbsp;<input type="text" name="fathercbc_form" size=9 value="#DateFormat(get_host.fathercbc_form, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
-	</tr>
-	<tr> 
-		<td><input type="checkbox" name="mothercbc_form_check" OnClick="CheckDates('mothercbc_form_check', 'mothercbc_form');" <cfif get_host.mothercbc_form NEQ''>checked</cfif> <cfif edit is 'no'>disabled</cfif>></td>
-		<td>Host Mother</td>
-		<td align="left">Date: &nbsp;<input type="text" name="mothercbc_form" size=9 value="#DateFormat(get_host.mothercbc_form, 'mm/dd/yyyy')#" <cfif edit is 'no'>readonly</cfif>></td>
-	</tr>
 	<tr>
 		<td colspan=3>CBC Host Members 18+</td>
 	</tr>	
