@@ -201,9 +201,9 @@
                 SET 
                 	schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.schoolID)#">,
                     schoolWorks = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.schoolWorks)#">,
-                    schoolWorksExpl = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.schoolWorksExpl)#">,
+                    schoolWorksExpl = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LEFT(TRIM(FORM.schoolWorksExpl), 300)#">,
                     schoolCoach = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.schoolCoach)#">,
-                    schoolCoachExpl = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.schoolCoachExpl)#">,
+                    schoolCoachExpl = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LEFT(TRIM(FORM.schoolCoachExpl), 300)#">,
                     schooltransportation = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.schoolTransportation)#">,
                     schoolTransportationOther = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.schoolTransportationOther)#">,
                     extraCuricTrans = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.extraCuricTrans)#">

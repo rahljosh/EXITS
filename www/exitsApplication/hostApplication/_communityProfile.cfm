@@ -121,7 +121,7 @@
                 SET 
                     population = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.population#">,
                     near_city_dist = <cfqueryparam cfsqltype="cf_sql_varchar" value="#vCityDistance#">,
-                    nearbigCity = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.nearbigCity#">,
+                    nearbigCity = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LEFT(FORM.nearbigCity, 255)#">,
                     major_air_code = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.major_air_code#">,
                     wintertemp = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.wintertemp#">,
                     summertemp = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.summertemp#">,
@@ -133,7 +133,7 @@
                     dry_air = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.dry_air)#">,
                     neighborhood = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.neighborhood#">,
                     community = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.community#">,
-                    avoidArea = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.avoidArea#">,
+                    avoidArea = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LEFT(FORM.avoidArea, 255)#">,
                     terrain1 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.terrain1#">,
                     terrain2 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.terrain2#">,
                     terrain3 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.terrain3#">,
