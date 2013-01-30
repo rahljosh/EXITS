@@ -79,7 +79,7 @@
 		SESSION.COMPANY.shortName = "CASE";
 		SESSION.COMPANY.siteURL = "http://www.case-usa.org/";
 		SESSION.COMPANY.exitsURL = "https://case.exitsapplication.com/";
-		SESSION.COMPANY.pageTitle = "(CASE) Cultural Academic Student Exchange - Host Family Application";
+		SESSION.COMPANY.pageTitle = "Cultural Academic Student Exchange - Host Family Application";
 		SESSION.COMPANY.logoImage = "logoCASE.png";
 		SESSION.COMPANY.submitGreyImage = "submitGrey.png";
 		SESSION.COMPANY.submitImage = "submit.png";
@@ -97,7 +97,7 @@
 		SESSION.COMPANY.shortName = "ISE";
 		SESSION.COMPANY.siteURL = "https://www.iseusa.com/";
 		SESSION.COMPANY.exitsURL = "https://ise.exitsapplication.com/";
-		SESSION.COMPANY.pageTitle = "(ISE) International Student Exchange - Host Family Application";
+		SESSION.COMPANY.pageTitle = "International Student Exchange - Host Family Application";
 		SESSION.COMPANY.logoImage = "logoISE.png";
 		SESSION.COMPANY.submitGreyImage = "ISESubmitGrey.png";
 		SESSION.COMPANY.submitImage = "ISESubmit.png";

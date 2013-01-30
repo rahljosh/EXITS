@@ -1,12 +1,12 @@
 <!--- ------------------------------------------------------------------------- ----
 	
-	File:		index.cfm
+	File:		errorMessage.cfm
 	Author:		Marcus Melo
-	Date:		November 6, 2012
-	Desc:		Host Family App - Index
-
-	Updated:	
-
+	Date:		January 30, 2013
+	Desc:		Host Application Error Message
+	
+	Updates:	
+	
 ----- ------------------------------------------------------------------------- --->
 
 <cfsilent>
@@ -22,8 +22,8 @@
 			URL.section = "overview";
 		} 
 		
-		// Get Host Family Info - Accessible from any page
-		qGetHostFamilyInfo = APPLICATION.CFC.HOST.getHosts(hostID=APPLICATION.CFC.SESSION.getHostSession().ID);
+		// Param ERRROR ID
+		param name="vErrorID" default="###APPLICATION.CFC.SESSION.getHostSession().ID#-#dateformat(now(),'mmddyyyy')#-#timeformat(now(),'hhmmss')#";
 	</cfscript>
         
 </cfsilent>
@@ -38,13 +38,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 <script src="linked/chosen/chosen.jquery.js" type="text/javascript"></script>
 <script src="linked/js/jquery.colorbox-min.js"></script>
-<script type="text/javascript">
-	//<![CDATA[
-	function ShowHide(){
-		$("#slidingDiv").animate({"height": "toggle"}, { duration: 300 });
-	}
-	//]]>
-</script>
 </head>
 
 <cfoutput>
@@ -56,7 +49,7 @@
         <div id="logoBoxB">
         
             <div class="blueBox">
-                <a href="../index.cfm"><img src="images/#SESSION.COMPANY.logoImage#" alt="#SESSION.COMPANY.name#" width="214" height="165"border="0" /></a>
+                <a href="../index.cfm"><img src="images/#SESSION.COMPANY.logoImage#" alt="#SESSION.COMPANY.name#" width="214" height="165" border="0" /></a>
 				<!--- Include Left Menu --->
                 <cfinclude template="includes/leftMenu.cfm">
             </div><!--blueBox -->
@@ -79,28 +72,31 @@
                 
                 <div class="whtMiddle">
                 
-                    <div class="hostApp">
+                    <div class="hostApp" style="height:500px;">
                     
-						<!--- Check to see which action we are taking. --->
-                        <cfswitch expression="#URL.section#">
+						<h2 class="enter">An Error Has Occurred</h2>
                         
-                            <cfcase value="login,overview,contactInfo,familyMembers,cbcAuthorization,personalDescription,hostingEnvironment,religiousPreference,familyRules,familyAlbum,schoolInfo,communityProfile,confidentialData,references,checkList,logout" delimiters=",">
-                        		
-                                <!--- Include template --->
-                                <cfinclude template="_#URL.section#.cfm" />
+                        <p>We are sorry, a system error has occurred.</p>
                         
-                            </cfcase>
+                        <p>Error ID: #vErrorID#</p>
                         
-                            <!--- The default case is the login page --->
-                            <cfdefaultcase>
-                                
-                                <!--- Include template --->
-                                <cfinclude template="_overview.cfm" />
+                        <p>Do not worry, an email has been submitted to the support folks and they will fix it as soon as possible.</p>
                         
-                            </cfdefaultcase>
+                        <p>
+                            If you would like to specify more information that you feel would help, please follow this link or reference the ID number in an email to:
+                            <a href="mailto:#SESSION.COMPANY.email.support#?subject=ErrorID: #vErrorID#">#SESSION.COMPANY.email.support#</a>
+                        </p>
+                       
+                        <p>You may or may not receive an email asking about more information or status update of the issue, depending on what the error is.</p>
                         
-                        </cfswitch>
-                            
+                        <p>Please close this window or click on your browser's back button and try again.</p>
+                        
+                        <p>
+                            Thank you,<br />
+                            #SESSION.COMPANY.name#<br />
+                            <a href="#SESSION.COMPANY.siteURL#">#SESSION.COMPANY.siteURL#</a>
+                        </p>
+                        
                         <div id="main" class="clearfix"></div>
                         
                     </div><!-- hostApp -->

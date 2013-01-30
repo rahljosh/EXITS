@@ -245,13 +245,16 @@
  		
  		<cfif NOT APPLICATION.IsServerLocal>
 			
+            <cfscript>
+				// Set Error ID
+				vErrorID = "###APPLICATION.CFC.SESSION.getHostSession().ID#-#dateformat(now(),'mmddyyyy')#-#timeformat(now(),'hhmmss')#";
+        	</cfscript>
+			
             <!--- Production Environment - Email Error --->
             <cfmail to="#SESSION.COMPANY.EMAIL.errors#" from="#SESSION.COMPANY.EMAIL.support#" subject="host.exitsapplication.com : Error" type="HTML">
-                <p>
-                An error occurred on
-                #DateFormat( Now(), "mmm d, yyyy" )# at
-                #TimeFormat( Now(), "hh:mm TT" )#
-                </p>
+				<p>An error occurred on #DateFormat( Now(), "mmm d, yyyy" )# at #TimeFormat( Now(), "hh:mm TT" )#</p>
+                        
+                <p>Error ID = #vErrorID#</p>                
                 
                 <h3>Error:</h3>
                 <cfdump var="#ARGUMENTS.Exception#">
@@ -272,7 +275,7 @@
             
             <cfset GetPageContext().GetOut().ClearBuffer() />
             
-            <cflocation url="/error-message.cfm" addtoken="no" />
+            <cflocation url="/errorMessage.cfm" addtoken="no" />
         
         <cfelse>
 			
