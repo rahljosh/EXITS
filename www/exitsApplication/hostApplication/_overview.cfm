@@ -22,7 +22,6 @@
 	<!--- Get Host Family Information --->
     <cfquery name="qGetHostFamilyInfo" datasource="#APPLICATION.DSN.Source#">
         SELECT 
-            h.initialHostAppType,
             h.hostAppStatus,
             h.familylastname, 
             h.applicationStarted, 
@@ -283,37 +282,5 @@
             </td>
         </tr>
     </table>
-    
-    <cfswitch expression="#qGetHostFamilyInfo.initialHostAppType#">
-    
-        <cfcase value="1">
-            <p style="background-color:##efefef;padding:10px">This account is not set up for the online applciation system.</p> <br />
-        </cfcase>
-        
-        <cfcase value="2">
-            <p style="background-color:##efefef;padding:10px">
-                The next 2 pages collect all the information that is needed to complete the background check. 
-                A background check is required on anyone who is 17 years of age or older and living in the residence where the exchange student will be living.  
-                Some or all of this information may be completed.  If it is, please review the information and then provide signatures on the approriate pages before submitting.  
-            </p> <br />
-            
-            <div align="center">
-                <a href="index.cfm?section=contactInfo"><img src="images/buttons/getStarted.png" alt="continue" border="0" /></a>
-            </div> <br />
-            
-            <hr width="50%" align="center"/> <br /><br />
-            
-            <h3><u>Department Of State Regulations</u></h3>
-            <p>
-                &dagger;<strong><a href="http://ecfr.gpoaccess.gov/cgi/t/text/text-idx?c=ecfr&rgn=div8&view=text&node=22:1.0.1.7.37.2.1.6&idno=22" target="_blank" class=external>CFR Title 22, Part 62, Subpart B, &sect;62.25 (j)(7)</a></strong><br />
-                <em> 
-                    Verify that each member of the host family household 18 years of age and older, as well as any new adult member added to the household, 
-                    or any member of the host family household who will turn eighteen years of age during the exchange student's stay in that household, 
-                    has undergone a criminal background check (which must include a search of the Department of Justice's National Sex Offender Public Registry);
-                </em>               
-            </p>
-        </cfcase>
-    
-    </cfswitch>
     
 </cfoutput>
