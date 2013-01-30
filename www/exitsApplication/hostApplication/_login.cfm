@@ -27,7 +27,6 @@
             SELECT  
                 hostID, 
                 hostAppStatus,
-                initialHostAppType,
                 familylastname,
                 email
             FROM 
