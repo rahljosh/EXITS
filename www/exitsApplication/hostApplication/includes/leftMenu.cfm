@@ -37,7 +37,7 @@
                 <cfif APPLICATION.CFC.SESSION.getHostSession().isMenuBlocked AND APPLICATION.CFC.SESSION.getHostSession().isExitsLogin>
 
                     <tr onMouseOver="this.style.background='#APPLICATION.leftMenu.colorSection[vCurrentSection]#'" onMouseOut="this.style.background=''" <cfif URL.section EQ APPLICATION.leftMenu.linkSection[vCurrentSection]>bgcolor="#APPLICATION.leftMenu.colorSection[vCurrentSection]#"</cfif> >
-                        <td><a href="?section=#APPLICATION.leftMenu.linkSection[vCurrentSection]#" class="whtLinks">#APPLICATION.leftMenu.displaySection[vCurrentSection]#</a></td>
+                        <td><a href="/index.cfm?section=#APPLICATION.leftMenu.linkSection[vCurrentSection]#" class="whtLinks">#APPLICATION.leftMenu.displaySection[vCurrentSection]#</a></td>
                     </tr>	
                 
                 <!--- Menu Blocked - Display Overview, Checklist and Lougout --->
@@ -46,7 +46,7 @@
                     <cfloop list="#APPLICATION.leftMenu.allowedMenuList#" index="x">
                     
                         <tr onMouseOver="this.style.background='#APPLICATION.leftMenu.colorSection[x]#'" onMouseOut="this.style.background=''" <cfif URL.section EQ APPLICATION.leftMenu.linkSection[x]>bgcolor="#APPLICATION.leftMenu.colorSection[x]#"</cfif> >
-                            <td><a href="?section=#APPLICATION.leftMenu.linkSection[x]#" class="whtLinks">#APPLICATION.leftMenu.displaySection[x]#</a></td>
+                            <td><a href="/index.cfm?section=#APPLICATION.leftMenu.linkSection[x]#" class="whtLinks">#APPLICATION.leftMenu.displaySection[x]#</a></td>
                         </tr>	
 
                     </cfloop>
@@ -58,7 +58,7 @@
                     <cfloop from="1" to="#ArrayLen(APPLICATION.leftMenu.linkSection)#" index="x">
 
                         <tr onMouseOver="this.style.background='#APPLICATION.leftMenu.colorSection[x]#'" onMouseOut="this.style.background=''" <cfif URL.section EQ APPLICATION.leftMenu.linkSection[x]>bgcolor="#APPLICATION.leftMenu.colorSection[x]#"</cfif> >
-                            <td><a href="?section=#APPLICATION.leftMenu.linkSection[x]#" class="whtLinks">#APPLICATION.leftMenu.displaySection[x]#</a></td>
+                            <td><a href="/index.cfm?section=#APPLICATION.leftMenu.linkSection[x]#" class="whtLinks">#APPLICATION.leftMenu.displaySection[x]#</a></td>
                         </tr>	
                                 
                     </cfloop>

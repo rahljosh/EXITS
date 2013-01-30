@@ -260,7 +260,7 @@
 	<em><strong>PLEASE NOTE:</strong> The Department of State now requires a second home visit which will be conducted by someone other than your local Area Representative.</em> <br /><br />
     
 	Please provide at least <cfif vTotalFamilyCount EQ 1>six (6)&dagger;<cfelse>four (4)&dagger;</cfif> references. References can <strong>not</strong> 
-    be relatives and must have visited you <strong>in side</strong> your home. <br /><br />
+    be relatives and must have visited you <strong>inside</strong> your home. <br /><br />
 
     <table width="100%" cellspacing="0" cellpadding="4" class="border">
         <tr bgcolor="##deeaf3"> 
