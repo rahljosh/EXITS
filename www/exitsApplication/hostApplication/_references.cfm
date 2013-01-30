@@ -296,11 +296,6 @@
         
     </table> <br />
 	
-    <!--- Finished with this page --->
-    <div style="display:block; float:right; margin-top:5px;">
-        <a href="index.cfm?section=checkList">I am finished entering references.</a>
-    </div>
-    
     <h3>Add a Reference</h3>
     
 	<cfif NOT VAL(vRemainingReferences)>
@@ -365,6 +360,11 @@
         <table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
             <tr>
             	<td align="right">
+					<!--- Finished with this page --->
+                    <div style="margin:5px 25px 0 0; float:left;">
+						<a href="index.cfm?section=checkList">I am finished entering references.</a>
+                    </div>
+                
 					<cfif VAL(URL.refID)>
                     	<a href="?section=references"><img src="images/buttons/goBack_44.png" border="0"/></a> 
                         <input name="Submit" type="image" src="images/buttons/update_44.png" border="0">
