@@ -1363,7 +1363,7 @@
                                     </cfdefaultcase>
                                 </cfswitch>
                             <cfelse>
-                                ISE Detailed Statement : <a href="index.cfm?curdoc=intrep/invoice/statement_detailed" class="smlink" target="_top">View Statement</a><br />
+                                Detailed Statement : <a href="index.cfm?curdoc=intrep/invoice/statement_detailed" class="smlink" target="_top">View Statement</a><br />
                             </cfif>
                         </td>
                     </tr>
