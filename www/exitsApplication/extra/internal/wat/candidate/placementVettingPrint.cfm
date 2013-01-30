@@ -137,16 +137,43 @@
                             <td align="left" class="left">#qCandidatePlaceCompany.selfConfirmationName#</td>
                         </tr>
                         <tr>
-                            <td align="right" class="right">Authentication - Secretary of State Website:</td>
-                            <td align="left" class="left">#YesNoFormat(qCandidatePlaceCompany.authentication_secretaryOfState)#</td>
+                        	<td colspan="2" align="center"><b><u>Authentications</u></b></td>
                         </tr>
                         <tr>
-                            <td align="right" class="right">Authentication - Department of Labor:</td>
-                            <td align="left" class="left">#YesNoFormat(qCandidatePlaceCompany.authentication_departmentOfLabor)#</td>
-                        </tr>
-                        <tr>
-                            <td align="right" class="right">Authentication - Google Earth:</td>
-                            <td align="left" class="left">#YesNoFormat(qCandidatePlaceCompany.authentication_googleEarth)#</td>
+                        	<td colspan="2">
+                            	<table width="70%" align="center" style="border:1px solid black;">
+                                	<tr>
+                                        <td align="right" class="right" width="50%">Business License:</td>
+                                        <td align="left" class="left">#YesNoFormat(qCandidatePlaceCompany.authentication_secretaryOfState)#</td>
+                                    </tr>
+                                    <cfif VAL(qCandidatePlaceCompany.authentication_businessLicenseNotAvailable)>
+                                        <tr>
+                                            <td align="right" class="right">Incorporation:</td>
+                                            <td align="left" class="left">#YesNoFormat(qCandidatePlaceCompany.authentication_incorporation)#</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right" class="right">Certificate of Existence:</td>
+                                            <td align="left" class="left">#YesNoFormat(qCandidatePlaceCompany.authentication_certificateOfExistence)#</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right" class="right">Certificate of Reinstatement:</td>
+                                            <td align="left" class="left">#YesNoFormat(qCandidatePlaceCompany.authentication_certificateOfReinstatement)#</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="right" class="right">Department of State:</td>
+                                            <td align="left" class="left">#YesNoFormat(qCandidatePlaceCompany.authentication_departmentOfState)#</td>
+                                        </tr>
+                                    </cfif>
+                                    <tr>
+                                        <td align="right" class="right">Department of Labor:</td>
+                                        <td align="left" class="left">#YesNoFormat(qCandidatePlaceCompany.authentication_departmentOfLabor)#</td>
+                                    </tr>
+                                    <tr>
+                                        <td align="right" class="right">Google Earth:</td>
+                                        <td align="left" class="left">#YesNoFormat(qCandidatePlaceCompany.authentication_googleEarth)#</td>
+                                    </tr>
+                                </table>
+                            </td>
                         </tr>
                         <tr>
                             <td align="right" class="right">EIN:</td>

@@ -796,12 +796,12 @@
                                         <p><a href="candidate/supportLetter.cfm?uniqueid=#qGetCandidate.uniqueid#" class="style4" target="_blank">[ Support Letter ]</a></p>
 									</cfif>
                                     
-                                </td>
-                            </tr>
+                            	</td>
+                      		</tr>
 						</table>
 						
                     </td>
-                </tr>													
+                </tr>
             </table>
             <!--- END OF TOP SECTION --->
             
@@ -1251,7 +1251,7 @@
                                                         </td>
                                                     </tr>
                                					</table>
-                                                                
+
                                        		</td>
                                       	</tr>
                                                                               
@@ -1259,7 +1259,7 @@
                    
                                 </td>
                             </tr>
-                        </table> 
+                        </table>
 
 						<br />
                         
