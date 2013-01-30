@@ -314,6 +314,7 @@
                     INSERT INTO 
                         smg_hosts 
                     (
+                        uniqueID,
                         familyLastName, 
                         fatherLastName, 
                         fatherFirstName, 
@@ -356,6 +357,7 @@
                     )
                     VALUES 
                     (
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#CreateUUID()#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.familyLastName)#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.fatherLastName)#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.fatherFirstName)#">,
