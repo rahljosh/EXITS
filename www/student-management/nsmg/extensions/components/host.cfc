@@ -772,7 +772,7 @@
         <cfargument name="hostID" default="" hint="HostID is not required">
         <cfargument name="statusID" default="" hint="statusID is not required">
 			
-            <cfif VAL(ARGUMENTS.hostID) AND listFind("1,2,3,4,5,6,7,8,9,99", ARGUMENTS.statusID)>
+            <cfif VAL(ARGUMENTS.hostID) AND listFind("0,1,2,3,4,5,6,7,8,9", ARGUMENTS.statusID)>
             
                 <cfquery datasource="#APPLICATION.DSN#">
                     UPDATE
