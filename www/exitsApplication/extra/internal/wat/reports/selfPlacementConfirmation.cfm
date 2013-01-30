@@ -460,28 +460,15 @@
                                	</cfif>
                           	</td>
                             <td class="style1">
-                            	<cfif CLIENT.userType NEQ 8>
-									<cfif NOT VAL(qTotalPerAgent.authentication_secretaryOfState)>-Business License<br /></cfif>
-                                    <cfif VAL(qTotalPerAgent.authentication_businessLicenseNotAvailable)>
-										<cfif NOT VAL(qTotalPerAgent.authentication_incorporation)>-Incorporation<br /></cfif>
-                                        <cfif NOT VAL(qTotalPerAgent.authentication_certificateOfExistence)>-Certificate of Existence<br /></cfif>
-                                        <cfif NOT VAL(qTotalPerAgent.authentication_certificateOfReinstatement)>-Certificate of Reinstatement<br /></cfif>
-                                        <cfif NOT VAL(qTotalPerAgent.authentication_departmentOfState)>-Department of State<br /></cfif>
-                                 	</cfif>
-                                    <cfif NOT VAL(qTotalPerAgent.authentication_departmentOfLabor)>-Department of Labor<br /></cfif>
-                                    <cfif NOT VAL(qTotalPerAgent.authentication_googleEarth)>-Google Earth<br /></cfif>
-                              	<cfelse>
-                                	<cfif ( ( VAL(qTotalPerAgent.authentication_businessLicenseNotAvailable) 
-										AND  VAL(qTotalPerAgent.authentication_incorporation) 
-										AND VAL(qTotalPerAgent.authentication_certificateOfExistence) )
-										OR VAL(qTotalPerAgent.authentication_secretaryOfState) )
-										AND VAL(qTotalPerAgent.authentication_departmentOfLabor) 
-										AND VAL(qTotalPerAgent.authentication_googleEarth)>
-                                    	No
-                                   	<cfelse>
-                                    	Yes
-                                    </cfif>
-								</cfif>
+								<cfif NOT VAL(qTotalPerAgent.authentication_secretaryOfState)>-Business License<br /></cfif>
+                                <cfif VAL(qTotalPerAgent.authentication_businessLicenseNotAvailable)>
+                                    <cfif NOT VAL(qTotalPerAgent.authentication_incorporation)>-Incorporation<br /></cfif>
+                                    <cfif NOT VAL(qTotalPerAgent.authentication_certificateOfExistence)>-Certificate of Existence<br /></cfif>
+                                    <cfif NOT VAL(qTotalPerAgent.authentication_certificateOfReinstatement)>-Certificate of Reinstatement<br /></cfif>
+                                    <cfif NOT VAL(qTotalPerAgent.authentication_departmentOfState)>-Department of State<br /></cfif>
+                                </cfif>
+                                <cfif NOT VAL(qTotalPerAgent.authentication_departmentOfLabor)>-Department of Labor<br /></cfif>
+                                <cfif NOT VAL(qTotalPerAgent.authentication_googleEarth)>-Google Earth<br /></cfif>
                             </td>
                             <td class="style1">
                             	<cfif CLIENT.userType NEQ 8>
