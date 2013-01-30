@@ -34,6 +34,25 @@
 		qGetCategoryList = APPLICATION.CFC.DOCUMENT.getDocumentType(documentGroup="familyAlbum");
 	
     	vUploadedImageList = ValueList(qGetUploadedImages.documentTypeID);
+		
+		// Required Images
+		stUploadInfo = StructNew();
+		stUploadInfo.totalUpload = 0;
+		stUploadInfo.totalRequired = 6;
+		stUploadInfo.remainingImages = 6;
+		stUploadInfo.categoryList = "";
+		
+		
+		// Loop through uploaded images to check how many of the required images were uploaded
+		for ( i=1; i LTE qGetCategoryList.recordCount; i++ ) {
+			if ( ListFind(vUploadedImageList, qGetCategoryList.ID[i]) ) {
+				stUploadInfo.totalUpload++;				
+			} else if ( qGetCategoryList.ID[i] NEQ 26 ) {
+				stUploadInfo.categoryList = ListAppend(stUploadInfo.categoryList, qGetCategoryList.name[i], ",");	
+			} 
+		}
+		
+		stUploadInfo.remainingImages = stUploadInfo.totalRequired - stUploadInfo.totalUpload;
     </cfscript>
 
 	<!--- Delete Image --->
@@ -157,11 +176,17 @@
     and family and living areas with a brief description of each. <br /><br />
     
     <h3>Upload Single Pictures<br /></h3>
-    
+
     <font size=-2><em>Once you upload a picture, you will be able to add a description for each picture.</em></font><br /><br />
+
+	<cfif NOT VAL(stUploadInfo.remainingImages)>
+        No additional images are required, feel free to upload more.
+    <cfelseif stUploadInfo.remainingImages EQ 6>
+		At least 6 images are required, one for each of the following categories: <cfloop list="#stUploadInfo.categoryList#" index="i"><cfif i EQ ListLast(stUploadInfo.categoryList)> and <cfelseif i NEQ ListFirst(stUploadInfo.categoryList)>, </cfif>#i#</cfloop> .
+	<cfelse>
+        #stUploadInfo.remainingImages# additional images are required, one for each of the following categories: <cfloop list="#stUploadInfo.categoryList#" index="i"><cfif i EQ ListLast(stUploadInfo.categoryList)> and <cfelseif i NEQ ListFirst(stUploadInfo.categoryList)>, </cfif>#i#</cfloop> .
+    </cfif> <br /><br />
     
-    <span class="required">* Required fields</span>
-	
     <!--- Upload Form --->        
 	<form method="post" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" enctype="multipart/form-data">  
     	<input type="hidden" name="action" value="uploadFile" />
@@ -193,7 +218,7 @@
 		</table>
 	</form> <br />
     
-	*At least one picture from this catagory is required. More than one photo may be needed to clearly depict each room. <br /><br />
+    <span class="required">*At least one picture from this catagory is required. More than one photo may be needed to clearly depict each room.</span> <br /><br />
 
     <h3>Your Photo Album</h3>
     
