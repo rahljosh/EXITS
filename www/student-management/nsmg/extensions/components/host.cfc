@@ -1277,7 +1277,7 @@
 				
 				vEmailTo = qGetHostInfo.email;
 				vSetEmailTemplate = "welcomeEmail";
-				stReturnMessage.pageMessages = "Host Family Application has been created, an email has been sent to the host family. Thank you.";
+				stReturnMessage.pageMessages = "E-Host Application Created. A notification has been sent to the host family. Thank you.";
 				
 			} else {
 			

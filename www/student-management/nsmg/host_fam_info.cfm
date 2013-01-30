@@ -12,6 +12,9 @@
 <!--- Kill extra output --->
 <cfsilent>
 
+	<!--- Import CustomTag --->
+    <cfimport taglib="extensions/customTags/gui/" prefix="gui" />	
+
 	<cfajaxproxy cfc="extensions.components.cbc" jsclassname="CBC">
 
     <!--- Param URL Variables --->
@@ -390,14 +393,30 @@ div.scroll2 {
 <Cfif family_info.motherfirstname is not ''>
 	<cfset mother = 1>
 </Cfif>
-<cfset totalfam = #mother# + #father# + #kidsAtHome.recordcount#>
+<cfset totalfam = mother + father + kidsAtHome.recordcount>
 
-<cfif totalfam eq 1>
-<div class="alert">
-<h1>Single Person Placement - additional screening will be required. </h1>
-<em>Starting with Aug 2011 Students - Single Person Placement Authorization Form and 2 additional references</em> </div>
-<br />
-</cfif>
+
+	<!--- Page Messages --->
+    <gui:displayPageMessages 
+        pageMessages="#SESSION.pageMessages.GetCollection()#"
+        messageType="divOnly"
+        width="98%"
+        />
+    
+    <!--- Form Errors --->
+    <gui:displayFormErrors 
+        formErrors="#SESSION.formErrors.GetCollection()#"
+        messageType="divOnly"
+        width="98%"
+        />
+        
+	<cfif totalfam eq 1>
+        <div class="alert">
+        <h1>Single Person Placement - additional screening will be required. </h1>
+        <em>Starting with Aug 2011 Students - Single Person Placement Authorization Form and 2 additional references</em> </div>
+        <br />
+    </cfif>
+        
 
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
 <tr><td width="60%" align="left" valign="top">
@@ -422,7 +441,14 @@ div.scroll2 {
 		<tr><td>City:</td><td>#family_info.city#</td></tr>
 		<tr><td>State:</td><td>#family_info.state#</td><td>ZIP:</td><td>#family_info.zip#</td></tr>
 		<tr><td>Phone:</td><td>#family_info.phone#</td></tr>
-		<tr><td>Email:</td><td><a href="mailto:#family_info.email#">#family_info.email#</a></td>
+		<tr>
+        	<td>Email:</td>
+        	<td>
+            	<a href="mailto:#family_info.email#">#family_info.email#</a>
+				<cfif VAL(family_info.hostAppStatus)>
+                    <br /><span class="required">*eHost - Online Application</span>
+                </cfif>                
+			</td>
         <td>Password:</td><td><cfif family_info.password is not ''>#family_info.password#<cfelse>No Password on File</cfif></td>
         </tr>
 		<tr><th colspan="2" align="left">Father's Information</th></tr>
