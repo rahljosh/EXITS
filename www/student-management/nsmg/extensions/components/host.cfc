@@ -1567,8 +1567,8 @@
                         </p>
                         
                         <p>
-                            <strong>Email:</strong> #ARGUMENTS.username# <br />
-                            <strong>Password:</strong> #ARGUMENTS.password# <br />
+                            <strong>Email:</strong> #ARGUMENTS.username#<br />
+                            <strong>Password:</strong> #ARGUMENTS.password#<br />
                         </p>
                         
                         <p> 

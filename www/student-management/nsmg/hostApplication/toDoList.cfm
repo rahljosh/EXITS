@@ -34,7 +34,7 @@
 		
 		// Get List of Host Family Applications
 		qGetHostInfo = APPLICATION.CFC.HOST.getApplicationList(hostID=FORM.hostID);	
-
+		
 		// Get Application Approval History
 		qGetApprovalHistory = APPLICATION.CFC.HOST.getApplicationApprovalHistory(hostID=qGetHostInfo.hostID, whoViews=CLIENT.userType);
 
