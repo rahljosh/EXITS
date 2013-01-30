@@ -53,7 +53,8 @@
                     UPDATE 
                         smg_hosts
                     SET 
-                        hostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+                        hostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="8">,
+                        applicationStarted = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
                     WHERE 
                         hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qLoginHostFamily.hostID)#">
                 </cfquery>
