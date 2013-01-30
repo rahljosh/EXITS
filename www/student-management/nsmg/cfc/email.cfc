@@ -92,7 +92,7 @@
                 <!--- Display Email Recipients when sending from development environment --->
                 <cfif APPLICATION.isServerLocal>
                     <div style="color:##F00; display:block; margin:10px 0px 10px 0px;">
-                    	****************************************** DEVELOPMENT SITE ******************************************
+                    	**************************** DEVELOPMENT SERVER ****************************
                     </div>
                     
                     <p>
@@ -105,7 +105,7 @@
                     #emailIntendedTo#
                     
                     <div style="color:##F00; display:block; margin:10px 0px 10px 0px;">
-                    	****************************************** DEVELOPMENT SITE ******************************************
+                    	**************************** DEVELOPMENT SERVER ****************************
                     </div>
                 </cfif>
                 

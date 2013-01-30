@@ -1,19 +1,19 @@
 <cfswitch expression="#CLIENT.companyID#">
 	
     <cfcase value="1,2,3,4,12,13">
-    	<cfset companycolor='0054A0'>
+    	<cfset vCompanyColor='0054A0'>
     </cfcase>
 
     <cfcase value="10">
-    	<cfset companycolor='98012E'>
+    	<cfset vCompanyColor='98012E'>
     </cfcase>
 
     <cfcase value="11">
-    	<cfset companycolor='00b3d9'>
+    	<cfset vCompanyColor='00b3d9'>
     </cfcase>
 
     <cfdefaultcase>
-    	<cfset companycolor='0054A0'> 
+    	<cfset vCompanyColor='0054A0'> 
     </cfdefaultcase>
 
 </cfswitch>
@@ -28,47 +28,32 @@
 	.sectionBottomDivider 	{border-bottom: 1px solid #BB9E66; background: #FAF7F1;line-height:1px;}
 	.sectionTopDivider 		{border-top: 1px solid #BB9E66; background: #FAF7F1;line-height:1px;}
 	.sectionSubHead			{font-size:11px;font-weight:bold;}
-	.thin-border			{border: 4px solid ##000000;}
-	.thin-border-bottom		{border-bottom: 1px solid #000000;}
-	.wrapper {
-			padding: 10px;
-			width: 750px;
-			margin-right: auto;
-			margin-left: auto;
-			border: medium solid #999;
-			font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-			font-size: 12px;
-		}
-		.wrapper .grey {
-			background-color: #EFEFEF;
-			padding: 10px;
-		}
-		.id {
-			width: 225px;
-			margin-right: auto;
-			margin-left: auto;
-			padding: 0px;
-		}
+	.thin-border			{border: 1px solid ##vCompanyColor#;}
+	.thin-border-bottom		{border-bottom: 1px solid ##vCompanyColor#;}
+	.wrapper 				{padding: 10px; width: 750px; margin-right: auto; margin-left: auto; border: medium solid #999; font-family: "Trebuchet MS", Arial, Helvetica, sans-serif; font-size: 12px; }
+	.wrapper .grey 			{background-color: #EFEFEF; padding: 10px; }
+	.id 					{width: 225px; margin-right: auto; margin-left: auto; padding: 0px; }
 	-->
 </style>
 
 <cfoutput>
-<div class="thin-border">
-<table background="#CLIENT.exits_url#/nsmg/pics/email_textured_background.png" width="98%">
-	<tr>
-     	<td width="94"><img src="#CLIENT.exits_url#/nsmg/pics/logos/#client.companyid#_header_logo.png"></td>
-		<cfif ListFind("1,2,3,4,5,12,13", CLIENT.companyID)>
-            <td><strong><font size=+2>INTERNATIONAL <font color="#companycolor#">STUDENT EXCHANGE</font></font></strong></td>
-        <cfelse>
-            <td><strong><font size=+2>#CLIENT.companyname#</font></strong></td>
-        </cfif>
-    </tr>	
-	<tr>
-     	<td colspan="2"><img src="#CLIENT.exits_url#/nsmg/pics/logos/#CLIENT.companyID#_px.png" height="12" width="100%"></td>
-	</tr>
-</table>
 
-<Table width="98%">
-	<Tr>
-    	<td>
- </cfoutput>
+<div class="thin-border">
+    <table background="#CLIENT.exits_url#/nsmg/pics/email_textured_background.png" width="90%">
+        <tr>
+            <td width="94"><img src="#CLIENT.exits_url#/nsmg/pics/logos/#CLIENT.companyid#_header_logo.png"></td>
+            <cfif ListFind("1,2,3,4,5,12,13", CLIENT.companyID)>
+                <td><strong><font size=+2>INTERNATIONAL <span color="#vCompanyColor#">STUDENT EXCHANGE</span></font></strong></td>
+            <cfelse>
+                <td><strong><font size=+2>#CLIENT.companyname#</font></strong></td>
+            </cfif>
+        </tr>	
+        <tr>
+            <td colspan="2"><img src="#CLIENT.exits_url#/nsmg/pics/logos/#CLIENT.companyID#_px.png" height="12" width="100%"></td>
+        </tr>
+    </table>
+    
+    <table width="90%">
+        <tr>
+            <td>
+</cfoutput>

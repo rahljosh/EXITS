@@ -1241,7 +1241,7 @@
     
 	<cffunction name="submitApplication" access="public" returntype="struct" output="false" hint="Approves a Host Family Application">
         <cfargument name="hostID" default="" hint="hostID">
-        <cfargument name="action" default="" hint="approve/deny">
+        <cfargument name="action" default="" hint="approve/deny/newApplication">
         <cfargument name="issueList" default="" hint="Lists issues when denying an application">
         <cfargument name="userType" default="#CLIENT.userType#" hint="userType">
 
@@ -1252,7 +1252,7 @@
 			var stReturnMessage.formErrors = "";
 
 			// Make sure we have correct data
-			if ( NOT ListFind("approved,denied", ARGUMENTS.action) ) {
+			if ( NOT ListFind("approved,denied,newApplication", ARGUMENTS.action) ) {
 				//throw("The action passed is not recognized, please try again", "invalidAction", "This argument must receive an approved/denied variable", "customHostAction1"); 	
 				stReturnMessage.formErrors = "The action value passed is not recognized, it must be either approved or denied. Please try again";
 				abort;
@@ -1266,175 +1266,192 @@
 			var vSetEmailTemplate = "";
 			
 			// Get Host Family Info - Includes AR, RA, RD and Facilitator information
-			var qGetHostInfo = getApplicationList(hostID=FORM.hostID);	
+			var qGetHostInfo = getApplicationList(hostID=ARGUMENTS.hostID);	
 			
 			// Get Current User
 			var vSubmittedBy = SESSION.USER.fullName & " (##" & SESSION.USER.ID & ")";
 			var vSubmittedByEmail = SESSION.USER.email;
 			
-			// Set Next Status Level
-            switch ( ARGUMENTS.usertype ) {
-                
-                // Area Representative
-                case 7: 
-                    
-					// Approved
-					if ( ARGUMENTS.action EQ 'approved' ) {
+			// New Application - Welcome Email
+			if ( ARGUMENTS.action EQ 'newApplication' ) {
+				
+				vEmailTo = qGetHostInfo.email;
+				vSetEmailTemplate = "welcomeEmail";
+				stReturnMessage.pageMessages = "Host Family Application has been created, an email has been sent to the host family. Thank you.";
+				
+			} else {
+			
+				// Set Next Status Level
+				switch ( ARGUMENTS.usertype ) {
+					
+					// Area Representative
+					case 7: 
 						
-						// Submit to RA - AR and RA must not be the same
-						if ( VAL(qGetHostInfo.regionalAdvisorID) AND qGetHostInfo.regionalAdvisorID NEQ qGetHostInfo.areaRepID ) {
-							vNextStatus = 6;	
-							vEmailTo = qGetHostInfo.regionalAdvisorEmail;
-							vSetEmailTemplate = "submitToRegionalAdvisor";
-							stReturnMessage.pageMessages = "Application has been submitted to your Regional Advisor #qGetHostInfo.regionalAdvisor# for review. Thank you.";
-						// Submit to RM - AR and RM must not be the same
-						} else if ( VAL(qGetHostInfo.regionalManagerID) AND qGetHostInfo.regionalManagerID NEQ qGetHostInfo.areaRepID ) {
-							vNextStatus = 5;
-							vEmailTo = qGetHostInfo.regionalManagerEmail;
-							vSetEmailTemplate = "submitToRegionalManager";
-							stReturnMessage.pageMessages = "Application has been submitted to your Regional Manager #qGetHostInfo.regionalManager# for review. Thank you.";
-						// Submit to Headquarters
-					    } else {
+						// Approved
+						if ( ARGUMENTS.action EQ 'approved' ) {
+							
+							// Submit to RA - AR and RA must not be the same
+							if ( VAL(qGetHostInfo.regionalAdvisorID) AND qGetHostInfo.regionalAdvisorID NEQ qGetHostInfo.areaRepID ) {
+								vNextStatus = 6;	
+								vEmailTo = qGetHostInfo.regionalAdvisorEmail;
+								vSetEmailTemplate = "submitToRegionalAdvisor";
+								stReturnMessage.pageMessages = "Application has been submitted to your Regional Advisor #qGetHostInfo.regionalAdvisor# for review. Thank you.";
+							// Submit to RM - AR and RM must not be the same
+							} else if ( VAL(qGetHostInfo.regionalManagerID) AND qGetHostInfo.regionalManagerID NEQ qGetHostInfo.areaRepID ) {
+								vNextStatus = 5;
+								vEmailTo = qGetHostInfo.regionalManagerEmail;
+								vSetEmailTemplate = "submitToRegionalManager";
+								stReturnMessage.pageMessages = "Application has been submitted to your Regional Manager #qGetHostInfo.regionalManager# for review. Thank you.";
+							// Submit to Headquarters
+							} else {
+								vNextStatus = 4;
+								vEmailTo = qGetHostInfo.facilitatorEmail;
+								vSetEmailTemplate = "submitToFacilitator";
+								stReturnMessage.pageMessages = "Application has been submitted to your Region Facilitator #qGetHostInfo.facilitator# for review. Thank you.";
+							}
+							
+						// Denied
+						} else {
+							// Reject to Host Family
+							vNextStatus = 8;
+							vEmailTo = qGetHostInfo.email;
+							vSetEmailTemplate = "denyToHostFamily";
+							stReturnMessage.pageMessages = "Application has been sent back to Host Family as you have suggested some changes. Thank you.";
+						}
+						
+					break;
+				
+					// Regional Advisor
+					case 6: 
+					
+						// Approved
+						if ( ARGUMENTS.action EQ 'approved' ) {
+							
+							// Submit to RM - RA and RM must not be the same
+							if ( VAL(qGetHostInfo.regionalManagerID) AND qGetHostInfo.regionalManagerID NEQ qGetHostInfo.regionalAdvisorID ) {
+								vNextStatus = 5;
+								vEmailTo = qGetHostInfo.regionalManagerEmail;
+								vSetEmailTemplate = "submitToRegionalManager";
+								stReturnMessage.pageMessages = "Application has been submitted to your Regional Manager #qGetHostInfo.regionalManager# for review. Thank you.";
+							// Submit to Headquarters
+							} else {
+								vNextStatus = 4;
+								vEmailTo = qGetHostInfo.facilitatorEmail;
+								vSetEmailTemplate = "submitToFacilitator";
+								stReturnMessage.pageMessages = "Application has been submitted to your Region Facilitator #qGetHostInfo.facilitator# for review. Thank you.";							
+							}						
+						
+						// Denied
+						} else {
+							
+							// Reject to AR - RA and AR must not be the same
+							if ( VAL(qGetHostInfo.regionalAdvisorID) AND ( qGetHostInfo.regionalAdvisorID NEQ qGetHostInfo.areaRepID ) ) {
+								// Reject to AR
+								vNextStatus = 7;
+								vEmailTo = qGetHostInfo.areaRepresentativeEmail;
+								vSetEmailTemplate = "denyToAreaRepresentative";
+								stReturnMessage.pageMessages = "Application has been sent back to Area Representative #qGetHostInfo.areaRepresentative# as you have suggested some changes. Thank you.";
+							} else {
+								// Reject to Host Family
+								vNextStatus = 8;
+								vEmailTo = qGetHostInfo.email;
+								vSetEmailTemplate = "denyToHostFamily";
+								stReturnMessage.pageMessages = "Application has been sent back to Host Family as you have suggested some changes. Thank you.";
+							}
+								
+						}
+						
+					break;
+					
+					// Regional Manager
+					case 5:
+					
+						// Approved
+						if ( ARGUMENTS.action EQ 'approved' ) {
+							// Submit to Headquarters
 							vNextStatus = 4;
 							vEmailTo = qGetHostInfo.facilitatorEmail;
 							vSetEmailTemplate = "submitToFacilitator";
 							stReturnMessage.pageMessages = "Application has been submitted to your Region Facilitator #qGetHostInfo.facilitator# for review. Thank you.";
-						}
-						
-					// Denied
-					} else {
-						// Reject to Host Family
-						vNextStatus = 8;
-						vEmailTo = qGetHostInfo.email;
-						vSetEmailTemplate = "denyToHostFamily";
-						stReturnMessage.pageMessages = "Application has been sent back to Host Family as you have suggested some changes. Thank you.";
-					}
-					
-                break;
-			
-                // Regional Advisor
-                case 6: 
-				
-					// Approved
-					if ( ARGUMENTS.action EQ 'approved' ) {
-						
-						// Submit to RM - RA and RM must not be the same
-						if ( VAL(qGetHostInfo.regionalManagerID) AND qGetHostInfo.regionalManagerID NEQ qGetHostInfo.regionalAdvisorID ) {
-							vNextStatus = 5;
-							vEmailTo = qGetHostInfo.regionalManagerEmail;
-							vSetEmailTemplate = "submitToRegionalManager";
-							stReturnMessage.pageMessages = "Application has been submitted to your Regional Manager #qGetHostInfo.regionalManager# for review. Thank you.";
-						// Submit to Headquarters
+						// Denied
 						} else {
-							vNextStatus = 4;
-							vEmailTo = qGetHostInfo.facilitatorEmail;
-							vSetEmailTemplate = "submitToFacilitator";
-							stReturnMessage.pageMessages = "Application has been submitted to your Region Facilitator #qGetHostInfo.facilitator# for review. Thank you.";							
-						}						
-					
-					// Denied
-					} else {
-						
-						// Reject to AR - RA and AR must not be the same
-						if ( VAL(qGetHostInfo.regionalAdvisorID) AND ( qGetHostInfo.regionalAdvisorID NEQ qGetHostInfo.areaRepID ) ) {
-							// Reject to AR
-							vNextStatus = 7;
-							vEmailTo = qGetHostInfo.areaRepresentativeEmail;
-							vSetEmailTemplate = "denyToAreaRepresentative";
-							stReturnMessage.pageMessages = "Application has been sent back to Area Representative #qGetHostInfo.areaRepresentative# as you have suggested some changes. Thank you.";
-						} else {
-							// Reject to Host Family
-							vNextStatus = 8;
-							vEmailTo = qGetHostInfo.email;
-							vSetEmailTemplate = "denyToHostFamily";
-							stReturnMessage.pageMessages = "Application has been sent back to Host Family as you have suggested some changes. Thank you.";
-						}
 							
-					}
-					
-				break;
-                
-                // Regional Manager
-                case 5:
-				
-					// Approved
-					if ( ARGUMENTS.action EQ 'approved' ) {
-						// Submit to Headquarters
-						vNextStatus = 4;
-						vEmailTo = qGetHostInfo.facilitatorEmail;
-						vSetEmailTemplate = "submitToFacilitator";
-						stReturnMessage.pageMessages = "Application has been submitted to your Region Facilitator #qGetHostInfo.facilitator# for review. Thank you.";
-					// Denied
-					} else {
-						
-						// Reject to RA - RM and RA must not be the same
-						if ( VAL(qGetHostInfo.regionalAdvisorID) AND qGetHostInfo.regionalAdvisorID NEQ qGetHostInfo.regionalManagerID ) {
-							vNextStatus = 6;
-							vEmailTo = qGetHostInfo.regionalAdvisorEmail;
-							vSetEmailTemplate = "denyToRegionalAdvisor";
-							stReturnMessage.pageMessages = "Application has been sent back to Regional Advisor #qGetHostInfo.regionalAdvisor# as you have suggested some changes. Thank you.";
-						// Reject to AR	- RM and AR must not be the same
-						} else if ( VAL(qGetHostInfo.areaRepID) AND qGetHostInfo.areaRepID NEQ qGetHostInfo.regionalManagerID ) {
-							vNextStatus = 7;
-							vEmailTo = qGetHostInfo.areaRepresentativeEmail;
-							vSetEmailTemplate = "denyToAreaRepresentative";
-							stReturnMessage.pageMessages = "Application has been sent back to Area Representative #qGetHostInfo.areaRepresentative# as you have suggested some changes. Thank you.";
-						// Reject to HF
-						} else {
-							// Reject to Host Family
-							vNextStatus = 8;
-							vEmailTo = qGetHostInfo.email;
-							vSetEmailTemplate = "denyToHostFamily";
-							stReturnMessage.pageMessages = "Application has been sent back to Host Family as you have suggested some changes. Thank you.";
+							// Reject to RA - RM and RA must not be the same
+							if ( VAL(qGetHostInfo.regionalAdvisorID) AND qGetHostInfo.regionalAdvisorID NEQ qGetHostInfo.regionalManagerID ) {
+								vNextStatus = 6;
+								vEmailTo = qGetHostInfo.regionalAdvisorEmail;
+								vSetEmailTemplate = "denyToRegionalAdvisor";
+								stReturnMessage.pageMessages = "Application has been sent back to Regional Advisor #qGetHostInfo.regionalAdvisor# as you have suggested some changes. Thank you.";
+							// Reject to AR	- RM and AR must not be the same
+							} else if ( VAL(qGetHostInfo.areaRepID) AND qGetHostInfo.areaRepID NEQ qGetHostInfo.regionalManagerID ) {
+								vNextStatus = 7;
+								vEmailTo = qGetHostInfo.areaRepresentativeEmail;
+								vSetEmailTemplate = "denyToAreaRepresentative";
+								stReturnMessage.pageMessages = "Application has been sent back to Area Representative #qGetHostInfo.areaRepresentative# as you have suggested some changes. Thank you.";
+							// Reject to HF
+							} else {
+								// Reject to Host Family
+								vNextStatus = 8;
+								vEmailTo = qGetHostInfo.email;
+								vSetEmailTemplate = "denyToHostFamily";
+								stReturnMessage.pageMessages = "Application has been sent back to Host Family as you have suggested some changes. Thank you.";
+							}
+							
 						}
 						
-					}
+					break;
 					
-				break;
-                
-                // Office Users
-                case 4: 
-                case 3:
-                case 2:
-                case 1: 
-
-					// Approved
-					if ( ARGUMENTS.action EQ 'approved' ) {
-						// Approve Application
-						vNextStatus = 3;
-						vEmailTo = qGetHostInfo.regionalManagerEmail;
-						vSetEmailTemplate = "applicationApproved";
-						stReturnMessage.pageMessages = "Application has been approved. Thank you.";
-						
-						// Check if there is a student assigned to this host family and copy data to placement management
-						setPlacementManagementPaperwork(hostID=ARGUMENTS.hostID,dateApproved=now());
-						
-					// Denied
-					} else {
-						// Reject to RM
-						vNextStatus = 5;
-						vEmailTo = qGetHostInfo.areaRepresentativeEmail;
-						vSetEmailTemplate = "denyToRegionalManager";
-						stReturnMessage.pageMessages = "Application has been sent back to Regional Manager #qGetHostInfo.regionalManager# as you have suggested some changes. Thank you.";
-					}
-
-				break;
-
-			}
+					// Office Users
+					case 4: 
+					case 3:
+					case 2:
+					case 1: 
+	
+						// Approved
+						if ( ARGUMENTS.action EQ 'approved' ) {
+							// Approve Application
+							vNextStatus = 3;
+							vEmailTo = qGetHostInfo.regionalManagerEmail;
+							vSetEmailTemplate = "applicationApproved";
+							stReturnMessage.pageMessages = "Application has been approved. Thank you.";
+							
+							// Check if there is a student assigned to this host family and copy data to placement management
+							setPlacementManagementPaperwork(hostID=ARGUMENTS.hostID,dateApproved=now());
+							
+						// Denied
+						} else {
+							// Reject to RM
+							vNextStatus = 5;
+							vEmailTo = qGetHostInfo.areaRepresentativeEmail;
+							vSetEmailTemplate = "denyToRegionalManager";
+							stReturnMessage.pageMessages = "Application has been sent back to Regional Manager #qGetHostInfo.regionalManager# as you have suggested some changes. Thank you.";
+						}
+	
+					break;
+	
+				}
 				
+				// Update Host Status According to usertype approving/denying the application
+				updateApplicationStatus(hostID=ARGUMENTS.hostID,statusID=vNextStatus);
+		
+			} // New Application - Welcome Email
+			
 			// Get Email Template
 			vGetEmailTemplate = getApplicationEmailTemplate(
 				applicatonStatus = qGetHostInfo.hostAppStatus,
 				issueList = ARGUMENTS.issueList,												
 				emailTemplate = vSetEmailTemplate,
-				submittedBy = vsubmittedBy,
+				submittedBy = vSubmittedBy,
 				hostFamily = qGetHostInfo.displayHostFamily,
+				hostFamilyLastName = qGetHostInfo.familyLastName,
 				areaRepresentative = qGetHostInfo.areaRepresentative,
 				regionalAdvisor = qGetHostInfo.regionalAdvisor,
 				regionalManager = qGetHostInfo.regionalManager,
-				facilitator = qGetHostInfo.facilitator
+				facilitator = qGetHostInfo.facilitator,
+				username = qGetHostInfo.email,
+				password = qGetHostInfo.password
 			);
-			
+						
 			// Try to send out email
 			try {
 			
@@ -1453,9 +1470,6 @@
 				stReturnMessage.formErrors = "There was a problem sending out an email notification";
 			}
 
-			// Update Host Status According to usertype approving/denying the application
-			updateApplicationStatus(hostID=ARGUMENTS.hostID,statusID=vNextStatus);
-
 			return stReturnMessage;
 		</cfscript>
         
@@ -1464,15 +1478,18 @@
 
 	<cffunction name="getApplicationEmailTemplate" access="public" returntype="struct" output="false" hint="Retuns templates based on action">
         <cfargument name="applicationStatus" default="" hint="Current status so we can set the link">
-        <cfargument name="issueList" default="" hint="Not required">
-        <cfargument name="emailTemplate" default="" hint="Display Name - Not required">
-        <cfargument name="submittedBy" default="" hint="Display Name - Not required">
-        <cfargument name="hostFamily" default="" hint="Display Name - Not required">
-        <cfargument name="areaRepresentative" default="" hint="Display Name - Not required">
-        <cfargument name="regionalAdvisor" default="" hint="Display Name - Not required">
-        <cfargument name="regionalManager" default="" hint="Display Name - Not required">
-        <cfargument name="facilitator" default="" hint="Display Name - Not required">
-		
+        <cfargument name="issueList" default="" hint="issueList - Not required">
+        <cfargument name="emailTemplate" default="" hint="emailTemplate - Not required">
+        <cfargument name="submittedBy" default="" hint="submittedBy - Not required">
+        <cfargument name="hostFamily" default="" hint="hostFamily - Not required">
+        <cfargument name="hostFamilyLastName" default="" hint="hostFamilyLastName - Not required">
+        <cfargument name="areaRepresentative" default="" hint="areaRepresentative - Not required">
+        <cfargument name="regionalAdvisor" default="" hint="regionalAdvisor - Not required">
+        <cfargument name="regionalManager" default="" hint="regionalManager - Not required">
+        <cfargument name="facilitator" default="" hint="facilitator - Not required">
+        <cfargument name="username" default="" hint="username - Not required">
+        <cfargument name="password" default="" hint="password - Not required">
+        
         <cfscript>
 			// Declare Struct
 			var stReturnData = StructNew();
@@ -1483,7 +1500,7 @@
 			
 			// Set List of Issues
 			if ( listFind("denyToHostFamily,denyToAreaRepresentative,denyToRegionalAdvisor,denyToRegionalManager", ARGUMENTS.emailTemplate) ) {
-				vDisplayIssues = "<p>Please see below a list of issues found:</p><ul>#ARGUMENTS.issueList#</ul>";
+				vDisplayIssues = "<p>Please see below a list of issues found:<ul>#ARGUMENTS.issueList#</ul></p>";
 			}
 			
 			/***
@@ -1500,6 +1517,78 @@
     
     	<cfswitch expression="#ARGUMENTS.emailTemplate#">
         	
+            <!--- Welcome Email --->
+            <cfcase value="welcomeEmail">
+            
+                <cfscript>
+					stReturnData.emailSubject = "#CLIENT.companyshort# - Welcome to our Host Family Application";
+				</cfscript>
+
+                <cfsavecontent variable="stReturnData.emailBody">
+					<cfoutput>
+                        <p>Dear #ARGUMENTS.hostFamilyLastName# Family,</p>
+                        
+                        <p>Thank you for your interest in student exchange and your commitment to learn more about hosting a student with #CLIENT.companyshort#.</p>
+                        
+                        <p>This email has been sent to you because your local #CLIENT.companyshort# Area Representative has notified us that you intend to host a student for one of our upcoming programs.</p>
+                        
+                        <p>Every time you host a student, we are required to have you update the information in your Host Family application.</p>
+                        
+                        <!--- (MAY WANT TO MAKE A SEPARATE EMAIL FOR RETURN HFS) --->
+                        <p>
+                            If this is not your first time filling out an online application, your information should all be there when you log in. 
+                            We just ask that you review this information and update anything that may have changed from last time you hosted.
+                        </p>
+                                        
+                        <p>                    
+                            As you may have been told by your Area Representative, all student exchange companies are strictly governed by the Department of State. 
+                            We have done our best to be as unobtrusive and brief as possible while still gathering the information required for you to be properly vetted as a host family. 
+                            There is nothing in this application which is not required by the Department of State. .
+                        </p>
+                        
+                        <p>
+                            This application takes an average of 30 minutes to complete. It does not have to be completed in one sitting. 
+                            You can always come back to the application at a later time. 
+                            Please keep in mind though, that once the application is submitted to your area rep, you will no longer be able to change any information on the application unless requested by your Area Rep.
+                        </p>
+        
+                        <p>
+                            To start filling out your application, please click on the following link:
+                            <cfif CLIENT.companyID EQ 10>
+                                <a href="http://www.case-usa.org/hostApplication/" target="_blank">http://www.case-usa.org/hostApplication/</a>
+                                <!--- <img src="#CLIENT.exits_url#/nsmg/pics/hostAppEmail.jpg" width="200" height="56" border="0"> --->
+                            <cfelse>
+                                <a href="https://www.iseusa.com/hostApplication/" target="_blank">https://www.iseusa.com/hostApplication/</a>
+                            </cfif>
+                        </p>
+
+                        <p>
+                            <strong>Please use the following login information:</strong>
+                        </p>
+                        
+                        <p>
+                            <strong>Email:</strong> #ARGUMENTS.username# <br />
+                            <strong>Password:</strong> #ARGUMENTS.password# <br />
+                        </p>
+                        
+                        <p> 
+                            <em>
+                                We have just launched this electronic host family application, and you are one of the first families to use this new tool. 
+                                Please bear with us as we work out the final "bugs". Should you get any errors or feel that something is confusing, please feel free to let us know how we can improve the process. 
+                                There is a live chat and email support available through the application if you need immediate assistance while filling it out. Any and all feedback would be greatly appreciated.
+                            </em>
+                        </p>
+                                        
+                        <p>	
+                            Thank you, <br />
+                            #CLIENT.companyName#
+                        </p>
+                    </cfoutput>
+                </cfsavecontent>
+                        
+            </cfcase>
+            
+            
             <!--- Approved - Submit To Regional Advisor --->
         	<cfcase value="submitToRegionalAdvisor">
 				
@@ -1563,7 +1652,7 @@
                 				
                 <cfsavecontent variable="stReturnData.emailBody">
 					<cfoutput>
-                    	<p>Dear #ARGUMENTS.hostFamily#,</p>
+                    	<p>Dear #ARGUMENTS.hostFamily# Family,</p>
                         <p>Your host family application has been approved by headquarters.</p>
                         #CLIENT.companyName#
                     </cfoutput>
@@ -1580,7 +1669,7 @@
 				
                 <cfsavecontent variable="stReturnData.emailBody">
                 	<cfoutput>
-                        <p>Dear #ARGUMENTS.hostFamily#,</p>
+                        <p>Dear #ARGUMENTS.hostFamily# Family,</p>
                         <p>#ARGUMENTS.submittedBy# has suggested you make changes on the host family application. Please re-submit the application once changes are complete.</p>
                         #vDisplayIssues#
                         #CLIENT.companyName#
