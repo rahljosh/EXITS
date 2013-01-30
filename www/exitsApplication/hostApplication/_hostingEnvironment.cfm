@@ -284,9 +284,9 @@
                 	hostSmokes = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hostSmokes#">,
                     smokeconditions = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.smokeConditions#">,
                     famDietRest = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.famDietRest#">,
-                    famDietRestDesc = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.famDietRestDesc#">,
+                    famDietRestDesc = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LEFT(FORM.famDietRestDesc, 300)#">,
                     stuDietRest = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.stuDietRest#">,
-                    stuDietRestDesc = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.stuDietRestDesc#">,
+                    stuDietRestDesc = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LEFT(FORM.stuDietRestDesc, 300)#">,
                     dietaryRestriction = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.dietaryRestriction#">,
                     threesquares = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.threesquares#">
                 WHERE 

@@ -62,8 +62,8 @@
                 UPDATE 
                     smg_hosts 
                 SET
-                    houserules_curfewweeknights = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.houserules_curfewweeknights#">,
-                    houserules_curfewweekends = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.houserules_curfewweekends#">,
+                    houserules_curfewweeknights = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LEFT(FORM.houserules_curfewweeknights, 300)#">,
+                    houserules_curfewweekends = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LEFT(FORM.houserules_curfewweekends, 300)#">,
                     houserules_chores = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.houserules_chores#">,
                     houserules_inet = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.houserules_inet#">,
                     houserules_expenses = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.houserules_expenses#">,

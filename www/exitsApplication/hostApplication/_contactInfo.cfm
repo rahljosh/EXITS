@@ -282,7 +282,7 @@
                     mailstate = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.mailstate#">,
                     mailzip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.mailzip#">,
                     homeIsFunctBusiness = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.homeIsFunctBusiness#">,
-                    homeBusinessDesc = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homeBusinessDesc#">,
+                    homeBusinessDesc = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LEFT(FORM.homeBusinessDesc, 300)#">,
                     lead = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
                 WHERE 
                     hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
