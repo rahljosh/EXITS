@@ -32,8 +32,11 @@
             h.lead, 
             h.hostAppStatus,
             r.regionname, 
-            u.firstName as repFirst,
-            u.lastName as repLast
+            u.firstName AS areaRepFirstName,
+            u.lastName AS areaRepLastName,
+            u.email AS areaRepEmail,
+            u.phone AS areaRepPhone,
+            u.work_phone AS areaRepWorkPhone
         FROM 
             smg_hosts h
         LEFT OUTER JOIN 
@@ -116,7 +119,7 @@
                     </tr>
                 </table>
                 
-                <br /> <hr align="center" width="80%" /> <br />
+                <hr align="center" width="80%" style="margin:15px auto 15px auto;" />
                 
                 <p>
                     <strong> Application Started -</strong> 
@@ -160,35 +163,87 @@
                     </cfswitch>
                 </p>
                 
-                <br /> <hr align="center" width="80%" /> <br />
+                <hr align="center" width="80%" style="margin:15px auto 15px auto;" />
                 
-                <p>
-                    <strong>Region:</strong>
-                    <cfif NOT VAL(qGetHostFamilyInfo.regionID)>
-                        Not Assigned
-                    <cfelse>
-                        #qGetHostFamilyInfo.regionname#
-                    </cfif>
-                </p>
+                <!--- Area Representative --->
+                <table border="0" cellpadding="0" cellspacng="0" width="300" align="center">
+                	<tr>
+                    	<td colspan="2">If you have any questions please contact your area representative: <br /><br /></td>
+					</tr>                        
+                    <tr>
+                    	<td width="130px">
+                        	<strong>Area Representative:</strong>  
+                            
+							<cfif LEN(qGetHostFamilyInfo.areaRepWorkPhone)>
+                                <br />
+                                <strong>Phone:</strong>  
+                            </cfif>
+                            
+							<cfif LEN(qGetHostFamilyInfo.areaRepPhone)>
+                                <br />
+                                <strong>Phone:</strong>  
+                            </cfif>
+
+                            <cfif LEN(qGetHostFamilyInfo.areaRepEmail)>
+                                <br />
+                                <strong>Email Address:</strong>  
+                            </cfif>
+                            
+                        </td>
+                        <td>
+							<cfif NOT VAL(qGetHostFamilyInfo.regionID)>
+                                Not Assigned
+                            <cfelse>
+                                #qGetHostFamilyInfo.areaRepFirstName# #qGetHostFamilyInfo.areaRepLastName#
+        
+                                <cfif LEN(qGetHostFamilyInfo.areaRepPhone)>
+                                    <br />
+                                    #qGetHostFamilyInfo.areaRepPhone#
+                                </cfif>
+
+                                <cfif LEN(qGetHostFamilyInfo.areaRepWorkPhone)>
+                                    <br />
+                                    #qGetHostFamilyInfo.areaRepWorkPhone#
+                                </cfif>
+                                
+                                <cfif LEN(qGetHostFamilyInfo.areaRepEmail)>
+                                    <br />
+                                    <a href="mailto:#qGetHostFamilyInfo.areaRepEmail#">#qGetHostFamilyInfo.areaRepEmail#</a>
+                                </cfif>
+                                
+                            </cfif>
+                        </td>
+					</tr>  
+                </table>
                 
-                <p>
-                    <strong>Regional Manager:</strong> 
-                    <cfif NOT VAL(qGetHostFamilyInfo.regionID)>
-                        Not Assigned
-                    <cfelse>
-                        #qGetRegionalManager.firstName# #qGetRegionalManager.lastName#  
-                    </cfif>
-                </p>
+                <!--- Regional Manager --->
+                <table border="0" cellpadding="0" cellspacng="0" width="300" align="center" style="margin-top:10px;">
+                    <tr>
+                    	<td width="130px"><strong>Regional Manager:</strong></td>
+                        <td>
+							<cfif NOT VAL(qGetHostFamilyInfo.regionID)>
+                                Not Assigned
+                            <cfelse>
+                                #qGetRegionalManager.firstName# #qGetRegionalManager.lastName#  
+                            </cfif>
+                        </td>
+					</tr>  
+                </table>
                 
-                <p>
-                    <strong>Area Representative:</strong> 
-                    <cfif NOT VAL(qGetHostFamilyInfo.regionID)>
-                        Not Assigned
-                    <cfelse>
-                        #qGetHostFamilyInfo.repFirst# #qGetHostFamilyInfo.repLast# 
-                    </cfif>
-                </p> 
-                                       
+                <!--- Region --->
+                <table border="0" cellpadding="0" cellspacng="0" width="300" align="center" style="margin-top:10px;">
+                    <tr>
+                    	<td width="130px"><strong>Region:</strong></td>
+                        <td>
+							<cfif NOT VAL(qGetHostFamilyInfo.regionID)>
+                                Not Assigned
+                            <cfelse>
+                                #qGetHostFamilyInfo.regionname#
+                            </cfif>
+                        </td>
+					</tr>  
+                </table>
+                
             </td>
             <td>&nbsp;&nbsp;</td>
             <td valign="top">	
