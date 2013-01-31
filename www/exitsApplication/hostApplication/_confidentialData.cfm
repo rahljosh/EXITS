@@ -227,46 +227,21 @@
             </tr>
             <tr bgcolor="##deeaf3">
                 <td colspan="2">
-                
+                    
                     <table width="100%">
                         <tr>
-                            <td width="10px"><input name="race" id="raceAfrican" value="African American" type="checkbox" <cfif ListFind(FORM.race, 'African American')>checked</cfif> /></td>
+                            <td width="10px"><input type="radio" name="race" id="raceWhite" value="Caucasian" <cfif FORM.race EQ 'Caucasian'>checked</cfif> /></td>
+                            <td><label for="raceWhite">Caucasian</label></td>
+                            <td width="10px"><input type="radio" name="race" id="raceAfrican" value="African American" <cfif FORM.race EQ 'African American'>checked</cfif> /></td>
                             <td><label for="raceAfrican">African American</label></td>
-                            <td width="10px"><input name="race" id="raceHispanic" value="Hispanic" type="checkbox" <cfif ListFind(FORM.race, 'Hispanic')>checked</cfif> /></td>
+                            <td width="10px"><input type="radio" name="race" id="raceHispanic" value="Hispanic" <cfif FORM.race EQ 'Hispanic'>checked</cfif> /></td>
                             <td><label for="raceHispanic">Hispanic</label></td>
                         </tr>
                         <tr>
-                           <td><input name="race" id="raceAmerican" value="American Indian or Alaska Native" type="checkbox" <cfif ListFind(FORM.race, 'American Indian or Alaska Native')>checked</cfif> /></td>
-                            <td><label for="raceAmerican">American Indian / Alaska Native</label></td>
-                            <td><input name="race" id="raceKorean" value="Korean" type="checkbox" <cfif ListFind(FORM.race, 'Korean')>checked</cfif> /></td>
-                            <td><label for="raceKorean">Korean</label></td>
-                         </tr>
-                        <tr>
-                            <td><input name="race" id="raceAsian" value="Asian Indian" type="checkbox" <cfif ListFind(FORM.race, 'Asian Indian')>checked</cfif> /></td>
-                            <td><label for="raceAsian">Asian Indian</label></td>
-                            <td><input name="race" id="raceHawaiian" value="Native Hawaiian" type="checkbox" <cfif ListFind(FORM.race, 'Native Hawaiian')>checked</cfif> /></td>
-                            <td><label for="raceHawaiian">Native Hawaiian</label></td>
-                        </tr>
-                        <tr>
-                            <td><input name="race" id="raceChinese" value="Chinese" type="checkbox" <cfif ListFind(FORM.race, 'Chinese')>checked</cfif> /></td>
-                            <td><label for="raceChinese">Chinese</label></td>
-                            <td><input name="race" id="raceSamoan" value="Samoan" type="checkbox" <cfif ListFind(FORM.race, 'Samoan')>checked</cfif> /></td>
-                            <td><label for="raceSamoan">Samoan</label></td>
-                        </tr>
-                        <tr>
-                            <td><input name="race" id="raceFilipino" value="Filipino" type="checkbox" <cfif ListFind(FORM.race, 'Filipino')>checked</cfif> /></td>
-                            <td><label for="raceFilipino">Filipino</label></td>
-                            <td><input name="race" id="raceVietnamese" value="Vietnamese" type="checkbox" <cfif ListFind(FORM.race, 'Vietnamese')>checked</cfif> /></td>
-                            <td><label for="raceVietnamese">Vietnamese</label></td>                        
-                        </tr>
-                        <tr>
-                            <td><input name="race" id="raceGuamanian" value="Guamanian or Chamorro" type="checkbox" <cfif ListFind(FORM.race, 'Guamanian or Chamorro')>checked</cfif> /></td>
-                            <td><label for="raceGuamanian">Guamanian or Chamorro</label></td>
-                            <td><input name="race" id="raceWhite" value="White" type="checkbox" <cfif ListFind(FORM.race, 'White')>checked</cfif> /></td>
-                            <td><label for="raceWhite">White</label></td>
-                        </tr>
-                        <tr>
-                            <td colspan="4"><label for="ethnicityOther">Other:</label><input type="text" name="ethnicityOther" id="ethnicityOther" value="#FORM.ethnicityOther#" class="largeField" maxlength="100" /></td>
+                            <td colspan="6">
+                            	<label for="ethnicityOther">Other:</label> &nbsp;
+                        		<input type="text" name="ethnicityOther" id="ethnicityOther" value="#FORM.ethnicityOther#" class="largeField" maxlength="100" />
+                            </td>
                         </tr>
                     </table>
             
