@@ -573,7 +573,7 @@
             <!--- Create PDF --->
             <cfdocument format="PDF" filename="#APPLICATION.CFC.SESSION.getHostSession().PATH.DOCS##vCompleteFileName#" overwrite="no">
                 <cfoutput>
-                    <img src="#SESSION.COMPANY.exitsURL#nsmg/pics/#SESSION.COMPANY.ID#_short_profile_header.jpg" border="0" />
+                    <img src="#APPLICATION.CFC.SESSION.getCompanySessionByKey(structKey='profileHeaderImage')#" border="0" />
                     
                     <p>
                         As mandated by the Department of State, a Criminal Background Check on all Office Staff, Regional Directors/
@@ -707,7 +707,7 @@
             <!--- Create PDF --->
             <cfdocument format="PDF" filename="#APPLICATION.CFC.SESSION.getHostSession().PATH.DOCS##vCompleteFileName#" overwrite="no">
                 <cfoutput>
-                    <img src="#SESSION.COMPANY.exitsURL#nsmg/pics/#SESSION.COMPANY.ID#_short_profile_header.jpg" border="0" />
+                    <img src="#APPLICATION.CFC.SESSION.getCompanySessionByKey(structKey='profileHeaderImage')#" border="0" />
                     
                     <h2>Terms for Submission</h2>
                     

@@ -227,6 +227,102 @@
 		</cfscript>
 	
     </cffunction>
+    
+    
+	<!--- Set Company Session --->
+	<cffunction name="setCompanySession" access="public" returntype="void" output="false" hint="Set Host Session Variables">
+        
+        <cfscript>
+			if ( ListFindNoCase(CGI.SERVER_NAME, "case-usa", ".") OR FindNoCase("case.exitsapplication.com", CGI.HTTP_REFERER) ) {
+				
+				// CASE
+				SESSION.COMPANY.ID = 10;
+				SESSION.COMPANY.exitsURL = "https://case.exitsapplication.com/";
+				SESSION.COMPANY.logoImage = "logoCASE.png";
+				SESSION.COMPANY.submitGreyImage = "submitGrey.png";
+				SESSION.COMPANY.submitImage = "submit.png";
+			
+			} else {
+				
+				// ISE
+				SESSION.COMPANY.ID = 1;		
+				SESSION.COMPANY.exitsURL = "https://ise.exitsapplication.com/";
+				SESSION.COMPANY.logoImage = "logoISE.png";
+				SESSION.COMPANY.submitGreyImage = "ISESubmitGrey.png";
+				SESSION.COMPANY.submitImage = "ISESubmit.png";
+				
+			}
+			
+			// Query to Get Company Info
+			qGetCompanyInformation = APPLICATION.CFC.LOOKUPTABLES.getCompany(companyID=SESSION.COMPANY.ID);
+			
+			SESSION.COMPANY.name = qGetCompanyInformation.companyName;
+			SESSION.COMPANY.shortName = qGetCompanyInformation.companyShort_noColor;
+			SESSION.COMPANY.tollFree = qGetCompanyInformation.toll_free;
+			SESSION.COMPANY.siteURL = qGetCompanyInformation.url;
+			SESSION.COMPANY.pageTitle = "#qGetCompanyInformation.companyName# - Host Family Application";
+			
+			// Images/Logos
+			SESSION.COMPANY.color = "###qGetCompanyInformation.company_color#";
+			SESSION.COMPANY.headerLogo = "#SESSION.COMPANY.exitsURL#nsmg/pics/logos/#SESSION.COMPANY.ID#_header_logo.png";
+			SESSION.COMPANY.profileHeaderImage = "#SESSION.COMPANY.exitsURL#nsmg/pics/#SESSION.COMPANY.ID#_short_profile_header.jpg";
+			SESSION.COMPANY.pxImage = "#SESSION.COMPANY.exitsURL#nsmg/pics/logos/#SESSION.COMPANY.ID#_px.png";
+			
+			// Emails
+			SESSION.COMPANY.EMAIL.support = qGetCompanyInformation.support_email;
+			SESSION.COMPANY.EMAIL.errors = "errors@student-management.com";	
+		</cfscript>
+		
+	</cffunction>
+    
 
+	<cffunction name="getCompanySession" access="public" returntype="struct" hint="Get COMPANY Session variables" output="no">
+        
+        <cfscript>
+			try {
+				
+				// Check if HOST structure exits
+				if ( StructIsEmpty(SESSION.COMPANY) ) {
+					// Set Session
+					setCompanySession();
+				}
+				
+			} catch (Any e) {
+				// Set Session
+				setCompanySession();
+			}
+			
+			// Make Sure Structs are not empty
+			return SESSION.COMPANY;
+		</cfscript>
+        
+	</cffunction>   
+    
+
+	<cffunction name="getCompanySessionByKey" access="public" returntype="string" hint="Get COMPANY Session variables" output="no">
+		<cfargument name="structKey" default="" hint="Only works for the 1st level - struct key is not required">
+        
+        <cfscript>
+			try {
+				
+				// Try to get specific value
+				return SESSION.COMPANY[ARGUMENTS.structKey];
+
+			} catch (Any e) {
+				// Not Found - Reset Session
+				setCompanySession();
+				
+				// Try to get specific value
+				try {
+					return SESSION.COMPANY[ARGUMENTS.structKey];
+				} catch (Any e) {
+					return "";
+				}
+				
+			}
+		</cfscript>
+        
+	</cffunction>  
+         
 
 </cfcomponent>

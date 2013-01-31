@@ -30,7 +30,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title><cfoutput>#SESSION.COMPANY.pageTitle#</cfoutput></title>
+<title><cfoutput>#APPLICATION.CFC.SESSION.getCompanySessionByKey(structKey='pageTitle')#</cfoutput></title>
 <link href="linked/css/baseStyle.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="linked/chosen/chosen.css" />
 <link rel="stylesheet" href="linked/css/wiki.css" />
@@ -49,7 +49,7 @@
         <div id="logoBoxB">
         
             <div class="blueBox">
-                <a href="../index.cfm"><img src="images/#SESSION.COMPANY.logoImage#" alt="#SESSION.COMPANY.name#" width="214" height="165" border="0" /></a>
+                <a href="../index.cfm"><img src="images/#APPLICATION.CFC.SESSION.getCompanySessionByKey(structKey='logoImage')#" alt="#APPLICATION.CFC.SESSION.getCompanySessionByKey(structKey='name')#" width="214" height="165" border="0" /></a>
 				<!--- Include Left Menu --->
                 <cfinclude template="includes/leftMenu.cfm">
             </div><!--blueBox -->
@@ -93,8 +93,8 @@
                         
                         <p>
                             Thank you,<br />
-                            #SESSION.COMPANY.name#<br />
-                            <a href="#SESSION.COMPANY.siteURL#">#SESSION.COMPANY.siteURL#</a>
+                            #APPLICATION.CFC.SESSION.getCompanySessionByKey(structKey='name')#<br />
+                            <a href="#APPLICATION.CFC.SESSION.getCompanySessionByKey(structKey='siteURL')#">#APPLICATION.CFC.SESSION.getCompanySessionByKey(structKey='siteURL')#</a>
                         </p>
                         
                         <div id="main" class="clearfix"></div>

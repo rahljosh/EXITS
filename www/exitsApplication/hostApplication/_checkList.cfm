@@ -324,7 +324,7 @@
                         Happy with how everything looks?  Click the button to the right to submit your application.
                     </td>
                     <td>
-                        <a href="disclaimer.cfm" class="iframe"><img src="images/buttons/#SESSION.COMPANY.submitImage#" border="0"/></a>
+                        <a href="disclaimer.cfm" class="iframe"><img src="images/buttons/#APPLICATION.CFC.SESSION.getCompanySessionByKey(structKey='submitImage')#" border="0"/></a>
                     </td>
                 <cfelse>
                     <td>
@@ -332,7 +332,7 @@
                         The botton to the right will not be active (the arrow will turn red) until all the required information above has been filled out. 
                     </td>
                     <td>
-                        <img src="images/buttons/#SESSION.COMPANY.submitGreyImage#" border="0"/>
+                        <img src="images/buttons/#APPLICATION.CFC.SESSION.getCompanySessionByKey(structKey='submitGreyImage')#" border="0"/>
                     </td>
                 </cfif>
             </tr>
