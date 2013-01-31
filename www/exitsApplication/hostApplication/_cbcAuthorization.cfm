@@ -307,7 +307,7 @@
                         <p>Attached are copies of the Criminal Background Check Authorization for you and any members of your family have electronically signed.</p> <br />
                         
                         Regards-<br />
-                        #SESSION.COMPANY.shortName# Support
+                        #APPLICATION.CFC.SESSION.getCompanySessionByKey(structKey='shortName')# Support
                     </cfoutput>
                 </cfsavecontent>    
                 

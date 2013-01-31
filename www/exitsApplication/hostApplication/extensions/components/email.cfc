@@ -66,13 +66,13 @@
             <cfoutput>
             
                 <div class="thin-border">
-                    <table background="#SESSION.COMPANY.exitsURL#nsmg/pics/email_textured_background.png" width="700px">
+                    <table background="#APPLICATION.CFC.SESSION.getCompanySessionByKey(structKey='exitsURL')#nsmg/pics/email_textured_background.png" width="700px">
                         <tr>
-                            <td width="94"><img src="#SESSION.COMPANY.exitsURL#nsmg/pics/logos/#SESSION.COMPANY.ID#_header_logo.png" border="0"></td>
-                            <td><strong><font size=+2>#SESSION.COMPANY.name#</font></strong></td>
+                            <td width="94"><img src="#APPLICATION.CFC.SESSION.getCompanySessionByKey(structKey='headerLogo')#" border="0"></td>
+                            <td><strong><font size=+2>#APPLICATION.CFC.SESSION.getCompanySessionByKey(structKey='name')#</font></strong></td>
                         </tr>	
                         <tr>
-                            <td colspan="2"><img src="#SESSION.COMPANY.exitsURL#nsmg/pics/logos/#SESSION.COMPANY.ID#_px.png" height="12" width="100%" border="0"></td>
+                            <td colspan="2"><img src="#APPLICATION.CFC.SESSION.getCompanySessionByKey(structKey='pxImage')#" height="12" width="100%" border="0"></td>
                         </tr>
                     </table>
                     
@@ -114,11 +114,11 @@
                     <table width="700px">
                     	<tr>
                         	<td>
-                            	<a href="#SESSION.COMPANY.siteURL#">#SESSION.COMPANY.siteURL#</a>
+                            	<a href="#APPLICATION.CFC.SESSION.getCompanySessionByKey(structKey='siteURL')#">#APPLICATION.CFC.SESSION.getCompanySessionByKey(structKey='siteURL')#</a>
                             </td>
                         </tr>
                         <tr>
-                        	<td bgcolor="#SESSION.COMPANY.color#" align="center">
+                        	<td bgcolor="#APPLICATION.CFC.SESSION.getCompanySessionByKey(structKey='color')#" align="center">
                             	<font color="##FFFFFF" size=-2>
 									<cfif LEN(qGetCompanyInfo.toll_free)>Toll-free: #qGetCompanyInfo.toll_free# &middot;</cfif>
                                     <cfif LEN(qGetCompanyInfo.phone)>Local: #qGetCompanyInfo.phone# &middot;</cfif> 

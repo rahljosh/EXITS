@@ -37,15 +37,24 @@
 <cfparam name="SESSION.HOST.PATH.relativeAlbumThumbs" default="">
 <cfparam name="SESSION.HOST.PATH.relativeDocs" default="">
 
-<!--- Param Company Variables --->
+<!--- Param SESSION.COMPANY Variables --->
 <cfparam name="SESSION.COMPANY.ID" default="0">
+<cfparam name="SESSION.COMPANY.exitsURL" default="">
+<cfparam name="SESSION.COMPANY.logoImage" default="">
+<cfparam name="SESSION.COMPANY.submitGreyImage" default="">
+<cfparam name="SESSION.COMPANY.submitImage" default="">
+
 <cfparam name="SESSION.COMPANY.name" default="">
 <cfparam name="SESSION.COMPANY.shortName" default="">
+<cfparam name="SESSION.COMPANY.tollFree" default="">
 <cfparam name="SESSION.COMPANY.siteURL" default="">
-<cfparam name="SESSION.COMPANY.exitsURL" default="">
 <cfparam name="SESSION.COMPANY.pageTitle" default="">
-<cfparam name="SESSION.COMPANY.logoImage" default="">
+
 <cfparam name="SESSION.COMPANY.color" default="">
+<cfparam name="SESSION.COMPANY.headerLogo" default="">
+<cfparam name="SESSION.COMPANY.profileHeaderImage" default="">
+<cfparam name="SESSION.COMPANY.pxImage" default="">
+
 <cfparam name="SESSION.COMPANY.EMAIL.support" default="">
 <cfparam name="SESSION.COMPANY.EMAIL.errors" default="">
 
@@ -65,41 +74,8 @@
 	);
 	*/
 
-	/*******************************************
-		Create SESSION.EMAIL structure
-	*******************************************/
-	
-	if ( ListFindNoCase(CGI.SERVER_NAME, "case-usa", ".") OR FindNoCase("case.exitsapplication.com", CGI.HTTP_REFERER) ) {
-		
-		// CASE
-		SESSION.COMPANY.ID = 10;
-		SESSION.COMPANY.exitsURL = "https://case.exitsapplication.com/";
-		SESSION.COMPANY.logoImage = "logoCASE.png";
-		SESSION.COMPANY.submitGreyImage = "submitGrey.png";
-		SESSION.COMPANY.submitImage = "submit.png";
-	
-	} else {
-		
-		// ISE
-		SESSION.COMPANY.ID = 1;		
-		SESSION.COMPANY.exitsURL = "https://ise.exitsapplication.com/";
-		SESSION.COMPANY.logoImage = "logoISE.png";
-		SESSION.COMPANY.submitGreyImage = "ISESubmitGrey.png";
-		SESSION.COMPANY.submitImage = "ISESubmit.png";
-		
-	}
-	
-	// Query to Get Company Info
-	qGetCompanyInformation = APPLICATION.CFC.LOOKUPTABLES.getCompany(companyID=SESSION.COMPANY.ID);
-	
-	SESSION.COMPANY.name = qGetCompanyInformation.companyName;
-	SESSION.COMPANY.shortName = qGetCompanyInformation.companyShort_noColor;
-	SESSION.COMPANY.tollFree = qGetCompanyInformation.toll_free;
-	SESSION.COMPANY.siteURL = qGetCompanyInformation.url;
-	SESSION.COMPANY.EMAIL.support = qGetCompanyInformation.support_email;
-	SESSION.COMPANY.EMAIL.errors = "errors@student-management.com";	
-	SESSION.COMPANY.pageTitle = "#qGetCompanyInformation.companyName# - Host Family Application";
-	SESSION.COMPANY.color = "###qGetCompanyInformation.company_color#";
+	// SET SESSION.COMPANY structure
+	APPLICATION.CFC.SESSION.setCompanySession();
 	
 	// Page Messages
 	SESSION.PageMessages = CreateCFC("pageMessages").Init();

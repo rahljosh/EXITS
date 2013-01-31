@@ -1237,7 +1237,7 @@
             <cfcase value="hfNotification">
             
                 <cfscript>
-					stReturnData.emailSubject = "#SESSION.COMPANY.shortName# - Host Family Application Submitted";
+					stReturnData.emailSubject = "#APPLICATION.CFC.SESSION.getCompanySessionByKey(structKey='shortName')# - Host Family Application Submitted";
 				</cfscript>
 
                 <cfsavecontent variable="stReturnData.emailBody">
@@ -1258,14 +1258,14 @@
                         
                         <p>
                         	Once your application has been approved by our head office, you will receive a notification. You can also log in to the website at any time to view your current application status. 
-                        	If at any time you feel that you are not being given the support you deserve, feel free to contact our main office at #SESSION.COMPANY.tollFree#. 
+                        	If at any time you feel that you are not being given the support you deserve, feel free to contact our main office at #APPLICATION.CFC.SESSION.getCompanySessionByKey(structKey='tollFree')#. 
                         </p>
                         
                         <p>We look forward to having you join our team of host families for this upcoming year!</p>
                         
                         <p>
                             Thank you, <br />
-                            #SESSION.COMPANY.name#
+                            #APPLICATION.CFC.SESSION.getCompanySessionByKey(structKey='name')#
     					</p>
                     </cfoutput>
                 </cfsavecontent>
@@ -1276,7 +1276,7 @@
             <cfcase value="arNotification">
             
                 <cfscript>
-					stReturnData.emailSubject = "#SESSION.COMPANY.shortName# - Host Family Application Submitted";
+					stReturnData.emailSubject = "#APPLICATION.CFC.SESSION.getCompanySessionByKey(structKey='shortName')# - Host Family Application Submitted";
 				</cfscript>
 
                 <cfsavecontent variable="stReturnData.emailBody">
@@ -1290,7 +1290,7 @@
                          
                         <p>
                         	Please log in to EXITS to view this application or click the link below for direct access (make sure you are logged in).
-                            <a href="#SESSION.COMPANY.exitsURL#/nsmg/index.cfm?curdoc=hostApplication/listOfApps&status=7">View Host Family Application</a>
+                            <a href="#APPLICATION.CFC.SESSION.getCompanySessionByKey(structKey='exitsURL')#/nsmg/index.cfm?curdoc=hostApplication/listOfApps&status=7">View Host Family Application</a>
 						</p>
                         
                         <p>
@@ -1299,7 +1299,7 @@
                         
                         <p>
                             Best Regards, <br />
-                            #SESSION.COMPANY.name#
+                            #APPLICATION.CFC.SESSION.getCompanySessionByKey(structKey='name')#
     					</p>
                     </cfoutput>
                 </cfsavecontent>

@@ -196,7 +196,7 @@
 						<p><strong>Your application is complete!</strong> Happy with how everything looks? Click the button to the right to submit your application.</p>
                         
                         <p align="center">
-                        	<a href="disclaimer.cfm" class="iframe"><img src="images/buttons/#SESSION.COMPANY.submitImage#" border="0"/></a>
+                        	<a href="disclaimer.cfm" class="iframe"><img src="images/buttons/#APPLICATION.CFC.SESSION.getCompanySessionByKey(structKey='submitImage')#" border="0"/></a>
                         </p>
                         
                     <cfelse>
