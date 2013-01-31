@@ -128,7 +128,8 @@
                                       regionID 
                                   FROM 
                                       user_access_rights 
-                                  WHERE userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#"> ) 
+                                  WHERE (userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#"> 
+                                  AND usertype !=<cfqueryparam cfsqltype="cf_sql_integer" value="9">) ) 
             AND
                 uar.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="5"> 
             AND 
@@ -1087,12 +1088,12 @@
                     <td><cfinput type="text" name="state" id="state" value="#FORM.state#" size="2" maxlength="2" readonly="readonly"></td>
                 </tr>
                 <tr>
-                    <td align="right">Zip:</td>
+                    <td align="right">Zip: <span class="redtext">*</span></td>
                     <td><cfinput type="text" name="zip" value="#FORM.zip#" size="10" maxlength="10" readonly="readonly"></td>
                 </tr>
             <cfelse>
             	<tr id="zipLookupRow">
-                	<td align="right">Zip Lookup: </td>
+                	<td align="right">Zip Lookup: <span class="redtext">*</span> </td>
                     <td><input type="text" name="zipLookup" id="zipLookup" value="#FORM.zipLookup#" size="5" maxlength="5" onblur="getLocationByZip();" />
                 </tr>                
                 <tr>
