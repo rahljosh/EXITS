@@ -1289,7 +1289,7 @@
                         </p>
                          
                         <p>
-                        	Please log in to EXITS to view this application or click the link below for direct access (make sure you are logged in).
+                        	Please log in to EXITS to view this application or click the link below for direct access (you must be logged in EXITS).
                             <a href="#APPLICATION.CFC.SESSION.getCompanySessionByKey(structKey='exitsURL')#/nsmg/index.cfm?curdoc=hostApplication/listOfApps&status=7">View Host Family Application</a>
 						</p>
                         
