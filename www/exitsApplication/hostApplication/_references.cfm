@@ -45,27 +45,8 @@
 		// Get State List
 		qGetStateList = APPLICATION.CFC.LOOKUPTABLES.getState();
 			
-		// Check if it is a single placement
-		if ( LEN(qGetHostFamilyInfo.fatherFirstName) ) {
-			vFather=1;
-		} else {
-			vFather=0;
-		}
-		
-		if ( LEN(qGetHostFamilyInfo.motherFirstName) ) {
-			vMother=1;
-		} else {
-			vMother=0;
-		}
-
-		// Get Host Family Members at Home
-		qGetFamilyMembersAtHome = APPLICATION.CFC.HOST.getHostMemberByID(hostID=APPLICATION.CFC.SESSION.getHostSession().ID,liveAtHome="yes");	
-		
-		// Total family members
-		vTotalFamilyCount = vMother + vFather + qGetFamilyMembersAtHome.recordCount;
-		
 		// Single Parent
-		if ( vTotalFamilyCount EQ 1 ) {
+		if ( qGetHostFamilyInfo.totalFamilyMembers EQ 1 ) {
 			vNumberOfRequiredReferences = 6;
 		} else {
 			vNumberOfRequiredReferences = 4;
@@ -259,7 +240,7 @@
 
 	<em><strong>PLEASE NOTE:</strong> The Department of State now requires a second home visit which will be conducted by someone other than your local Area Representative.</em> <br /><br />
     
-	Please provide at least <cfif vTotalFamilyCount EQ 1>six (6)&dagger;<cfelse>four (4)&dagger;</cfif> references. References can <strong>not</strong> 
+	Please provide at least <cfif qGetHostFamilyInfo.totalFamilyMembers EQ 1>six (6)&dagger;<cfelse>four (4)&dagger;</cfif> references. References can <strong>not</strong> 
     be relatives and must have visited you <strong>inside</strong> your home. <br /><br />
 
     <table width="100%" cellspacing="0" cellpadding="4" class="border">

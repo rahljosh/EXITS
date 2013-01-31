@@ -23,7 +23,7 @@
 		} 
 		
 		// Get Host Family Info - Accessible from any page
-		qGetHostFamilyInfo = APPLICATION.CFC.HOST.getHosts(hostID=APPLICATION.CFC.SESSION.getHostSession().ID);
+		qGetHostFamilyInfo = APPLICATION.CFC.HOST.getCompleteHostInfo(hostID=APPLICATION.CFC.SESSION.getHostSession().ID);
 	</cfscript>
         
 </cfsilent>

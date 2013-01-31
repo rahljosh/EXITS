@@ -24,6 +24,24 @@
 	</cffunction>
 
 
+	<cffunction name="getCompany" access="public" returntype="query" output="false" hint="Returns company information">
+    	<cfargument name="companyID" hint="companyID is required">	
+        
+        <cfquery 
+        	name="qGetCompany"
+        	datasource="#APPLICATION.DSN.Source#">
+                SELECT 
+                	*
+				FROM
+                	smg_companies
+                WHERE 
+                    companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.companyID)#">
+        </cfquery> 
+
+		<cfreturn qGetCompany>
+	</cffunction>
+
+
 	<!--- Get Current Season Based on Today's date --->
 	<cffunction name="getCurrentSeason" access="public" returntype="query" output="false" hint=" Get Current Season Based on Today's date ">
 	
