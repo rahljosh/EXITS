@@ -48,7 +48,6 @@
 <cfparam name="SESSION.COMPANY.color" default="">
 <cfparam name="SESSION.COMPANY.EMAIL.support" default="">
 <cfparam name="SESSION.COMPANY.EMAIL.errors" default="">
-<cfparam name="SESSION.COMPANY.EMAIL.hostApp" default="">
 
 <cfscript>
 	// Store session information
@@ -74,39 +73,33 @@
 		
 		// CASE
 		SESSION.COMPANY.ID = 10;
-		// Query to Get Company Info
-		SESSION.COMPANY.name = "Cultural Academic Student Exchange";
-		SESSION.COMPANY.shortName = "CASE";
-		SESSION.COMPANY.siteURL = "http://www.case-usa.org/";
 		SESSION.COMPANY.exitsURL = "https://case.exitsapplication.com/";
-		SESSION.COMPANY.pageTitle = "Cultural Academic Student Exchange - Host Family Application";
 		SESSION.COMPANY.logoImage = "logoCASE.png";
 		SESSION.COMPANY.submitGreyImage = "submitGrey.png";
 		SESSION.COMPANY.submitImage = "submit.png";
-		SESSION.COMPANY.color = "##98012E";
-		SESSION.COMPANY.EMAIL.support = "support@case-usa.org";
-		SESSION.COMPANY.EMAIL.errors = "errors@student-management.com";
-		SESSION.COMPANY.EMAIL.hostApp = "hostApp@case-usa.org";		
 	
 	} else {
 		
 		// ISE
 		SESSION.COMPANY.ID = 1;		
-		// Query to Get Company Info
-		SESSION.COMPANY.name = "International Student Exchange";
-		SESSION.COMPANY.shortName = "ISE";
-		SESSION.COMPANY.siteURL = "https://www.iseusa.com/";
 		SESSION.COMPANY.exitsURL = "https://ise.exitsapplication.com/";
-		SESSION.COMPANY.pageTitle = "International Student Exchange - Host Family Application";
 		SESSION.COMPANY.logoImage = "logoISE.png";
 		SESSION.COMPANY.submitGreyImage = "ISESubmitGrey.png";
 		SESSION.COMPANY.submitImage = "ISESubmit.png";
-		SESSION.COMPANY.color = "##0054A0";
-		SESSION.COMPANY.EMAIL.support = "support@iseusa.com";
-		SESSION.COMPANY.EMAIL.errors = "errors@student-management.com";
-		SESSION.COMPANY.EMAIL.hostApp = "hostApp@iseusa.com";
 		
 	}
+	
+	// Query to Get Company Info
+	qGetCompanyInformation = APPLICATION.CFC.LOOKUPTABLES.getCompany(companyID=SESSION.COMPANY.ID);
+	
+	SESSION.COMPANY.name = qGetCompanyInformation.companyName;
+	SESSION.COMPANY.shortName = qGetCompanyInformation.companyShort_noColor;
+	SESSION.COMPANY.tollFree = qGetCompanyInformation.toll_free;
+	SESSION.COMPANY.siteURL = qGetCompanyInformation.url;
+	SESSION.COMPANY.EMAIL.support = qGetCompanyInformation.support_email;
+	SESSION.COMPANY.EMAIL.errors = "errors@student-management.com";	
+	SESSION.COMPANY.pageTitle = "#qGetCompanyInformation.companyName# - Host Family Application";
+	SESSION.COMPANY.color = "###qGetCompanyInformation.company_color#";
 	
 	// Page Messages
 	SESSION.PageMessages = CreateCFC("pageMessages").Init();

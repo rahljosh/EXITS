@@ -35,82 +35,31 @@
         
             <cfscript>
 				// Generate Disclaimer
-				stResult = APPLICATION.CFC.DOCUMENT.generateDisclaimer(
+				stGenerateDisclaimerStatus = APPLICATION.CFC.DOCUMENT.generateDisclaimer(
 					foreignTable = "smg_hosts",
 					foreignID = APPLICATION.CFC.SESSION.getHostSession().ID,
 					documentTypeID = APPLICATION.DOCUMENT.disclaimer,
 					signature = FORM.signature																		  
 				);
-			</cfscript>
+
+				// File Generated Successfully
+                if ( stGenerateDisclaimerStatus.isSuccess ) {
             
-            <!--- File Generated Successfully --->
-            <cfif stResult.isSuccess>
-            	
-                <cfscript>
-					vApprovedStatus = 7;
+					// Submit Application
+					stSubmitApplication = APPLICATION.CFC.HOST.submitApplication();
 				
-					// Get Host Family Info - Accessible from any page
-					qGetHostFamilyInfo = APPLICATION.CFC.HOST.getHosts(hostID=APPLICATION.CFC.SESSION.getHostSession().ID);				
-					
-					// Set New Status
-					APPLICATION.CFC.SESSION.setHostSessionApplicationStatus(applicationStatus=vApprovedStatus);
-					
-					// Disable Left Menu Navigation
-					APPLICATION.CFC.SESSION.setHostSessionisMenuBlocked(isMenuBlocked=true);
-							
 					// Set Page Message
 					SESSION.pageMessages.Add("Host Family Application Succesfully Submited");
 					SESSION.pageMessages.Add("This window should close shortly");
-				</cfscript>
-				
-                <cfquery datasource="#APPLICATION.DSN.Source#">
-                    UPDATE 
-                        smg_hosts
-                    SET 
-                        hostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="#vApprovedStatus#">,
-                        dateApplicationSubmitted = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
-                    WHERE
-                        hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
-                </cfquery>
-                
-                <cfquery name="qGetEmailNotification" datasource="#APPLICATION.DSN.Source#">
-                    SELECT 
-                        u.email 
-                    FROM 
-                        smg_users u
-                    INNER JOIN 
-                        smg_hosts h ON h.areaRepID = u.userID
-                    WHERE 
-                        h.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
-                </cfquery>
-                
-                <cfif isValid("email", qGetEmailNotification.email)>
-                
-                    <cfsavecontent variable="vEmailMessage">                      
-                        <cfoutput>
-                            The #qGetHostFamilyInfo.familylastname# application has been submitted for your review.
-                            <br /><br />  
-                            You can review the app <a href="#SESSION.COMPANY.exitsURL#">here</a>.
-                        </cfoutput>
-                    </cfsavecontent>
-                
-                    <cfinvoke component="extensions.components.email" method="send_mail">
-                        <cfinvokeargument name="emailTo" value="#qGetEmailNotification.email#">
-                        <cfinvokeargument name="emailSubject" value="#qGetHostFamilyInfo.familylastname# Host Family Application Needs your Approval">
-                        <cfinvokeargument name="emailMessage" value="#vEmailMessage#">
-                    </cfinvoke>            
-    			
-                </cfif>
-                
-            <!--- Errors --->
-            <cfelse>
-
-                <cfscript>
-					// Set Error Message
-					SESSION.formErrors.Add(stResult.message);
-				</cfscript>
-				
-			</cfif> <!--- stResult.isSuccess --->
+					
+                // Errors
+                } else {
+                    
+                    // Set Error Message
+                    SESSION.formErrors.Add(stGenerateDisclaimerStatus.message);
+                    
+                }
+            </cfscript>                
             
         </cfif> <!--- No Errors Found --->
         
@@ -138,7 +87,7 @@
 
         <script type="text/javascript">
             // Close Window After 1.5 Seconds
-            setTimeout(function() { parent.$.fn.colorbox.close(); }, 1500);
+            setTimeout(function() { parent.$.fn.colorbox.close(); }, 3000);
 			
 			window.parent.location.href = "index.cfm?section=overview";
         </script>

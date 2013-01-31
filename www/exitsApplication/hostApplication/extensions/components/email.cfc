@@ -1,6 +1,6 @@
 <cfcomponent>
 
-	<cffunction name="send_mail" access="public" returntype="void">
+	<cffunction name="sendEmail" access="public" returntype="void">
         <cfargument name="emailFrom" default="#SESSION.COMPANY.EMAIL.support#" required="true">
 		<cfargument name="emailTo" type="string" required="true">
 		<cfargument name="emailSubject" type="string" required="true">
@@ -19,6 +19,8 @@
         <cfargument name="emailFile6" type="string" required="false" default="" hint="optional attachment">
         <cfargument name="emailFile7" type="string" required="false" default="" hint="optional attachment">
         <cfargument name="emailFile8" type="string" required="false" default="" hint="optional attachment">
+        <cfargument name="emailFile9" type="string" required="false" default="" hint="optional attachment">
+        <cfargument name="emailFile10" type="string" required="false" default="" hint="optional attachment">
 
     	<cfscript>
 			var vEmailTemplate = '';
@@ -79,6 +81,9 @@
                         <tr>
                             <td>
     
+                                <!--- Email Message --->
+                               #ARGUMENTS.emailMessage#
+                               
                                 <!--- Display Email Recipients when sending from development environment --->
                                 <cfif APPLICATION.isServerLocal>
                                     <cfoutput>
@@ -100,9 +105,6 @@
                                         </div>
                                     </cfoutput>                    
                                 </cfif>
-                                
-                                <!--- Email Message --->
-                               #ARGUMENTS.emailMessage#
                 
                             </td>
                         </tr>
@@ -131,43 +133,58 @@
                                                     
         </cfsavecontent>
                 
-		<cfmail to="#ARGUMENTS.emailTo#" from="#ARGUMENTS.emailFrom#" replyto="#ARGUMENTS.emailReplyTo#" cc="#ARGUMENTS.emailCC#" bcc="#ARGUMENTS.emailBCC#" subject="#ARGUMENTS.emailSubject#" type="html">
+		<cfmail 
+        	to="#ARGUMENTS.emailTo#" 
+            from="#ARGUMENTS.emailFrom#" 
+            replyto="#ARGUMENTS.emailReplyTo#" 
+            cc="#ARGUMENTS.emailCC#" 
+            bcc="#ARGUMENTS.emailBCC#" 
+            subject="#ARGUMENTS.emailSubject#" 
+            type="html">
 
-            <!--- Attach File --->
-			<cfif LEN(ARGUMENTS.emailFile1)>
-				<cfmailparam disposition="attachment" file="#ARGUMENTS.emailFile1#">                
-            </cfif>
-            
-            <cfif LEN(ARGUMENTS.emailFile2)>
-				<cfmailparam disposition="attachment" file="#ARGUMENTS.emailFile2#">                
-            </cfif>
-            
-            <cfif LEN(ARGUMENTS.emailFile3)>
-				<cfmailparam disposition="attachment" file="#ARGUMENTS.emailFile3#">                
-            </cfif>
-
-            <cfif LEN(ARGUMENTS.emailFile4)>
-				<cfmailparam disposition="attachment" file="#ARGUMENTS.emailFile4#">                
-            </cfif>
-            
-            <cfif LEN(ARGUMENTS.emailFile5)>
-				<cfmailparam disposition="attachment" file="#ARGUMENTS.emailFile5#">                
-            </cfif>
-            
-            <cfif LEN(ARGUMENTS.emailFile6)>
-				<cfmailparam disposition="attachment" file="#ARGUMENTS.emailFile6#">                
-            </cfif>
-            
-            <cfif LEN(ARGUMENTS.emailFile7)>
-				<cfmailparam disposition="attachment" file="#ARGUMENTS.emailFile7#">                
-            </cfif>
-
-            <cfif LEN(ARGUMENTS.emailFile8)>
-				<cfmailparam disposition="attachment" file="#ARGUMENTS.emailFile8#">                
-            </cfif>
-
-            <!--- Email Template --->
-            #vEmailTemplate#
+				<!--- Attach File --->
+                <cfif LEN(ARGUMENTS.emailFile1)>
+                    <cfmailparam disposition="attachment" file="#ARGUMENTS.emailFile1#">                
+                </cfif>
+                
+                <cfif LEN(ARGUMENTS.emailFile2)>
+                    <cfmailparam disposition="attachment" file="#ARGUMENTS.emailFile2#">                
+                </cfif>
+                
+                <cfif LEN(ARGUMENTS.emailFile3)>
+                    <cfmailparam disposition="attachment" file="#ARGUMENTS.emailFile3#">                
+                </cfif>
+    
+                <cfif LEN(ARGUMENTS.emailFile4)>
+                    <cfmailparam disposition="attachment" file="#ARGUMENTS.emailFile4#">                
+                </cfif>
+                
+                <cfif LEN(ARGUMENTS.emailFile5)>
+                    <cfmailparam disposition="attachment" file="#ARGUMENTS.emailFile5#">                
+                </cfif>
+                
+                <cfif LEN(ARGUMENTS.emailFile6)>
+                    <cfmailparam disposition="attachment" file="#ARGUMENTS.emailFile6#">                
+                </cfif>
+                
+                <cfif LEN(ARGUMENTS.emailFile7)>
+                    <cfmailparam disposition="attachment" file="#ARGUMENTS.emailFile7#">                
+                </cfif>
+    
+                <cfif LEN(ARGUMENTS.emailFile8)>
+                    <cfmailparam disposition="attachment" file="#ARGUMENTS.emailFile8#">                
+                </cfif>
+    
+                <cfif LEN(ARGUMENTS.emailFile9)>
+                    <cfmailparam disposition="attachment" file="#ARGUMENTS.emailFile8#">                
+                </cfif>
+    
+                <cfif LEN(ARGUMENTS.emailFile10)>
+                    <cfmailparam disposition="attachment" file="#ARGUMENTS.emailFile8#">                
+                </cfif>
+    
+                <!--- Email Template --->
+                #vEmailTemplate#
 
         </cfmail>
 

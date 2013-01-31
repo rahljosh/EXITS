@@ -18,48 +18,6 @@
 		// Get Application Status
 		stApplicationStatus = APPLICATION.CFC.HOST.getApplicationProcess();
 	</cfscript>
-
-	<!--- Get Host Family Information --->
-    <cfquery name="qGetHostFamilyInfo" datasource="#APPLICATION.DSN.Source#">
-        SELECT 
-            h.hostAppStatus,
-            h.familylastname, 
-            h.applicationStarted, 
-            h.email, 
-            h.regionID, 
-            h.areaRepID, 
-            h.lead, 
-            h.hostAppStatus,
-            r.regionname, 
-            u.firstName AS areaRepFirstName,
-            u.lastName AS areaRepLastName,
-            u.email AS areaRepEmail,
-            u.phone AS areaRepPhone,
-            u.work_phone AS areaRepWorkPhone
-        FROM 
-            smg_hosts h
-        LEFT OUTER JOIN 
-            smg_regions r on r.regionID = h.regionID
-        LEFT OUTER JOIN 
-            smg_users u on u.userID = h.areaRepID
-        WHERE 
-            h.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
-    </cfquery>
-
-    <!--- Regional Manager --->
-    <cfquery name="qGetRegionalManager" datasource="#APPLICATION.DSN.Source#">
-        SELECT 
-            u.firstName, 
-            u.lastName
-        FROM 
-            smg_users u
-        LEFT OUTER JOIN 
-            user_access_rights uar on uar.userID = u.userID
-        WHERE 
-            uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostFamilyInfo.regionID)#">
-        AND
-            uar.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="5">
-    </cfquery>
     
 </cfsilent>
 
@@ -118,14 +76,14 @@
                     </tr>
                 </table>
                 
-                <hr align="center" width="80%" style="margin:15px auto 15px auto;" />
+                <hr align="center" width="75%" style="margin:15px auto 15px auto; border:1px solid ##0053a0;" />
                 
                 <p>
-                    <strong> Application Started -</strong> 
-                    <cfif qGetHostFamilyInfo.applicationStarted is ''>
-                        N/A
-                    <cfelse>
+                    <strong> Application Started:</strong> 
+                    <cfif isDate(qGetHostFamilyInfo.applicationStarted)>
                         #DateFormat(qGetHostFamilyInfo.applicationStarted, 'mmm d, yyyy')#
+                    <cfelse>
+                        N/A
                     </cfif>
                 </p>
                 
@@ -152,8 +110,8 @@
                         <cfdefaultcase>
                             
                             <cfif stApplicationStatus.isComplete>
-                                Complete
-                            <cfelse>
+                                Complete - Pending Submission
+                            <cfelse>                                
                                 In Progress - #round(100 * stApplicationStatus.applicationProgress / 300)#% Complete
                             </cfif>
                             
@@ -162,7 +120,7 @@
                     </cfswitch>
                 </p>
                 
-                <hr align="center" width="80%" style="margin:15px auto 15px auto;" />
+                <hr align="center" width="75%" style="margin:15px auto 15px auto; border:1px solid ##0053a0;" />
                 
                 <!--- Area Representative --->
                 <table border="0" cellpadding="0" cellspacng="0" width="300" align="center">
@@ -190,26 +148,21 @@
                             
                         </td>
                         <td>
-							<cfif NOT VAL(qGetHostFamilyInfo.regionID)>
-                                Not Assigned
-                            <cfelse>
-                                #qGetHostFamilyInfo.areaRepFirstName# #qGetHostFamilyInfo.areaRepLastName#
-        
-                                <cfif LEN(qGetHostFamilyInfo.areaRepPhone)>
-                                    <br />
-                                    #qGetHostFamilyInfo.areaRepPhone#
-                                </cfif>
+                            #qGetHostFamilyInfo.areaRepresentative#
 
-                                <cfif LEN(qGetHostFamilyInfo.areaRepWorkPhone)>
-                                    <br />
-                                    #qGetHostFamilyInfo.areaRepWorkPhone#
-                                </cfif>
-                                
-                                <cfif LEN(qGetHostFamilyInfo.areaRepEmail)>
-                                    <br />
-                                    <a href="mailto:#qGetHostFamilyInfo.areaRepEmail#">#qGetHostFamilyInfo.areaRepEmail#</a>
-                                </cfif>
-                                
+                            <cfif LEN(qGetHostFamilyInfo.areaRepPhone)>
+                                <br />
+                                #qGetHostFamilyInfo.areaRepPhone#
+                            </cfif>
+
+                            <cfif LEN(qGetHostFamilyInfo.areaRepWorkPhone)>
+                                <br />
+                                #qGetHostFamilyInfo.areaRepWorkPhone#
+                            </cfif>
+                            
+                            <cfif LEN(qGetHostFamilyInfo.areaRepEmail)>
+                                <br />
+                                <a href="mailto:#qGetHostFamilyInfo.areaRepEmail#">#qGetHostFamilyInfo.areaRepEmail#</a>
                             </cfif>
                         </td>
 					</tr>  
@@ -219,13 +172,7 @@
                 <table border="0" cellpadding="0" cellspacng="0" width="300" align="center" style="margin-top:10px;">
                     <tr>
                     	<td width="130px"><strong>Regional Manager:</strong></td>
-                        <td>
-							<cfif NOT VAL(qGetHostFamilyInfo.regionID)>
-                                Not Assigned
-                            <cfelse>
-                                #qGetRegionalManager.firstName# #qGetRegionalManager.lastName#  
-                            </cfif>
-                        </td>
+                        <td>#qGetHostFamilyInfo.regionalManager#</td>
 					</tr>  
                 </table>
                 
@@ -233,13 +180,7 @@
                 <table border="0" cellpadding="0" cellspacng="0" width="300" align="center" style="margin-top:10px;">
                     <tr>
                     	<td width="130px"><strong>Region:</strong></td>
-                        <td>
-							<cfif NOT VAL(qGetHostFamilyInfo.regionID)>
-                                Not Assigned
-                            <cfelse>
-                                #qGetHostFamilyInfo.regionname#
-                            </cfif>
-                        </td>
+                        <td>#qGetHostFamilyInfo.regionName#</td>
 					</tr>  
                 </table>
                 

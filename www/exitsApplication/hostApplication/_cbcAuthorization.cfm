@@ -284,10 +284,17 @@
                         documentGroup="cbcAuthorization"
                     );
                     
+					// Make sure there are valid family members, if not pass 0
+					if ( qGetFamilyMembers18AndOlder.recordCount ) {
+						vMemberChildIDList = ValueList(qGetFamilyMembers18AndOlder.childID);
+					} else {
+						vMemberChildIDList = 0;
+					}
+					
                     // Host Members Authorization
                     qGetMembersCBCAuthorization = APPLICATION.CFC.DOCUMENT.getDocuments(
                         foreignTable="smg_host_children",																   
-                        foreignIDList=ValueList(qGetFamilyMembers18AndOlder.childID), 
+                        foreignIDList=vMemberChildIDList, 
                         seasonID=APPLICATION.CFC.SESSION.getHostSession().seasonID,
                         documentGroup="cbcAuthorization"
                     );
@@ -304,7 +311,7 @@
                     </cfoutput>
                 </cfsavecontent>    
                 
-                <cfinvoke component="extensions.components.email" method="send_mail">
+                <cfinvoke component="extensions.components.email" method="sendEmail">
                     <cfinvokeargument name="emailTo" value="#qGetHostFamilyInfo.email#">       
                     <cfinvokeargument name="emailFrom" value="hostApp@iseusa.com">
                     <cfinvokeargument name="emailSubject" value="Host Family Application - CBC Authorization Forms">
