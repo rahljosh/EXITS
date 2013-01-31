@@ -151,9 +151,10 @@ where active = 1
             <cfloop query="questions">
                 <cfquery datasource="#application.dsn#">
                 insert into hostRefQuestionaireAnswers (fk_reportID, fk_questionID, answer)
-                                    values(#reportid.reportid#, #id#, <Cfqueryparam cfsqltype="cf_sql_varchar" value="#Evaluate('form.' & id)#"> )
+                                    values(#reportID.reportID#, #id#, <Cfqueryparam cfsqltype="cf_sql_varchar" value="#Evaluate('form.' & id)#"> )
                 </cfquery>
             </cfloop>
+            
         <cfquery name="markApproved" datasource="#application.dsn#">
         update hostRefQuestionaireTracking
         set
@@ -171,8 +172,26 @@ where active = 1
             facilitatorStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="approved">,
             facilitatorDateStatus = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
         </Cfif>
-    	where  id = <cfqueryparam cfsqltype="cf_sql_integer" value="#reportid.reportid#">
-    </cfquery>
+    	where  id = <cfqueryparam cfsqltype="cf_sql_integer" value="#reportID.reportID#">
+    	</cfquery>
+        
+        
+		<cfscript>
+			// Get List of Host Family Applications
+			qGetHostInfo = APPLICATION.CFC.HOST.getApplicationList(hostID=URL.hostID);	
+		
+            // Use same approval process of the host family sections
+            APPLICATION.CFC.HOST.updateReferenceStatus(
+                hostID=qGetHostInfo.hostID,
+                referenceID=reportID.reportID,
+                action="approve",
+                notes="",
+                areaRepID=qGetHostInfo.areaRepID,
+                regionalAdvisorID=qGetHostInfo.regionalAdvisorID,
+                regionalManagerID=qGetHostInfo.regionalManagerID
+            );
+        </cfscript>       
+        
             <body onload="opener.location.reload()">
            
 			<script language="javascript">

@@ -300,35 +300,30 @@
             
             </cfif>
             
-            <!--- approve report --->  
-            <cfif APPLICATION.CFC.USER.isOfficeUser() OR ( CLIENT.userID EQ qGetConfidentialVisitForm[stCurrentUserFieldSet.prUserFieldName][qGetConfidentialVisitForm.currentrow] )>
-            
-            	<cfscript>
-					// Use same approval process of the host family sections
-					APPLICATION.CFC.HOST.updateSectionStatus(
-						hostID=FORM.hostID,
-						itemID=8,
-                        action="approved",
-                        notes="",
-						areaRepID=qGetHostInfo.areaRepresentativeID,
-						regionalAdvisorID=qGetHostInfo.regionalAdvisorID,
-						regionalManagerID=qGetHostInfo.regionalManagerID
-					);
-				</cfscript>
-            
-            	<!--- Approved on the PR Table as Well --->
-                <cfquery datasource="#APPLICATION.DSN#" result="test">
-                    UPDATE 
-                    	progress_reports 
-                    SET
-                    	#stCurrentUserFieldSet.prApproveFieldName# = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
-                    	pr_rejected_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">
-                    WHERE 
-                    	pr_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">
-                </cfquery>
-                
-            </cfif>  
-            
+			<cfscript>
+                // Use same approval process of the host family sections
+                APPLICATION.CFC.HOST.updateSectionStatus(
+                    hostID=FORM.hostID,
+                    itemID=8,
+                    action="approved",
+                    notes="",
+                    areaRepID=qGetHostInfo.areaRepresentativeID,
+                    regionalAdvisorID=qGetHostInfo.regionalAdvisorID,
+                    regionalManagerID=qGetHostInfo.regionalManagerID
+                );
+            </cfscript>
+        
+            <!--- Approved on the PR Table as Well --->
+            <cfquery datasource="#APPLICATION.DSN#" result="test">
+                UPDATE 
+                    progress_reports 
+                SET
+                    #stCurrentUserFieldSet.prApproveFieldName# = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
+                    pr_rejected_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+                WHERE 
+                    pr_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">
+            </cfquery>
+        
             <cfscript>
 				// Set Page Message
 				SESSION.pageMessages.Add("Report successfully submitted. This window will close shortly.");
