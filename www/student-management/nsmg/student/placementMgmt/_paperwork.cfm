@@ -167,9 +167,23 @@
 			param name="FORM.#qGetDoublePlacementPaperworkHistory.ID[i]#_doublePlacementHostFamilyDateSigned" default="";
 			param name="FORM.#qGetDoublePlacementPaperworkHistory.ID[i]#_doublePlacementHostFamilyDateCompliance" default="";
 		}
+			
 		
 		// FORM SUBMITTED
 		if ( VAL(FORM.submitted) ) {
+				// Data Validation
+				
+		}
+		if ( VAL(FORM.submitted) ) {
+			//Date of student orientation after arrival
+			if ( isDate(FORM.stu_arrival_orientation) AND ( FORM.stu_arrival_orientation LT FORM.studentArrivalDate ) ) {
+				SESSION.formErrors.Add("Student orientation date must be completed after Student Arrival - #dateFormat(studentArrivalDate, 'mm/dd/yyyy')#");
+				form.stu_arrival_orientation = '';
+			}
+			//if ( isDate(FORM.doc_date_of_visit) AND ( FORM.host_arrival_orientation LT FORM.hostFamConfVisit OR FORM.host_arrival_orientation GT FORM.studentArrivalDate ) ) {
+			//SESSION.formErrors.Add("HF Orientation must be completed after Conf. Host Visit - #dateFormat(form.hostFamConfVisit, 'mm/dd/yyyy')# and before Student Arrival - #dateFormat(FORM.studentArrivalDate, 'mm/dd/yyyy')#");
+			//	form.host_arrival_orientation = '';
+			//}	
 			
 			// Update fields on the student table
 			APPLICATION.CFC.STUDENT.updatePlacementPaperworkHistory(
@@ -752,6 +766,7 @@
         messageType="tableSection"
         width="90%"
         />
+      
 
     <table width="90%" cellpadding="2" cellspacing="0" class="section" align="center">            
         <tr class="reportCenterTitle">
@@ -773,7 +788,10 @@
         <input type="hidden" name="compliandeLogIDList" value="#ValueList(qGetComplianceHistory.ID)#">
         <input type="hidden" name="dateOf2ndVisit" id="dateOf2ndVisit" value="#DateFormat(qGetSecondVisitReport.dateOfVisit, 'mm/dd/yyyy')#">
         <input type="hidden" name="dateEndWindowCompliance" id="dateEndWindowCompliance" value="#DateFormat(vDateEndWindowCompliance, 'mm/dd/yyyy')#">
-	
+        <input type="hidden" name="studentArrivalDate" id="studentArrivalDate" value="#DateFormat(qGetArrival.dep_date, 'mm/dd/yyyy')#">
+        <input type="hidden" name="hostFamConfVisit" id="hostFamConfVisit" value="#DateFormat(FORM.doc_date_of_visit, 'mm/dd/yyyy')#">
+        
+        
         <cfswitch expression="#vPlacementStatus#">
             
             <cfcase value="unplaced">
