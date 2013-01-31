@@ -117,15 +117,15 @@ Please follow these guidlines when creating your password:<br>
 <table border=0 cellpadding=4 cellspacing=0>
     <tr>
     	<td class="label">Current Password: <span class="redtext">*</span></td>
-        <td><cfinput type="password" name="old_password" value="#form.old_password#" size="20" maxlength="15" required="yes" validate="noblanks" message="Please enter the Old Password."></td>
+        <td><cfinput type="password" name="old_password" value="#form.old_password#" class="largeField" maxlength="30" required="yes" validate="noblanks" message="Please enter the Old Password."></td>
     </tr>
     <tr>
     	<td class="label">New Password: <span class="redtext">*</span></td>
-        <td><cfinput type="password" name="new_password" value="#form.new_password#" size="20" maxlength="15" required="yes" validate="noblanks" mask="EB-9999-XX-999999" message="Please enter the New Password."></td>
+        <td><cfinput type="password" name="new_password" value="#form.new_password#" class="largeField" maxlength="30" required="yes" validate="noblanks" message="Please enter the New Password."></td>
     </tr>
     <tr>
     	<td class="label">Verify New Password: <span class="redtext">*</span></td>
-        <td><cfinput type="password" name="verify_new_password" value="#form.verify_new_password#" size="20" maxlength="15" required="yes" validate="noblanks" message="Please verify the New Password."></td>
+        <td><cfinput type="password" name="verify_new_password" value="#form.verify_new_password#" class="largeField" maxlength="30" required="yes" validate="noblanks" message="Please verify the New Password."></td>
     </tr>
 </table>
 
