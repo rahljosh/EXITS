@@ -230,11 +230,11 @@
                     
                     <table width="100%">
                         <tr>
-                            <td width="10px"><input type="radio" name="race" id="raceWhite" value="Caucasian" <cfif FORM.race EQ 'Caucasian'>checked</cfif> /></td>
+                            <td width="10px"><input type="radio" name="race" id="raceWhite" value="Caucasian" <cfif listFind("Caucasian", FORM.race)>checked</cfif> /></td>
                             <td><label for="raceWhite">Caucasian</label></td>
-                            <td width="10px"><input type="radio" name="race" id="raceAfrican" value="African American" <cfif FORM.race EQ 'African American'>checked</cfif> /></td>
+                            <td width="10px"><input type="radio" name="race" id="raceAfrican" value="African American" <cfif listFind("African American", FORM.race)>checked</cfif> /></td>
                             <td><label for="raceAfrican">African American</label></td>
-                            <td width="10px"><input type="radio" name="race" id="raceHispanic" value="Hispanic" <cfif FORM.race EQ 'Hispanic'>checked</cfif> /></td>
+                            <td width="10px"><input type="radio" name="race" id="raceHispanic" value="Hispanic" <cfif listFind("Hispanic", FORM.race)>checked</cfif> /></td>
                             <td><label for="raceHispanic">Hispanic</label></td>
                         </tr>
                         <tr>
