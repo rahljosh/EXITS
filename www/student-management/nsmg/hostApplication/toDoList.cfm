@@ -195,7 +195,7 @@
 				}
 				
 				// Check if Confidential Host Family Visit Form Has Been Submitted
-				if ( NOT qGetConfidentialVisitForm.recordCount ) {
+				if ( vAction NEQ 'denied' AND NOT qGetConfidentialVisitForm.recordCount ) {
 					SESSION.formErrors.Add("Confidential Host Family Visit Form - Please submit a report");
 				}
 				
@@ -518,7 +518,9 @@
 								<cfelseif qGetApprovalHistory[stOneLevelUpFieldSet.statusFieldName][qGetApprovalHistory.currentrow] EQ 'approved' OR ( qGetApprovalHistory[stCurrentUserFieldSet.statusFieldName][qGetApprovalHistory.currentrow] EQ 'approved' AND qGetHostInfo.hostAppStatus LT CLIENT.userType )>
 									
                                     <font color="##CCCCCC"><em>Previously Approved</em></font>
-									<input type="hidden" name="sectionStatus#qGetApprovalHistory.ID#" value="#FORM['sectionStatus' & qGetApprovalHistory.ID]#" /> 
+                                    <!--- This will automatically approve items in case upper lever has approved them | In the future we can give the approval/deny option --->
+									<input type="hidden" name="sectionStatus#qGetApprovalHistory.ID#" value="approved" /> 
+                                    <!--- input type="hidden" name="sectionStatus#qGetApprovalHistory.ID#" value="#FORM['sectionStatus' & qGetApprovalHistory.ID]#" />  --->
                                     
                                 <!--- Approve/Deny Options --->      
 								<cfelseif qGetHostInfo.hostAppStatus GTE CLIENT.userType>
@@ -729,7 +731,7 @@
                             </td>
                             <td>#qGetReferences.firstname# #qGetReferences.lastname# - #qGetReferences.phone#</td>
                             <td>
-
+								
 								<!--- There is an approved report, display link --->
                                 <cfif VAL(qGetReferences.isSubmitted)>	
 

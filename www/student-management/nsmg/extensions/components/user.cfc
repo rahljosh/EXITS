@@ -267,6 +267,7 @@
 				
 				// Local Environment
 				SESSION.USER.companyURL = "http://smg.local/";
+				SESSION.USER.hostApplicationURL = 'http://host.local/';
 				SESSION.USER.emailSupport = 'support@student-management.com';
 				
 			} else { 
@@ -274,8 +275,10 @@
 				// Production Environment
 				SESSION.USER.companyURL = "https://#CGI.SERVER_NAME#/";
 				if ( FindNoCase("case.exitsapplication.com", CGI.SERVER_NAME) ) {
+					SESSION.USER.hostApplicationURL = 'http://www.case-usa.org/hostApplication/';
 					SESSION.USER.emailSupport = 'support@case-usa.org';
 				} else {
+					SESSION.USER.hostApplicationURL = 'https://www.iseusa.com/hostApplication/';
 					SESSION.USER.emailSupport = 'support@iseusa.com';
 				}
 				
@@ -310,12 +313,25 @@
 					// Set Session
 					setUserSession();
 				}
-				
+
+				// Param Session Variables so we don't get any errors with new ones
+				param name="SESSION.USER.ID" default="";
+				param name="SESSION.USER.firstName" default="";
+				param name="SESSION.USER.lastName" default="";
+				param name="SESSION.USER.fullName" default="";
+				param name="SESSION.USER.dateLastLoggedIn" default="";
+				param name="SESSION.USER.email" default="";
+				param name="SESSION.USER.companyURL" default="";
+				param name="SESSION.USER.hostApplicationURL" default="";
+				param name="SESSION.USER.emailSupport" default="";
+				param name="SESSION.USER.paperworkSkipAllowed" default="false";
+				param name="SESSION.USER.myUploadFolder" default="";
+
 			} catch (Any e) {
 				// Set Session
 				setUserSession();
 			}
-			
+
 			// Make Sure Structs are not empty
 			return SESSION.USER;
 		</cfscript>
