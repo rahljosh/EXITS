@@ -44,8 +44,8 @@
 		IF ( VAL(FORM.submitted) ) {
 			CLIENT.programID = FORM.programID;
 			CLIENT.isCancelled = FORM.isCancelled;
-			CLIENT.reportMonth = FORM.reportMonth;
 			CLIENT.isComplete = FORM.isComplete;
+			CLIENT.reportMonth = FORM.reportMonth;
 		}
 		
 		if ( VAL(CLIENT.reportMonth) ) {
@@ -91,8 +91,7 @@
                     spt.dec_report, 
                     spt.feb_report, 
                     spt.april_report, 
-                    spt.june_report,
-                    pr.*
+                    spt.june_report
                 FROM 
                     smg_students s
                 INNER JOIN 
@@ -107,10 +106,6 @@
                     smg_programs p ON php.programid = p.programid
                 INNER JOIN 
                     smg_program_type spt ON p.type = spt.programtypeid
-               	LEFT JOIN
-                	progress_reports pr ON pr.fk_student = s.studentID
-                    AND 
-                    	pr.pr_month_of_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.reportMonth#">
                 WHERE 
                     php.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
                 AND 
@@ -140,19 +135,7 @@
                         )
                 </cfif>
                 
-                <!--- progress report completion status --->
-                <cfif FORM.isComplete EQ "approved">
-                	AND pr.pr_ny_approved_date IS NOT NULL
-               	<cfelseif FORM.isComplete EQ "rejected">
-                	AND pr.pr_rejected_date IS NOT NULL
-              	<cfelseif FORM.isComplete EQ "incomplete">
-                	AND pr.pr_ny_approved_date IS NULL
-                    AND pr.pr_rejected_date IS NULL
-               	</cfif>
-                
                 <!--- include the suNYID and arearepid because we're grouping by those in the output, just in case two have the same first and last name. --->
-                GROUP BY
-                	s.studentID
                 ORDER BY 
                     facilitatorLastName, 
                     facilitatorFirstName, 
@@ -234,6 +217,15 @@
                 messageType="onlineApplication"
                 width="98%"
                 />
+			
+            <!---
+			<table width="100%" cellpadding="0" cellspacing="0" border="0">
+				<tr>
+					<td><font size="4"><strong>Progress Reports</strong></font></td>
+					<td align="right"><a href="index.cfm?curdoc=lists/agent_approve_list">Progress Reports submitted prior to 09/16/2009</a></td>
+				</tr>
+			</table>
+			--->
 
             <cfform action="index.cfm?curdoc=lists/progress_reports" method="post">
             	<input name="submitted" type="hidden" value="1">
@@ -264,13 +256,13 @@
                             </select>            
                         </td>
                         <td>
-                            <strong>Completion</strong><br />
+                        	<strong>Completion</strong><br/>
                             <select name="isComplete" class="largeField">
-                            	<option value="all" <cfif CLIENT.isComplete EQ "all">selected</cfif>>All</option>
-                                <option value="approved" <cfif CLIENT.isComplete EQ "approved">selected</cfif>>Approved</option>
-                                <option value="rejected" <cfif CLIENT.isComplete EQ "rejected">selected</cfif>>Rejected</option>
-                                <option value="incomplete" <cfif CLIENT.isComplete EQ "incomplete">selected</cfif>>Incomplete</option>
-                            </select>            
+                            	<option value="all" <cfif CLIENT.isComplete EQ "all">selected="selected"</cfif>>All</option>
+                                <option value="approved" <cfif CLIENT.isComplete EQ "approved">selected="selected"</cfif>>Approved</option>
+                                <option value="rejected" <cfif CLIENT.isComplete EQ "rejected">selected="selected"</cfif>>Rejected</option>
+                                <option value="incomplete" <cfif CLIENT.isComplete EQ "incomplete">selected="selected"</cfif>>Incomplete</option>
+                            </select>
                         </td>
                         <td><input name="send" type="submit" value="Submit" /></td>
                     </tr>
@@ -284,6 +276,26 @@
             <cfif VAL(FORM.submitted) AND NOT SESSION.formErrors.length()>
 
 				<cfif VAL(qGetResults.recordCount)>
+                
+					<!--- get the reports, used in a query of query below, because LEFT JOIN is too slow in mySQL. --->
+                    <cfquery name="qGetAllReports" datasource="#APPLICATION.DSN#">
+                        SELECT 
+                        	*
+                        FROM 
+                        	progress_reports
+                        WHERE 
+                        	fk_student IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#valueList(qGetResults.studentid)#" list="yes"> )
+                        AND 
+                        	pr_month_of_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.reportMonth#">
+						<cfif FORM.isComplete EQ "approved">
+                            AND NOT pr_ny_approved_date IS NULL
+                        <cfelseif FORM.isComplete EQ "rejected">
+                            AND pr_rejected_date != ""
+                        <cfelseif FORM.isComplete EQ "incomplete">
+                            AND pr_ny_approved_date != ""
+                            AND pr_rejected_date != ""
+                        </cfif>
+                    </cfquery>
                     
                     <table width="100%" cellspacing="2" cellpadding="2" border="0">
 						<cfoutput query="qGetResults" group="facilitatorID">
@@ -305,157 +317,192 @@
                             </tr>
                             
                             <cfoutput group="arearepid">
-                                <tr>
-                                    <th colspan="9" align="left" bgcolor="##CCCCCC">&nbsp;#rep_firstname# #rep_lastname# (#arearepid#)</th>
-                                </tr>                               
-                                <tr style="font-weight:bold;">
-                                    <td width="15">&nbsp;</td>
-                                    <td>Student</td>
-                                    <td>Program</td>
-                                    <td>Submitted</td>
-                                    <td>Action</td>
-                                    <td align="center">SR Approved</td>
-                                    <td align="center">SSR Approved</td>
-                                    <td align="center">NY Approved</td>
-                                    <td align="center">Rejected</td>
-                                </tr>
+                            	<cfset displayRep = 0>
+								<cfoutput>
+                                	<cfquery name="qGetStudentReport" dbtype="query">
+                                        SELECT 
+                                        	*
+                                        FROM 
+                                        	qGetAllReports
+                                        WHERE 
+                                        	fk_student = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.studentID#">
+                                        AND 
+                                        	fk_program = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.programID#">
+                                    </cfquery>
+                                    <cfif VAL(qGetStudentReport.recordCount)>
+                                    	<cfset displayRep = 1>
+                                    </cfif>
+                                </cfoutput>
+                            
+                            	<cfif FORM.isComplete EQ "all" OR VAL(displayRep)>
+                                    <tr>
+                                        <th colspan="9" align="left" bgcolor="##CCCCCC">&nbsp;#rep_firstname# #rep_lastname# (#arearepid#)</th>
+                                    </tr>                               
+                                    <tr style="font-weight:bold;">
+                                        <td width="15">&nbsp;</td>
+                                        <td>Student</td>
+                                        <td>Program</td>
+                                        <td>Submitted</td>
+                                        <td>Action</td>
+                                        <td align="center">SR Approved</td>
+                                        <td align="center">SSR Approved</td>
+                                        <td align="center">NY Approved</td>
+                                        <td align="center">Rejected</td>
+                                    </tr>
+                              	</cfif>
                                 
                             	<cfset vCurrentRow = 0>
                             
 								<cfoutput>
+                                
+                                    <cfquery name="qGetStudentReport" dbtype="query">
+                                        SELECT 
+                                        	*
+                                        FROM 
+                                        	qGetAllReports
+                                        WHERE 
+                                        	fk_student = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.studentID#">
+                                        AND 
+                                        	fk_program = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.programID#">
+                                    </cfquery>
                                     
-									<cfset vCurrentRow = vCurrentRow + 1>
+                                    <cfif FORM.isComplete EQ "all" OR VAL(qGetStudentReport.recordCount)>
                                     
-                                    <tr <cfif vCurrentRow MOD 2>bgcolor="##ffffff"</cfif>>
-                                        <td>&nbsp;</td>
-                                        <td>
-                                            <!--- put in red if user is the supervising rep for this student. --->
-                                            <cfif arearepid EQ CLIENT.userid>
-                                                <font color="FF0000"><strong>#qGetResults.firstname# #qGetResults.familylastname# (###qGetResults.studentid#)</strong></font>
-                                            <cfelse>
-                                                #qGetResults.firstname# #qGetResults.familylastname# (###qGetResults.studentid#)
-                                            </cfif>
-                                        </td>
-                                        <td>#qGetResults.programname#</td>
-                                        <td>#yesNoFormat(qGetResults.fk_student)#</td>
-                                        <!--- these <td>'s are separate because the add form needs to be outside them. --->
-                                        <cfif VAL(qGetResults.fk_student)>
-                                            
-                                            <!--- access is limited to: CLIENT.usertype LTE 4, supervising rep, school supervising rep, and NY. --->
-                                            <cfif CLIENT.usertype LTE 4 or listFind("#qGetResults.fk_sr_user#,#qGetResults.fk_ssr_user#,#qGetResults.fk_ny_user#", CLIENT.userid)>
-                                                
-                                                <!--- restrict view of report until the supervising rep approves it. --->
-                                                <cfif qGetResults.pr_sr_approved_date EQ '' and qGetResults.fk_sr_user NEQ CLIENT.userid>
+										<cfset vCurrentRow = vCurrentRow + 1>
                                         
-                                                    <td>Pending</td>
-                                                    
-                                                <cfelse>
-                                                
-                                                    <form action="index.cfm?curdoc=lists/progress_report_info" method="post" name="theForm_#qGetResults.pr_id#" id="theForm_#qGetResults.pr_id#">
-                                                        <input type="hidden" name="pr_id" value="#qGetResults.pr_id#">
-                                                    </form>
-                                                
-                                                    <td><a href="javascript:document.theForm_#qGetResults.pr_id#.submit();">View</a></td>
-                                                
-                                                </cfif>
-                                        
-                                            <cfelse>
-                                            
-                                                <td>N/A</td>
-                                            
-                                            </cfif>
-                                        
-                                        <!--- add report link --->
-                                        <cfelse>
-
-                                            <cfscript>
-                                                // Set Previous Report Month
-                                                vPreviousReportMonth = 0;
-                                                vIsPreviousReportApproved = 0;
-                                                
-                                                switch(CLIENT.reportMonth) {
-                                                    case "12":
-                                                        vPreviousReportMonth = 9;
-                                                        break;
-                        
-                                                    case "2":
-                                                        vPreviousReportMonth = 12;
-                                                        break;
-                        
-                                                    case "4":
-                                                        vPreviousReportMonth = 2;
-                                                        break;
-                        
-                                                    case "6":
-                                                        vPreviousReportMonth = 4;
-                                                        break;
-                                                }
-                                                
-                                                // There is no previous report - allow entering a new one
-                                                if ( NOT VAL(vPreviousReportMonth) ) {
-                                                    vIsPreviousReportApproved = 1;	
-                                                }
-                                            </cfscript>
-                                                
-                                            <!--- Check if previous report has been submitted --->
-                                            <Cfquery name="qGetPreviousReport" datasource="#APPLICATION.DSN#">
-                                                SELECT 
-                                                    pr_ny_approved_date 
-                                                FROM 
-                                                    progress_reports
-                                                WHERE 
-                                                    fk_reportType = <cfqueryparam cfsqltype="cf_sql_integer" value="1"> 
-                                                AND 
-                                                    fk_student = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.studentid#">
-                                                AND 
-                                                    pr_month_of_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(vPreviousReportMonth)#">
-                                                AND
-                                                    fk_sr_user = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.arearepID#">
-                                                AND
-                                                    fk_program = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.programID#">
-                                            </cfquery>
-                                        
-                                            <cfscript>
-                                                // There is an approved previous report - allow entering a new one
-                                                if ( isDate(qGetPreviousReport.pr_ny_approved_date) ) {
-                                                    vIsPreviousReportApproved = 1;	
-                                                }
-                                            </cfscript>
-                                                    
+                                        <tr <cfif vCurrentRow MOD 2>bgcolor="##ffffff"</cfif>>
+                                            <td>&nbsp;</td>
                                             <td>
-                                                <!--- to add a progress report, user must be the supervising rep, and the program has a report for this phase. --->
-                                                <cfif VAL(qGetPreviousReport.recordCount) AND VAL(vPreviousReportMonth) AND NOT VAL(vIsPreviousReportApproved)>
-                                                    Waiting on #MonthAsString(vPreviousReportMonth)# report approval. Once previous report is approved you will be able to create #MonthAsString(CLIENT.reportMonth)# report.				                                                    
-                                                <cfelseif arearepid EQ CLIENT.userid AND EVALUATE(dbfield)> <!--- AND VAL(vIsPreviousReportApproved) --->
-                                                    <form action="index.cfm?curdoc=forms/pr_add" method="post">
-                                                        <input type="hidden" name="assignedid" value="#assignedid#">
-                                                        <input type="hidden" name="month_of_report" value="#CLIENT.reportMonth#">
-                                                        <input name="Submit" type="image" src="pics/new.gif" alt="Add New Report" border="0">
-                                                    </form>
-                                                <!---
-                                                <cfelseif VAL(vPreviousReportMonth) AND NOT VAL(qGetPreviousReport.recordCount)>
-                                                    <span style="color:##F00">
-                                                        Previous report is MISSING. You must submit #MonthAsString(vPreviousReportMonth)# report prior to #MonthAsString(CLIENT.reportMonth)# report.
-                                                    </span>
-                                                --->
+                                                <!--- put in red if user is the supervising rep for this student. --->
+                                                <cfif arearepid EQ CLIENT.userid>
+                                                    <font color="FF0000"><strong>#qGetResults.firstname# #qGetResults.familylastname# (###qGetResults.studentid#)</strong></font>
                                                 <cfelse>
-                                                    N/A
+                                                    #qGetResults.firstname# #qGetResults.familylastname# (###qGetResults.studentid#)
                                                 </cfif>
                                             </td>
+                                            <td>#qGetResults.programname#</td>
+                                            <td>#yesNoFormat(qGetStudentReport.recordCount)#</td>
+                                            <!--- these <td>'s are separate because the add form needs to be outside them. --->
+                                            <cfif qGetStudentReport.recordCount>
+                                                
+                                                <!--- access is limited to: CLIENT.usertype LTE 4, supervising rep, school supervising rep, and NY. --->
+                                                <cfif CLIENT.usertype LTE 4 or listFind("#qGetStudentReport.fk_sr_user#,#qGetStudentReport.fk_ssr_user#,#qGetStudentReport.fk_ny_user#", CLIENT.userid)>
+                                                    
+                                                    <!--- restrict view of report until the supervising rep approves it. --->
+                                                    <cfif qGetStudentReport.pr_sr_approved_date EQ '' and qGetStudentReport.fk_sr_user NEQ CLIENT.userid>
                                             
-                                        </cfif>
-                                        
-                                        <td align="center">#dateFormat(qGetResults.pr_sr_approved_date, 'mm/dd/yyyy')#</td>
-                                        <td align="center">
-                                            <cfif facilitatorID EQ ''>
-                                                N/A
+                                                        <td>Pending</td>
+                                                        
+                                                    <cfelse>
+                                                    
+                                                        <form action="index.cfm?curdoc=lists/progress_report_info" method="post" name="theForm_#qGetStudentReport.pr_id#" id="theForm_#qGetStudentReport.pr_id#">
+                                                            <input type="hidden" name="pr_id" value="#qGetStudentReport.pr_id#">
+                                                        </form>
+                                                    
+                                                        <td><a href="javascript:document.theForm_#qGetStudentReport.pr_id#.submit();">View</a></td>
+                                                    
+                                                    </cfif>
+                                            
+                                                <cfelse>
+                                                
+                                                    <td>N/A</td>
+                                                
+                                                </cfif>
+                                            
+                                            <!--- add report link --->
                                             <cfelse>
-                                                #dateFormat(qGetResults.pr_ssr_approved_date, 'mm/dd/yyyy')#
+    
+                                                <cfscript>
+                                                    // Set Previous Report Month
+                                                    vPreviousReportMonth = 0;
+                                                    vIsPreviousReportApproved = 0;
+                                                    
+                                                    switch(CLIENT.reportMonth) {
+                                                        case "12":
+                                                            vPreviousReportMonth = 9;
+                                                            break;
+                            
+                                                        case "2":
+                                                            vPreviousReportMonth = 12;
+                                                            break;
+                            
+                                                        case "4":
+                                                            vPreviousReportMonth = 2;
+                                                            break;
+                            
+                                                        case "6":
+                                                            vPreviousReportMonth = 4;
+                                                            break;
+                                                    }
+                                                    
+                                                    // There is no previous report - allow entering a new one
+                                                    if ( NOT VAL(vPreviousReportMonth) ) {
+                                                        vIsPreviousReportApproved = 1;	
+                                                    }
+                                                </cfscript>
+                                                    
+                                                <!--- Check if previous report has been submitted --->
+                                                <Cfquery name="qGetPreviousReport" datasource="#APPLICATION.DSN#">
+                                                    SELECT 
+                                                        pr_ny_approved_date 
+                                                    FROM 
+                                                        progress_reports
+                                                    WHERE 
+                                                        fk_reportType = <cfqueryparam cfsqltype="cf_sql_integer" value="1"> 
+                                                    AND 
+                                                        fk_student = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.studentid#">
+                                                    AND 
+                                                        pr_month_of_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(vPreviousReportMonth)#">
+                                                    AND
+                                                        fk_sr_user = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.arearepID#">
+                                                    AND
+                                                        fk_program = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.programID#">
+                                                </cfquery>
+                                            
+                                                <cfscript>
+                                                    // There is an approved previous report - allow entering a new one
+                                                    if ( isDate(qGetPreviousReport.pr_ny_approved_date) ) {
+                                                        vIsPreviousReportApproved = 1;	
+                                                    }
+                                                </cfscript>
+                                                        
+                                                <td>
+                                                    <!--- to add a progress report, user must be the supervising rep, and the program has a report for this phase. --->
+                                                    <cfif VAL(qGetPreviousReport.recordCount) AND VAL(vPreviousReportMonth) AND NOT VAL(vIsPreviousReportApproved)>
+                                                        Waiting on #MonthAsString(vPreviousReportMonth)# report approval. Once previous report is approved you will be able to create #MonthAsString(CLIENT.reportMonth)# report.				                                                    
+                                                    <cfelseif arearepid EQ CLIENT.userid AND EVALUATE(dbfield)> <!--- AND VAL(vIsPreviousReportApproved) --->
+                                                        <form action="index.cfm?curdoc=forms/pr_add" method="post">
+                                                            <input type="hidden" name="assignedid" value="#assignedid#">
+                                                            <input type="hidden" name="month_of_report" value="#CLIENT.reportMonth#">
+                                                            <input name="Submit" type="image" src="pics/new.gif" alt="Add New Report" border="0">
+                                                        </form>
+                                                    <!---
+                                                    <cfelseif VAL(vPreviousReportMonth) AND NOT VAL(qGetPreviousReport.recordCount)>
+                                                        <span style="color:##F00">
+                                                            Previous report is MISSING. You must submit #MonthAsString(vPreviousReportMonth)# report prior to #MonthAsString(CLIENT.reportMonth)# report.
+                                                        </span>
+                                                    --->
+                                                    <cfelse>
+                                                        N/A
+                                                    </cfif>
+                                                </td>
+                                                
                                             </cfif>
-                                        </td>
-                                        <td align="center">#dateFormat(qGetResults.pr_ny_approved_date, 'mm/dd/yyyy')#</td>
-                                        <td align="center">#dateFormat(qGetResults.pr_rejected_date, 'mm/dd/yyyy')#</td>
-                                    </tr>
+                                            
+                                            <td align="center">#dateFormat(qGetStudentReport.pr_sr_approved_date, 'mm/dd/yyyy')#</td>
+                                            <td align="center">
+                                                <cfif facilitatorID EQ ''>
+                                                    N/A
+                                                <cfelse>
+                                                    #dateFormat(qGetStudentReport.pr_ssr_approved_date, 'mm/dd/yyyy')#
+                                                </cfif>
+                                            </td>
+                                            <td align="center">#dateFormat(qGetStudentReport.pr_ny_approved_date, 'mm/dd/yyyy')#</td>
+                                            <td align="center">#dateFormat(qGetStudentReport.pr_rejected_date, 'mm/dd/yyyy')#</td>
+                                        </tr>
+                                        
+                                  	</cfif>
+                                    
                             	</cfoutput> <!--- Students --->
                                 
                             </cfoutput> <!--- Area Rep --->
