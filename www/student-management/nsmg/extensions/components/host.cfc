@@ -524,12 +524,13 @@
 
 	<cffunction name="getApplicationList" access="public" returntype="query" output="false" hint="Gets a list of host family applications">
         <cfargument name="hostID" default="" hint="hostID">
+        <cfargument name="uniqueID" default="" hint="uniqueID">
         <cfargument name="statusID" default="" hint="statusID is not required">
         <cfargument name="companyID" default="#CLIENT.companyID#" hint="CompanyID is not required">
         <cfargument name="userType" default="#CLIENT.userType#" hint="userType is not required">
         <cfargument name="regionID" default="#CLIENT.regionID#" hint="regionID is not required">
         <cfargument name="userID" default="#CLIENT.userID#" hint="userID is not required">
-		
+
         <cfquery 
 			name="qGetApplicationList" 
 			datasource="#APPLICATION.DSN#">
@@ -700,6 +701,10 @@
                     <cfif LEN(ARGUMENTS.hostID)>
                         AND
                             h.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
+					<!--- Unique ID --->
+					<cfelseif LEN(ARGUMENTS.uniqueID)>
+                        AND
+                            h.uniqueID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.uniqueID#">
 					<!--- We are getting a list of families so make sure we get only active and families from the appropriate company --->
 					<cfelse>
                     
@@ -793,6 +798,8 @@
 
 	<cffunction name="getReferences" access="public" returntype="query" output="false" hint="Gets references for a host family application">
         <cfargument name="hostID" default="" hint="HostID is not required">
+        <cfargument name="refID" default="" hint="refID is not required">
+		<cfargument name="seasonID" default="" hint="Current Paperwork Season ID">        
         <cfargument name="getCurrentUserApprovedReferences" default="0" hint="Pass userType to get current user ID approved references">
         
         <cfquery 
@@ -812,8 +819,11 @@
                     sfr.referenceFor,
                     sfr.approved,
                     hrqt.ID,
+                    hrqt.dateInterview,
+                    hrqt.areaRepID,
+                    hrqt.fk_referencesID,
                     hrqt.season,
-                    hrqt.isSubmitted,
+                    hrqt.hostID,
                     hrqt.areaRepStatus,
                     hrqt.areaRepDateStatus,
                     hrqt.areaRepNotes,                    
@@ -832,11 +842,24 @@
                     smg_family_references sfr
                 LEFT OUTER JOIN
                 	smg_host_reference_tracking hrqt ON hrqt.fk_referencesID = sfr.refID
+
+					<!--- Get SeasonID --->
+                    <cfif LEN(ARGUMENTS.seasonID)>
+                        AND
+                            hrqt.season = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
+                    </cfif>
+                    
                 LEFT OUTER JOIN
                 	smg_users u ON u.userID = hrqt.interviewer
                 WHERE
-                	referenceFor = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
-
+                	sfr.referenceFor = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
+				
+                <!--- Get RefID --->
+                <cfif LEN(ARGUMENTS.refID)>
+                	AND
+                    	sfr.refID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.refID)#">
+                </cfif>
+                
 				<!--- Get Approved References for current User --->
                 <cfswitch expression="#ARGUMENTS.getCurrentUserApprovedReferences#">
                 	
@@ -878,6 +901,55 @@
         		   
 		<cfreturn qGetReferences>
 	</cffunction>
+    
+
+	<cffunction name="getReferenceQuestionnaireQuestions" access="public" returntype="query" output="false" hint="Gets references questionnaire questions">
+        
+        <cfquery 
+			name="qGetReferenceQuestionnaireQuestions" 
+			datasource="#APPLICATION.DSN#">
+                SELECT 
+                	*
+                FROM 
+                	smg_host_reference_questions
+                WHERE
+                	active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">  
+				ORDER BY
+                	ID                                       
+        </cfquery>
+        
+        <cfreturn qGetReferenceQuestionnaireQuestions>        
+	</cffunction>      
+    
+    
+	<cffunction name="getReferenceQuestionnaireAnswers" access="public" returntype="query" output="false" hint="Gets references questionnaire anwers">
+        <cfargument name="fk_reportID" default="0" hint="fk_reportID is not required">
+
+        <cfquery 
+			name="qGetReferenceQuestionnaireQuestions" 
+			datasource="#APPLICATION.DSN#">
+                SELECT 
+                	shrq.ID,
+                    shrq.active,
+                    shrq.qText,
+                    shra.ID AS answerID,
+                    shra.fk_reportID,
+                    shra.fk_questionID,
+                    shra.answer
+                FROM 
+                	smg_host_reference_questions shrq
+                LEFT OUTER JOIN
+                	smg_host_reference_answers shra ON shra.fk_questionID = shrq.ID 
+                	AND
+                    	fk_reportID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.fk_reportID)#">
+                WHERE
+                	shrq.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">   
+				ORDER BY
+                	shrq.ID                                       
+        </cfquery>
+        
+        <cfreturn qGetReferenceQuestionnaireQuestions>        
+	</cffunction>      
 
 
 	<cffunction name="getApplicationApprovalHistory" access="public" returntype="query" output="false" hint="Gets a list of items and their approval history">
@@ -1166,15 +1238,17 @@
     
     
 	<cffunction name="updateReferenceStatus" access="public" returntype="void" output="false" hint="Approves/Denies references">
+    	<cfargument name="ID" default="" hint="ID of smg_host_reference_tracking">
         <cfargument name="hostID" default="" hint="HostID is not required">
-        <cfargument name="referenceID" default="" hint="referenceID">
+        <cfargument name="fk_referencesID" default="" hint="fk_referencesID">
         <cfargument name="seasonID" default="#APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID#" hint="Gets current paperwork season ID">
         <cfargument name="action" default="" hint="Approve/Deny an item">
         <cfargument name="notes" default="" hint="notes, usually reason for denial">
         <cfargument name="areaRepID" default="0" hint="areaRepID is not required">
         <cfargument name="regionalAdvisorID" default="0" hint="regionalAdvisorID is not required">
         <cfargument name="regionalManagerID" default="0" hint="regionalManagerID is not required">
-
+        <cfargument name="dateInterview" default="" hint="dateInterview is not required">
+        
         <cfscript>
 			// This returns the approval fields for the logged in user
 			stFieldSet = getApprovalFieldNames();
@@ -1182,19 +1256,70 @@
         
         <cfif listFind("approved,denied", ARGUMENTS.action)>
         
-            <!--- Update --->
-            <cfquery 
-                datasource="#APPLICATION.DSN#">
-                    UPDATE	
-                        smg_host_reference_tracking
-                    SET
-                        #stFieldSet.statusFieldName# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.action#">,
-                        #stFieldSet.dateFieldName# = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
-                        #stFieldSet.notesFieldName# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.notes#" null="#yesNoFormat(NOT LEN(ARGUMENTS.notes))#">
-                    WHERE
-                        ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.referenceID)#">
-            </cfquery>	
+        	<!--- Check if we are Inserting/Updating --->
+            <cfif VAL(ARGUMENTS.ID)>
             
+				<!--- Update --->
+                <cfquery 
+                    datasource="#APPLICATION.DSN#">
+                        UPDATE	
+                            smg_host_reference_tracking
+                        SET
+                            <cfif isDate(ARGUMENTS.dateInterview)>
+                                dateInterview = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateInterview#">,
+                            </cfif>
+                            #stFieldSet.statusFieldName# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.action#">,
+                            #stFieldSet.dateFieldName# = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
+                            #stFieldSet.notesFieldName# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.notes#" null="#yesNoFormat(NOT LEN(ARGUMENTS.notes))#">
+                        WHERE
+                            ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.ID#">
+                        AND
+                        	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
+                </cfquery>	
+            
+           <cfelse> 
+        		
+                <!--- INSERT --->
+                <cfquery 
+                	result="newRecord"
+                    datasource="#APPLICATION.DSN#">
+                        INSERT INTO 
+                            smg_host_reference_tracking 
+                        (
+                            <cfif isDate(ARGUMENTS.dateInterview)>
+                            	dateInterview, 
+                            </cfif>
+                            interviewer, 
+                            arearepID, 
+                            fk_referencesID, 
+                            hostID,
+                            season,
+                            #stFieldSet.statusFieldName#,
+                            #stFieldSet.dateFieldName#,
+                            #stFieldSet.notesFieldName#
+                        )
+                        VALUES
+                        (
+                            <cfif isDate(ARGUMENTS.dateInterview)>
+                                <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateInterview#">, 
+                            </cfif>
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#CLIENT.userID#">, 
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.areaRepID)#">,
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.fk_referencesID)#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.hostID#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.seasonID#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.action#">,
+                            <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.notes#" null="#yesNoFormat(NOT LEN(ARGUMENTS.notes))#">
+                        )
+				</cfquery>
+
+                <cfscript>
+					// Set Generated ID 
+					ARGUMENTS.ID = newRecord.GENERATED_KEY;
+				</cfscript>
+            
+            </cfif>
             
             <!--- Reset approval level of denied items | RA denies section 1 and 2 so we'll need to resset the AR approval to NULL for these sections --->
             <cfif ARGUMENTS.action EQ 'denied' AND listFind("regionalAdvisorStatus,regionalManagerStatus,facilitatorStatus", stFieldSet.statusFieldName)>
@@ -1219,7 +1344,7 @@
 				</cfscript>
                 
 				<!--- Update --->
-                <cfif VAL(vUserTypeOneLevelDown)>
+                <cfif VAL(vUserTypeOneLevelDown) AND VAL(ARGUMENTS.ID)>
         
                     <cfquery 
                         datasource="#APPLICATION.DSN#">
@@ -1230,7 +1355,7 @@
                                 #stFieldReset.dateFieldName# = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">,
                                 #stFieldReset.notesFieldName# = <cfqueryparam cfsqltype="cf_sql_varchar" null="yes">
                             WHERE
-                                ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.referenceID)#">                 
+                                ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.ID#">                 
                     </cfquery>	
                     
               	</cfif> 

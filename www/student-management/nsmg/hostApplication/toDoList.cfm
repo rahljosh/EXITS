@@ -127,7 +127,7 @@
 			// References - Check for Errors
 			For ( i=1; i LTE qGetReferences.recordCount; i++ ) {
 				
-				if ( VAL(qGetReferences.isSubmitted[i]) ) {
+				if ( VAL(qGetReferences.ID[i]) ) {
 
 					// Check if all sections have an approval/denial value
 					if ( NOT LEN(FORM["referenceStatus" & qGetReferences.ID[i]]) ) {
@@ -176,8 +176,9 @@
 				For ( i=1; i LTE qGetReferences.recordCount; i++ ) {
 
 					APPLICATION.CFC.HOST.updateReferenceStatus(
+						ID=qGetReferences.ID[i],
 						hostID=FORM.hostID,
-						referenceID=qGetReferences.ID[i],
+						fk_referencesID=qGetReferences.fk_referencesID[i],
                         action=FORM["referenceStatus" & qGetReferences.ID[i]],
                         notes=FORM["referenceNotes" & qGetReferences.ID[i]],
 						areaRepID=qGetHostInfo.areaRepID,
@@ -356,14 +357,14 @@
                         <a href="mailto:#qGetHostInfo.facilitatorEmail#">#qGetHostInfo.facilitatorEmail#</a>
                     </td>
                     <td valign="top">
-                        <!---
 						<cfif isDate(qGetHostInfo.applicationSent)>
                         	Date Created: #DateFormat(qGetHostInfo.applicationSent, 'mm/dd/yyyy')# <br />
                         </cfif>
-						
-                        <cfif isDate(qGetHostInfo.applicationStarted)>
-                        	Date HF Started: #DateFormat(qGetHostInfo.applicationStarted, 'mm/dd/yyyy')# <br />
-                        </cfif>
+                        
+						<!---
+						<cfif isDate(qGetHostInfo.applicationStarted)>
+							Date HF Started: #DateFormat(qGetHostInfo.applicationStarted, 'mm/dd/yyyy')# <br />
+						</cfif>
 						--->
 
                     	<!--- App has been denied, display message --->
@@ -583,7 +584,7 @@
                                     <cfif NOT qGetSchoolAcceptance.recordCount>
                                         <a href="#qGetApprovalHistory.link#?hostID=#qGetHostInfo.hostID#" title="Click to view item" class="jQueryModalRefresh" style="display:block;">[ Upload School Acceptance Letter ]</a>
                                     <!--- Print View Default --->
-                                    <cfelseif qGetApprovalHistory[stCurrentUserFieldSet.statusFieldName][qGetApprovalHistory.currentrow] EQ 'approved' OR qGetApprovalHistory[stOneLevelUpFieldSet.statusFieldName][qGetApprovalHistory.currentrow] EQ 'denied'>
+                                    <cfelseif qGetApprovalHistory[stCurrentUserFieldSet.statusFieldName][qGetApprovalHistory.currentrow] EQ 'approved' OR qGetApprovalHistory[stOneLevelUpFieldSet.statusFieldName][qGetApprovalHistory.currentrow] NEQ 'denied'>
                                         <a href="publicDocument.cfm?ID=#qGetSchoolAcceptance.ID#&key=#qGetSchoolAcceptance.hashID#" target="_blank" style="display:block;">[ Download School Acceptance Letter ]</a>
                                     	<!--- ADD OPTION TO DELETE A FILE --->
 										<!--- Delete --->
@@ -598,12 +599,12 @@
                                     <!--- Report Never Submitted --->
                                     <cfif NOT qGetConfidentialVisitForm.recordCount> 
                                         <a href="#qGetApprovalHistory.link#?hostID=#qGetHostInfo.hostID#" title="Click to view item" class="jQueryModalRefresh" style="display:block;">[ Submit Visit Form ]</a>
-                                    <!--- Print View Default --->
-                                    <cfelseif qGetApprovalHistory[stCurrentUserFieldSet.statusFieldName][qGetApprovalHistory.currentrow] EQ 'approved' OR qGetApprovalHistory[stOneLevelUpFieldSet.statusFieldName][qGetApprovalHistory.currentrow] EQ 'denied'>
-                                        <a href="#qGetApprovalHistory.link#?hostID=#qGetHostInfo.hostID#" target="_blank" style="display:block;">[ View Visit Form ]</a>
                                     <!--- Report Denied by up level user - Edit Report --->
-                                    <cfelse>
+                                    <cfelseif qGetApprovalHistory[stCurrentUserFieldSet.statusFieldName][qGetApprovalHistory.currentrow] NEQ 'approved' OR qGetApprovalHistory[stOneLevelUpFieldSet.statusFieldName][qGetApprovalHistory.currentrow] EQ 'denied'>
                                         <a href="#qGetApprovalHistory.link#?hostID=#qGetHostInfo.hostID#" title="Click to view item" class="jQueryModalRefresh" style="display:block;">[ Edit Visit Form ]</a>
+									<!--- Print View Default --->
+                                    <cfelseif qGetApprovalHistory[stCurrentUserFieldSet.statusFieldName][qGetApprovalHistory.currentrow] EQ 'approved' OR qGetApprovalHistory[stOneLevelUpFieldSet.statusFieldName][qGetApprovalHistory.currentrow] NEQ 'denied'>
+                                        <a href="#qGetApprovalHistory.link#?hostID=#qGetHostInfo.hostID#" target="_blank" style="display:block;">[ View Visit Form ]</a>
                                     </cfif>   
                                     
                               </cfif>
@@ -718,7 +719,7 @@
                     <!--- References: Everyone Sees these ---->
                     <tr bgcolor="##1b99da">
                         <td colspan="7" align="center">
-                        	<h2 style="color:##FFFFFF;">REFERENCES</h2>
+                        	<h2 style="color:##FFFFFF;">REFERENCE QUESTIONNAIRE</h2>
 						
                         	<span style="color:##FFFFFF; font-weight:bold;">
 								<cfif qGetHostInfo.totalFamilyMembers GT 1>
@@ -743,7 +744,7 @@
                             <td>
 								
 								<!--- There is an approved report, display link --->
-                                <cfif VAL(qGetReferences.isSubmitted)>	
+                                <cfif VAL(qGetReferences.ID)>	
 
 									<!--- Previously approved reports --->    
                                     <cfif qGetReferences[stOneLevelUpFieldSet.statusFieldName][qGetReferences.currentrow] EQ 'approved' OR ( qGetReferences[stCurrentUserFieldSet.statusFieldName][qGetReferences.currentrow] EQ 'approved' AND qGetHostInfo.hostAppStatus LT CLIENT.userType )>
@@ -770,16 +771,25 @@
                                         
                                     </cfif>
                                     
-                                    <a href="forms/viewHostRefrencesQuestionaire.cfm?reportid=#qGetReferences.id#" target="_blank" style="display:block;">[ View Reference Questionnaire ]</a> 
-                                    <span style="display:block; color:##CCCCCC;"><em>Submitted on #DateFormat(qGetReferences.dateInterview,'mm/dd/yyyy')# by #qGetReferences.submittedBy#</em></span>
+                                    <!--- Report Does not exist or has not been approved by current level or has not been denied by upper level - Edit Report --->
+                                    <cfif qGetReferences[stCurrentUserFieldSet.statusFieldName][qGetReferences.currentrow] NEQ 'approved' OR qGetReferences[stOneLevelUpFieldSet.statusFieldName][qGetReferences.currentrow] EQ 'denied'>
+                                        <a class="jQueryModalRefresh" href="hostApplication/referenceQuestionnaire.cfm?refID=#qGetReferences.refID#&hostID=#qGetHostInfo.hostID#" style="display:block;">[ Edit Reference Questionnaire ]</a>
+                                    <!--- Print View Default --->
+									<cfelse>
+                                        <a href="hostApplication/referenceQuestionnaire.cfm?refID=#qGetReferences.refID#&hostID=#qGetHostInfo.hostID#" target="_blank" style="display:block;">[ View Reference Questionnaire ]</a>
+                                    </cfif>
+                                    
+                                    <span style="display:block; color:##CCCCCC;"><em>Submitted on #DateFormat(qGetReferences.dateInterview,'mm/dd/yyyy')# by #qGetReferences.submittedBy#</em></span>   
                                     
                                 <cfelse>
                                 
-                                    <a class="jQueryModalRefresh" href="forms/hostRefrencesQuestionaire.cfm?ref=#refid#&rep=#CLIENT.userid#&hostid=#hostid#">
+                                    <a class="jQueryModalRefresh" href="hostApplication/referenceQuestionnaire.cfm?refID=#qGetReferences.refID#&hostID=#qGetHostInfo.hostID#">
                                    		[ Submit Reference Questionnaire ]
                                     </a>
                                     
                                 </cfif>
+                                
+                                
                             </td>
                             <td>
                                 <cfif isDate(qGetReferences.areaRepDateStatus)>
