@@ -10,11 +10,6 @@
 		
 
     </cfscript>
-    <Cfquery name="current_photos" datasource="mysql">
-        select filename, description, cat 
-        from smg_host_picture_album
-        where fk_hostid = <cfqueryparam cfsqltype="integer" value="#url.hostid#">
-    </cfquery>
    <cfoutput> 
    <table class="profileTable" align="center">
         <tr>
@@ -45,23 +40,7 @@
 	<tr>
     <cfset count = 1>
     <cfoutput>
-    <cfloop query="current_photos">
-    	<cfquery name="catDesc" datasource="mysql">
-        select cat_name
-        from smg_host_pic_cat
-        where catID = #cat#
-        </cfquery>
-    	<Td><img src="http://ise.exitsapplication.com/nsmg/uploadedfiles/HostAlbum/#url.hostid#/thumbs/#filename#" width = 250><br />
-            <span class="title">Catagory:</span> #catDesc.cat_name#<br />
-            <span class="title">Description:</span>#description#
-		</Td>
-                <td valign="top">
-                
-              <Cfset count = #count# + 1>
- 	<Cfif  #count#  mod 2>
-    </tr>
-    </Cfif>
-    </cfloop>
+    	display images
     </Cfoutput>
    <tr>
     	

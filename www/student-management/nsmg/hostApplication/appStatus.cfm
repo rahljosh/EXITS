@@ -321,37 +321,6 @@ WHERE hostid = #hostid#
 	
 <!------------------------>
 <!----Family Album---->   
-
-<Cfquery name="hostPicCat" datasource="mysql">
-	select *
-    from smg_host_pic_cat
-    <!---Don't include Other description---->
-    where catID != 7
-</Cfquery>
-<Cfquery name="hostPics" datasource="mysql">
-	select *
-    from smg_host_picture_album
-    where fk_hostID = #cl.hostid#
-</Cfquery>
-<cfloop query="hostPicCat">
-	<cfquery dbtype="query" name="catExist">
-    select id
-    from hostPics
-    where cat = #catId#
-    </cfquery>
-	<Cfif catExist.recordcount eq 0>
-		 <cfscript>
-                // Data Validation
-                //No Letter
-                 if (  1 EQ 1) {
-                    // Get all the missing items in a list
-                    SESSION.formErrors.Add("Family Album You seem to be missing a picutre of: #hostPicCat.cat_name#.");
-                 }
-                                    
-            </cfscript>
-    </Cfif>
-
-</cfloop> 
 <cfif SESSION.formErrors.length()>
 	<cfscript>
         	Session.formErrors.clear();
