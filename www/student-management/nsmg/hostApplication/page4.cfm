@@ -16,12 +16,6 @@
     where s.schoolid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.schoolid#">
     </cfquery>
 
-    <cfquery name="religionInfo" datasource="#application.dsn#">
-    select c.churchname, c.address, c.address2, c.city, c.state, c.zip, c.phone, c.pastor
-    from churches c
-    where c.churchid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.churchid#">
-    </cfquery>
-
     <cfquery name="religion" datasource="#application.dsn#">
     select religionname
     from smg_religions 

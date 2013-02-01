@@ -469,58 +469,7 @@ WHERE hostid = #hostid#
    
 <!------------------------>
 <!----Church Info---->     
-<cfif cl.churchid gt 0>
-	<Cfquery name="churchInfo" datasource="mysql">
-    select *
-    from churches 
-    where churchid = #cl.churchid#
-    </cfquery>
-
-            <cfscript>
-            // Data Validation
-			// Family Last Name
-            if ( NOT LEN(TRIM(churchInfo.churchName)) ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Church Info Please enter the name of your religious institution.");
-            }			
-        	
-			// Address
-            if ( NOT LEN(TRIM(churchInfo.address)) ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Church Info Please enter the address.");
-            }	
-			
-			// City
-            if ( NOT LEN(TRIM(churchInfo.city)) ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Church Info Please enter the city.");
-            }			
-        	
-        	// State
-            if ( NOT LEN(TRIM(churchInfo.state)) ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please select the state");
-            }		
-			
-			// Zip
-            if ( NOT LEN(TRIM(churchInfo.zip)) )  {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Church Info Please enter a zip code.");
-            }			
-        	
-			// Family Last Name
-            if ( NOT LEN(TRIM(churchInfo.pastor)) ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Church Info Please enter the religious leaders name.");
-            }
-			
-			// Family Last Name
-            if ( NOT LEN(TRIM(churchInfo.phone)) ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Church Info Please enter the phone number of your religious institution.");
-            }	
- 
-        </cfscript>     
+<cfif cl.churchid gt 0> 
         
          <cfif SESSION.formErrors.length()>
          	<cfscript>
