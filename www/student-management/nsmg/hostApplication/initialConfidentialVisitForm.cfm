@@ -64,14 +64,14 @@
 		
 		// This returns the fields that need to be checked
 		stOneLevelUpFieldSet = APPLICATION.CFC.HOST.getApprovalFieldNames(userType=stUserOneLevelUpInfo.userType);
-		
-		// If report approved by current user and denied by up level display edit page, else display print version
-		if ( qGetApprovalHistory[stCurrentUserFieldSet.statusFieldName][qGetApprovalHistory.currentrow] EQ 'approved' OR qGetApprovalHistory[stOneLevelUpFieldSet.statusFieldName][qGetApprovalHistory.currentrow] EQ 'denied' ) {
-			// Read only if it has been approved by an up level
-			vIsEditAllowed = false;
-		} else {
+
+		// If report has not been approved by current level or has not been denied by upper level - Edit Report
+		if ( qGetApprovalHistory[stCurrentUserFieldSet.statusFieldName][qGetApprovalHistory.currentrow] NEQ 'approved' OR qGetApprovalHistory[stOneLevelUpFieldSet.statusFieldName][qGetApprovalHistory.currentrow] EQ 'denied' ) {
 			// Allow edit	
 			vIsEditAllowed = true;
+		} else {
+			// Read only if it has been approved 
+			vIsEditAllowed = false;
 		}	
 	</cfscript>
     
