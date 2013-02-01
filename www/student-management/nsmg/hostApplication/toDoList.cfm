@@ -32,7 +32,7 @@
 			FORM.hostID = URL.hostID;
 		}
 		
-		// Get List of Host Family Applications
+		// Get Host Application Information
 		qGetHostInfo = APPLICATION.CFC.HOST.getApplicationList(hostID=FORM.hostID);	
 		
 		// Get Application Approval History
@@ -749,8 +749,10 @@
                                     <cfif qGetReferences[stOneLevelUpFieldSet.statusFieldName][qGetReferences.currentrow] EQ 'approved' OR ( qGetReferences[stCurrentUserFieldSet.statusFieldName][qGetReferences.currentrow] EQ 'approved' AND qGetHostInfo.hostAppStatus LT CLIENT.userType )>
                                         
                                         <font color="##CCCCCC"><em>Previously Approved</em></font>
-                                        <input type="hidden" name="referenceStatus#qGetReferences.ID#" value="#FORM['referenceStatus' & qGetReferences.ID]#" /> 
-									
+                                        <!--- This will automatically approve items in case upper lever has approved them | In the future we can give the approval/deny option --->
+                                        <input type="hidden" name="referenceStatus#qGetReferences.ID#" value="approved" /> 
+                                        <!--- <input type="hidden" name="referenceStatus#qGetReferences.ID#" value="#FORM['referenceStatus' & qGetReferences.ID]#" /> --->
+                                        
 									<!--- Approve/Deny Options --->      
                                     <cfelseif qGetHostInfo.hostAppStatus GTE CLIENT.userType>
                                         
