@@ -150,14 +150,12 @@
                         <td>
                             #qGetHostFamilyInfo.areaRepresentative#
 
-                            <cfif LEN(qGetHostFamilyInfo.areaRepPhone)>
-                                <br />
-                                #qGetHostFamilyInfo.areaRepPhone#
-                            </cfif>
-
                             <cfif LEN(qGetHostFamilyInfo.areaRepWorkPhone)>
                                 <br />
                                 #qGetHostFamilyInfo.areaRepWorkPhone#
+                            <cfelseif LEN(qGetHostFamilyInfo.areaRepPhone)>
+                                <br />
+                                #qGetHostFamilyInfo.areaRepPhone#
                             </cfif>
                             
                             <cfif LEN(qGetHostFamilyInfo.areaRepEmail)>
