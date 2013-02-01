@@ -330,7 +330,7 @@
             		<th width="14%" align="left">Actions</th>
             	</tr>
                 <tr>
-                    <td>
+                    <td valign="top">
                     	#APPLICATION.CFC.HOST.displayHostFamilyName(
                         	fatherFirstName=qGetHostInfo.fatherFirstName,
                             fatherLastName=qGetHostInfo.fatherLastName,
@@ -356,6 +356,16 @@
                         <a href="mailto:#qGetHostInfo.facilitatorEmail#">#qGetHostInfo.facilitatorEmail#</a>
                     </td>
                     <td valign="top">
+                        <!---
+						<cfif isDate(qGetHostInfo.applicationSent)>
+                        	Date Created: #DateFormat(qGetHostInfo.applicationSent, 'mm/dd/yyyy')# <br />
+                        </cfif>
+						
+                        <cfif isDate(qGetHostInfo.applicationStarted)>
+                        	Date HF Started: #DateFormat(qGetHostInfo.applicationStarted, 'mm/dd/yyyy')# <br />
+                        </cfif>
+						--->
+
                     	<!--- App has been denied, display message --->
                     	<cfif vHasAppBeenDeniedByOneLevelUpUser>
                         	#stUserOneLevelUpInfo.description# has denied one or more sections.
@@ -612,7 +622,7 @@
                                     
                                     #DateFormat(qGetApprovalHistory.areaRepDateStatus, 'MM/DD/YYYY')#
 
-                                    <cfif LEN(qGetApprovalHistory.areaRepNotes) AND CLIENT.userID NEQ qGetHostInfo.areaRepID>
+                                    <cfif LEN(qGetApprovalHistory.areaRepNotes)>
                                     	<span style="display:block;">
                                         	Reason: #qGetApprovalHistory.areaRepNotes#
                                         </span>
@@ -636,7 +646,7 @@
                                     
                                     #DateFormat(qGetApprovalHistory.regionalAdvisorDateStatus, 'MM/DD/YYYY')#
 
-                                    <cfif LEN(qGetApprovalHistory.regionalAdvisorNotes) AND CLIENT.userID NEQ qGetHostInfo.regionalAdvisorID>
+                                    <cfif LEN(qGetApprovalHistory.regionalAdvisorNotes)>
                                     	<span style="display:block;">
                                         	Reason: #qGetApprovalHistory.regionalAdvisorNotes#
                                         </span>
@@ -660,7 +670,7 @@
                                     
                                     #DateFormat(qGetApprovalHistory.regionalManagerDateStatus, 'MM/DD/YYYY')#
                                     
-                                    <cfif LEN(qGetApprovalHistory.regionalManagerNotes) AND CLIENT.userID NEQ qGetHostInfo.regionalManagerID>
+                                    <cfif LEN(qGetApprovalHistory.regionalManagerNotes)>
                                     	<span style="display:block;">
                                         	Reason: #qGetApprovalHistory.regionalManagerNotes#
                                         </span>
@@ -684,7 +694,7 @@
                                     
                                     #DateFormat(qGetApprovalHistory.facilitatorDateStatus, 'MM/DD/YYYY')#
 
-                                    <cfif LEN(qGetApprovalHistory.facilitatorNotes) AND NOT APPLICATION.CFC.USER.isOfficeUser()>
+                                    <cfif LEN(qGetApprovalHistory.facilitatorNotes)>
                                     	<span style="display:block;">
                                         	Reason: #qGetApprovalHistory.facilitatorNotes#
                                         </span>
