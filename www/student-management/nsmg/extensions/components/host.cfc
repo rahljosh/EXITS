@@ -831,7 +831,7 @@
                 FROM 
                     smg_family_references sfr
                 LEFT OUTER JOIN
-                	hostRefQuestionaireTracking hrqt ON hrqt.fk_referencesID = sfr.refID
+                	smg_host_reference_tracking hrqt ON hrqt.fk_referencesID = sfr.refID
                 LEFT OUTER JOIN
                 	smg_users u ON u.userID = hrqt.interviewer
                 WHERE
@@ -1186,7 +1186,7 @@
             <cfquery 
                 datasource="#APPLICATION.DSN#">
                     UPDATE	
-                        hostRefQuestionaireTracking
+                        smg_host_reference_tracking
                     SET
                         #stFieldSet.statusFieldName# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.action#">,
                         #stFieldSet.dateFieldName# = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
@@ -1224,7 +1224,7 @@
                     <cfquery 
                         datasource="#APPLICATION.DSN#">
                             UPDATE	
-                                hostRefQuestionaireTracking
+                                smg_host_reference_tracking
                             SET
                                 #stFieldReset.statusFieldName# = <cfqueryparam cfsqltype="cf_sql_varchar" value="">,
                                 #stFieldReset.dateFieldName# = <cfqueryparam cfsqltype="cf_sql_timestamp" null="yes">,

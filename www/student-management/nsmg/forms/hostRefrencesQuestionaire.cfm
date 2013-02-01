@@ -94,7 +94,7 @@
 		</script>
 <Cfquery name="questions" datasource="#application.dsn#">
 select *
-from hostRefQuestions
+from smg_host_reference_questions
 where active = 1
 </cfquery>
 <Cfparam name="FORM.dateInterview" default="">
@@ -133,13 +133,13 @@ where active = 1
     
     	
             <cfquery datasource="#application.dsn#">
-            insert into hostRefQuestionaireTracking (dateInterview, interviewer, arearepid, fk_referencesID, hostid)
+            insert into smg_host_reference_tracking (dateInterview, interviewer, arearepid, fk_referencesID, hostid)
                                     values(#CreateODBCDate(form.dateInterview)#, #client.userid#, #url.rep#, #url.ref#, #url.hostid#)
              </cfquery>
     
             <Cfquery name="reportID" datasource="#application.dsn#">
             select max(id) as reportID
-            from hostRefQuestionaireTracking
+            from smg_host_reference_tracking
             </cfquery>
             <Cfif client.usertype lte 5>
             	<cfquery datasource="#application.dsn#">
@@ -150,13 +150,13 @@ where active = 1
             </Cfif>
             <cfloop query="questions">
                 <cfquery datasource="#application.dsn#">
-                insert into hostRefQuestionaireAnswers (fk_reportID, fk_questionID, answer)
+                insert into smg_host_reference_answers (fk_reportID, fk_questionID, answer)
                                     values(#reportID.reportID#, #id#, <Cfqueryparam cfsqltype="cf_sql_varchar" value="#Evaluate('form.' & id)#"> )
                 </cfquery>
             </cfloop>
             
         <cfquery name="markApproved" datasource="#application.dsn#">
-        update hostRefQuestionaireTracking
+        update smg_host_reference_tracking
         set
         	isSubmitted = <cfqueryparam cfsqltype="cf_sql_bit" value="1">,
     	<Cfif client.usertype eq 7>
