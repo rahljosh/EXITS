@@ -549,7 +549,8 @@
                             	CAST(CONCAT(rm.firstName, ' ', rm.lastName,  ' (##', rm.userID, ')' ) AS CHAR)
                             END
                     ) AS regionalManager,
-                    rm.email AS regionalManagerEmail
+                    rm.email AS regionalManagerEmail,
+                    rm.phone AS regionalManagerPhone
                 FROM
                 (
                     SELECT
@@ -646,19 +647,21 @@
                                 END
                         ) AS regionalAdvisor,
                         ra.email AS regionalAdvisorEmail,
+                        ra.phone AS regionalAdvisorPhone,
                         <!--- Area Representative Info --->
-                        u.userID AS areaRepresentativeID,
+                        areaRep.userID AS areaRepresentativeID,
                         (
                             CASE 
                                 WHEN 
-                                    u.userID IS NULL
+                                    areaRep.userID IS NULL
                                 THEN 
                                     "Not Assigned"
                                 ELSE 
-                                    CAST(CONCAT(u.firstName, ' ', u.lastName,  ' (##', u.userID, ')' ) AS CHAR)
+                                    CAST(CONCAT(areaRep.firstName, ' ', areaRep.lastName,  ' (##', areaRep.userID, ')' ) AS CHAR)
                             END
                         ) AS areaRepresentative,
-                        u.email AS areaRepresentativeEmail,
+                        areaRep.email AS areaRepresentativeEmail,
+                        areaRep.phone AS areaRepresentativePhone,
                         <!--- Facilitator --->
                         fac.userID AS facilitatorID,
                         (
@@ -679,9 +682,9 @@
                         smg_regions r ON r.regionID = h.regionID
                     <!--- Area Representative --->
                     LEFT OUTER JOIN
-                        smg_users u ON u.userID = h.areaRepID
+                        smg_users areaRep ON areaRep.userID = h.areaRepID
                     LEFT OUTER JOIN
-                        user_access_rights uar ON uar.userID = u.userID
+                        user_access_rights uar ON uar.userID = areaRep.userID
                             AND
                                 h.regionID = uar.regionID
 					<!--- Regional Advisor Info --->
@@ -1260,6 +1263,7 @@
 
 			// this is used in the email notification
 			var vEmailTo = "";
+			vEmailCC = "";
 			
 			// Default Values
 			var vNextStatus = CLIENT.userType;
@@ -1315,6 +1319,7 @@
 							// Reject to Host Family
 							vNextStatus = 8;
 							vEmailTo = qGetHostInfo.email;
+							// vEmailCC = qGetHostInfo.areaRepresentativeEmail;
 							vSetEmailTemplate = "denyToHostFamily";
 							stReturnMessage.pageMessages = "Application has been sent back to Host Family as you have suggested some changes. Thank you.";
 						}
@@ -1349,12 +1354,14 @@
 								// Reject to AR
 								vNextStatus = 7;
 								vEmailTo = qGetHostInfo.areaRepresentativeEmail;
+								vEmailCC = qGetHostInfo.regionalAdvisorEmail;
 								vSetEmailTemplate = "denyToAreaRepresentative";
 								stReturnMessage.pageMessages = "Application has been sent back to Area Representative #qGetHostInfo.areaRepresentative# as you have suggested some changes. Thank you.";
 							} else {
 								// Reject to Host Family
 								vNextStatus = 8;
 								vEmailTo = qGetHostInfo.email;
+								vEmailCC = qGetHostInfo.regionalAdvisorEmail;
 								vSetEmailTemplate = "denyToHostFamily";
 								stReturnMessage.pageMessages = "Application has been sent back to Host Family as you have suggested some changes. Thank you.";
 							}
@@ -1370,7 +1377,9 @@
 						if ( ARGUMENTS.action EQ 'approved' ) {
 							// Submit to Headquarters
 							vNextStatus = 4;
+							// Compliance will be notified
 							vEmailTo = qGetHostInfo.facilitatorEmail;
+							
 							vSetEmailTemplate = "submitToFacilitator";
 							stReturnMessage.pageMessages = "Application has been submitted to your Region Facilitator #qGetHostInfo.facilitator# for review. Thank you.";
 						// Denied
@@ -1380,12 +1389,14 @@
 							if ( VAL(qGetHostInfo.regionalAdvisorID) AND qGetHostInfo.regionalAdvisorID NEQ qGetHostInfo.regionalManagerID ) {
 								vNextStatus = 6;
 								vEmailTo = qGetHostInfo.regionalAdvisorEmail;
+								vEmailCC = qGetHostInfo.regionalManagerEmail;
 								vSetEmailTemplate = "denyToRegionalAdvisor";
 								stReturnMessage.pageMessages = "Application has been sent back to Regional Advisor #qGetHostInfo.regionalAdvisor# as you have suggested some changes. Thank you.";
 							// Reject to AR	- RM and AR must not be the same
 							} else if ( VAL(qGetHostInfo.areaRepID) AND qGetHostInfo.areaRepID NEQ qGetHostInfo.regionalManagerID ) {
 								vNextStatus = 7;
 								vEmailTo = qGetHostInfo.areaRepresentativeEmail;
+								vEmailCC = qGetHostInfo.regionalManagerEmail;
 								vSetEmailTemplate = "denyToAreaRepresentative";
 								stReturnMessage.pageMessages = "Application has been sent back to Area Representative #qGetHostInfo.areaRepresentative# as you have suggested some changes. Thank you.";
 							// Reject to HF
@@ -1393,6 +1404,7 @@
 								// Reject to Host Family
 								vNextStatus = 8;
 								vEmailTo = qGetHostInfo.email;
+								vEmailCC = qGetHostInfo.regionalManagerEmail;
 								vSetEmailTemplate = "denyToHostFamily";
 								stReturnMessage.pageMessages = "Application has been sent back to Host Family as you have suggested some changes. Thank you.";
 							}
@@ -1411,18 +1423,33 @@
 						if ( ARGUMENTS.action EQ 'approved' ) {
 							// Approve Application
 							vNextStatus = 3;
-							vEmailTo = qGetHostInfo.regionalManagerEmail;
+							vEmailTo = qGetHostInfo.email;
+							
+							// Copy RM
+							if ( isValid("email", qGetHostInfo.regionalManagerEmail) ) {
+								vEmailCC = ListAppend(qGetHostInfo.regionalManagerEmail, ";");
+							}
+							// Copy RA
+							if ( isValid("email", qGetHostInfo.regionalAdvisorEmail) ) {
+								vEmailCC = ListAppend(qGetHostInfo.regionalAdvisorEmail, ";");
+							}
+							// Copy AR
+							if ( isValid("email", qGetHostInfo.areaRepresentativeEmail) ) {
+								vEmailCC = ListAppend(qGetHostInfo.areaRepresentativeEmail, ";");
+							}
+
 							vSetEmailTemplate = "applicationApproved";
 							stReturnMessage.pageMessages = "Application has been approved. Thank you.";
 							
 							// Check if there is a student assigned to this host family and copy data to placement management
-							setPlacementManagementPaperwork(hostID=ARGUMENTS.hostID,dateApproved=now());
+							setPlacementManagementPaperwork(hostID=qGetHostInfo.hostID,dateApproved=now());
 							
 						// Denied
 						} else {
 							// Reject to RM
 							vNextStatus = 5;
-							vEmailTo = qGetHostInfo.areaRepresentativeEmail;
+							vEmailTo = qGetHostInfo.regionalManagerEmail;
+							vEmailCC = qGetHostInfo.facilitatorEmail;
 							vSetEmailTemplate = "denyToRegionalManager";
 							stReturnMessage.pageMessages = "Application has been sent back to Regional Manager #qGetHostInfo.regionalManager# as you have suggested some changes. Thank you.";
 						}
@@ -1432,10 +1459,32 @@
 				}
 				
 				// Update Host Status According to usertype approving/denying the application
-				updateApplicationStatus(hostID=ARGUMENTS.hostID,statusID=vNextStatus);
+				updateApplicationStatus(hostID=qGetHostInfo.hostID,statusID=vNextStatus);
 		
 			} // New Application - Welcome Email
+
+
+			// Check if application is being resubmitted or not
+			vIsResubmitted = false;
+
+			// Get Application Approval History
+			qGetApprovalHistory = APPLICATION.CFC.HOST.getApplicationApprovalHistory(hostID=qGetHostInfo.hostID, whoViews=CLIENT.userType);
+
+			// This Returns who is the next user approving / denying the report
+			stUserOneLevelUpInfo = APPLICATION.CFC.USER.getUserOneLevelUpInfo(currentUserType=qGetHostInfo.hostAppStatus,regionalAdvisorID=qGetHostInfo.regionalAdvisorID);
 			
+			// This returns the fields that need to be checked
+			stOneLevelUpFieldSet = APPLICATION.CFC.HOST.getApprovalFieldNames(userType=stUserOneLevelUpInfo.userType);
+	
+			// Param Form Variables - Approval History
+			For ( i=1; i LTE qGetApprovalHistory.recordCount; i++ ) {
+				// Check if level app has denied any of the sections
+				if ( qGetApprovalHistory[stOneLevelUpFieldSet.statusFieldName][i] EQ 'denied' ) {
+					vIsResubmitted = true;
+				}
+			}
+
+
 			// Get Email Template
 			vGetEmailTemplate = getApplicationEmailTemplate(
 				applicatonStatus = qGetHostInfo.hostAppStatus,
@@ -1444,12 +1493,15 @@
 				submittedBy = vSubmittedBy,
 				hostFamily = qGetHostInfo.displayHostFamily,
 				hostFamilyLastName = qGetHostInfo.familyLastName,
+				hostFamilyUsername = qGetHostInfo.email,
+				hostFamilyPassword = qGetHostInfo.password,
 				areaRepresentative = qGetHostInfo.areaRepresentative,
+				areaRepresentativeEmail = qGetHostInfo.areaRepresentativeEmail,
+				areaRepresentativePhone = qGetHostInfo.areaRepresentativePhone,
 				regionalAdvisor = qGetHostInfo.regionalAdvisor,
 				regionalManager = qGetHostInfo.regionalManager,
 				facilitator = qGetHostInfo.facilitator,
-				username = qGetHostInfo.email,
-				password = qGetHostInfo.password
+				isResubmitted = vIsResubmitted
 			);
 						
 			// Try to send out email
@@ -1461,6 +1513,7 @@
 				e.send_mail(
 					email_from = CLIENT.email,
 					email_to = vEmailTo,
+					email_cc = vEmailCC,
 					email_subject = vGetEmailTemplate.emailSubject,
 					email_message = vGetEmailTemplate.emailBody
 				);
@@ -1483,24 +1536,29 @@
         <cfargument name="submittedBy" default="" hint="submittedBy - Not required">
         <cfargument name="hostFamily" default="" hint="hostFamily - Not required">
         <cfargument name="hostFamilyLastName" default="" hint="hostFamilyLastName - Not required">
+        <cfargument name="hostFamilyUsername" default="" hint="hostFamilyUsername - Not required">
+        <cfargument name="hostFamilyPassword" default="" hint="hostFamilyPassword - Not required">
         <cfargument name="areaRepresentative" default="" hint="areaRepresentative - Not required">
+        <cfargument name="areaRepresentativeEmail" default="" hint="areaRepresentativeEmail - Not required">
+        <cfargument name="areaRepresentativePhone" default="" hint="areaRepresentativePhone - Not required">
         <cfargument name="regionalAdvisor" default="" hint="regionalAdvisor - Not required">
         <cfargument name="regionalManager" default="" hint="regionalManager - Not required">
         <cfargument name="facilitator" default="" hint="facilitator - Not required">
-        <cfargument name="username" default="" hint="username - Not required">
-        <cfargument name="password" default="" hint="password - Not required">
-        
+        <cfargument name="isResubmitted" default="false" hint="isResubmitted - Not required">
+		
         <cfscript>
 			// Declare Struct
 			var stReturnData = StructNew();
 			var stReturnData.emailSubject = "";
 			var stReturnData.emailBody = "";	
 			
-			var vDisplayIssues = "";
-			
 			// Set List of Issues
-			if ( listFind("denyToHostFamily,denyToAreaRepresentative,denyToRegionalAdvisor,denyToRegionalManager", ARGUMENTS.emailTemplate) ) {
-				vDisplayIssues = "<p>Please see below a list of issues found:<ul>#ARGUMENTS.issueList#</ul></p>";
+			var vDisplayIssues = "<p>Please see below a list of issues found:<ul>#ARGUMENTS.issueList#</ul></p>";
+			
+			if ( ARGUMENTS.isResubmitted ) {
+				var vApplicationAction = "Resubmitted";
+			} else {
+				var vApplicationAction = "Submitted";
 			}
 			
 			/***
@@ -1521,7 +1579,7 @@
             <cfcase value="welcomeEmail">
             
                 <cfscript>
-					stReturnData.emailSubject = "#CLIENT.companyshort# - Welcome to our Host Family Application";
+					stReturnData.emailSubject = "#CLIENT.companyshort# - Host Family Application";
 				</cfscript>
 
                 <cfsavecontent variable="stReturnData.emailBody">
@@ -1534,7 +1592,6 @@
                         
                         <p>Every time you host a student, we are required to have you update the information in your Host Family application.</p>
                         
-                        <!--- (MAY WANT TO MAKE A SEPARATE EMAIL FOR RETURN HFS) --->
                         <p>
                             If this is not your first time filling out an online application, your information should all be there when you log in. 
                             We just ask that you review this information and update anything that may have changed from last time you hosted.
@@ -1543,7 +1600,7 @@
                         <p>                    
                             As you may have been told by your Area Representative, all student exchange companies are strictly governed by the Department of State. 
                             We have done our best to be as unobtrusive and brief as possible while still gathering the information required for you to be properly vetted as a host family. 
-                            There is nothing in this application which is not required by the Department of State. .
+                            There is nothing in this application which is not required by the Department of State.
                         </p>
                         
                         <p>
@@ -1567,8 +1624,8 @@
                         </p>
                         
                         <p>
-                            <strong>Email:</strong> #ARGUMENTS.username#<br />
-                            <strong>Password:</strong> #ARGUMENTS.password#<br />
+                            <strong>Email:</strong> #ARGUMENTS.hostFamilyUsername#<br />
+                            <strong>Password:</strong> #ARGUMENTS.hostFamilyPassword#<br />
                         </p>
                         
                         <p> 
@@ -1593,15 +1650,28 @@
         	<cfcase value="submitToRegionalAdvisor">
 				
                 <cfscript>
-					stReturnData.emailSubject = "Host Family Application Submitted for your review";
+					stReturnData.emailSubject = "#CLIENT.companyshort# - Host Family Application #vApplicationAction#";
 				</cfscript>
                 
                 <cfsavecontent variable="stReturnData.emailBody">
 					<cfoutput>
-                    	<p>Dear #ARGUMENTS.regionalAdvisor#,</p>
-                        <p>The #ARGUMENTS.hostFamily# host family application has been submitted for your review by #ARGUMENTS.submittedBy#.</p>
-                        <p>You can review the application <a href="#APPLICATION.CFC.USER.getUserSession().companyURL#nsmg/index.cfm?curdoc=hostApplication/listOfApps&status=#VAL(ARGUMENTS.applicationStatus)#">here</a>.</p>
-                        #CLIENT.companyName#
+                        <p>Dear #ARGUMENTS.regionalAdvisor#,</p>
+                        
+                        <p>
+							This email is being sent to notify you that a Host Family application has been approved by your Area Representative #ARGUMENTS.areaRepresentative#, 
+                            for the #ARGUMENTS.hostFamilyLastName# family. This Area Representative has been notified that you have started the review process and will be 
+                            contacting them if any additional information is required. 
+                        </p>
+                        
+                        <p>
+                        	Please log in to EXITS to view this application or click the link below for direct access (you must be logged in EXITS). <br />
+                            <a href="#CLIENT.exits_URL#/nsmg/index.cfm?curdoc=hostApplication/listOfApps&status=7">View Host Family Application</a>
+						</p>
+                        
+                        <p>
+                        	Thank you, <br />
+                            #CLIENT.companyName#
+						</p>              
                     </cfoutput>
                 </cfsavecontent>
                             
@@ -1611,15 +1681,29 @@
         	<cfcase value="submitToRegionalManager">
             
                 <cfscript>
-					stReturnData.emailSubject = "Host Family Application Submitted for your review";
+					stReturnData.emailSubject = "#CLIENT.companyshort# - Host Family Application #vApplicationAction#";
 				</cfscript>
                 
                 <cfsavecontent variable="stReturnData.emailBody">
 					<cfoutput>
-                    	<p>Dear #ARGUMENTS.regionalManager#,</p>
-                        <p>The #ARGUMENTS.hostFamily# host family application has been submitted for your review by #ARGUMENTS.submittedBy#.</p>
-                        <p>You can review the application <a href="#APPLICATION.CFC.USER.getUserSession().companyURL#nsmg/index.cfm?curdoc=hostApplication/listOfApps&status=#VAL(ARGUMENTS.applicationStatus)#">here</a>.</p>
-                        #CLIENT.companyName#
+                        <p>Dear #ARGUMENTS.regionalManager#,</p>
+                        
+                        <p>
+							This email is being sent to notify you that a Host Family application has been approved by your 
+                            <cfif LEN(ARGUMENTS.regionalAdvisor)>Regional Advisor #ARGUMENTS.regionalAdvisor#<cfelse>Area Representative #ARGUMENTS.areaRepresentative#</cfif> 
+                            for the #ARGUMENTS.hostFamilyLastName# family. This representative has been notified that you have started the review process and will be
+                            contacting them if any additional information is required. 
+                        </p>
+                        
+                        <p>
+                        	Please log in to EXITS to view this application or click the link below for direct access (you must be logged in EXITS). <br />
+                            <a href="#CLIENT.exits_URL#/nsmg/index.cfm?curdoc=hostApplication/listOfApps&status=7">View Host Family Application</a>
+						</p>
+                        
+                        <p>
+                        	Thank you, <br />
+                            #CLIENT.companyName#
+						</p>              
                     </cfoutput>
                 </cfsavecontent>
                             
@@ -1629,15 +1713,24 @@
         	<cfcase value="submitToFacilitator">
             
                 <cfscript>
-					stReturnData.emailSubject = "Host Family Application Submitted for your review";
+					stReturnData.emailSubject = "#CLIENT.companyshort# - Host Family Application #vApplicationAction#";
 				</cfscript>
                 
                 <cfsavecontent variable="stReturnData.emailBody">
 					<cfoutput>
-                        <p>Dear #ARGUMENTS.facilitator#,</p>
-                        <p>The #ARGUMENTS.hostFamily# host family application has been submitted for your review by #ARGUMENTS.submittedBy#.</p>
-                        <p>You can review the application <a href="#APPLICATION.CFC.USER.getUserSession().companyURL#nsmg/index.cfm?curdoc=hostApplication/listOfApps&status=#VAL(ARGUMENTS.applicationStatus)#">here</a>.</p>
-                        #CLIENT.companyName#
+                        <p>Dear HQ,</p> <!--- #ARGUMENTS.facilitator#, --->
+
+                        <p>We would like to notify you that an application has been #LCase(vApplicationAction)# for the #ARGUMENTS.hostFamilyLastName# family.</p>
+                         
+                        <p>
+                        	Please log in to EXITS to view this application or click the link below for direct access (you must be logged in EXITS). <br />
+                            <a href="#CLIENT.exits_URL#/nsmg/index.cfm?curdoc=hostApplication/listOfApps&status=4">View Host Family Application</a>
+						</p>
+
+                        <p>
+                        	Thank you, <br />
+                            #CLIENT.companyName#
+						</p>              
                     </cfoutput>
                 </cfsavecontent>
                             
@@ -1647,14 +1740,28 @@
         	<cfcase value="applicationApproved">
 
                 <cfscript>
-					stReturnData.emailSubject = "Host Family Application Approved";
+					stReturnData.emailSubject = "#CLIENT.companyshort# - Your Host Family Application Has Been Approved";
 				</cfscript>
                 				
                 <cfsavecontent variable="stReturnData.emailBody">
 					<cfoutput>
-                    	<p>Dear #ARGUMENTS.hostFamily# Family,</p>
+                        <p>Dear #ARGUMENTS.hostFamilyLastName# Family,</p>
+                        
+                        <p>
+                        	We would like to let you know that your Host Family Application has been approved by our compliance department, here at headquarters. 
+                        	We thank you for your hard work and dedication to this process. 
+                        </p>
+                        
+                        <p>Everyone here is excited about your decision to host next season and looks forward to sharing the experience with you.</p>
+                        
+                        <p>If you have any questions, you should always contact your Area Rep first. In an emergency, you can contact us, here at the headquarters.</p>
+                    	
                         <p>Your host family application has been approved by headquarters.</p>
-                        #CLIENT.companyName#
+                        
+                        <p>
+                        	Best Regards, <br />
+                            #CLIENT.companyName#
+						</p>              
                     </cfoutput>
                 </cfsavecontent>
                             
@@ -1664,15 +1771,44 @@
         	<cfcase value="denyToHostFamily">
 
                 <cfscript>
-					stReturnData.emailSubject = "Host Family Application Needs Updates";
+					stReturnData.emailSubject = "#CLIENT.companyshort# - Host Family Application Needs Additional Info";
 				</cfscript>
 				
                 <cfsavecontent variable="stReturnData.emailBody">
                 	<cfoutput>
-                        <p>Dear #ARGUMENTS.hostFamily# Family,</p>
-                        <p>#ARGUMENTS.submittedBy# has suggested you make changes on the host family application. Please re-submit the application once changes are complete.</p>
+                        <p>Dear #ARGUMENTS.hostFamilyLastName# Family,</p>
+                        
+                        <p>Your Area Representative would like you to submit some additional documents in order to complete your Host Family Application.</p>
+                        
+                        <p>Please find a list of requested updates below.</p>
+                        
                         #vDisplayIssues#
-                        #CLIENT.companyName#
+                        
+                        <p>To make changes to your application, please log in to our website or click the link below.</p>
+                        
+                        <p><a href="#APPLICATION.CFC.USER.getUserSession().hostApplicationURL#">#APPLICATION.CFC.USER.getUserSession().hostApplicationURL#</a></p>
+                        
+                        <p>In case you may have misplaced your login information, we have listed it below.</p>
+                        
+                        <p>
+                            <strong>Email:</strong> #ARGUMENTS.hostFamilyUsername#<br />
+                            <strong>Password:</strong> #ARGUMENTS.hostFamilyPassword#<br />
+                        </p>
+                        
+                        <p>All questions can be directed at your Area Representative.</p>
+                        
+                        <p>
+                        	<strong>Area Representative:</strong> #ARGUMENTS.areaRepresentative# <br />
+                            <strong>Phone:</strong> #ARGUMENTS.areaRepresentativePhone# <br />
+                            <strong>Email:</strong> <a href="mailto:#ARGUMENTS.areaRepresentativeEmail#">#ARGUMENTS.areaRepresentativeEmail#</a>
+                        </p>
+                        
+                        <p>Once again, ISE would like to thank you for your efforts to support our goal of bringing people of the world closer together.</p>
+
+                        <p>
+                        	Thank you, <br />
+                            #CLIENT.companyName#
+						</p>                            
 					</cfoutput>                        
                 </cfsavecontent>
                             
@@ -1682,15 +1818,31 @@
         	<cfcase value="denyToAreaRepresentative">
 
                 <cfscript>
-					stReturnData.emailSubject = "Host Family Application Needs Updates";
+					stReturnData.emailSubject = "#CLIENT.companyshort# - Host Family Application Needs Additional Info";
 				</cfscript>
 				
                 <cfsavecontent variable="stReturnData.emailBody">
                 	<cfoutput>
                         <p>Dear #ARGUMENTS.areaRepresentative#,</p>
-                        <p>#ARGUMENTS.submittedBy# has suggested you make changes on the host family application. Please re-submit the application once changes are complete.</p>
+                        
+                        <p>
+	                        This email is intended to notify you that your Regional Advisor #ARGUMENTS.submittedBy# has requested additional information in order to 
+                            approve the #ARGUMENTS.hostFamilyLastName# family’s Host Application. 
+                        </p>
+                        
+                        <p>Please find a list of requested updates below.</p>
+                        
                         #vDisplayIssues#
-                        #CLIENT.companyName#
+                        
+                        <p>
+                        	Please log in to EXITS to view this application or click the link below for direct access (you must be logged in EXITS). <br />
+                            <a href="#CLIENT.exits_URL#/nsmg/index.cfm?curdoc=hostApplication/listOfApps&status=7">View Host Family Application</a>
+						</p>
+                        
+                        <p>
+                        	Thank you, <br />
+                            #CLIENT.companyName#
+						</p>                            
 					</cfoutput>
                 </cfsavecontent>
                             
@@ -1700,15 +1852,31 @@
         	<cfcase value="denyToRegionalAdvisor">
 
                 <cfscript>
-					stReturnData.emailSubject = "Host Family Application Needs Updates";
+					stReturnData.emailSubject = "#CLIENT.companyshort# - Host Family Application Needs Additional Info";
 				</cfscript>
 				
                 <cfsavecontent variable="stReturnData.emailBody">
                 	<cfoutput>
                         <p>Dear #ARGUMENTS.regionalAdvisor#,</p>
-                        <p>#ARGUMENTS.submittedBy# has suggested you make changes on the host family application. Please re-submit the application once changes are complete.</p>
+                        
+                        <p>
+	                        This email is intended to notify you that your Regional Advisor #ARGUMENTS.submittedBy# has requested additional information in order to 
+                            approve the #ARGUMENTS.hostFamilyLastName# family’s Host Application. 
+                        </p>
+                        
+                        <p>Please find a list of requested updates below.</p>
+                        
                         #vDisplayIssues#
-                        #CLIENT.companyName#
+                        
+                        <p>
+                        	Please log in to EXITS to view this application or click the link below for direct access (you must be logged in EXITS). <br />
+                            <a href="#CLIENT.exits_URL#/nsmg/index.cfm?curdoc=hostApplication/listOfApps&status=6">View Host Family Application</a>
+						</p>
+                        
+                        <p>
+                        	Thank you, <br />
+                            #CLIENT.companyName#
+						</p>                            
 					</cfoutput>                        
                 </cfsavecontent>
                             
@@ -1718,15 +1886,31 @@
         	<cfcase value="denyToRegionalManager">
 
                 <cfscript>
-					stReturnData.emailSubject = "Host Family Application Needs Updates";
+					stReturnData.emailSubject = "#CLIENT.companyshort# - Host Family Application Needs Additional Info";
 				</cfscript>
 				
                 <cfsavecontent variable="stReturnData.emailBody">
                 	<cfoutput>
                         <p>Dear #ARGUMENTS.regionalManager#,</p>
-                        <p>#ARGUMENTS.submittedBy# has suggested you make changes on the host family application. Please re-submit the application once changes are complete.</p>
+                        
+                        <p>
+	                        This email is intended to notify you that your Facilitator #ARGUMENTS.submittedBy# has requested additional information in order to 
+                            approve the #ARGUMENTS.hostFamilyLastName# family’s Host Application. 
+                        </p>
+                        
+                        <p>Please find a list of requested updates below.</p>
+                        
                         #vDisplayIssues#
-                        #CLIENT.companyName#
+                        
+                        <p>
+                        	Please log in to EXITS to view this application or click the link below for direct access (you must be logged in EXITS). <br />
+                            <a href="#CLIENT.exits_URL#/nsmg/index.cfm?curdoc=hostApplication/listOfApps&status=5">View Host Family Application</a>
+						</p>
+                        
+                        <p>
+                        	Thank you, <br />
+                            #CLIENT.companyName#
+						</p>                            
 					</cfoutput>                        
                 </cfsavecontent>
                             
