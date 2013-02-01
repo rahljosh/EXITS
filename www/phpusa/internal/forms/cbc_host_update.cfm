@@ -10,6 +10,8 @@
 <cfsilent>
 
 	<cfparam name="FORM.submitted" default="0">
+    <cfparam name="FORM.fatherInputUsed" default="0">
+    <cfparam name="FORM.motherInputUsed" default="0">
     
     <cfinclude template="../querys/family_info.cfm">
 
