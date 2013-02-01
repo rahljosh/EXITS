@@ -583,24 +583,25 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                     </div> <!-- end top --> 
                     
                     <div class="rdbox">
-						<cfif CLIENT.companyID lte 5>
-                         There are currently no available bonuses
-                         <!----
+                    
+                    	<!--- ISE --->
+						<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG,CLIENT.companyID)>
+                         
                             <table width="90%" align="center" cellpadding="4">
                                 <tr>
-                                    <td width=22><img src="pics/icons/bonus.png" /></td>
-                                    <td><a href="uploadedfiles/pdf_docs/ISE/promotion/Pre-Ayp%20Bonus%202012.pdf" target="_blank">Pre-AYP</a> </td>
-                                </tr>	
+                                    <td><img src="pics/icons/bonus.png" /></td>
+                                    <td><a href="uploadedfiles/pdf_docs/ISE/payment/Early%20Placement%20Bonus%20Pay%20Sheet(R)-1.pdf" target="_blank">Early Placement Bonus</a></td>
+                                </tr>
                                 <tr>
                                     <td><img src="pics/icons/bonus2.png" /></td>
-                                    <td><a href="uploadedfiles/pdf_docs/ISE/promotion/Early%20Placement%20Bonus%202012.pdf" target="_blank">Early Placement</a> </td>
+                                    <td><a href="uploadedfiles/pdf_docs/ISE/payment/Fast%20Track%20Placement%20Bonus%20Pay%20Sheet(R).pdf " target="_blank">Fast Track Placement Bonus</a></td>
                                 </tr>
                                 <tr>
-                                    <td><img src="pics/icons/bonus.png" /></td>
-                                    <td><a href="slideshow/pdfs/CASE/CEOBonus.pdf" target="_blank">CEO Placement Bonus</a></td>
-                                </tr>
+                                    <td width="22"><img src="pics/icons/bonus.png" /></td>
+                                    <td><a href="uploadedfiles/pdf_docs/ISE/payment/On-Time%20Placement%20Bonus%20Pay%20Sheet(R).pdf" target="_blank">On-Time Placement Bonus</a></td>
+                                </tr>	
                             </table>
-							---->
+                            
                         <cfelse>
                             There are currently no available bonuses
                         </cfif>
