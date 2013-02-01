@@ -73,18 +73,18 @@
 <Cfif isDefined('form.submit')>
     <Cfquery name="Answeredquestions" datasource="#application.dsn#">
     select *
-    from hostRefQuestionaireAnswers
+    from smg_host_reference_answers
     where fk_reportID = #url.reportid#
     </cfquery>
     <cfquery datasource="#application.dsn#">
-        update hostRefQuestionaireTracking
+        update smg_host_reference_tracking
         set dateInterview = #CreateODBCDate(form.dateInterview)#
         where id = #url.reportid#
     </cfquery>
    
 	<cfloop query="Answeredquestions">
             <cfquery datasource="#application.dsn#">
-            update hostRefQuestionaireAnswers
+            update smg_host_reference_answers
              set answer = '#Evaluate("form." & id)#'
       		where id = #id#
             </cfquery>
@@ -94,13 +94,13 @@
 <Cfset season = 10>
 <Cfquery name="questionTracking" datasource="#application.dsn#">
 select *
-from hostRefQuestionaireTracking
+from smg_host_reference_tracking
 where ID = #url.reportid#
 </cfquery>
 <Cfquery name="questions" datasource="#application.dsn#">
 select *, ARQ.qText, ARQ.id
-from hostRefQuestionaireAnswers ARQA
-left join hostRefQuestions ARQ on ARQ.id = ARQA.fk_questionID
+from smg_host_reference_answers ARQA
+left join smg_host_reference_questions ARQ on ARQ.id = ARQA.fk_questionID
 where fk_reportID = #url.reportid#
 order by ARQ.id
 </cfquery>
@@ -109,7 +109,7 @@ order by ARQ.id
 <!----Report is Approved--->
 <Cfif isDefined('form.approve')>
 	<cfquery name="markApproved" datasource="#application.dsn#">
-    update hostRefQuestionaireTracking
+    update smg_host_reference_tracking
     set 
     	isSubmitted = <cfqueryparam cfsqltype="cf_sql_bit" value="1">,
     	<Cfif client.usertype eq 7>
