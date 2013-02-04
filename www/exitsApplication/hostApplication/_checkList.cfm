@@ -48,7 +48,7 @@
         as a host family, it simpliy indicates that your application is ready to submit.
 	</p>
     
-    <p>Once your application is submitted, you will be contacted be your local area representative so that they can conducte a tour of your home and to help you select an exchange student.</p>
+    <p>Once your application is submitted, you will be contacted be your local area representative so that they can conduct a tour of your home and to help you select an exchange student.</p>
 
 
     <h2><p>Name & Contact Information</p></h2>

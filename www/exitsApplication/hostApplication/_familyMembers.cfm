@@ -326,7 +326,7 @@
                 <td>#qGetAllFamilyMembers.schoolname#</td>
                 <td>
                     <a href="index.cfm?section=familyMembers&childID=#qGetAllFamilyMembers.childID#" title="Click to edit this family member" style="padding-right:5px;"><img src="images/buttons/pencilBlue23x29.png" border="0" height="15"/></a> 
-                    <a href="index.cfm?section=familyMembers&deleteChildID=#qGetAllFamilyMembers.childID#" title="Click to delete this family member" onClick="return confirm('Are you sure you want to delete this Family Member?')"> <img src="images/buttons/deleteRedX.png" border="0"/></a>
+                    <a href="index.cfm?section=familyMembers&deleteChildID=#qGetAllFamilyMembers.childID#" title="Click to delete this family member" onClick="return confirm('Are you sure you want to delete #qGetAllFamilyMembers.name# #qGetAllFamilyMembers.lastName# from Family Members?')"> <img src="images/buttons/deleteRedX.png" border="0"/></a>
                 </td>
             </tr>
         </cfloop>

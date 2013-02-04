@@ -96,7 +96,7 @@
 
 			// special_cloths
             if( NOT LEN(TRIM(FORM.special_cloths)) ) {
-                SESSION.formErrors.Add("Please provide a list of any special cloths to bring.");
+                SESSION.formErrors.Add("Please provide a list of any special clothes to bring.");
             }
 
 			// point_interest

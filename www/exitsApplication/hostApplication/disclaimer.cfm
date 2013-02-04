@@ -18,16 +18,30 @@
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.signature" default="">
 
+	<cfscript>
+		// Get Host Family Info - Accessible from any page
+		qGetHostFamilyInfo = APPLICATION.CFC.HOST.getCompleteHostInfo(hostID=APPLICATION.CFC.SESSION.getHostSession().ID);
+	
+		vFatherName = TRIM(qGetHostFamilyInfo.fatherFirstName) & " " & TRIM(qGetHostFamilyInfo.fatherLastName);
+		
+		vMotherName = TRIM(qGetHostFamilyInfo.motherFirstName) & " " & TRIM(qGetHostFamilyInfo.motherLastName);
+    </cfscript>	
+
     <!--- Form Submitted --->
     <cfif VAL(FORM.submitted)>
     
 		<cfscript>
 			// Data Validation
 			
-            // First Name
+            // Signature
             if ( NOT LEN(TRIM(FORM.signature)) ) {
                 SESSION.formErrors.Add("Please type your name in the signature box.");
-            }			
+            }	
+			
+			// Check Signature
+			if ( LEN(TRIM(FORM.signature)) AND TRIM(FORM.signature) NEQ vFatherName AND TRIM(FORM.signature) NEQ vMotherName ) {
+                SESSION.formErrors.Add("The signature provided does not match either of the names provided for host parents, please be sure to enter the exact first and last name.");
+			}
 		</cfscript>
 
 		<!--- No Errors Found --->
@@ -128,7 +142,7 @@
                             <td>
                                 <p>
                                     Applicants and their families certify that all information submitted in the Host Family Application - including the application, 
-                                    the Host Family Letter, any supplements, and any other supporting materials - is honestly presented and accurate; and that these documents 
+                                    the Host Family Letter, any supplements, and any other supporting materials - is honestly presented and accurate; these documents 
                                     will become the property of the exchange organization and will not be returned.         
                                 </p>        
                                 

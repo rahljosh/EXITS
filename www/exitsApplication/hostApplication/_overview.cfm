@@ -199,7 +199,7 @@
                         
                     <cfelse>
                 
-                        <p>Congratulations on the decission to host a student with #APPLICATION.CFC.SESSION.getCompanySessionByKey(structKey='shortName')#.  We are excited to be working with you.</p>
+                        <p>Congratulations on the decision to host a student with #APPLICATION.CFC.SESSION.getCompanySessionByKey(structKey='shortName')#.  We are excited to be working with you.</p>
                         <div align="center">
                             <a href="index.cfm?section=contactInfo"><img src="images/buttons/contApp.png" alt="continue" border="0" /></a>
                         </div>
@@ -208,7 +208,7 @@
                     
                         <p>
                             Your student's family will receive selected  information from this application. 
-                            Student and their families will not receive any confidential infromation.  
+                            Student and their families will not receive any confidential information.  
                             Please be aware that the Department of State has specific requirements regarding the photos that are uploaded on the family album.  
                             We are mandated to have photos of specific areas of your home on file. 
                             <br /><br /> 
