@@ -46,7 +46,7 @@
 		}
 	
 		// Get Host Application Information
-		qGetHostInfo = APPLICATION.CFC.HOST.getApplicationList(hostID=FORM.hostID);	
+		qGetHostInfo = APPLICATION.CFC.HOST.getApplicationList(hostID=VAL(FORM.hostID));
 		
 		vCanHostBeDeleted = false;
 	</cfscript>	
@@ -77,7 +77,7 @@
             DELETE FROM
                 smg_host_animals
             WHERE
-                hostID = <cfqueryparam cfsqltype="integer" value="#qGetHostInfo.hostID#">
+                hostID = <cfqueryparam cfsqltype="integer" value="#VAL(qGetHostInfo.hostID)#">
         </cfquery>   
             
             
@@ -86,7 +86,7 @@
             DELETE FROM
                 smg_host_children
             WHERE
-                hostID = <cfqueryparam cfsqltype="integer" value="#qGetHostInfo.hostID#">
+                hostID = <cfqueryparam cfsqltype="integer" value="#VAL(qGetHostInfo.hostID)#">
         </cfquery>   
     
     
@@ -95,7 +95,7 @@
             DELETE FROM
                 smg_hosts_cbc
             WHERE
-                hostID = <cfqueryparam cfsqltype="integer" value="#qGetHostInfo.hostID#">
+                hostID = <cfqueryparam cfsqltype="integer" value="#VAL(qGetHostInfo.hostID)#">
         </cfquery>   
         
         
@@ -110,7 +110,7 @@
                                     FROM
                                         smg_family_references
                                     WHERE
-                                        referenceFor = <cfqueryparam cfsqltype="integer" value="#qGetHostInfo.hostID#">
+                                        referenceFor = <cfqueryparam cfsqltype="integer" value="#VAL(qGetHostInfo.hostID)#">
                                     )
         </cfquery>   
     
@@ -126,7 +126,7 @@
                                     FROM
                                         smg_family_references
                                     WHERE
-                                        referenceFor = <cfqueryparam cfsqltype="integer" value="#qGetHostInfo.hostID#">
+                                        referenceFor = <cfqueryparam cfsqltype="integer" value="#VAL(qGetHostInfo.hostID)#">
                                     )
         </cfquery>   
         
@@ -136,7 +136,7 @@
             DELETE FROM
                 smg_family_references
             WHERE
-                referenceFor = <cfqueryparam cfsqltype="integer" value="#qGetHostInfo.hostID#">
+                referenceFor = <cfqueryparam cfsqltype="integer" value="#VAL(qGetHostInfo.hostID)#">
         </cfquery>   
         
         
@@ -151,7 +151,7 @@
                                     FROM
                                         progress_reports
                                     WHERE
-                                        fk_host = <cfqueryparam cfsqltype="integer" value="#qGetHostInfo.hostID#">
+                                        fk_host = <cfqueryparam cfsqltype="integer" value="#VAL(qGetHostInfo.hostID)#">
                                     )
         </cfquery>   
 
@@ -161,7 +161,7 @@
             DELETE FROM
                 progress_reports
             WHERE
-                fk_host = <cfqueryparam cfsqltype="integer" value="#qGetHostInfo.hostID#">
+                fk_host = <cfqueryparam cfsqltype="integer" value="#VAL(qGetHostInfo.hostID)#">
         </cfquery>   
 
         
@@ -170,7 +170,7 @@
             DELETE FROM
                 smg_host_app_history
             WHERE
-                hostID = <cfqueryparam cfsqltype="integer" value="#qGetHostInfo.hostID#">
+                hostID = <cfqueryparam cfsqltype="integer" value="#VAL(qGetHostInfo.hostID)#">
         </cfquery>   
     
 
@@ -181,14 +181,14 @@
             WHERE
             	foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="smg_hosts">
             AND
-                foreignID = <cfqueryparam cfsqltype="integer" value="#qGetHostInfo.hostID#">
+                foreignID = <cfqueryparam cfsqltype="integer" value="#VAL(qGetHostInfo.hostID)#">
         </cfquery>   
     
         
         <!--- Delete Folder --->
         <cftry>
         	
-            <cfdirectory action="delete" directory="#APPLICATION.PATH.hostApp##qGetHostInfo.hostID#">
+            <cfdirectory action="delete" directory="#APPLICATION.PATH.hostApp##VAL(qGetHostInfo.hostID)#">
 
             <cfcatch type="any">
 				<!--- Handle Error --->            
@@ -202,7 +202,7 @@
             DELETE FROM
                 smg_hosts
             WHERE
-                hostID = <cfqueryparam cfsqltype="integer" value="#qGetHostInfo.hostID#">
+                hostID = <cfqueryparam cfsqltype="integer" value="#VAL(qGetHostInfo.hostID)#">
         </cfquery> 
         
 	</cfif>
