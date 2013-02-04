@@ -213,21 +213,29 @@
 	
     <cfif NOT VAL(FORM.submitted)>
     	
-        <form name="deleteHost" action="#CGI.SCRIPT_NAME#" method="post" style="border:1px solid ##ccc; width:400px;">
-			<input type="hidden" name="submitted" value="1">     
+        <cfif APPLICATION.CFC.USER.isOfficeUser()>
+        
+            <form name="deleteHost" action="#CGI.SCRIPT_NAME#" method="post" style="border:1px solid ##ccc; width:400px;">
+                <input type="hidden" name="submitted" value="1">     
+                
+                <h2>Delete Host Family Data</h2>   
+                
+                <p>
+                    Please Enter host ID:
+                    <input type="text" name="hostID" value="">
+                </p>
+    
+                <input type="submit" name="submit"> <br /> <br />
+    
+                <span style="color:##F00">PS: DATA IS PERMANENTLY DELETED. <br /> Please be sure you are typing in the correct HOST ID.</span>
+                
+            </form>
             
-            <h2>Delete Host Family Data</h2>   
-        	
-            <p>
-            	Please Enter host ID:
-            	<input type="text" name="hostID" value="">
-            </p>
-
-            <input type="submit" name="submit"> <br /> <br />
-
-            <span style="color:##F00">PS: DATA IS PERMANENTLY DELETED. <br /> Please be sure you are typing in the correct HOST ID.</span>
-            
-        </form>
+		<cfelse>
+        
+        	<p>You don't have rights to see this page</p>        
+        
+        </cfif>            
    
     <cfelseif NOT VAL(qGetHostInfo.recordCount)>
 
