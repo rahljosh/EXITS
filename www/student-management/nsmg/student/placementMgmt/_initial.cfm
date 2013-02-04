@@ -80,6 +80,9 @@
 		// Get School Information
 		qGetSchoolInfo = APPLICATION.CFC.SCHOOL.getSchoolAndDatesInfo(schoolID=qGetPlacementHistoryByID.schoolID, seasonID=qGetProgramInfo.seasonID);
 		
+		// Get Host eligibility
+		vHostEligibility = APPLICATION.CFC.HOST.getHostEligibility(hostID=qGetPlacementHistoryByID.hostID);
+		
 		// FORM Submitted - Update Placement Information
 		if ( listLen(FORM.subAction) GT 1 ) {
 			
@@ -1010,7 +1013,7 @@
                     </tr>
                     <tr>
                         <td align="center" style="color:##3b5998; padding-top:10px;">
-                            To approve this placement, please review the placement letter clicking on the link above, <br /> then click on "continue" at the bottom of the placement letter.
+                            To approve or reject this placement, please review the placement letter clicking on the link above, <br /> then click on "continue" at the bottom of the placement letter.
                         </td>
                     </tr>
                 <cfelse>
@@ -1043,14 +1046,23 @@
                             
                         <cfelseif CLIENT.usertype LT qGetStudentInfo.host_fam_Approved>
                             
+                            <cfif NOT vHostEligibility>
+                                <font color="red">One or more members of this family have been marked ineligible to host</font>
+                                <br/>
+                          	</cfif>
+                            
                             <span id="actionButtons" class="displayNone">
                             
-                                <!--- Relocation date is required for office users --->
-                                <cfif APPLICATION.CFC.USER.isOfficeUser() AND VAL(qGetPlacementHistoryByID.isRelocation)>
-									<a href="javascript:displayHiddenForm('approvePlacementForm','actionButtons');"><img src="../../pics/approve.gif" border="0" alt="Approve Placement" /></a>    
+                            	<cfif NOT vHostEligibility>
+                                	<img src="../../pics/approve.gif" border="0" alt="Approve Placement" style="opacity:0.4; filter: alpha(opacity=40);" />
                                 <cfelse>
-	                                <a href="javascript:approvePlacement();"><img src="../../pics/approve.gif" border="0" alt="Approve Placement" /></a>                                
-                                </cfif>
+									<!--- Relocation date is required for office users --->
+                                    <cfif APPLICATION.CFC.USER.isOfficeUser() AND VAL(qGetPlacementHistoryByID.isRelocation)>
+                                        <a href="javascript:displayHiddenForm('approvePlacementForm','actionButtons');"><img src="../../pics/approve.gif" border="0" alt="Approve Placement" /></a>    
+                                    <cfelse>
+                                        <a href="javascript:approvePlacement();"><img src="../../pics/approve.gif" border="0" alt="Approve Placement" /></a>                                
+                                    </cfif>
+                              	</cfif>
 
                                 &nbsp; &nbsp;
                                 <a href="javascript:displayHiddenForm('rejectPlacementForm','actionButtons');"><img src="../../pics/reject.gif" border="0" alt="Reject Placement" /></a>
