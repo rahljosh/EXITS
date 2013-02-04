@@ -199,7 +199,7 @@
                         
                     <cfelse>
                 
-                        <p>Congratulations on the decission to host a student with ISE.  We are excited to be working with you.</p>
+                        <p>Congratulations on the decission to host a student with #APPLICATION.CFC.SESSION.getCompanySessionByKey(structKey='shortName')#.  We are excited to be working with you.</p>
                         <div align="center">
                             <a href="index.cfm?section=contactInfo"><img src="images/buttons/contApp.png" alt="continue" border="0" /></a>
                         </div>

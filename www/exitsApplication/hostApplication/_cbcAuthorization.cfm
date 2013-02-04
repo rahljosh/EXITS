@@ -313,7 +313,7 @@
                 
                 <cfinvoke component="extensions.components.email" method="sendEmail">
                     <cfinvokeargument name="emailTo" value="#qGetHostFamilyInfo.email#">       
-                    <cfinvokeargument name="emailFrom" value="hostApp@iseusa.com">
+                    <cfinvokeargument name="emailFrom" value="#SESSION.COMPANY.EMAIL.support#">
                     <cfinvokeargument name="emailSubject" value="Host Family Application - CBC Authorization Forms">
                     <cfinvokeargument name="emailMessage" value="#vHostCBCEmailMessage#">
                     

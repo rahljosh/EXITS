@@ -114,7 +114,7 @@
     
     List your household rules and personal expectations. It is very important that your student be treated as a member of your family. 
     We will share this information with the student you select. 
-    <b>Exchange students MUST abide by all ISE rules and all local, state & federal laws, regardless of home rules.</b>
+    <b>Exchange students MUST abide by all #APPLICATION.CFC.SESSION.getCompanySessionByKey(structKey='shortName')# rules and all local, state & federal laws, regardless of home rules.</b>
     <br /><br />
     
     <span class="required">* Required fields</span>
