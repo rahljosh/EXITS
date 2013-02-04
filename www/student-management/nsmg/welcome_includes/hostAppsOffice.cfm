@@ -10,7 +10,7 @@
 			<tr>
 				<th valign="top">Started</th>
 				<th valign="top">Host</th>                
-				<th valign="top">Rep</th>
+				<th valign="top">Area Rep.</th>
                 <th valign="top">Advisor</th>
 				<th valign="top">Manager</th>
 				<th valign="top">HQ</th>

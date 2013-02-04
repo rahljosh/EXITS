@@ -54,7 +54,7 @@
 		qGetConfidentialVisitForm = APPLICATION.CFC.PROGRESSREPORT.getVisitInformation(hostID=VAL(FORM.hostID),reportType=5);
 
 		// Get Application Approval History for this section
-		qGetApprovalHistory = APPLICATION.CFC.HOST.getApplicationApprovalHistory(hostID=qGetHostInfo.hostID, itemID=8);
+		qGetApprovalHistory = APPLICATION.CFC.HOST.getApplicationApprovalHistory(hostID=qGetHostInfo.hostID, itemID=13);
 
 		// This returns the approval fields for the logged in user
 		stCurrentUserFieldSet = APPLICATION.CFC.HOST.getApprovalFieldNames();
@@ -304,7 +304,7 @@
                 // Use same approval process of the host family sections
                 APPLICATION.CFC.HOST.updateSectionStatus(
                     hostID=FORM.hostID,
-                    itemID=8,
+                    itemID=13,
                     action="approved",
                     notes="",
                     areaRepID=qGetHostInfo.areaRepresentativeID,

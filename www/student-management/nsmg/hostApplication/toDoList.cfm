@@ -97,13 +97,13 @@
 				// Only check for approval if there is a school acceptance and a confidential host visit report
 				vCheckIfMissing = true;
 				
-				// School Acceptance
-				if ( qGetApprovalHistory.ID[i] EQ 2 AND NOT qGetSchoolAcceptance.recordCount ) {
+				// Confidential Host Family Visit Form
+				if ( qGetApprovalHistory.ID[i] EQ 13 AND NOT qGetConfidentialVisitForm.recordCount ) {
 					vCheckIfMissing = false;
 				}
 				
-				// Confidential Host Family Visit Form
-				if ( qGetApprovalHistory.ID[i] EQ 8 AND NOT qGetConfidentialVisitForm.recordCount ) {
+				// School Acceptance
+				if ( qGetApprovalHistory.ID[i] EQ 14 AND NOT qGetSchoolAcceptance.recordCount ) {
 					vCheckIfMissing = false;
 				}
 
@@ -495,7 +495,7 @@
 							}
                         </cfscript>
                         
-                        <tr <cfif currentRow MOD 2> bgcolor="##F7F7F7"</cfif>>
+                        <tr <cfif qGetApprovalHistory.currentRow MOD 2> bgcolor="##F7F7F7"</cfif>>
                             <td>
                             	
                                 <cfif ListFind(qGetApprovalHistory.isRequiredForApproval, CLIENT.userType)>
@@ -521,7 +521,7 @@
                             <td>#vSetDescLink#</td>
                             <td>
                             	<!--- Host Family still filling out --->
-								<cfif ListFind("9,8", qGetHostInfo.hostAppStatus) AND NOT listFind("2,8", qGetApprovalHistory.ID)>
+								<cfif ListFind("9,8", qGetHostInfo.hostAppStatus) AND NOT listFind("13,14", qGetApprovalHistory.ID)>
                                     
                                     <font color="##CCCCCC"><em>Application has NOT been submitted</em></font>
                                 
@@ -540,13 +540,13 @@
 										// Only Display approval option if there is a school acceptance and a confidential host visit report
 										vDisplayApprovalButtons = true;
 										
-										// School Acceptance
-										if ( qGetApprovalHistory.ID EQ 2 AND NOT qGetSchoolAcceptance.recordCount ) {
+										// Confidential Host Family Visit Form
+										if ( qGetApprovalHistory.ID EQ 13 AND NOT qGetConfidentialVisitForm.recordCount ) {
 											vDisplayApprovalButtons = false;
 										}
-										
-										// Confidential Host Family Visit Form
-										if ( qGetApprovalHistory.ID EQ 8 AND NOT qGetConfidentialVisitForm.recordCount ) {
+
+										// School Acceptance
+										if ( qGetApprovalHistory.ID EQ 14 AND NOT qGetSchoolAcceptance.recordCount ) {
 											vDisplayApprovalButtons = false;
 										}
 									</cfscript>
@@ -577,10 +577,24 @@
                                 	<font color="##CCCCCC"><em>N/A</em></font>
                                     
                                 </cfif>
+							  	
+                                <!--- Confidential HF Visit --->
+                              	<cfif qGetApprovalHistory.ID EQ 13>
                                 
+                                    <!--- Report Never Submitted --->
+                                    <cfif NOT qGetConfidentialVisitForm.recordCount> 
+                                        <a href="#qGetApprovalHistory.link#?hostID=#qGetHostInfo.hostID#" title="Click to view item" class="jQueryModalRefresh" style="display:block;">[ Submit Visit Form ]</a>
+                                    <!--- Report Denied by up level user - Edit Report --->
+                                    <cfelseif qGetApprovalHistory[stCurrentUserFieldSet.statusFieldName][qGetApprovalHistory.currentrow] NEQ 'approved' OR qGetApprovalHistory[stOneLevelUpFieldSet.statusFieldName][qGetApprovalHistory.currentrow] EQ 'denied'>
+                                        <a href="#qGetApprovalHistory.link#?hostID=#qGetHostInfo.hostID#" title="Click to view item" class="jQueryModalRefresh" style="display:block;">[ Edit Visit Form ]</a>
+									<!--- Print View Default --->
+                                    <cfelseif qGetApprovalHistory[stCurrentUserFieldSet.statusFieldName][qGetApprovalHistory.currentrow] EQ 'approved' OR qGetApprovalHistory[stOneLevelUpFieldSet.statusFieldName][qGetApprovalHistory.currentrow] NEQ 'denied'>
+                                        <a href="#qGetApprovalHistory.link#?hostID=#qGetHostInfo.hostID#" target="_blank" style="display:block;">[ View Visit Form ]</a>
+                                    </cfif>   
+
 							  	<!--- School Acceptance --->
-                              	<cfif qGetApprovalHistory.ID EQ 2>
-                                	
+                              	<cfelseif qGetApprovalHistory.ID EQ 14>
+                                
                                     <cfif NOT qGetSchoolAcceptance.recordCount>
                                         <a href="#qGetApprovalHistory.link#?hostID=#qGetHostInfo.hostID#" title="Click to view item" class="jQueryModalRefresh" style="display:block;">[ Upload School Acceptance Letter ]</a>
                                     <!--- Print View Default --->
@@ -592,20 +606,6 @@
                                     	<!--- ADD OPTION TO DELETE A FILE --->
                                     	<!--- <a href="" title="Click to delete this item" class="jQueryModalRefresh" style="display:block;">[ Delete File ]</a> --->
                                     </cfif>
-
-							  	<!--- Confidential HF Visit --->
-                              	<cfelseif qGetApprovalHistory.ID EQ 8>
-                                    
-                                    <!--- Report Never Submitted --->
-                                    <cfif NOT qGetConfidentialVisitForm.recordCount> 
-                                        <a href="#qGetApprovalHistory.link#?hostID=#qGetHostInfo.hostID#" title="Click to view item" class="jQueryModalRefresh" style="display:block;">[ Submit Visit Form ]</a>
-                                    <!--- Report Denied by up level user - Edit Report --->
-                                    <cfelseif qGetApprovalHistory[stCurrentUserFieldSet.statusFieldName][qGetApprovalHistory.currentrow] NEQ 'approved' OR qGetApprovalHistory[stOneLevelUpFieldSet.statusFieldName][qGetApprovalHistory.currentrow] EQ 'denied'>
-                                        <a href="#qGetApprovalHistory.link#?hostID=#qGetHostInfo.hostID#" title="Click to view item" class="jQueryModalRefresh" style="display:block;">[ Edit Visit Form ]</a>
-									<!--- Print View Default --->
-                                    <cfelseif qGetApprovalHistory[stCurrentUserFieldSet.statusFieldName][qGetApprovalHistory.currentrow] EQ 'approved' OR qGetApprovalHistory[stOneLevelUpFieldSet.statusFieldName][qGetApprovalHistory.currentrow] NEQ 'denied'>
-                                        <a href="#qGetApprovalHistory.link#?hostID=#qGetHostInfo.hostID#" target="_blank" style="display:block;">[ View Visit Form ]</a>
-                                    </cfif>   
                                     
                               </cfif>
                                 
