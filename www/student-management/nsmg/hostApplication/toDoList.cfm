@@ -480,7 +480,7 @@
                             // Set Links
 							
 							// Host Visit Report / Second Visit Report - No link, text only
-                            if ( ListFind("2,8", qGetApprovalHistory.ID) ) {
+                            if ( ListFind("13,14", qGetApprovalHistory.ID) ) {
 								vSetDescLink = '#qGetApprovalHistory.description#';
 							// Set Up Link for HF section
 							} else { 
