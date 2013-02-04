@@ -173,7 +173,7 @@
 			
 			// Valid Mother's Phone
             if ( LEN(TRIM(FORM.mother_cell)) AND NOT isValid("telephone", TRIM(FORM.mother_cell)) ) {
-                SESSION.formErrors.Add("Please enter a valid phoe number for Mother's Cell Phone");
+                SESSION.formErrors.Add("Please enter a valid phone number for Mother's Cell Phone");
 			}
 			
 			// Functioning Business

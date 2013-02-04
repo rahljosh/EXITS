@@ -85,7 +85,7 @@
 			}	
 			
 			// race
-			if ( NOT LEN(TRIM(FORM.race)) ) {
+			if ( NOT LEN(TRIM(FORM.race)) AND NOT LEN(TRIM(FORM.ethnicityOther)) ) {
 				SESSION.formErrors.Add("Please indicate the race of your household.");
 			}
 		</cfscript>
@@ -223,7 +223,7 @@
                 </td>
             </tr>
             <tr bgcolor="##deeaf3">
-                <td class="label" valign="top" colspan="2"><h3>What is the families race? (check as many boxes as needed) <span class="required">*</span></h3></td>
+                <td class="label" valign="top" colspan="2"><h3>What your family's race? <span class="required">*</span></h3></td>
             </tr>
             <tr bgcolor="##deeaf3">
                 <td colspan="2">

@@ -713,7 +713,7 @@
                     
                     <p>
                         Applicants and their families certify that all information submitted in the Host Family Application - including the application, 
-                        the Host Family Letter, any supplements, and any other supporting materials - is honestly presented and accurate; and that these documents 
+                        the Host Family Letter, any supplements, and any other supporting materials - is honestly presented and accurate; these documents 
                         will become the property of the exchange organization and will not be returned.         
                     </p>        
                     
