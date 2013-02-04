@@ -41,6 +41,8 @@
                 email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.username)#"> 
             AND 
                 password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.password)#">
+			AND
+            	hostAppStatus != <cfqueryparam cfsqltype="cf_sql_integer" value="0">               
         </cfquery>
         
 		<!--- Host Account found - Log them in --->
