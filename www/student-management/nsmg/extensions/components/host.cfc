@@ -517,21 +517,30 @@
         
 	</cffunction>
     
+    
     <cffunction name="getHostEligibility" access="public" returntype="boolean" output="false" hint="Checks if the host family is eligible to host, returns true if they are, false otherwise.">
-    	<cfargument name="hostID" type="numeric" hint="hostID is required">
+        <cfargument name="hostID" default="" hint="hostID">
         
         <cfquery name="qGetHostQualified" datasource="#APPLICATION.DSN#">
-        	SELECT isNotQualifiedToHost
-            FROM smg_hosts
-            WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#">
-            AND isNotQualifiedToHost != 0
+        	SELECT 
+            	isNotQualifiedToHost
+            FROM 
+            	smg_hosts
+            WHERE 
+            	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
+            AND 
+            	isNotQualifiedToHost != 0
         </cfquery>
         
         <cfquery name="qGetHostCBCFlags" datasource="#APPLICATION.DSN#">
-        	SELECT flagCBC
-            FROM smg_hosts_cbc
-            WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#">
-            AND flagCBC != 0
+        	SELECT 
+            	flagCBC
+            FROM 
+            	smg_hosts_cbc
+            WHERE 
+            	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
+            AND 
+            	flagCBC != 0
         </cfquery>
         
         <cfscript>
@@ -543,6 +552,7 @@
 		</cfscript>
         
     </cffunction>
+
 
 	<!--- ------------------------------------------------------------------------- ----
 		HOST FAMILY APPLICATION
