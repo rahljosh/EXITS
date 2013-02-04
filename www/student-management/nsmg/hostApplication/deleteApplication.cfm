@@ -277,7 +277,7 @@
 	
     <cfelse>
 
-        <h2>Host family could not be deleted. It seems host family record is assigned to one or more students</h2>
+        <h2>Host family could not be deleted. HF record is assigned to one or more students</h2>
 
     	<p>Host Family: #qGetHostInfo.familyLastName# (###qGetHostInfo.hostID#)</p>
     
