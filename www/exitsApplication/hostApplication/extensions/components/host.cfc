@@ -216,7 +216,7 @@
         <cfargument name="hostID" default="" hint="HostID is not required">
         <cfargument name="liveAtHome" default="" hint="liveAtHome is not required">
         <cfargument name="getAllMembers" default="0" hint="Returns all family members including deleted">
-        <cfargument name="get18AndOlder" default="" hint="Returns all family members 18 and older">
+        <cfargument name="getCBCQualifiedMembers" default="" hint="Returns all qualified members to run CBCs, any one turning 18 in the next 18 months">
         
         <cfquery 
 			name="qGetHostMemberByID" 
@@ -267,11 +267,14 @@
                         liveAtHome = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.liveAtHome#">
                 </cfif>
                 
-                <cfif LEN(ARGUMENTS.get18AndOlder)>
+                <!--- Gets any family member that are turning 18 in the next 18 months and live at home --->
+                <cfif LEN(ARGUMENTS.getCBCQualifiedMembers)>
                     AND
-                        FLOOR(datediff (now(), birthDate)/365) >= <cfqueryparam cfsqltype="cf_sql_integer" value="18">
+                        FLOOR(DATEDIFF(DATE_ADD(CURRENT_DATE, INTERVAL 18 MONTH), birthdate)/365) >= <cfqueryparam cfsqltype="cf_sql_integer" value="18">
+                    AND
+                        liveAtHome = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">
                 </cfif>
-				
+                
 		</cfquery>
 		   
 		<cfreturn qGetHostMemberByID>
@@ -357,7 +360,7 @@
 			var qGetFamilyMembersAtHome = getHostMemberByID(hostID=ARGUMENTS.hostID,liveAtHome="yes");
 			
 			// Get Host Family Members at Home
-			var qGetFamilyMembers18AndOlder = APPLICATION.CFC.HOST.getHostMemberByID(hostID=APPLICATION.CFC.SESSION.getHostSession().ID,liveAtHome="yes", get18AndOlder=1);	
+			var qGetCBCQualifiedMembers = APPLICATION.CFC.HOST.getHostMemberByID(hostID=APPLICATION.CFC.SESSION.getHostSession().ID,getCBCQualifiedMembers=1);	
 			
 			// Father CBC Authorization
 			var qGetFatherCBCAuthorization = APPLICATION.CFC.DOCUMENT.getDocuments(
@@ -656,18 +659,18 @@
 			}
 
 			// Members - Loop through query
-			for( x=1; x LTE qGetFamilyMembers18AndOlder.recordCount; x++ ) {
+			for( x=1; x LTE qGetCBCQualifiedMembers.recordCount; x++ ) {
 				
 				// Member CBC Authorization
 				var qGetMemberCBCAuthorization = APPLICATION.CFC.DOCUMENT.getDocuments(
 					foreignTable="smg_host_children",
-					foreignID=qGetFamilyMembers18AndOlder.childID[x], 
+					foreignID=qGetCBCQualifiedMembers.childID[x], 
 					documentTypeID=APPLICATION.DOCUMENT.hostMemberCBCAuthorization, 
 					seasonID=APPLICATION.CFC.SESSION.getHostSession().seasonID
 				);
 				
 				if ( NOT qGetMemberCBCAuthorization.recordCount ) {
-					SESSION.formErrors.Add("The CBC authorization signature for host member #qGetFamilyMembers18AndOlder.name[x]# is missing.");										
+					SESSION.formErrors.Add("The CBC authorization signature for host member #qGetCBCQualifiedMembers.name[x]# is missing.");										
 				}
 				
 			}
