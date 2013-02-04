@@ -998,10 +998,7 @@
 			datasource="#APPLICATION.DSN#">
                 SELECT
 					ap.ID,
-                    ap.itemName,
-                    ap.link,
                     ap.section,
-                    ap.linkDesc,
                     ap.whoViews,
                     ap.description,
                     ap.isStudentRequired,

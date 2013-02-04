@@ -167,7 +167,7 @@
 					if ( FORM["sectionStatus" & qGetApprovalHistory.ID[i]] EQ 'denied' ) {
 						vAction = "denied";
 						// Store a list of issues
-						vIssueList = ListAppend(vIssueList, '<li>#qGetApprovalHistory.itemName[i]# Section - #FORM["sectionNotes" & qGetApprovalHistory.ID[i]]#</li>');
+						vIssueList = ListAppend(vIssueList, '<li>#qGetApprovalHistory.description[i]# Section - #FORM["sectionNotes" & qGetApprovalHistory.ID[i]]#</li>');
 					}
 					
 				}
@@ -583,20 +583,20 @@
                                 
                                     <!--- Report Never Submitted --->
                                     <cfif NOT qGetConfidentialVisitForm.recordCount> 
-                                        <a href="#qGetApprovalHistory.link#?hostID=#qGetHostInfo.hostID#" title="Click to view item" class="jQueryModalRefresh" style="display:block;">[ Submit Visit Form ]</a>
+                                        <a href="#qGetApprovalHistory.section#?hostID=#qGetHostInfo.hostID#" title="Click to view item" class="jQueryModalRefresh" style="display:block;">[ Submit Visit Form ]</a>
                                     <!--- Report Denied by up level user - Edit Report --->
                                     <cfelseif qGetApprovalHistory[stCurrentUserFieldSet.statusFieldName][qGetApprovalHistory.currentrow] NEQ 'approved' OR qGetApprovalHistory[stOneLevelUpFieldSet.statusFieldName][qGetApprovalHistory.currentrow] EQ 'denied'>
-                                        <a href="#qGetApprovalHistory.link#?hostID=#qGetHostInfo.hostID#" title="Click to view item" class="jQueryModalRefresh" style="display:block;">[ Edit Visit Form ]</a>
+                                        <a href="#qGetApprovalHistory.section#?hostID=#qGetHostInfo.hostID#" title="Click to view item" class="jQueryModalRefresh" style="display:block;">[ Edit Visit Form ]</a>
 									<!--- Print View Default --->
                                     <cfelseif qGetApprovalHistory[stCurrentUserFieldSet.statusFieldName][qGetApprovalHistory.currentrow] EQ 'approved' OR qGetApprovalHistory[stOneLevelUpFieldSet.statusFieldName][qGetApprovalHistory.currentrow] NEQ 'denied'>
-                                        <a href="#qGetApprovalHistory.link#?hostID=#qGetHostInfo.hostID#" target="_blank" style="display:block;">[ View Visit Form ]</a>
+                                        <a href="#qGetApprovalHistory.section#?hostID=#qGetHostInfo.hostID#" target="_blank" style="display:block;">[ View Visit Form ]</a>
                                     </cfif>   
 
 							  	<!--- School Acceptance --->
                               	<cfelseif qGetApprovalHistory.ID EQ 14>
                                 
                                     <cfif NOT qGetSchoolAcceptance.recordCount>
-                                        <a href="#qGetApprovalHistory.link#?hostID=#qGetHostInfo.hostID#" title="Click to view item" class="jQueryModalRefresh" style="display:block;">[ Upload School Acceptance Letter ]</a>
+                                        <a href="#qGetApprovalHistory.section#?hostID=#qGetHostInfo.hostID#" title="Click to view item" class="jQueryModalRefresh" style="display:block;">[ Upload School Acceptance Letter ]</a>
                                     <!--- Print View Default --->
                                     <cfelseif qGetApprovalHistory[stCurrentUserFieldSet.statusFieldName][qGetApprovalHistory.currentrow] EQ 'approved' OR qGetApprovalHistory[stOneLevelUpFieldSet.statusFieldName][qGetApprovalHistory.currentrow] NEQ 'denied'>
                                         <a href="publicDocument.cfm?ID=#qGetSchoolAcceptance.ID#&key=#qGetSchoolAcceptance.hashID#" target="_blank" style="display:block;">[ Download School Acceptance Letter ]</a>
