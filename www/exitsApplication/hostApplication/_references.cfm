@@ -118,6 +118,11 @@
 			if ( NOT LEN(TRIM(FORM.phone)) ) {
 				SESSION.formErrors.Add("Please enter the phone number.");
 			}	
+			
+			// Phone Number
+			if ( LEN(TRIM(FORM.phone)) AND NOT IsValid("telephone", TRIM(FORM.phone)) ) {
+				SESSION.formErrors.Add("Please enter a valid phone number in the following format (xxx) xxx-xx-xx");
+			}	
 		</cfscript>    
         
         <!--- No Errors Found --->

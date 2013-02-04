@@ -38,7 +38,9 @@
 		qGetAllFamilyMembersAtHome = APPLICATION.CFC.HOST.getHostMemberByID(hostID=APPLICATION.CFC.SESSION.getHostSession().ID,liveAtHome="yes");	
 		
 		// Get Host Family Members at Home
-		qGetFamilyMembers18AndOlder = APPLICATION.CFC.HOST.getHostMemberByID(hostID=APPLICATION.CFC.SESSION.getHostSession().ID,liveAtHome="yes", get18AndOlder=1);	
+		qGetCBCQualifiedMembers = APPLICATION.CFC.HOST.getHostMemberByID(hostID=APPLICATION.CFC.SESSION.getHostSession().ID,getCBCQualifiedMembers=1);	
+
+		vCBCQualifiedMembersList = ValueList(qGetCBCQualifiedMembers.childID);
 		
 		// Defaults to true
 		vIsPreviousInfoCompleted = true;
@@ -95,6 +97,12 @@
 				if ( NOT qGetFatherCBCAuthorization.recordCount AND NOT LEN(TRIM(FORM.fatherSignature)) ) {
 					SESSION.formErrors.Add("The CBC authorization signature for #qGetHostFamilyInfo.fatherFirstName# #qGetHostFamilyInfo.fatherLastName# is missing.");
 				}	
+				
+				vFatherName = TRIM(qGetHostFamilyInfo.fatherFirstName) & " " & TRIM(qGetHostFamilyInfo.fatherLastName);
+				
+				if ( LEN(FORM.fatherSignature) AND TRIM(FORM.fatherSignature) NEQ vFatherName ) {
+					SESSION.formErrors.Add("Please make sure you enter the exact name as displayed for host father signature.");
+				}
 			
 			}
 			
@@ -110,21 +118,33 @@
 				if ( NOT qGetMotherCBCAuthorization.recordCount AND NOT LEN(TRIM(FORM.motherSignature)) ){
 					SESSION.formErrors.Add("The CBC authorization signature for #qGetHostFamilyInfo.motherFirstName# #qGetHostFamilyInfo.motherLastName# is missing.");
 				}	
+				
+				vMotherName = TRIM(qGetHostFamilyInfo.motherFirstName) & " " & TRIM(qGetHostFamilyInfo.motherLastName);
+				
+				if ( LEN(FORM.motherSignature) AND TRIM(FORM.motherSignature) NEQ vMotherName ) {
+					SESSION.formErrors.Add("Please make sure you enter the exact name as displayed for host mother signature.");
+				}
 			
 			}
 			
 			// Family Members
-			for ( i=1; i LTE qGetFamilyMembers18AndOlder.recordCount; i++ ) {
+			for ( i=1; i LTE qGetCBCQualifiedMembers.recordCount; i++ ) {
 				
 				// SSN
-				if  ( NOT LEN(qGetFamilyMembers18AndOlder.ssn[i]) AND NOT IsValid("ssn", FORM[qGetFamilyMembers18AndOlder.childID[i] & "memberSSN"]) ) {
-					SESSION.formErrors.Add("The SSN for #qGetFamilyMembers18AndOlder.name[i]# does not appear to be a valid SSN. Please make sure it is entered in the 999-99-9999 format.");
+				if  ( NOT LEN(qGetCBCQualifiedMembers.ssn[i]) AND NOT IsValid("ssn", FORM[qGetCBCQualifiedMembers.childID[i] & "memberSSN"]) ) {
+					SESSION.formErrors.Add("The SSN for #qGetCBCQualifiedMembers.name[i]# does not appear to be a valid SSN. Please make sure it is entered in the 999-99-9999 format.");
 				}	
 				
 				// Signature
-				if ( NOT LEN(FORM[qGetFamilyMembers18AndOlder.childID[i] & "documentID"]) AND NOT LEN(TRIM(FORM[qGetFamilyMembers18AndOlder.childID[i] & "memberSignature"])) ){
-					SESSION.formErrors.Add("The signature for #qGetFamilyMembers18AndOlder.name[i]# is missing");
+				if ( NOT LEN(FORM[qGetCBCQualifiedMembers.childID[i] & "documentID"]) AND NOT LEN(TRIM(FORM[qGetCBCQualifiedMembers.childID[i] & "memberSignature"])) ){
+					SESSION.formErrors.Add("The CBC authorization signature for #qGetCBCQualifiedMembers.name[i]# is missing");
 				}	
+				
+				vMemberName = TRIM(qGetCBCQualifiedMembers.name) & " " & TRIM(qGetCBCQualifiedMembers.lastName);
+				
+				if ( LEN(FORM[qGetCBCQualifiedMembers.childID[i] & "memberSignature"]) AND TRIM(FORM[qGetCBCQualifiedMembers.childID[i] & "memberSignature"]) NEQ vMemberName ) {
+					SESSION.formErrors.Add("Please make sure you enter the exact name as displayed for host member #qGetCBCQualifiedMembers.name[i]# signature.");
+				}
 				
 			}			
 		</cfscript>	
@@ -161,17 +181,17 @@
             </cfif>
             
             <!--- Member SSN --->
-            <cfloop query="qGetFamilyMembers18AndOlder">
+            <cfloop query="qGetCBCQualifiedMembers">
             
-				<cfif NOT LEN(qGetFamilyMembers18AndOlder.SSN)>
+				<cfif NOT LEN(qGetCBCQualifiedMembers.SSN)>
 
                     <cfquery datasource="#APPLICATION.DSN.Source#">
                         UPDATE 	
                             smg_host_children
                         SET 
-                            SSN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.encryptVariable(FORM[qGetFamilyMembers18AndOlder.childID & 'memberSSN'])#">
+                            SSN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.encryptVariable(FORM[qGetCBCQualifiedMembers.childID & 'memberSSN'])#">
                         WHERE 
-                            childID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetFamilyMembers18AndOlder.childID#">
+                            childID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCBCQualifiedMembers.childID#">
                         AND
                         	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
                     </cfquery>
@@ -240,20 +260,20 @@
 				/***************************
 					Member Authorization 
 				***************************/
-				for ( i=1; i LTE qGetFamilyMembers18AndOlder.recordCount; i++ ) {
+				for ( i=1; i LTE qGetCBCQualifiedMembers.recordCount; i++ ) {
 					
-					if ( NOT LEN(FORM[qGetFamilyMembers18AndOlder.childID[i] & "documentID"]) AND LEN(qGetFamilyMembers18AndOlder.name[i]) AND LEN(qGetFamilyMembers18AndOlder.lastName[i]) ) {
+					if ( NOT LEN(FORM[qGetCBCQualifiedMembers.childID[i] & "documentID"]) AND LEN(qGetCBCQualifiedMembers.name[i]) AND LEN(qGetCBCQualifiedMembers.lastName[i]) ) {
 					
 						// Generate CBC Authorization
 						stResult = APPLICATION.CFC.DOCUMENT.generateCBCAuthorization(
 							foreignTable = "smg_host_children",
-							foreignID = qGetFamilyMembers18AndOlder.childID[i],
+							foreignID = qGetCBCQualifiedMembers.childID[i],
 							documentTypeID = APPLICATION.DOCUMENT.hostMemberCBCAuthorization,
 							address = qGetHostFamilyInfo.address,
 							city = qGetHostFamilyInfo.city,
 							state = qGetHostFamilyInfo.state,
 							zip = qGetHostFamilyInfo.zip,
-							signature = FORM[qGetFamilyMembers18AndOlder.childID[i] & 'memberSignature']																		  
+							signature = FORM[qGetCBCQualifiedMembers.childID[i] & 'memberSignature']																		  
 						);
 							
 						if ( stResult.isSuccess ) {
@@ -285,8 +305,8 @@
                     );
                     
 					// Make sure there are valid family members, if not pass 0
-					if ( qGetFamilyMembers18AndOlder.recordCount ) {
-						vMemberChildIDList = ValueList(qGetFamilyMembers18AndOlder.childID);
+					if ( qGetCBCQualifiedMembers.recordCount ) {
+						vMemberChildIDList = ValueList(qGetCBCQualifiedMembers.childID);
 					} else {
 						vMemberChildIDList = 0;
 					}
@@ -510,7 +530,7 @@
                         <td><h3>#qGetAllFamilyMembersAtHome.membertype#</h3></td>
                         <td><h3><cfif isDate(qGetAllFamilyMembersAtHome.birthDate)>#DateFormat(qGetAllFamilyMembersAtHome.birthDate, 'mmm d, yyyy')#</cfif></h3></td>
                         <td><h3>#qGetAllFamilyMembersAtHome.age#</h3></td> 
-                        <cfif qGetAllFamilyMembersAtHome.age GTE 18 AND qGetAllFamilyMembersAtHome.liveathome EQ 'yes'>
+                        <cfif ListFind(vCBCQualifiedMembersList, qGetAllFamilyMembersAtHome.childID)>
                             <td>	
                                 <cfif NOT LEN(qGetAllFamilyMembersAtHome.ssn)>
                                     <cfinput type="text" name="#qGetAllFamilyMembersAtHome.childID#memberSSN" value="#FORM[qGetAllFamilyMembersAtHome.childID & 'memberSSN']#" mask="999-99-9999" class="mediumField" maxlength="50">
@@ -577,15 +597,15 @@
                 </cfif>
                 
                 <!--- Host Member --->
-                <cfloop query="qGetFamilyMembers18AndOlder">
+                <cfloop query="qGetCBCQualifiedMembers">
 
                     <tr <cfif vSignatureCurrentRow MOD 2> bgcolor="##deeaf3" </cfif> >
-                        <td><h3>#qGetFamilyMembers18AndOlder.name# #qGetFamilyMembers18AndOlder.lastName#</h3></td>
+                        <td><h3>#qGetCBCQualifiedMembers.name# #qGetCBCQualifiedMembers.lastName#</h3></td>
                         <td>
-                            <cfif NOT LEN(FORM[qGetFamilyMembers18AndOlder.childID & "documentID"])>
-                                <input type="text" name="#qGetFamilyMembers18AndOlder.childID#memberSignature" value="#FORM[qGetFamilyMembers18AndOlder.childID & 'memberSignature']#" class="largeField" />
+                            <cfif NOT LEN(FORM[qGetCBCQualifiedMembers.childID & "documentID"])>
+                                <input type="text" name="#qGetCBCQualifiedMembers.childID#memberSignature" value="#FORM[qGetCBCQualifiedMembers.childID & 'memberSignature']#" class="largeField" />
                             <cfelse>
-                                <a href="publicDocument.cfm?ID=#FORM[qGetFamilyMembers18AndOlder.childID & 'documentID']#&Key=#APPLICATION.CFC.DOCUMENT.generateHashID(FORM[qGetFamilyMembers18AndOlder.childID & 'documentID'])#" target="_blank">Download CBC Authoriaztion</a>
+                                <a href="publicDocument.cfm?ID=#FORM[qGetCBCQualifiedMembers.childID & 'documentID']#&Key=#APPLICATION.CFC.DOCUMENT.generateHashID(FORM[qGetCBCQualifiedMembers.childID & 'documentID'])#" target="_blank">Download CBC Authoriaztion</a>
                             </cfif>
                         </td>
                     </tr>
