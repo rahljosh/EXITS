@@ -285,6 +285,8 @@
                         	progress_reports
                         WHERE 
                         	fk_student IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#valueList(qGetResults.studentid)#" list="yes"> )
+                      	AND
+                        	fk_program = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
                         AND 
                         	pr_month_of_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.reportMonth#">
 						<cfif FORM.isComplete EQ "approved">
