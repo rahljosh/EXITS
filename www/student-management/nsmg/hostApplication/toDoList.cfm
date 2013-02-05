@@ -98,12 +98,12 @@
 				vCheckIfMissing = true;
 				
 				// Confidential Host Family Visit Form
-				if ( qGetApprovalHistory.ID[i] EQ 13 AND NOT qGetConfidentialVisitForm.recordCount ) {
+				if ( qGetApprovalHistory.ID[i] EQ 14 AND NOT qGetConfidentialVisitForm.recordCount ) {
 					vCheckIfMissing = false;
 				}
 				
 				// School Acceptance
-				if ( qGetApprovalHistory.ID[i] EQ 14 AND NOT qGetSchoolAcceptance.recordCount ) {
+				if ( qGetApprovalHistory.ID[i] EQ 15 AND NOT qGetSchoolAcceptance.recordCount ) {
 					vCheckIfMissing = false;
 				}
 
@@ -480,7 +480,7 @@
                             // Set Links
 							
 							// Host Visit Report / Second Visit Report - No link, text only
-                            if ( ListFind("13,14", qGetApprovalHistory.ID) ) {
+                            if ( ListFind("14,15", qGetApprovalHistory.ID) ) {
 								vSetDescLink = '#qGetApprovalHistory.description#';
 							// Set Up Link for HF section
 							} else { 
@@ -521,7 +521,7 @@
                             <td>#vSetDescLink#</td>
                             <td>
                             	<!--- Host Family still filling out --->
-								<cfif ListFind("9,8", qGetHostInfo.hostAppStatus) AND NOT listFind("13,14", qGetApprovalHistory.ID)>
+								<cfif ListFind("9,8", qGetHostInfo.hostAppStatus) AND NOT listFind("14,15", qGetApprovalHistory.ID)>
                                     
                                     <font color="##CCCCCC"><em>Application has NOT been submitted</em></font>
                                 
@@ -541,12 +541,12 @@
 										vDisplayApprovalButtons = true;
 										
 										// Confidential Host Family Visit Form
-										if ( qGetApprovalHistory.ID EQ 13 AND NOT qGetConfidentialVisitForm.recordCount ) {
+										if ( qGetApprovalHistory.ID EQ 14 AND NOT qGetConfidentialVisitForm.recordCount ) {
 											vDisplayApprovalButtons = false;
 										}
 
 										// School Acceptance
-										if ( qGetApprovalHistory.ID EQ 14 AND NOT qGetSchoolAcceptance.recordCount ) {
+										if ( qGetApprovalHistory.ID EQ 15 AND NOT qGetSchoolAcceptance.recordCount ) {
 											vDisplayApprovalButtons = false;
 										}
 									</cfscript>
@@ -579,7 +579,7 @@
                                 </cfif>
 							  	
                                 <!--- Confidential HF Visit --->
-                              	<cfif qGetApprovalHistory.ID EQ 13>
+                              	<cfif qGetApprovalHistory.ID EQ 14>
                                 
                                     <!--- Report Never Submitted --->
                                     <cfif NOT qGetConfidentialVisitForm.recordCount> 
@@ -593,7 +593,7 @@
                                     </cfif>   
 
 							  	<!--- School Acceptance --->
-                              	<cfelseif qGetApprovalHistory.ID EQ 14>
+                              	<cfelseif qGetApprovalHistory.ID EQ 15>
                                 
                                     <cfif NOT qGetSchoolAcceptance.recordCount>
                                         <a href="#qGetApprovalHistory.section#?hostID=#qGetHostInfo.hostID#" title="Click to view item" class="jQueryModalRefresh" style="display:block;">[ Upload School Acceptance Letter ]</a>
