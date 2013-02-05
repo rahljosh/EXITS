@@ -101,7 +101,7 @@
 					// Use same approval process of the host family sections
 					APPLICATION.CFC.HOST.updateSectionStatus(
 						hostID=FORM.hostID,
-						itemID=14,
+						itemID=15,
                         action="approved",
                         notes="",
 						areaRepID=qGetHostInfo.areaRepresentativeID,
