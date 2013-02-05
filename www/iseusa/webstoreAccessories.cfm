@@ -99,47 +99,8 @@ under:active {
             <tr>
               <th height="45" colspan="3" scope="row" align="center" ><img src="images/webStore_lines_03.gif" width="600" height="15" alt="line" /><a href="webstoreClothing.cfm">Clothing</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="webstoreAccessories.cfm">Accessories</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="fee.cfm">Program Fee</a><img src="images/webStore_lines_06.gif" width="600" height="14" /></th>
               </tr>
-            <tr>
-              <th width="298" height="178" class="lightGreen" scope="row"><img src="images/webstore/travelMug.jpg" width="190" height="160" alt="travel mug" /></th>
-              <td width="21" valign="middle">&nbsp;</td>
-              <td width="293" align="center" valign="middle" class="lightGreen"><img src="images/webstore/pens.jpg" width="190" height="160" alt="PENS" /><br /></td>
-            </tr>
-            
-            <tr>
-              <th class="lightGreen" scope="row" padding="5">
-               <FORM action="http://www.coolcart.net/shop/coolcart.aspx/studentmanagement" method=post name="mug" id="mug" target="loja">
-                 <p>Travel mug with white ISE logo <br />
-             
-                18 oz. stainless steel interior with acrylic exterior.<img src="images/webstore/greenLine.gif" width="211" height="15" alt="green line" /><br />
-              <INPUT NAME="Qty" class="style1" VALUE="" size=3>
-      Quantity - <strong>$7.00</strong> each  
- 			<INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='y'>
-            <INPUT TYPE="HIDDEN" NAME="ID" VALUE="TM">
-            <INPUT TYPE="HIDDEN" NAME="Describe" VALUE="Travel Mug">
-            <INPUT TYPE="HIDDEN" NAME="Price" VALUE="7.00">
-            <INPUT TYPE="HIDDEN" NAME="Ship" VALUE="">
-            <INPUT TYPE="HIDDEN" NAME="Multi" VALUE="Y"> <br />
-               <INPUT type="image" src="images/webstore/addtoCart.png" class="style1"  VALUE="Add to Cart"> </p></form></th>
-              <td>&nbsp;</td>
-              <th class="lightGreen">ISE Pens<br />
-                Blue with white ISE logo, black ink.<br />
-                <img src="images/webstore/greenLine.gif" width="208" height="20" /><br /> 
-                <FORM action="http://www.coolcart.net/shop/coolcart.aspx/studentmanagement" method=post name="mug" id="mug" target="loja">               
-               <INPUT NAME="Qty" class="style1" VALUE="" size=2> 
-                Quantity - <strong>$0.40</strong> each      
-                <INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='y'> 
-                <INPUT TYPE="HIDDEN" NAME="ID" VALUE="IP">
-                <INPUT TYPE="HIDDEN" NAME="Describe" VALUE="Pens">
-                <INPUT TYPE="HIDDEN" NAME="Price" VALUE="0.40">
-                <INPUT TYPE="HIDDEN" NAME="Ship" VALUE="">
-                <INPUT TYPE="HIDDEN" NAME="Multi" VALUE="Y"> <br />
-<INPUT TYPE="image" src="images/webstore/addtoCart.png" class="style1"  VALUE="Add to Cart">
-</FORM>
-              </th>
-            </tr>
-            <tr>
-            	<td>&nbsp;</td>
-            </tr>
+           
+          
             <tr>
               <th class="lightGreen" scope="row"><img src="images/webstore/MousePad.jpg" width="190" height="160" alt="mousepad" /></th>
               <td>&nbsp;</td>
@@ -404,6 +365,38 @@ under:active {
                 </FORM></th>
               <th class="lightGreen"><FORM action="http://www.coolcart.net/shop/coolcart.aspx/studentmanagement" method=post name="bag" id="bag" target="loja">
               </FORM></th>
+            </tr>
+             <tr>
+              <td width="293" align="center" valign="middle" class="lightGreen"><img src="images/webstore/pens.jpg" width="190" height="160" alt="PENS" /><br /></td>
+              
+              <td width="21" valign="middle">&nbsp;</td>
+             <th width="298" height="178" class="lightGreen" scope="row"></th>
+            </tr>
+            
+            <tr>
+             
+              
+              <th class="lightGreen">ISE Pens<br />
+                Blue with white ISE logo, black ink.<br />
+                <img src="images/webstore/greenLine.gif" width="208" height="20" /><br /> 
+                <FORM action="http://www.coolcart.net/shop/coolcart.aspx/studentmanagement" method=post name="mug" id="mug" target="loja">               
+               <INPUT NAME="Qty" class="style1" VALUE="" size=2> 
+                Quantity - <strong>$0.40</strong> each      
+                <INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='y'> 
+                <INPUT TYPE="HIDDEN" NAME="ID" VALUE="IP">
+                <INPUT TYPE="HIDDEN" NAME="Describe" VALUE="Pens">
+                <INPUT TYPE="HIDDEN" NAME="Price" VALUE="0.40">
+                <INPUT TYPE="HIDDEN" NAME="Ship" VALUE="">
+                <INPUT TYPE="HIDDEN" NAME="Multi" VALUE="Y"> <br />
+<INPUT TYPE="image" src="images/webstore/addtoCart.png" class="style1"  VALUE="Add to Cart">
+</FORM>
+              </th>
+              <td>&nbsp;</td>
+               <th class="lightGreen" scope="row" padding="5">
+              </th>
+            </tr>
+            <tr>
+            	<td>&nbsp;</td>
             </tr>
             <tr>
               <th colspan="3" scope="row" align="center"><img src="images/webStore_lines_06.gif" width="600" height="15" alt="line" /><a href="webstoreClothing.cfm">Clothing</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="webstoreAccessories.cfm">Accessories</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="fee.cfm">Program Fee</a><img src="images/webStore_lines_03.gif" width="600" height="15" alt="line" /></th>
