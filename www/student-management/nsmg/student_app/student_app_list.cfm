@@ -60,7 +60,7 @@
     </cffunction>
 
 
-    <cfquery name="qStudents" datasource="MySQL">
+    <cfquery name="qStudents" datasource="#application.dsn#">
         SELECT  
         	s.studentid, 
             s.familylastname, 
@@ -368,7 +368,7 @@
     
                             <cfoutput>
                         
-                                <cfquery name="qCheckIntAgentInput" datasource="MySQL">
+                                <cfquery name="qCheckIntAgentInput" datasource="#application.dsn#">
                                     SELECT 
                                         studentid, 
                                         status
@@ -463,7 +463,7 @@
 
 	<cfoutput query="qStudents">
 
-        <cfquery name="qCheckIntAgentInput" datasource="MySQL">
+        <cfquery name="qCheckIntAgentInput" datasource="#application.dsn#">
             SELECT 
                 studentid, 
                 status
