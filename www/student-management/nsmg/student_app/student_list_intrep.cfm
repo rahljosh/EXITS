@@ -18,7 +18,7 @@
 	<!--- Param URL Variables --->
 	<cfparam name="URL.status" default="1">
 
-    <cfquery name="qStudents" datasource="MySQL">
+    <cfquery name="qStudents" datasource="#application.dsn#">
         SELECT DISTINCT 
             u.userid, 
             u.businessname, 
