@@ -241,6 +241,7 @@
                     interests,
                     employer,
                     gradeInSchool,
+                    schoolActivities,
                     isDeleted
                 FROM 
                     smg_host_children
@@ -465,143 +466,239 @@
 			********************************************/
 
 			// Family Last Name
-            if ( NOT LEN(TRIM(qGetHostFamilyInfo.familyLastName)) ) {
+            if ( NOT LEN(TRIM(qGetHostFamilyInfo.familylastname)) ) {
                 SESSION.formErrors.Add("Please enter your family last name.");
             }			
-            
-            // Address
+        	
+			// Address
             if ( NOT LEN(TRIM(qGetHostFamilyInfo.address)) ) {
                 SESSION.formErrors.Add("Your home address is not valid.");
             }	
-    
-            // City
-            if ( NOT LEN(TRIM(qGetHostFamilyInfo.city)) ) {
+
+			// City
+            if (NOT LEN(TRIM(qGetHostFamilyInfo.city)) ) {
                 SESSION.formErrors.Add("You need to indicate which city your home is located in.");
             }	
-    
-            // State
+
+			// State
             if ( NOT LEN(TRIM(qGetHostFamilyInfo.state)) ) {
                 SESSION.formErrors.Add("Please indicate which state your home is located in.");
             }	
-    
-            // Zip
+
+			// Zip
             if ( NOT isValid("zipcode", TRIM(qGetHostFamilyInfo.zip)) ) {
                 SESSION.formErrors.Add("The zip code for home address is not a valid zip code.");
+				qGetHostFamilyInfo.zip = "";
             }	
-    
-            // Mailing Address
+
+			// Ethnicity
+			if ( NOT LEN(TRIM(qGetHostFamilyInfo.race)) ) {
+				SESSION.formErrors.Add("Please indicate your family's ethnicity.");
+			}
+			
+			// Ethnicity
+			if ( TRIM(qGetHostFamilyInfo.race) EQ 'other' AND NOT LEN(TRIM(qGetHostFamilyInfo.ethnicityOther)) ) {
+				SESSION.formErrors.Add("Please indicate other ethnicity.");
+			}
+
+			// Primary Language
+			if ( NOT LEN(TRIM(qGetHostFamilyInfo.primaryLanguage)) ) {
+				SESSION.formErrors.Add("Please indicate what is the primary language spoken in your home.");
+			}
+
+			// Functioning Business
+            if ( NOT LEN(qGetHostFamilyInfo.homeIsFunctBusiness) ) {
+                SESSION.formErrors.Add("Please indicate if your home is also a functioning business.");
+			}
+			
+			// No business Des
+            if (( qGetHostFamilyInfo.homeIsFunctBusiness EQ 1) AND NOT LEN(TRIM(qGetHostFamilyInfo.homeBusinessDesc)) )  {
+                SESSION.formErrors.Add("You have indicated that your home is also a business, but have not provided details on the type of business.");
+			}
+			
+			// Mailing Address
             if ( NOT LEN(TRIM(qGetHostFamilyInfo.mailaddress)) ) {
                 SESSION.formErrors.Add("Please indicate your mailing address.");
             }	
-    
-            // Mailing City
+
+			// Mailing City
             if ( NOT LEN(TRIM(qGetHostFamilyInfo.mailcity)) ) {
                 SESSION.formErrors.Add("Please indicate your mailing address city.");
             }	
-    
-            // Mailing State
+
+			// Mailing State
             if ( NOT LEN(TRIM(qGetHostFamilyInfo.mailstate)) ) {
                 SESSION.formErrors.Add("Please indicate your mailing address state.");
             }	
-    
-            // Mailing Zip
+
+			// Mailing Zip
             if ( NOT isValid("zipcode", TRIM(qGetHostFamilyInfo.mailzip)) ) {
                 SESSION.formErrors.Add("The zip code for mailing address is not a valid zip code.");
+				qGetHostFamilyInfo.mailzip = "";
             }	
-    
-            // Phones
+	
+			// Phones
             if ( NOT LEN(TRIM(qGetHostFamilyInfo.phone)) AND NOT LEN(TRIM(qGetHostFamilyInfo.father_cell)) AND NOT LEN(TRIM(qGetHostFamilyInfo.mother_cell)) ) {
                 SESSION.formErrors.Add("Please enter one of the Phone fields: Home, Father Cell or Mother Cell");
             }	
-    
-            // Valid Phone
+	
+			// Valid Phone
             if ( LEN(TRIM(qGetHostFamilyInfo.phone)) AND NOT isValid("telephone", TRIM(qGetHostFamilyInfo.phone)) ) {
                 SESSION.formErrors.Add("The home phone number you have entered does not appear to be valid. ");
             }	
-    
-            // Valid Email Address
+	
+			// Valid Email Address
             if ( LEN(TRIM(qGetHostFamilyInfo.email)) AND NOT isValid("email", TRIM(qGetHostFamilyInfo.email)) ) {
                 SESSION.formErrors.Add("The email address you have entered does not appear to be valid.");
             }	
-            
-            // Valid Email Address
-            if ( LEN(TRIM(qGetHostFamilyInfo.password)) LT 6 ) {
+			
+			/*
+			// Valid Password
+            if ( LEN(TRIM(qGetHostFamilyInfo.password)) LT 6) {
                 SESSION.formErrors.Add("Your password must be at least 6 characters long.");
             }	
-            
-            // Valid Father's DOB
-            if ( LEN(TRIM(qGetHostFamilyInfo.fatherdob)) AND NOT isValid("date", TRIM(qGetHostFamilyInfo.fatherdob)) ) {
-                SESSION.formErrors.Add("Please enter a valid Date of Birth for the Father");
-            }	
-    
-            // Valid Father's Phone
-            if ( LEN(TRIM(qGetHostFamilyInfo.father_cell)) AND NOT isValid("telephone", TRIM(qGetHostFamilyInfo.father_cell)) ) {
-                SESSION.formErrors.Add("Please enter a valid phone number for the Father's Cell Phone.");
-            }	
-    
-            // Valid Mother's DOB
-            if ( LEN(TRIM(qGetHostFamilyInfo.motherdob)) AND NOT isValid("date", TRIM(qGetHostFamilyInfo.motherdob)) ) {
-                SESSION.formErrors.Add("The date you specified is not valid for Mother's Date of Birth");
-            }	
-            
-            // Valid Mother's Phone
-            if ( LEN(TRIM(qGetHostFamilyInfo.mother_cell)) AND NOT isValid("telephone", TRIM(qGetHostFamilyInfo.mother_cell)) ) {
-                SESSION.formErrors.Add("Please enter a valid phone number for Mother's Cell Phone");
-            }
-            
-            // Functioning Business
-            if ( NOT LEN(qGetHostFamilyInfo.homeIsFunctBusiness) ) {
-                SESSION.formErrors.Add("Please indicate if your home is also a functioning business.");
-            }
-            
-            // No business Des
-            if ( qGetHostFamilyInfo.homeIsFunctBusiness EQ 1 AND NOT LEN(TRIM(qGetHostFamilyInfo.homeBusinessDesc)) )  {
-                SESSION.formErrors.Add("You have indicated that your home is also a business, but have not provided details on the type of business.");
-            }
-            
-            // No business Des
+			*/
+			
+			// Check for last name
             if ( NOT LEN(TRIM(qGetHostFamilyInfo.fatherlastname)) AND NOT LEN(TRIM(qGetHostFamilyInfo.motherlastname)) )  {
                 SESSION.formErrors.Add("If you are single, you must provide information for at least one of the host parents, either the father or mother. If you are not single, please provide information on both host parents.");
-            }
-            
-            // Father is Required
-            if ( LEN(TRIM(qGetHostFamilyInfo.fatherFirstName)) AND NOT LEN(TRIM(qGetHostFamilyInfo.fatherdob)) )  {
-                SESSION.formErrors.Add("Please provide the birthdate for the Host Father.");
-            }
-            
-            // Father is Required
-            if ( LEN(TRIM(qGetHostFamilyInfo.fatherFirstName)) AND NOT LEN(TRIM(qGetHostFamilyInfo.fatherworktype)) )  {
-                SESSION.formErrors.Add("Please provide the occupation for the Host Father.");
-            }
-            
-            // Father Occupation
-            if ( LEN(TRIM(qGetHostFamilyInfo.fatherworktype)) AND NOT LEN (qGetHostFamilyInfo.fatherfullpart) ) {
-                SESSION.formErrors.Add("You provided a job for the host father, but didn't indicate if you work full or part time.");
-            }
-            
-            // Father Employer
-            if ( LEN(TRIM(qGetHostFamilyInfo.fatherworktype)) AND NOT LEN(TRIM(qGetHostFamilyInfo.fatherEmployeer)) ) {
-                SESSION.formErrors.Add("You provided a job for the host father, but didn't indicate the employer.");
-            }
-            // Father is Required
-            if ( LEN(TRIM(qGetHostFamilyInfo.motherFirstName)) AND NOT LEN(TRIM(qGetHostFamilyInfo.motherdob)) )  {
-                SESSION.formErrors.Add("Please provide the birthdate for the Host Mother.");
-            }
-            
-            // Father is Required
-            if ( LEN(TRIM(qGetHostFamilyInfo.motherFirstName)) AND NOT LEN(TRIM(qGetHostFamilyInfo.motherworktype)) )  {
-                SESSION.formErrors.Add("Please provide the occupation for the Host Mother.");
-            }
-            
-            // Father Occupation
-            if ( LEN(TRIM(qGetHostFamilyInfo.motherworktype)) AND NOT LEN(qGetHostFamilyInfo.motherfullpart) ) {
-                SESSION.formErrors.Add("You provided a job for the host mother, but didn't indicate if you work full or part time.");
-            }
-            
-            // Father Employer
-            if ( LEN(TRIM(qGetHostFamilyInfo.motherworktype)) AND NOT LEN(TRIM(qGetHostFamilyInfo.motherEmployeer)) ) {
-                SESSION.formErrors.Add("You provided a job for the host mother, but didn't indicate the employer.");
-            }
+			}
+
+			// Check if there is a father
+			if ( LEN(TRIM(qGetHostFamilyInfo.fatherFirstName)) ) {
+
+				// Father DOB 
+				if ( NOT LEN(TRIM(qGetHostFamilyInfo.fatherDOB)) )  {
+					SESSION.formErrors.Add("Please provide date of birth for the Host Father.");
+				}
+				
+				// Father DOB 
+				if ( LEN(TRIM(qGetHostFamilyInfo.fatherDOB)) AND NOT isDate(TRIM(qGetHostFamilyInfo.fatherDOB)) )  {
+					SESSION.formErrors.Add("Please provide a valid date of birth for Host Father.");
+					qGetHostFamilyInfo.fatherDOB = '';
+				}
+
+				// Calculate Age
+				if ( isDate(qGetHostFamilyInfo.fatherDOB) ) {
+					vCalculateFatherAge = Datediff('yyyy',qGetHostFamilyInfo.fatherDOB, now());
+				} else {
+					vCalculateFatherAge = 0;
+				}
+
+				// Birthdate
+				//if ( vCalculateFatherAge LTE 18 ) {
+				//	SESSION.formErrors.Add("The host father date of birth indicates he is 18 years old. Please check host fathers's date of birth.");				
+				//}	
+
+				// Birthdate
+				if ( vCalculateFatherAge GT 120 ) {
+					SESSION.formErrors.Add("The host father date of birth indicates he is over 120 years old. Please check host father's date of birth.");				
+				}	
+				
+				// Birthdate
+				if ( isDate(qGetHostFamilyInfo.fatherDOB) AND qGetHostFamilyInfo.fatherDOB GT now() ) {
+					SESSION.formErrors.Add("The host father date of birth indicates he has not been born yet. Please check host father's date of birth.");				
+				}	
+				
+				// Father Education Level 
+				if ( NOT LEN(qGetHostFamilyInfo.fatherEducationLevel) )  {
+					SESSION.formErrors.Add("Please provide the highest education lever for Host Father.");
+				}
+				
+				// Father Occupation
+				if ( NOT LEN(TRIM(qGetHostFamilyInfo.fatherworktype)) )  {
+					SESSION.formErrors.Add("Please provide the occupation for the Host Father.");
+				}
+				
+				// Father Full/part time
+				if ( LEN(TRIM(qGetHostFamilyInfo.fatherworktype)) AND NOT LEN (qGetHostFamilyInfo.fatherfullpart) ) {
+					SESSION.formErrors.Add("You provided a job for the host father, but didn't indicate if you work full or part time.");
+				}
+				
+				// Father Employer
+				if ( LEN(TRIM(qGetHostFamilyInfo.fatherworktype)) AND NOT LEN(TRIM(qGetHostFamilyInfo.fatherEmployeer)) ) {
+					SESSION.formErrors.Add("You provided a job for the host father, but didn't indicate the employer.");
+				}
+
+				// Valid Father's Phone
+				if ( LEN(TRIM(qGetHostFamilyInfo.father_cell)) AND NOT isValid("telephone", TRIM(qGetHostFamilyInfo.father_cell)) ) {
+					SESSION.formErrors.Add("Please enter a valid phone number for the Father's Cell Phone.");
+				}	
+
+				// Father Interests
+				if ( NOT LEN(TRIM(qGetHostFamilyInfo.fatherInterests)) ) {
+					SESSION.formErrors.Add("Please provide interests for host father");
+				}
+
+			}
+			
+			// Check if there is a mother
+			if ( LEN(TRIM(qGetHostFamilyInfo.motherFirstName)) ) {
+				
+				// Mother DOB 
+				if ( NOT LEN(TRIM(qGetHostFamilyInfo.motherDOB)) )  {
+					SESSION.formErrors.Add("Please provide date of birth for the Host Mother.");
+				}
+				
+				// Mother DOB 
+				if ( LEN(TRIM(qGetHostFamilyInfo.motherDOB)) AND NOT isDate(TRIM(qGetHostFamilyInfo.motherDOB)) )  {
+					SESSION.formErrors.Add("Please provide a valid date of birth for Host Mother.");
+					qGetHostFamilyInfo.motherDOB = '';
+				}
+
+				// Calculate Age
+				if ( isDate(qGetHostFamilyInfo.motherDOB) ) {
+					vCalculateMotherAge = Datediff('yyyy',qGetHostFamilyInfo.motherDOB, now());
+				} else {
+					vCalculateMotherAge = 0;
+				}
+
+				// Birthdate
+				//if ( vCalculateMotherAge LTE 18 ) {
+				//	SESSION.formErrors.Add("The host mother date of birth indicates she is 18 years old. Please check host mother's date of birth.");				
+				//}	
+
+				// Birthdate
+				if ( vCalculateMotherAge GT 120 ) {
+					SESSION.formErrors.Add("The host mother date of birth indicates she is over 120 years old. Please check host mother's date of birth.");				
+				}	
+				
+				// Birthdate
+				if ( isDate(qGetHostFamilyInfo.motherDOB) AND qGetHostFamilyInfo.motherDOB GT now() ) {
+					SESSION.formErrors.Add("The host mother date of birth indicates she has not been born yet. Please check host mother's date of birth.");				
+				}	
+
+				// Mother Education Level 
+				if ( NOT LEN(qGetHostFamilyInfo.motherEducationLevel) )  {
+					SESSION.formErrors.Add("Please provide the highest education lever for Host Mother.");
+				}
+				
+				// Mother Occupation
+				if ( NOT LEN(TRIM(qGetHostFamilyInfo.motherworktype)) )  {
+					SESSION.formErrors.Add("Please provide the occupation for the Host Mother.");
+				}
+				
+				// Mother Full/Part Time
+				if ( NOT LEN(qGetHostFamilyInfo.motherfullpart) ) {
+					SESSION.formErrors.Add("You provided a job for the host mother, but didn't indicate if you work full or part time.");
+				}
+				
+				// Mother Employer
+				if ( NOT LEN(TRIM(qGetHostFamilyInfo.motherEmployeer)) ) {
+					SESSION.formErrors.Add("You provided a job for the host mother, but didn't indicate the employer.");
+				}
+
+				// Valid Mother's Phone
+				if ( LEN(TRIM(qGetHostFamilyInfo.mother_cell)) AND NOT isValid("telephone", TRIM(qGetHostFamilyInfo.mother_cell)) ) {
+					SESSION.formErrors.Add("Please enter a valid phone number for Mother's Cell Phone");
+				}
+
+				// Mother Interests
+				if ( NOT LEN(TRIM(qGetHostFamilyInfo.motherInterests)) ) {
+					SESSION.formErrors.Add("Please provide interests for host mother");
+				}
+			
+			}
     
             // No Errors Found
             if ( NOT SESSION.formErrors.length() ) {
@@ -657,6 +754,11 @@
 				if ( NOT LEN(TRIM(qGetFamilyMembers.interests[x])) ) {
 					SESSION.formErrors.Add("Please enter some interests for #qGetFamilyMembers.name[x]#.");
 				}
+
+				// School Activities
+				if ( NOT LEN(qGetFamilyMembers.schoolActivities) ) {
+					SESSION.formErrors.Add("Please indicate if the student participates in any sponsored school activities");
+				}	
 
 			} 
 			
@@ -992,17 +1094,22 @@
 			if ( qGetHostFamilyInfo.schoolCoach EQ 1 AND NOT LEN(TRIM(qGetHostFamilyInfo.schoolCoachExpl)) ) {
 				SESSION.formErrors.Add("You have indicated that a coach contacted you, but didn't explain.  Please provide details regarding this contact.");
 			}	
-			
-			// Other Transportation 
-			if ( qGetHostFamilyInfo.schooltransportation is 'other' AND NOT LEN(TRIM(qGetHostFamilyInfo.schoolTransportationOther)) ) {
-				SESSION.formErrors.Add("You indicated that the student will get to school but Other, but didn't specify what that other method would be.");
-			}	
+
+			// School Distance
+			if ( NOT LEN(TRIM(qGetHostFamilyInfo.schoolDistance)) )  {
+				SESSION.formErrors.Add("Please indicate how far is the school from your home.");
+			}
 			
 			// Transportaion
 			if ( NOT LEN(TRIM(qGetHostFamilyInfo.schoolTransportation)) )  {
 				SESSION.formErrors.Add("Please indicate how the student will get to school.");
 			}
-			
+
+			// Other Transportation 
+			if ( qGetHostFamilyInfo.schooltransportation is 'other' AND NOT LEN(TRIM(qGetHostFamilyInfo.schoolTransportationOther)) ) {
+				SESSION.formErrors.Add("You indicated that the student will get to school but Other, but didn't specify what that other method would be.");
+			}	
+
 			// Extra Curricular Transportaion
 			if ( NOT LEN(TRIM(qGetHostFamilyInfo.extraCuricTrans)) )  {
 				SESSION.formErrors.Add("Please indicate if you will provide transportation to extracuricular activities.");
@@ -1096,12 +1203,7 @@
 			if ( qGetHostFamilyInfo.publicAssitance EQ 1 AND NOT LEN(TRIM(qGetHostFamilyInfo.publicAssitanceExpl)) ) {
 				SESSION.formErrors.Add("You have indicated that you receive public assistance, but did not explain.");
 			}	
-			
-			// race
-			if ( NOT LEN(TRIM(qGetHostFamilyInfo.race)) ) {
-				SESSION.formErrors.Add("Please indicate the race of your household.");
-			}
-			
+						
 			// Income
 			if ( NOT LEN(qGetHostFamilyInfo.income) ) {
 				SESSION.formErrors.Add("Please indicate your household income.");

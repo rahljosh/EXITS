@@ -20,26 +20,10 @@
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.regionID" default="0">
     <cfparam name="FORM.familylastname" default="">
-	<!--- Father --->
-    <cfparam name="FORM.fatherlastname" default="">
-    <cfparam name="FORM.fatherFirstName" default="">
-    <cfparam name="FORM.fathermiddlename" default="">
-    <cfparam name="FORM.fatherdob" default="">
-    <cfparam name="FORM.fatherbirth" default="">
-    <cfparam name="FORM.fatherworktype" default="">
-    <cfparam name="FORM.fatherEmployeer" default="">
-    <cfparam name="FORM.father_cell" default="">
-    <cfparam name="FORM.fatherfullpart" default="">
-	<!--- Mother --->    
-    <cfparam name="FORM.motherFirstName" default="">
-    <cfparam name="FORM.motherlastname" default="">
-    <cfparam name="FORM.mothermiddlename" default="">
-    <cfparam name="FORM.motherdob" default="">
-    <cfparam name="FORM.motherbirth" default="">
-    <cfparam name="FORM.motherworktype" default="">
-    <cfparam name="FORM.motherEmployeer" default="">
-    <cfparam name="FORM.mother_cell" default="">
-    <cfparam name="FORM.motherfullpart" default="">
+    <!--- Ethnicity --->
+    <cfparam name="FORM.race" default="">
+    <cfparam name="FORM.ethnicityOther" default="">
+    <cfparam name="FORM.primaryLanguage" default="">
     <!--- Address --->
     <cfparam name="FORM.address" default="">
     <cfparam name="FORM.address2" default="">
@@ -49,6 +33,30 @@
     <cfparam name="FORM.phone" default="">
     <cfparam name="FORM.email" default="">
     <cfparam name="FORM.password" default="">
+	<!--- Father --->
+    <cfparam name="FORM.fatherlastname" default="">
+    <cfparam name="FORM.fatherFirstName" default="">
+    <cfparam name="FORM.fathermiddlename" default="">
+    <cfparam name="FORM.fatherDOB" default="">
+    <cfparam name="FORM.fatherbirth" default="">
+    <cfparam name="FORM.fatherEducationLevel" default="">
+    <cfparam name="FORM.fatherworktype" default="">
+    <cfparam name="FORM.fatherEmployeer" default="">
+    <cfparam name="FORM.father_cell" default="">
+    <cfparam name="FORM.fatherfullpart" default="">
+    <cfparam name="FORM.fatherInterests" default="">
+	<!--- Mother --->    
+    <cfparam name="FORM.motherFirstName" default="">
+    <cfparam name="FORM.motherlastname" default="">
+    <cfparam name="FORM.mothermiddlename" default="">
+    <cfparam name="FORM.motherDOB" default="">
+    <cfparam name="FORM.motherbirth" default="">
+    <cfparam name="FORM.motherEducationLevel" default="">
+    <cfparam name="FORM.motherworktype" default="">
+    <cfparam name="FORM.motherEmployeer" default="">
+    <cfparam name="FORM.mother_cell" default="">
+    <cfparam name="FORM.motherfullpart" default="">
+    <cfparam name="FORM.motherInterests" default="">
     <!--- Mailing Address --->
     <cfparam name="FORM.mailaddress" default="">
     <cfparam name="FORM.mailaddress2" default="">
@@ -78,6 +86,11 @@
         ORDER BY 
         	id
     </cfquery>
+    
+    <cfscript>
+		// Get Languages
+		qGetLanguages = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey="language", sortBy="name");	
+	</cfscript>
 
 	<!--- Process Form Submission --->
     <cfif VAL(FORM.submitted)>
@@ -111,6 +124,31 @@
 				FORM.zip = "";
             }	
 
+			// Ethnicity
+			if ( NOT LEN(TRIM(FORM.race)) ) {
+				SESSION.formErrors.Add("Please indicate your family's ethnicity.");
+			}
+			
+			// Ethnicity
+			if ( TRIM(FORM.race) EQ 'other' AND NOT LEN(TRIM(FORM.ethnicityOther)) ) {
+				SESSION.formErrors.Add("Please indicate other ethnicity.");
+			}
+
+			// Primary Language
+			if ( NOT LEN(TRIM(FORM.primaryLanguage)) ) {
+				SESSION.formErrors.Add("Please indicate what is the primary language spoken in your home.");
+			}
+
+			// Functioning Business
+            if ( NOT LEN(FORM.homeIsFunctBusiness) ) {
+                SESSION.formErrors.Add("Please indicate if your home is also a functioning business.");
+			}
+			
+			// No business Des
+            if (( FORM.homeIsFunctBusiness EQ 1) AND NOT LEN(TRIM(FORM.homeBusinessDesc)) )  {
+                SESSION.formErrors.Add("You have indicated that your home is also a business, but have not provided details on the type of business.");
+			}
+			
 			// Mailing Address
             if ( NOT LEN(TRIM(FORM.mailaddress)) ) {
                 SESSION.formErrors.Add("Please indicate your mailing address.");
@@ -154,87 +192,157 @@
             }	
 			*/
 			
-			// Valid Father's DOB
-            if ( LEN(TRIM(FORM.fatherdob)) AND NOT isValid("date", TRIM(FORM.fatherdob)) ) {
-                SESSION.formErrors.Add("Please enter a valid Date of Birth for the Father");
-				FORM.fatherdob = "";
-            }	
-
-			// Valid Father's Phone
-            if ( LEN(TRIM(FORM.father_cell)) AND NOT isValid("telephone", TRIM(FORM.father_cell)) ) {
-                SESSION.formErrors.Add("Please enter a valid phone number for the Father's Cell Phone.");
-            }	
-
-			// Valid Mother's DOB
-            if ( LEN(TRIM(FORM.motherdob)) AND NOT isValid("date", TRIM(FORM.motherdob)) ) {
-                SESSION.formErrors.Add("The date you specified is not valid for Mother's Date of Birth");
-				FORM.motherdob = "";
-            }	
-			
-			// Valid Mother's Phone
-            if ( LEN(TRIM(FORM.mother_cell)) AND NOT isValid("telephone", TRIM(FORM.mother_cell)) ) {
-                SESSION.formErrors.Add("Please enter a valid phone number for Mother's Cell Phone");
-			}
-			
-			// Functioning Business
-            if ( NOT LEN(FORM.homeIsFunctBusiness) ) {
-                SESSION.formErrors.Add("Please indicate if your home is also a functioning business.");
-			}
-			
-			// No business Des
-            if (( FORM.homeIsFunctBusiness EQ 1) AND NOT LEN(TRIM(FORM.homeBusinessDesc)) )  {
-                SESSION.formErrors.Add("You have indicated that your home is also a business, but have not provided details on the type of business.");
-			}
-			
-			// No business Des
+			// Check for last name
             if ( NOT LEN(TRIM(FORM.fatherlastname)) AND NOT LEN(TRIM(FORM.motherlastname)) )  {
                 SESSION.formErrors.Add("If you are single, you must provide information for at least one of the host parents, either the father or mother. If you are not single, please provide information on both host parents.");
 			}
-			
-			// Father is Required
-            if ( LEN(TRIM(FORM.fatherFirstName)) AND NOT LEN(TRIM(FORM.fatherdob)) )  {
-                SESSION.formErrors.Add("Please provide the birthdate for the Host Father.");
+
+			// Check if there is a father
+			if ( LEN(TRIM(FORM.fatherFirstName)) ) {
+
+				// Father DOB 
+				if ( NOT LEN(TRIM(FORM.fatherDOB)) )  {
+					SESSION.formErrors.Add("Please provide date of birth for the Host Father.");
+				}
+				
+				// Father DOB 
+				if ( LEN(TRIM(FORM.fatherDOB)) AND NOT isDate(TRIM(FORM.fatherDOB)) )  {
+					SESSION.formErrors.Add("Please provide a valid date of birth for Host Father.");
+					FORM.fatherDOB = '';
+				}
+
+				// Calculate Age
+				if ( isDate(FORM.fatherDOB) ) {
+					vCalculateFatherAge = Datediff('yyyy',FORM.fatherDOB, now());
+				} else {
+					vCalculateFatherAge = 0;
+				}
+
+				// Birthdate
+				//if ( vCalculateFatherAge LTE 18 ) {
+				//	SESSION.formErrors.Add("The host father date of birth indicates he is 18 years old. Please check host fathers's date of birth.");				
+				//}	
+
+				// Birthdate
+				if ( vCalculateFatherAge GT 120 ) {
+					SESSION.formErrors.Add("The host father date of birth indicates he is over 120 years old. Please check host father's date of birth.");				
+				}	
+				
+				// Birthdate
+				if ( isDate(FORM.fatherDOB) AND FORM.fatherDOB GT now() ) {
+					SESSION.formErrors.Add("The host father date of birth indicates he has not been born yet. Please check host father's date of birth.");				
+				}	
+				
+				// Father Education Level 
+				if ( NOT LEN(FORM.fatherEducationLevel) )  {
+					SESSION.formErrors.Add("Please provide the highest education lever for Host Father.");
+				}
+				
+				// Father Occupation
+				if ( NOT LEN(TRIM(FORM.fatherworktype)) )  {
+					SESSION.formErrors.Add("Please provide the occupation for the Host Father.");
+				}
+				
+				// Father Full/part time
+				if ( LEN(TRIM(FORM.fatherworktype)) AND NOT LEN (FORM.fatherfullpart) ) {
+					SESSION.formErrors.Add("You provided a job for the host father, but didn't indicate if you work full or part time.");
+				}
+				
+				// Father Employer
+				if ( LEN(TRIM(FORM.fatherworktype)) AND NOT LEN(TRIM(FORM.fatherEmployeer)) ) {
+					SESSION.formErrors.Add("You provided a job for the host father, but didn't indicate the employer.");
+				}
+
+				// Valid Father's Phone
+				if ( LEN(TRIM(FORM.father_cell)) AND NOT isValid("telephone", TRIM(FORM.father_cell)) ) {
+					SESSION.formErrors.Add("Please enter a valid phone number for the Father's Cell Phone.");
+				}	
+
+				// Father Interests
+				if ( NOT LEN(TRIM(FORM.fatherInterests)) ) {
+					SESSION.formErrors.Add("Please provide interests for host father");
+				}
+
 			}
 			
-			// Father is Required
-            if ( LEN(TRIM(FORM.fatherFirstName)) AND NOT LEN(TRIM(FORM.fatherworktype)) )  {
-                SESSION.formErrors.Add("Please provide the occupation for the Host Father.");
-			}
+			// Check if there is a mother
+			if ( LEN(TRIM(FORM.motherFirstName)) ) {
+				
+				// Mother DOB 
+				if ( NOT LEN(TRIM(FORM.motherDOB)) )  {
+					SESSION.formErrors.Add("Please provide date of birth for the Host Mother.");
+				}
+				
+				// Mother DOB 
+				if ( LEN(TRIM(FORM.motherDOB)) AND NOT isDate(TRIM(FORM.motherDOB)) )  {
+					SESSION.formErrors.Add("Please provide a valid date of birth for Host Mother.");
+					FORM.motherDOB = '';
+				}
+
+				// Calculate Age
+				if ( isDate(FORM.motherDOB) ) {
+					vCalculateMotherAge = Datediff('yyyy',FORM.motherDOB, now());
+				} else {
+					vCalculateMotherAge = 0;
+				}
+
+				// Birthdate
+				//if ( vCalculateMotherAge LTE 18 ) {
+				//	SESSION.formErrors.Add("The host mother date of birth indicates she is 18 years old. Please check host mother's date of birth.");				
+				//}	
+
+				// Birthdate
+				if ( vCalculateMotherAge GT 120 ) {
+					SESSION.formErrors.Add("The host mother date of birth indicates she is over 120 years old. Please check host mother's date of birth.");				
+				}	
+				
+				// Birthdate
+				if ( isDate(FORM.motherDOB) AND FORM.motherDOB GT now() ) {
+					SESSION.formErrors.Add("The host mother date of birth indicates she has not been born yet. Please check host mother's date of birth.");				
+				}	
+
+				// Mother Education Level 
+				if ( NOT LEN(FORM.motherEducationLevel) )  {
+					SESSION.formErrors.Add("Please provide the highest education lever for Host Mother.");
+				}
+				
+				// Mother Occupation
+				if ( NOT LEN(TRIM(FORM.motherworktype)) )  {
+					SESSION.formErrors.Add("Please provide the occupation for the Host Mother.");
+				}
+				
+				// Mother Full/Part Time
+				if ( NOT LEN(FORM.motherfullpart) ) {
+					SESSION.formErrors.Add("You provided a job for the host mother, but didn't indicate if you work full or part time.");
+				}
+				
+				// Mother Employer
+				if ( NOT LEN(TRIM(FORM.motherEmployeer)) ) {
+					SESSION.formErrors.Add("You provided a job for the host mother, but didn't indicate the employer.");
+				}
+
+				// Valid Mother's Phone
+				if ( LEN(TRIM(FORM.mother_cell)) AND NOT isValid("telephone", TRIM(FORM.mother_cell)) ) {
+					SESSION.formErrors.Add("Please enter a valid phone number for Mother's Cell Phone");
+				}
+
+				// Mother Interests
+				if ( NOT LEN(TRIM(FORM.motherInterests)) ) {
+					SESSION.formErrors.Add("Please provide interests for host mother");
+				}
 			
-			// Father Occupation
-            if ( LEN(TRIM(FORM.fatherworktype)) AND NOT LEN (FORM.fatherfullpart) ) {
-                SESSION.formErrors.Add("You provided a job for the host father, but didn't indicate if you work full or part time.");
-			}
-			
-			// Father Employer
-            if ( LEN(TRIM(FORM.fatherworktype)) AND NOT LEN(TRIM(FORM.fatherEmployeer)) ) {
-                SESSION.formErrors.Add("You provided a job for the host father, but didn't indicate the employer.");
-			}
-			// Father is Required
-            if ( LEN(TRIM(FORM.motherFirstName)) AND NOT LEN(TRIM(FORM.motherdob)) )  {
-                SESSION.formErrors.Add("Please provide the birthdate for the Host Mother.");
-			}
-			
-			// Father is Required
-            if ( LEN(TRIM(FORM.motherFirstName)) AND NOT LEN(TRIM(FORM.motherworktype)) )  {
-                SESSION.formErrors.Add("Please provide the occupation for the Host Mother.");
-			}
-			
-			// Father Occupation
-            if ( LEN(TRIM(FORM.motherworktype)) AND NOT LEN(FORM.motherfullpart) ) {
-                SESSION.formErrors.Add("You provided a job for the host mother, but didn't indicate if you work full or part time.");
-			}
-			
-			// Father Employer
-            if ( LEN(TRIM(FORM.motherworktype)) AND NOT LEN(TRIM(FORM.motherEmployeer)) ) {
-                SESSION.formErrors.Add("You provided a job for the host mother, but didn't indicate the employer.");
 			}
 		</cfscript>
         
         <!--- Check if there are no errors --->
         <cfif NOT SESSION.formErrors.length()>
             
-			<!--- No Erros --->				
+            <cfscript>
+				// Erase value on ethnicityOther if other is not selected
+				if ( TRIM(FORM.race) NEQ 'other' ) {
+					FORM.ethnicityOther = '';
+				}
+			</cfscript>
         		
             <!--- Update Record --->
             <cfquery datasource="#APPLICATION.DSN.Source#">
@@ -242,30 +350,6 @@
                     smg_hosts 
                 SET
                     familylastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.familylastname)#">,
-                    <!--- Father --->
-                    fatherlastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherlastname#">,
-                    fatherFirstName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherFirstName#">,
-                    fathermiddlename = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fathermiddlename#">,
-                    fatherdob = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.fatherdob#" null="#yesNoFormat(TRIM(FORM.fatherdob) EQ '')#">,
-                    <cfif IsDate(FORM.fatherdob)>
-	                    fatherbirth = <cfqueryparam cfsqltype="cf_sql_integer" value="#Year(TRIM(FORM.fatherdob))#">,
-                    </cfif>
-                    fatherworktype = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherworktype#">,
-                    father_cell = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.father_cell#">,
-                    fatherfullpart = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.fatherfullpart#" null="#yesNoFormat(NOT LEN(FORM.fatherfullpart))#">,
-                    fatherEmployeer = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.fatherEmployeer)#">,
-					<!--- Mother --->
-                    motherFirstName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherFirstName#">,
-                    motherlastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherlastname#">,
-                    mothermiddlename = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.mothermiddlename#">,
-                    motherdob = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.motherdob#" null="#yesNoFormat(TRIM(FORM.motherdob) EQ '')#">,
-                    <cfif IsDate(FORM.motherdob)>
-                    	motherbirth = <cfqueryparam cfsqltype="cf_sql_integer" value="#Year(TRIM(FORM.motherdob))#">,
-                    </cfif>
-                    motherworktype = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherworktype#">,
-                    mother_cell = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.mother_cell#">,
-                    motherfullpart = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.motherfullpart#" null="#yesNoFormat(NOT LEN(FORM.motherfullpart))#">,
-                    motherEmployeer = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.motherEmployeer)#">,
 					<!--- Address --->
                     address = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address#">,
                     address2 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address2#">,
@@ -274,16 +358,49 @@
                     zip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.zip#">,
                     phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#">,
                     email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">,
-                    <!--- password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.password#">, --->
+					<!--- password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.password#">, --->
+                    <!--- Business --->
+                    homeIsFunctBusiness = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.homeIsFunctBusiness#">,
+                    homeBusinessDesc = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LEFT(FORM.homeBusinessDesc, 300)#">,
                     <!--- Mailing Address --->
                     mailaddress = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.mailaddress#">,
                     mailaddress2 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.mailaddress2#">,
                     mailcity = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.mailcity#">,
                     mailstate = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.mailstate#">,
                     mailzip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.mailzip#">,
-                    homeIsFunctBusiness = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.homeIsFunctBusiness#">,
-                    homeBusinessDesc = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LEFT(FORM.homeBusinessDesc, 300)#">,
-                    lead = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                    <!--- Ethnicity --->
+                    race = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.race#">,
+                    ethnicityOther = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.ethnicityOther#">,
+                    primaryLanguage = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.primaryLanguage#">,
+                    <!--- Father --->
+                    fatherlastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherlastname#">,
+                    fatherFirstName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherFirstName#">,
+                    fathermiddlename = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fathermiddlename#">,
+                    fatherDOB = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.fatherDOB#" null="#yesNoFormat(TRIM(FORM.fatherDOB) EQ '')#">,
+                    <cfif IsDate(FORM.fatherDOB)>
+	                    fatherbirth = <cfqueryparam cfsqltype="cf_sql_integer" value="#Year(TRIM(FORM.fatherDOB))#">,
+                    </cfif>
+                    fatherEducationLevel = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherEducationLevel#">,
+                    fatherworktype = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherworktype#">,
+                    father_cell = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.father_cell#">,
+                    fatherfullpart = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.fatherfullpart#" null="#yesNoFormat(NOT LEN(FORM.fatherfullpart))#">,
+                    fatherEmployeer = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.fatherEmployeer)#">,
+                    fatherInterests = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.fatherInterests)#">,
+					<!--- Mother --->
+                    motherFirstName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherFirstName#">,
+                    motherlastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherlastname#">,
+                    mothermiddlename = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.mothermiddlename#">,
+                    motherDOB = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.motherDOB#" null="#yesNoFormat(TRIM(FORM.motherDOB) EQ '')#">,
+                    <cfif IsDate(FORM.motherDOB)>
+                    	motherbirth = <cfqueryparam cfsqltype="cf_sql_integer" value="#Year(TRIM(FORM.motherDOB))#">,
+                    </cfif>
+                    motherEducationLevel = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherEducationLevel#">,
+                    motherworktype = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherworktype#">,
+                    mother_cell = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.mother_cell#">,
+                    motherfullpart = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.motherfullpart#" null="#yesNoFormat(NOT LEN(FORM.motherfullpart))#">,
+                    motherEmployeer = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.motherEmployeer)#">,
+                    motherInterests = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.motherInterests)#">
+                    <!--- lead = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> --->
                 WHERE 
                     hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
             </cfquery>
@@ -301,26 +418,6 @@
          <cfscript>
 			 // Set FORM Values   
 			FORM.familylastname = qGetHostInfo.familylastname;
-			// Father --->
-			FORM.fatherlastname = qGetHostInfo.fatherlastname;
-			FORM.fatherFirstName = qGetHostInfo.fatherFirstName;
-			FORM.fathermiddlename = qGetHostInfo.fathermiddlename;
-			FORM.fatherbirth = qGetHostInfo.fatherbirth;
-			FORM.fatherdob = qGetHostInfo.fatherdob;
-			FORM.fatherworktype = qGetHostInfo.fatherworktype;
-			FORM.fatherEmployeer = qGetHostInfo.fatheremployeer;
-			FORM.father_cell = qGetHostInfo.father_cell;
-			FORM.fatherfullpart = qGetHostInfo.fatherfullpart;
-			// Mother --->    
-			FORM.motherFirstName = qGetHostInfo.motherFirstName;
-			FORM.motherlastname = qGetHostInfo.motherlastname;
-			FORM.mothermiddlename = qGetHostInfo.mothermiddlename;
-			FORM.motherbirth = qGetHostInfo.motherbirth;
-			FORM.motherdob = qGetHostInfo.motherdob;
-			FORM.motherworktype = qGetHostInfo.motherworktype;
-			FORM.mother_cell = qGetHostInfo.mother_cell;
-			FORM.motherfullpart = qGetHostInfo.motherfullpart;
-			FORM.motherEmployeer = qGetHostInfo.motherEmployeer;
 			// Address --->
 			FORM.address = qGetHostInfo.address;
 			FORM.address2 = qGetHostInfo.address2;
@@ -330,14 +427,41 @@
 			FORM.phone = qGetHostInfo.phone;
 			FORM.email = qGetHostInfo.email;
 			// FORM.password = qGetHostInfo.password;
+			FORM.homeIsFunctBusiness = qGetHostInfo.homeIsFunctBusiness;
+			FORM.homeBusinessDesc = qGetHostInfo.homeBusinessDesc;
 			// Mailing Address --->
 			FORM.mailaddress = qGetHostInfo.mailaddress;
 			FORM.mailaddress2 = qGetHostInfo.mailaddress2;
 			FORM.mailcity = qGetHostInfo.mailcity;
 			FORM.mailstate = qGetHostInfo.mailstate;
 			FORM.mailzip = qGetHostInfo.mailzip;
-			FORM.homeIsFunctBusiness = qGetHostInfo.homeIsFunctBusiness;
-			FORM.homeBusinessDesc = qGetHostInfo.homeBusinessDesc;
+			FORM.race = qGetHostInfo.race;
+			FORM.ethnicityOther = qGetHostInfo.ethnicityOther;
+			FORM.primaryLanguage = qGetHostInfo.primaryLanguage;
+			// Father --->
+			FORM.fatherlastname = qGetHostInfo.fatherlastname;
+			FORM.fatherFirstName = qGetHostInfo.fatherFirstName;
+			FORM.fathermiddlename = qGetHostInfo.fathermiddlename;
+			FORM.fatherbirth = qGetHostInfo.fatherbirth;
+			FORM.fatherDOB = qGetHostInfo.fatherDOB;
+			FORM.fatherEducationLevel = qGetHostInfo.fatherEducationLevel;
+			FORM.fatherworktype = qGetHostInfo.fatherworktype;
+			FORM.fatherEmployeer = qGetHostInfo.fatheremployeer;
+			FORM.father_cell = qGetHostInfo.father_cell;
+			FORM.fatherfullpart = qGetHostInfo.fatherfullpart;
+			FORM.fatherInterests = qGetHostInfo.fatherInterests;
+			// Mother --->    
+			FORM.motherFirstName = qGetHostInfo.motherFirstName;
+			FORM.motherlastname = qGetHostInfo.motherlastname;
+			FORM.mothermiddlename = qGetHostInfo.mothermiddlename;
+			FORM.motherbirth = qGetHostInfo.motherbirth;
+			FORM.motherDOB = qGetHostInfo.motherDOB;
+			FORM.motherEducationLevel = qGetHostInfo.motherEducationLevel;
+			FORM.motherworktype = qGetHostInfo.motherworktype;
+			FORM.mother_cell = qGetHostInfo.mother_cell;
+			FORM.motherfullpart = qGetHostInfo.motherfullpart;
+			FORM.motherEmployeer = qGetHostInfo.motherEmployeer;
+			FORM.motherInterests = qGetHostInfo.motherInterests;
          	
 			// the default values in the database for these used to be "na", so remove any.
          	if ( FORM.father_cell EQ 'na' ) {
@@ -414,7 +538,7 @@
         
         <table width="100%" cellspacing="0" cellpadding="2" class="border">
             <tr>
-                <td class="label" width="110px"><h3>Family Name <span class="required">*</span></h3></td>
+                <td class="label" width="180px"><h3>Family Name <span class="required">*</span></h3></td>
                 <td colspan="3"><cfinput type="text" name="familylastname" id="familylastname" value="#FORM.familylastname#" class="xLargeField" maxlength="150"></td>
             </tr>
             <tr bgcolor="##deeaf3">
@@ -469,6 +593,59 @@
 			--->
         </table> <br />
         
+        
+        <table width="100%" cellspacing="0" cellpadding="2" class="border">
+            <tr bgcolor="##deeaf3">
+                <td class="label" valign="top" colspan="2"><h3>What is the ethnicity of your family? <span class="required">*</span></h3></td>
+            </tr>
+            <tr bgcolor="##deeaf3">
+                <td colspan="2">
+                    
+                    <table width="100%">
+                        <tr>
+                            <td width="10px"><input type="radio" name="race" id="raceAmericanIndian" value="American Indian or Alaska Native" <cfif listFind("American Indian or Alaska Native", FORM.race)>checked</cfif> /></td>
+                            <td><label for="raceAmericanIndian">American Indian or Alaska Native</label></td>
+
+                            <td width="10px"><input type="radio" name="race" id="raceAsian" value="Asian" <cfif listFind("Asian", FORM.race)>checked</cfif> /></td>
+                            <td><label for="raceAsian">Asian</label></td>
+                            
+                            <td width="10px"><input type="radio" name="race" id="raceAfrican" value="Black or African American" <cfif listFind("Black or African American", FORM.race)>checked</cfif> /></td>
+                            <td><label for="raceAfrican">Black or African American</label></td>
+                        </tr>
+                        <tr>
+                            <td><input type="radio" name="race" id="raceHispanic" value="Hispanic or Latino" <cfif listFind("Hispanic or Latino", FORM.race)>checked</cfif> /></td>
+                            <td><label for="raceHispanic">Hispanic or Latino</label></td>
+                            
+                            <td><input type="radio" name="race" id="raceHawaiian" value="Native Hawaiian or Other Pacific Islander" <cfif listFind("Native Hawaiian or Other Pacific Islander", FORM.race)>checked</cfif> /></td>
+                            <td><label for="raceHawaiian">Native Hawaiian or Other Pacific Islander</label></td>
+                           
+                            <td><input type="radio" name="race" id="raceWhite" value="White" <cfif listFind("White", FORM.race)>checked</cfif> /></td>
+                            <td><label for="raceWhite">White</label></td>
+                        </tr>
+                        <tr>
+                        	<td><input type="radio" name="race" id="ethnicityOther" value="Other" <cfif listFind("Other", FORM.race)>checked</cfif> /></td>
+                            <td colspan="5">
+                            	<label for="ethnicityOther">Other:</label> &nbsp;
+                        		<input type="text" name="ethnicityOther" value="#FORM.ethnicityOther#" class="largeField" maxlength="100" />
+                            </td>
+                        </tr>
+                    </table>
+            
+                </td>
+            </tr> 
+            <tr>
+                <td class="label"><h3>Primary language spoken in your home <span class="required">*</span></h3></td>
+                <td>
+                	<select name="primaryLanguage" id="primaryLanguage" class="largeField">
+                        <option value="" <cfif NOT LEN(FORM.primaryLanguage)> selected="selected" </cfif></option>
+                        <cfloop query="qGetLanguages">
+	                        <option value="#qGetLanguages.name#" <cfif FORM.primaryLanguage EQ qGetLanguages.name> selected="selected" </cfif> >#qGetLanguages.name#</option>
+                    	</cfloop>
+                    </select>
+                </td>
+            </tr>
+        </table>  <br />
+        
         <h3>Home Based Business</h3>
         
         <table width="100%" cellspacing="0" cellpadding="2" class="border">
@@ -500,7 +677,7 @@
         
         <table width="100%" cellspacing="0" cellpadding="2" class="border">
             <tr bgcolor="##deeaf3">
-                <td class="label"><h3>Address <span class="required">*</span></h3></td>
+                <td class="label" width="180px"><h3>Address <span class="required">*</span></h3></td>
                 <td colspan="3"><cfinput type="text" name="mailaddress" id="mailaddress" value="#FORM.mailaddress#" class="xLargeField" maxlength="150"></td>
             </tr>
             <tr bgcolor="##deeaf3">
@@ -527,7 +704,7 @@
         
         <table width="100%" cellspacing="0" cellpadding="2" class="border">
             <tr bgcolor="##deeaf3">
-                <td class="label"><h3>First Name</h3></td>
+                <td class="label" width="180px"><h3>First Name</h3></td>
                 <td><cfinput type="text" name="fatherFirstName" value="#FORM.fatherFirstName#" class="xLargeField" maxlength="150"></td>
             </tr>
             <tr>
@@ -540,10 +717,27 @@
             </tr>
             <tr bgcolor="##deeaf3">
                 <td class="label"><h3>Date of Birth</h3></td>
-                <td><cfinput type="text" name="fatherdob" value="#dateFormat(FORM.fatherdob, 'mm/dd/yyyy')#" class="mediumField" maxlength="10" mask="99/99/9999" placeholder="MM/DD/YYYY"> </td>
+                <td><cfinput type="text" name="fatherDOB" value="#dateFormat(FORM.fatherDOB, 'mm/dd/yyyy')#" class="mediumField" maxlength="10" mask="99/99/9999" placeholder="MM/DD/YYYY"> </td>
             </tr>
             <tr>
-                <td class="label"><h3>Occupation</h3></td>
+                <td class="label"><h3>Highest level of formal education <span class="required">*</span></h3></td>
+                <td>
+                	<select name="fatherEducationLevel" id="fatherEducationLevel">
+                    	<option value="" <cfif NOT LEN(FORM.fatherEducationLevel)>selected="selected"</cfif> ></option>
+                    	<option value="Grade school or less" <cfif FORM.fatherEducationLevel EQ 'Grade school or less'>selected="selected"</cfif> >Grade school or less</option>
+                    	<option value="Some high school" <cfif FORM.fatherEducationLevel EQ 'Some high school'>selected="selected"</cfif> >Some high school</option>
+                    	<option value="High school graduate" <cfif FORM.fatherEducationLevel EQ 'High school graduate'>selected="selected"</cfif> >High school graduate</option>
+                    	<option value="Grade school or less" <cfif FORM.fatherEducationLevel EQ 'Grade school or less'>selected="selected"</cfif> >Grade school or less</option>
+                    	<option value="Some college" <cfif FORM.fatherEducationLevel EQ 'Some college'>selected="selected"</cfif> >Some college</option>
+                    	<option value="2-year college/technical school" <cfif FORM.fatherEducationLevel EQ '2-year college/technical school'>selected="selected"</cfif> >2-year college/technical school</option>
+                    	<option value="4-year college" <cfif FORM.fatherEducationLevel EQ '4-year college'>selected="selected"</cfif> >4-year college</option>
+                    	<option value="Some postgraduate work" <cfif FORM.fatherEducationLevel EQ 'Some postgraduate work'>selected="selected"</cfif>>Some postgraduate work</option>
+                        <option value="Postgraduate degree" <cfif FORM.fatherEducationLevel EQ 'Postgraduate degree'>selected="selected"</cfif> >Postgraduate degree</option>
+                    </select>
+                </td>
+            </tr>
+            <tr bgcolor="##deeaf3">
+                <td class="label"><h3>Occupation <span class="required">*</span></h3></td>
                 <td>
                     <cfinput type="text" name="fatherworktype" value="#FORM.fatherworktype#" class="xLargeField" maxlength="200"> 
                     <input name="fatherfullpart" id="fatherFullTime" type="radio" value="1" <cfif FORM.fatherfullpart eq 1>checked</cfif>> <label for="fatherFullTime">Full Time</label>
@@ -551,12 +745,16 @@
                 </td>
             </tr>
             <tr>
-                <td class="label"><h3>Employer</h3></td>
+                <td class="label"><h3>Employer <span class="required">*</span></h3></td>
                 <td><cfinput type="text" name="fatherEmployeer" value="#FORM.fatherEmployeer#" class="xLargeField" maxlength="100"> </td>
             </tr>
             <tr bgcolor="##deeaf3">
                 <td class="label"><h3>Cell Phone <span class="required">+</span></h3></td>
                 <td colspan="3"><cfinput type="text" name="father_cell" value="#FORM.father_cell#" size="14" maxlength="14" placeholder="(999) 999-9999"  mask="(999) 999-9999" ></td>
+            </tr>
+            <tr>
+                <td class="label" valign="top" ><h3>Interests <span class="required">*</span></h3></td>
+                <td><textarea name="fatherInterests" rows="5" cols="50">#FORM.fatherInterests#</textarea></td>
             </tr>
         </table> <br />
         
@@ -564,7 +762,7 @@
         
         <table width="100%" cellspacing="0" cellpadding="2" class="border">
             <tr bgcolor="##deeaf3">
-                <td class="label"><h3>First Name</h3></td>
+                <td class="label" width="180px"><h3>First Name</h3></td>
                 <td><cfinput type="text" name="motherFirstName" value="#FORM.motherFirstName#" class="xLargeField" maxlength="150"></td>
             </tr>
             <tr>
@@ -577,11 +775,27 @@
             </tr>			
             <tr bgcolor="##deeaf3">
                 <td class="label"><h3>Date of Birth</h3></td>
-                <td><cfinput type="text" name="motherdob" value="#dateFormat(FORM.motherdob, 'mm/dd/yyyy')#" class="mediumField" maxlength="10" mask="99/99/9999" placeholder="MM/DD/YYYY"> </td>
+                <td><cfinput type="text" name="motherDOB" value="#dateFormat(FORM.motherDOB, 'mm/dd/yyyy')#" class="mediumField" maxlength="10" mask="99/99/9999" placeholder="MM/DD/YYYY"> </td>
             </tr>
-            
             <tr>
-                <td class="label"><h3>Occupation</h3></td>
+                <td class="label"><h3>Highest level of formal education <span class="required">*</span></h3></td>
+                <td>
+                	<select name="motherEducationLevel" id="motherEducationLevel">
+                    	<option value="" <cfif NOT LEN(FORM.motherEducationLevel)>selected="selected"</cfif> ></option>
+                    	<option value="Grade school or less" <cfif FORM.motherEducationLevel EQ 'Grade school or less'>selected="selected"</cfif> >Grade school or less</option>
+                    	<option value="Some high school" <cfif FORM.motherEducationLevel EQ 'Some high school'>selected="selected"</cfif> >Some high school</option>
+                    	<option value="High school graduate" <cfif FORM.motherEducationLevel EQ 'High school graduate'>selected="selected"</cfif> >High school graduate</option>
+                    	<option value="Grade school or less" <cfif FORM.motherEducationLevel EQ 'Grade school or less'>selected="selected"</cfif> >Grade school or less</option>
+                    	<option value="Some college" <cfif FORM.motherEducationLevel EQ 'Some college'>selected="selected"</cfif> >Some college</option>
+                    	<option value="2-year college/technical school" <cfif FORM.motherEducationLevel EQ '2-year college/technical school'>selected="selected"</cfif> >2-year college/technical school</option>
+                    	<option value="4-year college" <cfif FORM.motherEducationLevel EQ '4-year college'>selected="selected"</cfif> >4-year college</option>
+                    	<option value="Some postgraduate work" <cfif FORM.motherEducationLevel EQ 'Some postgraduate work'>selected="selected"</cfif>>Some postgraduate work</option>
+                        <option value="Postgraduate degree" <cfif FORM.motherEducationLevel EQ 'Postgraduate degree'>selected="selected"</cfif> >Postgraduate degree</option>
+                    </select>
+                </td>
+            </tr>
+            <tr bgcolor="##deeaf3">
+                <td class="label"><h3>Occupation <span class="required">*</span></h3></td>
                 <td>
                     <cfinput type="text" name="motherworktype" value="#FORM.motherworktype#" class="xLargeField" maxlength="200">  
                     <input name="motherfullpart" id="motherFullTime" type="radio" value="1" <cfif FORM.motherfullpart eq 1>checked</cfif>> <label for="motherFullTime">Full Time</label>
@@ -589,12 +803,16 @@
                 </td>
             </tr>
             <tr>
-                <td class="label"><h3>Employer</h3></td>
+                <td class="label"><h3>Employer <span class="required">*</span></h3></td>
                 <td><cfinput type="text" name="motherEmployeer" value="#FORM.motherEmployeer#" class="xLargeField" maxlength="100"></td>
             </tr>
             <tr bgcolor="##deeaf3">
                 <td class="label"><h3>Cell Phone <span class="required">+</span></h3></td>
                 <td colspan="3"><cfinput type="text" name="mother_cell" value="#FORM.mother_cell#" size="14" maxlength="14" placeholder="(999) 999-9999" mask="(999) 999-9999" ></td>
+            </tr>
+            <tr>
+                <td class="label" valign="top" ><h3>Interests <span class="required">*</span></h3></td>
+                <td><textarea name="motherInterests" rows="5" cols="50">#FORM.motherInterests#</textarea></td>
             </tr>
         </table> 		
         

@@ -23,8 +23,6 @@
     <cfparam name="FORM.cpsexpl" default="">
     <cfparam name="FORM.crimeExpl" default="">
     <cfparam name="FORM.income" default="">
-    <cfparam name="FORM.race" default="">
-    <cfparam name="FORM.ethnicityOther" default="">
 
     <cfquery name="qGetConfidentialInfo" datasource="#APPLICATION.DSN.Source#">
         SELECT 
@@ -34,9 +32,7 @@
             crime, 
             crimeExpl, 
             cps, 
-            cpsExpl, 
-            race, 
-            ethnicityOther
+            cpsExpl 
         FROM 
             smg_hosts
         WHERE 
@@ -83,11 +79,6 @@
 			if ( FORM.cps EQ 1 AND NOT LEN(TRIM(FORM.cpsExpl)) ) {
 				SESSION.formErrors.Add("You have indicated that you have been contacted by Child Protective Services, but did not explain.");
 			}	
-			
-			// race
-			if ( NOT LEN(TRIM(FORM.race)) AND NOT LEN(TRIM(FORM.ethnicityOther)) ) {
-				SESSION.formErrors.Add("Please indicate the race of your household.");
-			}
 		</cfscript>
         
         <!--- No Errors Found --->
@@ -103,9 +94,7 @@
                     crime = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.crime#">,
                     crimeExpl = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.crimeExpl#">,
                     cps = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.cps#">,
-                    cpsexpl = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.cpsexpl#">,
-                    race = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.race#">,
-                    ethnicityOther = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.ethnicityOther#">
+                    cpsexpl = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.cpsexpl#">
                 WHERE
                 	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
             </cfquery>
@@ -129,8 +118,6 @@
 			FORM.cps = qGetConfidentialInfo.cps;
 			FORM.cpsexpl =  qGetConfidentialInfo.cpsexpl;
 			FORM.income = qGetConfidentialInfo.income;
-			FORM.race = qGetConfidentialInfo.race;
-			FORM.ethnicityOther = qGetConfidentialInfo.ethnicityOther;
 		</cfscript>		
     
     </cfif>        
@@ -175,7 +162,7 @@
             <tr bgcolor="##deeaf3" id="publicAssitanceExpl" <cfif FORM.publicAssitance NEQ 1>class="displayNone"</cfif> >
                 <td colspan="2">
                 	Please explain <span class="required">*</span><br />
-            		<textarea name="publicAssitanceExpl" cols="50" rows="4">#FORM.publicAssitanceExpl#</textarea>
+            		<textarea name="publicAssitanceExpl" cols="70" rows="4">#FORM.publicAssitanceExpl#</textarea>
                 </td>
             </tr>
             <tr>
@@ -203,7 +190,7 @@
             <tr bgcolor="##deeaf3" id="crimeExpl" <cfif FORM.crime NEQ 1>class="displayNone"</cfif>>
                 <td colspan="2">
                     Please explain <span class="required">*</span><br />
-                    <textarea name="crimeExpl" cols="50" rows="4">#FORM.crimeExpl#</textarea>
+                    <textarea name="crimeExpl" cols="70" rows="4">#FORM.crimeExpl#</textarea>
                 </td>
             </tr>
             <tr>
@@ -219,34 +206,9 @@
             <tr id="cpsExpl" <cfif FORM.cps NEQ 1>class="displayNone"</cfif>>
                 <td colspan="2">
                 	Please explain <span class="required">*</span><br />
-                    <textarea name="cpsExpl" cols="50" rows="4">#FORM.cpsExpl#</textarea>
+                    <textarea name="cpsExpl" cols="70" rows="4">#FORM.cpsExpl#</textarea>
                 </td>
-            </tr>
-            <tr bgcolor="##deeaf3">
-                <td class="label" valign="top" colspan="2"><h3>What your family's race? <span class="required">*</span></h3></td>
-            </tr>
-            <tr bgcolor="##deeaf3">
-                <td colspan="2">
-                    
-                    <table width="100%">
-                        <tr>
-                            <td width="10px"><input type="radio" name="race" id="raceWhite" value="Caucasian" <cfif listFind("Caucasian", FORM.race)>checked</cfif> /></td>
-                            <td><label for="raceWhite">Caucasian</label></td>
-                            <td width="10px"><input type="radio" name="race" id="raceAfrican" value="African American" <cfif listFind("African American", FORM.race)>checked</cfif> /></td>
-                            <td><label for="raceAfrican">African American</label></td>
-                            <td width="10px"><input type="radio" name="race" id="raceHispanic" value="Hispanic" <cfif listFind("Hispanic", FORM.race)>checked</cfif> /></td>
-                            <td><label for="raceHispanic">Hispanic</label></td>
-                        </tr>
-                        <tr>
-                            <td colspan="6">
-                            	<label for="ethnicityOther">Other:</label> &nbsp;
-                        		<input type="text" name="ethnicityOther" id="ethnicityOther" value="#FORM.ethnicityOther#" class="largeField" maxlength="100" />
-                            </td>
-                        </tr>
-                    </table>
-            
-                </td>
-            </tr>        
+            </tr>       
         </table>
         
         <table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
