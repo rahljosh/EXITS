@@ -25,7 +25,7 @@
 	
 	<cfscript>
 	//users allowed to resent email app
-	allowedUsers = "13538,7729,13185,7858,7203,14488,16975,6200,13731";
+	allowedUsers = "13538,7729,13185,7858,7203,14488,16975,6200,13731,17919";
 	//Random Password for account, if needed
 		strPassword = APPLICATION.CFC.UDF.randomPassword(length=8);
 		
