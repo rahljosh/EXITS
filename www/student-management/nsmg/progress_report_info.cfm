@@ -511,6 +511,10 @@ function OpenLetter(url) {
         <th bgcolor="cccccc" colspan="2">Status</th>
       </tr>
       <tr>
+        <th align="right">Report ID:</th>
+        <td>#FORM.pr_id#</td>
+      </tr>
+      <tr>
         <th align="right">SR Approved:</th>
         <td>#DateFormat(get_report.pr_sr_approved_date, 'mm/dd/yyyy')#</td>
       </tr>
