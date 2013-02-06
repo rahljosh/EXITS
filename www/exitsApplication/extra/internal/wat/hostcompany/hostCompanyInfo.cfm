@@ -3034,7 +3034,7 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td class="style1" align="right"><strong>Workmen's Compensation:</strong></td>
+                                                <td class="style1" align="right"><strong>Worker's Compensation Certificate:</strong></td>
                                                 <td class="style1" bordercolor="##FFFFFF">
                                                     <span class="readOnly">
                                                         <cfif ListFind("0,1", FORM.workmensCompensation)>
