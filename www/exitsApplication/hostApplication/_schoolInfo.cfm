@@ -32,6 +32,7 @@
     <cfparam name="FORM.type" default="">
     <cfparam name="FORM.tuition" default="">
 	<!--- School Details --->
+    <cfparam name="FORM.schoolDistance" default="">
     <cfparam name="FORM.schoolWorks" default="">
     <cfparam name="FORM.schoolWorksExpl" default="">
     <cfparam name="FORM.schoolCoach" default="">
@@ -134,16 +135,21 @@
 			if ( VAL(FORM.schoolCoach) AND NOT LEN(TRIM(FORM.schoolCoachExpl)) ) {
 				SESSION.formErrors.Add("You have indicated that a coach contacted you, but didn't explain.  Please provide details regarding this contact.");
 			}	
-			
-			// Other Transportation 
-			if ( FORM.schooltransportation is 'other' AND NOT LEN(TRIM(FORM.schoolTransportationOther)) ) {
-				SESSION.formErrors.Add("You indicated that the student will get to school but Other, but didn't specify what that other method would be.");
-			}	
-			
+
+			// School Distance
+			if ( NOT LEN(TRIM(FORM.schoolDistance)) )  {
+				SESSION.formErrors.Add("Please indicate how far is the school from your home.");
+			}
+
 			// Transportaion
 			if ( NOT LEN(TRIM(FORM.schoolTransportation)) )  {
 				SESSION.formErrors.Add("Please indicate how the student will get to school.");
 			}
+
+			// Other Transportation 
+			if ( FORM.schooltransportation is 'other' AND NOT LEN(TRIM(FORM.schoolTransportationOther)) ) {
+				SESSION.formErrors.Add("You indicated that the student will get to school but Other, but didn't specify what that other method would be.");
+			}	
 			
 			// Extra Curricular Transportaion
 			if ( NOT LEN(TRIM(FORM.extraCuricTrans)) )  {
@@ -198,8 +204,9 @@
             <cfquery datasource="#APPLICATION.DSN.Source#">
                 UPDATE 
                 	smg_hosts
-                SET 
-                	schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.schoolID)#">,
+                SET                 	
+                    schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.schoolID)#">,
+                    schoolDistance = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.schoolDistance)#">,
                     schoolWorks = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.schoolWorks)#">,
                     schoolWorksExpl = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LEFT(TRIM(FORM.schoolWorksExpl), 300)#">,
                     schoolCoach = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.schoolCoach)#">,
@@ -223,6 +230,7 @@
 		<cfscript>
 			// Set FORM Values 
 			FORM.schoolID = qGetHostFamilyInfo.schoolID;
+			FORM.schoolDistance = qGetHostFamilyInfo.schoolDistance;
 			FORM.schoolWorks = qGetHostFamilyInfo.schoolWorks;
 			FORM.schoolWorksExpl = qGetHostFamilyInfo.schoolWorksExpl;
 			FORM.schoolCoach = qGetHostFamilyInfo.schoolCoach;
@@ -388,7 +396,7 @@
                     <textarea name="schoolWorksExpl" class="xLargeTextArea">#FORM.schoolWorksExpl#</textarea>
 				</td>
             </tr>   
-            <tr bgcolor="##deeaf3">
+            <tr>
                 <td class="label">Has any member of your household had contact with a coach<br /> regarding the hosting of an exchange student with a particular athletic ability? <span class="required">*</span></td>
                 <td>
                     <cfinput type="radio" name="schoolCoach" id="schoolCoach1" value="1" checked="#FORM.schoolCoach EQ 1#" onclick="document.getElementById('showCoachExpl').style.display='table-row';" />
@@ -409,6 +417,10 @@
         <h3>Transportation</h3>
         
         <table width="100%" cellspacing="0" cellpadding="4" class="border">
+            <tr bgcolor="##deeaf3">
+                <td class="label">How far is the school from your home? <span class="required">*</span></td>
+                <td colspan="2"><input type="text" name="schoolDistance" id="schoolDistance" class="smallField" value="#FORM.schoolDistance#" /> (miles)</td>
+            </tr>
             <tr>
             	<td colspan="3">
                 	<strong>How will the student get to school? </strong> <span class="required">*</span>

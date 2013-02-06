@@ -24,6 +24,77 @@
 	</cffunction>
 
 
+	<cffunction name="getApplicationLookUp" access="public" returntype="query" output="false" hint="Returns a list from ApplicationLookUp Table. This table was created to store values used throughout the system">
+    	<cfargument name="fieldKey" hint="fieldKey is required. This is what defines a group of data">
+        <cfargument name="fieldID" default="" hint="fieldID is not required">
+    	<cfargument name="isActive" default="1" hint="isActive is not required">
+        <cfargument name="sortBy" type="string" default="fieldID" hint="sortBy is not required">
+        <cfargument name="includeFieldIDList" default="" hint="includeFieldIDList is not required, display inactive data">
+
+        <cfquery 
+        	name="qGetApplicationLookUp"
+        	datasource="#APPLICATION.DSN.Source#">
+                SELECT 
+                	ID,
+                    fieldKey,
+                    fieldID,
+                    name,
+                    sortOrder,
+                    isActive,
+                    dateCreated,
+                    dateUpdated
+				FROM
+                	applicationLookUp
+				WHERE
+                    fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.fieldKey#">
+                
+                <!--- If fieldID is passed, return it, if not return a list of active fields --->
+				<cfif LEN(ARGUMENTS.fieldID)>
+	                AND 
+                        fieldID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.fieldID)#">
+                <cfelseif LEN(ARGUMENTS.isActive)>
+                    AND 
+                        isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isActive)#">
+				</cfif>                        
+				
+                <!--- Include current selected to the list if current selected is inactive --->
+                <cfif LEN(ARGUMENTS.includeFieldIDList)>
+                	OR
+                    (
+                        fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.fieldKey#">
+	                AND 
+                        fieldID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.includeFieldIDList)#" list="yes"> )
+                    )
+                </cfif>
+                
+                ORDER BY
+                
+                <cfswitch expression="#ARGUMENTS.sortBy#">
+                    
+                    <cfcase value="fieldID">                    
+                        fieldID
+                    </cfcase>
+                
+                    <cfcase value="name">
+                        name
+                    </cfcase>
+
+                    <cfcase value="sortOrder">
+                        sortOrder
+                    </cfcase>
+
+                    <cfdefaultcase>
+                        fieldKey
+                    </cfdefaultcase>
+    
+                </cfswitch>  
+                
+        </cfquery> 
+
+		<cfreturn qGetApplicationLookUp>
+	</cffunction>
+
+
 	<cffunction name="getCompany" access="public" returntype="query" output="false" hint="Returns company information">
     	<cfargument name="companyID" hint="companyID is required">	
         

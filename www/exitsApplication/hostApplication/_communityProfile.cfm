@@ -17,6 +17,7 @@
 	<!--- Param FORM Variables --->
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.population" default="">
+    <cfparam name="FORM.cityWebsite" default="">
     <cfparam name="FORM.nearbigCity" default="">
     <cfparam name="FORM.major_air_code" default="">
     <cfparam name="FORM.wintertemp" default="">
@@ -120,6 +121,7 @@
                 	smg_hosts
                 SET 
                     population = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.population#">,
+                    cityWebsite = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.cityWebsite#">,
                     near_city_dist = <cfqueryparam cfsqltype="cf_sql_varchar" value="#vCityDistance#">,
                     nearbigCity = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LEFT(FORM.nearbigCity, 255)#">,
                     major_air_code = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.major_air_code#">,
@@ -156,6 +158,7 @@
     
 		<cfscript>
 			FORM.population = qGetHostFamilyInfo.population;
+			FORM.cityWebsite = qGetHostFamilyInfo.cityWebsite;
 			FORM.near_city_dist = qGetHostFamilyInfo.near_city_dist;
 			FORM.nearbigCity = qGetHostFamilyInfo.nearbigcity;
 			FORM.major_air_code = qGetHostFamilyInfo.major_air_code;
@@ -337,9 +340,13 @@
 		</table>
 
         <table width="100%" cellspacing="0" cellpadding="2" class="border">
-            <tr>	
+            <tr bgcolor="##deeaf3">	
                 <td width="30%">Population of #qGetHostFamilyInfo.city# :</td>
                 <td class="form_text"><input type="text" name="population" value="#FORM.population#" class="largeField" maxlength="45"/></td>
+            </tr>
+            <tr>	
+                <td>City or Town Website:</td>
+                <td class="form_text"><input type="text" name="cityWebsite" value="#FORM.cityWebsite#" class="xxLargeField" maxlength="200"/></td>
             </tr>
             <tr bgcolor="##deeaf3">
             	<td class="label">Nearest Major City: <span class="required">*</span></td>

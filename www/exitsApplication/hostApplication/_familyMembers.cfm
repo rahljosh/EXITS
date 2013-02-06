@@ -32,6 +32,7 @@
     <cfparam name="FORM.liveathomePartTime" default="">
     <cfparam name="FORM.gradeInSchool" default="">
     <cfparam name="FORM.employer" default="">
+    <cfparam name="FORM.schoolActivities" default="">
 
 	<cfscript>
 		if ( VAL(URL.childID) ) {
@@ -172,6 +173,16 @@
             if ( NOT LEN(TRIM(FORM.liveathomePartTime)) ) {
                 SESSION.formErrors.Add("Please indicate if living at home at all durring the exchange period.");
             }	
+			
+            // School Activities
+			if ( FORM.radioSchoolActivities EQ 'n/a' ) {
+				FORM.schoolActivities = "n/a";
+			}
+			
+			// School Activities
+            if ( NOT LEN(FORM.schoolActivities) ) {
+                SESSION.formErrors.Add("Please indicate if the student participates in any sponsored school activities");
+            }	
         </cfscript>
         
         <!--- No Errors Found --->
@@ -179,7 +190,7 @@
         
 			<!--- Update --->
             <cfif VAL(FORM.childID)>
-            
+            	
                 <cfquery datasource="#APPLICATION.DSN.Source#">
                     UPDATE 
                         smg_host_children 
@@ -195,7 +206,8 @@
                         school = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.school#">,
                         employer = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.employer#">,
                         interests = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.interests#">,
-                        gradeInSchool = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.gradeInSchool#">
+                        gradeInSchool = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.gradeInSchool#">,
+                        schoolActivities = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.schoolActivities#">
                     WHERE 
                         childID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.childID#">
                 </cfquery>
@@ -224,7 +236,8 @@
                         interests, 
                         school, 
                         employer,
-                        gradeInSchool
+                        gradeInSchool,
+                        schoolActivities
                     )
                     VALUES 
                     (
@@ -240,7 +253,8 @@
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.interests#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.school#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.employer#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.gradeInSchool#">
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.gradeInSchool#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.schoolActivities#">
                     )  
                 </cfquery>
 
@@ -275,6 +289,7 @@
             FORM.sex = qGetHostMemberInfo.sex;
             FORM.school = qGetHostMemberInfo.school;
             FORM.gradeInSchool = qGetHostMemberInfo.gradeInSchool;
+            FORM.schoolActivities = qGetHostMemberInfo.schoolActivities;
         </cfscript>
         
 	</cfif>
@@ -317,7 +332,7 @@
         </cfif>
         
         <cfloop query="qGetAllFamilyMembers">
-            <tr <cfif qGetAllFamilyMembers.currentRow MOD 2	EQ 0> bgcolor="##deeaf3"</cfif>>
+            <tr <cfif qGetAllFamilyMembers.currentRow MOD 2 EQ 0> bgcolor="##deeaf3"</cfif>>
                 <th>#qGetAllFamilyMembers.name# #qGetAllFamilyMembers.lastName#</th>
                 <td>#qGetAllFamilyMembers.sex#</td>
                 <td>#DateFormat(qGetAllFamilyMembers.birthdate, 'mmm d, yyyy')#</td>
@@ -433,16 +448,33 @@
                                 </cfswitch>
                             </option>
                         </cfloop>
+                        <option value="college" <cfif FORM.gradeInSchool EQ "college"> selected</cfif>>College</option>
                     </select>
                 </td>
             </tr>
             <tr>
                 <td class="label"><h3>Current Employer</h3></td>
-                <td><cftextarea name="employer" rows="3" cols="25" placeholder="Name, Title, Contact Info">#FORM.employer#</cftextarea></td>
+                <td><cftextarea name="employer" rows="3" cols="30" placeholder="Name, Title, Contact Info">#FORM.employer#</cftextarea></td>
             </tr>
             <tr  bgcolor="##deeaf3">
                 <td class="label" valign="top" ><h3>Interests <span class="required">*</span></h3></td>
-                <td><cftextarea name="interests" rows="5" cols="25" placeholder="Mountain biking, swimming, theatre, music, movies">#FORM.interests#</cftextarea></td>
+                <td><cftextarea name="interests" rows="5" cols="30" placeholder="Mountain biking, swimming, theatre, music, movies">#FORM.interests#</cftextarea></td>
+            </tr>
+            <tr>
+                <td class="label" valign="top"><h3>Does this family member participates in any school sponsored activities? <span class="required">*</span></h3></td>
+                <td>
+                    <input type="radio" name="radioSchoolActivities" id="radioSchoolActivitiesYes" value="1" <cfif LEN(FORM.schoolActivities)> checked="checked" </cfif> onclick="document.getElementById('schoolActivitiesExplanation').style.display='table-row';" />
+                    <label for="radioSchoolActivitiesYes">Yes</label>
+               		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="radio" name="radioSchoolActivities" id="radioSchoolActivitiesNo" value="n/a" <cfif FORM.schoolActivities EQ 'n/a'> checked="checked" </cfif> onclick="document.getElementById('schoolActivitiesExplanation').style.display='none';" />
+                	<label for="radioSchoolActivitiesNo">No</label>
+                </td>
+            </tr>
+            <tr id="schoolActivitiesExplanation" <cfif NOT LEN(FORM.schoolActivities) OR FORM.schoolActivities EQ 'n/a'>class="displayNone"</cfif> >
+                <td colspan="2">
+                	Please explain <span class="required">*</span><br />
+            		<textarea name="schoolActivities" cols="70" rows="4">#FORM.schoolActivities#</textarea>
+                </td>
             </tr>
         </table>
 
