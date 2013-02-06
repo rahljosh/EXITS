@@ -339,7 +339,51 @@
     <cffunction name="getApplicationProcess" access="public" returntype="struct" output="false" hint="Gets application process status">
         <cfargument name="hostID" default="#APPLICATION.CFC.SESSION.getHostSession().ID#" hint="HostID is not required">
     
-        <!--- References --->
+        <cfquery name="qGetAppSections" datasource="#APPLICATION.DSN.Source#">
+                SELECT
+                    ap.section,
+                    ap.description,
+                    ap.appMenuColor,
+                    (
+                        CASE 
+                            WHEN 
+                                h.areaRepNotes != '' 
+                            THEN 
+                                h.areaRepNotes
+                            WHEN 
+                                h.regionalAdvisorNotes != '' 
+                            THEN 
+                                h.regionalAdvisorNotes
+                            WHEN 
+                                h.regionalManagerNotes != '' 
+                            THEN 
+                                h.regionalManagerNotes
+                            WHEN 
+                                h.facilitatorNotes != '' 
+                            THEN 
+                                h.facilitatorNotes
+                        END
+                    ) AS notes                    
+                FROM 
+                    smg_host_app_section ap
+                LEFT OUTER JOIN	
+                    smg_host_app_history h ON h.itemID = ap.ID                  
+                    AND
+                        h.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
+                    AND
+                        h.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(APPLICATION.CFC.SESSION.getHostSession().seasonID)#">
+                WHERE
+                	ap.appMenuColor != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+                AND
+                	ap.ID 
+                    	BETWEEN 
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="2">
+                    	AND 
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="13">
+                ORDER BY
+                	ap.listOrder
+        </cfquery>
+
         <cfquery name="qGetReferences" datasource="#APPLICATION.DSN.Source#">
             SELECT 
                 *
@@ -348,8 +392,13 @@
             WHERE 
                 referenceFor = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
         </cfquery>
-
+        
 		<cfscript>
+			var qGetDeniedSections = getDeniedSections();
+			
+			// Stores all the denied sections in a list
+			var vDeniedSectionList = ValueList(qGetDeniedSections.section);
+			
 			// Get Host Family Information
 			var qGetHostFamilyInfo = getCompleteHostInfo(hostID=VAL(ARGUMENTS.hostID));
 			
@@ -385,20 +434,31 @@
             stResults.applicationProgress = 0;
    		    stResults.isComplete = false;
 			
+			// Create an array so we can sort
+			stResults.section = ArrayNew(1);
+			
 			// Set a struct for each section
-			stResults.contactInfo = structNew();
-			stResults.familyMembers = structNew();
-			stResults.backgroundChecks = structNew();
-			stResults.personalDescription = structNew();
-			stResults.hostingEnvironment = structNew();
-			stResults.religiousPreference = structNew();
-			stResults.familyRules = structNew();
-			stResults.familyAlbum = structNew();
-			stResults.schoolInfo = structNew();
-			stResults.communityProfile = structNew();
-			stResults.confidentialData = structNew();
-			stResults.references = structNew();
-
+			for ( i=1; i LTE qGetAppSections.recordCount; i++ ) {
+				
+				// Create Structure for each section
+				stResults.section[i] = structNew();
+				// Set Section Description
+				stResults.section[i].link = qGetAppSections.section[i];
+				// Set Section Description
+				stResults.section[i].description = qGetAppSections.description[i];
+				
+				// Check if section has been denied
+				if ( ListFindNoCase(vDeniedSectionList, qGetAppSections.section[i]) ) {
+					// Section Denied
+					stResults.section[i].isDenied = true;
+					stResults.section[i].notes = qGetAppSections.notes[i];
+				} else {
+					stResults.section[i].isDenied = false;	
+					stResults.section[i].notes = "";
+				}
+			
+			}
+			
 
 			/********************************************
 				1 - Contact Info 
@@ -546,15 +606,15 @@
             // No Errors Found
             if ( NOT SESSION.formErrors.length() ) {
                 stResults.applicationProgress = stResults.applicationProgress + 25;
-				stResults.contactInfo.isComplete = true;
-				stResults.contactInfo.message = "";
+				stResults.section[1].isComplete = true;
+				stResults.section[1].message = "";
             // Errors Found - Erase queue for next section	
             } else {
-				stResults.contactInfo.isComplete = false;
-				stResults.contactInfo.message = SESSION.formErrors.GetCollection();
+				stResults.section[1].isComplete = false;
+				stResults.section[1].message = SESSION.formErrors.GetCollection();
 				SESSION.formErrors.clear();
             }
-
+			
 
 			/********************************************
 				2 - Family Members 
@@ -603,18 +663,18 @@
             // No Errors Found
             if ( NOT SESSION.formErrors.length() ) {
                 stResults.applicationProgress = stResults.applicationProgress + 25;
-				stResults.familyMembers.isComplete = true;
+				stResults.section[2].isComplete = true;
 				
 				if ( NOT qGetFamilyMembers.recordCount ) {
-					stResults.familyMembers.message = "(assuming you have no other family members)";
+					stResults.section[2].message = "(assuming you have no other family members)";
 				} else {
-					stResults.familyMembers.message = "";
+					stResults.section[2].message = "";
 				}
 					
             // Errors Found - Erase queue for next section	
             } else {
-				stResults.familyMembers.isComplete = false;
-				stResults.familyMembers.message = SESSION.formErrors.GetCollection();
+				stResults.section[2].isComplete = false;
+				stResults.section[2].message = SESSION.formErrors.GetCollection();
 				SESSION.formErrors.clear();
             }
 			
@@ -678,12 +738,12 @@
             // No Errors Found
             if ( NOT SESSION.formErrors.length() ) {
                 stResults.applicationProgress = stResults.applicationProgress + 25;
-				stResults.backgroundChecks.isComplete = true;
-				stResults.backgroundChecks.message = "";
+				stResults.section[3].isComplete = true;
+				stResults.section[3].message = "";
             // Errors Found - Erase queue for next section	
             } else {
-				stResults.backgroundChecks.isComplete = false;
-				stResults.backgroundChecks.message = SESSION.formErrors.GetCollection();
+				stResults.section[3].isComplete = false;
+				stResults.section[3].message = SESSION.formErrors.GetCollection();
 				SESSION.formErrors.clear();
             }
 			
@@ -705,12 +765,12 @@
             // No Errors Found
             if ( NOT SESSION.formErrors.length() ) {
                 stResults.applicationProgress = stResults.applicationProgress + 25;
-				stResults.personalDescription.isComplete = true;
-				stResults.personalDescription.message = "";
+				stResults.section[4].isComplete = true;
+				stResults.section[4].message = "";
             // Errors Found - Erase queue for next section	
             } else {
-				stResults.personalDescription.isComplete = false;
-				stResults.personalDescription.message = SESSION.formErrors.GetCollection();
+				stResults.section[4].isComplete = false;
+				stResults.section[4].message = SESSION.formErrors.GetCollection();
 				SESSION.formErrors.clear();
             }
 			
@@ -769,12 +829,12 @@
             // No Errors Found
             if ( NOT SESSION.formErrors.length() ) {
                 stResults.applicationProgress = stResults.applicationProgress + 25;
-				stResults.hostingEnvironment.isComplete = true;
-				stResults.hostingEnvironment.message = "";
+				stResults.section[5].isComplete = true;
+				stResults.section[5].message = "";
             // Errors Found - Erase queue for next section	
             } else {
-				stResults.hostingEnvironment.isComplete = false;
-				stResults.hostingEnvironment.message = SESSION.formErrors.GetCollection();
+				stResults.section[5].isComplete = false;
+				stResults.section[5].message = SESSION.formErrors.GetCollection();
 				SESSION.formErrors.clear();
             }
 
@@ -816,12 +876,12 @@
             // No Errors Found
             if ( NOT SESSION.formErrors.length() ) {
                 stResults.applicationProgress = stResults.applicationProgress + 25;
-				stResults.religiousPreference.isComplete = true;
-				stResults.religiousPreference.message = "";
+				stResults.section[6].isComplete = true;
+				stResults.section[6].message = "";
             // Errors Found - Erase queue for next section	
             } else {
-				stResults.religiousPreference.isComplete = false;
-				stResults.religiousPreference.message = SESSION.formErrors.GetCollection();
+				stResults.section[6].isComplete = false;
+				stResults.section[6].message = SESSION.formErrors.GetCollection();
 				SESSION.formErrors.clear();
             }
 
@@ -858,12 +918,12 @@
             // No Errors Found
             if ( NOT SESSION.formErrors.length() ) {
                 stResults.applicationProgress = stResults.applicationProgress + 25;
-				stResults.familyRules.isComplete = true;
-				stResults.familyRules.message = "";
+				stResults.section[7].isComplete = true;
+				stResults.section[7].message = "";
             // Errors Found - Erase queue for next section	
             } else {
-				stResults.familyRules.isComplete = false;
-				stResults.familyRules.message = SESSION.formErrors.GetCollection();
+				stResults.section[7].isComplete = false;
+				stResults.section[7].message = SESSION.formErrors.GetCollection();
 				SESSION.formErrors.clear();
             }
 
@@ -894,12 +954,12 @@
             // No Errors Found
             if ( NOT SESSION.formErrors.length() ) {
                 stResults.applicationProgress = stResults.applicationProgress + 25;
-				stResults.familyAlbum.isComplete = true;
-				stResults.familyAlbum.message = "";
+				stResults.section[8].isComplete = true;
+				stResults.section[8].message = "";
             // Errors Found - Erase queue for next section	
             } else {
-				stResults.familyAlbum.isComplete = false;
-				stResults.familyAlbum.message = SESSION.formErrors.GetCollection();
+				stResults.section[8].isComplete = false;
+				stResults.section[8].message = SESSION.formErrors.GetCollection();
 				SESSION.formErrors.clear();
             }
 
@@ -951,12 +1011,12 @@
             // No Errors Found
             if ( NOT SESSION.formErrors.length() ) {
                 stResults.applicationProgress = stResults.applicationProgress + 25;
-				stResults.schoolInfo.isComplete = true;
-				stResults.schoolInfo.message = "";
+				stResults.section[9].isComplete = true;
+				stResults.section[9].message = "";
             // Errors Found - Erase queue for next section	
             } else {
-				stResults.schoolInfo.isComplete = false;
-				stResults.schoolInfo.message = SESSION.formErrors.GetCollection();
+				stResults.section[9].isComplete = false;
+				stResults.section[9].message = SESSION.formErrors.GetCollection();
 				SESSION.formErrors.clear();
             }
 
@@ -1013,12 +1073,12 @@
             // No Errors Found
             if ( NOT SESSION.formErrors.length() ) {
                 stResults.applicationProgress = stResults.applicationProgress + 25;
-				stResults.communityProfile.isComplete = true;
-				stResults.communityProfile.message = "";
+				stResults.section[10].isComplete = true;
+				stResults.section[10].message = "";
             // Errors Found - Erase queue for next section	
             } else {
-				stResults.communityProfile.isComplete = false;
-				stResults.communityProfile.message = SESSION.formErrors.GetCollection();
+				stResults.section[10].isComplete = false;
+				stResults.section[10].message = SESSION.formErrors.GetCollection();
 				SESSION.formErrors.clear();
             }
 
@@ -1070,12 +1130,12 @@
             // No Errors Found
             if ( NOT SESSION.formErrors.length() ) {
                 stResults.applicationProgress = stResults.applicationProgress + 25;
-				stResults.confidentialData.isComplete = true;
-				stResults.confidentialData.message = "";
+				stResults.section[11].isComplete = true;
+				stResults.section[11].message = "";
             // Errors Found - Erase queue for next section	
             } else {
-				stResults.confidentialData.isComplete = false;
-				stResults.confidentialData.message = SESSION.formErrors.GetCollection();
+				stResults.section[11].isComplete = false;
+				stResults.section[11].message = SESSION.formErrors.GetCollection();
 				SESSION.formErrors.clear();
             }
 
@@ -1097,18 +1157,19 @@
 				SESSION.formErrors.Add("You need to provide an additional #vRemainingReferences# reference(s).");
 			}
 
+
             // No Errors Found
             if ( NOT SESSION.formErrors.length() ) {
                 stResults.applicationProgress = stResults.applicationProgress + 25;
-				stResults.references.isComplete = true;
-				stResults.references.message = "";
+				stResults.section[12].isComplete = true;
+				stResults.section[12].message = "";
             // Errors Found - Erase queue for next section	
             } else {
-				stResults.references.isComplete = false;
-				stResults.references.message = SESSION.formErrors.GetCollection();
+				stResults.section[12].isComplete = false;
+				stResults.section[12].message = SESSION.formErrors.GetCollection();
 				SESSION.formErrors.clear();
             }
-			
+				
 			// Set Application Complete true/false
 			if ( stResults.applicationProgress EQ 300 ) {
 				stResults.isComplete = true;
@@ -1221,7 +1282,6 @@
 	</cffunction>
 
     
-    
 	<cffunction name="getEmailTemplate" access="public" returntype="struct" output="false" hint="Retuns templates based on actions">
         <cfargument name="emailTemplate" default="" hint="emailTemplate - Not required">
         <cfargument name="hostFamilyLastName" default="" hint="hostFamilyLastName - Not required">
@@ -1316,6 +1376,113 @@
 		</cfscript>
 
 	</cffunction>     
+
+
+	<cffunction name="getMenuHistory" access="public" returntype="query" output="false" hint="Gets a list of items and their approval history">
+        <cfargument name="hostID" default="#APPLICATION.CFC.SESSION.getHostSession().ID#" hint="HostID is not required">
+        <cfargument name="seasonID" default="#APPLICATION.CFC.SESSION.getHostSession().seasonID#" hint="Gets current paperwork season ID">
+        
+        <cfquery 
+			name="qGetMenuHistory" 
+			datasource="#APPLICATION.DSN.Source#">
+                SELECT
+                    ap.section,
+                    ap.description,
+                    ap.appMenuColor,
+                    h.areaRepStatus,
+                    h.areaRepDateStatus,
+                    h.areaRepNotes,                    
+                    h.regionalAdvisorStatus,
+                    h.regionalAdvisorDateStatus,
+                    h.regionalAdvisorNotes,
+                    h.regionalManagerStatus,
+                    h.regionalManagerDateStatus,
+                    h.regionalManagerNotes,
+                    h.facilitatorStatus,
+                    h.facilitatorDateStatus,
+                    h.facilitatorNotes
+                FROM 
+                    smg_host_app_section ap
+				LEFT OUTER JOIN	
+					smg_host_app_history h ON h.itemID = ap.ID                  
+                    AND
+                        h.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
+                    AND
+                        h.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
+                WHERE
+                	appMenuColor != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+                ORDER BY
+                	listOrder
+		</cfquery>
+		   
+		<cfreturn qGetMenuHistory>
+	</cffunction>
     
+    
+	<cffunction name="getDeniedSections" access="public" returntype="query" output="false" hint="Gets a list of items and their approval history">
+        <cfargument name="hostID" default="#APPLICATION.CFC.SESSION.getHostSession().ID#" hint="HostID is not required">
+        <cfargument name="seasonID" default="#APPLICATION.CFC.SESSION.getHostSession().seasonID#" hint="Gets current paperwork season ID">
+        
+        <cfquery 
+            name="qGetDeniedSections" 
+            datasource="#APPLICATION.DSN.Source#">
+                SELECT
+                    ap.section,
+                    ap.description,
+                    ap.appMenuColor,
+                    (
+                        CASE 
+                            WHEN 
+                                h.areaRepNotes != '' 
+                            THEN 
+                                h.areaRepNotes
+                            WHEN 
+                                h.regionalAdvisorNotes != '' 
+                            THEN 
+                                h.regionalAdvisorNotes
+                            WHEN 
+                                h.regionalManagerNotes != '' 
+                            THEN 
+                                h.regionalManagerNotes
+                            WHEN 
+                                h.facilitatorNotes != '' 
+                            THEN 
+                                h.facilitatorNotes
+                        END
+                    ) AS notes
+                FROM 
+                    smg_host_app_section ap
+                LEFT OUTER JOIN	
+                    smg_host_app_history h ON h.itemID = ap.ID                  
+                    AND
+                        h.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
+                    AND
+                        h.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
+                WHERE
+                    appMenuColor != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+                AND
+                    (
+                        h.areaRepStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="denied">
+                    OR
+                        h.regionalAdvisorStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="denied">
+                    OR
+                        h.regionalManagerStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="denied">
+                    OR
+                        h.facilitatorStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="denied">
+                    )
+                    
+				<!--- Get only denied sections when application has been sent back to the HF --->
+                <cfif NOT listFind("8,9", APPLICATION.CFC.SESSION.getHostSession().applicationStatus)>
+					AND
+                    	1 != 1
+                </cfif>
+                    
+                ORDER BY
+                    listOrder
+        </cfquery>
+           
+		<cfreturn qGetDeniedSections>
+	</cffunction>    
+        
        
 </cfcomponent>

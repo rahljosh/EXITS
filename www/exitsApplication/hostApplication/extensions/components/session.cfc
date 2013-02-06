@@ -166,6 +166,9 @@
 				SESSION.HOST.PATH.relativeDocs = "";
 
 			}
+			
+			// Re-build Menu based on host family information
+			APPLICATION.leftMenu = APPLICATION.CFC.UDF.buildLeftMenu();
 		</cfscript>
 		
 	</cffunction>

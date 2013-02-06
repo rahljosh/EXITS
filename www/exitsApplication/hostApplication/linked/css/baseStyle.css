@@ -177,29 +177,30 @@ div.loginBox label {
 	text-align: left;
 }
 
-#leftMenu .whtLinks{
+#leftMenu .whiteLinks {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
 	color: #FFF;
 	text-decoration: none;
 }
 
-#leftMenu .whtLinks:links{
+#leftMenu .whiteLinks:active {
+	color: #FFF;
+	text-decoration: none;
+}
+
+#leftMenu .greyLinks {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
-	color: #FFF;
- 	text-decoration: none;
-}
-
-#leftMenu .whtLinks:hover{
-	color: #FFF;
+	color: #666;
 	text-decoration: none;
 }
 
-#leftMenu .whtLinks:active{
-	color: #FFF;
+#leftMenu .greyLinks:active {
+	color: #666;
 	text-decoration: none;
 }
+
 /********************************************
 	END OF LEFT MENU
 ********************************************/

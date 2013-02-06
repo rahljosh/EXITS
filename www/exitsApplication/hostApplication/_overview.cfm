@@ -47,8 +47,11 @@
                 <table width="100%" style="margin-top:10px;">
                     <tr>
                         <td>
-                        
+                        	
                             <table border="0" cellpadding="0" cellspacng="0" width="300" align="center">
+                                <tr>	
+                                	<td colspan="5" align="center">Application Progress</td>
+								</tr>                                    
                                 <tr>
                                     <td colspan="5" align="left" style="border:1px solid ##03518d;">
                                         <img src="images/gradient.png" alt="Percentage Complete" name="Percent Complete" width="#stApplicationStatus.applicationProgress#" height="15" border="0" />
@@ -67,7 +70,7 @@
                     </tr>
                     <tr>
                         <td align="center">
-                            <cfif qGetHostFamilyInfo.hostAppStatus LTE 7>
+                            <cfif APPLICATION.CFC.SESSION.getHostSession().applicationStatus LTE 7>
                                 <p><strong><u>Submitted!</u></strong></p>
                             <cfelse>
                                 <a href="index.cfm?section=checkList" style="text-align: left;">Review Checklist</a>
@@ -76,7 +79,7 @@
                     </tr>
                 </table>
                 
-                <hr align="center" width="75%" style="margin:15px auto 15px auto; border:1px solid ##0053a0;" />
+                <hr align="center" width="90%" style="margin:15px auto 15px auto; border:1px solid ##0053a0;" />
                 
                 <p>
                     <strong> Application Started:</strong> 
@@ -89,7 +92,7 @@
                 
                 <p>
                     <strong>Application Status:</strong>
-                    <cfswitch expression="#qGetHostFamilyInfo.hostAppStatus#">
+                    <cfswitch expression="#APPLICATION.CFC.SESSION.getHostSession().applicationStatus#">
                         
                         <cfcase value="1,2,3,4">
                             Submitted to Headquarters
@@ -109,9 +112,11 @@
                         
                         <cfdefaultcase>
                             
-                            <cfif stApplicationStatus.isComplete>
+                            <cfif qGetDeniedSections.recordCount>
+                            	Needs Additional Information
+                            <cfelseif stApplicationStatus.isComplete>
                                 Complete - Pending Submission
-                            <cfelse>                                
+							<cfelse>                                
                                 In Progress - #round(100 * stApplicationStatus.applicationProgress / 300)#% Complete
                             </cfif>
                             
@@ -120,7 +125,7 @@
                     </cfswitch>
                 </p>
                 
-                <hr align="center" width="75%" style="margin:15px auto 15px auto; border:1px solid ##0053a0;" />
+                <hr align="center" width="90%" style="margin:15px auto 15px auto; border:1px solid ##0053a0;" />
                 
                 <!--- Area Representative --->
                 <table border="0" cellpadding="0" cellspacng="0" width="300" align="center">
@@ -182,6 +187,8 @@
 					</tr>  
                 </table>
                 
+                <p>If you have not already been in contact with a representative, you will be contacted shortly after your application is submitted.</p>
+                
             </td>
             <td>&nbsp;&nbsp;</td>
             <td valign="top">	
@@ -190,8 +197,24 @@
                     <p>Thats it!  Your application has been submitted for review.  You will hear from your local representative shortly.</p>
                 <cfelse>
                 	
-                    <cfif stApplicationStatus.isComplete>
-						<p><strong>Your application is complete!</strong> Happy with how everything looks? Click the button to the right to submit your application.</p>
+                    <cfif qGetDeniedSections.recordCount>
+						<p><strong><span class="required">&##10008;</span> Your Application Needs Additional Information.</strong></p>
+                        
+                        <p>Please review the sections based on the comments from your Area Representative below, once you are done just resubmit the application</p>
+                        
+                        <cfloop query="qGetDeniedSections">
+                        	<p>
+                            	<strong>Section: #qGetDeniedSections.description#</strong><br />
+                                Notes: #qGetDeniedSections.notes#
+                            </p>
+                        </cfloop>
+					
+                        <p align="center">
+                        	<a href="disclaimer.cfm" class="iframe"><img src="images/buttons/#APPLICATION.CFC.SESSION.getCompanySessionByKey(structKey='submitImage')#" border="0"/></a>
+                        </p>
+					
+					<cfelseif stApplicationStatus.isComplete>
+						<p><strong><font color="##00CC00">&##10004;</font> Your application is complete!</strong> Happy with how everything looks? Click the button to the right to submit your application.</p>
                         
                         <p align="center">
                         	<a href="disclaimer.cfm" class="iframe"><img src="images/buttons/#APPLICATION.CFC.SESSION.getCompanySessionByKey(structKey='submitImage')#" border="0"/></a>
@@ -200,23 +223,25 @@
                     <cfelse>
                 
                         <p>Congratulations on the decision to host a student with #APPLICATION.CFC.SESSION.getCompanySessionByKey(structKey='shortName')#.  We are excited to be working with you.</p>
+                        
                         <div align="center">
                             <a href="index.cfm?section=contactInfo"><img src="images/buttons/contApp.png" alt="continue" border="0" /></a>
                         </div>
                         
                     </cfif>
+
+                        <p>Before your applcation can be approved background checks will need to be run on all household members over the age of 18.</p>
                     
-                        <p>
-                            Your student's family will receive selected  information from this application. 
-                            Student and their families will not receive any confidential information.  
-                            Please be aware that the Department of State has specific requirements regarding the photos that are uploaded on the family album.  
-                            We are mandated to have photos of specific areas of your home on file. 
-                            <br /><br /> 
-                            Before your applcation can be approved background checks will need to be run on all household members over the age of 18.
-                            <br /><br />
-                            If you have not already been in contact with a representative, you will be contacted shortly after your application is submitted.
+						<p>
+                            Your student's family will receive selected information from this application. 
+                            Student and their families will not receive any confidential information.
                         </p>
-					
+                        
+                        <p>
+                            Please be aware that the Department of State has specific requirements regarding the photos that are uploaded on the family album.  
+                            We are mandated to have photos of specific areas of your home on file.   
+						</p>                                              
+                    
                 </cfif>
             </td>
         </tr>
