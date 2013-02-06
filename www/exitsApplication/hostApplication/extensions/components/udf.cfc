@@ -202,10 +202,20 @@
 
 		<cfscript>
 			// Set Default Navigation to the same page
-			vSetNavigation = "index.cfm?section=#ARGUMENTS.section#";
+			var vSetNavigation = "index.cfm?section=#ARGUMENTS.section#";
+
+			// Get Sections that are denied - Accessible from any page
+			qGetDeniedSections = APPLICATION.CFC.HOST.getDeniedSections();
 			
+			// Check if app has been denied
+			if ( qGetDeniedSections.recordCount ) {
+				vHasAppBeenDenied = true;
+			} else {
+				vHasAppBeenDenied = false;
+			}
+
 			// Menu Blocked - Set default page message
-			if ( APPLICATION.CFC.SESSION.getHostSession().isMenuBlocked AND APPLICATION.CFC.SESSION.getHostSession().isExitsLogin AND NOT ListFind("login,overview", ARGUMENTS.section) ) {
+			if ( APPLICATION.CFC.SESSION.getHostSession().isMenuBlocked AND APPLICATION.CFC.SESSION.getHostSession().isExitsLogin AND NOT ListFind("login,overview", ARGUMENTS.section) OR vHasAppBeenDenied ) {
 	
 				// Set Page Message
 				SESSION.pageMessages.Add("Page has been updated");
