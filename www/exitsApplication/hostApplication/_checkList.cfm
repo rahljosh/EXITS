@@ -51,270 +51,51 @@
     <p>Once your application is submitted, you will be contacted be your local area representative so that they can conduct a tour of your home and to help you select an exchange student.</p>
 
 
-    <h2><p>Name & Contact Information</p></h2>
-    
-    <p style="margin-top:-15px;">
-		<cfif stApplicationStatus.contactInfo.isComplete>
-            <font color="##00CC00">&##10004;</font> This section is complete.
-        <cfelse>
-            <cfscript>
-				// Loop Through Array and Populate Errors
-				for( x=1; x LTE ArrayLen(stApplicationStatus.contactInfo.message); x++ ) {
-					SESSION.formErrors.Add(stApplicationStatus.contactInfo.message[x]);
-				}
-			</cfscript>
-            
-			<!--- Form Errors --->
-            <gui:displayFormErrors 
-                formErrors="#SESSION.formErrors.GetCollection()#"
-                messageType="checklist"
-                />
-        </cfif>
-    </p>
-    
-    
-    <h2><p>Family Members</p></h2>
-    
-    <p style="margin-top:-15px;">
-		<cfif stApplicationStatus.familyMembers.isComplete>
-            <font color="##00CC00">&##10004;</font> This section is complete. #stApplicationStatus.familyMembers.message#
-        <cfelse>
-            <cfscript>
-				// Loop Through Array and Populate Errors
-				for( x=1; x LTE ArrayLen(stApplicationStatus.familyMembers.message); x++ ) {
-					SESSION.formErrors.Add(stApplicationStatus.familyMembers.message[x]);
-				}
-			</cfscript>
-            
-			<!--- Form Errors --->
-            <gui:displayFormErrors 
-                formErrors="#SESSION.formErrors.GetCollection()#"
-                messageType="checklist"
-                />
-        </cfif>
-    </p>
-    
-    
-    <h2><p>Background Checks</p></h2>
-
-    <p style="margin-top:-15px;">
-		<cfif stApplicationStatus.backgroundChecks.isComplete>
-            <font color="##00CC00">&##10004;</font> This section is complete.
-        <cfelse>
-            <cfscript>
-				// Loop Through Array and Populate Errors
-				for( x=1; x LTE ArrayLen(stApplicationStatus.backgroundChecks.message); x++ ) {
-					SESSION.formErrors.Add(stApplicationStatus.backgroundChecks.message[x]);
-				}
-			</cfscript>
-            
-			<!--- Form Errors --->
-            <gui:displayFormErrors 
-                formErrors="#SESSION.formErrors.GetCollection()#"
-                messageType="checklist"
-                />
-        </cfif>
-    </p>
-    
-    
-    <h2><p>Personal Description</p></h2>
-
-    <p style="margin-top:-15px;">
-		<cfif stApplicationStatus.personalDescription.isComplete>
-            <font color="##00CC00">&##10004;</font> This section is complete.
-        <cfelse>
-            <cfscript>
-				// Loop Through Array and Populate Errors
-				for( x=1; x LTE ArrayLen(stApplicationStatus.personalDescription.message); x++ ) {
-					SESSION.formErrors.Add(stApplicationStatus.personalDescription.message[x]);
-				}
-			</cfscript>
-            
-			<!--- Form Errors --->
-            <gui:displayFormErrors 
-                formErrors="#SESSION.formErrors.GetCollection()#"
-                messageType="checklist"
-                />
-        </cfif>
-    </p>
-    
+    <!--- Loop Through Results --->
+    <cfloop from="1" to="#ArrayLen(stApplicationStatus.section)#" index="i">
+    	
+        <h2><p>#stApplicationStatus.section[i].description#</p></h2>
         
-    <h2><p>Hosting Environment</p></h2>
-
-    <p style="margin-top:-15px;">
-		<cfif stApplicationStatus.hostingEnvironment.isComplete>
-            <font color="##00CC00">&##10004;</font> This section is complete.
-        <cfelse>
-            <cfscript>
-				// Loop Through Array and Populate Errors
-				for( x=1; x LTE ArrayLen(stApplicationStatus.hostingEnvironment.message); x++ ) {
-					SESSION.formErrors.Add(stApplicationStatus.hostingEnvironment.message[x]);
-				}
-			</cfscript>
+        <p style="margin-top:-15px;">
+            <cfif stApplicationStatus.section[i].isDenied>
+                
+                <cfscript>
+					// Notes
+					SESSION.formErrors.Add(stApplicationStatus.section[i].notes);
+				</cfscript>
+                
+				<!--- Form Errors --->
+                <gui:displayFormErrors 
+                    formErrors="#SESSION.formErrors.GetCollection()#"
+                    messageType="deniedMessage"
+                    />
             
-			<!--- Form Errors --->
-            <gui:displayFormErrors 
-                formErrors="#SESSION.formErrors.GetCollection()#"
-                messageType="checklist"
-                />
-        </cfif>
-    </p>
+			<cfelseif stApplicationStatus.section[i].isComplete>
+				
+                <font color="##00CC00">&##10004;</font> This section is complete.
 
-
-    <h2><p>Religious Preference</p></h2>
-
-    <p style="margin-top:-15px;">
-		<cfif stApplicationStatus.religiousPreference.isComplete>
-            <font color="##00CC00">&##10004;</font> This section is complete.
-        <cfelse>
-            <cfscript>
-				// Loop Through Array and Populate Errors
-				for( x=1; x LTE ArrayLen(stApplicationStatus.religiousPreference.message); x++ ) {
-					SESSION.formErrors.Add(stApplicationStatus.religiousPreference.message[x]);
-				}
-			</cfscript>
+			<cfelse>
             
-			<!--- Form Errors --->
-            <gui:displayFormErrors 
-                formErrors="#SESSION.formErrors.GetCollection()#"
-                messageType="checklist"
-                />
-        </cfif>
-    </p>
+                <cfscript>
+                    // Loop Through Array and Populate Errors
+                    for( x=1; x LTE ArrayLen(stApplicationStatus.section[i].message); x++ ) {
+                        SESSION.formErrors.Add(stApplicationStatus.section[i].message[x]);
+                    }
+                </cfscript>
+                
+				<!--- Form Errors --->
+                <gui:displayFormErrors 
+                    formErrors="#SESSION.formErrors.GetCollection()#"
+                    messageType="checklist"
+                    />
 
-
-    <h2><p>Family Rules</p></h2>
+            </cfif>
+            
+        </p>
+        
+    </cfloop>
     
-    <p style="margin-top:-15px;">
-		<cfif stApplicationStatus.familyRules.isComplete>
-            <font color="##00CC00">&##10004;</font> This section is complete.
-        <cfelse>
-            <cfscript>
-				// Loop Through Array and Populate Errors
-				for( x=1; x LTE ArrayLen(stApplicationStatus.familyRules.message); x++ ) {
-					SESSION.formErrors.Add(stApplicationStatus.familyRules.message[x]);
-				}
-			</cfscript>
-            
-			<!--- Form Errors --->
-            <gui:displayFormErrors 
-                formErrors="#SESSION.formErrors.GetCollection()#"
-                messageType="checklist"
-                />
-        </cfif>
-    </p>
 
-
-    <h2><p>Family Album</p></h2>
-
-    <p style="margin-top:-15px;">
-		<cfif stApplicationStatus.familyAlbum.isComplete>
-            <font color="##00CC00">&##10004;</font> This section is complete.
-        <cfelse>
-            <cfscript>
-				// Loop Through Array and Populate Errors
-				for( x=1; x LTE ArrayLen(stApplicationStatus.familyAlbum.message); x++ ) {
-					SESSION.formErrors.Add(stApplicationStatus.familyAlbum.message[x]);
-				}
-			</cfscript>
-            
-			<!--- Form Errors --->
-            <gui:displayFormErrors 
-                formErrors="#SESSION.formErrors.GetCollection()#"
-                messageType="checklist"
-                />
-        </cfif>
-    </p>
-
-
-    <h2><p>School Info</p></h2>
-
-    <p style="margin-top:-15px;">
-		<cfif stApplicationStatus.schoolInfo.isComplete>
-            <font color="##00CC00">&##10004;</font> This section is complete.
-        <cfelse>
-            <cfscript>
-				// Loop Through Array and Populate Errors
-				for( x=1; x LTE ArrayLen(stApplicationStatus.schoolInfo.message); x++ ) {
-					SESSION.formErrors.Add(stApplicationStatus.schoolInfo.message[x]);
-				}
-			</cfscript>
-            
-			<!--- Form Errors --->
-            <gui:displayFormErrors 
-                formErrors="#SESSION.formErrors.GetCollection()#"
-                messageType="checklist"
-                />
-        </cfif>
-    </p>
-
-
-    <h2><p>Community Profile</p></h2>
-
-    <p style="margin-top:-15px;">
-		<cfif stApplicationStatus.communityProfile.isComplete>
-            <font color="##00CC00">&##10004;</font> This section is complete.
-        <cfelse>
-            <cfscript>
-				// Loop Through Array and Populate Errors
-				for( x=1; x LTE ArrayLen(stApplicationStatus.communityProfile.message); x++ ) {
-					SESSION.formErrors.Add(stApplicationStatus.communityProfile.message[x]);
-				}
-			</cfscript>
-            
-			<!--- Form Errors --->
-            <gui:displayFormErrors 
-                formErrors="#SESSION.formErrors.GetCollection()#"
-                messageType="checklist"
-                />
-        </cfif>
-    </p>
-
-
-    <h2><p>Confidential Data</p></h2>
-
-    <p style="margin-top:-15px;">
-		<cfif stApplicationStatus.confidentialData.isComplete>
-            <font color="##00CC00">&##10004;</font> This section is complete.
-        <cfelse>
-            <cfscript>
-				// Loop Through Array and Populate Errors
-				for( x=1; x LTE ArrayLen(stApplicationStatus.confidentialData.message); x++ ) {
-					SESSION.formErrors.Add(stApplicationStatus.confidentialData.message[x]);
-				}
-			</cfscript>
-            
-			<!--- Form Errors --->
-            <gui:displayFormErrors 
-                formErrors="#SESSION.formErrors.GetCollection()#"
-                messageType="checklist"
-                />
-        </cfif>
-    </p>
-
-
-    <h2><p>References</p></h2>
-
-    <p style="margin-top:-15px;">
-		<cfif stApplicationStatus.references.isComplete>
-            <font color="##00CC00">&##10004;</font> This section is complete.
-        <cfelse>
-            <cfscript>
-				// Loop Through Array and Populate Errors
-				for( x=1; x LTE ArrayLen(stApplicationStatus.references.message); x++ ) {
-					SESSION.formErrors.Add(stApplicationStatus.references.message[x]);
-				}
-			</cfscript>
-            
-			<!--- Form Errors --->
-            <gui:displayFormErrors 
-                formErrors="#SESSION.formErrors.GetCollection()#"
-                messageType="checklist"
-                />
-        </cfif>
-    </p>
-
-	
     <!--- Submit Application --->
     <cfif ListFind("8,9", APPLICATION.CFC.SESSION.getHostSession().applicationStatus)>
         <table class="greenBackground" cellpadding="8">

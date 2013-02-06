@@ -155,6 +155,34 @@
                 </cfcase>
                 
 
+                <cfcase value="deniedMessage">
+                    
+                    <div class="errors">
+                        <p><em><span class="required">&##10008;</span> This Section Needs Additional Information</em></p> <br />
+                        <p>Please review this section based on the comments below and resubmit the application.</p>
+                
+                        <ul>
+    
+                            <!--- Loop over the message --->
+                            <cfloop from="1" to="#ArrayLen(ATTRIBUTES.formErrors)#" index="i">
+                               <li>#i#. &nbsp; #ATTRIBUTES.formErrors[i]#</li>        	
+                            </cfloop>
+    
+                        </ul>
+                       
+                    </div>
+					
+					<cfscript>
+                        // Check to see if we are supposed to clear the queue 
+                        if ( ATTRIBUTES.Clear ) {
+							ATTRIBUTES.formErrors.Clear();
+							SESSION.formErrors.Clear();
+                        }
+                    </cfscript>
+                
+                </cfcase>
+                
+
             </cfswitch>
                        
 		</cfoutput>

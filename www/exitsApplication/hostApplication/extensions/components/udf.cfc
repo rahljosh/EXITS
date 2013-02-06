@@ -44,68 +44,56 @@
 
 
 	<cffunction name="buildLeftMenu" access="public" returntype="struct" output="No" hint="Build the Left Menu Items">
-    
+		        
 		<cfscript>
+			// Get Section Approval History
+			qGetMenuHistory = APPLICATION.CFC.HOST.getMenuHistory();
+	
 			// Create structure
 			stBuildMenu = StructNew();
 			
-			// These are allowed for blocked Menus			
-			stBuildMenu.allowedMenuList = "1,14,15"; 
-			
 			// Set Menu Link Section
 			stBuildMenu.linkSection = arrayNew(1);
-			stBuildMenu.linkSection[1] = "overview";
-			stBuildMenu.linkSection[2] = "contactInfo";
-			stBuildMenu.linkSection[3] = "familyMembers";
-			stBuildMenu.linkSection[4] = "cbcAuthorization";
-			stBuildMenu.linkSection[5] = "personalDescription";
-			stBuildMenu.linkSection[6] = "hostingEnvironment";
-			stBuildMenu.linkSection[7] = "religiousPreference";
-			stBuildMenu.linkSection[8] = "familyRules";
-			stBuildMenu.linkSection[9] = "familyAlbum";
-			stBuildMenu.linkSection[10] = "schoolInfo";
-			stBuildMenu.linkSection[11] = "communityProfile";
-			stBuildMenu.linkSection[12] = "confidentialData";
-			stBuildMenu.linkSection[13] = "references";
-			stBuildMenu.linkSection[14] = "checkList";
-			stBuildMenu.linkSection[15] = "logout";
-
+			
 			// Set Menu Display Section
 			stBuildMenu.displaySection = arrayNew(1);
-			stBuildMenu.displaySection[1] = "Overview";
-			stBuildMenu.displaySection[2] = "Name & Contact Info";
-			stBuildMenu.displaySection[3] = "Family Members";
-			stBuildMenu.displaySection[4] = "Background Checks";
-			stBuildMenu.displaySection[5] = "Personal Description";
-			stBuildMenu.displaySection[6] = "Hosting Environment";
-			stBuildMenu.displaySection[7] = "Religious Preference";
-			stBuildMenu.displaySection[8] = "Family Rules";
-			stBuildMenu.displaySection[9] = "Family Album";
-			stBuildMenu.displaySection[10] = "School Info";
-			stBuildMenu.displaySection[11] = "Community Profile";	
-			stBuildMenu.displaySection[12] = "Confidential Data";
-			stBuildMenu.displaySection[13] = "References";
-			stBuildMenu.displaySection[14] = "Checklist";
-			stBuildMenu.displaySection[15] = "Logout";
 			
 			// Set Menu Color Section
 			stBuildMenu.colorSection = arrayNew(1);
-			stBuildMenu.colorSection[1] = "##8cc540";
-			stBuildMenu.colorSection[2] = "##00aeef";
-			stBuildMenu.colorSection[3] = "##f6931e";
-			stBuildMenu.colorSection[4] = "##c0272c";
-			stBuildMenu.colorSection[5] = "##0171bd";
-			stBuildMenu.colorSection[6] = "##8cc540";
-			stBuildMenu.colorSection[7] = "##00aeef";
-			stBuildMenu.colorSection[8] = "##f6931e";
-			stBuildMenu.colorSection[9] = "##c0272c";
-			stBuildMenu.colorSection[10] = "##0171bd";
-			stBuildMenu.colorSection[11] = "##8cc540";
-			stBuildMenu.colorSection[12] = "##00aeef";
-			stBuildMenu.colorSection[13] = "##f6931e";
-			stBuildMenu.colorSection[14] = "##c0272c";
-			stBuildMenu.colorSection[15] = "##0171bd";
-		
+			
+			// Populate Menu
+			for ( i=1; i LTE qGetMenuHistory.recordCount; i++ ) {
+				
+				// Link Section
+				stBuildMenu.linkSection[i] = qGetMenuHistory.section[i];
+				
+				// Remove link for approved sections
+				if ( qGetMenuHistory.areaRepStatus[i] EQ 'approved' OR qGetMenuHistory.regionalAdvisorStatus[i] EQ 'approved' OR qGetMenuHistory.regionalManagerStatus[i] EQ 'approved' OR qGetMenuHistory.facilitatorStatus[i] EQ 'approved' ) {
+					
+					// Display Section
+					stBuildMenu.displaySection[i] = '<span class="greyLinks">#qGetMenuHistory.description[i]#</span>';
+				
+				} else {
+					
+					// Display Section
+					stBuildMenu.displaySection[i] = '<a href="index.cfm?section=#qGetMenuHistory.section[i]#" class="whiteLinks">#qGetMenuHistory.description[i]#</a>';
+				
+				}
+
+				// Color Section
+				stBuildMenu.colorSection[i] = qGetMenuHistory.appMenuColor[i];
+
+			}
+			
+			// Build a list of items that are always available
+			stBuildMenu.allowedMenuList = ""; 		
+			// Overview is always available
+			stBuildMenu.allowedMenuList = ListAppend(stBuildMenu.allowedMenuList, ArrayFindNoCase(stBuildMenu.linkSection, 'overview') );
+			// Checklistis always available
+			stBuildMenu.allowedMenuList = ListAppend(stBuildMenu.allowedMenuList, ArrayFindNoCase(stBuildMenu.linkSection, 'checklist') );
+			// Logout is always available
+			stBuildMenu.allowedMenuList = ListAppend(stBuildMenu.allowedMenuList, ArrayFindNoCase(stBuildMenu.linkSection, 'logout') );
+			
         	return stBuildMenu;
         </cfscript>
         
