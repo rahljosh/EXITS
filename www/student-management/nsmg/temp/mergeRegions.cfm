@@ -5,7 +5,7 @@
 	Date:		July 29, 2011
 	Desc:		Merge two regions, move students, reps and families
 	
-	Updated: 	
+	Updated: 	This should be moved to Tools as it is often used
 
 ----- ------------------------------------------------------------------------- --->
 
@@ -73,6 +73,16 @@
                 WHERE
                     regionAssigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionFrom#">
             </cfquery>
+            
+            <!--- Host Leads --->
+            <cfquery datasource="mysql">
+                UPDATE
+                    smg_host_lead
+                SET
+                    regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionTo#">
+                WHERE
+                    regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionFrom#">
+            </cfquery>
    			
             <cfscript>
 				// Set Page Message
@@ -119,7 +129,7 @@
         
             <table width="50%" border="0" cellpadding="4" cellspacing="0" class="section" align="center">
                 <tr class="projectHelpTitle">
-                    <th colspan="2">Transfers Users, Students and Host Families from/to a region</th>
+                    <th colspan="2">Transfers Users, Students, Host Families and Host Leads from/to a region</th>
                 </tr>
                 <tr>
                     <td class="columTitleRight">Region From</td>
