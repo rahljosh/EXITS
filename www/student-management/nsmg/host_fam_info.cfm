@@ -26,6 +26,7 @@
 	<cfscript>
 	//users allowed to resent email app
 	allowedUsers = "13538,7729,13185,7858,7203,14488,16975,6200,13731,17919";
+	allowedRegions = "1474,1389,1020,1435,1463,1093,22,1403";
 	//Random Password for account, if needed
 		strPassword = APPLICATION.CFC.UDF.randomPassword(length=8);
 		
@@ -535,7 +536,7 @@ div.scroll2 {
                 </td>
           
         <td>
-        <Cfif client.usertype eq 1 OR listFind(allowedUsers, CLIENT.userID)>
+        <Cfif (client.usertype eq 1 OR listFind(allowedUsers, CLIENT.userID) OR listFind(allowedRegion, CLIENT.regionID) )>
 			<cfif isDefined('sendAppEmail')>
             <strong><em>Link to application was sent succesfully.</em> </strong>
             <cfelse>
