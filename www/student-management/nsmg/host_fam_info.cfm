@@ -300,7 +300,7 @@
 
 </div>
 
-                        
+               
                         </cfoutput>
                     </cfsavecontent>
              
@@ -539,7 +539,7 @@ div.scroll2 {
 			<cfif isDefined('sendAppEmail')>
             <strong><em>Link to application was sent succesfully.</em> </strong>
             <cfelse>
-                        <form method="post" action="index.cfm?curdoc=host_fam_infoSendLink&&hostid=#url.hostid#">
+                        <form method="post" action="index.cfm?curdoc=host_fam_info&hostid=#url.hostid#">
                         <input name="sendAppEmail" type="submit" value="Send Application Email"  alt="Send Application" border="0" class="buttonGreen" /></form>
             </cfif>        
         </Cfif>
