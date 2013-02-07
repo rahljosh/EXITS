@@ -536,7 +536,7 @@ div.scroll2 {
                 </td>
           
         <td>
-        <Cfif (client.usertype eq 1 OR listFind(allowedUsers, CLIENT.userID) OR listFind(allowedRegion, CLIENT.regionID) )>
+        <Cfif (client.usertype eq 1 OR listFind(allowedUsers, CLIENT.userID) OR listFind(allowedRegions, CLIENT.regionID) )>
 			<cfif isDefined('sendAppEmail')>
             <strong><em>Link to application was sent succesfully.</em> </strong>
             <cfelse>
