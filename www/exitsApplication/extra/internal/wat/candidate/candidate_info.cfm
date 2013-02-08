@@ -1984,51 +1984,53 @@
                                                 </select>
                                             </td>
                                         </tr>
-                                        <tr class="hiddenField selfPlacementInfo">
-                                            <td class="style1" align="right"><strong>Carrier Name:</strong></td>
-                                            <td class="style1">
-                                                <span class="readOnly selfPlacementReadOnly">
-                                                    #qCandidatePlaceCompany.WC_carrierName#
-                                                </span>
-                                                <input 
-                                                    type="text" 
-                                                    name="WC_carrierName" 
-                                                    id="WC_carrierName" 
-                                                    value="#qCandidatePlaceCompany.WC_carrierName#" 
-                                                    class="style1 editPage"
-                                                    size="40">
-                                            </td>
-                                        </tr>
-                                        <tr class="hiddenField selfPlacementInfo">
-                                            <td class="style1" align="right"><strong>Carrier Phone:</strong></td>
-                                            <td class="style1">
-                                                <span class="readOnly selfPlacementReadOnly">
-                                                    #qCandidatePlaceCompany.WC_carrierPhone#
-                                                </span>
-                                                <input 
-                                                    type="text" 
-                                                    name="WC_carrierPhone" 
-                                                    id="WC_carrierPhone" 
-                                                    value="#qCandidatePlaceCompany.WC_carrierPhone#" 
-                                                    class="style1 editPage"
-                                                    size="40">
-                                            </td>
-                                        </tr>
-                                        <tr class="hiddenField selfPlacementInfo">
-                                            <td class="style1" align="right"><strong>Policy Number:</strong></td>
-                                            <td class="style1">
-                                                <span class="readOnly selfPlacementReadOnly">
-                                                    #qCandidatePlaceCompany.WC_policyNumber#
-                                                </span>
-                                                <input 
-                                                    type="text" 
-                                                    name="WC_policyNumber" 
-                                                    id="WC_policyNumber" 
-                                                    value="#qCandidatePlaceCompany.WC_policyNumber#" 
-                                                    class="style1 editPage" 
-                                                    size="40">
-                                            </td>
-                                        </tr>
+                                        <cfif ListFind("1,2,3,4", CLIENT.userType)>
+                                            <tr class="hiddenField selfPlacementInfo">
+                                                <td class="style1" align="right"><strong>Carrier Name:</strong></td>
+                                                <td class="style1">
+                                                    <span class="readOnly selfPlacementReadOnly">
+                                                        #qCandidatePlaceCompany.WC_carrierName#
+                                                    </span>
+                                                    <input 
+                                                        type="text" 
+                                                        name="WC_carrierName" 
+                                                        id="WC_carrierName" 
+                                                        value="#qCandidatePlaceCompany.WC_carrierName#" 
+                                                        class="style1 editPage"
+                                                        size="40">
+                                                </td>
+                                            </tr>
+                                            <tr class="hiddenField selfPlacementInfo">
+                                                <td class="style1" align="right"><strong>Carrier Phone:</strong></td>
+                                                <td class="style1">
+                                                    <span class="readOnly selfPlacementReadOnly">
+                                                        #qCandidatePlaceCompany.WC_carrierPhone#
+                                                    </span>
+                                                    <input 
+                                                        type="text" 
+                                                        name="WC_carrierPhone" 
+                                                        id="WC_carrierPhone" 
+                                                        value="#qCandidatePlaceCompany.WC_carrierPhone#" 
+                                                        class="style1 editPage"
+                                                        size="40">
+                                                </td>
+                                            </tr>
+                                            <tr class="hiddenField selfPlacementInfo">
+                                                <td class="style1" align="right"><strong>Policy Number:</strong></td>
+                                                <td class="style1">
+                                                    <span class="readOnly selfPlacementReadOnly">
+                                                        #qCandidatePlaceCompany.WC_policyNumber#
+                                                    </span>
+                                                    <input 
+                                                        type="text" 
+                                                        name="WC_policyNumber" 
+                                                        id="WC_policyNumber" 
+                                                        value="#qCandidatePlaceCompany.WC_policyNumber#" 
+                                                        class="style1 editPage" 
+                                                        size="40">
+                                                </td>
+                                            </tr>
+                                      	</cfif>
                                         <tr>
                                         	<td class="style1" align="right"><strong>WC Expiration Date:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
@@ -2422,51 +2424,53 @@
                                                         </select>
                                                     </td>
                                                 </tr>
-                                                <tr class="hiddenField selfPlacementInfo">
-                                                    <td class="style1" align="right"><strong>Carrier Name:</strong></td>
-                                                    <td class="style1">
-                                                        <span class="readOnly selfPlacementReadOnly">
-                                                        	#qGetAllPlacements.WC_carrierName#
-                                                        </span>
-                                                        <input 
-                                                        	type="text" 
-                                                            name="WC_carrierName_#qGetAllPlacements.candCompID#" 
-                                                            id="WC_carrierName_#qGetAllPlacements.candCompID#" 
-                                                            value="#qGetAllPlacements.WC_carrierName#" 
-                                                            class="style1 editPage selfPlacementField"
-                                                            size="40" />
-                                                    </td>
-                                                </tr>
-                                                <tr class="hiddenField selfPlacementInfo">
-                                                    <td class="style1" align="right"><strong>Carrier Phone:</strong></td>
-                                                    <td class="style1">
-                                                        <span class="readOnly selfPlacementReadOnly">
-                                                        	#qGetAllPlacements.WC_carrierPhone#
-                                                        </span>
-                                                        <input 
-                                                        	type="text" 
-                                                            name="WC_carrierPhone_#qGetAllPlacements.candCompID#" 
-                                                            id="WC_carrierPhone_#qGetAllPlacements.candCompID#" 
-                                                            value="#qGetAllPlacements.WC_carrierPhone#" 
-                                                            class="style1 editPage selfPlacementField"
-                                                            size="40" />
-                                                    </td>
-                                                </tr>
-                                                <tr class="hiddenField selfPlacementInfo">
-                                                    <td class="style1" align="right"><strong>Policy Number:</strong></td>
-                                                    <td class="style1">
-                                                        <span class="readOnly selfPlacementReadOnly">
-                                                        	#qGetAllPlacements.WC_policyNumber#
-                                                        </span>
-                                                        <input 
-                                                        	type="text" 
-                                                            name="WC_policyNumber_#qGetAllPlacements.candCompID#" 
-                                                            id="WC_policyNumber_#qGetAllPlacements.candCompID#" 
-                                                            value="#qGetAllPlacements.WC_policyNumber#" 
-                                                            class="style1 editPage selfPlacementField"
-                                                            size="40" />
-                                                    </td>
-                                                </tr>
+                                                <cfif ListFind("1,2,3,4", CLIENT.userType)>
+                                                    <tr class="hiddenField selfPlacementInfo">
+                                                        <td class="style1" align="right"><strong>Carrier Name:</strong></td>
+                                                        <td class="style1">
+                                                            <span class="readOnly selfPlacementReadOnly">
+                                                                #qGetAllPlacements.WC_carrierName#
+                                                            </span>
+                                                            <input 
+                                                                type="text" 
+                                                                name="WC_carrierName_#qGetAllPlacements.candCompID#" 
+                                                                id="WC_carrierName_#qGetAllPlacements.candCompID#" 
+                                                                value="#qGetAllPlacements.WC_carrierName#" 
+                                                                class="style1 editPage selfPlacementField"
+                                                                size="40" />
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="hiddenField selfPlacementInfo">
+                                                        <td class="style1" align="right"><strong>Carrier Phone:</strong></td>
+                                                        <td class="style1">
+                                                            <span class="readOnly selfPlacementReadOnly">
+                                                                #qGetAllPlacements.WC_carrierPhone#
+                                                            </span>
+                                                            <input 
+                                                                type="text" 
+                                                                name="WC_carrierPhone_#qGetAllPlacements.candCompID#" 
+                                                                id="WC_carrierPhone_#qGetAllPlacements.candCompID#" 
+                                                                value="#qGetAllPlacements.WC_carrierPhone#" 
+                                                                class="style1 editPage selfPlacementField"
+                                                                size="40" />
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="hiddenField selfPlacementInfo">
+                                                        <td class="style1" align="right"><strong>Policy Number:</strong></td>
+                                                        <td class="style1">
+                                                            <span class="readOnly selfPlacementReadOnly">
+                                                                #qGetAllPlacements.WC_policyNumber#
+                                                            </span>
+                                                            <input 
+                                                                type="text" 
+                                                                name="WC_policyNumber_#qGetAllPlacements.candCompID#" 
+                                                                id="WC_policyNumber_#qGetAllPlacements.candCompID#" 
+                                                                value="#qGetAllPlacements.WC_policyNumber#" 
+                                                                class="style1 editPage selfPlacementField"
+                                                                size="40" />
+                                                        </td>
+                                                    </tr>
+                                               	</cfif>
                                                 <tr>
                                                     <td class="style1" align="right"><strong>WC Expiration Date:</strong></td>
                                                     <td class="style1" bordercolor="##FFFFFF">
