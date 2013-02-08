@@ -163,14 +163,19 @@
 <!----send EMail to Host Fam to update application.  CHeck for password first.---->
 
 <cfif isDefined('sendAppEmail')>
-        <Cfif family_info.password is ''>
-        <Cfquery datasource="#application.dsn#">
+		
+		<Cfquery datasource="#application.dsn#">
         update smg_hosts
-        set password = <Cfqueryparam cfsqltype="cf_sql_integer" value="#strPassword#">
+        set hostAppStatus = <Cfqueryparam cfsqltype="cf_sql_integer" value="8">
+          <Cfif family_info.password is ''>
+           , password = <Cfqueryparam cfsqltype="cf_sql_varchar" value="#strPassword#">
+          </Cfif>
         where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(family_info.hostID)#">
         </Cfquery>
-        <cfset family_info.password = '#strPassword#'>
-        </Cfif>
+      
+       
+        
+        
                     <cfsavecontent variable="hostWelcome">
                     
 						<style type="text/css">
