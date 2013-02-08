@@ -96,7 +96,7 @@
                     smg_students s
                 INNER JOIN 
                     php_students_in_program php ON s.studentid = php.studentid
-                INNER JOIN 
+                INNER JOIN
                     smg_users rep ON php.arearepid = rep.userid
                 INNER JOIN 
                     php_schools ON php.schoolid = php_schools.schoolid

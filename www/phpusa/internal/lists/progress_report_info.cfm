@@ -70,13 +70,16 @@
         </cfif>
         <!--- email report if box is checked --->
         <cfif FORM.emailReport EQ 1>
-			<form id="emailForm" action="index.cfm?curdoc=forms/pr_email" method="post" target="_self">
+        	<script type="text/javascript">
+				window.open("<cfoutput>forms/pr_email.cfm?pr_id=#FORM.pr_id#&automatic=1</cfoutput>","Email");
+			</script>
+			<!---<form id="emailForm" action="index.cfm?curdoc=forms/pr_email" method="post" target="_self">
          		<input type="hidden" name="pr_id" value="<cfoutput>#form.pr_id#</cfoutput>" />
                 <input type="hidden" name="automatic" value="1" />
        		</form>
             <script type="text/javascript">
 				$("#emailForm").submit();
-			</script>
+			</script>--->
         </cfif>
     </cfif>
 </cfcase>
@@ -324,7 +327,9 @@ span.mainSpan {
 
 <cfif form.report_mode EQ 'view'>
       <tr align="center" height="25">
-      	<td colspan="2"><img src=<cfif (NOT isDefined(form.email)) AND (form.report_mode EQ 'print' OR CLIENT.usertype EQ 8)>"../pics/pisStatus.png"<cfelse>"pics/pisStatus.png"</cfif> /></td>
+      	<td colspan="2">
+        	<img src=<cfif (NOT isDefined(form.email)) AND (form.report_mode EQ 'print' OR CLIENT.usertype EQ 8)>"../pics/pisStatus.png"<cfelse>"pics/pisStatus.png"</cfif> />
+      	</td>
       </tr>
       <tr>
         <th align="right">SR Approved:</th>
