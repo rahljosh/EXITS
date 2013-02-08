@@ -42,8 +42,9 @@
     <cfparam name="FORM.supervisor_email" default="">
     <cfparam name="FORM.homepage" default="">
     <cfparam name="FORM.observations" default="">
+    <cfparam name="FORM.comments" default="">
     
-    <cfquery name="qGetHostCompanyInfo" datasource="MySql">
+    <cfquery name="qGetHostCompanyInfo" datasource="#APPLICATION.DSN.Source#">
         SELECT 
         	eh.hostCompanyID,
             eh.business_typeID, 
@@ -74,6 +75,7 @@
             eh.entryDate,
             eh.arrivalAirport,
             eh.arrivalInstructions,
+            eh.comments,
             et.business_type as typeBusiness, 
             s.stateName as stateName,  
             workSiteS.stateName as hqStateName            
@@ -89,7 +91,7 @@
         	eh.hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostCompanyID#">
     </cfquery>
 
-    <cfquery name="qGetenteredBy" datasource="MySql">
+    <cfquery name="qGetenteredBy" datasource="#APPLICATION.DSN.Source#">
         SELECT 
         	firstname, 
             lastname
@@ -99,7 +101,7 @@
         	userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostCompanyInfo.enteredBy)#"> 
     </cfquery>
     
-    <cfquery name="qGetJobs" datasource="MySql">
+    <cfquery name="qGetJobs" datasource="#APPLICATION.DSN.Source#">
         SELECT 
         	ej.id, 
             ej.title, 
@@ -113,7 +115,7 @@
         	ej.hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostCompanyInfo.hostCompanyID)#"> 
     </cfquery> 
     
-    <cfquery name="qGetHousing" datasource="MySql">
+    <cfquery name="qGetHousing" datasource="#APPLICATION.DSN.Source#">
         SELECT 
         	type, 
             id
@@ -121,7 +123,7 @@
         	extra_housing							
     </cfquery>
 
-    <cfquery name="qGetBusinessType" datasource="MySql">
+    <cfquery name="qGetBusinessType" datasource="#APPLICATION.DSN.Source#">
         SELECT 
         	business_typeID, 
             business_type
@@ -131,7 +133,7 @@
         	business_type            
     </cfquery>
 
-    <cfquery name="qGetStateList" datasource="MySql">
+    <cfquery name="qGetStateList" datasource="#APPLICATION.DSN.Source#">
         SELECT 
         	id, 
             state, 
@@ -142,7 +144,7 @@
         	stateName
     </cfquery>
 
-    <cfquery name="qGetCurrentTrainees" datasource="MySql">
+    <cfquery name="qGetCurrentTrainees" datasource="#APPLICATION.DSN.Source#">
         SELECT 
         	ec.candidateid, 
             ec.uniqueid, 
@@ -165,7 +167,7 @@
         	p.programid
     </cfquery>
 
-    <cfquery name="qGetInactiveTrainees" datasource="MySql">
+    <cfquery name="qGetInactiveTrainees" datasource="#APPLICATION.DSN.Source#">
         SELECT 
         	ec.candidateid, 
             ec.uniqueid, 
@@ -191,7 +193,7 @@
     <!--- FORM Submitted --->
     <cfif FORM.submitted>
     	
-        <cfquery name="qCheckForDuplicates" datasource="MySql">
+        <cfquery name="qCheckForDuplicates" datasource="#APPLICATION.DSN.Source#">
             SELECT 
                 hostCompanyID, 
                 name
@@ -240,7 +242,7 @@
 		<!--- Check if we need to insert business type --->
         <cfif LEN(FORM.businessTypeOther) AND FORM.business_typeID EQ 'Other'>
             
-            <cfquery name="qCheckBusinessType" datasource="MySql">
+            <cfquery name="qCheckBusinessType" datasource="#APPLICATION.DSN.Source#">
                 SELECT
                     business_typeID,
                     business_type 
@@ -260,7 +262,7 @@
             
             <cfelse>
             
-                <cfquery result="newBusinessType" datasource="MySql">
+                <cfquery result="newBusinessType" datasource="#APPLICATION.DSN.Source#">
                     INSERT INTO
                         extra_typebusiness 
                     (
@@ -287,7 +289,7 @@
 			<cfif VAL(FORM.hostCompanyID)>
                 
                 <!--- Update --->
-                <cfquery datasource="MySql">
+                <cfquery datasource="#APPLICATION.DSN.Source#">
                     UPDATE 
                         extra_hostcompany 
                     SET 
@@ -311,7 +313,8 @@
                         supervisor_phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor_phone#">,
                         supervisor_email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor_email#">,
                         homepage = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homepage#">,
-                        observations = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.observations#">
+                        observations = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.observations#">,
+                        comments = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.comments#">
                     WHERE
                         hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostCompanyID#">
                 </cfquery>
@@ -319,7 +322,7 @@
             <cfelse>
 
 				<!--- Insert Host Company --->                  
-                <cfquery result="newRecord" datasource="MySql">
+                <cfquery result="newRecord" datasource="#APPLICATION.DSN.Source#">
                     INSERT INTO 
                         extra_hostcompany 
                     (
@@ -345,6 +348,7 @@
                         supervisor_email,
                         homepage,
                         observations,
+                        comments,
                         entryDate,
                         enteredBy
                     )                
@@ -372,6 +376,7 @@
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor_email#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homepage#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.observations#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.comments#">,
                         <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
                     )
@@ -419,6 +424,7 @@
 			FORM.supervisor_email = qGetHostCompanyInfo.supervisor_email;
 			FORM.homepage = qGetHostCompanyInfo.homepage;
 			FORM.observations = qGetHostCompanyInfo.observations;
+			FORM.comments = qGetHostCompanyInfo.comments;
 		</cfscript>
     
     </cfif>
@@ -807,6 +813,30 @@
                         </table> 
                         
                         <br />
+                        
+                        <!--- COMMENTS --->
+                        <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
+                            <tr>
+								<td bordercolor="##FFFFFF">
+
+                                    <table width="100%" cellpadding="3" cellspacing="3" border="0">
+                                        <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
+                                            <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Comments</td>
+                                        </tr>
+                                        <tr>
+                                            <td width="35%" class="style1" align="right"><strong>Comments:</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                            	<span class="readOnly">#FORM.comments#</span>
+                                                <textarea name="comments" id="comments" class="style1 editPage" rows="4" cols="35" maxlength="500">#FORM.comments#</textarea>
+                                            </td>
+                                        </tr>		
+                                    </table>
+
+                                </td>
+                            </tr>
+                        </table>
+
+						<br /> 
 
 						<!--- JOBS --->
                         <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">

@@ -104,7 +104,8 @@
     <Cfquery name="qGetHostCompanyList" datasource="MySQL">
         SELECT 
         	name, 
-            hostCompanyID
+            hostCompanyID,
+            comments
         FROM 
         	extra_hostcompany
         WHERE 
@@ -932,8 +933,11 @@
                                                 <span class="readOnly">#qGetHostCompanyInfo.name#</span>
                                                 <select name="hostCompanyID" id="hostCompanyID" class="style1 editPage" onChange="displayHostReason(#VAL(qCandidatePlacedCompany.hostCompanyID)#, this.value); loadOptionsHostPosition('jobID');">
                                                     <cfloop query="qGetHostCompanyList">
-                                                        <option value="#hostCompanyID#" <cfif qGetHostCompanyList.hostCompanyID EQ qCandidatePlacedCompany.hostCompanyID> selected </cfif> >
-                                                            <cfif len(name) gt 35>
+                                                        <option 
+                                                        	value="#hostCompanyID#" 
+															<cfif qGetHostCompanyList.hostCompanyID EQ qCandidatePlacedCompany.hostCompanyID> selected </cfif>
+                                                            <cfif LEN(TRIM(comments))>style="color:red"</cfif> >
+															<cfif len(name) gt 35>
                                                                 #Left(name, 32)#...
                                                             <cfelse>
                                                                 #name#

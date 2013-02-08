@@ -13,7 +13,8 @@
             eh.supervisor, 
             eh.city, 
             eh.state, 
-            eh.business_typeid, 
+            eh.business_typeid,
+            eh.comments,
             etb.business_type as typeBusiness, 
             s.state as stateName
         FROM 
@@ -62,6 +63,15 @@
                 	typebusiness #URL.sortOrder#,
                     eh.name #URL.sortOrder#
                 </cfcase>
+                
+                <cfcase value="comments">
+                	<cfif URL.sortOrder EQ "ASC">
+                		CASE WHEN comments IS NULL THEN 1 ELSE 0 END,
+                  	<cfelse>
+                    	CASE WHEN comments IS NULL THEN 0 ELSE 1 END,
+                   	</cfif>
+                    eh.name #URL.sortOrder#
+                </cfcase>
 
                 <cfdefaultcase>
                 	eh.name #URL.sortOrder#,
@@ -100,11 +110,12 @@
 			<tr bgcolor="##4F8EA4" >
 				<th width="5%" align="left"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='hostCompanyID',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" class="style2">ID</a></th>
 				<th width="25%" align="left"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='name',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" class="style2">Company Name</a></th>
-				<th width="15%" align="left"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='phone',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" class="style2">Phone</a></th>
+				<th width="12%" align="left"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='phone',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" class="style2">Phone</a></th>
 				<th width="15%" align="left"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='supervisor',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" class="style2">Contact</a></th>
 				<th width="10%" align="left"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='city',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" class="style2">City</a></th>
-				<th width="15%" align="left"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='stateName',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" class="style2">State</a></th>		
+				<th width="10%" align="left"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='stateName',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" class="style2">State</a></th>		
 				<th width="15%" bgcolor="##4F8EA4"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='typebusiness',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" class="style2">Business</a></th>
+                <th width="8%" bgcolor="##4F8EA4"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='comments',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" class="style2">Comments</a></th>
 			</tr>
             <cfloop query="qGetHostCompanies">
                 <tr bgcolor="###iif(qGetHostCompanies.currentrow MOD 2 ,DE("E9ECF1") ,DE("FFFFFF") )#">
@@ -120,7 +131,14 @@
                         <cfelse> 
                             #typebusiness# 
                         </cfif>
-                    </td>		
+                    </td>	
+                    <td class="style5" align="center">
+                    	<cfif LEN(TRIM(comments))>
+                        	<font color="red">YES</font>
+                        <cfelse>
+                        	NO
+                        </cfif>
+                    </td>	
                 </tr>
             </cfloop>
     
