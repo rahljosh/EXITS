@@ -898,11 +898,11 @@
                                         officeUser = APPLICATION.CFC.USER.isOfficeUser(CLIENT.usertype);
                                     </cfscript>
                             
-                                    <cfif NOW() LT DateAdd('m',-3,qGetStudentInfo.endDate) AND NOT officeUser>
+                                    <cfif NOW() LT DateAdd('m',-5,qGetStudentInfo.endDate) AND NOT officeUser>
                                         <tr bgcolor="##FEE6D3" align="center">
                                             <td colspan="12" align="center">
-                                                You can only enter departure flight information within 3 months of the end of the program.<br />
-                                                You will be able to enter departure flight information starting on: #DateFormat(DateAdd('m',-3,qGetStudentInfo.endDate),'mm/dd/yyyy')#
+                                                You can only enter departure flight information within 5 months of the end of the program.<br />
+                                                You will be able to enter departure flight information starting on: #DateFormat(DateAdd('m',-5,qGetStudentInfo.endDate),'mm/dd/yyyy')#
                                             </td>
                                         </tr>
                                     <cfelse>
