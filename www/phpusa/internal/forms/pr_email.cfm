@@ -1,13 +1,22 @@
 <cfset errorMsg = ''>
 
+<cfparam name="URL.automatic" default="0">
+<cfparam name="FORM.automatic" default="0">
+<cfparam name="URL.pr_id" default="0">
+<cfparam name="FORM.pr_id" default="0">
+
+<cfif VAL(URL.pr_id)>
+	<cfset FORM.pr_id = URL.pr_id>
+</cfif>
+
 <cfquery name="get_record" datasource="#application.dsn#">
     SELECT fk_intrep_user
     FROM progress_reports
     WHERE pr_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">
 </cfquery>
 
-<cfparam name="FORM.automatic" default="0">
-<cfif VAL(FORM.automatic)>
+<cfif VAL(URL.automatic)>
+	<cfset FORM.automatic = URL.automatic>
 	<cfset FORM.submitted = 1>
     <cfset FORM.email_to = CLIENT.userID & "," & get_record.fk_intrep_user>
 </cfif>
@@ -41,7 +50,7 @@
             <cfset form.report_mode = 'print'>
             <!---<cfset form.pdf = 1>--->
             <!--- This variable is to display the images properly if coming from this file --->
-            <cfset form.email = "email">
+            <cfset form.email = 1>
             <cfinclude template="../lists/progress_report_info.cfm">
         </cfdocument>
                 
@@ -66,14 +75,7 @@
             <cfinvokeargument name="email_file" value="#file_path#">
         </cfinvoke>
       	
-        <cfif VAL(FORM.automatic)>
-			<script type="text/javascript">
-                $(document).ready(function() {
-					window.open('', '_self', ''); 
-					window.close();
-                });
-            </script>
-        <cfelse>               
+        <cfif NOT VAL(FORM.automatic)>          
             <form action="index.cfm?curdoc=lists/progress_report_info" method="post" name="theForm" id="theForm">
             	<input type="hidden" name="pr_id" value="<cfoutput>#form.pr_id#</cfoutput>">
             </form>
@@ -152,4 +154,8 @@
     
     </cfform>
 
+<cfelse>
+	<script type="text/javascript">
+		window.close();
+	</script>
 </cfif>
