@@ -92,7 +92,7 @@ function PrintFile(url)
 		<cfset newsize = size / '1024'>
 		<tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("CCCCCC") )#">
 			<cfif ListFind("jpg,peg,gif,tif,png", Right(name, 3))>
-				<td><a href="javascript:PrintFile('page22printfile.cfm?studentid=#get_student_info.studentid#&page=page22&file=#URLEncodedFormat(name)#');">#name#</a></td>
+				<td><a href="javascript:PrintFile('page22printfile.cfm?studentid=#get_student_info.studentid#&page=page22&file=#URLEncodedFormat(jsStringFormat(name))#');">#name#</a></td>
 			<cfelse>
 				<td><b>*</b> <a href="../../uploadedfiles/virtualfolder/#get_student_info.studentid#/page22/#name#" target="_blank">#name#</a></td>
 			</cfif>
