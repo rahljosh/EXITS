@@ -166,7 +166,9 @@
 			<cfif LEN(FORM.selfJobOfferStatus)>
             	AND
                     ecpc.selfJobOfferStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfJobOfferStatus#">                 
-			</cfif> 
+			</cfif>
+            
+            GROUP BY ec.candidateID
                        
             ORDER BY
             	ehc.name,
