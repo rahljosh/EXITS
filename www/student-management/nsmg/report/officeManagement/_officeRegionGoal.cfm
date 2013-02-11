@@ -7,7 +7,9 @@
 				
 				#CGI.SCRIPT_NAME#?curdoc=report/index?action=officeRegionGoal
 				
-	Updated: 	08/03/2012 - Placed students = Pending Previously Approved and approved
+	Updated: 	02/11/2014 - RM now also checked against company id, fixes problem of 
+					displaying multiple regions after a merge. 
+				08/03/2012 - Placed students = Pending Previously Approved and approved
 				06/14/2012 - Combing Great Lakes Region
 				06/14/2012 - Renaming report from Allocation to Goal		
 				
@@ -113,6 +115,10 @@
                     user_access_rights uar ON r.regionID = uar.regionID
                     AND
                     	uar.userType = <cfqueryparam cfsqltype="cf_sql_integer" value="5">
+                   	AND
+                    	uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyID)#">
+                   	AND
+                    	uar.userID IN (SELECT userID FROM smg_users WHERE active = 1)
                 LEFT OUTER JOIN
 					smg_users u ON uar.userID = u.userID
 					AND
@@ -124,7 +130,9 @@
                     AND
                         a.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#">
                 WHERE
-                	r.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#FORM.regionID#"> )                
+                	r.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#FORM.regionID#"> )
+              	AND
+                	r.active = 1
                 ORDER BY
                     c.companyShort,
                     r.regionName
