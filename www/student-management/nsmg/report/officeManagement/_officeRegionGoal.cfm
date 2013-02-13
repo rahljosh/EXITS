@@ -116,8 +116,6 @@
                     AND
                     	uar.userType = <cfqueryparam cfsqltype="cf_sql_integer" value="5">
                    	AND
-                    	uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyID)#">
-                   	AND
                     	uar.userID IN (SELECT userID FROM smg_users WHERE active = 1)
                 LEFT OUTER JOIN
 					smg_users u ON uar.userID = u.userID
