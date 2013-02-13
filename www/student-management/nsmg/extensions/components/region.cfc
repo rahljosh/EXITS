@@ -248,6 +248,8 @@
                    user_access_rights UAR on UAR.regionID = r.regionID                         
                        AND                                         
                            uar.userType = <cfqueryparam cfsqltype="cf_sql_integer" value="5">
+                   		AND
+                    		uar.userID IN (SELECT userID FROM smg_users WHERE active = 1)
                 LEFT OUTER JOIN                     
                     smg_users u ON u.userID = uar.userID                         
                         AND                         
