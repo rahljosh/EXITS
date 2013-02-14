@@ -495,6 +495,7 @@
                                     AND
                                     	double_place_share = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentID)#">
                                 </cfquery>
+                                
                             </table>
 						
 							<cfif VAL(qGetShareChildren.recordCount)>
