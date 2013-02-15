@@ -18,7 +18,7 @@
 			hostID = URL.hostID												
 		);
         qGetValidAreaReps = APPLICATION.CFC.USER.getUsers(
-            userType = 7,
+            userType = ('5,6,7'),
             isActive = 1,
             companyID = qGetHostInfo.companyID,
             regionID = qGetHostInfo.regionID

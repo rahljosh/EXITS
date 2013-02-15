@@ -42,7 +42,7 @@
                 	user_access_rights uar ON uar.userID = u.userID
 					<cfif VAL(ARGUMENTS.usertype)>
                         AND	
-                            uar.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.usertype#">
+                            uar.usertype IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.usertype#" list="yes"> )
                     </cfif>
                     <cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, ARGUMENTS.companyID)>
                         AND          
