@@ -25,7 +25,7 @@
 	
 	<cfscript>
 	//users allowed to resent email app
-	allowedUsers = "13538,7729,13185,7858,7203,14488,16975,6200,13731,17919";
+	allowedUsers = "13538,7729,13185,7858,7203,14488,16975,6200,13731,17919,17427,12313";
 	allowedRegions = "1474,1389,1020,1435,1463,1093,22,1403";
 	//Random Password for account, if needed
 		strPassword = APPLICATION.CFC.UDF.randomPassword(length=8);
@@ -82,6 +82,11 @@
         FROM smg_hosts
         WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(url.hostID)#">
     </cfquery>
+    <cfscript>
+		qGetAreaRep = APPLICATION.CFC.USER.getUsers(
+			userID = family_info.areaRepID
+		);
+	</cfscript>
     
      <cfquery name="host_children" datasource="#application.dsn#">
         SELECT *
@@ -163,18 +168,16 @@
 <!----send EMail to Host Fam to update application.  CHeck for password first.---->
 
 <cfif isDefined('sendAppEmail')>
-		
-		<Cfquery datasource="#application.dsn#">
-        update smg_hosts
-        set hostAppStatus = <Cfqueryparam cfsqltype="cf_sql_integer" value="8">
-          <Cfif family_info.password is ''>
-           , password = <Cfqueryparam cfsqltype="cf_sql_varchar" value="#strPassword#">
-          </Cfif>
-        where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(family_info.hostID)#">
-        </Cfquery>
-      
-       
-        
+
+		<cfquery datasource="#APPLICATION.DSN#">
+        	UPDATE smg_hosts
+            SET hostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="8">,
+            	areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+                <cfif family_info.password is ''>
+                	, password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#strPassword#">
+                </cfif>
+           	WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(family_info.hostID)#">
+        </cfquery>
         
                     <cfsavecontent variable="hostWelcome">
                     
@@ -539,16 +542,15 @@ div.scroll2 {
                 <td>
                     <input type="checkbox" disabled="disabled" /> Not Qualified
                 </td>
-          
-        <td>
-        <Cfif (client.usertype eq 1 OR listFind(allowedUsers, CLIENT.userID) OR listFind(allowedRegions, CLIENT.regionID) )>
-			<cfif isDefined('sendAppEmail')>
-            <strong><em>Link to application was sent succesfully.</em> </strong>
-            <cfelse>
-                        <form method="post" action="index.cfm?curdoc=host_fam_info&hostid=#url.hostid#">
-                        <input name="sendAppEmail" type="submit" value="Send Application Email"  alt="Send Application" border="0" class="buttonGreen" /></form>
-            </cfif>        
-        </Cfif>
+                <td>
+					<Cfif (client.usertype eq 1 OR listFind(allowedUsers, CLIENT.userID) OR listFind(allowedRegions, CLIENT.regionID) )>
+                        <cfif isDefined('sendAppEmail')>
+                        	<strong><em>Link to application was sent succesfully.</em> </strong>
+                        <cfelse>
+                            <form method="post" action="index.cfm?curdoc=host_fam_info&hostid=#url.hostid#">
+                            <input name="sendAppEmail" type="submit" value="Send Application Email"  alt="Send Application" border="0" class="buttonGreen" /></form>
+                        </cfif>        
+                    </Cfif>
                 </td>
         </tr>
         <cfelse>
@@ -588,6 +590,41 @@ div.scroll2 {
         </tr>
     </table>
 	<!--- BOTTOM OF A TABLE --->
+	<table width=100% cellpadding=0 cellspacing=0 border=0>
+		<tr valign="bottom">
+        	<td width=9 valign="top" height=12>
+            	<img src="pics/footer_leftcap.gif" >
+           	</td>
+            <td width=100% background="pics/header_background_footer.gif">
+            </td>
+            <td width=9 valign="top">
+            	<img src="pics/footer_rightcap.gif">
+           	</td>
+     	</tr>
+	</table>
+    
+    <br/>
+    
+    <!--- HEADER OF TABLE --- Area Representative --->
+	<table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
+		<tr valign=middle height=24>
+			<td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
+			<td background="pics/header_background.gif"><h2>&nbsp;&nbsp;Area Representative</h2></td>
+            <td background="pics/header_background.gif" width=16>
+            	<cfif APPLICATION.CFC.USER.isOfficeUser()>
+                	<a href="index.cfm?curdoc=forms/setHostAreaRepForm&hostID=#family_info.hostID#">Edit</a>
+              	</cfif>
+          	</td>
+			<td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
+      	</tr>
+	</table>
+    <!--- BODY OF TABLE --->
+    <table width="100%" align="left" cellpadding=8 class="section">
+    	<tr>
+        	<td>#qGetAreaRep.firstName# #qGetAreaRep.lastName# (###qGetAreaRep.userID#)</td>
+        </tr>
+    </table>
+    <!--- BOTTOM OF A TABLE --->
 	<table width=100% cellpadding=0 cellspacing=0 border=0>
 		<tr valign="bottom">
         	<td width=9 valign="top" height=12>
