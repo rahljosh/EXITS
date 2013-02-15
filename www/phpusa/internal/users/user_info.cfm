@@ -92,6 +92,7 @@
             smg_users u
       	LEFT JOIN 
         	user_access_rights uar ON u.userid = uar.userid
+            AND uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
         LEFT OUTER JOIN 
             smg_countrylist cl ON cl.countryid = u.country
         LEFT OUTER JOIN 
