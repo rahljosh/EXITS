@@ -29,6 +29,7 @@
     	<cfargument name="usertype" default="0" hint="usertype is not required">
         <cfargument name="isActive" default="" hint="isActive is not required">
         <cfargument name="companyID" default="" hint="CompanyID is not required">
+        <cfargument name="regionID" default="0" hint="regionID is not required">
               
         <cfquery 
 			name="qGetUsers" 
@@ -43,13 +44,16 @@
                         AND	
                             uar.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.usertype#">
                     </cfif>
-    
                     <cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, ARGUMENTS.companyID)>
                         AND          
                             uar.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
                     <cfelseif VAL(ARGUMENTS.companyID)>
                         AND          
                             uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+                    </cfif>
+                    <cfif VAL(ARGUMENTS.regionID)>
+                    	AND
+                        	uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#">
                     </cfif>
                 WHERE
                 	1 = 1
