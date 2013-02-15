@@ -65,7 +65,8 @@
         <!--- print report if box is checked --->
 		<cfif FORM.printReport EQ 1>
         	<script type="text/javascript">
-				window.open("<cfoutput>lists/progress_report_info.cfm?pr_id=#FORM.pr_id#&report_mode=print</cfoutput>","Print").print();
+				//window.open("<cfoutput>lists/progress_report_info.cfm?pr_id=#FORM.pr_id#&report_mode=print</cfoutput>","Print");
+				$(document).ready(function() {$("#printReportForm").submit();});
 			</script>
         </cfif>
         <!--- email report if box is checked --->
@@ -73,13 +74,6 @@
         	<script type="text/javascript">
 				window.open("<cfoutput>forms/pr_email.cfm?pr_id=#FORM.pr_id#&automatic=1</cfoutput>","Email");
 			</script>
-			<!---<form id="emailForm" action="index.cfm?curdoc=forms/pr_email" method="post" target="_self">
-         		<input type="hidden" name="pr_id" value="<cfoutput>#form.pr_id#</cfoutput>" />
-                <input type="hidden" name="automatic" value="1" />
-       		</form>
-            <script type="text/javascript">
-				$("#emailForm").submit();
-			</script>--->
         </cfif>
     </cfif>
 </cfcase>
@@ -643,13 +637,13 @@ span.mainSpan {
               <td style="vertical-align:bottom">
                 <!--- print --->
                 <cfif CLIENT.usertype EQ 8>
-                	<form action="progress_report_info.cfm" method="post" target="_blank">
+                	<form id="printReportForm" action="progress_report_info.cfm" method="post" target="_blank">
                     <input type="hidden" name="pr_id" value="#form.pr_id#">
                     <input type="hidden" name="report_mode" value="print">
                     <input name="Submit" type="image" src="../pics/printer.gif" alt="Print Report" border=0>
                     </form>
                 <cfelse>
-                	<form action="lists/progress_report_info.cfm" method="post" target="_blank">
+                	<form id="printReportForm" action="lists/progress_report_info.cfm" method="post" target="_blank">
                     <input type="hidden" name="pr_id" value="#form.pr_id#">
                     <input type="hidden" name="report_mode" value="print">
                     <input name="Submit" type="image" src="pics/printer.gif" alt="Print Report" border=0>
