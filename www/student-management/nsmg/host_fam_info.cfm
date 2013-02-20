@@ -611,7 +611,7 @@ div.scroll2 {
 			<td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
 			<td background="pics/header_background.gif"><h2>&nbsp;&nbsp;Area Representative</h2></td>
             <td background="pics/header_background.gif" width=16>
-            	<cfif APPLICATION.CFC.USER.isOfficeUser()>
+            	<cfif CLIENT.userType LTE 7>
                 	<a href="index.cfm?curdoc=forms/setHostAreaRepForm&hostID=#family_info.hostID#">Edit</a>
               	</cfif>
           	</td>
