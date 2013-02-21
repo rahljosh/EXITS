@@ -195,9 +195,9 @@
                     UPDATE 
                         smg_host_children 
                     SET
-                        name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.name#">,
-                        lastName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.lastName#">,
-                        middleName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.middleName#">,                    
+                        name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#Trim(FORM.name)#">,
+                        lastName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#Trim(FORM.lastName)#">,
+                        middleName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#Trim(FORM.middleName)#">,                    
                         sex = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.sex#">,
                         birthdate = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.birthdate#">,
                         membertype = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.membertype#">,
@@ -242,9 +242,9 @@
                     VALUES 
                     (
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.name#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.lastName#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.middleName#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#Trim(FORM.name)#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#Trim(FORM.lastName)#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#Trim(FORM.middleName)#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.sex#">,
                         <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.birthdate#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.membertype#">,
