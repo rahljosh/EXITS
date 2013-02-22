@@ -17,7 +17,65 @@
     <!--- Param FORM Variables --->
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.username" default="">
-    <cfparam name="FORM.password" default="">   
+    <cfparam name="FORM.password" default="">
+    <cfparam name="FORM.forgot" default="0">
+    
+    <!--- Forgot login --->
+    <cfif VAL(FORM.forgot)>
+    	<cfif NOT isValid("email", TRIM(FORM.username))>
+        	<cfscript>
+				// Error - Could not resend login
+				SESSION.formErrors.Add("Please enter a valid email to have your information sent to.");
+			</cfscript>
+        <cfelse>
+        	<!--- Find user in database --->
+        	<cfquery name="qCheckHost" datasource="#APPLICATION.DSN.Source#">
+                SELECT 
+                	hostID,
+                    fatherfirstname,
+                    motherfirstname,
+                    familylastname,
+                    email,
+                    password
+                FROM 
+                	smg_hosts
+                WHERE 
+                	email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.username)#">
+               	AND
+            		hostAppStatus != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+               	LIMIT 1 
+            </cfquery>
+            <cfif VAL(qCheckHost.recordCount)>
+            	<cfsavecontent variable="emailContent">
+                	<cfoutput query="qCheckHost">
+                    	<p>
+                        	#qCheckHost.fatherfirstname# <cfif LEN(qCheckHost.fatherfirstname) AND LEN(qCheckHost.motherfirstname)>and </cfif>#qCheckHost.motherfirstname# #qCheckHost.familylastname#,
+                            a login information retrieval request was made from the #SESSION.COMPANY.exitsURL#hostApplication website. <br /><br />
+           		        	Your login information is: <br /><br />
+                            Email: #qCheckHost.email#<br />
+                            Password: #qCheckHost.password#
+                        </p>
+                        <p>To login please visit: <a href="#SESSION.COMPANY.exitsURL#hostApplication">#SESSION.COMPANY.exitsURL#hostApplication</a> </p>
+                    </cfoutput>
+                </cfsavecontent>
+                <cfinvoke component="extensions.components.email" method="sendEmail">
+                    <cfinvokeargument name="emailFrom" value="#SESSION.COMPANY.EMAIL.support#">
+                    <cfinvokeargument name="emailTo" value="#FORM.username#">
+                    <cfinvokeargument name="emailSubject" value="ISE - Login Information">
+                    <cfinvokeargument name="emailMessage" value="#emailContent#">
+                </cfinvoke>
+                <cfscript>
+					// Message - Login information sent
+					SESSION.pageMessages.Add("Your login credentials have been sent to the email address provided.");
+				</cfscript>
+          	<cfelse>
+            	<cfscript>
+					// Error - Host Family Not Found
+					SESSION.formErrors.Add("Your login credentials could not be found. Please verify your email address.");
+				</cfscript>
+            </cfif>
+        </cfif>
+    </cfif>   
     
 	<!--- FORM Submitted --->
 	<cfif VAL(FORM.submitted)>
@@ -206,10 +264,19 @@
 
 </cfsilent>
 
+<script type="text/javascript">
+	function forgotLogin() {
+		$("#submitted").val(0);
+		$("#forgot").val(1);
+		$("#loginForm").submit();
+	}
+</script>
+
 <cfoutput> 
 
-<form method="post" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#">
-    <input type="hidden" name="submitted" value="1" />
+<form method="post" id="loginForm" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#">
+    <input type="hidden" name="submitted" id="submitted" value="1" />
+    <input type="hidden" name="forgot" id="forgot" value="0"/>
     
     <h1 align="center">Host Family Application</h1>
     
@@ -218,6 +285,13 @@
 	<!--- Form Errors --->
     <gui:displayFormErrors 
         formErrors="#SESSION.formErrors.GetCollection()#"
+        messageType="login"
+        width="525px"
+        />
+        
+  	<!--- Page Messages --->
+    <gui:displayPageMessages
+        pageMessages="#SESSION.pageMessages.GetCollection()#"
         messageType="login"
         width="525px"
         />
@@ -238,7 +312,8 @@
                 <td><input type="password" name="password" id="password" size="35" /></p></td>
             </tr>
             <tr>
-                <td colspan="2" align="right"><input type="image" name="login" value="Login" src="images/login.png" /></td>
+                <td><span style="color:green; cursor:pointer;" onclick="forgotLogin()">Forgot Login?</span></td>
+                <td align="right"><input type="image" name="login" value="Login" src="images/login.png" /></td>
             </tr>
         </table>
         
