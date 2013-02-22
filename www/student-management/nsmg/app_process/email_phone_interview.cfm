@@ -41,7 +41,7 @@
 </cfquery>
 
 <cfquery name="get_current_user" datasource="MySql">
-	SELECT userid, firstname, lastname, email
+	SELECT userid, firstname, lastname, email, skype
 	FROM smg_users
 	WHERE userid = '#client.userid#'
 </cfquery>
@@ -161,6 +161,7 @@
 		<tr><td><br>Thank you,</td></tr>
 		<tr><td>#get_current_user.firstname# #get_current_user.lastname#</td></tr>
 		<tr><td>#companyshort.companyname#</td></tr>
+        <tr><td>Skype #get_current_user.skype#</td></tr>
 	</table>
 	</body>
 	</html>
