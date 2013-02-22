@@ -390,7 +390,7 @@
                                             <cfif qGetStudentReport.recordCount>
                                                 
                                                 <!--- access is limited to: CLIENT.usertype LTE 4, supervising rep, school supervising rep, and NY. --->
-                                                <cfif CLIENT.usertype LTE 4 or listFind("#qGetStudentReport.fk_sr_user#,#qGetStudentReport.fk_ssr_user#,#qGetStudentReport.fk_ny_user#", CLIENT.userid)>
+                                                <cfif CLIENT.usertype LTE 4 or listFind("#qGetStudentReport.fk_sr_user#,#qGetStudentReport.fk_ssr_user#,#qGetStudentReport.fk_ny_user#,#qGetResults.arearepid#", CLIENT.userid)>
                                                     
                                                     <!--- restrict view of report until the supervising rep approves it. --->
                                                     <cfif qGetStudentReport.pr_sr_approved_date EQ '' and qGetStudentReport.fk_sr_user NEQ CLIENT.userid>
