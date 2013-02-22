@@ -70,7 +70,8 @@
         	SELECT
             	eh.*,
                 ec.confirmed,
-                ep.numberPositions
+                ep.numberPositions,
+                ecpc.selfPhoneConfirmationDate
           	FROM
             	extra_hostcompany eh
 			LEFT OUTER JOIN
@@ -81,8 +82,15 @@
             	extra_j1_positions ep ON ep.hostID = eh.hostCompanyID
                 	AND
                     	ep.programID = (SELECT programID FROM extra_candidates WHERE candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#"> LIMIT 1)
+          	LEFT OUTER JOIN
+            	extra_candidate_place_company ecpc ON ecpc.hostCompanyID = eh.hostCompanyID
+                	AND
+                    	ecpc.selfPhoneConfirmationDate IS NOT NULL
            	WHERE
             	eh.hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostCompanyID#">
+          	ORDER BY
+            	ecpc.selfPhoneConfirmationDate DESC
+          	LIMIT 1
         </cfquery>
         
         <cfscript>
@@ -111,6 +119,7 @@
 			result.WC_POLICYNUMBER = "";
 			result.CONFIRMED = 0;
 			result.POSITIONS = 0;
+			result.PHONECONFIRMATION = "";
 			
 			if (qGetHCInfo.recordCount) {
 				result.hasCompany = 1;
@@ -137,6 +146,7 @@
 				result.WC_POLICYNUMBER = qGetHCInfo.WC_policyNumber;
 				result.CONFIRMED = qGetHCInfo.confirmed;
 				result.POSITIONS = qGetHCInfo.numberPositions;
+				result.PHONECONFIRMATION = DateFormat(qGetHCInfo.selfPhoneConfirmationDate, 'mm/dd/yyyy');
 			}
 			return result;
 		</cfscript>

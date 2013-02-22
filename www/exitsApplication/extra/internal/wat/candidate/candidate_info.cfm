@@ -474,6 +474,7 @@
 			var WC_policyNumber = companyInfo.WC_POLICYNUMBER;
 			var confirmed = companyInfo.CONFIRMED;
 			var numberPositions = companyInfo.POSITIONS;
+			var phoneConfirmation = companyInfo.PHONECONFIRMATION;
 			
 			if (authSecretaryOfState == 1)
 				$("#authentication_secretaryOfState").attr("checked", "checked");
@@ -541,6 +542,7 @@
 			$("#WC_carrierPhone").val(WC_carrierPhone);
 			$("#WC_policyNumber").val(WC_policyNumber);
 			$("#numberPositionsSelect").val(numberPositions);
+			$("#selfPhoneConfirmationDate").val(phoneConfirmation);
 		} else {
 			getCompanyInfoError();
 		}
