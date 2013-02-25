@@ -163,6 +163,7 @@
     <link rel="stylesheet" href="smg.css" type="text/css">
     <link rel="stylesheet" href="linked/css/baseStyle.css" type="text/css"> <!-- BaseStyle -->
     <link media="screen" rel="stylesheet" href="linked/css/colorbox.css" /> <!-- Modal ColorBox -->
+    <link media="screen" rel="stylesheet" href="linked/css/buttons.css" /> <!-- Css Buttons -->
     <cfoutput>
 		<link rel="stylesheet" href="#APPLICATION.PATH.jQueryTheme#" type="text/css" /> <!-- JQuery UI 1.8 Tab Style Sheet --> 
     	<script type="text/javascript" src="#APPLICATION.PATH.jQuery#"></script> <!-- jQuery -->
