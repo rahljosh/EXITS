@@ -18,7 +18,10 @@
 <cfsilent>
 
 	<!--- Import CustomTag --->
-    <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
+    <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />
+    
+    <!--- Ajax Call to the Component --->
+    <cfajaxproxy cfc="nsmg.extensions.components.student" jsclassname="StudentComponent">
 
     <!--- Delete Flight Information --->
     <cfparam name="URL.uniqueID" type="string" default="">
@@ -531,6 +534,19 @@
 				}
 			}
 			
+			var Student = new StudentComponent();
+			
+			function changeBlockedFlight() {
+				newValue = 0;
+				if ($("##unblockFlight").is(":checked")) {
+					newValue = 1;
+				} else {
+					newValue = 0;
+				}
+				Student.unblockFlights(#qGetStudentInfo.studentID#,newValue);
+				window.location.reload();
+			}
+			
             // -->
         </script>
 
@@ -898,7 +914,7 @@
                                         officeUser = APPLICATION.CFC.USER.isOfficeUser(CLIENT.usertype);
                                     </cfscript>
                             
-                                    <cfif NOW() LT DateAdd('m',-5,qGetStudentInfo.endDate) AND NOT officeUser>
+                                    <cfif NOW() LT DateAdd('m',-5,qGetStudentInfo.endDate) AND NOT officeUser AND NOT qGetStudentInfo.unblockFlight>
                                         <tr bgcolor="##FEE6D3" align="center">
                                             <td colspan="12" align="center">
                                                 You can only enter departure flight information within 5 months of the end of the program.<br />
@@ -925,6 +941,17 @@
                                         <cfif qGetDeparture.recordCount>
                                             <tr bgcolor="##FEE6D3"><td colspan="12" align="center"><a href="javascript:displayClass('trNewAYPDeparture');">Click here to add more legs</a></td></tr>
                                         </cfif>
+                                    </cfif>
+                                    <!--- Unblock flights from area reps (even if the departure is more than 5 months away --->
+                                    <cfif officeUser>
+                                    	<tr bgcolor="##FEE6D3">
+                                        	<td colspan="12" align="center">
+                                            	Unblock Departure Flights: 
+                                                <input type="checkbox" value="1" id="unblockFlight" onclick="changeBlockedFlight()" <cfif qGetStudentInfo.unblockFlight>checked="checked"</cfif> />
+                                                <br/>
+                                                <font size="-2">- allow reps to enter departure flight information even if the departure is more than 5 months away.</font>
+                                            </td>
+                                        </tr>
                                     </cfif>
                                 
                                 <cfelse>

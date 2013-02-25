@@ -104,6 +104,7 @@
                     s.flight_info_notes,
                     s.AYPOrientation,
                     s.AYPEnglish,
+                    s.unblockFlight,
                     <!--- Intl Representative --->
                     intlRep.userID AS intlRepUserID,
                     intlRep.firstName AS intlRepFirstName,
@@ -3428,7 +3429,18 @@
         
         </cfif>
         
-	</cffunction>            
+	</cffunction>
+    
+    <cffunction name="unblockFlights" access="remote" returntype="void" output="false" hint="blocks or unblocks flight information from being input early">
+    	<cfargument name="studentID" type="numeric" required="yes">
+        <cfargument name="unblockFlight" type="numeric" required="yes">
+        
+        <cfquery datasource="#APPLICATION.DSN#">
+        	UPDATE smg_students
+            SET unblockFlight = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.unblockFlight)#">
+            WHERE studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
+        </cfquery>
+    </cffunction>
     
 	<!--- ------------------------------------------------------------------------- ----
 		End of Remote Functions 
