@@ -80,7 +80,7 @@ from virtualFolderDocuments
 where fk_category = <cfqueryparam cfsqltype="cf_sql_integer" value="2">
 </Cfquery>
 <cfset hostFamDocID = ''>
-<Cfloop query="#hostFamDocs#">
+<Cfloop query="hostFamDocs">
 	<cfset hostFamDocID = "#ListAppend(hostFamDocID, id)#">
 </Cfloop>
 
@@ -144,7 +144,7 @@ where id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.docType#">
                insert into virtualfolder (fk_documentType,fileName,filePath,fk_hostID,fk_studentID,generatedHow,  uploadedBy, dateAdded)
                             values (<cfqueryparam cfsqltype="cf_sql_integer" value="#form.docType#">,
                             		<cfqueryparam cfsqltype="cf_sql_varchar" value="#file.serverfile#">,
-                            		<cfqueryparam cfsqltype="cf_sql_varchar" value="#currentDirectory#">,
+                            		<cfqueryparam cfsqltype="cf_sql_varchar" value="uploadedFiles/virtualfolder/#qGetStudentInfo.studentid#/">,
                                     <cfqueryparam cfsqltype="cf_sql_integer" value="#val(form.hostfamily)#">,
                                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetStudentInfo.studentid#">,
                                     <cfqueryparam cfsqltype="cf_sql_varchar" value="manual">,
