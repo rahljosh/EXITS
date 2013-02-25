@@ -553,8 +553,8 @@
 		<cfif LEN(FORM.subAction) AND NOT SESSION.formErrors.length()>
         
             <script language="javascript">
-                // Close Window After 1.5 Seconds
-                setTimeout(function() { parent.$.fn.colorbox.close(); }, 2000);
+                // Close Window After 2 Seconds
+                setTimeout(function() { parent.$.fn.colorbox.close(); }, 3000);
             </script>
         
         </cfif>
@@ -1004,6 +1004,11 @@
 				APPLICATION.CFC.UDF.insertInternalFile(filePath=fullPath,fieldID=1,studentID=qGetStudentInfo.studentID);
 			</cfscript>
             
+             <cfquery name="insertFileDetails" datasource="#application.dsn#">
+            insert into  virtualFolder (fk_categoryID, fk_documentType, fileDescription,fileName, filePath, fk_studentID,dateAdded,generatedHow,uploadedBy)
+            				values(1,4,'Flight Itinerary','#fileName#.pdf', 'uploadedfiles/virtualFolder/#qGetStudentInfo.studentID#/', #qGetStudentInfo.studentID#,#now()#,'auto',#client.userid#)
+            </cfquery>
+          
         </cfif>
         
         <!--- Table Footer --->
