@@ -56,6 +56,7 @@
 		// Set Regions or users or user type that can start host app
 		//allowedUsers = '1,12313,8747,17972,17791,8731,12431,17438,17767,15045,10133,6617,16552,16718,10631,9974,510';	
 		allowedUsers = "13538,7729,13185,7858,7203,14488,16975,6200,13731,17919";
+		allowedRegions = "1474,1389,1020,1435,1463,1093,22,1403";
 		
 		// Check if we have a valid URL.hostID
 		if ( VAL(URL.hostID) AND NOT VAL(FORM.hostID) ) {
@@ -891,7 +892,7 @@
                	</cfif>
            		
                 <!--- Remove Office Access --->
-				<cfif ( APPLICATION.CFC.USER.isOfficeUser() OR listFind(allowedUsers, CLIENT.userID) ) AND NOT VAL(qGetHostFamilyInfo.hostAppStatus)>
+				<cfif ( APPLICATION.CFC.USER.isOfficeUser() OR listFind(allowedUsers, CLIENT.userID) OR listFind(allowedRegions, CLIENT.regionID) ) AND NOT VAL(qGetHostFamilyInfo.hostAppStatus)>
                     <td valing="top" align="center">
                         <input name="subAction" id="submiteHost" type="submit" value="eHost"  alt="Start E-App" border="0" class="buttonBlue" onclick="verifyAddress('submiteHost'); return false;" /> <br />
                         <cfif VAL(FORM.hostID)>
