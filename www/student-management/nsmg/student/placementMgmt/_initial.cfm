@@ -368,12 +368,12 @@
 			if ( NOT SESSION.formErrors.length() ) {				
 	
 				// Approve Placement - Insert into history
-				//APPLICATION.CFC.STUDENT.approvePlacement(
-				//	studentID = FORM.studentID,								 
-				//	changedBy = CLIENT.userID,								 
-				//	userType = CLIENT.userType,
-				//	dateRelocated=FORM.dateRelocated
-				// );
+				APPLICATION.CFC.STUDENT.approvePlacement(
+					studentID = FORM.studentID,								 
+					changedBy = CLIENT.userID,								 
+					userType = CLIENT.userType,
+					dateRelocated=FORM.dateRelocated
+				 );
 			if (val(CLIENT.userType) lte 4) {
 				
 				
