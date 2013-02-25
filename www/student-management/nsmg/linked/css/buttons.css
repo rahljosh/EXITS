@@ -25,12 +25,12 @@
    }
 .buttonGreen:hover {
 	border-top-color: #066e26;
-	background: #5a81c0;
+	background: #69bd45;
 	color: #ccc;
    }
 .buttonGreen:active {
    border-top-color: #066e26;
-   background: #5a81c0;
+   background: #066e26;
    }  
 
 /****Blue Button******/
