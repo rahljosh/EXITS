@@ -426,7 +426,7 @@
                         </li>
                         
                         <li><a href="index.cfm?curdoc=forms/update_alerts">System Messages</a></li>
-    
+    					<li><a href="index.cfm?curdoc=virtualFolder/globalSettings">Virtual Folder Options</a></li>
                         <li><a href="index.cfm?curdoc=tools/smg_welcome_pictures">Welcome Pictures</a></li>
                     </ul>
                 </li>
