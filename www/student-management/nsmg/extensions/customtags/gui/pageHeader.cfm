@@ -81,14 +81,17 @@
                         <link rel="shortcut icon" href="#ATTRIBUTES.filePath#pics/favicon.ico" type="image/x-icon" />
                         <link rel="stylesheet" href="#ATTRIBUTES.filePath#smg.css" type="text/css">
                         <link rel="stylesheet" href="#ATTRIBUTES.filePath#linked/css/baseStyle.css" type="text/css"> <!-- BaseStyle -->
+                        <link rel="stylesheet" href="#ATTRIBUTES.filePath#linked/css/buttons.css" type="text/css"> <!-- CSS button Styles -->
                         <link media="screen" rel="stylesheet" href="#ATTRIBUTES.filePath#linked/css/colorbox.css" /> <!-- Modal ColorBox -->
                         <link rel="stylesheet" href="#APPLICATION.PATH.jQueryTheme#" type="text/css" /> <!-- JQuery UI 1.8 Tab Style Sheet --> 
+                        
                         <script type="text/javascript" src="#APPLICATION.PATH.jQuery#"></script> <!-- jQuery -->
                         <script type="text/javascript" src="#APPLICATION.PATH.jQueryUI#"></script> <!-- JQuery UI 1.8 Tab -->
 						<script type="text/javascript" src="#ATTRIBUTES.filePath#linked/js/jquery.tools.min.js"></script> <!-- JQuery Tools Includes: Modal tooltip, colorBox, MaskedInput, TimePicker -->
                         <script type="text/javascript" src="#ATTRIBUTES.filePath#linked/js/jquery.cfjs.js"></script> <!-- Coldfusion functions for jquery -->
                         <script type="text/javascript" src="#ATTRIBUTES.filePath#linked/js/basescript.js "></script> <!-- BaseScript -->
-                    </cfoutput>        
+                   
+					</cfoutput>        
                 </head>
                 <body>
             </cfcase>
