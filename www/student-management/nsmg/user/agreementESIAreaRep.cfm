@@ -82,10 +82,10 @@
                 that the performance of the Services is subject to the regulations and guidelines of the
                 exchange industry. All Services shall be performed to the
                 highest professional standard and shall be performed to #qGetCompanyInfo.companyshort_nocolor#'s reasonable satisfaction in
-                accordance with State Department regulations and CSIET guidelines, which are
+                accordance with  CSIET guidelines, which are
                 reviewed during the annual AR training. Failure to adhere to these standards may
                 result in termination of this Agreement.
-			</p>
+		  </p>
 		</li>
         
         <li>
@@ -95,14 +95,14 @@
                 Representative will be an independent contractor of #qGetCompanyInfo.companyshort_nocolor# and will not be
                 deemed to be an employee or to be in a joint venture, partnership or
                 agency relationship.
-			</p>
+		  </p>
             
             <p>
             	(b) The Area Representative understands and agrees that there is no
                 obligation on the part of #qGetCompanyInfo.companyshort_nocolor# to give the Area Representative any student
                 placement assignment over any specific period, and any such assignment
                 is in the sole and absolute discretion of #qGetCompanyInfo.companyshort_nocolor#.
-			</p>
+		  </p>
         
             <p>
             	(c) This Agreement is not exclusive. The Area Representative may perform
@@ -118,7 +118,7 @@
                 contractor of #qGetCompanyInfo.companyshort_nocolor#. #qGetCompanyInfo.companyshort_nocolor# will not be required to withhold any amounts from
                 compensation for federal, state or local taxes, or for Social Security,
                 unemployment insurance or other related taxes.
-            </p>
+          </p>
         
             <p>
                 (e) The Area Representative will be responsible for payment of his/her own
@@ -141,7 +141,7 @@
                 (g) Criminal Background Check
                 For each Service Agreement cycle, #qGetCompanyInfo.companyshort_nocolor# will process a Criminal Background
                 Check for the Area Representative.
-            </p>
+          </p>
         </li>
                   
         <li>
@@ -150,7 +150,7 @@
                 #qGetCompanyInfo.companyshort_nocolor# shall designate in writing a supervisor to review the performance and quality of the
                 Services on a discretionary basis and take any necessary steps to ensure performance by
                 the Area Representative of such Services is commensurate with the standards set forth by the industry.
-			</p>  
+		  </p>  
         </li>
         
         <li>
@@ -159,7 +159,7 @@
                 In full consideration of the Area Representative providing and furnishing the Services
                 hereunder, #qGetCompanyInfo.companyshort_nocolor# shall pay the Area Representative the fee(s) set forth in Schedule 1
                 attached hereto.
-           	</p>
+       	  </p>
 		</li>
                       
         <li>
@@ -175,7 +175,7 @@
                 contained in the #qGetCompanyInfo.companyshort_nocolor# database. Any materials or information provided by #qGetCompanyInfo.companyshort_nocolor# to the
                 Area Representative shall be the sole property of #qGetCompanyInfo.companyshort_nocolor# and shall be returned to #qGetCompanyInfo.companyshort_nocolor# at the
                 conclusion of this agreement.
-			</p>
+		  </p>
         </li>
         
         <li>
@@ -190,12 +190,12 @@
         <li>
         	<u>Interpretation of Contract</u>
             <p>
-                This Agreement shall be deemed to have been entered into in the State of <cfif CLIENT.companyID eq 10>New Jersey<cfelse>New York</cfif>
+                This Agreement shall be deemed to have been entered into in the State of <cfif CLIENT.companyID eq 10 or CLIENT.companyID eq 14>New Jersey<cfelse>New York</cfif>
                 and shall be governed and controlled as to validity, enforcement, interpretation,
-                construction, effect, and in all other respects by the internal laws of the State of <cfif CLIENT.companyID eq 10>New Jersey<cfelse>New York</cfif>  
+                construction, effect, and in all other respects by the internal laws of the State of <cfif CLIENT.companyID eq 10  or CLIENT.companyID eq 14>New Jersey<cfelse>New York</cfif>  
                 applicable to contracts made in that State, without regard to its laws of conflict of
                 laws. The Area Representative agrees that the Area Representative will be subject to the
-                personal jurisdiction of the courts of the State of <cfif CLIENT.companyID eq 10>New Jersey<cfelse>New York</cfif>  for any matter relating to
+                personal jurisdiction of the courts of the State of <cfif CLIENT.companyID eq 10  or CLIENT.companyID eq 14>New Jersey<cfelse>New York</cfif>  for any matter relating to
                 this Agreement; provided, however, nothing herein shall be deemed to preclude or
                 prevent #qGetCompanyInfo.companyshort_nocolor# from bringing any action or claim to enforce the provisions of this
                 Agreement in any other appropriate state or from having jurisdiction over the Area
@@ -204,7 +204,7 @@
                 illegal, unenforceable or void, the illegal, unenforceable or void provision of this
                 Agreement shall not affect the remaining provisions of this Agreement, which shall
                 remain in full force and effect.
-            </p>
+          </p>
 		</li>
                     
         <li>
@@ -252,7 +252,7 @@
             	(g) Nothing herein shall be construed as a license, grant or right to use any
             	#qGetCompanyInfo.companyshort_nocolor# trademarks, logos, or materials without the express written consent of
 	            #qGetCompanyInfo.companyshort_nocolor# in each and every case.
-            </p>
+          </p>
 		
         </li>
         
@@ -437,7 +437,10 @@
                 eligible for payment.
             </li>
             
-            <li>The <cfif CLIENT.companyID eq 10>NJ<cfelse>NY</cfif> office will pro-rate all supervision fees for students who depart from the program early.</li>
+            <li>The <cfif CLIENT.companyID eq 10>
+              #qGetCompanyInfo.state#
+            </cfif> 
+            office will pro-rate all supervision fees for students who depart from the program early.</li>
             
             <li>Unpaid fees relating to placement of a student that has to move and/or change AR will move with the student to the new AR.</li>
             
