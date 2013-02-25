@@ -368,13 +368,17 @@
 			if ( NOT SESSION.formErrors.length() ) {				
 	
 				// Approve Placement - Insert into history
-				APPLICATION.CFC.STUDENT.approvePlacement(
-					studentID = FORM.studentID,								 
-					changedBy = CLIENT.userID,								 
-					userType = CLIENT.userType,
-					dateRelocated=FORM.dateRelocated
-				 );
-	
+				//APPLICATION.CFC.STUDENT.approvePlacement(
+				//	studentID = FORM.studentID,								 
+				//	changedBy = CLIENT.userID,								 
+				//	userType = CLIENT.userType,
+				//	dateRelocated=FORM.dateRelocated
+				// );
+			if (val(CLIENT.userType) lte 4) {
+				
+				
+				APPLICATION.CFC.UDF.createAutoFiles(studentID=FORM.studentID,hostID=FORM.hostID,uniqueID=qGetStudentInfo.uniqueid,documentType=3, category=2,fileDescription='PIS');
+			};
 				// Set Page Message
 				SESSION.pageMessages.Add("Placement has been approved.");
 				
