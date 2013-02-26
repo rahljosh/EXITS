@@ -33,6 +33,7 @@
     <cfparam name="FORM.gradeInSchool" default="">
     <cfparam name="FORM.employer" default="">
     <cfparam name="FORM.schoolActivities" default="">
+    <cfparam name="FORM.radioSchoolActivities" default="">
 
 	<cfscript>
 		if ( VAL(URL.childID) ) {
