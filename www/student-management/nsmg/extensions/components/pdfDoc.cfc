@@ -40,6 +40,7 @@
                     sort_by,
                     date_created,
                     date_updated
+
                 FROM 
                     smg_pdf_categories
                 WHERE
@@ -54,7 +55,8 @@
                 	AND	
                     	userType_ID >= <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userTypeID#">
                 </cfif>
-                
+                AND 
+                	 companyAccess like "%#client.companyID#%"
                 ORDER BY 
                     sort_by                
 		</cfquery>
