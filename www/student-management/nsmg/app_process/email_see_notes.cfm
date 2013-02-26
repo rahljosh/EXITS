@@ -53,7 +53,7 @@
 </cfquery>
 
 <cfquery name="get_current_user" datasource="MySql">
-	SELECT userid, firstname, lastname, email
+	SELECT userid, firstname, lastname, email, skype
 	FROM smg_users
 	WHERE userid = '#client.userid#'
 </cfquery>
