@@ -546,7 +546,12 @@
             if ( LEN(TRIM(qGetHostFamilyInfo.phone)) AND NOT isValid("telephone", TRIM(qGetHostFamilyInfo.phone)) ) {
                 SESSION.formErrors.Add("The home phone number you have entered does not appear to be valid. ");
             }	
-	
+
+			// Email Address
+            if ( NOT LEN(TRIM(qGetHostFamilyInfo.email)) ) {
+                SESSION.formErrors.Add("Please provide an email address.");
+            }	
+
 			// Valid Email Address
             if ( LEN(TRIM(qGetHostFamilyInfo.email)) AND NOT isValid("email", TRIM(qGetHostFamilyInfo.email)) ) {
                 SESSION.formErrors.Add("The email address you have entered does not appear to be valid.");

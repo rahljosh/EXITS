@@ -179,7 +179,12 @@
             if ( LEN(TRIM(FORM.phone)) AND NOT isValid("telephone", TRIM(FORM.phone)) ) {
                 SESSION.formErrors.Add("The home phone number you have entered does not appear to be valid. ");
             }	
-	
+
+			// Email Address
+            if ( NOT LEN(TRIM(FORM.email)) ) {
+                SESSION.formErrors.Add("Please provide an email address.");
+            }	
+			
 			// Valid Email Address
             if ( LEN(TRIM(FORM.email)) AND NOT isValid("email", TRIM(FORM.email)) ) {
                 SESSION.formErrors.Add("The email address you have entered does not appear to be valid.");
