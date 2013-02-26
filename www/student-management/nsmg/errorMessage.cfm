@@ -16,7 +16,13 @@
 
 	<cfscript>
 		// Set Error ID
-		vErrorID = "#CLIENT.userID#-#dateformat(now(),'mmddyyyy')#-#timeformat(now(),'hhmmss')#";
+		if ( VAL(CLIENT.userID) ) {
+			vErrorID = "#CLIENT.userID#-#dateformat(now(),'mm-dd-yyyy')#-#timeformat(now(),'hh-mm-ss')#";
+		} else if ( VAL(CLIENT.studentID) ) {
+			vErrorID = "#CLIENT.studentID#-#dateformat(now(),'mm-dd-yyyy')#-#timeformat(now(),'hh-mm-ss')#";
+		} else {
+			vErrorID = "00-#dateformat(now(),'mm-dd-yyyy')#-#timeformat(now(),'hh-mm-ss')#";
+		}
 	</cfscript>
 	
 </cfsilent>
