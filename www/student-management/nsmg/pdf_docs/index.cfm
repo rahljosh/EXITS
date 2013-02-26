@@ -37,7 +37,11 @@
 		}
 		
 		// Get PDF Categories
-		qGetPDFCategory = APPCFC.pdfDoc.getPDFCategories(userTypeID=CLIENT.userType);
+		if (CLIENT.companyid neq 14) {
+			qGetPDFCategory = APPCFC.pdfDoc.getPDFCategories(userTypeID=CLIENT.userType);
+		} else {
+			qGetPDFCategory = APPCFC.pdfDoc.getPDFCategories();
+		}
 		
 		// FORM SUBMITTED
 		if ( VAL(FORM.submitted) ) {
