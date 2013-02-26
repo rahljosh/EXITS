@@ -167,8 +167,11 @@
                             <a class="jQueryModal" href="/hostApplication/index.cfm?uniqueID=#qGetHostApplications.uniqueID#" title="Open Application"><img src="pics/buttons/openApplication.png" border="0"></a>
                             &nbsp; &nbsp; 
                             <a href="index.cfm?curdoc=hostApplication/toDoList&hostID=#qGetHostApplications.hostID#" title="View Details"><img src="pics/buttons/approve.png" width="110" border="0"></a>
+                            
+                            <!--- Commented out until the print version is redone 02/26/2013 - Marcus Melo
                             &nbsp; &nbsp; 
                             <a class="jQueryModal" href="hostApplication/viewPDF.cfm?hostID=#qGetHostApplications.hostID#&pdf" title="Print Application"><img src="pics/buttons/print50x50.png" width="40" border="0"></a>
+                            --->
                             
                             <cfif APPLICATION.CFC.USER.isOfficeUser()>
                             	<form id="frSetRecordToPaper#qGetHostApplications.hostID#" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
