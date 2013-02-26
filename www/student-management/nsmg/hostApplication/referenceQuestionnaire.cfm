@@ -44,12 +44,12 @@
 
 		// Get Reference for this season
 		qGetReferenceInfo = APPLICATION.CFC.HOST.getReferences(refID=FORM.refID,hostID=qGetHostInfo.hostID,seasonID=vCurrentSeasonID);
-
+		
 		// Get Reference Questionnaire Details
 		qGetQuestionnaireDetails = APPLICATION.CFC.HOST.getReferenceQuestionnaireAnswers(fk_reportID=FORM.refID);
 
 		// Get User By Userid
-		qGetUserInfo = APPLICATION.CFC.USER.getUserByID(userID=client.userid);
+		qGetCurrentUserInfo = APPLICATION.CFC.USER.getUserByID(userID=CLIENT.userID);
 
 		// Param FORM Variables
 		For ( i=1; i LTE qGetQuestionnaireDetails.recordCount; i++ ) {
@@ -274,7 +274,12 @@
                         motherLastName=qGetHostInfo.motherLastName)# (###qGetHostInfo.hostid#) - 
                         #qGetHostInfo.city#, #qGetHostInfo.state# #qGetHostInfo.zip# <br />
                         
-					<strong>Interviewer:</strong> #qGetUserInfo.firstName# #qGetUserInfo.lastName# (###qGetUserInfo.userID#) <br />
+					<strong>Interviewer:</strong> 
+                    <cfif LEN(qGetReferenceInfo.submittedBy)>
+                    	#qGetReferenceInfo.submittedBy# <br />
+                    <cfelse>
+                        #qGetCurrentUserInfo.firstName# #qGetCurrentUserInfo.lastName# (###qGetCurrentUserInfo.userID#) <br />
+                    </cfif>
               	</p>
                 
                 <h1>Reference Information</h1>
