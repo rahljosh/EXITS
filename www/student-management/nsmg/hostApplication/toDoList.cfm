@@ -408,8 +408,10 @@
                     </td>                    
                     <td valign="top">
                         <a class="jQueryModal" href="/hostApplication/index.cfm?uniqueID=#qGetHostInfo.uniqueID#" title="View Complete Application"><img src="pics/buttons/openApplication.png" border="0"></a>
+                        <!--- Commented out until the print version is redone 02/26/2013 - Marcus Melo
                         &nbsp; &nbsp; 
                         <a class="jQueryModal" href="hostApplication/viewPDF.cfm?hostID=#hostID#&pdf" title="Print Application"><img src="pics/buttons/print50x50.png" width="40" border="0"></a>
+						--->
                     </td>
             	</tr>
             </table>
