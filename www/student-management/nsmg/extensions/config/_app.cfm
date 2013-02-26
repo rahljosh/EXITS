@@ -11,7 +11,7 @@
 
 ----- ------------------------------------------------------------------------- --->
 
-<cfquery name="qCompanyInfo" datasource="smg">
+<cfquery name="qCompanyInfo" datasource="mysql">
 	SELECT
     	companyID,
         support_email,
@@ -25,7 +25,7 @@
 
 <cfscript>
 	// DNS
-	APPLICATION.DSN = 'smg';
+	APPLICATION.DSN = 'MySQL';
 	
 	/***** Create APPLICATION.SETTINGS structure *****/
 	APPLICATION.SETTINGS = StructNew();		
@@ -130,10 +130,9 @@
 		// DEVELOPMENT Server Settings	
 
 		// Getting error on querys/upload_logo.cfm. Getting full path including /query
-		// APPLICATION.PATH.base = getDirectoryFr
-		
+		// APPLICATION.PATH.base = getDirectoryFromPath(getBaseTemplatePath());
 		// Base Path eg. C:\websites\smg\nsmg\
-		APPLICATION.PATH.base = 'D:/home/111cooper.com/wwwroot/nsmg/';
+		APPLICATION.PATH.base = 'C:/websites/www/student-management/nsmg/';
 		
 		// URL: http://smg.local
 		APPLICATION.KEY.googleMapsAPI = 'ABQIAAAAiT0TfDoNFmmMRtOgGZNu_RQ7SAcFHxXg_-mJGkd4r8IEQsqs-RTA-mZLUkFOvNCYFwvV4y4wGdOOyg'; 
