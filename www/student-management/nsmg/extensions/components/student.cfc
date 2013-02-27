@@ -782,13 +782,10 @@
 			
 			}
 			
-			
-			/***** MARCUS MELO - REMOVE COMMENT AFTER APPLICATION IS LAUNCHED ***/
-			
 			// Check if there is an approved HF App and copy the paperwork
 			if ( VAL(vHasHostIDChanged) ) {
 				// SET PAPERWORK AUTOMATICALLY
-				//APPLICATION.CFC.HOST.setPlacementManagementPaperwork(hostID=ARGUMENTS.hostID);
+				APPLICATION.CFC.HOST.setPlacementManagementPaperwork(hostID=ARGUMENTS.hostID);
 			}
 		</cfscript>
 	
