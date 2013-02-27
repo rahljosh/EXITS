@@ -3228,7 +3228,7 @@
         	<cfscript>
 				// Check if students speak the same language, if it does set as not compliant
 				if ( qCheckDoublePlacementPrimaryLanguage.recordCount) {
-					vReturnMessage = "<p>Double Placement Non Compliant - It seems both students speak the same language.</p>";
+					vReturnMessage = "<p>Double Placement Non Compliant - It seems both students speak the same language, #qCheckDoublePlacementPrimaryLanguage.name# #ARGUMENTS.doublePlacementID#</p>";
 				}
 			</cfscript>
         
