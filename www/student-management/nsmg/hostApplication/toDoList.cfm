@@ -207,7 +207,7 @@
 				vMissingReferences = VAL(vRequiredApprovedReferences-qGetApprovedReferences.recordCount);
 				
 				// Only Force References when approving application
-				if ( vAction EQ 'approved' AND vMissingReferences ) {
+				if ( vAction EQ 'approved' AND vMissingReferences GT 0 ) {
 					SESSION.formErrors.Add("You must submit/approve a total of #vRequiredApprovedReferences# references. #vMissingReferences# reference(s) missing.");
 				}
 				
