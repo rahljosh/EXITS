@@ -11,6 +11,9 @@ Total Number of Applications: #numberofstudents# applications.<br /><br />
 <cfloop from="1" to="#numberofstudents#" index="i">
 <br /><br />
 
+<Cfdump var="#studentXMLFile#">
+
+
 <!----Check if Student has been sumitted---->
 <cfquery name="check_soid" datasource="MySQL">
 select studentid, soid, familylastname, firstname, app_current_status, uniqueID
@@ -32,9 +35,14 @@ from smg_students where soid = '#StudentXMLFile.applications.application[i].XmlA
 <cfif (check_soid.recordcount neq 0 and check_soid.app_current_status lt 11) or (check_soid.recordcount eq 0)>
 
 		<cfset unid = CreateUUID()>
+        <cfif client.companyid lte 5>
+        	<cfset AssignedID = 5>
+        <cfelse>
+        	<cfset AssignedID = #client.companyid#>
+        </cfif>
 		<cfquery name="inset_soid" datasource="MySQL">
 		insert into smg_students  (soid, intrep, phone, randid, uniqueid, app_current_status, companyid)
-					values ('#StudentXMLFile.applications.application[i].XmlAttributes.studentid#',#client.userid#,'523-0944',8675309,'#unid#',5, #client.companyid#)
+					values ('#StudentXMLFile.applications.application[i].XmlAttributes.studentid#',#client.userid#,'523-0944',8675309,'#unid#',5, #AssignedID#)
 		</cfquery>
 		<cfquery name="get_studentid" datasource="mysql">
 		select studentid 
