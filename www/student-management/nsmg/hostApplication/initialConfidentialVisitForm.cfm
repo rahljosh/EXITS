@@ -72,7 +72,7 @@
 		} else {
 			// Read only if it has been approved 
 			vIsEditAllowed = false;
-		}	
+		}			
 	</cfscript>
     
     <!--- FORM Submitted --->
@@ -81,7 +81,13 @@
 		<cfscript>
 			// Data Validation
 			
-            // Date of Visit
+			// Check if we have an AR assigned
+            if ( NOT VAL(qGetHostInfo.areaRepresentativeID) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please assign an AR before submitting this form.");
+            }	
+
+			// Date of Visit
             if ( NOT isDate(FORM.dateOfVisit) ) {
                 // Get all the missing items in a list
                 SESSION.formErrors.Add("Please enter the date you visited the home.");
@@ -193,8 +199,8 @@
                         avoid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.avoid#">,
                         homeAppearance = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homeAppearance#">,
                         typeOfHome = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.typeOfHome#">,
-                        numberBedRooms = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(FORM.numberBedRooms)#">,
-                        numberBathRooms = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(FORM.numberBathRooms)#">,
+                        numberBedRooms = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.numberBedRooms)#">,
+                        numberBathRooms = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.numberBathRooms)#">,
                         livingRoom = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.livingRoom#">,
                         diningRoom = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.diningRoom#">,
                         kitchen = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.kitchen#">,
@@ -206,7 +212,7 @@
                         livingYear = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.livingYear#">,
                         other =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.other#">
                     WHERE 
-                        fk_reportID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_ID#">                  
+                        fk_reportID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.pr_ID)#">                  
                 </cfquery>   
             
             <!--- Insert --->
@@ -233,11 +239,11 @@
                         <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
                         <cfqueryparam cfsqltype="cf_sql_idstamp" value="#createuuid()#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#DateFormat(now(), 'm')#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostInfo.areaRepresentativeID#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostInfo.regionalManagerID#" null="#yesNoFormat(TRIM(qGetHostInfo.regionalManagerID) EQ '')#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostInfo.regionalManagerID#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostInfo.facilitatorID#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostID#">
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostInfo.areaRepresentativeID)#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostInfo.regionalManagerID)#" null="#yesNoFormat(TRIM(qGetHostInfo.regionalManagerID) EQ '')#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostInfo.regionalManagerID)#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostInfo.facilitatorID)#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.hostID)#">
                     )  
                 </cfquery>
                 
@@ -278,8 +284,8 @@
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.avoid#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homeAppearance#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.typeOfHome#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#val(FORM.numberBedRooms)#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#val(FORM.numberBathRooms)#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.numberBedRooms)#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.numberBathRooms)#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.livingRoom#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.diningRoom#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.kitchen#">,
@@ -479,8 +485,14 @@
               	</p>
                 
                 <p>
-					<strong>Area Representative:</strong> #qGetHostInfo.areaRepresentative# <br />
+					<strong>Area Representative:</strong> 
                     
+                    <cfif NOT VAL(qGetHostInfo.areaRepresentativeID)>
+                    	<span class="required">Please <a href="../index.cfm?curdoc=host_fam_info&hostid=#FORM.hostID#" target="_blank"> click here </a> to assign an area representative before filling out the report</span>
+                    <cfelse>
+                        #qGetHostInfo.areaRepresentative#
+                    </cfif> <br />		
+                                        
                     <strong>Regional Advisor:</strong> #qGetHostInfo.regionalAdvisor# <br />
 					
                     <strong>Regional Manager:</strong> #qGetHostInfo.regionalManager# <br />
