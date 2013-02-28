@@ -84,7 +84,7 @@
 			// Check if we have an AR assigned
             if ( NOT VAL(qGetHostInfo.areaRepresentativeID) ) {
                 // Get all the missing items in a list
-                SESSION.formErrors.Add("Please assign an AR before submitting this form.");
+                SESSION.formErrors.Add("Please assign an Area Representative before submitting this form.");
             }	
 
 			// Date of Visit
