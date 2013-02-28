@@ -1,0 +1,10 @@
+retreving long text (CLOB) using CFQuery
+
+Go to the coldfusion administrator
+select datasources
+edit your datasource
+click on advanced settings
+check the "enable clob"
+save datasource
+
+You shouldn't need to restart CF for this.
