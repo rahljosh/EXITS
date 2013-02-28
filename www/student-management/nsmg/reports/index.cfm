@@ -177,10 +177,10 @@
 	<!--- Reports for Managers --->
     <cfif ListFind("1,2,3,4,5", CLIENT.userType)>
         <tr bgcolor="e2efc7"><td colspan="2"><span class="get_attention"><b>::</b></span> Reports Available for Managers</td></tr>
-        <!----<tr>
-            <td><a href="?curdoc=reports/HostFam_select_region">Host Family Spreadsheet</a></td>
+        <tr>
+            <!----<td><a href="?curdoc=reports/HostFam_select_region">Host Family Spreadsheet</a></td>---->
             <td><a href="?curdoc=reports/select_region">Regional Hierarchy</a></td>
-        </tr>---->
+        </tr>
         <tr>
             <td><a href="?curdoc=cbc/managers_menu">CBC Form Authorization Not Received</a></td>
             <td><!----<a href="?curdoc=reports/userTrainingReports">Training Reports</a>----></td>
