@@ -10,7 +10,7 @@
 <!--- APPLICATION DENIED --->
 <cfset newstatus = 9>
 <Cfif client.companyid lte 5>
-<Cfset FORM.companyid = 5>
+	<Cfset FORM.companyid = 5>
 </Cfif>
 <cfquery name="deny_application" datasource="MySQL">
 	UPDATE smg_students 
