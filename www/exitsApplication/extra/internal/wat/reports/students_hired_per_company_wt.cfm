@@ -94,6 +94,7 @@
                 c.wat_placement, 
                 c.status,
                 c.englishAssessment,
+                ej.title,
                 u.businessname,
                 country.countryname
             FROM   
@@ -113,6 +114,8 @@
                     </cfif>
             LEFT JOIN 
                 smg_countrylist country ON country.countryid = c.home_country
+            LEFT JOIN
+            	extra_jobs ej ON ej.ID = ecpc.jobID
             WHERE 
                 c.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">    
             AND 
@@ -312,6 +315,7 @@
                         <td width="5%">DOB</td>
                         <td width="6%">Country</td>
                         <td width="11%">Email</td>
+                        <td width="7%">Job Title</td>
                         <td width="5%">DS-2019</td>
                         <td width="5%">SSN</td>
                         <td width="5%">Start Date</td>
@@ -330,6 +334,7 @@
                             <td class="style1">#dateformat(qTotalPerHostCompany.dob, 'mm/dd/yyyy')#</td>
                             <td class="style1">#qTotalPerHostCompany.countryname#</td>
                             <td class="style1"><a href="mailto:#qTotalPerHostCompany.email#" class="style4">#qTotalPerHostCompany.email#</a></td>
+                            <td class="style1">#qTotalPerHostCompany.title#</td>
                             <td class="style1">#qTotalPerHostCompany.ds2019#</td>
                             <td class="style1">
                                 <cfif ListFind("1,2,3,4", CLIENT.userType) AND LEN(qTotalPerHostCompany.SSN)>
