@@ -346,7 +346,7 @@
 					) 
 				) {
 				  // Paperwork docs are complete but orientations are missing
-				  vPaperworkImage = 'paperwork_3';
+				  vPaperworkImage = 'paperwork_4';
 			}
 			
         }
