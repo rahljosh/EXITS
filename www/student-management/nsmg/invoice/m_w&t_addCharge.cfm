@@ -165,6 +165,7 @@ FROM extra_candidates e
 INNER JOIN smg_users su ON su.userid = e.intrep
 INNER JOIN smg_programs sp ON sp.programid = e.programid
 WHERE e.intrep = #url.userid#
+AND e.status = 1
 AND sp.type = 11
 AND e.verification_received = '#form.dsVerRepDateRec#'
 AND e.candidateid NOT IN (SELECT sc.stuid
@@ -182,6 +183,7 @@ FROM extra_candidates e
 INNER JOIN smg_users su ON su.userid = e.intrep
 INNER JOIN smg_programs sp ON sp.programid = e.programid
 WHERE e.intrep = #url.userid#
+AND e.status = 1
 AND sp.type = 11
 AND e.verification_received = '#form.dsVerRepDateRec#'
 AND e.candidateid NOT IN (SELECT sc.stuid
@@ -199,6 +201,7 @@ FROM extra_candidates e
 INNER JOIN smg_users su ON su.userid = e.intrep
 INNER JOIN smg_programs sp ON sp.programid = e.programid
 WHERE e.intrep = #url.userid#
+AND e.status = 1
 AND sp.type = 11
 AND e.verification_received = '#form.dsVerRepDateRec#'
 AND e.candidateid NOT IN (SELECT sc.stuid
@@ -216,6 +219,7 @@ FROM extra_candidates e
 INNER JOIN smg_users su ON su.userid = e.intrep
 INNER JOIN smg_programs sp ON sp.programid = e.programid
 WHERE e.intrep = #url.userid#
+AND e.status = 1
 AND sp.type = 11
 AND e.verification_received = '#form.dsVerRepDateRec#'
 AND e.candidateid NOT IN (SELECT sc.stuid
