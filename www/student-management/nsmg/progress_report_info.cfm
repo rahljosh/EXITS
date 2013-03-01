@@ -368,64 +368,86 @@ function OpenLetter(url) {
 	<!--- contact dates: at least one In Person contact for both Host Family and Student or both. --->
     <cfset hostFamilyOK = 0>
     <cfset studentOK = 0>
-    <cfset prevhostFamilyOK = 1>
-    <cfset prevStudentOK = 1>
-    <!----
-    <cfloop query="get_Previousdates">
+    <cfset prevhostFamilyOK = 0>
+    <cfset prevStudentOK = 0>
+    <cfset currentStudentContact = 0>
+    <cfset currentHostContact = 0>
+    <!-------->
+<Cfoutput>
+
+</Cfoutput>
+	<!---Check in Person over previous two months---->
+    <!----If there are no current contact dates, throw error---->
+    
+    <cfif get_dates.recordcount eq 0>
+		
+        <cfset allow_approve = 0>
+        <cfset approve_error_msg = listAppend(approve_error_msg, 'currentDate')>
+    <cfelse>
+    
+    	<!----check previous dates---->
+        <cfloop query="get_Previousdates">
         <!--- type = In Person --->
         <cfif fk_prdate_type EQ 1>
             <!--- Host Family --->
-            <cfif fk_prdate_contact EQ 1>
+            <cfif fk_prdate_type EQ 1 and fk_prdate_contact  eq 1>
                 <cfset prevhostFamilyOK = 1>
             <!--- Student --->
-            <cfelseif fk_prdate_contact EQ 2>
+            <cfelseif fk_prdate_type EQ 1 and fk_prdate_contact  eq 2 >
                 <cfset prevstudentOK = 1>
             <!--- Host Family & Student --->
-            <cfelseif fk_prdate_contact EQ 3>
+            <cfelseif fk_prdate_type EQ 1 or fk_prdate_contact  eq 3>
                 <cfset prevhostFamilyOK = 1>
                 <cfset prevstudentOK = 1>
             </cfif>
         </cfif>
-    </cfloop>
-	---->
-    <!----If there are no current contact dates, throw error---->
+    	</cfloop>
+        
+ <Cfoutput>
+
+</Cfoutput>
     
-    <cfif get_dates.recordcount eq 0>
-		<Cfset hostFamilyOK = 0>
-        <cfset studentOK = 0>
-        <cfset allow_approve = 0>
-        <cfset approve_error_msg = listAppend(approve_error_msg, 'currentDate')>
-    <cfelse>
+    	<!----check current dates---->
         <cfloop query="get_dates">
             	<!--- Host Family --->
-                <cfif fk_prdate_contact EQ 1>
+                <cfif fk_prdate_type EQ 1 and fk_prdate_contact  eq 1>
                     <cfset hostFamilyOK = 1>
+                    
                 <!--- Student --->
-                <cfelseif fk_prdate_contact EQ 2>
+                <cfelseif fk_prdate_type EQ 1 and fk_prdate_contact  eq 2 >
                     <cfset studentOK = 1>
+                    
                 <!--- Host Family & Student --->
-                <cfelseif fk_prdate_contact EQ 3>
+                <cfelseif fk_prdate_type EQ 1 or fk_prdate_contact  eq 3>
                     <cfset hostFamilyOK = 1>
                     <cfset studentOK = 1>
                 </cfif>
+                <cfif fk_prdate_contact eq 2 or fk_prdate_contact eq 3 >
+              	  <cfset currentStudentContact = 1>
+                </cfif>
+                 <cfif fk_prdate_contact eq 1 or fk_prdate_contact eq 3 >
+              	  <cfset currentHostContact = 1>
+                </cfif>
         </cfloop>
-        
-        <Cfif hostFamilyOK eq 0>
+ <Cfoutput>
+
+</Cfoutput>       
+       <cfif not ((prevhostFamilyOK or hostFamilyOK) AND  (prevstudentOK or studentOK))>
+        <cfset allow_approve = 0>
+        <cfset approve_error_msg = 'date'>
+    	</cfif> 
+    
+        <Cfif currentHostContact eq 0>
         	<cfset approve_error_msg = listAppend(approve_error_msg, 'noHostContact')>
             <cfset allow_approve = 0>
         </Cfif>
-        <Cfif studentOK eq 0>
+        <Cfif currentStudentContact eq 0>
         	<cfset approve_error_msg = listAppend(approve_error_msg, 'noStudentContact')>
             <cfset allow_approve = 0>
         </Cfif>
     </cfif>
-    <!---Check in Person over previous two months
-
-    <cfif not (prevhostFamilyOK and prevstudentOK)>
-        <cfset allow_approve = 0>
-        <cfset approve_error_msg = 'date'>
-    </cfif>
-     ---->
+    
+    
 	<!--- questions: all questions must be answered. --->
     <cfset questionsOK = 1>
     <cfloop query="get_questions">
@@ -483,6 +505,7 @@ function OpenLetter(url) {
 
 <center>
 <br />
+
 
 <h2>
 	<cfif FORM.report_mode EQ 'print'>
