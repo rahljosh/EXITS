@@ -88,7 +88,7 @@
 	AppEmail = APPLICATION.EMAIL;
 	APPLICATION.EMAIL.errors = 'errors@student-management.com';
 	APPLICATION.EMAIL.finance = 'marcel@iseusa.com';	
-	APPLICATION.EMAIL.cbcNotifications = 'support@iseusa.com;bill@iseusa.com;gary@iseusa.com;merri@iseusa.com;tal@iseusa.com;bhause@iseusa.com';
+	APPLICATION.EMAIL.cbcNotifications = 'support@iseusa.com;bill@iseusa.com;gary@iseusa.com;merri@iseusa.com;tal@iseusa.com;bhause@iseusa.com;jan@iseusa.com';
 	APPLICATION.EMAIL.cbcCaseNotifications = 'support@student-management.com;jana@case-usa.org';
 	APPLICATION.EMAIL.hostLeadNotifications = 'lamonica@iseusa.com';
 	
