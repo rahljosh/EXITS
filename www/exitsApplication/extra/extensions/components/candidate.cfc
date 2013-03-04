@@ -1130,6 +1130,22 @@
         </cfif>
         	
 	</cffunction>
+    
+    <cffunction name="getIncidentSubjects" access="public" returntype="query" output="no" hint="Gets the possible subjects for an incident.">
+    	<cfargument name="incidentID" default="0" required="no" hint="incidentID is not required">
+        
+        <cfquery name="qGetIncidentSubjects" datasource="#APPLICATION.DSN.Source#">
+        	SELECT *
+            FROM extra_incident_subjects
+            <cfif VAL(ARGUMENTS.incidentID)>
+            	WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.incidentID#">
+            </cfif>
+        </cfquery>
+        
+        <cfreturn qGetIncidentSubjects>
+    
+    </cffunction>
+    
 	<!------------------------------------------------------------ 
 		End of Candidate Incident Report 
 	------------------------------------------------------------->
