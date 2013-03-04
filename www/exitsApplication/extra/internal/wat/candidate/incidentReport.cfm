@@ -167,7 +167,7 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td class="style2" style="background-color:##8FB6C9; border-bottom:1px solid ##C7CFDC; text-align:right; padding-right:10px;">Subject</td>
+                                <td class="style2" style="background-color:##8FB6C9; border-bottom:1px solid ##C7CFDC; text-align:right; padding-right:10px;">Nature of Complaint</td>
                                 <td style="border-bottom:1px solid ##C7CFDC;">
                                 	<select name="subject" id="subject" class="xLargeField">
                                     	<cfloop query="qGetIncidentSubjects">
