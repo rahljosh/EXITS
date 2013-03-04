@@ -2812,7 +2812,7 @@
                                             </tr>	
                                             <tr>
                                                 <td class="style1"><strong>Date</strong></td>
-                                                <td class="style1"><strong>Subject</strong></td>
+                                                <td class="style1"><strong>Nature of Complaint</strong></td>
                                                 <td class="style1"><strong>Host Company</strong></td>
                                                 <td class="style1"><strong>Solved</strong></td>
                                             </tr>
