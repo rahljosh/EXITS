@@ -94,6 +94,8 @@
                             
                             <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/incidentReport"  class="style4">- Incident Report</a></p>
                             
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/terminatedListReport"  class="style4">- Terminated List</a></p>
+                            
                             <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/culturalActivityReport"  class="style4">- Cultural Activity Report</a></p>
                             
                             <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/missing_documents_wt"  class="style4">- Missing Documents</a></p>

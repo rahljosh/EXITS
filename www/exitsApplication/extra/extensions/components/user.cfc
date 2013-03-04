@@ -60,8 +60,18 @@
 		<cfreturn qGetUsers>
 	</cffunction>
 
+	<cffunction name="getIntlReps" access="public" returntype="query" output="no" hint="Gets a list of intl. reps">
+    	<cfquery name="qGetIntlReps" datasource="#APPLICATION.DSN.Source#">
+        	SELECT userID, businessName
+        	FROM smg_users
+        	WHERE userType = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+        	AND businessName != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+        	ORDER BY businessName
+        </cfquery>
+        <cfreturn qGetIntlReps>
+    </cffunction>
 
-	<cffunction name="getIntlRepAssignedToCandidate" access="public" returntype="query" output="false" hint="Gets a list of intl. reps">
+	<cffunction name="getIntlRepAssignedToCandidate" access="public" returntype="query" output="false" hint="Gets a list of intl. reps that are assigned">
 
         <cfquery 
 			name="qGetIntlRepAssignedToCandidate" 
