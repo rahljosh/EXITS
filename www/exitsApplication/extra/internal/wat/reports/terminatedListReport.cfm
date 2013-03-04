@@ -1,9 +1,9 @@
 <!--- ------------------------------------------------------------------------- ----
 	
-	File:		housingAddressList.cfm
+	File:		terminatedListReport.cfm
 	Author:		James Griffiths
-	Date:		December 27, 2012
-	Desc:		Shows candidate arrival addresses.
+	Date:		March 4, 2013
+	Desc:		Shows a list of terminated candidates.
 
 ----- ------------------------------------------------------------------------- --->
 
@@ -15,7 +15,6 @@
     <cfparam name="FORM.printOption" default="1">
     <cfparam name="FORM.programID" default="0">
     <cfparam name="FORM.intlRepID" default="0"> <!--- 0 for all reps --->
-    <cfparam name="FORM.hostCompany" default="all"> <!--- all, primary, secondary --->
     <cfparam name="FORM.status" default="all"> <!--- all, active, inactive --->
     
     <!--- Get the list of programs --->
@@ -29,41 +28,51 @@
 <!--- FORM SUBMITTED --->
 <cfif FORM.submitted>
 
-	<!--- Get selected reps with candidates in the selected program --->
-	<cfquery name="qGetIntlReps" datasource="#APPLICATION.DSN.Source#">
-		SELECT u.userID, u.businessName
-		FROM smg_users u
-		INNER JOIN extra_candidates ec ON ec.intRep = u.userID
-			AND ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
-			AND ec.status != <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
-			<cfif FORM.status NEQ 'All'>
-				AND ec.status = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.status#">
-			</cfif>
-            <cfif FORM.hostCompany EQ "primary">
-            	AND ec.hostcompanyid != 0
-          	<cfelseif FORM.hostCompany EQ "secondary">
-            	AND ec.candidateID IN (SELECT candidateID FROM extra_candidate_place_company WHERE isSecondary = 1 AND status = 1)
-            </cfif>
-		WHERE u.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
-		<cfif CLIENT.userType EQ 8>
-			AND u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
-		<cfelseif VAL(FORM.intlRepID)>
-			AND u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intlRepID#">
-		</cfif>
-        GROUP BY u.userID
-		ORDER BY u.businessname
-	</cfquery>
+	<cfquery name="qGetResults" datasource="#APPLICATION.DSN.Source#">
+    	SELECT c.candidateID, c.lastName, c.firstName, c.sex, c.wat_placement, c.startDate, c.endDate,
+            u.userID, u.businessName,
+            ecpc.isSecondary,
+            eh.hostCompanyID, eh.name AS hostCompanyName
+        FROM extra_candidates c
+        LEFT JOIN smg_users u ON c.intRep = u.userID
+        LEFT JOIN extra_candidate_place_company ecpc ON ecpc.candidateID = c.candidateID
+        	AND ecpc.status = 1
+       	LEFT JOIN extra_hostcompany eh ON eh.hostCompanyID = ecpc.hostCompanyID
+        WHERE c.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.programID)#">
+        <cfif VAL(FORM.intlRepID)>
+        	AND c.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.intlRepID)#">
+        </cfif>
+        <cfif FORM.status NEQ "all">
+            AND c.status = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.status)#">
+        </cfif>
+		AND c.candidateID IN (SELECT candidateID FROM extra_incident_report WHERE subject="Terminated" AND isSolved=0)
+    </cfquery>
+    
+    <cfquery name="qGetResultsGrouped" datasource="#APPLICATION.DSN.Source#">
+    	SELECT c.candidateID, c.lastName, c.firstName, c.sex, c.wat_placement, c.startDate, c.endDate,
+            u.userID, u.businessName,
+            eh.hostCompanyID, eh.name AS hostCompanyName
+        FROM extra_candidates c
+        LEFT JOIN smg_users u ON c.intRep = u.userID
+        LEFT JOIN extra_candidate_place_company ecpc ON ecpc.candidateID = c.candidateID
+        	AND ecpc.status = 1
+       	LEFT JOIN extra_hostcompany eh ON eh.hostCompanyID = ecpc.hostCompanyID
+        WHERE c.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.programID)#">
+        <cfif VAL(FORM.intlRepID)>
+        	AND c.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.intlRepID)#">
+        </cfif>
+        <cfif FORM.status NEQ "all">
+            AND c.status = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.status)#">
+        </cfif>
+        AND c.candidateID IN (SELECT candidateID FROM extra_incident_report WHERE subject="Terminated" AND isSolved=0)
+        GROUP BY c.candidateID
+    </cfquery>
 	
 </cfif>
 
 <script type="text/javascript">
 	function formValidation(){
 		with (document.form) {
-			if (intrep.value == '') {
-				alert("Please, select an intl. rep.!");
-				intrep.focus();
-				return false;
-			}
 			if (program.value == '') {
 				alert("Please, select a program!");
 				program.focus();
@@ -91,7 +100,7 @@
         <table width="95%" cellpadding="4" cellspacing="0" border="0" align="center">
             <tr valign="middle" height="24">
                 <td valign="middle" bgcolor="##E4E4E4" class="title1" colspan=2>
-                    <font size="2" face="Verdana, Arial, Helvetica, sans-serif">&nbsp; Program Reports -> Housing Address List</font>
+                    <font size="2" face="Verdana, Arial, Helvetica, sans-serif">&nbsp; Program Reports -> Terminated List</font>
                 </td>
             </tr>
             <tr valign="middle" height="24">
@@ -118,16 +127,6 @@
                         <cfloop query="qGetProgramList">
                             <option value="#programID#" <cfif qGetProgramList.programID eq FORM.programID> selected</cfif> >#programname#</option>
                         </cfloop>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td valign="middle" align="right" class="style1"><b>Placement:</b></td>
-                <td>
-                    <select name="hostCompany" class="style1">
-                        <option value="all">All</option>
-                        <option value="primary" <cfif FORM.hostCompany eq 'primary'>selected</cfif>>Primary Placements</option>
-                        <option value="secondary" <cfif FORM.hostCompany eq 'secondary'>selected</cfif>>Secondary Placements</option>
                     </select>
                 </td>
             </tr>
@@ -171,98 +170,64 @@
         </cfscript>
         
         <cfsavecontent variable="reportContent">
-        
-        	<cfloop query="qGetIntlReps">
             
-            	<cfquery name="qGetCandidates" datasource="#APPLICATION.DSN.Source#">
-                	SELECT ec.candidateID, ec.hostCompanyID, ec.lastName, ec.firstName, ec.sex, ec.startDate, ec.endDate, ec.ds2019, ec.wat_placement, ec.watDateCheckedIn,
-                    	ec.arrivalDate, ec.arrival_address, ec.arrival_city, ec.arrival_zip,
-                        s.state, ehc.name
-                    FROM extra_candidates ec
-                    LEFT JOIN smg_states s ON s.id = ec.arrival_state
-                   	LEFT JOIN extra_hostcompany ehc ON ehc.hostCompanyID = ec.hostCompanyID
-                    WHERE ec.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(userID)#">
-                    AND ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.programID)#">
-                    AND ec.status != "canceled"
-                    <cfif FORM.status NEQ "all">
-                    	AND ec.status = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.status)#">
-                    </cfif>
-                    <cfif FORM.hostCompany EQ "primary">
-                    	AND ec.hostcompanyid != 0
-                    <cfelseif FORM.hostCompany EQ "secondary">
-                    	AND ec.candidateID IN (SELECT candidateID FROM extra_candidate_place_company WHERE isSecondary = 1 AND status = 1)
-                    </cfif>
-                </cfquery>
-            
-            	<table width="99%" cellpadding="4" cellspacing=0 align="center">
-                	<tr>
-                    	<td colspan="11">
-                        	<small>
-                            	<strong>#qGetIntlReps.businessname# - Total candidates: #qGetCandidates.recordCount#</strong> 
-                            </small>
-                        </td>
-                    </tr>
-                    <cfif ListFind("2,3", FORM.printOption)>
-                        <tr><td colspan="11"><img src="../../pics/black_pixel.gif" width="100%" height="2"></td></tr>
-                    </cfif>
-                    <tr>
-                        <th align="left" class="#tableTitleClass#" width="5%">ID</Th>
-                        <th align="left" class="#tableTitleClass#" width="6%">Last Name</Th>
-                        <th align="left" class="#tableTitleClass#" width="6%">First Name</Th>
-                        <th align="left" class="#tableTitleClass#" width="3%">Sex</th>
-                        <th align="left" class="#tableTitleClass#" width="8%">Start Date</th>
-                        <th align="left" class="#tableTitleClass#" width="8%">End Date</th>
-                        <th align="left" class="#tableTitleClass#" width="24%">Placement Information</th>
-                        <th align="left" class="#tableTitleClass#" width="10%">DS-2019</th>
-                        <th align="left" class="#tableTitleClass#" width="10%">Option</th>
-                        <th align="left" class="#tableTitleClass#" width="8%">Check-in Date</th>
-                        <th align="left" class="#tableTitleClass#" width="12%">Arrival Address</th>
-                    </tr>
-                    <cfif ListFind("2,3", FORM.printOption)>
-                        <tr><td colspan="11"><img src="../../pics/black_pixel.gif" width="100%" height="2"></td></tr>
-                    </cfif>
-                    <cfloop query="qGetCandidates">
-                    	<cfif FORM.hostCompany NEQ "primary">
-                            <cfquery name="qGetSecondaryPlacements" datasource="MySql">
-                                SELECT ecpc.hostCompanyID, h.name
-                                FROM extra_candidate_place_company ecpc
-                                INNER JOIN extra_hostCompany h ON h.hostCompanyID = ecpc.hostCompanyID
-                                WHERE ecpc.candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(candidateID)#">
-                                AND ecpc.status = 1
-                                AND ecpc.isSecondary = 1
+			<table width="99%" cellpadding="4" cellspacing=0 align="center">
+          		<tr>
+               		<td colspan="11">
+                        <small>
+                            <strong>Total candidates: #qGetResults.recordCount#</strong> 
+                        </small>
+                 	</td>
+            	</tr>
+				<cfif ListFind("2,3", FORM.printOption)>
+                    <tr><td colspan="11"><img src="../../pics/black_pixel.gif" width="100%" height="2"></td></tr>
+                </cfif>
+                <tr>
+                    <th align="left" class="#tableTitleClass#">ID</Th>
+                    <th align="left" class="#tableTitleClass#">Last Name</Th>
+                    <th align="left" class="#tableTitleClass#">First Name</Th>
+                    <th align="left" class="#tableTitleClass#">Sex</th>
+                    <th align="left" class="#tableTitleClass#">Start Date</th>
+                    <th align="left" class="#tableTitleClass#">End Date</th>
+                    <th align="left" class="#tableTitleClass#">Placement Information</th>
+                    <th align="left" class="#tableTitleClass#">Option</th>
+                    <th align="left" class="#tableTitleClass#">Intl. Rep.</th>
+                </tr>
+				<cfif ListFind("2,3", FORM.printOption)>
+                    <tr><td colspan="11"><img src="../../pics/black_pixel.gif" width="100%" height="2"></td></tr>
+                </cfif>
+                <cfloop query="qGetResultsGrouped">
+                	<tr <cfif qGetResultsGrouped.currentRow mod 2>bgcolor="##E4E4E4"</cfif>>
+                        <td class="style1">#candidateid#</td>
+                        <td class="style1">#lastname#</td>
+                        <td class="style1">#firstname#</td>
+                        <td class="style1">#sex#</td>
+                        <td class="style1">#DateFormat(startDate,'mm/dd/yyyy')#</td>
+                        <td class="style1">#DateFormat(endDate,'mm/dd/yyyy')#</td>
+                        <td class="style1">
+                        	<cfquery name="qGetPlacements" dbtype="query">
+                            	SELECT *
+                                FROM qGetResults
+                                WHERE candidateID = #candidateID#
+                                ORDER BY isSecondary
                             </cfquery>
-                        </cfif>
-                    	<tr <cfif qGetCandidates.currentRow mod 2>bgcolor="##E4E4E4"</cfif>>
-                        	<td class="style1">#candidateid#</td>
-                            <td class="style1">#lastname#</td>
-                            <td class="style1">#firstname#</td>
-                            <td class="style1">#sex#</td>
-                            <td class="style1">#DateFormat(startDate,'mm/dd/yyyy')#</td>
-                            <td class="style1">#DateFormat(endDate,'mm/dd/yyyy')#</td>
-                            <td class="style1">
-                            	<cfif hostCompanyID NEQ 0>
-                                	<a href="?curdoc=hostcompany/hostCompanyInfo&hostCompanyID=#hostCompanyID#"  target="_blank" class="style4">
-                                        #name#
-                                    </a>
+                            <cfloop query="qGetPlacements">
+                            	<cfif VAL(isSecondary)>
+                                	Secondary:
+                                <cfelse>
+                                	Primary: 
                                 </cfif>
-                                <cfif FORM.hostCompany NEQ "primary">
-                                	<cfloop query="qGetSecondaryPlacements">
-                                    	<br/>
-                                        <a href="?curdoc=hostcompany/hostCompanyInfo&hostCompanyID=#hostCompanyID#"  target="_blank" class="style4">
-                                            #name#
-                                        </a>
-                                    </cfloop>
+                            	#hostCompanyName# (###hostCompanyID#)
+                                <cfif qGetPlacements.currentRow NEQ qGetPlacements.recordCount>
+                                	<br/>
                                 </cfif>
-                            </td>
-                            <td class="style1">#ds2019#</td>
-                            <td class="style1">#wat_placement#</td>
-                            <td class="style1">#DateFormat(watDateCheckedIn,'mm/dd/yyyy')#</td>
-                            <td class="style1">#arrival_address#<br/>#arrival_city#<cfif state NEQ "">,</cfif> #state# #arrival_zip#</td>
-                        </tr>
-                    </cfloop>
-                </table>
-            
-            </cfloop>
+                            </cfloop>
+                        </td>
+                        <td class="style1">#wat_placement#</td>
+                        <td class="style1">#businessName# (###userID#)</td>
+                    </tr>
+               	</cfloop>
+  			</table>
         
         </cfsavecontent>
         
