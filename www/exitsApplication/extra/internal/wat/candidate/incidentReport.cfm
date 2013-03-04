@@ -44,6 +44,9 @@
 		
 		// Get Incident Information
 		qGetIncidentInfo = APPLICATION.CFC.CANDIDATE.getIncidentReport(incidentID=FORM.incidentID, candidateID=qGetCandidateInfo.candidateID);
+		
+		// Get The Incident Subjects
+		qGetIncidentSubjects = APPLICATION.CFC.CANDIDATE.getIncidentSubjects();
     
     	// FORM Submitted
 		if ( FORM.submitted ) {
@@ -166,7 +169,13 @@
                             <tr>
                                 <td class="style2" style="background-color:##8FB6C9; border-bottom:1px solid ##C7CFDC; text-align:right; padding-right:10px;">Subject</td>
                                 <td style="border-bottom:1px solid ##C7CFDC;">
-                                    <input type="text" name="subject" id="subject" value="#FORM.subject#" class="xxLargeField" maxlength="250">
+                                	<select name="subject" id="subject" class="xLargeField">
+                                    	<cfloop query="qGetIncidentSubjects">
+                                        	<option value="#qGetIncidentSubjects.subject#" <cfif qGetIncidentSubjects.subject EQ FORM.subject> selected="selected" </cfif> >
+                                            	#qGetIncidentSubjects.subject#
+                                          	</option>
+                                        </cfloop>
+                                    </select>
                                 </td>
                             </tr>
                             <cfif VAL(qGetIncidentInfo.recordCount)>
