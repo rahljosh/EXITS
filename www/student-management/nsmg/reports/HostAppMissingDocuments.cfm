@@ -108,7 +108,7 @@
                                 <cfquery name="unresolvedIssues" dbtype="query">
                                select actions
                                from qGetStudentWithMissingCompliance
-                               where studentid =<Cfqueryparam cfsqltype="cf_sql_integer" value="#studentid#">
+                               where studentid =<Cfqueryparam cfsqltype="cf_sql_integer" value="#studentid#"> and hostid = <Cfqueryparam cfsqltype="cf_sql_integer" value="#hostid#">
                                </cfquery>
                                 <tr bgcolor="##c4d9e6" >
                             
