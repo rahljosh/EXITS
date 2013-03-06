@@ -18,7 +18,7 @@
 
 	// Param SESSION Struct Variables
 	param name="SESSION.EMAIL" default="struct";	
-	param name="SESSION.ROLES" default="struct";	
+	param name="SESSION.USER.ROLES" default="struct";	
 
 	// Param SESSION Array Variables
 	param name="SESSION.pageMessages" default="array";	

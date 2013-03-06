@@ -88,7 +88,7 @@
 			// Get Company Information
 			qGetCompanyInfo = APPLICATION.CFC.COMPANY.getCompanies(httpHost=CGI.http_host);
 		
-			// Set SESSION.ROLES
+			// Set SESSION.EMAIL
 			SESSION.EMAIL = StructNew();
 			
 			// Set Email Support According to Company

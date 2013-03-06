@@ -273,6 +273,7 @@
 				SESSION.USER.companyURL = "http://smg.local/";
 				SESSION.USER.hostApplicationURL = 'http://host.local/';
 				SESSION.USER.emailSupport = 'support@student-management.com';
+				SESSION.USER.emailCompliance = 'support@iseusa.com';
 				
 			} else { 
 			
@@ -281,9 +282,11 @@
 				if ( FindNoCase("case.exitsapplication.com", CGI.SERVER_NAME) ) {
 					SESSION.USER.hostApplicationURL = 'http://www.case-usa.org/hostApplication/';
 					SESSION.USER.emailSupport = 'support@case-usa.org';
+					SESSION.USER.emailCompliance = 'jana@case=usa.org';
 				} else {
 					SESSION.USER.hostApplicationURL = 'https://www.iseusa.com/hostApplication/';
 					SESSION.USER.emailSupport = 'support@iseusa.com';
+					SESSION.USER.emailCompliance = 'merri@iseusa.com';
 				}
 				
 			}
@@ -317,7 +320,14 @@
 					// Set Session
 					setUserSession();
 				}
-
+				
+				// New field emailCompliance added | Making sure it is populated - this code can be removed later 03/06/2013 - Marcus
+				if ( NOT IsValid("email", SESSION.USER.emailCompliance) ) {
+					// Set Session
+					setUserSession();
+				}
+				// New field emailCompliance added | Making sure it is populated - this code can be removed later 03/06/2013 - Marcus
+				
 				// Param Session Variables so we don't get any errors with new ones
 				param name="SESSION.USER.ID" default="";
 				param name="SESSION.USER.firstName" default="";
@@ -328,6 +338,7 @@
 				param name="SESSION.USER.companyURL" default="";
 				param name="SESSION.USER.hostApplicationURL" default="";
 				param name="SESSION.USER.emailSupport" default="";
+				param name="SESSION.USER.emailCompliance" default="";
 				param name="SESSION.USER.paperworkSkipAllowed" default="false";
 				param name="SESSION.USER.myUploadFolder" default="";
 
@@ -368,8 +379,8 @@
 		</cfquery>
         
         <cfscript>
-			// Set SESSION.ROLES
-			SESSION.ROLES = StructNew();
+			// Set SESSION.USER.ROLES
+			SESSION.USER.ROLES = StructNew();
 			
 			// Loop Through Roles
 			for ( i=1; i LTE qGetUserInfoRoles.recordCount; i=i+1 ) {
@@ -377,10 +388,10 @@
 				// Check if user has roles
 				if ( VAL(qGetUserInfoRoles.userID[i]) ) {
 					// Set Roles
-					SESSION.ROLES[qGetUserInfoRoles.name[i]] = true;
+					SESSION.USER.ROLES[qGetUserInfoRoles.name[i]] = true;
 				} else {
 					// Set Not Allowed
-					SESSION.ROLES[qGetUserInfoRoles.name[i]] = false;
+					SESSION.USER.ROLES[qGetUserInfoRoles.name[i]] = false;
 				}
 				
 			}
@@ -399,7 +410,7 @@
 			
 			try {
 				// Check if roles do not exist
-				if ( StructIsEmpty(SESSION.ROLES) ) {
+				if ( StructIsEmpty(SESSION.USER.ROLES) ) {
 					// Set Roles
 					setUserSessionRoles();
 				}
@@ -410,7 +421,7 @@
 			
 			try {
 				// Get Role Access
-				return SESSION.ROLES[ARGUMENTS.role];
+				return SESSION.USER.ROLES[ARGUMENTS.role];
 			} catch (Any e) {
 				// Error
 				return false;	
