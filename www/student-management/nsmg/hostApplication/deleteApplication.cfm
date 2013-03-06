@@ -11,7 +11,7 @@
 				smg_host_app_history
 				smg_host_children
 					
-				smg_family_references
+				smg_host_reference
 				smg_host_reference_anwers
 				smg_host_reference_tracking
 				
@@ -108,7 +108,7 @@
                                     SELECT
                                         refID
                                     FROM
-                                        smg_family_references
+                                        smg_host_reference
                                     WHERE
                                         referenceFor = <cfqueryparam cfsqltype="integer" value="#VAL(qGetHostInfo.hostID)#">
                                     )
@@ -124,7 +124,7 @@
                                     SELECT
                                         refID
                                     FROM
-                                        smg_family_references
+                                        smg_host_reference
                                     WHERE
                                         referenceFor = <cfqueryparam cfsqltype="integer" value="#VAL(qGetHostInfo.hostID)#">
                                     )
@@ -134,7 +134,7 @@
         <!--- Reference --->
         <cfquery datasource="#APPLICATION.DSN#">
             DELETE FROM
-                smg_family_references
+                smg_host_reference
             WHERE
                 referenceFor = <cfqueryparam cfsqltype="integer" value="#VAL(qGetHostInfo.hostID)#">
         </cfquery>   
@@ -255,7 +255,7 @@
         
         <p>Data deleted from smg_host_children</p>
             
-        <p>Data deleted from smg_family_references</p>
+        <p>Data deleted from smg_host_reference</p>
         
         <p>Data deleted from smg_host_reference_anwers</p>
         
