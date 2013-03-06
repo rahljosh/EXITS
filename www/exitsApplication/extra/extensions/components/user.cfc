@@ -45,7 +45,7 @@
                 </cfif>
                 
                 <cfif VAL(ARGUMENTS.businessNameExists)>
-                	businessname != ""
+                	AND businessname != ""
                 </cfif>
                 
 				<cfif VAL(ARGUMENTS.usertype)>
