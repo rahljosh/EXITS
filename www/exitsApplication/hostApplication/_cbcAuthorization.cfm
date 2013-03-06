@@ -140,10 +140,10 @@
 					SESSION.formErrors.Add("The CBC authorization signature for #qGetCBCQualifiedMembers.name[i]# is missing");
 				}	
 				
-				vMemberName = TRIM(qGetCBCQualifiedMembers.name) & " " & TRIM(qGetCBCQualifiedMembers.lastName);
+				vMemberName = TRIM(qGetCBCQualifiedMembers.name[i]) & " " & TRIM(qGetCBCQualifiedMembers.lastName[i]);
 				
 				if ( LEN(FORM[qGetCBCQualifiedMembers.childID[i] & "memberSignature"]) AND TRIM(FORM[qGetCBCQualifiedMembers.childID[i] & "memberSignature"]) NEQ vMemberName ) {
-					SESSION.formErrors.Add("Please make sure you enter the exact name as displayed for host member #qGetCBCQualifiedMembers.name[i]# signature.");
+					SESSION.formErrors.Add("Please make sure you enter the exact name as displayed for host member #vMemberName# signature.");
 				}
 				
 			}			
