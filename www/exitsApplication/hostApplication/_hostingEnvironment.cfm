@@ -567,15 +567,18 @@
                 </td>
             </tr>
         </table>
-    
-        <table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
-            <tr>
-                <td align="right">
-    	            <input name="submit" type="image" src="images/buttons/Next.png" border="0">
-                </td>
-            </tr>
-        </table>
 
+        <!--- Check if FORM submission is allowed --->
+        <cfif APPLICATION.CFC.UDF.allowFormSubmission(section=URL.section)>
+            <table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
+                <tr>
+                    <td align="right">
+                        <input name="submit" type="image" src="images/buttons/Next.png" border="0">
+                    </td>
+                </tr>
+            </table>
+		</cfif>
+        
 	</cfform>
     
 </cfoutput>

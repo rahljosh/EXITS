@@ -30,7 +30,8 @@
         <cfparam name="SESSION.HOST.familyName" default="">
         <cfparam name="SESSION.HOST.email" default="">
         <cfparam name="SESSION.HOST.seasonID" default="0">
-        <cfparam name="SESSION.HOST.isMenuBlocked" default="false">
+        <cfparam name="SESSION.HOST.userID" default="0">
+        <cfparam name="SESSION.HOST.isSectionLocked" default="false">
         <cfparam name="SESSION.HOST.isExitsLogin" default="false">
 		<!--- Full Paths --->
         <cfparam name="SESSION.HOST.PATH.albumLarge" default="">
@@ -114,9 +115,11 @@
 		<cfargument name="applicationStatus" default="9" hint="applicationStatus">
         <cfargument name="familyName" default="" hint="familyName">
         <cfargument name="email" default="" hint="email">
-        <cfargument name="isMenuBlocked" default="false" hint="Set to true to block menu after HF submits application">
         <cfargument name="isExitsLogin" default="false" hint="Set to true when logging in from EXITS">       
-        
+        <cfargument name="regionID" default="0" hint="Region ID">
+        <cfargument name="userID" default="0" hint="User ID">
+        <cfargument name="currentSection" default="login" hint="">
+
         <cfscript>
 			// New Struct
 			SESSION.HOST = StructNew();
@@ -128,13 +131,22 @@
 			SESSION.HOST.familyName = ARGUMENTS.familyName;
 			SESSION.HOST.email = ARGUMENTS.email;
 			SESSION.HOST.seasonID = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID;
+			SESSION.HOST.regionID = VAL(ARGUMENTS.regionID);
+			SESSION.HOST.userID = VAL(ARGUMENTS.userID);
 			
-			// Set to true after HF submits app
-			SESSION.HOST.isMenuBlocked = ARGUMENTS.isMenuBlocked;	
-
 			// Set tp true when logged in from EXITS
 			SESSION.HOST.isExitsLogin = ARGUMENTS.isExitsLogin;	
 
+			// Get Sections that are denied - Accessible from any page
+			qGetDeniedSections = APPLICATION.CFC.HOST.getDeniedSections();
+			
+			// Locked section if opening a specific section from EXITS or if application has been denied
+			if ( ( SESSION.HOST.isExitsLogin ) OR ( NOT SESSION.HOST.isExitsLogin AND qGetDeniedSections.recordCount ) ) {
+				SESSION.HOST.isSectionLocked = true;					
+			} else {				
+				SESSION.HOST.isSectionLocked = false;					
+			}
+			
 			// Set Folders
 			if ( VAL(ARGUMENTS.hostID) ) {
 				
@@ -167,8 +179,8 @@
 
 			}
 			
-			// Re-build Menu based on host family information
-			APPLICATION.leftMenu = APPLICATION.CFC.UDF.buildLeftMenu();
+			// Re-build Menu based on logged in user/host family information
+			SESSION.leftMenu = APPLICATION.CFC.UDF.buildLeftMenu(currentSection=ARGUMENTS.currentSection);
 		</cfscript>
 		
 	</cffunction>
@@ -185,18 +197,6 @@
 		
 	</cffunction>
 
-
-	<!--- Set Host Session Menu As Blocked --->
-	<cffunction name="setHostSessionisMenuBlocked" access="public" returntype="void" output="false" hint="Set an specific Session Variables">
-        <cfargument name="isMenuBlocked" default="false" hint="isMenuBlocked">
-        
-        <cfscript>
-			// Disable Menu
-			SESSION.HOST.isMenuBlocked = ARGUMENTS.isMenuBlocked;	
-		</cfscript>
-		
-	</cffunction>
-        
 
 	<cffunction name="getHostSession" access="public" returntype="struct" hint="Get HOST Session variables" output="no">
 

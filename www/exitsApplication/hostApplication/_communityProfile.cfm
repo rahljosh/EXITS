@@ -474,12 +474,16 @@
                 <td><textarea cols="50" rows="4" name="point_interest" placeholder="Parks, museums, historical sites, local attractions">#FORM.point_interest#</textarea></td>
             </tr>
         </table>
+
+        <!--- Check if FORM submission is allowed --->
+        <cfif APPLICATION.CFC.UDF.allowFormSubmission(section=URL.section)>
+            <table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
+                <tr>
+                    <td align="right"><input name="Submit" type="image" src="images/buttons/Next.png" border="0"></td>
+                </tr>
+            </table>
+		</cfif>
         
-        <table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
-            <tr>
-                <td align="right"><input name="Submit" type="image" src="images/buttons/Next.png" border="0"></td>
-			</tr>
-        </table>
     </form>
 
 </cfoutput>

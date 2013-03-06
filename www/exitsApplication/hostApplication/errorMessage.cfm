@@ -12,16 +12,6 @@
 <cfsilent>
 	
     <cfscript>
-		// If Host is logged in skip the login page
-		if ( VAL(APPLICATION.CFC.SESSION.getHostSession().ID) AND URL.section EQ "login" ) {
-			URL.section = "overview";
-		}
-		
-		// Submitted applications have access only to overview and logout pages
-		if ( APPLICATION.CFC.SESSION.getHostSession().isMenuBlocked AND NOT APPLICATION.CFC.SESSION.getHostSession().isExitsLogin AND NOT ListFind("login,checkList,overview,logout", URL.section) ) {
-			URL.section = "overview";
-		} 
-		
 		// Param ERRROR ID
 		param name="vErrorID" default="###APPLICATION.CFC.SESSION.getHostSession().ID#-#dateformat(now(),'mmddyyyy')#-#timeformat(now(),'hhmmss')#";
 	</cfscript>

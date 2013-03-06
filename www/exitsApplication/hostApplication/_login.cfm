@@ -86,7 +86,8 @@
                 hostID, 
                 hostAppStatus,
                 familylastname,
-                email
+                email,
+                regionID
             FROM 
                 smg_hosts
             WHERE 
@@ -122,20 +123,14 @@
             </cfif>
         
             <cfscript>
-				if ( qLoginHostFamily.hostAppStatus LTE 7 ) {
-					vIsMenuBlocked = true;
-				} else {
-					vIsMenuBlocked = false;
-				}
-			
 				// Login Host Family
 				APPLICATION.CFC.SESSION.setHostSession(
 					hostID=qLoginHostFamily.hostID,												
 					applicationStatus=qLoginHostFamily.hostAppStatus,
 					familyName=qLoginHostFamily.familylastname,
 					email=qLoginHostFamily.email,
-					isMenuBlocked=vIsMenuBlocked,
-					isExitsLogin=false
+					isExitsLogin=false,
+					regionID=qLoginHostFamily.regionID
 				);
 
 				// Go to overview page
@@ -241,8 +236,8 @@
 							applicationStatus=8,
 							familyName=qLoginHostFamily.lastName,
 							email=qLoginHostFamily.email,
-							isMenuBlocked=vIsMenuBlocked,
-							isExitsLogin=false
+							isExitsLogin=false,
+							regionID=qLoginHostFamily.regionID
 						);
 					
 						// Go to overview page

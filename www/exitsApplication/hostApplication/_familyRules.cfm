@@ -151,13 +151,16 @@
                 <td><textarea cols="50" rows="4" name="houserules_other" placeholder="Homework, access to food, etc">#FORM.houserules_other#</textarea></td>
             </tr> 
         </table>
-        
-        <table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
-            <tr>
-            	<td align="right"><input name="Submit" type="image" src="images/buttons/Next.png" border="0"></td>
-            </tr>
-        </table>
-        
+
+        <!--- Check if FORM submission is allowed --->
+        <cfif APPLICATION.CFC.UDF.allowFormSubmission(section=URL.section)>
+            <table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
+                <tr>
+                    <td align="right"><input name="Submit" type="image" src="images/buttons/Next.png" border="0"></td>
+                </tr>
+            </table>
+		</cfif>
+                
     </form>
 
 </cfoutput>
