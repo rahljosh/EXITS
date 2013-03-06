@@ -1,6 +1,6 @@
 <cfquery name="references" datasource="caseusa">
 select *
-from smg_family_references
+from smg_host_reference
 where referencefor = #client.hostid#
 </cfquery>
 <cfform action="querys/insert_family_references.cfm" method="post">
