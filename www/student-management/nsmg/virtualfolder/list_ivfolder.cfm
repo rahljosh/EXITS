@@ -81,7 +81,15 @@
     
         // Make sure the folder Exists
         AppCFC.UDF.createFolder(flightInfoDirectory);
-    </cfscript>
+
+		// Get Uploaded Images
+		qGetSchoolAcceptance = APPLICATION.CFC.DOCUMENT.getDocuments(
+			foreignTable="smg_hosts",	
+			foreignID=qGetSelectedPlacementDetails.hostID, 			
+			documentGroup="schoolAcceptance",
+			seasonID=APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID			
+		);
+	</cfscript>	
 
 	<cfdirectory directory="#flightInfoDirectory#" name="flightDocs" sort="datelastmodified DESC" filter="*.*">
     
@@ -191,7 +199,8 @@
                 </td>
             </tr>
             
-            <!--- School Welcome Letter --->
+            
+			<!--- School Welcome Letter --->
             <tr>
             	<td style="border-bottom:1px solid gray;" colspan="2">School Welcome Letter</td>
             	<td align="center" style="border-bottom:1px solid gray;">
@@ -203,14 +212,16 @@
             
             <!--- School Acceptance Letter --->
             <tr>
-            	<td style="border-bottom:1px solid gray;" colspan="2">School Acceptance Letter</td>
-            	<td align="center" style="border-bottom:1px solid gray;">
-                	<a href="school_acceptance.cfm?studentid=#qGetStudentInfo.studentid#&hostID=#qGetSelectedPlacementDetails.hostID#">
-                        <img src="vfolderview.gif" border="0" alt="View File"></img>
-                    </a>
+                <td style="border-bottom:1px solid gray;" colspan="2">School Acceptance Letter</td>
+                <td align="center" style="border-bottom:1px solid gray;">
+                    <cfif qGetSchoolAcceptance.recordCount>
+                        <a href="../publicDocument.cfm?ID=#qGetSchoolAcceptance.ID#&key=#qGetSchoolAcceptance.hashID#" target="_blank" style="display:block;">[ Download ]</a>
+                    <cfelse>
+                    	n/a
+                    </cfif>
                 </td>
             </tr>
-            
+        
             <tr><td colspan="3"><br /></td></tr>
             
             <!--- Uploaded Files --->

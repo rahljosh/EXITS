@@ -28,10 +28,11 @@
     
     <cfscript>	
 		vDisplayFile = false;
+		
 		// Check if we are displaying a file
-		if ( VAL(URL.ID) AND VAL(URL.hashID) ) {
+		//if ( VAL(URL.ID) AND VAL(URL.hashID) ) {
 			
-		}		
+		//}		
 		
 		// Check if we have a valid URL.hostID
 		if ( VAL(URL.hostID) AND NOT VAL(FORM.hostID) ) {
