@@ -43,13 +43,26 @@
 	</cffunction>
 
 
-	<cffunction name="buildLeftMenu" access="public" returntype="struct" output="No" hint="Build the Left Menu Items">
-		        
+	<cffunction name="buildLeftMenu" access="public" returntype="struct" output="No" hint="Build the Left Menu Items based on current status and user logged in">
+        <cfargument name="currentSection" default="login" hint="">
+
 		<cfscript>
-			// Get Section Approval History
-			qGetMenuHistory = APPLICATION.CFC.HOST.getMenuHistory();
-	
-			// Create structure
+			// Get Host Family Information
+			qGetHostFamilyInfo = APPLICATION.CFC.HOST.getCompleteHostInfo(hostID=APPLICATION.CFC.SESSION.getHostSession().ID);
+
+			// Get UserType Access Level
+			vCurrentUserType = getUserAccessLevel(userID=APPLICATION.CFC.SESSION.getHostSession().userID, regionID=qGetHostFamilyInfo.regionID);
+
+			// This returns the approval fields for the logged in user
+			stCurrentUserFieldSet = getApprovalFieldNames(usertype=vCurrentUserType);
+
+			// Get One Level Up User
+			stUserOneLevelUpInfo = getUserOneLevelUpInfo(currentUserType=vCurrentUserType, regionalAdvisorID=qGetHostFamilyInfo.regionalAdvisorID);
+		
+			// This returns the fields that need to be checked
+			stOneLevelUpFieldSet = getApprovalFieldNames(userType=stUserOneLevelUpInfo.userType);
+			
+			// Create MENU structure
 			stBuildMenu = StructNew();
 			
 			// Set Menu Link Section
@@ -61,44 +74,234 @@
 			// Set Menu Color Section
 			stBuildMenu.colorSection = arrayNew(1);
 			
+			// Store blocked sections here | hide submit button
+			stBuildMenu.blockedSections = "";
+
+			// Build Menu with only 1 item - Specific Section 
+			if ( APPLICATION.CFC.SESSION.getHostSession().isExitsLogin AND NOT ListFind("login,overview", ARGUMENTS.currentSection) ) {
+				// Get Specific Section Approval History
+				qGetMenuHistory = APPLICATION.CFC.HOST.getMenuHistory(section=ARGUMENTS.currentSection);
+			} else {
+			  // Get Sections Approval History
+				qGetMenuHistory = APPLICATION.CFC.HOST.getMenuHistory();
+			}
+
+			// These items are always available - they should never be grayed out
+			vAllowedItems = "overview,checklist,logout";
+
 			// Populate Menu
 			for ( i=1; i LTE qGetMenuHistory.recordCount; i++ ) {
 				
 				// Link Section
 				stBuildMenu.linkSection[i] = qGetMenuHistory.section[i];
 				
-				// Remove link for approved sections
-				if ( qGetMenuHistory.areaRepStatus[i] EQ 'approved' OR qGetMenuHistory.regionalAdvisorStatus[i] EQ 'approved' OR qGetMenuHistory.regionalManagerStatus[i] EQ 'approved' OR qGetMenuHistory.facilitatorStatus[i] EQ 'approved' ) {
+				/*** 
+					Remove link for approved sections (approved by current usertype or denied by one level up user) 
+					PS: If and elseif are doing the same thing, they were kept separate for better reading
+				***/				
+				
+				// HF logged In - If application submitted = Grey Out Links
+				if ( NOT APPLICATION.CFC.SESSION.getHostSession().isExitsLogin AND NOT ListFindNoCase(vAllowedItems,qGetMenuHistory.section[i]) AND APPLICATION.CFC.SESSION.getHostSession().applicationStatus LTE 7 ) {
 					
-					// Display Section
+					// Grey Out Section - Remove Link
 					stBuildMenu.displaySection[i] = '<span class="greyLinks">#qGetMenuHistory.description[i]#</span>';
+					stBuildMenu.blockedSections = ListAppend(stBuildMenu.blockedSections, qGetMenuHistory.section[i]);
+					
+				// EXITS User Logged In - If section approved = Grey Out Links
+				} else if ( APPLICATION.CFC.SESSION.getHostSession().isExitsLogin AND NOT ListFindNoCase(vAllowedItems,qGetMenuHistory.section[i]) AND NOT listFind("1,2,3,4", vCurrentUserType) AND ( qGetMenuHistory[stCurrentUserFieldSet.statusFieldName][i] EQ 'approved' OR qGetMenuHistory[stOneLevelUpFieldSet.statusFieldName][i] EQ 'approved' ) ) {
+					
+					// Grey Out Section - Remove Link
+					stBuildMenu.displaySection[i] = '<span class="greyLinks">#qGetMenuHistory.description[i]#</span>';
+					stBuildMenu.blockedSections = ListAppend(stBuildMenu.blockedSections, qGetMenuHistory.section[i]);
 				
 				} else {
 					
 					// Display Section
 					stBuildMenu.displaySection[i] = '<a href="index.cfm?section=#qGetMenuHistory.section[i]#" class="whiteLinks">#qGetMenuHistory.description[i]#</a>';
-				
+					
 				}
 
 				// Color Section
 				stBuildMenu.colorSection[i] = qGetMenuHistory.appMenuColor[i];
-
+				
 			}
-			
-			// Build a list of items that are always available
-			stBuildMenu.allowedMenuList = ""; 		
-			// Overview is always available
-			stBuildMenu.allowedMenuList = ListAppend(stBuildMenu.allowedMenuList, ArrayFindNoCase(stBuildMenu.linkSection, 'overview') );
-			// Checklistis always available
-			stBuildMenu.allowedMenuList = ListAppend(stBuildMenu.allowedMenuList, ArrayFindNoCase(stBuildMenu.linkSection, 'checklist') );
-			// Logout is always available
-			stBuildMenu.allowedMenuList = ListAppend(stBuildMenu.allowedMenuList, ArrayFindNoCase(stBuildMenu.linkSection, 'logout') );
 			
         	return stBuildMenu;
         </cfscript>
         
 	</cffunction>
 
+
+	<cffunction name="getUserAccessLevel" access="public" returntype="numeric" output="false" hint="Returns user access level">
+        <cfargument name="userID" default="0" hint="User ID">
+        <cfargument name="regionID" default="0" hint="Region ID">
+
+		<!--- Check if is an office user | Office user does not have region specific --->
+        <cfquery 
+			name="qCheckForOfficeAccessLevel" 
+			datasource="#APPLICATION.DSN.Source#">
+				SELECT
+                	userType
+                FROM
+                	user_access_rights
+                WHERE
+                	userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
+               	AND
+                	userType IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4" list="yes"> )
+		        <!--- ISE --->
+				<cfif SESSION.COMPANY.ID EQ 1>
+                	AND
+                    	companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,12" list="yes"> )
+                <!--- CASE --->
+				<cfelse>
+                	AND
+                    	companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAl(SESSION.COMPANY.ID)#">
+                </cfif>            
+        </cfquery>
+        
+        <cfif qCheckForOfficeAccessLevel.recordCount>
+        
+			<cfscript>
+                return VAL(qCheckForOfficeAccessLevel.userType);       	
+           	</cfscript>
+        
+        <cfelse>
+        	
+            <!--- Field User --->
+            <cfquery 
+                name="qGetAccessLevel" 
+                datasource="#APPLICATION.DSN.Source#">
+                    SELECT
+                        userType
+                    FROM
+                        user_access_rights
+                    WHERE
+                        userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
+                   AND
+                        regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.regionID)#">
+            </cfquery>
+
+			<cfscript>
+                return VAL(qGetAccessLevel.userType);       	
+           	</cfscript>
+
+		</cfif>
+       
+	</cffunction>
+
+
+	<cffunction name="getApprovalFieldNames" access="public" returntype="struct" output="false" hint="Returns the fields used in the approval process based on the logged in user">
+        <cfargument name="userType" default="#CLIENT.userType#" hint="userType">
+        
+        <cfscript>
+			var stFieldSet = StructNew();
+			
+            // Set Field Names
+            switch ( ARGUMENTS.usertype ) {
+                
+                // Area Representative
+                case 7: 
+                    stFieldSet.statusFieldName = "areaRepStatus";
+                    stFieldSet.dateFieldName = "areaRepDateStatus";
+                    stFieldSet.notesFieldName = "areaRepNotes";
+                break;
+                
+                // Regional Advisor
+                case 6: 
+                    stFieldSet.statusFieldName = "regionalAdvisorStatus";
+                    stFieldSet.dateFieldName = "regionalAdvisorDateStatus";
+                    stFieldSet.notesFieldName = "regionalAdvisorNotes";
+                break;
+                
+                // Regional Manager
+                case 5:
+                    stFieldSet.statusFieldName = "regionalManagerStatus";
+                    stFieldSet.dateFieldName = "regionalManagerDateStatus";
+                    stFieldSet.notesFieldName = "regionalManagerNotes";
+				break;
+                
+                // Office Users
+                case 4: 
+                case 3:
+                case 2:
+                case 1: 
+                    stFieldSet.statusFieldName = "facilitatorStatus";
+                    stFieldSet.dateFieldName = "facilitatorDateStatus";
+                    stFieldSet.notesFieldName = "facilitatorNotes";
+                break;
+                
+                // User Not Found - Default to lowest level
+                default: 
+                    stFieldSet.statusFieldName = "areaRepStatus";
+                    stFieldSet.dateFieldName = "areaRepDateStatus";
+                    stFieldSet.notesFieldName = "areaRepNotes";
+				break;
+            }	 
+            
+            return stFieldSet;       
+       </cfscript>
+       
+	</cffunction>
+
+
+	<cffunction name="getUserOneLevelUpInfo" access="public" returntype="struct" output="false" hint="Returns the next level up user, eg. RA next level is RM">
+    	<cfargument name="currentUserType" type="string" default="">
+    	<cfargument name="regionalAdvisorID" type="string" default="">
+        
+        <cfscript>
+			// new structure
+			var stFieldSet = StructNew();
+			
+            // Set Field Names
+            switch ( ARGUMENTS.currentUserType ) {
+                
+                // Area Representative
+                case 7: 
+					
+					// Next Level Regional Advisor
+					if ( VAL(ARGUMENTS.regionalAdvisorID) ) {
+						stFieldSet.userType = 6;
+						stFieldSet.description = "Regional Advisor";
+					// Next Level Regional Manager
+					} else  {
+						stFieldSet.userType = 5;
+						stFieldSet.description = "Regional Manager";
+					}
+
+				break;
+				
+				// Regional Advisor
+				case 6:
+					// Next Level Regional Manager
+					stFieldSet.userType = 5;
+					stFieldSet.description = "Regional Manager";
+				break;
+
+				// Regional Manager
+				case 5:
+				case 4:
+				case 3:
+				case 2:
+				case 1:
+					// Next Level Regional Manager
+					stFieldSet.userType = 4;
+					stFieldSet.description = "Headquarters";
+				break;
+
+                // User Not Found - Default to lowest level
+                default: 
+					// Default Values - Lowest user type
+					stFieldSet.userType = 7;
+					stFieldSet.description = "Area Representative";
+				break;
+	
+			}
+			
+			return stFieldSet;
+		</cfscript>
+		
+	</cffunction>    
+        
 
 	<!--- Check if Password is valid --->
 	<cffunction name="IsValidPassword" access="public" returntype="struct" hint="Determines if the password is of valid format">
@@ -196,7 +399,7 @@
     </cffunction>
 
 
-	<!--- Encrypt Variable --->
+	<!--- Set Page Navigation --->
 	<cffunction name="setPageNavigation" access="public" returntype="string" output="false" hint="Sets the next page navigation after submitting a form, returns a string">
     	<cfargument name="section" default="overview" hint="section is required">
 
@@ -204,18 +407,8 @@
 			// Set Default Navigation to the same page
 			var vSetNavigation = "index.cfm?section=#ARGUMENTS.section#";
 
-			// Get Sections that are denied - Accessible from any page
-			qGetDeniedSections = APPLICATION.CFC.HOST.getDeniedSections();
-			
-			// Check if app has been denied
-			if ( qGetDeniedSections.recordCount ) {
-				vHasAppBeenDenied = true;
-			} else {
-				vHasAppBeenDenied = false;
-			}
-
-			// Menu Blocked - Set default page message
-			if ( APPLICATION.CFC.SESSION.getHostSession().isMenuBlocked AND APPLICATION.CFC.SESSION.getHostSession().isExitsLogin AND NOT ListFind("login,overview", ARGUMENTS.section) OR vHasAppBeenDenied ) {
+			// Section Locked - Set default page message
+			if ( NOT ListFind("login,overview", ARGUMENTS.section) AND APPLICATION.CFC.SESSION.getHostSession().isSectionLocked ) {
 	
 				// Set Page Message
 				SESSION.pageMessages.Add("Page has been updated");
@@ -282,6 +475,21 @@
 			return vSetNavigation;
         </cfscript>
 		   
+	</cffunction>
+
+
+	<cffunction name="allowFormSubmission" access="public" returntype="boolean" output="false" hint="Returns true/false if form submission is allowed">
+    	<cfargument name="section" default="overview" hint="section is required">
+		
+        <cfscript>
+			// Form submission is alllowed if section is not listed in the blockedSections variable
+			if ( NOT ListFindNoCase(SESSION.LEFTMENU.blockedSections, ARGUMENTS.section) ) {
+				return true;
+			} else {
+				return false;
+			}		
+		</cfscript>
+		
 	</cffunction>
 
 

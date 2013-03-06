@@ -341,8 +341,11 @@
                 <td><cfif qGetAllFamilyMembers.liveathome is 'yes'>Yes<cfelseif qGetAllFamilyMembers.liveathomePartTime is 'yes'>Part Time<cfelse>No</cfif></td>
                 <td>#qGetAllFamilyMembers.schoolname#</td>
                 <td>
-                    <a href="index.cfm?section=familyMembers&childID=#qGetAllFamilyMembers.childID#" title="Click to edit this family member" style="padding-right:5px;"><img src="images/buttons/pencilBlue23x29.png" border="0" height="15"/></a> 
-                    <a href="index.cfm?section=familyMembers&deleteChildID=#qGetAllFamilyMembers.childID#" title="Click to delete this family member" onClick="return confirm('Are you sure you want to delete #qGetAllFamilyMembers.name# #qGetAllFamilyMembers.lastName# from Family Members?')"> <img src="images/buttons/deleteRedX.png" border="0"/></a>
+					<!--- Check if FORM submission is allowed --->
+                    <cfif APPLICATION.CFC.UDF.allowFormSubmission(section=URL.section)>                    
+                        <a href="index.cfm?section=familyMembers&childID=#qGetAllFamilyMembers.childID#" title="Click to edit this family member" style="padding-right:5px;"><img src="images/buttons/pencilBlue23x29.png" border="0" height="15"/></a> 
+                        <a href="index.cfm?section=familyMembers&deleteChildID=#qGetAllFamilyMembers.childID#" title="Click to delete this family member" onClick="return confirm('Are you sure you want to delete #qGetAllFamilyMembers.name# #qGetAllFamilyMembers.lastName# from Family Members?')"> <img src="images/buttons/deleteRedX.png" border="0"/></a>
+					</cfif>
                 </td>
             </tr>
         </cfloop>
@@ -479,25 +482,28 @@
             </tr>
         </table>
 
-        <table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
-            <tr>
-                <td align="right">
-					<!--- Finished with this page --->
-                    <div style="margin:5px 25px 0 0; float:left;">
-                        <a href="index.cfm?section=cbcAuthorization">No <cfif qGetAllFamilyMembers.recordcount neq 0>other</cfif> family members to add</a>
-                    </div>
-                
-                    <cfif VAL(qGetHostMemberInfo.childID)>
-                        <a href="?section=familyMembers">
-                        <img src="images/buttons/goBack_44.png" border="0"/></a> 
-                        <input name="Submit" type="image" src="images/buttons/update_44.png" border="0"> 
-                    <cfelse>
-                        <input name="Submit" type="image" src="images/buttons/addMember.png" border="0">
-                    </cfif> 
-                </td>
-            </tr>
-        </table>
-
+        <!--- Check if FORM submission is allowed --->
+        <cfif APPLICATION.CFC.UDF.allowFormSubmission(section=URL.section)>
+            <table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
+                <tr>
+                    <td align="right">
+                        <!--- Finished with this page --->
+                        <div style="margin:5px 25px 0 0; float:left;">
+                            <a href="index.cfm?section=cbcAuthorization">No <cfif qGetAllFamilyMembers.recordcount neq 0>other</cfif> family members to add</a>
+                        </div>
+                    
+                        <cfif VAL(qGetHostMemberInfo.childID)>
+                            <a href="?section=familyMembers">
+                            <img src="images/buttons/goBack_44.png" border="0"/></a> 
+                            <input name="Submit" type="image" src="images/buttons/update_44.png" border="0"> 
+                        <cfelse>
+                            <input name="Submit" type="image" src="images/buttons/addMember.png" border="0">
+                        </cfif> 
+                    </td>
+                </tr>
+            </table>
+		</cfif>
+        
 	</cfform>
 
 </cfoutput>

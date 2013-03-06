@@ -192,12 +192,12 @@ div.loginBox label {
 #leftMenu .greyLinks {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
-	color: #666;
+	color: #999;
 	text-decoration: none;
 }
 
 #leftMenu .greyLinks:active {
-	color: #666;
+	color: #999;
 	text-decoration: none;
 }
 

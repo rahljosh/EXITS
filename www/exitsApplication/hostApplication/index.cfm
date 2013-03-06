@@ -16,9 +16,9 @@
 		if ( VAL(APPLICATION.CFC.SESSION.getHostSession().ID) AND URL.section EQ "login" ) {
 			URL.section = "overview";
 		}
-		
-		// Submitted applications have access only to overview and logout pages
-		if ( APPLICATION.CFC.SESSION.getHostSession().isMenuBlocked AND NOT APPLICATION.CFC.SESSION.getHostSession().isExitsLogin AND NOT ListFindNoCase("login,checklist,overview,logout", URL.section) ) {
+
+		// Submitted applications have access only to overview and logout pages | Make sure blocked pages cannot be accessed
+		if ( NOT APPLICATION.CFC.SESSION.getHostSession().isExitsLogin AND NOT ListFindNoCase("login,checklist,overview,logout", URL.section) AND ListFindNoCase(SESSION.LEFTMENU.blockedSections, URL.section) ) {
 			URL.section = "overview";
 		} 
 		

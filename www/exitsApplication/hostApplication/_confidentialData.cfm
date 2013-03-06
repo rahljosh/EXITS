@@ -210,13 +210,16 @@
                 </td>
             </tr>       
         </table>
-        
-        <table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
-            <tr>
-            	<td align="right"><input name="Submit" type="image" src="images/buttons/Next.png" border="0"></td>
-            </tr>
-        </table>
-        
+
+        <!--- Check if FORM submission is allowed --->
+        <cfif APPLICATION.CFC.UDF.allowFormSubmission(section=URL.section)>
+            <table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
+                <tr>
+                    <td align="right"><input name="Submit" type="image" src="images/buttons/Next.png" border="0"></td>
+                </tr>
+            </table>
+		</cfif>
+                
         <h3><u>Department Of State Regulations</u></h3>
         
         <p>&dagger;<strong><a href="http://ecfr.gpoaccess.gov/cgi/t/text/text-idx?c=ecfr&sid=bfef5f6152d538eed70ad639c221a216&rgn=div8&view=text&node=22:1.0.1.7.37.2.1.6&idno=22" target="_blank" class=external>CFR Title 22, Part 62, Subpart B, &sect;62.25 (j)(2)</a></strong><br />

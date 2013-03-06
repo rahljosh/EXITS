@@ -68,8 +68,8 @@
         <cfparam name="URL.initApp" default="0">
         <cfparam name="URL.initSession" default="0">
         <cfparam name="URL.uniqueID" default="">
+        <cfparam name="URL.userID" default="0">
         <cfparam name="URL.section" default="login">
-        <cfparam name="URL.section" default="">
         
 		<cfscript>
 			// Reset Application and Session
@@ -104,7 +104,8 @@
                     hostID, 
                     hostAppStatus,
                     familylastname,
-                    email
+                    email,
+                    regionID
                 FROM 
                     smg_hosts
                 WHERE 
@@ -114,33 +115,19 @@
             <cfscript>
                 // Host Account found - Log them in
                 if ( qLoginHostFamily.recordcount ) {
-                    
-                    if ( ListFind("login,overview", URL.section) ) {
     
-                        // Login Host Family - Menu Available
-                        APPLICATION.CFC.SESSION.setHostSession(
-                            hostID=qLoginHostFamily.hostID,												
-                            applicationStatus=qLoginHostFamily.hostAppStatus,
-                            familyName=qLoginHostFamily.familylastname,
-                            email=qLoginHostFamily.email,							
-                            isMenuBlocked=false,
-							isExitsLogin=true
-                        );
-    
-                    } else {
-                        
-                        // Login Host Family - Block Menu - Displaying specific section
-                        APPLICATION.CFC.SESSION.setHostSession(
-                            hostID=qLoginHostFamily.hostID,												
-                            applicationStatus=qLoginHostFamily.hostAppStatus,
-                            familyName=qLoginHostFamily.familylastname,
-                            email=qLoginHostFamily.email,
-                            isMenuBlocked=true,
-							isExitsLogin=true
-                        );
-                        
-                    }
-                                                        
+					// Login Host Family - Menu Available
+					APPLICATION.CFC.SESSION.setHostSession(
+						hostID=qLoginHostFamily.hostID,												
+						applicationStatus=qLoginHostFamily.hostAppStatus,
+						familyName=qLoginHostFamily.familylastname,
+						email=qLoginHostFamily.email,	
+						isExitsLogin=true,
+						regionID=qLoginHostFamily.regionID,
+						userID=URL.userID,
+						currentSection=URL.section
+					);
+													
                 }
             </cfscript>
         

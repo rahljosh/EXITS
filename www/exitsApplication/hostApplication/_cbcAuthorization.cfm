@@ -633,15 +633,18 @@
                 information about the nature and substance of all records on file about me at the time of my request.  This may include the type of information requested as well as those who requested 
                 reports from General Information Services, Inc.  within the two-year period preceding my request.
             </p>
-            
-            <table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
-                <tr>
-                    <td align="right">
-                        <input name="Submit" type="image" src="images/buttons/BlkSubmit.png" border="0">
-                    </td>
-                </tr>
-            </table>
-            
+
+			<!--- Check if FORM submission is allowed --->
+            <cfif APPLICATION.CFC.UDF.allowFormSubmission(section=URL.section)>
+                <table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
+                    <tr>
+                        <td align="right">
+                            <input name="Submit" type="image" src="images/buttons/BlkSubmit.png" border="0">
+                        </td>
+                    </tr>
+                </table>
+			</cfif>
+                        
             <p style="font-weight:bold;">
                 As part of our background check, reports from several sources may be obtained.  Reports may include, but not be limited to, criminal history reports, Social Security verifications, 
                 address histories, and Sex Offender Registries.  Should any results from the aforementioned reports indicate that driving history records will need to be reviewed during a more comprehensive 

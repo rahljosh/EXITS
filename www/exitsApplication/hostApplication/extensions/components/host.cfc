@@ -1319,8 +1319,8 @@
 			// Set New Session Status
             APPLICATION.CFC.SESSION.setHostSessionApplicationStatus(applicationStatus=7);
             
-            // Disable Left Menu Navigation
-            APPLICATION.CFC.SESSION.setHostSessionisMenuBlocked(isMenuBlocked=true);
+			// Rebuild Left Menu to disable navigation after HF is submitted
+			SESSION.leftMenu = APPLICATION.CFC.UDF.buildLeftMenu();
 
 			// Create Email Object
 			e = createObject("component","extensions.components.email");
@@ -1488,6 +1488,7 @@
 	<cffunction name="getMenuHistory" access="public" returntype="query" output="false" hint="Gets a list of items and their approval history">
         <cfargument name="hostID" default="#APPLICATION.CFC.SESSION.getHostSession().ID#" hint="HostID is not required">
         <cfargument name="seasonID" default="#APPLICATION.CFC.SESSION.getHostSession().seasonID#" hint="Gets current paperwork season ID">
+        <cfargument name="section" default="" hint="Used to build menu for a specific section">
         
         <cfquery 
 			name="qGetMenuHistory" 
@@ -1518,6 +1519,11 @@
                         h.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
                 WHERE
                 	appMenuColor != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+                <!--- Check if we are bulding a menu for a specific section --->
+				<cfif LEN(ARGUMENTS.section)>
+                	AND
+                    	section = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.section#">
+                </cfif>
                 ORDER BY
                 	listOrder
 		</cfquery>

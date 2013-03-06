@@ -26,7 +26,9 @@
 <cfparam name="SESSION.HOST.familyName" default="">
 <cfparam name="SESSION.HOST.email" default="">
 <cfparam name="SESSION.HOST.seasonID" default="0">
-<cfparam name="SESSION.HOST.isMenuBlocked" default="false">
+<cfparam name="SESSION.HOST.userID" default="0">
+<cfparam name="SESSION.HOST.regionID" default="0">
+<cfparam name="SESSION.HOST.isSectionLocked" default="false">
 <cfparam name="SESSION.HOST.isExitsLogin" default="false">
 <!--- Full Paths --->
 <cfparam name="SESSION.HOST.PATH.albumLarge" default="">
@@ -77,6 +79,9 @@
 	// SET SESSION.COMPANY structure
 	APPLICATION.CFC.SESSION.setCompanySession();
 	
+	// Build Left Menu According to user/host family and/or status
+	SESSION.leftMenu = APPLICATION.CFC.UDF.buildLeftMenu();
+		
 	// Page Messages
 	SESSION.PageMessages = CreateCFC("pageMessages").Init();
 	

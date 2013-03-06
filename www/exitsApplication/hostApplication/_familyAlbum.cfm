@@ -186,37 +186,42 @@
 	<cfelse>
         #stUploadInfo.remainingImages# additional images are required, one for each of the following categories: <cfloop list="#stUploadInfo.categoryList#" index="i"><cfif i EQ ListLast(stUploadInfo.categoryList)> and <cfelseif i NEQ ListFirst(stUploadInfo.categoryList)>, </cfif>#i#</cfloop> .
     </cfif> <br /><br />
-    
-    <!--- Upload Form --->        
-	<form method="post" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" enctype="multipart/form-data">  
-    	<input type="hidden" name="action" value="uploadFile" />
-        <table width="100%" cellspacing="0" cellpadding="2" class="border">
-            <tr>
-                <td colspan="4">
-                    <cfloop query="qGetCategoryList">
-                        <div id="divarea#ID#" class="box" display="hidden">#qGetCategoryList.description#</div>
-                    </cfloop>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    Select a category for this picture:<br />
-                    <select name="categoryID" id="dropdown" class="xLargeField">
-                        <option value="0"></option>
+
+	<!--- Check if FORM submission is allowed --->
+    <cfif APPLICATION.CFC.UDF.allowFormSubmission(section=URL.section)>
+        
+        <!--- Upload Form --->        
+        <form method="post" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" enctype="multipart/form-data">  
+            <input type="hidden" name="action" value="uploadFile" />
+            <table width="100%" cellspacing="0" cellpadding="2" class="border">
+                <tr>
+                    <td colspan="4">
                         <cfloop query="qGetCategoryList">
-                            <option value="area#qGetCategoryList.ID#" <cfif ListFind(vUploadedImageList, qGetCategoryList.ID)> style="background-color:##deeaf3;" </cfif> <cfif FORM.categoryID EQ "area#qGetCategoryList.ID#">selected</cfif>>
-                            	#qGetCategoryList.name#
-                            	<cfif ListFind(vUploadedImageList, qGetCategoryList.ID)>(Uploaded)</cfif>
-                                <cfif qGetCategoryList.ID NEQ 26> <span class="required">*</span></cfif>
-                            </option>
+                            <div id="divarea#ID#" class="box" display="hidden">#qGetCategoryList.description#</div>
                         </cfloop>
-                    </select>
-                </td>
-                <td><input type="file" name="fileData" /><br /></td>
-				<td><input type="image" src="images/buttons/BlkSubmit.png" /></td>
-		    </tr>
-		</table>
-	</form> <br />
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Select a category for this picture:<br />
+                        <select name="categoryID" id="dropdown" class="xLargeField">
+                            <option value="0"></option>
+                            <cfloop query="qGetCategoryList">
+                                <option value="area#qGetCategoryList.ID#" <cfif ListFind(vUploadedImageList, qGetCategoryList.ID)> style="background-color:##deeaf3;" </cfif> <cfif FORM.categoryID EQ "area#qGetCategoryList.ID#">selected</cfif>>
+                                    #qGetCategoryList.name#
+                                    <cfif ListFind(vUploadedImageList, qGetCategoryList.ID)>(Uploaded)</cfif>
+                                    <cfif qGetCategoryList.ID NEQ 26> <span class="required">*</span></cfif>
+                                </option>
+                            </cfloop>
+                        </select>
+                    </td>
+                    <td><input type="file" name="fileData" /><br /></td>
+                    <td><input type="image" src="images/buttons/BlkSubmit.png" /></td>
+                </tr>
+            </table>
+        </form> <br />
+    
+    </cfif>
     
     <span class="required">*At least one picture from this catagory is required. More than one photo may be needed to clearly depict each room.</span> <br /><br />
 
@@ -245,12 +250,15 @@
                             <textarea name="desc_#qGetUploadedImages.ID#" id="#qGetUploadedImages.ID#" cols="20" rows="6">#qGetUploadedImages.description#</textarea>
                             
                         </div>
-                         
-                        <div style="display:block; margin:3px 0 5px 0; clear:both;"> 
-                            <a href="index.cfm?section=familyAlbum&deleteImageID=#qGetUploadedImages.ID#" title="Click to delete #qGetUploadedImages.documentType# picture" onClick="return confirm('Are you sure you want to delete the #qGetUploadedImages.documentType# picture?')">
-                                <img src="images/buttons/deleteGreyRed.png" border="0"/>
-                            </a>
-                        </div>
+
+						<!--- Check if FORM submission is allowed --->
+                        <cfif APPLICATION.CFC.UDF.allowFormSubmission(section=URL.section)>                         
+                            <div style="display:block; margin:3px 0 5px 0; clear:both;"> 
+                                <a href="index.cfm?section=familyAlbum&deleteImageID=#qGetUploadedImages.ID#" title="Click to delete #qGetUploadedImages.documentType# picture" onClick="return confirm('Are you sure you want to delete the #qGetUploadedImages.documentType# picture?')">
+                                    <img src="images/buttons/deleteGreyRed.png" border="0"/>
+                                </a>
+                            </div>
+						</cfif>                            
                     </td>
             		<cfif qGetUploadedImages.currentRow MOD 2 EQ 0>
                     	<cfset vTrRowCount ++>
@@ -266,16 +274,20 @@
             </cfif>
     	</table>
 
-        <table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
-            <tr>
-                <td align="center" valign="center">
-                	When you are done editing the descriptions, just click "Next"
-				</td>                    
-                <td align="right">
-                    <input name="Submit" type="image" src="images/buttons/Next.png"/>
-                </td>
-            </tr>
-        </table>
+        <!--- Check if FORM submission is allowed --->
+        <cfif APPLICATION.CFC.UDF.allowFormSubmission(section=URL.section)>
+            <table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
+                <tr>
+                    <td align="center" valign="center">
+                        When you are done editing the descriptions, just click "Next"
+                    </td>                    
+                    <td align="right">
+                        <input name="Submit" type="image" src="images/buttons/Next.png"/>
+                    </td>
+                </tr>
+            </table>
+		</cfif>
+        
     </form>
     
 </cfoutput>
