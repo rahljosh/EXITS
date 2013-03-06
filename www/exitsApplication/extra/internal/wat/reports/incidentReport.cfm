@@ -23,7 +23,7 @@
 		qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(companyID=CLIENT.companyID);
 	</cfscript>
 
-    <cfquery name="qGetHostCompanyList" datasource="mySQL">
+    <cfquery name="qGetHostCompanyList" datasource="#APPLICATION.DSN.Source#">
         SELECT DISTINCT
         	eh.hostcompanyID, 
             eh.name 
@@ -42,7 +42,7 @@
     <!--- FORM submitted --->
     <cfif FORM.submitted>
      
-        <cfquery name="qGetCandidates" datasource="mySQL">
+        <cfquery name="qGetCandidates" datasource="#APPLICATION.DSN.Source#">
             SELECT DISTINCT
                 ec.candidateID,
                 ec.uniqueID,
@@ -205,6 +205,9 @@
                         <td valign="top">
                             <a href="?curdoc=candidate/candidate_info&uniqueid=#qGetCandidates.uniqueID#" target="_blank" class="style4">
                                 #qGetCandidates.firstname# #qGetCandidates.lastname# (###qGetCandidates.candidateid#)
+                                <cfif qGetCandidates.subject EQ "Terminated" AND NOT VAL(qGetCandidates.isSolved)>
+                                	<font color="red"><b>T</b></font>
+                                </cfif>
                             </a>
                         </td>		
                         <td valign="top">#qGetCandidates.businessName#</td>

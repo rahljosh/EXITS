@@ -198,6 +198,65 @@
 		   
 		<cfreturn qGetCandidateByID>
 	</cffunction>
+    
+    <cffunction name="getCandidateWithPlacementInformation" access="public" returntype="query" output="no" hint="Gets a candidate with their placement information by their candidateID">
+    	<cfargument name="candidateID" default="0" hint="candidateID is not required (0 returns all candidates)">
+        <cfargument name="placementType" default="All" hint="placementType is not required, values: primary, secondary, all">
+        <cfargument name="programID" default="0" hint="programID is not required">
+        <cfargument name="candidateStatus" default="All" hint="candidateStatus is not required">
+        <cfargument name="intRep" default="0" hint="intRep is not required">
+        
+        <cfquery name="qGetCandidates" datasource="#APPLICATION.DSN.Source#">
+            SELECT 
+                ec.*,
+                ecpc.jobID AS jobTitleID,  
+                ej.title AS jobTitle,
+                ehc.name AS hostCompanyName, 
+                ehc.city AS hostCompanyCity,
+                ss.state AS hostCompanyState,                
+                u.businessName,
+                eic.subject
+            FROM extra_candidates ec
+          	<cfif ARGUMENTS.placementType EQ "primary" OR ARGUMENTS.placementType EQ "secondary">
+            	INNER JOIN extra_candidate_place_company ecpc ON ecpc.candidateID = ec.candidateID
+                    AND ec.hostcompanyid = ecpc.hostCompanyID
+                    AND ecpc.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                    <cfif ARGUMENTS.placementType EQ "primary">
+                        AND ecpc.isSecondary = 0
+                    <cfelseif ARGUMENTS.placementType EQ "secondary">
+                        AND ecpc.isSecondary = 1
+                    </cfif>
+          	<cfelse>
+            	LEFT JOIN extra_candidate_place_company ecpc ON ecpc.candidateID = ec.candidateID
+                    AND ec.hostcompanyid = ecpc.hostCompanyID
+                    AND ecpc.status = 1
+          	</cfif>
+            LEFT JOIN extra_jobs ej ON ej.id = ecpc.jobID
+            LEFT JOIN extra_hostcompany ehc ON ehc.hostcompanyid = ec.hostcompanyid
+            INNER JOIN smg_programs ON smg_programs.programID = ec.programID
+            INNER JOIN smg_users u ON u.userid = ec.intrep
+            LEFT JOIN smg_states ss ON ss.id = ehc.state
+           	LEFT JOIN extra_incident_report eic ON eic.candidateID = ec.candidateID
+              	AND eic.isSolved = 0
+          	WHERE ec.status != "canceled"
+            <cfif VAL(ARGUMENTS.programID)>  
+           		AND ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#">
+           	</cfif>
+          	<cfif ARGUMENTS.candidateStatus NEQ 'all'>
+            	AND ec.status = <cfqueryparam cfsqltype="cf_sql_integer" value="#candidateStatus.candidateStatus#">
+            </cfif>
+           	<cfif CLIENT.userType EQ 8>
+            	AND ec.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+            <cfelse>
+				<cfif VAL(ARGUMENTS.intRep)>
+                    AND ec.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.intRep#">
+                </cfif>
+          	</cfif>
+            GROUP BY ec.candidateID
+        </cfquery>
+        
+        <cfreturn qGetCandidates>
+    </cffunction>
 
 
 	<!--- Update Candidate --->

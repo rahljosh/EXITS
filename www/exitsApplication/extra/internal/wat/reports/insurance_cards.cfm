@@ -8,7 +8,7 @@
 	<!--- set loop variables --->                    	
     <cfset startTable = 1>
 
-    <cfquery name="qGetCandidates" datasource="MySql"> 
+    <cfquery name="qGetCandidates" datasource="#APPLICATION.DSN.Source#"> 
         SELECT DISTINCT 
         	c.candidateid, 
             c.lastname, 

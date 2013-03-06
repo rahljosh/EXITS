@@ -1,4 +1,4 @@
-<cfquery name="get_candidates" datasource="mysql">
+<cfquery name="get_candidates" datasource="#APPLICATION.DSN.Source#">
 	select c.firstname, c.candidateid,c.lastname, c.sex, c.citizen_country, c.dob, c.email, c.home_phone, c.programid, c.status,
 	p.programname, smg_countrylist.countryname
 	FROM extra_candidates c
@@ -10,7 +10,7 @@
 </cfquery> 
 
 
-<cfquery name="program_info" datasource="mysql">
+<cfquery name="program_info" datasource="#APPLICATION.DSN.Source#">
 	select programname
 	from smg_programs
 	where programid = #url.program#

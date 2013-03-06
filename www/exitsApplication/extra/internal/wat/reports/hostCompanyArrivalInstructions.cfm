@@ -15,7 +15,7 @@
 		qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(companyID=CLIENT.companyID);
 	</cfscript>
 
-    <cfquery name="qGetHostCompanyList" datasource="MySql">
+    <cfquery name="qGetHostCompanyList" datasource="#APPLICATION.DSN.Source#">
         SELECT 
         	hostcompanyID, 
             name 
@@ -33,7 +33,7 @@
     <cfif FORM.submitted>
 
         <!--- Get Host Companies Assigned to Candidates --->
-        <cfquery name="qGetHostCompany" datasource="MySQL">
+        <cfquery name="qGetHostCompany" datasource="#APPLICATION.DSN.Source#">
             SELECT DISTINCT
                 eh.hostCompanyID,
                 eh.name,

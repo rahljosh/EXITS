@@ -30,7 +30,7 @@
 		qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(companyID=CLIENT.companyID);
 	</cfscript>
     
-    <cfquery name="qGetHostCompanyList" datasource="MySql">
+    <cfquery name="qGetHostCompanyList" datasource="#APPLICATION.DSN.Source#">
         SELECT
         	hostcompanyID, 
             name 
@@ -47,7 +47,7 @@
     <!--- FORM submitted --->
     <cfif FORM.submitted>
 		
-        <cfquery name="qGetProgramInfo" datasource="mysql">
+        <cfquery name="qGetProgramInfo" datasource="#APPLICATION.DSN.Source#">
             SELECT 
             	programname
             FROM 
@@ -56,7 +56,7 @@
             	programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
         </cfquery> 
     	
-        <cfquery name="qGetResults" datasource="MySql">
+        <cfquery name="qGetResults" datasource="#APPLICATION.DSN.Source#">
             SELECT 
                 ec.candidateID,
                 ec.uniqueID,
@@ -343,7 +343,7 @@
                 -->
                 </style>
                 
-                <cfquery name="qGetJ1Positions" datasource="MySql">
+                <cfquery name="qGetJ1Positions" datasource="#APPLICATION.DSN.Source#">
                 	SELECT *
                     FROM extra_j1_positions
                     WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetResults.hostCompanyID)#">
@@ -351,7 +351,7 @@
                     AND verifiedDate IS NOT NULL
                 </cfquery>
                 
-                <cfquery name="qGetConfirmations" datasource="MySql">
+                <cfquery name="qGetConfirmations" datasource="#APPLICATION.DSN.Source#">
                 	SELECT *
                     FROM extra_confirmations
                     WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetResults.hostCompanyID)#">

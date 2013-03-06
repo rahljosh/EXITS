@@ -16,7 +16,7 @@
 		qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(companyID=CLIENT.companyID);
 	</cfscript>
 
-    <cfquery name="qGetHostCompanyList" datasource="MySql">
+    <cfquery name="qGetHostCompanyList" datasource="#APPLICATION.DSN.Source#">
         SELECT 
         	hostcompanyID, 
             name 
@@ -34,7 +34,7 @@
     <cfif FORM.submitted>
 
         <!--- Get Host Companies Assigned to Candidates --->
-        <cfquery name="qGetHostCompany" datasource="MySQL">
+        <cfquery name="qGetHostCompany" datasource="#APPLICATION.DSN.Source#">
             SELECT 
                 ehc.hostCompanyID,
                 ehc.name
@@ -76,7 +76,7 @@
 		</cfquery>
 		
         <!--- Get All Candidates --->
-        <cfquery name="qGetAllCandidates" datasource="MySQL">
+        <cfquery name="qGetAllCandidates" datasource="#APPLICATION.DSN.Source#">
             SELECT 
                 c.candidateID,
                 c.uniqueID,
@@ -96,7 +96,8 @@
                 c.englishAssessment,
                 ej.title,
                 u.businessname,
-                country.countryname
+                country.countryname,
+                eir.subject
             FROM   
                 extra_candidates c
             INNER JOIN
@@ -116,6 +117,12 @@
                 smg_countrylist country ON country.countryid = c.home_country
             LEFT JOIN
             	extra_jobs ej ON ej.ID = ecpc.jobID
+          	LEFT JOIN
+            	extra_incident_report eir ON eir.candidateID = c.candidateID
+                AND
+                	eir.isSolved = 0
+              	AND
+                	eir.subject = "Terminated"
             WHERE 
                 c.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">    
             AND 
@@ -308,8 +315,8 @@
                         </td>
                     </tr>
                     <tr style="background-color:##4F8EA4; color:##FFF; padding:5px; font-weight:bold; font-size: 11px; vertical-align:top;">
-                        <td width="3%">ID</td>
-                        <td width="12%">Last Name</td>
+                        <td width="4%">ID</td>
+                        <td width="11%">Last Name</td>
                         <td width="8%">First Name</td>
                         <td width="3%">Sex</td>
                         <td width="5%">DOB</td>
@@ -327,7 +334,14 @@
                     </tr>
                     <cfloop query="qTotalPerHostCompany">
                         <tr bgcolor="###IIf(qTotalPerHostCompany.currentRow MOD 2 ,DE("FFFFFF") ,DE("E4E4E4") )#">
-                            <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerHostCompany.uniqueID#" target="_blank" class="style4">#qTotalPerHostCompany.candidateID#</a></td>
+                            <td>
+                            	<a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerHostCompany.uniqueID#" target="_blank" class="style4">
+                                	#qTotalPerHostCompany.candidateID#
+                                    <cfif LEN(qTotalPerHostCompany.subject)>
+                                    	<font color="red"><b>T</b></font>
+                                    </cfif>
+                               	</a>
+                           	</td>
                             <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerHostCompany.uniqueID#" target="_blank" class="style4">#qTotalPerHostCompany.lastname#</a></td>
                             <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerHostCompany.uniqueID#" target="_blank" class="style4">#qTotalPerHostCompany.firstname#</a></td>
                             <td class="style1">#qTotalPerHostCompany.sex#</td>
@@ -356,7 +370,7 @@
                         <!--- Seeking Employment - Display Reason --->
                         <cfif qGetHostCompany.hostCompanyID EQ 195>
                         
-                            <cfquery name="qGetHostHistory" datasource="MySql">
+                            <cfquery name="qGetHostHistory" datasource="#APPLICATION.DSN.Source#">
                                 SELECT  
                                     reason_host
                                 FROM 

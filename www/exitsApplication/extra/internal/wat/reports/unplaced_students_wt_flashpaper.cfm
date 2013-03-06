@@ -22,7 +22,7 @@
 -->
 </style>
 <cfif IsDefined('url.program')>
-	<cfquery name="get_students" datasource="mysql">
+	<cfquery name="get_students" datasource="#APPLICATION.DSN.Source#">
 	SELECT c.firstname, c.lastname, c.sex, c.home_country, c.intrep, c.status, c.requested_placement, c.programid, smg_programs.programname, smg_users.companyid, smg_users.businessname, c.companyid, c.hostcompanyid, smg_countrylist.countryname, extra_hostcompany.name, c.wat_placement, c.candidateid
 	FROM extra_candidates c
 	INNER JOIN smg_users ON smg_users.userid = c.intrep
@@ -38,13 +38,13 @@
 	  ORDER BY businessname
 	</cfquery>
 	</cfif>
-<cfquery name="program_info" datasource="mysql">
+<cfquery name="program_info" datasource="#APPLICATION.DSN.Source#">
 select programname
 from smg_programs
 where programid = #url.program#
 </cfquery> 
 
-<cfquery name="host_company_info" datasource="mysql">
+<cfquery name="host_company_info" datasource="#APPLICATION.DSN.Source#">
 select name
 from extra_hostcompany
 where hostcompanyid = 0
@@ -59,7 +59,7 @@ where hostcompanyid = 0
 <div class="head2">Program: #program_info.programname#</div>
 <img src="../../pics/black_pixel.gif" width="100%" height="2">
 
-<cfquery name="get_wat_placement" datasource="mysql">
+<cfquery name="get_wat_placement" datasource="#APPLICATION.DSN.Source#">
 	SELECT wat_placement, count(wat_placement) AS total
 	FROM extra_candidates
 	WHERE status = 1 

@@ -26,7 +26,7 @@
 
     <cfif FORM.submitted>
     
-    	<cfquery name="qGetResults" datasource="MySql">
+    	<cfquery name="qGetResults" datasource="#APPLICATION.DSN.Source#">
         	SELECT
             	r.userID,
                 r.firstName,

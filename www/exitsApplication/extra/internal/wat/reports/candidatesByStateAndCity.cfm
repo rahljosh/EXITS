@@ -20,14 +20,11 @@
     <cfparam name="FORM.studentStatus" default="All">
 
     <cfscript>
-		// Get Program List
 		qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(companyID=CLIENT.companyID);
-		
-		// Get State List
 		qGetStateList = APPLICATION.CFC.LOOKUPTABLES.getState();
 	</cfscript>
     
-    <cfquery name="qGetCandidates" datasource="mySql">
+    <cfquery name="qGetCandidates" datasource="#APPLICATION.DSN.Source#">
     	SELECT DISTINCT
         	c.candidateID,
             c.uniqueID,
@@ -49,7 +46,8 @@
             r.userID AS repID,
             r.businessName,
             com.companyShort,
-            p.programName
+            p.programName,
+            eir.subject
      	FROM
         	extra_candidates c
       	INNER JOIN
@@ -62,6 +60,12 @@
         	smg_programs p ON p.programID = c.programID
        	INNER JOIN
         	smg_countrylist cntry ON cntry.countryID = c.citizen_country
+       	LEFT JOIN
+            extra_incident_report eir ON eir.candidateID = c.candidateID
+            AND
+                eir.isSolved = 0
+            AND
+                eir.subject = "Terminated"
       	WHERE
         	c.status != <cfqueryparam cfsqltype="cf_sql_varchar" value="cancelled">
         <cfif FORM.studentStatus NEQ 'All'>
@@ -82,7 +86,7 @@
         	state
     </cfquery>
     
-    <cfquery name="qGetStates" datasource="mySql">
+    <cfquery name="qGetStates" datasource="#APPLICATION.DSN.Source#">
     	SELECT
         	ID,
             state,
@@ -192,110 +196,117 @@
                     
             <cfoutput>
             
-                <table width="98%" cellpadding="3" cellspacing="0" align="center" style="margin-top:20px; margin-bottom:20px; border:1px solid ##4F8EA4"> 
-                    <tr style="font-weight:bold;">
-                        <td colspan="4" style="font-weight:bold; font-size: 11px;">#qGetStates.statename#: #qGetNumState.recordCount#</td>
-                    </tr>
-                    
-                    <cfloop query="qGetCities">
-                        
-                        <cfquery name="qGetNumCity" dbType="query">
-                            SELECT
-                                *
-                            FROM
-                                qGetNumState
-                            WHERE
-                                city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCities.city#">
-                            ORDER BY
-                                lastname
-                        </cfquery>
-                        
+            	<cfif VAL(qGetNumState.recordCount)>
+            
+                    <table width="98%" cellpadding="3" cellspacing="0" align="center" style="margin-top:20px; margin-bottom:20px; border:1px solid ##4F8EA4"> 
                         <tr style="font-weight:bold;">
-                            <td colspan="4" style="font-weight:bold; font-size: 8px; font-family:Verdana, Geneva, sans-serif;">&nbsp;&nbsp&nbsp;&nbsp;&nbsp;#qGetCities.city#: #qGetNumCity.recordCount#</td>
+                            <td colspan="4" style="font-weight:bold; font-size: 11px;">#qGetStates.statename#: #qGetNumState.recordCount#</td>
                         </tr>
                         
-                        <tr style="background-color:##4F8EA4; color:##FFF; padding:5px; font-weight:bold; font-size: 9px;">
-                            <!--- The td widths are set differently for the onScreen report and the print report --->
-							<cfif FORM.printOption EQ 1>
-                                <td width="4%">ID</Td>
-                                <td width="10%">Last Name</td>
-                                <td width="10%">First Name</td>
-                                <td width="4%">Gender</td>
-                                <td width="7%">Country</td>
-                                <td width="10%">Email</td>
-                                <td width="6%">Start Date</td>
-                                <td width="6%">End Date</td>
-                                <td width="20%">Placement Info</td>
-                                <td width="8%">Option</td>
-                                <td width="15%">Intl. Rep.</td>
-                          	<cfelse>
-                            	<td>ID</Td>
-                                <td>Last Name</td>
-                                <td>First Name</td>
-                                <td>Gender</td>
-                                <td>Country</td>
-                                <td>Email</td>
-                                <td>Start Date</td>
-                                <td>End Date</td>
-                                <td>Placement Info</td>
-                                <td>Option</td>
-                                <td>Intl. Rep</td>
-                            </cfif>
-                        </tr>
-                    
-                        <cfscript>
-                            vRowCount = 0;
-                        </cfscript>
-                        
-                        <cfloop query="qGetNumCity">
+                        <cfloop query="qGetCities">
                             
-                            <cfscript>
-                                vRowCount = vRowCount + 1;
-                            </cfscript>
-                            
-                            <cfquery name="qGetPlacements" datasource="MySql">
-                            	SELECT
-                                	h.name,
-                                    j.title
-                              	FROM
-                                	extra_hostCompany h
-                              	INNER JOIN
-                                	extra_candidate_place_company ecpc ON ecpc.hostCompanyID = h.hostCompanyID
-                               	LEFT JOIN
-                                	extra_jobs j ON j.ID = ecpc.jobID
-                               	WHERE
-                                	ecpc.status = 1
-                              	AND
-                                	ecpc.candidateID = #qGetNumCity.candidateID#
-                               	ORDER BY
-                                	ecpc.isSecondary ASC
+                            <cfquery name="qGetNumCity" dbType="query">
+                                SELECT
+                                    *
+                                FROM
+                                    qGetNumState
+                                WHERE
+                                    city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCities.city#">
+                                ORDER BY
+                                    lastname
                             </cfquery>
                             
-                            <tr bgcolor="###IIf(vRowCount MOD 2 ,DE("FFFFFF") ,DE("E4E4E4") )#" style="font-size:10px;">
-                                <td valign="center">
-                                    <a href="?curdoc=candidate/candidate_info&uniqueid=#qGetNumCity.uniqueID#" target="_blank" class="style4">
-                                        #qGetNumCity.candidateid#
-                                    </a>
-                                </td>
-                                <td>#qGetNumCity.lastname#</td>
-                                <td>#qGetNumCity.firstname#</td>
-                                <td>#qGetNumCity.sex#</td>
-                                <td>#qGetNumCity.country#</td>
-                                <td>#qGetNumCity.email#</td>
-                                <td>#DateFormat(qGetNumCity.startdate, 'mm/dd/yyyy')#</td>
-                                <td>#DateFormat(qGetNumCity.enddate, 'mm/dd/yyyy')#</td>
-                                <td><cfloop query="qGetPlacements">(#qGetPlacements.currentRow#) #name# - #title#<cfif qGetPlacements.currentRow NEQ qGetPlacements.recordCount><br /></cfif></cfloop></td>
-                                <td>#qGetNumCity.wat_placement#</td>
-                                <td>#qGetNumCity.businessName#</td>
+                            <tr style="font-weight:bold;">
+                                <td colspan="4" style="font-weight:bold; font-size: 8px; font-family:Verdana, Geneva, sans-serif;">&nbsp;&nbsp&nbsp;&nbsp;&nbsp;#qGetCities.city#: #qGetNumCity.recordCount#</td>
                             </tr>
                             
-                        </cfloop>
+                            <tr style="background-color:##4F8EA4; color:##FFF; padding:5px; font-weight:bold; font-size: 9px;">
+                                <!--- The td widths are set differently for the onScreen report and the print report --->
+                                <cfif FORM.printOption EQ 1>
+                                    <td width="4%">ID</Td>
+                                    <td width="10%">Last Name</td>
+                                    <td width="10%">First Name</td>
+                                    <td width="4%">Gender</td>
+                                    <td width="7%">Country</td>
+                                    <td width="10%">Email</td>
+                                    <td width="6%">Start Date</td>
+                                    <td width="6%">End Date</td>
+                                    <td width="20%">Placement Info</td>
+                                    <td width="8%">Option</td>
+                                    <td width="15%">Intl. Rep.</td>
+                                <cfelse>
+                                    <td>ID</Td>
+                                    <td>Last Name</td>
+                                    <td>First Name</td>
+                                    <td>Gender</td>
+                                    <td>Country</td>
+                                    <td>Email</td>
+                                    <td>Start Date</td>
+                                    <td>End Date</td>
+                                    <td>Placement Info</td>
+                                    <td>Option</td>
+                                    <td>Intl. Rep</td>
+                                </cfif>
+                            </tr>
                         
-                        <tr height="10px"><td></td></tr>
+                            <cfscript>
+                                vRowCount = 0;
+                            </cfscript>
+                            
+                            <cfloop query="qGetNumCity">
+                                
+                                <cfscript>
+                                    vRowCount = vRowCount + 1;
+                                </cfscript>
+                                
+                                <cfquery name="qGetPlacements" datasource="#APPLICATION.DSN.Source#">
+                                    SELECT
+                                        h.name,
+                                        j.title
+                                    FROM
+                                        extra_hostCompany h
+                                    INNER JOIN
+                                        extra_candidate_place_company ecpc ON ecpc.hostCompanyID = h.hostCompanyID
+                                    LEFT JOIN
+                                        extra_jobs j ON j.ID = ecpc.jobID
+                                    WHERE
+                                        ecpc.status = 1
+                                    AND
+                                        ecpc.candidateID = #qGetNumCity.candidateID#
+                                    ORDER BY
+                                        ecpc.isSecondary ASC
+                                </cfquery>
+                                
+                                <tr bgcolor="###IIf(vRowCount MOD 2 ,DE("FFFFFF") ,DE("E4E4E4") )#" style="font-size:10px;">
+                                    <td valign="center">
+                                        <a href="?curdoc=candidate/candidate_info&uniqueid=#qGetNumCity.uniqueID#" target="_blank" class="style4">
+                                            #qGetNumCity.candidateid#
+                                            <cfif LEN(qGetNumCity.subject)>
+                                            	<font color="red"><b>T</b></font>
+                                            </cfif>
+                                        </a>
+                                    </td>
+                                    <td>#qGetNumCity.lastname#</td>
+                                    <td>#qGetNumCity.firstname#</td>
+                                    <td>#qGetNumCity.sex#</td>
+                                    <td>#qGetNumCity.country#</td>
+                                    <td>#qGetNumCity.email#</td>
+                                    <td>#DateFormat(qGetNumCity.startdate, 'mm/dd/yyyy')#</td>
+                                    <td>#DateFormat(qGetNumCity.enddate, 'mm/dd/yyyy')#</td>
+                                    <td><cfloop query="qGetPlacements">(#qGetPlacements.currentRow#) #name# - #title#<cfif qGetPlacements.currentRow NEQ qGetPlacements.recordCount><br /></cfif></cfloop></td>
+                                    <td>#qGetNumCity.wat_placement#</td>
+                                    <td>#qGetNumCity.businessName#</td>
+                                </tr>
+                                
+                            </cfloop>
+                            
+                            <tr height="10px"><td></td></tr>
+                        
+                        </cfloop>
                     
-                    </cfloop>
-                
-                </table>
+                    </table>
+                    
+              	</cfif>
                     
             </cfoutput>
             

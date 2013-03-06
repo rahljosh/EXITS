@@ -18,7 +18,7 @@
     <cfparam name="FORM.hostCompany" default="all"> <!--- all, primary, secondary --->
     <cfparam name="FORM.status" default="all"> <!--- all, active, inactive --->
     
-    <!--- Get the list of programs --->
+    <!--- Get the list of programs and reps --->
     <cfscript>
 		qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(companyID=CLIENT.companyID);
 		qGetIntlRepList = APPLICATION.CFC.USER.getIntlReps();
@@ -177,10 +177,13 @@
             	<cfquery name="qGetCandidates" datasource="#APPLICATION.DSN.Source#">
                 	SELECT ec.candidateID, ec.hostCompanyID, ec.lastName, ec.firstName, ec.sex, ec.startDate, ec.endDate, ec.ds2019, ec.wat_placement, ec.watDateCheckedIn,
                     	ec.arrivalDate, ec.arrival_address, ec.arrival_city, ec.arrival_zip,
-                        s.state, ehc.name
+                        s.state, ehc.name, eir.subject
                     FROM extra_candidates ec
                     LEFT JOIN smg_states s ON s.id = ec.arrival_state
                    	LEFT JOIN extra_hostcompany ehc ON ehc.hostCompanyID = ec.hostCompanyID
+                    LEFT JOIN extra_incident_report eir ON eir.candidateID = ec.candidateID
+            			AND eir.isSolved = 0
+            			AND eir.subject = "Terminated"
                     WHERE ec.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(userID)#">
                     AND ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.programID)#">
                     AND ec.status != "canceled"
@@ -192,6 +195,7 @@
                     <cfelseif FORM.hostCompany EQ "secondary">
                     	AND ec.candidateID IN (SELECT candidateID FROM extra_candidate_place_company WHERE isSecondary = 1 AND status = 1)
                     </cfif>
+                    GROUP BY ec.candidateID
                 </cfquery>
             
             	<table width="99%" cellpadding="4" cellspacing=0 align="center">
@@ -223,7 +227,7 @@
                     </cfif>
                     <cfloop query="qGetCandidates">
                     	<cfif FORM.hostCompany NEQ "primary">
-                            <cfquery name="qGetSecondaryPlacements" datasource="MySql">
+                            <cfquery name="qGetSecondaryPlacements" datasource="#APPLICATION.DSN.Source#">
                                 SELECT ecpc.hostCompanyID, h.name
                                 FROM extra_candidate_place_company ecpc
                                 INNER JOIN extra_hostCompany h ON h.hostCompanyID = ecpc.hostCompanyID
@@ -233,7 +237,12 @@
                             </cfquery>
                         </cfif>
                     	<tr <cfif qGetCandidates.currentRow mod 2>bgcolor="##E4E4E4"</cfif>>
-                        	<td class="style1">#candidateid#</td>
+                        	<td class="style1">
+                            	#candidateid#
+                                <cfif LEN(subject)>
+                                    <font color="red"><b>T</b></font>
+                                </cfif>
+                           	</td>
                             <td class="style1">#lastname#</td>
                             <td class="style1">#firstname#</td>
                             <td class="style1">#sex#</td>

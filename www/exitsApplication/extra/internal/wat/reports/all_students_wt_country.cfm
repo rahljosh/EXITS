@@ -8,26 +8,14 @@
 <cfparam name="FORM.printOption" default="1">
 <cfparam name="FORM.submitted" default="0">
 
-<cfquery name="qGetIntlRepList" datasource="MySql">
-    SELECT 
-        userid, 
-        businessname
-    FROM 
-        smg_users
-    WHERE         
-        usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
-    AND 
-        businessname != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
-    ORDER BY 
-        businessname
-</cfquery>
-
 <cfscript>
 	// Get Program List
 	qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(companyID=CLIENT.companyID);
+	// Get Intl. Rep List
+	qGetIntlRepList = APPLICATION.CFC.USER.getUsers(usertype=8,isActive=1,businessNameExists=1);
 </cfscript>
 
-<cfquery name="qGetCountry" datasource="MySQL">
+<cfquery name="qGetCountry" datasource="#APPLICATION.DSN.Source#">
 	SELECT
     	countryID,
         countryname
@@ -121,7 +109,7 @@
 	<cfabort>
 </cfif>
 
-<cfquery name="qGetAgents" datasource="MySQL">
+<cfquery name="qGetAgents" datasource="#APPLICATION.DSN.Source#">
     SELECT
         ec.intrep,
         ec.residence_country,
@@ -273,7 +261,7 @@
 	
     <cfloop query="qFilterCountry">
     
-    	<cfquery name="qGetCountry2" datasource="MySQL">
+    	<cfquery name="qGetCountry2" datasource="#APPLICATION.DSN.Source#">
             SELECT
                 countryID,
                 countryname

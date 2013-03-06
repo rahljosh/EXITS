@@ -54,7 +54,7 @@ font-size:14px;
 
 <cfinclude template="../querys/get_company.cfm">
 
-<cfquery name="get_candidates" datasource="MySql"> 
+<cfquery name="get_candidates" datasource="#APPLICATION.DSN.Source#"> 
 	SELECT DISTINCT	
     	c.candidateid, 
         c.lastname, 

@@ -21,16 +21,8 @@
     <!--- Get the list of programs --->
     <cfscript>
 		qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(companyID=CLIENT.companyID);
+		qGetIntlRepList = APPLICATION.CFC.USER.getUsers(usertype=8,isActive=1,businessNameExists=1);
 	</cfscript>
-    
-    <!--- Get the list of international reps --->
-    <cfquery name="qGetIntlRepList" datasource="#APPLICATION.DSN.Source#">
-    	SELECT userID, businessName
-        FROM smg_users
-        WHERE userType = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
-        AND businessName != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
-        ORDER BY businessName
-    </cfquery>
  
 </cfsilent>
         
@@ -172,8 +164,11 @@
         	<cfloop query="qGetIntlReps">
             
             	<cfquery name="qGetCandidates" datasource="#APPLICATION.DSN.Source#">
-                	SELECT ec.candidateID, ec.lastName, ec.firstName, ec.sex, ec.watDateCheckedIn, ec.watDateEvaluation1, ec.watDateEvaluation2, ec.watDateEvaluation3, ec.watDateEvaluation4
+                	SELECT ec.candidateID, ec.lastName, ec.firstName, ec.sex, ec.watDateCheckedIn, ec.watDateEvaluation1, ec.watDateEvaluation2, ec.watDateEvaluation3, ec.watDateEvaluation4, eir.subject
                     FROM extra_candidates ec
+                    LEFT JOIN extra_incident_report eir ON eir.candidateID = ec.candidateID
+            			AND eir.isSolved = 0
+            			AND eir.subject = "Terminated"
                     WHERE ec.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(userID)#">
                     AND ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.programID)#">
                     AND ec.status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
@@ -216,6 +211,7 @@
                     	AND DATEDIFF(NOW(),watDateCheckedIn) > 120
                         AND watDateEvaluation4 IS NULL
 					</cfif>
+                    GROUP BY ec.candidateID
                 </cfquery>
                 
                 <cfif VAL(qGetCandidates.recordCount)>
@@ -246,7 +242,12 @@
                         </cfif>
                         <cfloop query="qGetCandidates">
                             <tr <cfif qGetCandidates.currentRow mod 2>bgcolor="##E4E4E4"</cfif>>
-                                <td class="style1">#candidateid#</td>
+                                <td class="style1">
+                                	#candidateid#
+                                    <cfif LEN(subject)>
+                                    	<font color="red"><b>T</b></font>
+                                    </cfif>
+                               	</td>
                                 <td class="style1">#lastname#</td>
                                 <td class="style1">#firstname#</td>
                                 <td class="style1">#sex#</td>

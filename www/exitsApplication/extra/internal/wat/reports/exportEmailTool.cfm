@@ -30,7 +30,7 @@
 		}
     </cfscript>
 
-    <cfquery name="qGetHostCompanyList" datasource="mySQL">
+    <cfquery name="qGetHostCompanyList" datasource="#APPLICATION.DSN.Source#">
         SELECT DISTINCT
         	eh.hostcompanyID, 
             eh.name 
@@ -48,7 +48,7 @@
             eh.name
     </cfquery>
 	
-    <cfquery name="qGetIntlRepList" datasource="MySql">
+    <cfquery name="qGetIntlRepList" datasource="#APPLICATION.DSN.Source#">
         SELECT 
         	u.userid, 
             u.businessname
@@ -74,7 +74,7 @@
         	<!--- Export Candidates --->
             <cfcase value="candidate">
                         
-                <cfquery name="qGetResults" datasource="MySQL">
+                <cfquery name="qGetResults" datasource="#APPLICATION.DSN.Source#">
                     SELECT 
                         ec.candidateID,
                         ec.firstname,             
@@ -111,7 +111,7 @@
             <!--- Export Host Company --->
             <cfcase value="hostCompany">
 
-                <cfquery name="qGetResults" datasource="MySQL">
+                <cfquery name="qGetResults" datasource="#APPLICATION.DSN.Source#">
                     SELECT DISTINCT
                         eh.hostCompanyID,
                         eh.name,
@@ -133,7 +133,7 @@
             <!--- Export Intl. Rep --->
             <cfcase value="intlRep">
 
-				<cfquery name="qGetResults" datasource="MySQL">
+				<cfquery name="qGetResults" datasource="#APPLICATION.DSN.Source#">
                     SELECT
                         u.businessName,
                         u.wat_contact,

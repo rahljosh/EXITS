@@ -11,7 +11,7 @@
 
 	<cfinclude template="../querys/get_company_short.cfm">
 
-    <cfquery name="qGetProgram" datasource="MySQL">
+    <cfquery name="qGetProgram" datasource="#APPLICATION.DSN.Source#">
         SELECT 
         	programID,
             programName,
@@ -23,7 +23,7 @@
     </cfquery>
 
 	<!-----Intl. Rep.----->
-    <cfquery name="qGetIntlAgent" datasource="MySQL">
+    <cfquery name="qGetIntlAgent" datasource="#APPLICATION.DSN.Source#">
         SELECT 
         	userID,
             companyID, 
@@ -36,7 +36,7 @@
         	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.intRep)#">
     </cfquery>
 
-    <cfquery name="qGetCandidates" datasource="MySQL">
+    <cfquery name="qGetCandidates" datasource="#APPLICATION.DSN.Source#">
         SELECT	 
         	c.candidateID, 
             c.lastname, 
