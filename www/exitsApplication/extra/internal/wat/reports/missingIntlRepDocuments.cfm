@@ -10,25 +10,13 @@
     <cfscript>
 		// Get Program List
 		qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(companyID=CLIENT.companyID);
+		// Get Intl. Rep List
+		qGetIntlRepList = APPLICATION.CFC.USER.getUsers(usertype=8,isActive=1,businessNameExists=1);
 	</cfscript>
-
-    <cfquery name="qGetIntlRepList" datasource="MySql">
-        SELECT 
-        	userid, 
-            businessname
-        FROM 
-        	smg_users
-        WHERE         
-        	usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
-        AND 
-        	businessname != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
-        ORDER BY 
-        	businessname
-    </cfquery>
 
 	<cfif VAL(FORM.submitted)>
      
-        <cfquery name="qGetResults" datasource="mysql">
+        <cfquery name="qGetResults" datasource="#APPLICATION.DSN.Source#">
             SELECT DISTINCT
                 u.companyID, 
                 u.businessname,

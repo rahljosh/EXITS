@@ -9,7 +9,7 @@
     <cfset startTable = 1>
     <cfset firstPage = 1>
 
-    <cfquery name="qGetCandidates" datasource="MySql"> 
+    <cfquery name="qGetCandidates" datasource="#APPLICATION.DSN.Source#"> 
         SELECT DISTINCT 
         	c.candidateid, 
             c.lastname, 

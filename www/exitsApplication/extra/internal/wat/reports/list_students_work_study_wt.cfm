@@ -16,7 +16,7 @@
 
     <cfif FORM.submitted>
     
-        <cfquery name="qGetStudents" datasource="mysql">
+        <cfquery name="qGetStudents" datasource="#APPLICATION.DSN.Source#">
             SELECT
                 c.candidateid, 
                 c.uniqueID,
@@ -66,7 +66,7 @@
 
     </cfif>
 
-    <cfquery name="qGetProgram" datasource="MySQL">
+    <cfquery name="qGetProgram" datasource="#APPLICATION.DSN.Source#">
         SELECT 
             programID,
             programName,
@@ -202,7 +202,7 @@
                     }
                 </cfscript>
                 
-                <cfquery name="qGetHistory" datasource="MySql">
+                <cfquery name="qGetHistory" datasource="#APPLICATION.DSN.Source#">
                 	SELECT
                     	ecpc.status,
                         ec.name,
@@ -232,7 +232,7 @@
                         <td class="style1" bgcolor="#rowColor#" align="center">
                             <cfif qGetStudents.wat_placement EQ 'Walk-In'>
         
-                                <cfquery name="qInitialEmployment" datasource="MySQL">
+                                <cfquery name="qInitialEmployment" datasource="#APPLICATION.DSN.Source#">
                                     SELECT 
                                         placement_date
                                     FROM 

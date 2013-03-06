@@ -27,33 +27,31 @@
 	<cffunction name="getUsers" access="public" returntype="query" output="false" hint="Gets a list of users, if usertype is passed gets users by usertype">
     	<cfargument name="usertype" default="0" hint="usertype is not required">
         <cfargument name="isActive" default="1" hint="isActive is not required">
+        <cfargument name="businessNameExists" default="0" hint="businessNameExists is not required">
 		       
         <cfquery 
 			name="qGetUsers" 
 			datasource="#APPLICATION.DSN.Source#">
-                SELECT
-					*
-                FROM 
-                    smg_users
-                WHERE
-                	1 = 1
+                SELECT *
+                FROM smg_users
+                WHERE 1 = 1
                     
 				<cfif VAL(ARGUMENTS.usertype)>
-                	AND	
-                    	usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.usertype#">
+                	AND usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.usertype#">
                 </cfif>
                 
                 <cfif LEN(ARGUMENTS.isActive)>
-                	AND
-                    	active = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.isActive)#">
+                	AND active = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.isActive)#">
+                </cfif>
+                
+                <cfif VAL(ARGUMENTS.businessNameExists)>
+                	businessname != ""
                 </cfif>
                 
 				<cfif VAL(ARGUMENTS.usertype)>
-                    ORDER BY 
-                        businessName                
+                    ORDER BY businessName                
                 <cfelse>
-                    ORDER BY 
-                        lastName
+                    ORDER BY lastName
                 </cfif>
 		</cfquery>
 		   

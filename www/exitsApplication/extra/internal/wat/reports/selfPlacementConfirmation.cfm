@@ -21,31 +21,19 @@
 	<cfparam name="FORM.selfJobOfferStatus" default="">
 	<cfparam name="FORM.printOption" default="1">
     <cfparam name="FORM.submitted" default="0">
-    
-    <cfquery name="qGetIntlRepList" datasource="MySql">
-        SELECT 
-        	userid, 
-            businessname
-        FROM 
-        	smg_users
-        WHERE         
-        	usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
-        AND 
-        	businessname != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
-        ORDER BY 
-        	businessname
-    </cfquery>
 
     <cfscript>
 		// Get Program List
 		qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(companyID=CLIENT.companyID);
+		// Get Intl. Rep List
+		qGetIntlRepList = APPLICATION.CFC.USER.getUsers(usertype=8,isActive=1,businessNameExists=1);
 	</cfscript>
     
     <!--- FORM submitted --->
     <cfif FORM.submitted>
 		
         <!--- Get Intl Reps --->
-		<cfquery name="qGetIntlReps" datasource="MySQL">
+		<cfquery name="qGetIntlReps" datasource="#APPLICATION.DSN.Source#">
             SELECT DISTINCT
             	u.userid, 
                 u.businessname
@@ -74,7 +62,7 @@
             	u.businessname
 		</cfquery>
 
-        <cfquery name="qGetProgramInfo" datasource="mysql">
+        <cfquery name="qGetProgramInfo" datasource="#APPLICATION.DSN.Source#">
             SELECT 
             	programname
             FROM 
@@ -83,7 +71,7 @@
             	programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
         </cfquery> 
     	
-        <cfquery name="qGetAllCandidates" datasource="MySql">
+        <cfquery name="qGetAllCandidates" datasource="#APPLICATION.DSN.Source#">
             SELECT 
                 ec.candidateID,
                 ec.uniqueID,

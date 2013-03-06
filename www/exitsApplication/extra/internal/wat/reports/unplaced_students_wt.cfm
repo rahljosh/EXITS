@@ -1,6 +1,6 @@
 <cfif IsDefined('FORM.program')>
 
-	<cfquery name="qGetCandidates" datasource="mysql">
+	<cfquery name="qGetCandidates" datasource="#APPLICATION.DSN.Source#">
         SELECT 
             c.uniqueID, 
             c.programid,
@@ -51,7 +51,7 @@
         	u.businessname
 	</cfquery>
 	
-	<cfquery name="qGetCandidatesSelf" datasource="mysql">
+	<cfquery name="qGetCandidatesSelf" datasource="#APPLICATION.DSN.Source#">
         SELECT 
             c.uniqueID, 
             c.programid,

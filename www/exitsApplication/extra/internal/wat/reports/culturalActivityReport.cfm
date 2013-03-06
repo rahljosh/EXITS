@@ -26,16 +26,9 @@
     <!--- FORM submitted --->
     <cfif FORM.submitted>
      
-        <cfquery name="qGetCandidates" datasource="mySQL">
+        <cfquery name="qGetCandidates" datasource="#APPLICATION.DSN.Source#">
             SELECT DISTINCT
-                ec.candidateID,
-                ec.uniqueID,
-                ec.firstname,             
-                ec.lastname, 
-                ec.wat_placement,
-                ec.startDate,
-                ec.endDate,
-                ec.intRep,
+                ec.*,
                 h.name,
                 <cfif NOT VAL(FORM.status)>
                     eca.dateActivity,
@@ -43,7 +36,8 @@
               	</cfif>
                 u.businessname,
                 p.programName,
-                p.programID           
+                p.programID,
+                eic.subject         
             FROM
                 extra_candidates ec
             INNER JOIN
@@ -55,7 +49,10 @@
             <cfif NOT VAL(FORM.status)>
                 INNER JOIN
                     extra_cultural_activity eca ON eca.candidateID = ec.candidateID
-         	</cfif>          
+         	</cfif>
+            LEFT JOIN extra_incident_report eic ON eic.candidateID = ec.candidateID
+              	AND eic.isSolved = 0
+                AND eic.subject = "Terminated"         
             WHERE 
                 ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
            	<cfif VAL(FORM.status)>
@@ -150,20 +147,10 @@
         </cfoutput>
     
     	<cfif VAL(qGetCandidates.recordCount)>
-                            
-            <cfquery name="qGetAgents" datasource="MySql">
-                SELECT
-                    u.businessName,
-                    u.userID
-                FROM
-                    smg_users u
-                WHERE
-                    u.userType = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
-                AND
-                    u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-              	ORDER BY
-                	u.businessName
-            </cfquery>
+        
+        	<cfscript>
+				qGetAgents = APPLICATION.CFC.USER.getUsers(usertype=8,isActive=1);
+			</cfscript>
                     
       		<cfloop query="qGetAgents">
                     
@@ -207,6 +194,9 @@
                             <td valign="center">
                                 <a href="?curdoc=candidate/candidate_info&uniqueid=#qGetCandidatesUnderAgent.uniqueID#" target="_blank" class="style4">
                                     #qGetCandidatesUnderAgent.firstname# #qGetCandidatesUnderAgent.lastname# (###qGetCandidatesUnderAgent.candidateid#)
+                                    <cfif LEN(qGetCandidatesUnderAgent.subject)>
+                                        <font color="red"><b>T</b></font>
+                                    </cfif>
                                 </a>
                             </td>
                             <td valign="center">#DateFormat(qGetCandidatesUnderAgent.startDate, 'mm/dd/yyyy')#</td>

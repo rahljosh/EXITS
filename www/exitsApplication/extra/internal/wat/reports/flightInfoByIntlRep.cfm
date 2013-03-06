@@ -17,7 +17,7 @@
 		qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(companyID=CLIENT.companyID);
 	</cfscript>
 
-    <cfquery name="qGetIntlRepList" datasource="MySql">
+    <cfquery name="qGetIntlRepList" datasource="#APPLICATION.DSN.Source#">
         SELECT 
         	u.userid, 
             u.businessname
@@ -39,7 +39,7 @@
     <cfif FORM.submitted>
 
         <!--- Get Intl. Reps Assigned to Candidates --->
-        <cfquery name="qGetIntlRep" datasource="MySQL">
+        <cfquery name="qGetIntlRep" datasource="#APPLICATION.DSN.Source#">
             SELECT 
                 u.userID,
                 u.businessName,
@@ -78,7 +78,7 @@
 		</cfquery>
 		
         <!--- Get All Candidates --->
-        <cfquery name="qGetAllCandidates" datasource="MySQL">
+        <cfquery name="qGetAllCandidates" datasource="#APPLICATION.DSN.Source#">
             SELECT DISTINCT
                 c.candidateID,
                 c.uniqueID,

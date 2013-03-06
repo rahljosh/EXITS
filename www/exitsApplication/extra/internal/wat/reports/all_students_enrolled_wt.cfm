@@ -10,23 +10,9 @@
 	<cfparam name="FORM.printOption" default="1">
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.studentStatus" default="All">
-    
-    <cfquery name="qGetIntlRepList" datasource="MySql">
-        SELECT 
-        	userid, 
-            businessname
-        FROM 
-        	smg_users
-        WHERE         
-        	usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
-        AND 
-        	businessname != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
-        ORDER BY 
-        	businessname
-    </cfquery>
 	
     <cfscript>
-		// Get Program List
+		qGetIntlRepList = APPLICATION.CFC.USER.getUsers(usertype=8,isActive=1,businessNameExists=1);
 		qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(companyID=CLIENT.companyID);
 	</cfscript>
         
@@ -34,124 +20,31 @@
     <cfif FORM.submitted>
 		
         <!--- Get Intl Reps --->
-		<cfquery name="qGetIntlReps" datasource="MySQL">
-            SELECT DISTINCT
-            	u.userid, 
-                u.businessname
-            FROM 
-            	smg_users u
-           	INNER JOIN
-            	extra_candidates ec ON ec.intRep = u.userID
-                	AND 
-                    	ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">    
-           			AND
-                    	ec.status != <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
-            WHERE 
-            	u.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+		<cfquery name="qGetIntlReps" datasource="#APPLICATION.DSN.Source#">
+            SELECT DISTINCT u.userid, u.businessname
+            FROM smg_users u
+           	INNER JOIN extra_candidates ec ON ec.intRep = u.userID
+           		AND ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">    
+           		AND ec.status != <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
+            WHERE u.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
             <cfif CLIENT.userType EQ 8>
-            	AND
-                	u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
-            <cfelse>
-				<cfif VAL(FORM.userID)>
-                    AND 
-                        u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">
-                </cfif>
+            	AND u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+            <cfelseif VAL(FORM.userID)>
+				AND u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">
           	</cfif>
-            GROUP BY
-            	u.userID
-            ORDER BY 
-            	u.businessname
+            GROUP BY u.userID
+            ORDER BY u.businessname
 		</cfquery>
-
-        <cfquery name="qGetProgramInfo" datasource="mysql">
-            SELECT 
-            	programname
-            FROM 
-            	smg_programs
-            WHERE 
-            	programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
-        </cfquery> 
-    	
-        <cfquery name="qGetAllCandidates" datasource="MySql">
-            SELECT 
-                ec.candidateID,
-                ec.uniqueID,
-                ec.firstname, 
-                ec.lastname, 
-                ec.placedby, 
-                ec.sex, 
-                ec.hostcompanyid, 
-                ec.ds2019,
-                ec.startdate, 
-                ec.enddate,
-                ec.intrep, 
-                ec.wat_placement,
-                ec.email,
-                ecpc.jobID AS jobTitleID,  
-                ej.title AS jobTitle,
-                ehc.name AS hostCompanyName, 
-                ehc.city AS hostCompanyCity,
-                ss.state AS hostCompanyState,                
-                u.businessName
-            FROM
-                extra_candidates ec
-          	<cfif FORM.placementType EQ "primary" OR FORM.placementType EQ "secondary">
-            	INNER JOIN
-                	extra_candidate_place_company ecpc ON ecpc.candidateID = ec.candidateID
-                    AND
-                        ec.hostcompanyid = ecpc.hostCompanyID
-                    AND 
-                        ecpc.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-                    <cfif FORM.placementType EQ "primary">
-                        AND
-                            ecpc.isSecondary = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-                    <cfelseif FORM.placementType EQ "secondary">
-                        AND
-                            ecpc.isSecondary = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-                    </cfif>
-          	<cfelse>
-            	LEFT JOIN
-                	extra_candidate_place_company ecpc ON ecpc.candidateID = ec.candidateID
-                    AND
-                        ec.hostcompanyid = ecpc.hostCompanyID
-                    AND 
-                        ecpc.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-                    <cfif FORM.placementType EQ "primary">
-                        AND
-                            ecpc.isSecondary = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-                    <cfelseif FORM.placementType EQ "secondary">
-                        AND
-                            ecpc.isSecondary = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-                    </cfif>
-          	</cfif>
-            LEFT JOIN
-            	extra_jobs ej ON ej.id = ecpc.jobID
-            LEFT JOIN 
-                extra_hostcompany ehc ON ehc.hostcompanyid = ec.hostcompanyid
-            INNER JOIN 
-                smg_programs ON smg_programs.programID = ec.programID
-            INNER JOIN 
-                smg_users u ON u.userid = ec.intrep
-            LEFT JOIN
-            	smg_states ss ON ss.id = ehc.state
-            WHERE 
-                ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
-            AND 
-                ec.status != <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
-          	<cfif FORM.studentStatus NEQ 'All'>
-            	AND
-                	ec.status = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentStatus#">
-            </cfif>
-           	<cfif CLIENT.userType EQ 8>
-            	AND
-                	ec.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
-            <cfelse>
-				<cfif VAL(FORM.userID)>
-                    AND 
-                        ec.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">
-                </cfif>
-          	</cfif>
-        </cfquery>
+        
+        <cfscript>
+			qGetProgramInfo = APPLICATION.CFC.PROGRAM.getPrograms(programID = FORM.programID);
+		
+			qGetAllCandidates = APPLICATION.CFC.CANDIDATE.getCandidateWithPlacementInformation(
+				placementType = FORM.placementType,
+				candidateStatus = FORM.studentStatus,
+				programID = FORM.programID,
+				intRep = FORM.userID);
+		</cfscript>
 
         <cffunction name="filterGetAllCandidates" hint="Gets total by Intl. Rep">
         	<cfargument name="placementType" default="" hint="Placement Type is not required">
@@ -424,7 +317,7 @@
                     
                         <cfif FORM.placementType NEQ "primary">
                     
-                            <cfquery name="qGetAllPlacements" datasource="MySql">
+                            <cfquery name="qGetAllPlacements" datasource="#APPLICATION.DSN.Source#">
                                 SELECT
                                     ecpc.hostCompanyID,
                                     ecpc.jobID,
@@ -459,6 +352,9 @@
                             <td class="style1">
                                 <a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerAgent.uniqueID#" target="_blank" class="style4">
                                     #qTotalPerAgent.candidateID#
+                                    <cfif qTotalPerAgent.subject EQ "Terminated">
+                                    	<font color="red"><b>T</b></font>
+                                  	</cfif>
                                 </a>
                             </td>
                             <td class="style1">

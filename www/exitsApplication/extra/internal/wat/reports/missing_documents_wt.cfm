@@ -13,7 +13,7 @@
 
 	<cfif LEN(printOption)>
      
-        <cfquery name="qGetCandidates" datasource="mysql">
+        <cfquery name="qGetCandidates" datasource="#APPLICATION.DSN.Source#">
             SELECT 
                 c.candidateID,
                 c.uniqueID,
