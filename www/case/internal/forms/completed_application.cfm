@@ -50,7 +50,7 @@ where schoolid = #host_info.schoolid#
 </cfquery>
 <cfquery name="host_refs" datasource="caseusa">
 select * 
-from smg_family_references
+from smg_host_reference
 where referencefor = #client.hostid#
 </cfquery>
 <i>Once you have reviewed the information and are ready to process your application, please click on 'Process Application'.  Your application will NOT be reviewed until this is done.</i>
