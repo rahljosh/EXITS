@@ -322,7 +322,7 @@
                 SELECT 
                     *
                 FROM 
-                    smg_family_references
+                    smg_host_reference
                 WHERE 
                     referenceFor = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
                 
@@ -389,7 +389,7 @@
             SELECT 
                 *
             FROM 
-                smg_family_references
+                smg_host_reference
             WHERE 
                 referenceFor = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
         </cfquery>

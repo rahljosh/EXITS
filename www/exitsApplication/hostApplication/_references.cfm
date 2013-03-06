@@ -60,7 +60,7 @@
     
         <cfquery datasource="#APPLICATION.DSN.Source#">
             DELETE FROM
-                smg_family_references
+                smg_host_reference
             WHERE 
                 refID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.deleteRefID)#">
             AND
@@ -133,7 +133,7 @@
             
                 <cfquery datasource="#APPLICATION.DSN.Source#">
                     UPDATE 
-                        smg_family_references 
+                        smg_host_reference 
                     SET
                         firstName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.firstName#">,
                         lastName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.lastName#">,
@@ -163,7 +163,7 @@
         
                 <cfquery datasource="#APPLICATION.DSN.Source#">
                     INSERT INTO 
-                    	smg_family_references 
+                    	smg_host_reference 
                     (
                         referenceFor, 
                         firstName, 
