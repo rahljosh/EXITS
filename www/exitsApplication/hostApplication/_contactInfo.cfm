@@ -655,7 +655,7 @@
         
         <table width="100%" cellspacing="0" cellpadding="2" class="border">
             <tr bgcolor="##deeaf3">
-                <td class="label" colspan="3"><h3>Is the residence the site of a functioning business?(e.g. daycare, farm) <span class="required">*</span></h3> </td>
+                <td class="label"><h3>Is the residence the site of a functioning business?(e.g. daycare, farm) <span class="required">*</span></h3> </td>
                 <td>
                     <cfinput type="radio" name="homeIsFunctBusiness" id="homeIsFunctBusiness1" value="1" checked="#FORM.homeIsFunctBusiness eq 1#" onclick="document.getElementById('describeBusiness').style.display='table-row';"/>
                     <label for="homeIsFunctBusiness1">Yes</label>        
@@ -665,7 +665,7 @@
                 </td>
             </tr>
             <tr>
-                <td align="left" colspan="4" id="describeBusiness" <cfif FORM.homeBusinessDesc is ''>class="displayNone"</cfif>>
+                <td align="left" id="describeBusiness" <cfif FORM.homeBusinessDesc is ''>class="displayNone"</cfif>>
                     <strong>Please Describe <span class="required">*</span></strong><br />
                     <textarea cols="50" rows="4" name="homeBusinessDesc" placeholder="Name of Business, Nature of Business, etc">#FORM.homeBusinessDesc#</textarea>
                 </td>
