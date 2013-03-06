@@ -821,7 +821,7 @@ if they are different from your own?</span></td><td>#CapFirst1(qGetHostFamily.ch
 
 <cfquery name="qreferences" datasource="MySQL">
 select *
-from smg_family_references
+from smg_host_reference
 where referencefor = <cfqueryparam cfsqltype="integer" value="#url.hostID#">
 </cfquery>
    <cfoutput> 

@@ -698,7 +698,7 @@ where schoolid = #cl.schoolid#
 <!----References---->
 <Cfquery name="references" datasource="mysql">
 	SELECT *
-	FROM smg_family_references
+	FROM smg_host_reference
 	WHERE referencefor = #cl.hostid#
 </cfquery>
 

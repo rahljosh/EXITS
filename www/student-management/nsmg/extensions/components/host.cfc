@@ -875,7 +875,7 @@
                     hrqt.dateInterview, 
                     CAST(CONCAT(u.firstName, ' ', u.lastName,  ' (##', u.userID, ')' ) AS CHAR) AS submittedBy  
                 FROM 
-                    smg_family_references sfr
+                    smg_host_reference sfr
                 LEFT OUTER JOIN
                 	smg_host_reference_tracking hrqt ON hrqt.fk_referencesID = sfr.refID
 
