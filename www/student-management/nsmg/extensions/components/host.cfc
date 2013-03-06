@@ -1467,7 +1467,8 @@
 							// Submit to Headquarters
 							} else {
 								vNextStatus = 4;
-								vEmailTo = qGetHostInfo.facilitatorEmail;
+								vEmailTo = APPLICATION.CFC.USER.getUserSession().emailCompliance;
+								//vEmailTo = qGetHostInfo.facilitatorEmail;
 								vSetEmailTemplate = "submitToFacilitator";
 								stReturnMessage.pageMessages = "Application has been submitted to your Region Facilitator #qGetHostInfo.facilitator# for review. Thank you.";
 							}
@@ -1499,7 +1500,8 @@
 							// Submit to Headquarters
 							} else {
 								vNextStatus = 4;
-								vEmailTo = qGetHostInfo.facilitatorEmail;
+								vEmailTo = APPLICATION.CFC.USER.getUserSession().emailCompliance;
+								//vEmailTo = qGetHostInfo.facilitatorEmail;
 								vSetEmailTemplate = "submitToFacilitator";
 								stReturnMessage.pageMessages = "Application has been submitted to your Region Facilitator #qGetHostInfo.facilitator# for review. Thank you.";							
 							}						
@@ -1536,8 +1538,8 @@
 							// Submit to Headquarters
 							vNextStatus = 4;
 							// Compliance will be notified
-							vEmailTo = qGetHostInfo.facilitatorEmail;
-							
+							vEmailTo = APPLICATION.CFC.USER.getUserSession().emailCompliance;
+							//vEmailTo = qGetHostInfo.facilitatorEmail;
 							vSetEmailTemplate = "submitToFacilitator";
 							stReturnMessage.pageMessages = "Application has been submitted to your Region Facilitator #qGetHostInfo.facilitator# for review. Thank you.";
 						// Denied
@@ -1607,7 +1609,8 @@
 							// Reject to RM
 							vNextStatus = 5;
 							vEmailTo = qGetHostInfo.regionalManagerEmail;
-							vEmailCC = qGetHostInfo.facilitatorEmail;
+							vEmailCC = APPLICATION.CFC.USER.getUserSession().emailCompliance;
+							//vEmailCC = qGetHostInfo.facilitatorEmail;
 							vSetEmailTemplate = "denyToRegionalManager";
 							stReturnMessage.pageMessages = "Application has been sent back to Regional Manager #qGetHostInfo.regionalManager# as you have suggested some changes. Thank you.";
 						}

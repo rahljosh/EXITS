@@ -164,7 +164,7 @@
                         <td>#qGetHostApplications.regionalAdvisor#</td> 
                         <td>#qGetHostApplications.regionalManager#</td> 
                         <td width="350" align="center">
-                            <a class="jQueryModal" href="/hostApplication/index.cfm?uniqueID=#qGetHostApplications.uniqueID#" title="Open Application"><img src="pics/buttons/openApplication.png" border="0"></a>
+                            <a class="jQueryModal" href="/hostApplication/index.cfm?uniqueID=#qGetHostApplications.uniqueID#&userID=#CLIENT.userID#" title="Open Application"><img src="pics/buttons/openApplication.png" border="0"></a>
                             &nbsp; &nbsp; 
                             <a href="index.cfm?curdoc=hostApplication/toDoList&hostID=#qGetHostApplications.hostID#" title="View Details"><img src="pics/buttons/approve.png" width="110" border="0"></a>
                             
