@@ -36,8 +36,10 @@
 		SESSION.formErrors = CreateCFC("formErrors").Init();
 	}
 
+	param name="CLIENT.userID" default="0";	
+
 	// Set USER SESSION Variables
-	APPLICATION.CFC.USER.setUserSession();
+	APPLICATION.CFC.USER.setUserSession(userID=CLIENT.userID);
 
 	// Set USER SESSION Roles
 	APPLICATION.CFC.USER.setUserSessionRoles();	

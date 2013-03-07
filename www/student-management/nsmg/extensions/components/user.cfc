@@ -249,7 +249,7 @@
 	----- ------------------------------------------------------------------------- --->
 
 	<cffunction name="setUserSession" access="public" returntype="void" output="false" hint="Set USER Session Variables">
-		<cfargument name="userID" default="#CLIENT.userID#" hint="User ID">
+		<cfargument name="userID" default="0" hint="User ID">
         
         <cfscript>
 			// Get Candidate Information
@@ -313,18 +313,20 @@
 	<cffunction name="getUserSession" access="public" returntype="struct" hint="Get user SESSION variables" output="no">
 
         <cfscript>
+			param name="CLIENT.userID" default="0";
+			
 			try {
 				
 				// Check if USER structure exits
 				if ( StructIsEmpty(SESSION.USER) ) {
 					// Set Session
-					setUserSession();
+					setUserSession(userID=CLIENT.userID);
 				}
 				
 				// New field emailCompliance added | Making sure it is populated - this code can be removed later 03/06/2013 - Marcus
 				if ( NOT IsValid("email", SESSION.USER.emailCompliance) ) {
 					// Set Session
-					setUserSession();
+					setUserSession(userID=CLIENT.userID);
 				}
 				// New field emailCompliance added | Making sure it is populated - this code can be removed later 03/06/2013 - Marcus
 				
@@ -344,7 +346,7 @@
 
 			} catch (Any e) {
 				// Set Session
-				setUserSession();
+				setUserSession(userID=CLIENT.userID);
 			}
 
 			// Make Sure Structs are not empty
