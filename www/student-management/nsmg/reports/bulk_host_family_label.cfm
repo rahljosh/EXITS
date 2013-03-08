@@ -1,6 +1,6 @@
 <cfparam name="FORM.programID" default="0">
 <cfparam name="FORM.regionID" default="">
-
+<cfparam name="FORM.addressStudent" default="0">
 <!--- Generate Avery Standard 5160 labels for our contacts. --->
 <html>
 <head>
@@ -53,7 +53,7 @@
 			<table border="0" cellspacing="0" cellpadding="0">
 	
 			<cfquery name="get_students" datasource="MySql"> 
-				SELECT 	h.address, h.address2, h.city, h.zip, h.state, h.familylastname as hostname, 
+				SELECT 	h.address, h.address2, h.city, h.zip, h.state, h.familylastname as hostname, s.firstname as stuFirst, s.familylastname as stuLast,
 						p.programname, p.programid, 
 						u.businessname, u.userid,
 						c.companyshort, c.companyid
@@ -93,7 +93,11 @@
 				
 				<!--- Output the label --->
 				<td class="label">
-					<p>The #hostname# Family</p>
+                <Cfif val(form.addressStudent)>
+					<p>#stuFirst# #stuLast#</p>
+                <cfelse>
+                	<p>The #hostname# Family</p>
+                </Cfif>
 					<p><cfif address2 NEQ ''>#address2#<cfelse>#address#</cfif></p>
 					<p>#city#, #state# #zip#</p>
 				</td>

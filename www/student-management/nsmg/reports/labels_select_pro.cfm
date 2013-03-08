@@ -603,6 +603,12 @@
                                     </select>
                                 </td>
                             </tr>
+                               <tr>
+                                <td>Address to Student:</td>
+                                <td>
+                                	<input type="checkbox" name="addressStudent" value=1 /> Name of Student instead of Host Family on To: line.
+                                </td>
+                            </tr>
                             <tr>
                                 <td>Insurance Type:</td>
                                 <td>
