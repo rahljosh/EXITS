@@ -540,6 +540,14 @@ span.mainSpan {
   </tr>
 </table>
 
+<!--- outside table --->
+<cfif FORM.report_mode NEQ 'view'>
+    </td>
+    </tr>
+    </table>
+    <br />
+</cfif>
+
 <cfif form.report_mode EQ 'view'>
 
 	<br />
@@ -594,12 +602,14 @@ span.mainSpan {
                     onSubmit="return confirm('Are you sure you want to approve this report?  You will no longer be able to edit this report after approval.')">
                     <input type="hidden" name="pr_action" value="approve">
                     <input type="hidden" name="pr_id" value="#form.pr_id#">
-                    <label style="vertical-align:top;">
-                    	<input type="checkbox" name="printReport" id="printReport" value="1" style="vertical-align:top;" <cfif VAL(FORM.printReport)>checked="checked"</cfif> />Print
-                 	</label>
-                    <label style="vertical-align:top;">
-                    	<input type="checkbox" name="emailReport" id="emailReport" value="1" style="vertical-align:top;" <cfif VAL(FORM.emailReport)>checked="checked"</cfif> />Email
-                  	</label>
+                    <cfif CLIENT.userType LTE 4>
+                        <label style="vertical-align:top;">
+                            <input type="checkbox" name="printReport" id="printReport" value="1" style="vertical-align:top;" <cfif VAL(FORM.printReport)>checked="checked"</cfif> />Print
+                        </label>
+                        <label style="vertical-align:top;">
+                            <input type="checkbox" name="emailReport" id="emailReport" value="1" style="vertical-align:top;" <cfif VAL(FORM.emailReport)>checked="checked"</cfif> />Email
+                        </label>
+                	</cfif>
                     <input name="Submit" type="image" src="pics/approve.gif" alt="Approve Report" border=0>
                 </form>
             <cfelseif CLIENT.usertype NEQ 8>
