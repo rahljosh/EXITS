@@ -313,22 +313,13 @@
 	<cffunction name="getUserSession" access="public" returntype="struct" hint="Get user SESSION variables" output="no">
 
         <cfscript>
-			param name="CLIENT.userID" default="0";
-			
 			try {
 				
 				// Check if USER structure exits
 				if ( StructIsEmpty(SESSION.USER) ) {
 					// Set Session
-					setUserSession(userID=CLIENT.userID);
+					setUserSession(userID=VAL(CLIENT.userID));
 				}
-				
-				// New field emailCompliance added | Making sure it is populated - this code can be removed later 03/06/2013 - Marcus
-				if ( NOT IsValid("email", SESSION.USER.emailCompliance) ) {
-					// Set Session
-					setUserSession(userID=CLIENT.userID);
-				}
-				// New field emailCompliance added | Making sure it is populated - this code can be removed later 03/06/2013 - Marcus
 				
 				// Param Session Variables so we don't get any errors with new ones
 				param name="SESSION.USER.ID" default="";
@@ -346,7 +337,7 @@
 
 			} catch (Any e) {
 				// Set Session
-				setUserSession(userID=CLIENT.userID);
+				setUserSession(userID=VAL(CLIENT.userID));
 			}
 
 			// Make Sure Structs are not empty
