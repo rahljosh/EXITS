@@ -282,7 +282,7 @@
 				if ( FindNoCase("case.exitsapplication.com", CGI.SERVER_NAME) ) {
 					SESSION.USER.hostApplicationURL = 'http://www.case-usa.org/hostApplication/';
 					SESSION.USER.emailSupport = 'support@case-usa.org';
-					SESSION.USER.emailCompliance = 'jana@case=usa.org';
+					SESSION.USER.emailCompliance = 'jana@case-usa.org';
 				} else {
 					SESSION.USER.hostApplicationURL = 'https://www.iseusa.com/hostApplication/';
 					SESSION.USER.emailSupport = 'support@iseusa.com';
