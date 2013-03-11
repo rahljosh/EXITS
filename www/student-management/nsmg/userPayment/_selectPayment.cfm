@@ -298,7 +298,37 @@
                 </cfif>
 
             GROUP BY 
-                studentID        
+                studentID   
+        <cfelse>
+        UNION 
+        
+            SELECT DISTINCT 
+                s.studentID, 
+                s.familyLastName, 
+                s.firstName,
+                s.programID, 
+                programName
+            FROM 
+                smg_students s
+            INNER JOIN
+                smg_programs p ON p.programID = s.programID
+                AND
+                	DATE_ADD(p.endDate, INTERVAL 9 MONTH) >= CURDATE()
+            INNER JOIN
+                smg_hostHistoryTracking sht ON sht.studentID = s.studentID
+                    AND
+                        sht.fieldName = <cfqueryparam cfsqltype="cf_sql_varchar" value="placeRepID">
+                    AND
+                    	sht.fieldID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">
+            WHERE 
+				<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+                    s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+                <cfelse>
+                    s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+                </cfif>
+
+            GROUP BY 
+                studentID      
 		</cfif>               
 		<!--- End of Split Payments - Display All students pl --->
             
