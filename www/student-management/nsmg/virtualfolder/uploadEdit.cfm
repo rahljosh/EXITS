@@ -222,7 +222,7 @@ where id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.docType#">
         }
 	</cfscript>	
     
-    
+    <Cfoutput>
         <cfsavecontent variable="email_message">
             Dear #qGetRegionInfo.firstname# #qGetRegionInfo.lastname#,<br><br>This e-mail is just to let you know a new document has been uploaded into #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname#'s (###qGetStudentInfo.studentid#) virtual folder by #qGetUser.businessname# #qGetUser.firstname# #qGetUser.lastname#.
             The document has been recorded in the category #qGetCategory.documenttype#.<br><br>
@@ -231,7 +231,7 @@ where id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.docType#">
             Sincerely,<br>
             EXITS - #CLIENT.companyname#<br><br>
         </cfsavecontent>
-                    
+        </Cfoutput>            
         <!--- send email --->
         <cfinvoke component="nsmg.cfc.email" method="send_mail">
             <cfinvokeargument name="email_to" value="#emailRecipient#">
@@ -244,7 +244,7 @@ where id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.docType#">
     
     <!--- Email International Representative if file has been upload by Office and in Production Environment --->
 	<cfif ListFind("1,2,3,4,5,6,7", CLIENT.userType) AND NOT APPLICATION.isServerLocal>
-    
+    <cfoutput>
         <cfsavecontent variable="email_message">
             This e-mail is just to let you know a new document has been uploaded into #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname#'s (###qGetStudentInfo.studentid#) virtual folder by #qGetUser.businessname# #qGetUser.firstname# #qGetUser.lastname#.
             The document has been recorded in the category #qGetCategory.documenttype# .<br><br>
@@ -252,7 +252,7 @@ where id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.docType#">
             Sincerely,<br>
             EXITS - #CLIENT.companyname#<br><br>
         </cfsavecontent>
-        
+        </cfoutput>
         <!--- send email --->
         <cfinvoke component="nsmg.cfc.email" method="send_mail">
             <cfinvokeargument name="email_to" value="#qIntlRep.email#">
@@ -260,7 +260,7 @@ where id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.docType#">
             <cfinvokeargument name="email_message" value="#email_message#">
             <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
         </cfinvoke>
-        
+      
     </cfif> 
     <!---- End of Email to Intl. Representative --->
         </cfif>
