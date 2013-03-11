@@ -133,7 +133,18 @@
        and isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.isDeleted#">
         ORDER by categoryName
     </cfquery>
-    
+    <cfset currentDirectory = "#AppPath.onlineApp.virtualFolder##qGetStudentInfo.studentID#/page22">
+	<!--- Check to see if the Directory exists. --->
+    <cfif NOT DirectoryExists(currentDirectory)>
+       <!--- If TRUE, create the directory. --->
+       <cfdirectory action = "create" directory = "#currentDirectory#" mode="777">
+    </cfif>
+    <cfdirectory directory="#currentDirectory#" name="mydirectory" sort="datelastmodified DESC" filter="*.*">
+    <cfquery name="check_allergies" datasource="#application.dsn#">
+    select has_an_allergy
+    from smg_student_app_health
+    where studentid = #qGetStudentInfo.studentID#
+    </cfquery>
 
 
 <!--- Page Header --->
@@ -156,7 +167,11 @@
  <cfset currentCategory = ''>             
     <div class="rdtop"> 
         <span class="rdtitle">Virtual Folder  &nbsp; - &nbsp; #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentid#) </span> 
+        <cfif client.usertype eq 8>
+        <em><a href="?curdoc=intrep/int_student_info&unqid=#qGetStudentInfo.uniqueid#">back to student profile</a></em>
+        <cfelse>
         <em><a href="?curdoc=student_info&studentID=#qGetStudentInfo.studentid#">back to student profile</a></em>
+    	</cfif>
     </div>
     
     <div class="rdbox">
@@ -219,8 +234,99 @@
         </tr>
   		</cfif>
     </cfloop>
+    <!----Flight Info that was auto generated prior to new VF (Feb 26, 2013)---->
+    <cfif flightDocs.recordcount gt 0>
+
+        <tr bgcolor="##CCCCCC">
+            <Td colspan=6 align="left" ><strong>Pre-AYP 12/13 Flight Info</td>
+        </tr>
+         <cfloop query="flightDocs">
+                    <tr>
+                    
+                    
+                    
+                        <td>Flight Information</td>
+                        <td><a href="uploadedfiles/internalVirtualFolder/#qGetStudentInfo.studentID#/#selectedPlacement#/flightInformation/#name#" target="_blank"ß>#name#</td> 	
+                        <td>#DateFormat(dateLastModified,'mmm d, yyyy')#</td>
+                        <td>System</td>
+                        <td>Auto</td>
+                       
+                    </tr>
+                </cfloop>
+     </cfif>
+     <cfif VAL(mydirectory.recordcount)>
+            <tr bgcolor="##CCCCCC">
+            	<Td colspan=6 align="left"><strong>Supplements on Student App</strong></th>
+            </tr> 
+			 <cfif VAL(check_allergies.has_an_allergy)>
+            <tr>
+                <td><a href="?curdoc=section3/allergy_info_request">Allergy Clarification Form</a></td>
+            </tr>
+            </cfif>
+    
+	
+
+            <cfloop query="mydirectory">
+                
+                <tr>
+                  <td>Student Suppliment</td>
+                  <td><a href="javascript:OpenApp('uploadedfiles/virtualfolder/#qGetStudentInfo.studentID#/page22/#name#');" target="_blank">#mydirectory.name#</a></td>
+                  <td>#DateFormat(mydirectory.dateLastModified,'mmm d, yyyy')#</td>
+                  <td>Student/Int Rep</td>
+                  <td>Manual</td>  
+                  </td>	
+                </tr>
+            </cfloop>
+       </cfif>
+      <!--- Automatic Files --->
+            <tr bgcolor="##CCCCCC">
+            	<Td colspan=6 align="left" ><strong>Automatic Documents - based on selected Host Family.</strong></th>
+            </tr>
+            
+            <cfif val(url.placement)> 
+            <!--- Placement Information Sheet --->
+            <tr>
+            	<td>Placement Information Sheet</td>
+            	<td><a href="../reports/placementInfoSheet.cfm?uniqueID=#URL.unqID#&historyID=#selectedPlacement#&profileType=pdf" taret="_blank">Dynamicaly Generated</a></td>
+                <td>N/A</td>
+                <td>System</td>
+                <td>Auto</td>	
+
+            </tr>
+            
+            <!--- Host Family Welcome Letter --->
+            <tr>
+            	<td>Host Family Welcome Letter</td>
+                <td><a href="../reports/host_welcome_letter.cfm?historyID=#selectedPlacement#&pdf=1" target="_blank">Dynamicaly Generated</a></td>
+            	<td>N/A</td>
+                <td>System</td>
+                <td>Auto</td>	
+            </tr>
+            
+            <!--- School Welcome Letter --->
+            <tr>
+            	<td>School Welcome Letter</td>
+                 <td><a href="../reports/school_welcome_letter.cfm?historyID=#selectedPlacement#&pdf=1">Dynamicaly Generated</a></td>
+            	<td>N/A</td>
+                <td>System</td>
+                <td>Auto</td>
+            </tr>
+            
+            <!--- School Acceptance Letter --->
+            <tr>
+            	<td>School Acceptance Letter</td>
+                <td><a href="school_acceptance.cfm?studentid=#qGetStudentInfo.studentid#&hostID=#qGetSelectedPlacementDetails.hostID#" target="_blank">Dynamicaly Generated</a></td>
+                <td>N/A</td>
+            	<td>System</td>
+                <td>Auto</td>
+            </tr>
+            <cfelse>
+            <tr>
+            	<Td colspan=6>Select Host Family above</Td>
+            </cfif>
      </table> 
-     <br><br>
+      
+    
      <div align="center">
      <table>
      	<Tr>
