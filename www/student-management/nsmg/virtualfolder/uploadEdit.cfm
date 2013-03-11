@@ -14,6 +14,8 @@ function displayHosts() {
 	}
 </script>
 </head>
+<cfparam name="emailRecipient" default="#APPLICATION.EMAIL.support#">
+
 
 <!--- Import CustomTag Used for Page Messages and Form Errors --->
 <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
@@ -44,6 +46,11 @@ function displayHosts() {
 		
 		// Get Student Placements
 		qGetStudentPlacements = APPLICATION.CFC.STUDENT.getPlacementHistory(studentID=qGetStudentInfo.studentID);
+		
+		studentProfileLink = '#CLIENT.exits_url#/nsmg/index.cfm?curdoc=student_info&studentID=#qGetStudentInfo.studentID#';		
+		//studentProfileLink = '#CLIENT.exits_url#/nsmg/virtualfolder/#qGetStudentInfo.uniqueID#';
+		
+		studentProfileIntLink = '#client.exits_url#/nsmg/index.cfm?curdoc=intrep/int_student_info&unqid=#qGetStudentInfo.uniqueID#';
 </cfscript>
 <Cfif val(url.docID)>
 	<cfset form.docExists = "#url.docID#">
@@ -152,6 +159,110 @@ where id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.docType#">
                                     <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">)
                 
                 </cfquery>
+                
+	 <!--- Email Local Person --->
+       <!--- EMAIL FACILITATORS TO LET THEM KNOW THERE IS A DOCUMENT ---->
+       
+       <cfquery name="qGetCategory" datasource="#application.dsn#">
+       select documenttype
+       from virtualfolderdocuments
+       where id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.docType#">
+       </cfquery>
+        <cfquery name="qGetUser" datasource="#application.dsn#">
+        SELECT 
+            userid, 
+            firstname, 
+            lastname, 
+            businessname, 
+            email
+        FROM 
+            smg_users
+        WHERE 
+            userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
+    </cfquery>
+
+    <cfquery name="qIntlRep" datasource="#application.dsn#">
+        SELECT 
+        	email
+        FROM 
+        	smg_users 
+        WHERE 
+        	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.intrep#">
+    </cfquery>
+    
+    <cfquery name="qGetRegionInfo" datasource="#application.dsn#">
+        SELECT 
+            s.regionassigned, 
+            r.regionname, 
+            r.regionfacilitator, 
+            r.regionid, 
+            r.company,
+            u.firstname, 
+            u.lastname, 
+            u.email 
+        FROM 
+            smg_students s 
+        INNER JOIN 
+            smg_regions r ON s.regionassigned = r.regionid
+        LEFT JOIN 
+            smg_users u ON r.regionfacilitator = u.userid
+        WHERE 
+            s.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.studentid#">
+    </cfquery>
+       <cfscript>
+		// Dev - Always Email Support
+        if ( APPLICATION.isServerLocal ) {
+			emailRecipient = APPLICATION.EMAIL.support; 	
+		// Check if is a PHP student - Email PHP
+		} else if ( qGetStudentInfo.companyid EQ 6 ) {
+            emailRecipient = APPLICATION.EMAIL.PHPContact; 	
+        // Check if there is a valid facilitator email address
+        } else if ( IsValid("email", qGetRegionInfo.email) ) {
+            emailRecipient = qGetRegionInfo.email;
+        }
+	</cfscript>	
+    
+    
+        <cfsavecontent variable="email_message">
+            Dear #qGetRegionInfo.firstname# #qGetRegionInfo.lastname#,<br><br>This e-mail is just to let you know a new document has been uploaded into #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname#'s (###qGetStudentInfo.studentid#) virtual folder by #qGetUser.businessname# #qGetUser.firstname# #qGetUser.lastname#.
+            The document has been recorded in the category #qGetCategory.documenttype#.<br><br>
+            Please click <a href="#studentProfileLink#">here</a> and click on "virtual folder" in the right menu. <br><br>
+            
+            Sincerely,<br>
+            EXITS - #CLIENT.companyname#<br><br>
+        </cfsavecontent>
+                    
+        <!--- send email --->
+        <cfinvoke component="nsmg.cfc.email" method="send_mail">
+            <cfinvokeargument name="email_to" value="#emailRecipient#">
+            <cfinvokeargument name="email_subject" value="Virtual Folder - Upload Notification for #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentid#)">
+            <cfinvokeargument name="email_message" value="#email_message#">
+            <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
+        </cfinvoke>
+    <!----End of Email---->
+    
+    
+    <!--- Email International Representative if file has been upload by Office and in Production Environment --->
+	<cfif ListFind("1,2,3,4,5,6,7", CLIENT.userType) AND NOT APPLICATION.isServerLocal>
+    
+        <cfsavecontent variable="email_message">
+            This e-mail is just to let you know a new document has been uploaded into #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname#'s (###qGetStudentInfo.studentid#) virtual folder by #qGetUser.businessname# #qGetUser.firstname# #qGetUser.lastname#.
+            The document has been recorded in the category #qGetCategory.documenttype# .<br><br>
+            Please click <a href="#studentProfileIntLink#">here</a> to see the student's virtual folder.<br><br>
+            Sincerely,<br>
+            EXITS - #CLIENT.companyname#<br><br>
+        </cfsavecontent>
+        
+        <!--- send email --->
+        <cfinvoke component="nsmg.cfc.email" method="send_mail">
+            <cfinvokeargument name="email_to" value="#qIntlRep.email#">
+            <cfinvokeargument name="email_subject" value="Virtual Folder - Upload Notification for #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentid#)">
+            <cfinvokeargument name="email_message" value="#email_message#">
+            <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
+        </cfinvoke>
+        
+    </cfif> 
+    <!---- End of Email to Intl. Representative --->
         </cfif>
        
 		<cfif FORM.subAction is 'Save and Close'>
