@@ -226,7 +226,7 @@
         	<td>#documentType#</td><td><a href="#filePath##filename#" target="_blank">#filename# <cfif val(fk_hostID)> - #familyLastName#</cfif></td><td>#DateFormat(dateAdded, 'mmm d, yyyy')#</td><td>#firstname# #lastname#</td>
         	<Td>#generatedHow#</Td>
             <td>
-            	<cfif ((userid eq client.userid) OR (client.usertype lte 2)) AND generatedHow is not 'auto'>
+            	<cfif ((userid eq client.userid) OR (client.usertype lte 4)) AND generatedHow is not 'auto'>
             <A href="index.cfm?curdoc=virtualFolder/view&unqid=#url.unqid#&vfid=#vfid#&how=#generatedHow#">
             	<img src="pics/deletex.gif" height="10" border=0/>
              </A>   
