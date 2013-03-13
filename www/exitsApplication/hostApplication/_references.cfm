@@ -287,6 +287,8 @@
 	
     <h3>Add a Reference</h3>
     
+    <div align="center"><strong>References must be from your community or general vicinity.</strong></div>
+    <br />
 	<cfif NOT VAL(vRemainingReferences)>
         No additional references are required.
     <cfelse>
