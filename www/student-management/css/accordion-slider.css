@@ -1,0 +1,101 @@
+#accordion-slider-container {width: 940px; height:400px; margin: 0 auto 30px auto; overflow:hidden; position:relative; 
+
+}
+#accordion-slider {
+	/* recommended styles for kwicks ul container */
+	list-style: none;
+	position: relative;
+	margin: 0;
+	padding: 0;
+	background:transparent;overflow:hidden; 
+}
+#accordion-slider li{
+	/* these are required, but the values are up to you (must be pixel) */
+	width: 235px;
+	height: 550px;
+	/*do not change these */
+	display: block;
+	overflow: hidden;
+	padding: 0;  /* if you need padding, do so with an inner div (or implement your own box-model hack) */
+}
+#accordion-slider.horizontal li {
+	/* This is optional and will be disregarded by the script.  However, it should be provided for non-JS enabled browsers. */
+	margin-right: 0px; /*Set to same as spacing option. */	
+	float: left;
+
+}
+#accordion-slider.vertical  li{
+	/* This is optional and will be disregarded by the script.  However, it should be provided for non-JS enabled browsers. */
+	margin-bottom: 5px; /*Set to same as spacing option. */	
+}
+.accordian-slider-image {
+	float:left;
+	padding:0;
+	margin:0;
+	cursor: pointer;
+}
+.slide-minicaption {
+	bottom:0;
+	right:0;
+	position:absolute;
+	color:#fff;
+	text-shadow: 2px 2px #111;
+	padding:10px;
+	font-size:12px;
+	line-height:18px;
+	width: 195px;
+	background:#111;
+	}
+	
+.slide-minicaptiontitle {
+	font-size:13px;
+	text-align:center;
+	letter-spacing:0.5px; 
+	color:#fff; 
+	display:block;
+	line-height:20px;
+	}
+.accordian-slider-logo {
+	bottom:0px;
+	left:-20px;
+	position:absolute;
+	padding:10px 20px 20px;
+	width: 250px;
+}
+.accordian-slider-caption {
+	bottom:-20px;
+	left:50px;
+	position:absolute;
+	color:#D1D1D1;
+	padding:10px 20px 20px;
+	font-size:12px;
+	line-height:20px;
+	background:#111;
+	font-family:Droid Sans;
+	width: 620px;
+	height:auto;
+	-moz-box-shadow:0px 3px 3px rgba(0,0,0,0.1);
+	-webkit-box-shadow:0px 3px 3px rgba(0,0,0,0.1);
+	box-shadow:0px 3px 3px rgba(0,0,0,0.1);
+}	
+.accordian-slider-caption a {color:#D1D1D1; }
+.accordian-slider-caption a:hover {text-decoration:none;}
+.accordian-slider-captiontitle {
+	font-size:24px; 
+	color:#fff; 
+	display:block;
+	line-height:26px;
+	margin: 0 0 5px 0;
+}
+.accordian-slider-captiontitle a {color:#ffb400;}
+.accordian-slider-captiontitle a:hover {color:#ffb400; text-decoration:none;	}
+	#accordion-slider-container  { height: 430px;overflow:hidden;  }
+	#accordion-slider-container  { width:940px;margin-bottom:0px;overflow:hidden; }
+	#accordion-slider li { width: 238px;
+    -moz-box-shadow:1px 3px 15px #000;
+    -webkit-box-shadow:1px 3px 15px #000;
+    box-shadow:1px 3px 15px #000;}
+	#accordion-slider li { height: 430px; }
+	.kwickshadow { height: 380px; }
+	.slideshowgallery { height: 380px; }
+	.slide-minicaption { width: 255px; }	

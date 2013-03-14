@@ -1,0 +1,53 @@
+.post-content{
+	clear:left;
+}
+.date-container{
+	float:left;
+}
+.date.day{
+	position:relative;
+	height:30px;
+	line-height:30px;
+	margin-top:-5px;
+}
+.date.month{
+	line-height:15px;
+	margin-bottom:0;
+	margin-top:-3px;
+}
+.date.year{
+	margin-top:-5px;
+}
+
+h3.post-title{
+	padding-top:1px;
+}
+
+.widget #recent-post li, .widget #recent-comments li{
+	width:220px;
+}
+
+.divider{
+	position:relative;
+	width:940px;
+}
+#commentlist li #children{
+	margin-bottom:-5px;
+}
+#submit {
+	padding-left:5px;
+	padding-right:5px;
+}
+#services-content{
+	width:940px;
+}
+
+.tab{
+	margin-top:-10px;
+}
+.toggle-container h4{
+	line-height:20px;
+}
+.one_half{
+	width:48.4%;	
+}
