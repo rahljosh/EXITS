@@ -193,7 +193,7 @@ ON
 WHERE
      usertype = 8
 AND
-   companyID = 8
+   (companyID = 8 OR companyID = "")
 ORDER BY
 	su.businessname
 </cfquery>
