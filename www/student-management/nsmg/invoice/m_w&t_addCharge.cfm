@@ -439,7 +439,12 @@ ORDER BY candidateid
             <cfinput type="text" name="#candidateId#typeProgramFee" value="Program price">
             </td> 
             <td>
-            <cfinput type="text" name="#candidateId#programFeeAmount" value="#qGetFees.priceCsbPlacement#">
+            <cfif #getWorkCand.wat_placement# IS "CSB-Placement">
+            	<cfset programFee = qGetFees.priceCsbPlacement>
+            <cfelse>
+            	<cfset programFee = qGetFees.priceSelfPlacement>
+            </cfif>
+            <cfinput type="text" name="#candidateId#programFeeAmount" value="#programFee#">
             </td>
             <td>
             </td>            
