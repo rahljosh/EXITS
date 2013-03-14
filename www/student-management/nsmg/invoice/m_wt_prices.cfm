@@ -49,6 +49,7 @@ div {
 <cfparam name="form.submitInsurance" default="0">
 <cfparam name="form.submitPrice" default="0">
 <cfparam name="form.submitted" default="0">
+<cfparam name="form.submitDefaultPrice" default="0">
 
 <!--- update wt monthly insurance price --->
 <cfif form.submitInsurance IS "submit">
@@ -125,8 +126,8 @@ div {
 </cfif>
 
 <!--- set default prices and fees --->
-<cfif form.submitted EQ 1>
-
+<cfif form.submitDefaultPrice IS "submit">
+entrou
 	<cfquery name="qDefaultPrices" datasource="MySQL">
     UPDATE
     	extra_wt_prices
@@ -288,7 +289,6 @@ ORDER BY
 </div>
 <table align="left" class="defaultPrices">
 	<form name="defaultPrice" id="defaultPrice" method="post" action="m_wt_prices.cfm">
-    	<input type="hidden" name="submitted" id="submitted" value="1" />
     	<tr>
         	<td class="tHeader">
             	<b>Select Price</b>
@@ -313,7 +313,8 @@ ORDER BY
             </td>
         </tr> 
         	<td colspan="2" align="center" class="submit">
-            	<input type="image" src="../pics/buttons/submit.png" name="submitDefaultPrice" id="submitDefaultPrice" value="submit" onclick="confirm_defaultPrice();" />
+           		 <input type="hidden" name="submitDefaultPrice" id="submitDefaultPrice" value="submit" onclick="confirm_defaultPrice();" />
+            	<input type="image" src="../pics/buttons/submit.png" />
             </td>
         </tr>
 </table>
