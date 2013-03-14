@@ -65,6 +65,11 @@
                 SESSION.formErrors.Add("Please indicate the nearest town over 30,000 people.");
             }
 
+			// city website
+            if( NOT LEN(TRIM(FORM.cityWebsite)) ) {
+                SESSION.formErrors.Add("Please indicate your city/town website.");
+            }
+			
 			// major_air_code
             if( NOT LEN(TRIM(FORM.major_air_code)) ) {
                 SESSION.formErrors.Add("Please indicate your major airport code.");
