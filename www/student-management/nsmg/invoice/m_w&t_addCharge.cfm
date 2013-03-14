@@ -13,6 +13,16 @@
 
 <cfset todaysDate = DateFormat(Now(), 'yyyy/mm/dd')>
 
+<!--- check if intl rep accepts sevis fee --->
+<cfquery name="qSevisOption" datasource="MySQL">
+SELECT
+	includeSevis
+FROM
+	extra_wt_prices
+WHERE
+	userID = #url.userid#
+</cfquery>
+
 <!--- get work and travel candidates that:
 1. Are active;
 2. Have no charges created;
@@ -126,6 +136,33 @@ ORDER BY verification_received
 .style1 {color: #004080}
 -->
 </style>
+
+<cfset arrayStuId = ArrayNew(1)>
+<cfloop query="getWorkCandidates">
+	<cfset aStuId = #arrayAppend(arrayStuId, "#getWorkCandidates.candidateid#")#>
+</cfloop>
+<cfset qtStud = #getWorkCandidates.recordCount#>
+
+<cfoutput>
+	<script type="text/javascript">
+		var #toScript(arrayStuId, "jsArrayStuId")#;
+		var #toScript(qtStud, "qtStud")#;
+		var jsCounter = qtStud;
+		
+		function enable_premium() {
+			for (var i=0; i<=jsCounter-1; i++) {
+					if(document.getElementById("applyPremiumProcessing"+jsArrayStuId[i]).checked == true) {
+						document.getElementById("premiumProcessing"+jsArrayStuId[i]).disabled = "";
+						document.getElementById("premiumProcessingAmount"+jsArrayStuId[i]).disabled = "";
+					}
+					else {
+						document.getElementById("premiumProcessing"+jsArrayStuId[i]).disabled = "disabled";
+						document.getElementById("premiumProcessingAmount"+jsArrayStuId[i]).disabled = "disabled";			
+					}
+			}
+		}		
+	</script>
+</cfoutput>
 </head>
 
 <body>
@@ -157,6 +194,25 @@ ORDER BY verification_received
 <cfif NOT ISDEFINED('form.dsVerRepDateRec')>
     <cfabort>
 </cfif>
+
+<!--- get fees for intl. rep --->
+<cfquery name="qGetFees" datasource="MySQL">
+SELECT *
+FROM extra_wt_prices
+WHERE userID = #url.userid#
+</cfquery>
+
+<cfif qGetFees.recordCount EQ 0>
+	<div align="center"><b><small>You need to enter fees for this International Representative</small></b></div>
+    <cfabort>
+</cfif>
+
+<!--- get monthly insurance rate --->
+<cfquery name="qGetInsuranceRate" datasource="MySQL">
+SELECT wt
+FROM smg_insurance_type
+WHERE insutypeID = 14
+</cfquery>
     
 <!--- gets work candidates with the chosen "ds verification report date received" --->
 <cfquery name="getWorkCand" datasource="MySQL">
@@ -291,7 +347,7 @@ ORDER BY candidateid
                 <cfelse>
                 	<cfset programLength = #Int(progLengTest2)# + 1>
             </cfif> --->
-            <cfset insuranceCostPerDay = 27 / 30>
+            <cfset insuranceCostPerDay = #qGetInsuranceRate.wt# / 30>
          <!--- INSURANCE COST PER WEEK DEACTIVATED, CHARGING NOW PER DAY from 01/06/2011   <cfset insuranceCost = Round(#insuranceCostPerDay# * #programLength#)> --->
          	<cfset insuranceCost = Round(#insuranceCostPerDay# * #progLengTest1#)>
         </cfif>
@@ -383,7 +439,7 @@ ORDER BY candidateid
             <cfinput type="text" name="#candidateId#typeProgramFee" value="Program price">
             </td> 
             <td>
-            <cfinput type="text" name="#candidateId#programFeeAmount" value="400">
+            <cfinput type="text" name="#candidateId#programFeeAmount" value="#qGetFees.priceCsbPlacement#">
             </td>
             <td>
             </td>            
@@ -420,7 +476,7 @@ ORDER BY candidateid
                 <cfinput type="text" name="#candidateId#typePlacementFee" value="Placement fee">
                 </td> 
                 <td>
-                <cfinput type="text" name="#candidateId#placementFeeAmount" value="200">
+                <cfinput type="text" name="#candidateId#placementFeeAmount" value="#qGetFees.placementFee#">
                 </td>
                     <cfelse>
                     <td>
@@ -437,12 +493,12 @@ ORDER BY candidateid
          <tr>
             <td>
             </td>
-            <cfif #getWorkCand.extra_accepts_sevis_fee# EQ 1>
+            <cfif #qSevisOption.includeSevis# EQ 1>
                 <td>
                     <cfinput type="text" name="#candidateId#typeSevisFee" value="Sevis fee">
                 </td> 
                 <td>
-                    <cfinput type="text" name="#candidateId#sevisAmount" value="35">
+                    <cfinput type="text" name="#candidateId#sevisAmount" value="#qGetFees.sevis#">
                 </td>
                 <cfelse>
                     <td>
@@ -455,6 +511,19 @@ ORDER BY candidateid
             </td>
          </tr>
          </cfif>
+         <tr>
+            <td>
+            <cfinput type="checkbox" name="applyPremiumProcessing#candidateId#" id="applyPremiumProcessing#candidateId#" checked="no" onClick="javaScript:enable_premium();">
+            </td> 
+            <td>
+            <cfinput type="text" name="premiumProcessing#candidateId#" id="premiumProcessing#candidateId#" value="Premium Processing" disabled="disabled">
+            </td> 
+            <td>
+            <cfinput type="text" name="premiumProcessingAmount#candidateId#" id="premiumProcessingAmount#candidateId#" value="#qGetFees.premiumProcessing#" disabled="disabled">
+            </td>
+            <td>
+            </td>            
+         </tr>
          <tr height="5">
          	<td colspan="4"></td>
          </tr>

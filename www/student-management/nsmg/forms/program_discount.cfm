@@ -1,3 +1,6 @@
+
+<!--- HIGH SCHOOL FEES --->
+<cfif client.companyID NEQ 8><!--- if not in w&t --->
 <span class="application_section_header">Program Fees</span> <br>
 
 <p>Assign program fees per program for this International Rep.  Changing information here will only affect students that have NOT been invoiced. <br><br>
@@ -29,10 +32,10 @@ If you need to remove an amount, set it to 0 (zero).</p>
 
 <table div align="center" cellpadding= 4 cellspacing=0>
 	<tr bgcolor="#00003C">
-		<Td colspan=2 align="center"><font color="white">12 Months</Td><Td colspan=2 align="center"><font color="white">10 Months</Td><td colspan=2 align="center"><font color="white">5 months</td>
+		<Td colspan=2 align="center"><font color="white">12 Months</Td></font><Td colspan=2 align="center"><font color="white">10 Months</font></Td><td colspan=2 align="center"><font color="white">5 months</font></td>
 	</tr>
 	<tr bgcolor="#00003C">
-		<td align="center"><font color="white">Price</td><td align="center"><font color="white">Insurance</td><td align="center"><font color="white">Price</td><td align="center"><font color="white">Insurance</td><td align="center"><font color="white">Price</td><td align="center"><font color="white">Insurance</td>
+		<td align="center"><font color="white">Price</font></td><td align="center"><font color="white">Insurance</font></td><td align="center"><font color="white">Price</font></td><td align="center"><font color="white">Insurance</font></td><td align="center"><font color="white">Price</font></td><td align="center"><font color="white">Insurance</font></td>
 	</tr>
 	<cfoutput query="get_prices">
 	<tr>
@@ -40,7 +43,7 @@ If you need to remove an amount, set it to 0 (zero).</p>
 		<td><input name="10_month_price" type="text" value="#get_prices.10_month_price#" size=5></td><td><input name="10_month_ins" type="text" value="#get_prices.10_month_ins#" size=5></td><td><input name="5_month_price" type="text" value="#get_prices.5_month_price#" size=5></td><td><input name="5_month_ins" type="text" value="#get_prices.5_month_ins#" size=5></td>
 	</tr>
 	<Tr>
-	<tr bgcolor="00003C"><td colspan=6><font color="white">Insurance Policy Type</td></tr>
+	<tr bgcolor="00003C"><td colspan=6><font color="white">Insurance Policy Type</font></td></tr>
 	<tr>
 		<td colspan=2>											
 		<select name="insurance_typeid">
@@ -51,7 +54,7 @@ If you need to remove an amount, set it to 0 (zero).</p>
 		</select>
 		</td>
 	</tr>
-	<tr bgcolor="00003C"><td colspan=6><font color="white">Accepts SEVIS FEE</td></tr>
+	<tr bgcolor="00003C"><td colspan=6><font color="white">Accepts SEVIS FEE</font></td></tr>
 	<tr>
 		<td colspan="2"> 								
 		<select name="accepts_sevis_fee">
@@ -69,4 +72,243 @@ If you need to remove an amount, set it to 0 (zero).</p>
 
 </form>
 <Cfif isDefined('url.message')>
-<p><span class="get_attention" align="center">Program charges were updated / added Successfully!!</span><br><br></cfif>
+<p><span class="get_attention" align="center">Program charges were updated / added Successfully!!</span><br><br></p></cfif>
+</cfif><!--- end of: if not in w&t --->
+
+
+<!--- ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- --->
+
+
+<!--- W&T FEES --->
+<cfparam name="form.submitted" default="0">
+
+<cfif client.companyID EQ 8><!--- if in w&t --->
+
+<span class="application_section_header">Program Fees</span> <br />
+
+<p>Assign program fees per program for this International Rep.  Changing information here will only affect students that have NOT been invoiced. <br /><br />
+If there is difference from the base price, just leave blank, don't put in zero's, N/A, etc.<br />
+If you need to remove an amount, set it to 0 (zero).</p>
+
+<!--- update prices and fees --->
+<cfif form.submitted IS "yes">
+
+	<!--- check if intl rep is already in the table --->
+    <cfquery name="qCheckRep" datasource="MySQL">
+    SELECT
+        userID
+    FROM
+        extra_wt_prices
+    WHERE
+        userID = #url.userID#
+    </cfquery>
+
+    <!--- if intl rep is not in the table, insert it --->
+    <cfif qCheckRep.recordCount EQ 0>
+    	
+        <cfquery name="qInsertRep" datasource="MySQL">
+        INSERT INTO
+            extra_wt_prices (
+                userID, 
+                priceCsbPlacement, 
+                priceSelfPlacement, 
+                placementFee,
+                sevis,
+                premiumProcessing,
+                includeSevis)
+        VALUES (
+            #url.userid#,
+            #form.priceCsbPlacement#,
+            #form.priceSelfPlacement#,
+            #form.placementFee#,
+            #form.sevis#,
+            #form.premiumProcessing#,
+            #form.includeSevis#)
+        </cfquery>
+
+    <cfelse><!--- if intl rep is already in the table, just update it --->
+    
+        <cfquery name="updatePrices" datasource="MySQL">
+        UPDATE
+            extra_wt_prices
+        SET
+            priceCsbPlacement = #form.priceCsbPlacement#,
+            priceSelfPlacement = #form.priceSelfPlacement#,
+            placementFee = #form.placementFee#,
+            sevis = #form.sevis#,
+            premiumProcessing = #form.premiumProcessing#,
+            includeSevis = #form.includeSevis#
+        WHERE
+            userID = #url.userid#
+        </cfquery>
+    
+    </cfif>
+    
+    <cfquery name="updateInsuranceCost" datasource="MySQL">
+    UPDATE
+    	smg_insurance_type
+    SET
+    	wt = #form.insurance#
+    WHERE
+    	insutypeID = 14
+    </cfquery>
+
+</cfif>
+
+<cfquery name="get_prices" datasource="mysql">
+	SELECT 
+        su.businessname, 
+        su.userID, 
+        ewp.priceCsbPlacement, 
+        ewp.priceSelfPlacement,
+        ewp.premiumProcessing,
+        ewp.placementFee,
+        ewp.sevis,
+        ewp.includeSevis
+	FROM
+    	smg_users su
+    LEFT JOIN
+    	extra_wt_prices ewp
+    ON
+    	ewp.userID = su.userID
+	WHERE
+    	su.userID = #url.userid#
+</cfquery>
+
+<!--- get insurance type AND insurance cost --->
+<cfquery name="get_insutypes" datasource="MySql">
+	SELECT type, wt
+	FROM smg_insurance_type
+    WHERE insutypeID = 14
+</cfquery>
+
+<Cfoutput>
+<form method="post" action="">
+
+<input type="hidden" name="submitted" value="yes" />
+<input type="hidden" name="userid" value="#url.userid#">
+
+<table align="center">
+    <tr>
+        <td align="center">
+        	#get_prices.businessname#
+        </td>
+    </tr>
+</table>
+</Cfoutput>
+
+<table div align="center" cellpadding= 4 cellspacing=0>
+	<tr bgcolor="#00003C">
+		<td align="center">
+        	<font color="white">Price CSB Placement</font>
+        </td>
+        <td align="center">
+        	<font color="white">Price Self-Placement</font>
+        </td><td align="center">
+        	<font color="white">Placement Fee</font>
+        </td>
+        <td align="center">
+        	<font color="white">Premium Processing</font>
+        </td>
+        <td align="center">
+        	<font color="white">Sevis Fee</font>
+        </td>
+        <td align="center">
+        	<font color="white">Insurance</font>
+        </td>
+	</tr>
+	<cfoutput query="get_prices">
+        <tr>
+            <td>
+            	<cfparam name="form.priceCsbPlacement" default="0">
+            	<cfif get_prices.priceCsbPlacement IS "">
+                	<cfset valueCsbPlacement = 0>
+                <cfelse>
+                	<cfset valueCsbPlacement = get_prices.priceCsbPlacement>
+                </cfif>
+                <input name="priceCsbPlacement" type="text" value="#valueCsbPlacement#" size=5>
+            </td>
+            <td>
+            	<cfparam name="form.priceSelfPlacement" default="0">
+            	<cfif get_prices.priceSelfPlacement IS "">
+                	<cfset valueSelfPlacement = 0>
+                <cfelse>
+                	<cfset valueSelfPlacement = get_prices.priceSelfPlacement>
+                </cfif>
+                <input name="priceSelfPlacement" type="text" value="#valueSelfPlacement#" size=5>
+            </td>
+            <td>
+            	<cfparam name="form.placementFee" default="0">
+            	<cfif get_prices.placementFee IS "">
+                	<cfset valueplacementFee = 0>
+                <cfelse>
+                	<cfset valueplacementFee = get_prices.placementFee>
+                </cfif>
+                <input name="placementFee" type="text" value="#valueplacementFee#" size=5>
+            </td>
+            <td>
+            	<cfparam name="form.premiumProcessing" default="0">
+            	<cfif get_prices.premiumProcessing IS "">
+                	<cfset valuepremiumProcessing = 0>
+                <cfelse>
+                	<cfset valuepremiumProcessing = get_prices.premiumProcessing>
+                </cfif>
+                <input name="premiumProcessing" type="text" value="#valuepremiumProcessing#" size=5>
+            </td>
+            <td>
+            	<cfparam name="form.sevis" default="0">
+            	<cfif get_prices.sevis IS "">
+                	<cfset valuesevis = 0>
+                <cfelse>
+                	<cfset valuesevis = get_prices.sevis>
+                </cfif>
+                <input name="sevis" type="text" value="#valuesevis#" size=5>
+            </td>
+            <td>
+            	<cfparam name="form.insurance" default="0">
+            	<cfif get_insutypes.wt IS "">
+                	<cfset valueinsurance = 0>
+                <cfelse>
+                	<cfset valueinsurance = get_insutypes.wt>
+                </cfif>
+                <input name="insurance" type="text" value="#valueinsurance#" size=5>
+            </td>
+        </tr>
+        <tr bgcolor="00003C">
+            <td colspan=6>
+                <font color="white">Insurance Policy Type</font>
+            </td>
+        </tr>
+        <tr>
+            <td colspan=2>											
+                <input name="insuranceType" type="text" value="#get_insutypes.type#" size="30" disabled="disabled">
+            </td>
+        </tr>
+        <tr bgcolor="00003C">
+            <td colspan=6>
+                <font color="white">Accepts SEVIS FEE</font>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2"> 								
+                <select name="includeSevis">
+                    <option value="0" <cfif get_prices.includeSevis EQ '0'>selected="selected"</cfif> >No</option>
+                    <option value="1" <cfif get_prices.includeSevis EQ '1'>selected="selected"</cfif> >Yes</option>
+                </select>	
+            </td>
+        </tr>
+        <tr>
+            <td colspan=4 align="right">
+                <input name="Submit" type="image" src="pics/next.gif" border=0>
+            </td>
+        </tr>
+    </cfoutput>		
+</table>
+
+</form>
+<br />
+<cfif isDefined('url.message')>
+	<p><span class="get_attention" align="center">Program charges were updated / added Successfully!!</span><br /><br /></p>
+</cfif>
+
+</cfif><!--- end of: if in w&t --->
