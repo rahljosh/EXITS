@@ -152,7 +152,9 @@ If you need to remove an amount, set it to 0 (zero).</p>
     WHERE
     	insutypeID = 14
     </cfquery>
-
+	
+    <p align="center"><span class="get_attention"><font color="##FF0000"><b> charges were updated / added Successfully!! </b></font></span><br /><br /></p>
+    
 </cfif>
 
 <cfquery name="get_prices" datasource="mysql">
@@ -307,8 +309,5 @@ If you need to remove an amount, set it to 0 (zero).</p>
 
 </form>
 <br />
-<cfif isDefined('url.message')>
-	<p><span class="get_attention" align="center">Program charges were updated / added Successfully!!</span><br /><br /></p>
-</cfif>
 
 </cfif><!--- end of: if in w&t --->
