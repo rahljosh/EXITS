@@ -204,7 +204,7 @@
                         membertype = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.membertype#">,
                         liveathome = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.liveathome#">,
                         liveathomePartTime = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.liveathomePartTime#">,
-                        school = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.school#">,
+                        school = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.school#">,
                         employer = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.employer#">,
                         interests = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.interests#">,
                         gradeInSchool = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.gradeInSchool#">,
@@ -252,7 +252,7 @@
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.liveathome#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.liveathomePartTime#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.interests#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.school#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.school#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.employer#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.gradeInSchool#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.schoolActivities#">
@@ -414,13 +414,7 @@
             <tr>
                 <td class="label"><h3>Current School Attending</h3></td>
                 <td>
-                    <select name="school" class="largeField">
-                        <option value='-1' selected>Not Applicable</option>
-                        <option value="0">Other</option>
-                        <cfloop query="qGetSchoolList">
-                            <option value=#schoolid#<cfif FORM.school eq qGetSchoolList.schoolid> selected</cfif>>#schoolname#</option>
-                        </cfloop>
-                    </select>
+                	<input type="text" class="largeField" name="school" maxlength="45" value="#FORM.school#"/>
                 </td>
             </tr>
             <tr  bgcolor="##deeaf3" >
