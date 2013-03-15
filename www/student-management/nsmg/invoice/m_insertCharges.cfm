@@ -44,6 +44,15 @@ FROM smg_charges
              </cfquery>
          </cfif>
          
+         <cfif #ISDEFINED('form.applyPremiumProcessing#studentId#')#>
+             <cfquery name="insertWtPremiumProcessing" datasource="MySQL">
+                INSERT INTO smg_charges
+                    (agentid, stuid, invoiceid, programid, description, type, date, amount_due, amount, userinput, invoicedate, companyid)
+                VALUES
+                    (#EVALUATE('form.' & 'agentId' & '#studentId#')#, #studentId#, #variables.invoiceNumber#, #EVALUATE('form.' & 'programId' & '#studentId#')#, '#EVALUATE('form.' & 'programName' & '#studentId#')#', '#EVALUATE('form.premiumProcessing' & '#studentId#')#', #Now()#, #EVALUATE('form.premiumProcessingAmount' & '#studentId#')#, #EVALUATE('form.premiumProcessingAmount' & '#studentId#')#, #client.userid#, #Now()#, #EVALUATE('form.' & 'companyId' & '#studentId#')#)
+             </cfquery>
+         </cfif>         
+         
 		<cfif ISDEFINED('typeSevisFee#studentId#')>
             <cfquery name="insertTraineeSevis" datasource="MySQL">
             INSERT INTO smg_charges
