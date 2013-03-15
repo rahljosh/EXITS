@@ -66,8 +66,12 @@
     <cfparam name="url.vfid" type="integer" default="0">
     <cfparam name="url.unDelete" type="integer" default="0">
     <Cfparam name="url.How" type="string" default="">
+    <Cfparam name="url.deleted" type="string" default="0">
     <Cfparam name="fileDeleted" type="integer" default="0">
     
+	<cfif val(url.deleted) and client.usertype lte 2>
+    	<cfset form.isDeleted = 1>
+    </cfif>
 	<cfif val(url.vfid)>
     <cfif ((userid eq client.userid) OR (client.usertype lte 2)) AND url.how is not 'auto'>
         <cfquery datasource="#application.dsn#">
@@ -154,6 +158,15 @@
         
 <div class="rdholder" style="width:100%; float:right;"> 
  <!--- Page Messages --->
+  <cfif val(form.isDeleted)>
+   <cfoutput>
+     <div class="alert">
+        
+        <em>You are viewing files that have been deleted. </em> </div>
+        <br />
+        </cfoutput>
+        
+   </cfif>
    <cfif val(fileDeleted)>
    <cfoutput>
      <div class="alert">
@@ -171,6 +184,9 @@
         <em><a href="?curdoc=intrep/int_student_info&unqid=#qGetStudentInfo.uniqueid#">back to student profile</a></em>
         <cfelse>
         <em><a href="?curdoc=student_info&studentID=#qGetStudentInfo.studentid#">back to student profile</a></em>
+    	</cfif>
+        <cfif client.usertype lte 2>
+        	<a href="?curdoc=virtualFolder/view&deleted=<cfif form.isDeleted eq 0>1<cfelse>0</cfif>&unqid=#url.unqid#" class="floatRight"><img src="pics/buttons/trash23x23.png" border="0" /></a>
     	</cfif>
     </div>
     
@@ -227,7 +243,7 @@
         	<Td>#generatedHow#</Td>
             <td>
             	<cfif ((userid eq client.userid) OR (client.usertype lte 4)) AND generatedHow is not 'auto'>
-            <A href="index.cfm?curdoc=virtualFolder/view&unqid=#url.unqid#&vfid=#vfid#&how=#generatedHow#">
+            <A href="index.cfm?curdoc=virtualFolder/view&unqid=#url.unqid#&vfid=#vfid#&how=#generatedHow#&undelete=<cfif form.isDeleted eq 0>0<cfelse>1</cfif>">
             	<img src="pics/deletex.gif" height="10" border=0/>
              </A>   
                 </cfif>
@@ -235,6 +251,7 @@
   		</cfif>
     </cfloop>
     <!----Flight Info that was auto generated prior to new VF (Feb 26, 2013)---->
+     <cfif not val(form.isDeleted)>
     <cfif flightDocs.recordcount gt 0>
 
         <tr bgcolor="##CCCCCC">
@@ -254,6 +271,7 @@
                     </tr>
                 </cfloop>
      </cfif>
+    
      <cfif VAL(mydirectory.recordcount)>
             <tr bgcolor="##CCCCCC">
             	<Td colspan=6 align="left"><strong>Supplements on Student App</strong></th>
@@ -324,6 +342,7 @@
             <tr>
             	<Td colspan=6>Select Host Family above</Td>
             </cfif>
+          </cfif>
      </table> 
       
     
