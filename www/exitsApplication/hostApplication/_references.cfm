@@ -289,7 +289,7 @@
     
     <div align="center"><strong>References must be from your community or general vicinity.</strong></div>
     <br />
-	<cfif NOT VAL(vRemainingReferences)>
+	<cfif NOT VAL(vRemainingReferences) or VAL(vRemainingReferences) lt 0>
         No additional references are required.
     <cfelse>
         #vRemainingReferences# additional references are required based on the information on your application.
