@@ -194,7 +194,7 @@ ON
 WHERE
      usertype = 8
 AND
-   (companyID = 8 OR companyID = "")
+   companyID LIKE "%8%"
 ORDER BY
 	su.businessname
 </cfquery>
