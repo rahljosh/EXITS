@@ -171,12 +171,23 @@
 
 		<cfquery datasource="#APPLICATION.DSN#">
         	UPDATE smg_hosts
-            SET hostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="8">,
+            SET 
+            	<cfif VAL(family_info.hostAppStatus)>
+            		hostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="8">,
+              	<cfelse>
+                    hostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="9">,
+                    applicationSent = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
+               	</cfif>
             	areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
                 <cfif family_info.password is ''>
                 	, password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#strPassword#">
                 </cfif>
            	WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(family_info.hostID)#">
+        </cfquery>
+        <cfquery name="qGetUpdatedPassword" datasource="#APPLICATION.DSN#">
+        	SELECT password
+            FROM smg_hosts
+            WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(family_info.hostID)#">
         </cfquery>
         
                     <cfsavecontent variable="hostWelcome">
@@ -305,7 +316,7 @@
          <div style="display: block; float: right; width: 270px; padding: 10px; font-family:Arial, Helvetica, sans-serif; font-size: .80em; border: thin solid ##CCC;"><div><strong><em>Please use the following login information:</em></strong></div><br /><br />
 <div style="width: 50px; float: left;"><img src="#client.exits_url#/nsmg/pics/lock.png" width="39" height="56"></div>
    <div> <strong>Username / Email:</strong><br /> #family_info.email#<br />
-  <strong>Password:<br /></strong>#family_info.password#</div>
+  <strong>Password:<br /></strong>#qGetUpdatedPassword.password#</div>
 
 </div>
 
@@ -543,12 +554,17 @@ div.scroll2 {
                     <input type="checkbox" disabled="disabled" /> Not Qualified
                 </td>
                 <td>
-					<Cfif (client.usertype eq 1 OR listFind(allowedUsers, CLIENT.userID) OR listFind(allowedRegions, CLIENT.regionID) )>
+					<Cfif (CLIENT.usertype eq 1 OR listFind(allowedUsers, CLIENT.userID) OR listFind(allowedRegions, CLIENT.regionID) OR CLIENT.userID EQ family_info.arearepid )>
                         <cfif isDefined('sendAppEmail')>
                         	<strong><em>Link to application was sent succesfully.</em> </strong>
                         <cfelse>
-                            <form method="post" action="index.cfm?curdoc=host_fam_info&hostid=#url.hostid#">
-                            <input name="sendAppEmail" type="submit" value="Send Application Email"  alt="Send Application" border="0" class="buttonGreen" /></form>
+                        	<cfif VAL(family_info.hostAppStatus)>
+                            	<form method="post" action="index.cfm?curdoc=host_fam_info&hostid=#url.hostid#">
+                            	<input name="sendAppEmail" type="submit" value="Resend Login Info"  alt="Resend Login Info" border="0" class="buttonGreen" /></form>
+                            <cfelse>
+                                <form method="post" action="index.cfm?curdoc=host_fam_info&hostid=#url.hostid#">
+                                <input name="sendAppEmail" type="submit" value="Convert to eHost"  alt="Convert to eHost" border="0" class="buttonYellow" /></form>
+                            </cfif>
                         </cfif>        
                     </Cfif>
                 </td>
