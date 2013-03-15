@@ -236,8 +236,8 @@ body{
 }
 
 #slider-container-full{
-	height:700px;
-	background:url(images/template/home-and-footer-bg.jpg);
+	/*height:700px;
+	background:url(images/template/home-and-footer-bg.jpg);*/
 }
 #slider,#piecemaker-slider{
 	height:430px;
