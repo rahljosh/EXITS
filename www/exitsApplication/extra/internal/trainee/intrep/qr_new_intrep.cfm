@@ -14,13 +14,13 @@
 <cftransaction action="begin" isolation="serializable">
 
 	<cfquery name="check_email" datasource="MySql">
-		SELECT userid, firstname, lastname
+		SELECT userid, firstname, lastname, businessname
 		FROM smg_users
 		WHERE email = '#form.email#'
 	</cfquery>
 
 	<cfquery name="check_username" datasource="MySql">
-		SELECT userid, firstname, lastname
+		SELECT userid, firstname, lastname, businessname
 		FROM smg_users
 		WHERE username = '#form.username#'
 	</cfquery>
@@ -82,12 +82,14 @@
 	</cfif>
 
 	<cfset form.uniqueid = '#createuuid()#'>
+    
+    <cfparam name="form.userType" default="8">
 		
 	<cfquery name="new_intrep" datasource="MySql">
 		INSERT INTO smg_users
 			(uniqueid, usertype, datecreated, businessname, address, city, country, zip, phone, fax, usebilling, billing_company, 
 			billing_contact, billing_email, billing_address, billing_address2, billing_city, billing_country, billing_zip, billing_phone, 
-			billing_fax, firstname, middlename, lastname, dob, sex, email, email2, username, password)
+			billing_fax, firstname, middlename, lastname, dob, sex, email, email2, username, password, whocreated)
 		VALUES
 			('#form.uniqueid#', '#form.usertype#', #CreateODBCDate(now())#,   '#form.businessname#', '#form.address#', '#form.city#', 
 			'#form.country#', '#form.zip#', '#form.phone#', '#form.fax#', 
@@ -97,7 +99,7 @@
 			'#form.firstname#', '#form.middlename#', '#form.lastname#', 
 			<cfif form.dob EQ ''>NULL<cfelse>#CreateODBCDate(dob)#</cfif>,
 			<cfif IsDefined('form.sex')>'#form.sex#'<cfelse>''</cfif>, 
-			'#form.email#', '#form.email2#', '#form.username#', '#form.password#')
+			'#form.email#', '#form.email2#', '#form.username#', '#form.password#', #client.userID#)
 	</cfquery>
 
 	<cfquery name="get_user" datasource="MySql">

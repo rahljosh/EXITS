@@ -44,19 +44,24 @@ function UserName() {
 
 <cftry>
 
-<cfquery name="get_intrep" datasource="MySql">
-	SELECT *
-	FROM smg_users
-	WHERE uniqueid = <cfqueryparam value="#url.uniqueid#" cfsqltype="cf_sql_char">
-</cfquery>
-
 <cfinclude template="../querys/countrylist.cfm">
 
 <cfparam name="edit" default="no">
+<cfparam name="URL.uniqueID" default="">
+
+    <cfscript>
+		// Get Intl. Rep.
+		get_intrep = APPLICATION.CFC.USER.getUserByUniqueID(uniqueID=URL.uniqueID);
+	</cfscript>
+<!--- <cfquery name="get_intrep" datasource="MySql">
+	SELECT *
+	FROM smg_users
+	WHERE uniqueid = <cfqueryparam value="#url.uniqueid#" cfsqltype="cf_sql_char">
+</cfquery> --->
 
 <cfoutput>
 
-<cfform method="post" name="new_user" action="?curdoc=intrep/qr_intrep_info">
+<cfform method="post" name="new_user" action="?curdoc=intrep/qr_new_intrep">
 <cfinput type="hidden" name="userid" value="#get_intrep.userid#">
 <cfinput type="hidden" name="uniqueid" value="#get_intrep.uniqueid#">
 
