@@ -173,7 +173,7 @@
                             <a class="jQueryModal" href="hostApplication/viewPDF.cfm?hostID=#qGetHostApplications.hostID#&pdf" title="Print Application"><img src="pics/buttons/print50x50.png" width="40" border="0"></a>
                             --->
                             
-                            <cfif APPLICATION.CFC.USER.isOfficeUser()>
+                            <cfif APPLICATION.CFC.USER.isAdminUser()>
                             	<form id="frSetRecordToPaper#qGetHostApplications.hostID#" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
                                 	<input type="hidden" name="setHostIDAsPaper" value="#qGetHostApplications.hostID#" />
                                 </form>
