@@ -45,6 +45,7 @@
 		// Get States
 		qGetStateList = APPLICATION.CFC.LOOKUPTABLES.getState();
 	</cfscript>
+    <cfset vSchoolSize = "'0 - 200','200 - 500','500 - 1,000','1,000 - 2,000', '2000 +'">
     
     <cfquery name="qGetLocalSchools" datasource="#APPLICATION.DSN.Source#">
         SELECT 
@@ -83,7 +84,10 @@
 				if ( NOT LEN(TRIM(FORM.schoolname)) ) {
 					SESSION.formErrors.Add("Please enter the name of the school.");
 				}			
-				
+				// Number of students
+				if ( NOT LEN(TRIM(FORM.numberofstudents)) ) {
+					SESSION.formErrors.Add("Please indicate the size of this school.");
+				}	
 				// Address
 				if ( NOT LEN(TRIM(FORM.address)) ) {
 					SESSION.formErrors.Add("Please enter the address of the school.");
@@ -323,19 +327,30 @@
                 	<td class="label"><h3>School Name <span class="required">*</span></h3></td>
                     <td class="form_text" colspan="3"><input type="text" name="schoolname" class="largeField" value="#FORM.schoolname#" maxlength="100"></td>
                 </tr>
-                <tr>
-                	<td class="label"><h3>Address <span class="required">*</span></h3></td>
+                 <tr>
+                	<td class="label"><h3>School Size <span class="required">*</span></h3></td>
+                    <td  colspan="3">
+                    	<select name="numberofstudents">
+                    	<option value=""></option>
+                        <Cfloop list="vNumberOfStudnets" index=i>
+                        	 <option value="#i#" <cfif form.numberofstudents is #i#>selected</cfif>>#i#</option>
+                        </Cfloop>
+                        </select>
+                    </td>
+                </tr>
+                <tr bgcolor="##deeaf3">
+                	<td class="label" ><h3>Address <span class="required">*</span></h3></td>
                     <td colspan="3" class="form_text"><input type="text" name="address" class="largeField" value="#FORM.address#" maxlength="100"></td>
                 </tr>
-                <tr>
+                <tr bgcolor="##deeaf3">
                 	<td></td>
                     <td colspan="3" class="form_text"> <input type="text" name="address2" class="largeField" value="#FORM.address2#" maxlength="100"></td>
                 </tr>
-                <tr bgcolor="##deeaf3">			 
+                <tr>			 
                 	<td class="label"><h3>City <span class="required">*</span></h3></td>
                     <td colspan="3" class="form_text"><input type="text" name="city" class="largeField" value="#FORM.city#" maxlength="100"></td>
                 </tr> 
-                <tr>	
+                <tr  bgcolor="##deeaf3">	
                		<td class="label"><h3>State <span class="required">*</span></h3></td>
                     <td width="10" class="form_Text">
                 		<select name="state" id="state" class="mediumField">
@@ -348,19 +363,19 @@
                     <td class="zip"><h3>Zip <span class="required">*</span></h3></td>
                     <td class="form_text"><input type="text" name="zip" class="smallField" value="#FORM.zip#" maxlength="10"></td>
                 </tr>
-                <tr bgcolor="##deeaf3">
+                <tr>
                     <td class="label"><h3>Contact</h3></td>
                     <td class="form_text" colspan="3"><input type="text" name="principal" class="largeField" value="#FORM.principal#" maxlength="100"></td>
                 </tr>
-                <tr>			
+                <tr  bgcolor="##deeaf3"> 			
                 	<td class="label"><h3>Phone</h3></td>
                     <td class="form_text" colspan="3"><cfinput type="text" name="phone" class="largeField" value="#FORM.phone#" placeholder="(999) 999-9999" mask='(999) 999-9999' maxlength="14"></td>
                 </tr>
-                <tr bgcolor="##deeaf3">
+                <tr>
                 	<td class="label"><h3>Contact Email</h3></td>
                     <td class="form_text" colspan="3"> <input name="email" class="largeField" type="text" value="#FORM.email#" placeholder="contact@school.edu" maxlength="100"></td>
                 </tr>
-                <tr>
+                <tr  bgcolor="##deeaf3">
                 	<td class="label"><h3>School Type <span class="required">*</span></h3></td>
                 	<td  colspan="3">
                     	<input type="radio" value="public" name="type" id="typePublic" <cfif FORM.type EQ 'public'>checked</cfif> /> <label for="typePublic">Public</label>
@@ -368,10 +383,11 @@
                         <input type="radio" value="private" name="type" id="typePrivate" <cfif FORM.type EQ 'private'>checked</cfif>   /> <label for="typePrivate">Private</label>  
                     </td>
                 </tr>
-                <tr bgcolor="##deeaf3">
+                <tr>
                 	<td class="label"><h3>School Fees</h3></td>
                     <td  colspan="3"><input type="text" name="tuition" class="largeField" placeholder="amount of tution or fees" value="#FORM.tuition#" maxlength="45" /></td>
                 </tr>
+                
             </table> 
             
             <br />
