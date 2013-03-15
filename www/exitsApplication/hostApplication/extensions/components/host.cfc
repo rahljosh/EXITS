@@ -1260,7 +1260,7 @@
 			
 			vRemainingReferences = vNumberOfRequiredReferences - qGetReferences.recordcount;
 
-			if ( VAL(vRemainingReferences) ) {
+			if ( VAL(vRemainingReferences) AND val(vRemainingReferences) gt 0 ) {
 				SESSION.formErrors.Add("You need to provide an additional #vRemainingReferences# reference(s).");
 			}
 
