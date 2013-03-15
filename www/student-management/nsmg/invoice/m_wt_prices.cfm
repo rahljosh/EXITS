@@ -127,7 +127,7 @@ div {
 
 <!--- set default prices and fees --->
 <cfif form.submitDefaultPrice IS "submit">
-entrou
+
 	<cfquery name="qDefaultPrices" datasource="MySQL">
     UPDATE
     	extra_wt_prices
