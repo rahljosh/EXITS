@@ -442,6 +442,24 @@
                 </cfquery>
                 
             </cfif> <!--- uniqueID --->
+            
+            <!--- update companyID: w&t companyID is 8 --->
+            <cfquery name="qCompID" datasource="MySQL">
+            SELECT companyID
+            FROM smg_users
+            WHERE uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.uniqueID#">
+            </cfquery>
+            
+            <!--- if companyID 8 is not included in companyID, include it --->
+			<cfif LISTFIND(qCompID.companyID, 8) EQ 0>
+            	<cfset qCompID.companyID = LISTAPPEND(qCompID.companyID,8)>
+                <cfset qCompID.companyID = LISTSORT(qCompID.companyID, "numeric")>
+				<cfquery name="qUpdateCompID" datasource="MySQL">
+                UPDATE smg_users
+                SET companyID = "#qCompID.companyID#"
+                WHERE uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.uniqueID#">
+                </cfquery>
+            </cfif>
 
 			<cfscript>
                 // Set Page Message
