@@ -31,6 +31,7 @@
     <cfparam name="FORM.email" default="">
     <cfparam name="FORM.type" default="">
     <cfparam name="FORM.tuition" default="">
+    <cfparam name="FORM.numberofstudents" default="">
 	<!--- School Details --->
     <cfparam name="FORM.schoolDistance" default="">
     <cfparam name="FORM.schoolWorks" default="">
@@ -45,7 +46,7 @@
 		// Get States
 		qGetStateList = APPLICATION.CFC.LOOKUPTABLES.getState();
 	</cfscript>
-    <cfset vSchoolSize = "'0 - 200','200 - 500','500 - 1,000','1,000 - 2,000', '2000 +'">
+    <cfset vSchoolSize = '0 - 200,200 - 500,500 - 1000,1000 - 2000, 2000 +'>
     
     <cfquery name="qGetLocalSchools" datasource="#APPLICATION.DSN.Source#">
         SELECT 
@@ -73,7 +74,7 @@
         	city, 
             schoolname
     </cfquery>
-        
+    
 	<cfif VAL(FORM.submitted)>
     
 		<cfscript>
@@ -181,7 +182,8 @@
                         email,
                         principal,
                         type, 
-                        tuition
+                        tuition,
+                        numberofstudents
 					)								
                     VALUES 
                     (
@@ -195,7 +197,8 @@
                     	<cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.email)#">, 
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.principal)#">, 
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.type)#">, 
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.tuition)#">
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.tuition)#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.numberofstudents)#">
                     )
                 </cfquery>
             	
@@ -245,7 +248,12 @@
         </cfscript>
 
     </cfif> 
-
+	<cfquery name="qNumberOfStudents" datasource="#APPLICATION.DSN.Source#">
+    	select numberofstudents
+        from smg_schools
+        where schoolid = <cfqueryparam cfsqltype="integer" value="#FORM.schoolID#">
+    </cfquery>
+    
 </cfsilent>
 
 <script type="text/javascript">
@@ -312,7 +320,8 @@
                             <option value="#qGetAllSchools.schoolID#" <cfif FORM.schoolID EQ qGetAllSchools.schoolID>selected</cfif>>#qGetAllSchools.schoolname# - #qGetAllSchools.city#, #qGetAllSchools.state#</option>
                         </cfloop> 
                     </select>
-				</td>                    
+				</td>  
+                <td>Number of Students: <Cfif qNumberOfStudents.numberofstudents eq 0><em>Not Available</em><Cfelse>#qNumberOfStudents.numberofstudents#</Cfif></td>                  
             </tr>
         </table> <br />
         
@@ -326,13 +335,14 @@
                 <tr bgcolor="##deeaf3">
                 	<td class="label"><h3>School Name <span class="required">*</span></h3></td>
                     <td class="form_text" colspan="3"><input type="text" name="schoolname" class="largeField" value="#FORM.schoolname#" maxlength="100"></td>
+                    
                 </tr>
                  <tr>
                 	<td class="label"><h3>School Size <span class="required">*</span></h3></td>
                     <td  colspan="3">
                     	<select name="numberofstudents">
                     	<option value=""></option>
-                        <Cfloop list="vNumberOfStudnets" index=i>
+                        <Cfloop list="#vSchoolSize#" index=i>
                         	 <option value="#i#" <cfif form.numberofstudents is #i#>selected</cfif>>#i#</option>
                         </Cfloop>
                         </select>
