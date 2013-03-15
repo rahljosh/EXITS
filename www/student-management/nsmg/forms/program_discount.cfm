@@ -141,7 +141,25 @@ If you need to remove an amount, set it to 0 (zero).</p>
         WHERE
             userID = #url.userid#
         </cfquery>
+        
+		<!--- update companyID: w&t companyID is 8 --->
+        <cfquery name="qCompID" datasource="MySQL">
+        SELECT companyID
+        FROM smg_users
+        WHERE userID = #url.userid#
+        </cfquery>
     
+    </cfif>
+    
+	<!--- if companyID 8 is not included in companyID, include it --->
+    <cfif LISTFIND(qCompID.companyID, 8) EQ 0>
+        <cfset qCompID.companyID = LISTAPPEND(qCompID.companyID,8)>
+        <cfset qCompID.companyID = LISTSORT(qCompID.companyID, "numeric")>
+        <cfquery name="qUpdateCompID" datasource="MySQL">
+        UPDATE smg_users
+        SET companyID = "#qCompID.companyID#"
+        WHERE userID = #url.userid#
+        </cfquery>
     </cfif>
     
     <cfquery name="updateInsuranceCost" datasource="MySQL">
