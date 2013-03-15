@@ -130,7 +130,7 @@
 			}
 			
 			// Ethnicity
-			if ( TRIM(FORM.race) EQ 'other' AND NOT LEN(TRIM(FORM.ethnicityOther)) ) {
+			if ( ListFind(FORM.race,'Other') AND NOT LEN(TRIM(FORM.ethnicityOther)) ) {
 				SESSION.formErrors.Add("Please indicate other ethnicity.");
 			}
 
@@ -344,7 +344,7 @@
             
             <cfscript>
 				// Erase value on ethnicityOther if other is not selected
-				if ( TRIM(FORM.race) NEQ 'other' ) {
+				if ( NOT ListFind(FORM.race,'Other')) {
 					FORM.ethnicityOther = '';
 				}
 			</cfscript>
@@ -608,27 +608,27 @@
                     
                     <table width="100%">
                         <tr>
-                            <td width="10px"><input type="radio" name="race" id="raceAmericanIndian" value="American Indian or Alaska Native" <cfif listFind("American Indian or Alaska Native", FORM.race)>checked</cfif> /></td>
+                            <td width="10px"><input type="checkbox" name="race" id="raceAmericanIndian" value="American Indian or Alaska Native" <cfif listFind(FORM.race,"American Indian or Alaska Native")>checked</cfif> /></td>
                             <td><label for="raceAmericanIndian">American Indian or Alaska Native</label></td>
 
-                            <td width="10px"><input type="radio" name="race" id="raceAsian" value="Asian" <cfif listFind("Asian", FORM.race)>checked</cfif> /></td>
+                            <td width="10px"><input type="checkbox" name="race" id="raceAsian" value="Asian" <cfif listFind(FORM.race,"Asian")>checked</cfif> /></td>
                             <td><label for="raceAsian">Asian</label></td>
                             
-                            <td width="10px"><input type="radio" name="race" id="raceAfrican" value="Black or African American" <cfif listFind("Black or African American", FORM.race)>checked</cfif> /></td>
+                            <td width="10px"><input type="checkbox" name="race" id="raceAfrican" value="Black or African American" <cfif listFind(FORM.race,"Black or African American")>checked</cfif> /></td>
                             <td><label for="raceAfrican">Black or African American</label></td>
                         </tr>
                         <tr>
-                            <td><input type="radio" name="race" id="raceHispanic" value="Hispanic or Latino" <cfif listFind("Hispanic or Latino", FORM.race)>checked</cfif> /></td>
+                            <td><input type="checkbox" name="race" id="raceHispanic" value="Hispanic or Latino" <cfif listFind(FORM.race,"Hispanic or Latino")>checked</cfif> /></td>
                             <td><label for="raceHispanic">Hispanic or Latino</label></td>
                             
-                            <td><input type="radio" name="race" id="raceHawaiian" value="Native Hawaiian or Other Pacific Islander" <cfif listFind("Native Hawaiian or Other Pacific Islander", FORM.race)>checked</cfif> /></td>
+                            <td><input type="checkbox" name="race" id="raceHawaiian" value="Native Hawaiian or Other Pacific Islander" <cfif listFind(FORM.race,"Native Hawaiian or Other Pacific Islander")>checked</cfif> /></td>
                             <td><label for="raceHawaiian">Native Hawaiian or Other Pacific Islander</label></td>
                            
-                            <td><input type="radio" name="race" id="raceWhite" value="White" <cfif listFind("White", FORM.race)>checked</cfif> /></td>
+                            <td><input type="checkbox" name="race" id="raceWhite" value="White" <cfif listFind(FORM.race,"White")>checked</cfif> /></td>
                             <td><label for="raceWhite">White</label></td>
                         </tr>
                         <tr>
-                        	<td><input type="radio" name="race" id="ethnicityOther" value="Other" <cfif listFind("Other", FORM.race)>checked</cfif> /></td>
+                        	<td><input type="checkbox" name="race" id="ethnicityOther" value="Other" <cfif listFind(FORM.race,"Other")>checked</cfif> /></td>
                             <td colspan="5">
                             	<label for="ethnicityOther">Other:</label> &nbsp;
                         		<input type="text" name="ethnicityOther" value="#FORM.ethnicityOther#" class="largeField" maxlength="100" />
