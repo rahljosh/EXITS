@@ -891,8 +891,8 @@
                      </td>
                	</cfif>
            		
-                <!--- Remove Office Access --->
-				<cfif NOT VAL(qGetHostFamilyInfo.hostAppStatus) AND ( APPLICATION.CFC.USER.isOfficeUser() OR listFind(allowedUsers, CLIENT.userID) OR listFind(allowedRegions, CLIENT.regionID) )>
+                <!--- Remove Office Access 
+				<cfif NOT VAL(qGetHostFamilyInfo.hostAppStatus) AND ( APPLICATION.CFC.USER.isOfficeUser() OR listFind(allowedUsers, CLIENT.userID) OR listFind(allowedRegions, CLIENT.regionID) )>--->
                     <td valing="top" align="center">
                         <input name="subAction" id="submiteHost" type="submit" value="eHost"  alt="Start E-App" border="0" class="buttonBlue" onclick="verifyAddress('submiteHost'); return false;" /> <br />
                         <cfif VAL(FORM.hostID)>
@@ -901,8 +901,9 @@
                             (Create an eHost - Host Family fills out application)
                         </cfif>
                     </td>
+                    <!----
                 </cfif>
-                
+                ---->
                 <cfif VAL(FORM.hostID)>
                     <td align="Center">   
                         <input name="subAction" id="submitUpdate" type="submit" value="Update"  alt="Update Information" border="0" class="buttonGreen" onclick="verifyAddress('submitUpdate'); return false;" /><br />
