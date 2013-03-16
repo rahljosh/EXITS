@@ -554,7 +554,9 @@ div.scroll2 {
                     <input type="checkbox" disabled="disabled" /> Not Qualified
                 </td>
                 <td>
+                <!----
 					<Cfif (CLIENT.usertype eq 1 OR listFind(allowedUsers, CLIENT.userID) OR listFind(allowedRegions, CLIENT.regionID) OR CLIENT.userID EQ family_info.arearepid )>
+					---->
                         <cfif isDefined('sendAppEmail')>
                         	<strong><em>Link to application was sent succesfully.</em> </strong>
                         <cfelse>
@@ -565,8 +567,10 @@ div.scroll2 {
                                 <form method="post" action="index.cfm?curdoc=host_fam_info&hostid=#url.hostid#">
                                 <input name="sendAppEmail" type="submit" value="Convert to eHost"  alt="Convert to eHost" border="0" class="buttonYellow" /></form>
                             </cfif>
-                        </cfif>        
+                        </cfif>   
+                    <!----     
                     </Cfif>
+					---->
                 </td>
         </tr>
         <cfelse>
