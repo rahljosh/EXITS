@@ -316,22 +316,7 @@
 			name="qGetHostMemberByID" 
 			datasource="#APPLICATION.DSN#">
                 SELECT
-					childID,
-                    hostID,
-                    memberType,
-                    birthDate,
-                    sex,
-                    liveAtHome,
-                    name,
-                    middleName,
-                    lastName,
-                    SSN,
-                    school,
-                    shared,
-                    roomShareWith,
-                    liveathomePartTime,
-                    interests,
-                    employer
+					*
                 FROM 
                     smg_host_children
                 WHERE

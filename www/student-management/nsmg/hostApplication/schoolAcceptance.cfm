@@ -47,7 +47,7 @@
 			foreignTable="smg_hosts",	
 			foreignID=FORM.hostID, 			
 			documentGroup="schoolAcceptance",
-			seasonID=APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID
+			seasonID=APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID // This needs to be replaced to get the assigned season for this app as a host family might apply to different seasons
 		);
 	</cfscript>
     

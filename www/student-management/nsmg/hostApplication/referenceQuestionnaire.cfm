@@ -37,7 +37,7 @@
 		}
 		
 		// Get Current SeasonID
-		vCurrentSeasonID = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID;
+		vCurrentSeasonID = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID; // This needs to be replaced to get the assigned season for this app as a host family might apply to different seasons
 		
 		// Get List of Host Family Applications
 		qGetHostInfo = APPLICATION.CFC.HOST.getApplicationList(hostID=FORM.hostID);	
