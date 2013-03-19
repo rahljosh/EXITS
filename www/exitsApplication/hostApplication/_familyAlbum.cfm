@@ -154,6 +154,28 @@
 		});
 		
 	});
+	
+	$(document).ready(function(){
+		//Examples of how to assign the ColorBox event to elements
+		$(".jQueryModal").colorbox( {
+			width:"80%", 
+			height:"95%", 
+			iframe:true,
+			overlayClose:false,
+			escKey:false			
+		});	
+		
+		//Examples of how to assign the ColorBox event to elements
+		$(".jQueryModalRefresh").colorbox( {
+			width:"80%", 
+			height:"95%", 
+			iframe:true, 
+			overlayClose:false,
+			escKey:false, 
+			onClosed:function(){ window.location.reload(); } 
+		});
+
+	});
 </script>
 
 <cfoutput>
@@ -241,7 +263,8 @@
                             <span style="float:left; margin-right:3px;">
                                 <label for="#qGetUploadedImages.ID#" style="font-weight:bold;">
                                 	<span style="display:block; margin-bottom:5px;">#qGetUploadedImages.documentType#</span>
-                                	<img src="#APPLICATION.CFC.SESSION.getHostSession().PATH.relativeAlbumThumbs##qGetUploadedImages.fileName#" border="0">
+                                    <cfoutput>
+         <a href="viewImage.cfm?imagePath=http://ise.exitsapplication.com/nsmg/uploadedfiles/hostApp/#APPLICATION.CFC.SESSION.getHostSession().ID#/album/large/#qGetUploadedImages.fileName#" class="jQueryModal"><img src="http://ise.exitsapplication.com/nsmg/uploadedfiles/hostApp/#APPLICATION.CFC.SESSION.getHostSession().ID#/album/thumbs/#qGetUploadedImages.fileName#" border="0"></a></cfoutput>
                                     <!--- <cfimage action="writeToBrowser" source="#APPLICATION.CFC.SESSION.getHostSession().PATH.albumThumbs##qGetUploadedImages.fileName#"> --->
                                 </label>
                             </span>    
