@@ -193,6 +193,7 @@
         <cfargument name="foreignIDList" default="" hint="List of foreign IDs">
 		<cfargument name="documentGroup" default="" hint="documentGroup is not required">   
         <cfargument name="documentTypeID" default="" hint="documentTypeID is not required">
+        <cfargument name="documentTypeIDList" default="" hint="documentTypeIDList is not required">
         <cfargument name="seasonID" default="" hint="seasonID is not required">
         
         <cfquery 
@@ -251,8 +252,11 @@
 	                AND 
                         dt.documentGroup = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.documentGroup#">
                 </cfif>  
-                
-  				<cfif LEN(ARGUMENTS.documentTypeID)>
+
+                <cfif LEN(ARGUMENTS.documentTypeIDList)>
+                    AND    
+                        d.documentTypeID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.documentTypeIDList#" list="yes"> )
+  				<cfelseif LEN(ARGUMENTS.documentTypeID)>
 	                AND 
                         d.documentTypeID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(ARGUMENTS.documentTypeID)#">
                 </cfif>  
