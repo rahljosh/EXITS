@@ -57,7 +57,19 @@
     </cfscript>
 
 	<cffile action="rename" source="#directory#/#CFFILE.ServerFile#" destination="#directory#/#LCase(CFFILE.ServerFile)#" attributes="normal" nameconflict="makeunique">
-		 
+		  <cfquery datasource="#application.dsn#">
+               insert into virtualfolder (fk_documentType,fileName,filePath,fk_studentID,generatedHow,  uploadedBy, dateAdded)
+                            values (<cfqueryparam cfsqltype="cf_sql_integer" value="44">,
+                            		<cfqueryparam cfsqltype="cf_sql_varchar" value="#file.serverfile#">,
+                            		<cfqueryparam cfsqltype="cf_sql_varchar" value="uploadedFiles/virtualfolder/#form.studentid#/page22">,
+                                    
+                                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.studentid#">,
+                                    <cfqueryparam cfsqltype="cf_sql_varchar" value="manual">,
+                                    <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userID#">,
+                                    <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">)
+                
+                </cfquery>
+         
 	<script type="text/javascript">
 		opener.location.reload(true);
    		self.close();
