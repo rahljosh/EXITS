@@ -137,32 +137,6 @@ ORDER BY verification_received
 -->
 </style>
 
-<cfset arrayStuId = ArrayNew(1)>
-<cfloop query="getWorkCandidates">
-	<cfset aStuId = #arrayAppend(arrayStuId, "#getWorkCandidates.candidateid#")#>
-</cfloop>
-<cfset qtStud = #getWorkCandidates.recordCount#>
-
-<cfoutput>
-	<script type="text/javascript">
-		var #toScript(arrayStuId, "jsArrayStuId")#;
-		var #toScript(qtStud, "qtStud")#;
-		var jsCounter = qtStud;
-		
-		function enable_premium() {
-			for (var i=0; i<=jsCounter-1; i++) {
-					if(document.getElementById("applyPremiumProcessing"+jsArrayStuId[i]).checked == true) {
-						document.getElementById("premiumProcessing"+jsArrayStuId[i]).disabled = "";
-						document.getElementById("premiumProcessingAmount"+jsArrayStuId[i]).disabled = "";
-					}
-					else {
-						document.getElementById("premiumProcessing"+jsArrayStuId[i]).disabled = "disabled";
-						document.getElementById("premiumProcessingAmount"+jsArrayStuId[i]).disabled = "disabled";			
-					}
-			}
-		}		
-	</script>
-</cfoutput>
 </head>
 
 <body>
@@ -289,6 +263,33 @@ AND e.candidateid NOT IN (SELECT sc.stuid
                         AND sc.active = 1)
 ORDER BY candidateid                                                                            
 </cfquery>
+
+<cfset arrayStuId = ArrayNew(1)>
+<cfloop query="getWorkCand">
+	<cfset aStuId = #arrayAppend(arrayStuId, "#getWorkCand.candidateid#")#>
+</cfloop>
+<cfset qtStud = #getWorkCand.recordCount#>
+
+<cfoutput>
+	<script type="text/javascript">
+		var #toScript(arrayStuId, "jsArrayStuId")#;
+		var #toScript(qtStud, "qtStud")#;
+		var jsCounter = qtStud;
+		
+		function enable_premium() {
+			for (var i=0; i<=jsCounter-1; i++) {
+					if(document.getElementById("applyPremiumProcessing"+jsArrayStuId[i]).checked == true) {
+						document.getElementById("premiumProcessing"+jsArrayStuId[i]).disabled = "";
+						document.getElementById("premiumProcessingAmount"+jsArrayStuId[i]).disabled = "";
+					}
+					else {
+						document.getElementById("premiumProcessing"+jsArrayStuId[i]).disabled = "disabled";
+						document.getElementById("premiumProcessingAmount"+jsArrayStuId[i]).disabled = "disabled";			
+					}
+			}
+		}		
+	</script>
+</cfoutput>
 
 <cfform name="workCharges" method="post" action="m_insertCharges.cfm?userid=#url.userid#&compid=#client.companyid#">
       	<table>
