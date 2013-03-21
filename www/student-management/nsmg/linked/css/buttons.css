@@ -136,4 +136,11 @@
 .buttonRed:active {
    border-top-color: #9c1a1d;
    background: #9c1a1d;
-   }     
+   }
+   
+/*****Smaller Button*****/
+.smallerButton {
+	padding: 4px;
+	border-radius: 5px;
+	font-size:10px;
+}
