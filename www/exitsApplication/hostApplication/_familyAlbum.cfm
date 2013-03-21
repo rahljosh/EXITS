@@ -162,7 +162,10 @@
 			height:"95%", 
 			iframe:true,
 			overlayClose:false,
-			escKey:false			
+			escKey:false,
+			onClosed:function(){ location.reload(true)}
+
+    		
 		});	
 		
 		//Examples of how to assign the ColorBox event to elements
@@ -174,6 +177,7 @@
 			escKey:false, 
 			onClosed:function(){ window.location.reload(); } 
 		});
+		
 
 	});
 </script>
@@ -256,6 +260,9 @@
     	<table width="100%" cellspacing="0" cellpadding="4" class="border">
             <tr>
                 <cfloop query="qGetUploadedImages">
+                <cfset viewImagePath="http://ise.exitsapplication.com/nsmg/uploadedfiles/hostApp/#APPLICATION.CFC.SESSION.getHostSession().ID#/album/large/#qGetUploadedImages.fileName#">
+                <Cfset absoluteLargePath = "c:\websites\student-management\nsmg\uploadedfiles\hostApp\#APPLICATION.CFC.SESSION.getHostSession().ID#\album\large\#qGetUploadedImages.fileName#">
+                <Cfset absoluteThumbPath = "c:\websites\student-management\nsmg\uploadedfiles\hostApp\#APPLICATION.CFC.SESSION.getHostSession().ID#\album\thumbs\#qGetUploadedImages.fileName#">
                 	<td width="50%" valign="top" align="center">
                         
                         <div style="display:block; margin:5px 0 2px 0;">
@@ -264,7 +271,7 @@
                                 <label for="#qGetUploadedImages.ID#" style="font-weight:bold;">
                                 	<span style="display:block; margin-bottom:5px;">#qGetUploadedImages.documentType#</span>
                                     <cfoutput>
-         <a href="viewImage.cfm?imagePath=http://ise.exitsapplication.com/nsmg/uploadedfiles/hostApp/#APPLICATION.CFC.SESSION.getHostSession().ID#/album/large/#qGetUploadedImages.fileName#" class="jQueryModal"><img src="http://ise.exitsapplication.com/nsmg/uploadedfiles/hostApp/#APPLICATION.CFC.SESSION.getHostSession().ID#/album/thumbs/#qGetUploadedImages.fileName#" border="0"></a></cfoutput>
+         <a href="viewImage.cfm?viewImagePath=#viewImagePath#&absoluteLargePath=#absoluteLargePath#&absoluteThumbPath=#absoluteThumbPath#&label=#qGetUploadedImages.documentType#" class="jQueryModal"><img src="http://ise.exitsapplication.com/nsmg/uploadedfiles/hostApp/#APPLICATION.CFC.SESSION.getHostSession().ID#/album/thumbs/#qGetUploadedImages.fileName#" border="0"></a></cfoutput>
                                     <!--- <cfimage action="writeToBrowser" source="#APPLICATION.CFC.SESSION.getHostSession().PATH.albumThumbs##qGetUploadedImages.fileName#"> --->
                                 </label>
                             </span>    
