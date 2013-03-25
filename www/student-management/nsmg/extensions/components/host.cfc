@@ -537,6 +537,83 @@
 		</cfscript>
         
     </cffunction>
+    
+    <!--- Combine Hosts --->
+    <cffunction name="combineHosts" access="public" returntype="boolean" output="no" hint="Changes all fields from fromHost to toHost and deletes fromHost">
+    	<cfargument name="fromHost" default="0" required="yes" hint="fromHost is required">
+        <cfargument name="toHost" default="0" required="yes" hint="toHost is required">
+        
+        <cfquery datasource="#APPLICATION.DSN#">
+            UPDATE smg_hosthistoryTracking
+            SET fieldID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.toHost#">
+            WHERE fieldID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.fromHost#">	
+            AND fieldName =  <cfqueryparam cfsqltype="cf_sql_varchar" value="hostID">           	
+        </cfquery>
+
+        <cfquery datasource="#APPLICATION.DSN#">
+            UPDATE progress_reports
+            SET fk_host = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.toHost#">
+            WHERE fk_host = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.fromHost#">
+        </cfquery>
+        
+        <!--- List of tables to update the host on - all of these tables use the hostID field name so they can be looped through to update them. --->
+        <cfset updateTables = "
+			extra_hostauthenticationfiles,
+			extra_hostinfohistory,
+			php_hosts_cbc,
+			php_students_in_program,
+			smg_csiet_history,
+			smg_documents,
+			smg_host_app_history,
+			smg_host_missing_docs,
+			smg_host_reference_tracking,
+			smg_hosthistory,
+			smg_hosts_cbc,
+			smg_sevis_history,
+			smg_students,
+			smg_users,
+			smg_users_payments
+		">
+        <!--- List of tables to delete the host from - all of these tables use the hostID field name so they can be looped through to update them. --->
+        <cfset deleteTables = "
+			extra_confirmations,
+			extra_j1_positions,
+			smg_host_animals,
+			smg_host_children,
+			smg_hosts
+		">
+        
+        <cfloop list="#updateTables#" index="i">
+        	<cfquery datasource="#APPLICATION.DSN#">
+            	UPDATE #i#
+                SET hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.toHost#">
+                WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.fromHost#">
+            </cfquery>
+        </cfloop>
+        
+        <cfloop list="#deleteTables#" index="i">
+        	<cfquery datasource="#APPLICATION.DSN#">
+            	DELETE FROM #i#
+                WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.fromHost#">
+            </cfquery>
+        </cfloop>
+        
+        <cfquery name="qGetHost" datasource="#APPLICATION.DSN#">
+        	SELECT smg_hosts.hostID
+            FROM smg_hosts
+            <cfloop list="#updateTables#" index="i">
+            	LEFT JOIN #i# ON #i#.hostID = smg_hosts.hostID
+            </cfloop>
+            WHERE smg_hosts.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.fromHost#">
+        </cfquery>
+        
+        <cfif VAL(qGetHost.recordCount)>
+        	<cfreturn false>
+        <cfelse>
+        	<cfreturn true>
+        </cfif>
+    
+    </cffunction>
 
 
 	<!--- ------------------------------------------------------------------------- ----
