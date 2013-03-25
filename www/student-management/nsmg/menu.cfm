@@ -14,7 +14,7 @@
 
 	<cfscript>
 		// Host Family Application
-		allowedUsers = '1,510,12313,7203,1077,17071';
+		allowedUsers = '1,510,12313,7203,1077,17071,17427';
 		
         // Get Company Info
         qGetCompany = APPCFC.COMPANY.getCompanies(companyID=CLIENT.companyID);
@@ -380,12 +380,15 @@
                             <li><a href="index.cfm?curdoc=cbc/cbc_menu">CBC Batch</a></li>
                         </cfif>
                         
-                        <cfif CLIENT.userType EQ 1>
+                        <!--- Only allow Global Administrators, Paul Sessions, and Bill Bonomo --->
+						<cfif CLIENT.userType EQ 1 OR CLIENT.userID EQ 17438 OR CLIENT.userID EQ 17095>
                             <li>
                             	<a href="">Merge Options</a>					
                                 <ul>
                                     <li><a href="index.cfm?curdoc=compliance/combine_hosts">Host Family</a></li>   
+                                    <!--- May not be up to date
                                     <li><a href="index.cfm?curdoc=compliance/combine_schools">Schools</a></li>
+									--->
                                 </ul>
                             </li>
                         </cfif>
