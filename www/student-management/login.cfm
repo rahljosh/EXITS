@@ -316,6 +316,10 @@ a:active {
           <tr>
             <td><a href="login.cfm?forgot=1" class="style2" valign="middle" align="right">Forgot Login?</a></td><td align="right" width=100> <input type="image" src="exitsapp_images/button.png" alt="Login" /></td>
           </tr>
+          <tr>
+          	<td colspan=2>Host Families:   <a href="https://www.iseusa.com/hostApp">Click Here!</a></td>
+          </tr>
+          </tr>
         </table>
         </cfform> 
         
