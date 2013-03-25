@@ -305,7 +305,7 @@
             <!--- Placement Information Sheet --->
             <tr>
             	<td>Placement Information Sheet</td>
-            	<td><a href="../reports/placementInfoSheet.cfm?uniqueID=#URL.unqID#&historyID=#selectedPlacement#&profileType=pdf" taret="_blank">Dynamicaly Generated</a></td>
+            	<td><a href="reports/placementInfoSheet.cfm?uniqueID=#URL.unqID#&historyID=#selectedPlacement#&profileType=pdf" taret="_blank">Dynamicaly Generated</a></td>
                 <td>N/A</td>
                 <td>System</td>
                 <td>Auto</td>	
@@ -315,7 +315,7 @@
             <!--- Host Family Welcome Letter --->
             <tr>
             	<td>Host Family Welcome Letter</td>
-                <td><a href="../reports/host_welcome_letter.cfm?historyID=#selectedPlacement#&pdf=1" target="_blank">Dynamicaly Generated</a></td>
+                <td><a href="reports/host_welcome_letter.cfm?historyID=#selectedPlacement#&pdf=1" target="_blank">Dynamicaly Generated</a></td>
             	<td>N/A</td>
                 <td>System</td>
                 <td>Auto</td>	
@@ -324,7 +324,7 @@
             <!--- School Welcome Letter --->
             <tr>
             	<td>School Welcome Letter</td>
-                 <td><a href="../reports/school_welcome_letter.cfm?historyID=#selectedPlacement#&pdf=1">Dynamicaly Generated</a></td>
+                 <td><a href="reports/school_welcome_letter.cfm?historyID=#selectedPlacement#&pdf=1">Dynamicaly Generated</a></td>
             	<td>N/A</td>
                 <td>System</td>
                 <td>Auto</td>
@@ -333,7 +333,7 @@
             <!--- School Acceptance Letter --->
             <tr>
             	<td>School Acceptance Letter</td>
-                <td><a href="school_acceptance.cfm?studentid=#qGetStudentInfo.studentid#&hostID=#qGetSelectedPlacementDetails.hostID#" target="_blank">Dynamicaly Generated</a></td>
+                <td><a href="reports/school_acceptance.cfm?studentid=#qGetStudentInfo.studentid#&hostID=#qGetSelectedPlacementDetails.hostID#" target="_blank">Dynamicaly Generated</a></td>
                 <td>N/A</td>
             	<td>System</td>
                 <td>Auto</td>
