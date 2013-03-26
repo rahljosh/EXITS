@@ -441,7 +441,10 @@
         formErrors="#SESSION.formErrors.GetCollection()#"
         messageType="section"
         />
+         
 	
+    
+
     <cfif vIsPreviousInfoCompleted>
 
         Due to Department of State Regulations&dagger;, criminal background checks will need to be run on the following persons.  
@@ -602,11 +605,13 @@
                     <tr <cfif vSignatureCurrentRow MOD 2> bgcolor="##deeaf3" </cfif> >
                         <td><h3>#qGetCBCQualifiedMembers.name# #qGetCBCQualifiedMembers.lastName#</h3></td>
                         <td>
+                      
                             <cfif NOT LEN(FORM[qGetCBCQualifiedMembers.childID & "documentID"])>
                                 <input type="text" name="#qGetCBCQualifiedMembers.childID#memberSignature" value="#FORM[qGetCBCQualifiedMembers.childID & 'memberSignature']#" class="largeField" />
                             <cfelse>
                                 <a href="publicDocument.cfm?ID=#FORM[qGetCBCQualifiedMembers.childID & 'documentID']#&Key=#APPLICATION.CFC.DOCUMENT.generateHashID(FORM[qGetCBCQualifiedMembers.childID & 'documentID'])#" target="_blank">Download CBC Authoriaztion</a>
                             </cfif>
+							
                         </td>
                     </tr>
                     <cfscript>
