@@ -68,9 +68,9 @@
             
         </div><!--logoBoxB -->
     
-	</div><!-- end topBar -->
+</div><!-- end topBar -->
     
-    <div id="container">
+	<div id="container">
     
         <div class="spacer2"></div>
     
