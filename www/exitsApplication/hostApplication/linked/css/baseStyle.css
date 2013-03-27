@@ -57,8 +57,6 @@ hr {
 	background-color: #000;
 	position: auto;
 	z-index: 50;
-	padding-right: 10px;
-	padding-left: 10px;
 }
 #topBarLinks {
 	width: 100%;
@@ -84,10 +82,11 @@ hr {
 
 #subPages {
 	height: auto;
-	width: 750px;
+	width: 900px;
 	margin-top: 0px;
 	margin-right: auto;
 	margin-left: auto;
+	padding-left: 150px;
 }
 
 .whtTop {
@@ -212,16 +211,15 @@ div.loginBox label {
 #logoBoxB {
 	background-image: url(../../images/logobox.png);
 	background-repeat: no-repeat;
-	width: 200px;
+	width: 1050px;
 	z-index: 50;
 	display: block;
 	clear: both;
 	position: relative;
-	float: none;
 	margin-right: auto;
 	margin-left: auto;
+	padding: 0px;
 	top: 0px;
-	left: -435px;
 }
 
 .hostApp {
