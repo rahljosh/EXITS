@@ -125,20 +125,32 @@ This agent does not have any students currently active OR all students have had 
 				from smg_programs
 				where programid = #students_under_rep_not_charged.programid#
 			</cfquery>
+            
+            <!-- Checks District Name for ESI students -->
+            <cfquery name="qcheck_district" datasource="MySQL">
+            select studentID, regionassigned, regionname
+            from smg_students ss
+            left join smg_regions sr on regionid = ss.regionassigned
+            where studentID = #studentid#
+            </cfquery>
 	
 		<Cfif program_name_charge.startdate lt '09/01/2004' or program_name_charge.blank is 1>
 		<cfelse>
 			<cfif program_name_charge.hold eq 0 or (onhold_approved lte '5' and onhold_approved gte '7')>
 				<tr bgcolor=<cfif (onhold_approved lte '5' and onhold_approved gte '7')>fee6d3<cfelse><cfif students_under_rep_not_charged.currentrow mod 2>ededed<cfelse>ffffff</cfif></cfif>>
 				<td class="thin-border-left-bottom-top">
-					<input type="checkbox" name="studentid" value="#studentid#" <Cfif hostid is 0 and check_charges.recordcount eq 1 or (onhold_approved gte '5' and onhold_approved lte '7') or verification_received is ''><Cfelseif program_name_charge.startdate lt '02/01/2005'><cfelse>checked</cfif>></td><td class="thin-border-top"> #firstname# #familylastname# (#studentid#)</td><Td class="thin-border-top">#program_name_charge.programname#</Td><td class="thin-border-top-right"><cfif verification_received is ''>Not Verified<Cfelseif hostid is '' or hostid is 0>Unplaced<cfelse>Placed</Cfif><Cfif direct_placement is 1> - Direct</Cfif><cfif (onhold_approved gte '5' and onhold_approved lte '7')>&nbsp;&nbsp;ON HOLD</cfif></td> 
+					<input type="checkbox" name="studentid" value="#studentid#" <Cfif hostid is 0 and check_charges.recordcount eq 1 or (onhold_approved gte '5' and onhold_approved lte '7') or verification_received is ''><Cfelseif program_name_charge.startdate lt '02/01/2005'><cfelse>checked</cfif>></td><td class="thin-border-top"> #firstname# #familylastname# (#studentid#)</td><Td class="thin-border-top">#program_name_charge.programname#</Td><td class="thin-border-top"><cfif verification_received is ''>Not Verified<Cfelseif hostid is '' or hostid is 0>Unplaced<cfelse>Placed</Cfif><Cfif direct_placement is 1> - Direct</Cfif><cfif (onhold_approved gte '5' and onhold_approved lte '7')>&nbsp;&nbsp;ON HOLD</cfif></td> 
+                    <td class="thin-border-top-right">District: #qcheck_district.regionname#</td>
 				</tr>
 			<cfif (onhold_approved gte '5' and onhold_approved lte '7')>
 			<cfelse>
 				<cfif check_depositCharge.recordcount is 0>
 							<tr bgcolor=<cfif students_under_rep_not_charged.currentrow mod 2>ededed<cfelse>ffffff</cfif>>
-								<td bgcolor="ffffff"></td><td class="thin-border-left-bottom">Type: 
-								<input type="hidden" name=#students_under_rep_not_charged.studentid#deposit_type value='deposit'>Deposit</td><td class="thin-border-bottom">Charge: <input type=text name="#studentid#deposit_amount" value=500 size=6></td><td class="thin-border-right-bottom"> Desc: <input type="text" size="14" name="#studentid#deposit_description" value='#program_name_charge.programname#'>
+								<td bgcolor="ffffff"></td>
+                                <td class="thin-border-left-bottom">Type: 
+								<input type="hidden" name=#students_under_rep_not_charged.studentid#deposit_type value='deposit'>Deposit</td>
+                                <td class="thin-border-bottom">Charge: <input type=text name="#studentid#deposit_amount" value=500 size=6></td>
+                                <td class="thin-border-bottom"> Desc: <input type="text" size="14" name="#studentid#deposit_description" value='#program_name_charge.programname#'>
 								<input type=hidden name="#students_under_rep_not_charged.studentid#guarantee_amount" value="" size=6>
 								<input type=hidden name="#students_under_rep_not_charged.studentid#insurance_amount" value="" size=6>
 								<input type=hidden name="#students_under_rep_not_charged.studentid#final_amount" value="" size=6>
@@ -147,15 +159,18 @@ This agent does not have any students currently active OR all students have had 
 								<input type=hidden name="#students_under_rep_not_charged.studentid#direct_placement_guarantee_disc" value="" size=6>
 								<input type="hidden" name="#students_under_rep_not_charged.studentid#programid" value="#programid#">
 								</td>
+                                <td class="thin-border-right-bottom"></td>
 							</tr>
 					<cfelse>
 						<cfset charge_list =''>
 							<input type="hidden" name="#students_under_rep_not_charged.studentid#programid" value="#programid#">
 							<cfloop query="check_charges">
 							<tr >
-								<Td bgcolor="ffffff"></Td><td bgcolor="FFFF99" class="thin-border-left">#type#</td><td bgcolor="FFFF99" >#description#</td><Td bgcolor="FFFF99" class="thin-border-right">#amount#
-		
-								</Td>
+								<Td bgcolor="ffffff"></Td>
+                                <td bgcolor="FFFF99" class="thin-border-left">#type#</td>
+                                <td bgcolor="FFFF99" >#description#</td>
+                                <Td bgcolor="FFFF99">#amount#</Td>
+                                <td bgcolor="FFFF99" class="thin-border-right"></td>
 							</tr>
 							<cfset charge_list = ListAppend(charge_list, '#type#')>
 							</cfloop>
@@ -185,7 +200,8 @@ This agent does not have any students currently active OR all students have had 
 								<td><input type=hidden name="#studentid#deposit_amount" value=''></td>
 								<td class="thin-border-left">Type: <input type="hidden" name=#students_under_rep_not_charged.studentid#final_type value='program fee'>Program Fee</td>
 								<td>Charge: <input type=text name="#students_under_rep_not_charged.studentid#final_amount" value="#program_charges.program_fee#" size=6></td>
-								<td class="thin-border-right"> Desc: <input type="text" size="14" name="#students_under_rep_not_charged.studentid#final_description" value='#program_name_charge.programname#'></td>
+								<td> Desc: <input type="text" size="14" name="#students_under_rep_not_charged.studentid#final_description" value='#program_name_charge.programname#'></td>
+                                <td class="thin-border-right"></td>
 							</Tr>
 							</cfif>
 							<!----Insurance Charge---->
@@ -201,7 +217,8 @@ This agent does not have any students currently active OR all students have had 
 								<td></td>
 									<td class="thin-border-left">Type: <input type="hidden" name=#students_under_rep_not_charged.studentid#insurance_type value='insurance'>Insurance</td>
 									<td>Charge: <input type=text name="#students_under_rep_not_charged.studentid#insurance_amount" value="#program_charges.insurance_charge#" size=6></td>
-									<td class="thin-border-right"> Desc: <input type="text" size="14" name="#students_under_rep_not_charged.studentid#insurance_description" value='#program_name_charge.programname#'></td>									
+									<td> Desc: <input type="text" size="14" name="#students_under_rep_not_charged.studentid#insurance_description" value='#program_name_charge.programname#'></td>	
+                                    <td class="thin-border-right"></td>							
 								</Tr>
 								</cfif>
 							</cfif>
@@ -213,7 +230,7 @@ This agent does not have any students currently active OR all students have had 
 							<cfelse>
 								<cfif student_charges.regionguar is 'no' AND student_charges.state_guarantee EQ 0>
 									<Tr>
-									<td></td><td colspan = 4 class="thin-border-left-right">Student doesn't have a regional or state guarantee <input type="hidden" name=#students_under_rep_not_charged.studentid#direct_placement_guarantee_disc value=''><input type=hidden name="#students_under_rep_not_charged.studentid#guarantee_amount" value="" size=6></td>
+									<td></td><td colspan = 5 class="thin-border-left-right">Student doesn't have a regional or state guarantee <input type="hidden" name=#students_under_rep_not_charged.studentid#direct_placement_guarantee_disc value=''><input type=hidden name="#students_under_rep_not_charged.studentid#guarantee_amount" value="" size=6></td>
 									</Tr>
 								<cfelse>
 								<!----Determine which type of guarantee student has---->
@@ -242,7 +259,8 @@ This agent does not have any students currently active OR all students have had 
 									<td></td>
 									<td class="thin-border-left">Type: <input type="hidden" name="#students_under_rep_not_charged.studentid#guarantee_type" value='guarantee'>Guarantee</td>
 									<td>Charge: <input type=text name="#students_under_rep_not_charged.studentid#guarantee_amount" value="#guarantee_info.guar_fee#" size=6></td>
-									<td class="thin-border-right"> Desc: <input type="text" size="14" name="#students_under_rep_not_charged.studentid#guarantee_description" value='#guar_type#'></td>
+									<td> Desc: <input type="text" size="14" name="#students_under_rep_not_charged.studentid#guarantee_description" value='#guar_type#'></td>
+                                    <td class="thin-border-right"></td>
 								</Tr>
 									<cfif dateplaced lt '0001/01/01 00:00:00' or dateplaced gt '05/11/2005 01:00:00' or hostid is 0>
 									<cfquery name="check_sts" datasource="MySQL">
@@ -269,8 +287,9 @@ This agent does not have any students currently active OR all students have had 
 											<Tr>
 												<td></td>
 												<td class="thin-border-left">Type: <input type="hidden" name="#students_under_rep_not_charged.studentid#direct_placement_guarantee_disc" value='guarantee'>Direct Placement Guarantee disc.</td>
-												<td>Charge: <input type="text" name="#students_under_rep_not_charged.studentid#direct_placement_guarantee_disc_amount" value="#direct_placement_reg_guar#" size=6></td>
-												<td class="thin-border-right"> Desc: <input type="text" size="14" name="#students_under_rep_not_charged.studentid#direct_placement_guarantee_disc_desc" value='#desc_value#'></td>
+												<td>Charge: <input type="left" name="#students_under_rep_not_charged.studentid#direct_placement_guarantee_disc_amount" value="#direct_placement_reg_guar#" size=6></td>
+												<td> Desc: <input type="text" size="14" name="#students_under_rep_not_charged.studentid#direct_placement_guarantee_disc_desc" value='#desc_value#'></td>
+                                                <td class="thin-border-right"></td>
 											</Tr>
 										</cfif>
 									<cfelse>
@@ -292,7 +311,9 @@ This agent does not have any students currently active OR all students have had 
 								<cfelse>
 								
 								<Tr>
-								<td></td><td class="thin-border-left">Type: <input type="hidden" name=#students_under_rep_not_charged.studentid#sevis_type value='sevis'>SEVIS</td><td>Charge: <input type=text name="#students_under_rep_not_charged.studentid#sevis_amount" value="180.00" size=6></td><td class="thin-border-right"> Desc: <input type="text" size="14" name="#students_under_rep_not_charged.studentid#sevis_description" value='SEVIS Fee'></td>
+								<td></td><td class="thin-border-left">Type: <input type="hidden" name=#students_under_rep_not_charged.studentid#sevis_type value='sevis'>SEVIS</td><td>Charge: <input type=text name="#students_under_rep_not_charged.studentid#sevis_amount" value="180.00" size=6></td>
+                                <td> Desc: <input type="text" size="14" name="#students_under_rep_not_charged.studentid#sevis_description" value='SEVIS Fee'></td>
+                                <td class="thin-border-right"></td>
 								</Tr>
 								</cfif>
 								
@@ -311,7 +332,9 @@ This agent does not have any students currently active OR all students have had 
 								<cfelse>
 									<cfif dateplaced lt '0001-01-01 00:00:00' or dateplaced gt '04/27/2005 01:00:00' or hostid is 0  >
 									<Tr>
-									<td></td><td class="thin-border-left">Type: <input type="hidden" name=#students_under_rep_not_charged.studentid#direct_placement value='direct placement'>Direct Placement</td><td>Charge: <input type=text name="#students_under_rep_not_charged.studentid#direct_placement_amount" value="-200.00" size=6></td><td class="thin-border-right"> Desc: <input type="text" size="14" name="#students_under_rep_not_charged.studentid#direct_placement_description" value='Direct Placement Discount'></td>
+									<td></td><td class="thin-border-left">Type: <input type="hidden" name=#students_under_rep_not_charged.studentid#direct_placement value='direct placement'>Direct Placement</td><td>Charge: <input type=text name="#students_under_rep_not_charged.studentid#direct_placement_amount" value="-200.00" size=6></td
+                                    ><td> Desc: <input type="text" size="14" name="#students_under_rep_not_charged.studentid#direct_placement_description" value='Direct Placement Discount'></td>
+                                    <td class="thin-border-right"></td>
 									</Tr>
 									<cfelse>
 									<input type=hidden name="#students_under_rep_not_charged.studentid#direct_placement" value="" size=6>
@@ -324,7 +347,7 @@ This agent does not have any students currently active OR all students have had 
 					</cfif>
 				</cfif>
 							<tr>
-								<td></td><td colspan=4 class="thin-border-top">&nbsp;</td>
+								<td></td><td colspan=5 class="thin-border-top">&nbsp;</td>
 							</tr>
 			</cfif>
 		
