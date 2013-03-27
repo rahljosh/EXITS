@@ -162,227 +162,9 @@
         	smg_states
     </cfquery>
 
-	<!--- FORM Submitted --->
-	<cfif FORM.type EQ 'login'>
+	
     
-    	<!--- FORM Validation --->
-		<cfscript>
-            // Data Validation
-            
-            // Email
-            if ( NOT LEN(FORM.loginEmail) OR NOT IsValid("email", FORM.loginEmail) ) {
-                ArrayAppend(pageMsg.Errors, "Enter a valid email address.");			
-            }
-
-            // Password
-            if ( NOT LEN(FORM.loginPassword) ) {
-                ArrayAppend(pageMsg.Errors, "Enter a password.");			
-            }
-		</cfscript>
-
-       <!--- There are no errors --->
-       <cfif NOT VAL(ArrayLen(pageMsg.Errors))>
-            
-            <cfquery name="qCheckLogin" datasource="#APPLICATION.DSN.Source#">
-                SELECT
-                    hl.ID,
-                    hl.firstName,
-                    hl.lastName,
-                    hl.address,
-                    hl.address2, 
-                    hl.city,
-                    hl.stateID,
-                    hl.zipCode,
-                    hl.phone,
-                    hl.email,
-                    hl.password,
-                    hl.hearAboutUs,
-                    hl.hearAboutUsDetail,
-                    hl.isListSubscriber,
-                    hl.isAdWords,
-                    hl.httpReferer,
-                    hl.remoteAddress,
-                    hl.remoteCountry,
-                    hl.dateLastLoggedIn,
-                    hl.dateCreated,
-                    st.state
-                FROM 
-                    smg_host_lead hl
-                LEFT OUTER JOIN
-                	smg_states st ON st.id = hl.stateID
-                WHERE 
-                    hl.email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.loginEmail)#">
-                AND
-                    hl.password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.loginPassword)#">
-				AND	
-                	hl.isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-				<!--- 3 = Not Interested | 10 = Not Qualified --->
-                AND	
-                	hl.statusID NOT IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="3,10" list="yes"> )
-            </cfquery>
-        	
-            <!--- Valid Login Host Family --->
-        	<cfif qCheckLogin.recordcount>
-            	
-                <!--- Update Last Logged In Date --->
-                <cfquery datasource="#APPLICATION.DSN.Source#">
-                    UPDATE 
-                        smg_host_lead
-                    SET
-                    	dateLastLoggedIn = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
-                    WHERE 
-                        ID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#qCheckLogin.ID#">
-                </cfquery>
-                
-                <!--- Email Bob/Budge if this is the first login --->
-                <cfif NOT LEN(qCheckLogin.dateLastLoggedIn)>
-
-                    <cfsavecontent variable="vEmailMessage">
-                        <cfoutput>
-                            <cfif VAL(CLIENT.isAdWords)>
-                                <p><strong>Google AdWords Campaign</strong></p>
-                            </cfif>     
-                                 
-                            <p>The #qCheckLogin.lastname# family from #qCheckLogin.city#, #qCheckLogin.state# has submitted their information to view students.</p>
-                            
-                            <p>Please see the details below:</p>
-                            
-                            Family Last Name: #qCheckLogin.lastName# <br />
-                            First Name: #qCheckLogin.firstName# <br />
-                            Address: #qCheckLogin.address# <br />
-                            Address2: #qCheckLogin.address2# <br />
-                            City: #qCheckLogin.city# <br />
-                            State: #qCheckLogin.state# <br />
-                            Zip Code: #qCheckLogin.zipCode# <br />
-                            Phone Number: #qCheckLogin.phone# <br />
-                            Email: #qCheckLogin.email# <br />
-                            How did you hear about us: #qCheckLogin.hearAboutUs# <br /> 
-                            
-                            <cfif LEN(qCheckLogin.hearAboutUsDetail) AND qCheckLogin.hearAboutUs EQ 'ISE Representative'>
-                                ISE Representative Name: #qCheckLogin.hearAboutUsDetail# <br /> 
-                            <cfelseif LEN(qCheckLogin.hearAboutUsDetail) AND qCheckLogin.hearAboutUs EQ 'Other'>
-                                Other Specify: #qCheckLogin.hearAboutUsDetail# <br /> 
-                            </cfif>
-                            
-                            <!---
-								Would you like to join our mailing list? <cfif qCheckLogin.isListSubscriber> Yes <cfelse> No </cfif> <br /> <br />
-							--->
-            				
-                            Last Logged in #DateFormat(now(), 'mm/dd/yyyy')# #TimeFormat(now(), 'hh:mm tt')# EST <br /> <br />
-                            
-                            Regards, <br />
-                            International Student Exchange
-                        </cfoutput>
-                    </cfsavecontent>
-                                    
-                    <!--- send email --->
-                    <cfinvoke component="cfc.email" method="send_mail">
-                        <cfinvokeargument name="email_to" value="#AppEmail.hostLead#">
-                        <cfinvokeargument name="email_subject" value="Host Family Viewing Students Section">
-                        <cfinvokeargument name="email_message" value="#vEmailMessage#">
-                        <cfinvokeargument name="email_from" value="International Student Exchange <#AppEmail.support#>">
-                    </cfinvoke>
-                    
-                </cfif>
-                
-                <cfscript>
-					// Login Host Lead / Set CLIENT Variables 
-                    CLIENT.hostID = qCheckLogin.ID;
-                    CLIENT.name = qCheckLogin.lastName;
-                    CLIENT.email = qCheckLogin.email;
-					// Redirect to View Students
-					location("viewStudents.cfm", "no");
-				</cfscript>
-    		
-            <cfelse>
-            	
-                <cfscript>
-					// Set Login Error Message
-					ArrayAppend(pageMsg.Errors, "Invalid login. If you would like to retrieve your password, please click on forgot password below.");
-				</cfscript>				
-            
-            </cfif>
-            	
-    	</cfif>
-    
-    <!--- Forgot Password --->
-    <cfelseif FORM.type EQ 'forgotPassword'>
-    
-    	<!--- FORM Validation --->
-		<cfscript>
-            // Data Validation
-            
-            // Email
-            if ( NOT LEN(FORM.forgotEmail) OR NOT IsValid("email", FORM.forgotEmail) ) {
-                ArrayAppend(pageMsg.Errors, "Enter a valid email address.");			
-            }
-		</cfscript>
-
-       <!--- There are no errors --->
-       <cfif NOT VAL(ArrayLen(pageMsg.Errors))>
-
-            <cfquery name="qCheckEmail" datasource="#APPLICATION.DSN.Source#">
-                SELECT 
-                    ID, 
-                    firstName,
-                    lastName, 
-                    email,
-                    password
-                FROM 
-                    smg_host_lead
-                WHERE 
-                    email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.forgotEmail)#">
-            </cfquery>
-  			
-            <!---  Email Already registered - Send Login Information --->
-            <cfif qCheckEmail.recordCount>
-
-                <cfsavecontent variable="vEmailMessage">
-	                <cfoutput>
-	                    Dear #qCheckEmail.firstName# #qCheckEmail.lastName#-
-                        
-                        <br /> <br />
-                        Please see your login information below.
-                        <br /> <br />
-                        
-                        User: #qCheckEmail.email#<br />
-                        Password: #qCheckEmail.password#<br /> <br />
-                        
-                        Visit <a href="#APPLICATION.siteURL#meet-our-students.cfm">#APPLICATION.siteURL#meet-our-students.cfm</a> to meet our students. <br /> <br />
-                        
-                        PS: <strong>DO NOT</strong> click on "Log In" at the top right of the page. Use the form at the bottom of the meet our students page to login. <br /> <br />
-                        
-                        Best Regards-<br />
-                        International Student Exchange
-	                </cfoutput>
-                </cfsavecontent>
-                
-                <!--- send email --->
-                <cfinvoke component="cfc.email" method="send_mail">
-                    <cfinvokeargument name="email_to" value="#qCheckEmail.email#">
-                    <cfinvokeargument name="email_subject" value="ISE - Host Family Account Information">
-                    <cfinvokeargument name="email_message" value="#vEmailMessage#">
-                    <cfinvokeargument name="email_from" value="International Student Exchange <#AppEmail.support#>">
-                </cfinvoke>
-                
-                <cfscript>				
-					// Set Page Message
-					ArrayAppend(pageMsg.Messages, "Login information has been sent to email addres provided.");
-            	</cfscript>
-            
-            <!--- Email not registered --->
-            <cfelse>
-            	
-                <cfscript>				
-					// Set Page Message
-					ArrayAppend(pageMsg.Messages, "Email address is not registered. Please create an account.");
-            	</cfscript>
-                
-            </cfif>
-            
-        </cfif>  
-    
-    <cfelseif FORM.type EQ 'newAccount'>
+    <cfif FORM.type EQ 'newAccount'>
 
     	<!--- FORM Validation --->
 		<cfscript>
@@ -486,49 +268,6 @@
 
        <!--- There are no errors --->
        <cfif NOT VAL(ArrayLen(pageMsg.Errors))>
-            
-            <cfquery name="qCheckAccount" datasource="#APPLICATION.DSN.Source#">
-                SELECT
-                    ID, 
-                    email,
-                    password
-                FROM
-                    smg_host_lead
-                WHERE	
-                    email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">                                
-            </cfquery>
-                
-            <!--- Account Exists - Email Information --->             
-            <cfif qCheckAccount.recordcount>
-                
-                <cfsavecontent variable="vEmailMessage">
-	                <cfoutput>
-                        #FORM.firstname#-
-                        
-                        <p>
-                            Based on your email address entered at <a href="http://www.iseusa.com">http://www.iseusa.com</a>, it appears you already have an account. 
-                            If you have ever hosted or applied to host with ISE*, or have already filled out the form, you have an account with us. <br /> <br />
-                            Your login information is below should you decide to log back in to view students or complete the host family application. 
-                        </p>
-                        
-                        Email Address: #qCheckAccount.email# <br />
-                        Password: #qCheckAccount.password# <br /> <br />
-
-                        Best Regards-<br />
-                        International Student Exchange
-					</cfoutput>
-                </cfsavecontent>
-                
-                <!--- send email --->
-                <cfinvoke component="cfc.email" method="send_mail">
-                    <cfinvokeargument name="email_to" value="#FORM.email#">
-                    <cfinvokeargument name="email_subject" value="Host Family Account Information">
-                    <cfinvokeargument name="email_message" value="#vEmailMessage#">
-                    <cfinvokeargument name="email_from" value="International Student Exchange <#AppEmail.support#>">
-                </cfinvoke>
-                 
-            <!--- Account Does Not Exists --->   
-            <cfelse>
     			
                 <!--- Generate New Password --->
                 <cfset setPassword = generatePassword()>
@@ -587,22 +326,17 @@
 					APPLICATION.CFC.HOST.setHostLeadDataIntegrity(ID=newRecord.GENERATED_KEY);
 				</cfscript>
                 
-                <cfsavecontent variable="vEmailMessage">
+             <cfcookie name="iseLead" expires="never" domain=".iseusa.com" value="#FORM.email#">
+             
+             <cfsavecontent variable="vEmailMessage">
 	                <cfoutput>
                         #FORM.firstname#-
                         
-                        <p>Thank you for registering with ISE.</p>
+                        <p>Thank you for you interest in ISE.</p>
                         
-                        <p>Please use the information below to log in to see profiles or to fill out the host family application. </p>
+                    <p> We appreciate your interest in providing an international student with a life-changing experience. A representative of International Student exchange will be contacting you shortly to provide you with additional information about hosting.</p>
                         
-                        Email Address: #FORM.email# <br />
-                        Password: #setPassword# <br /> <br />
-                        
-                        Visit <a href="#APPLICATION.siteURL#meet-our-students.cfm">#APPLICATION.siteURL#meet-our-students.cfm</a> to meet our students. <br /> <br />
-                        
-                        PS: Use the login box in the <a href="#APPLICATION.siteURL#meet-our-students.cfm">#APPLICATION.siteURL#meet-our-students.cfm</a> page. <br /><br />
-                        
-                        PS: <strong>DO NOT</strong> click on "Log In" at the top right of the page. Use the form at the bottom of the meet our students page to login. <br /> <br />
+                        <p>Please visit <a href="#APPLICATION.siteURL#meet-our-students.cfm">#APPLICATION.siteURL#meet-our-students.cfm</a> to view profiles of students whoe are coming to the United States this next season. </p>
     
                         Best Regards-<br />
                         International Student Exchange
@@ -612,16 +346,19 @@
                 <!--- send email --->
                 <cfinvoke component="cfc.email" method="send_mail">
                     <cfinvokeargument name="email_to" value="#FORM.email#">
-                    <cfinvokeargument name="email_subject" value="Host Family Account Information">
+                    <cfinvokeargument name="email_subject" value="Host Family Interest">
                     <cfinvokeargument name="email_message" value="#vEmailMessage#">
                     <cfinvokeargument name="email_from" value="International Student Exchange <#AppEmail.support#>">
                 </cfinvoke>
-            
-            </cfif>
+             
+             <cfscript>
+             	location("viewStudents.cfm", "no");
+              </cfscript>
+			</cfif>
             
     	</cfif>
     
-    </cfif>
+  
 
 </cfsilent>
 
@@ -679,7 +416,9 @@
 </head>
 
 <body class="oneColFixCtr">
-
+<Cfif isdefined('cookie.iseLead')>
+	<cflocation url="viewStudents.cfm">
+</Cfif>
 <cfoutput>
 
 <div id="topBar">
@@ -708,92 +447,34 @@
                     
                     <div class="loginMid">
 
-						<!--- Display Errors --->
-                        <cfif FORM.type EQ 'login' AND VAL(ArrayLen(pageMsg.Errors))>
-                            <p class="errorMessage">
-                                
-                                <span>Please review the following item(s):</span>
-                            
-                                <cfloop from="1" to="#ArrayLen(pageMsg.Errors)#" index="i">
-                                   &nbsp; &bull; #pageMsg.Errors[i]# <br />        	
-                                </cfloop>
-                            
-                            </p>
-                        </cfif>	
+					
     
                         <!--- Login --->
-                        <cfform name="loginForm" id="loginForm" method="post" action="http://#cgi.SERVER_NAME##cgi.SCRIPT_NAME#" class="#loginFormClass#">
-                            <input type="hidden" name="type" value="login" />
+                        
+                           
                           
-                            <h2 style="margin-top:0px;">LOGIN</h2>
+                            <h2 style="margin-top:0px;">Host Family Application? </h2>
                     
                             <p>
                             	<em>
-                                    If you have already submited your contact information,<br />
-                                    please use the login information you received to login and <br />
-                                    and view incoming students.
+                                    Have you received an email from ISE regarding your Host Family <br />Application?  If so, you can access your application through <br /> the login portal located at <a href="http://www.iseusa.com/hostApp"><font color="white"><strong>http://www.iseusa.com/hostApp</strong></font></a> <br /><br /> 
+                                    This email would be from a local representative with ISE <br />and contain instructions and login information to start <br />a Host Family Application.
                             	</em>
                             </p>
 
-                            <div class="HFormpicR" style="float:right; width:100px;">
-                                <a href="javascript:displayForgotPass();" class="HFform_wtext"> Forgot Password? </a>
-                            </div>
-
+                            
 
                             
-                            <label for="loginEmail" class="HFform_wtext">Email Address <span class="requiredField">*</span> </label> 
-                            <cfinput type="text" name="loginEmail" id="loginEmail" value="#FORM.loginEmail#" maxlength="50" class="largeInput" required="yes" message="Please enter an email address." />          							
-    
-                            <label for="loginPassword" class="HFform_wtext">Password <span class="requiredField">*</span> </label>                                   
-                            <cfinput type="password" name="loginPassword" id="loginPassword" maxlength="50" class="largeInput" required="yes" message="Please enter a password." />                                    
+                                 
 
                             
-                            <span class="requiredFieldNote">* Required Fields</span>
-                            
-                            <input type="image" src="images/hostFamily/HFform_login.png" />
-                                
-                        </cfform>
+                          
+                       
     
-    
-                        <!--- Forgot Password Form --->
-                        <cfform name="forgotPassForm" id="forgotPassForm" method="post" action="http://#cgi.SERVER_NAME##cgi.SCRIPT_NAME#" class="#forgotPassClass#">
-                        	<input type="hidden" name="type" value="forgotPassword" />
+                     
                             
-                            <h3> Retrieve Password </h3>
-    
-                            <p> <em>Please enter your email address to have your password<br />emailed to you.</em></p>
-    
-                            <!--- Display Messages/Errors --->
-                            <cfif FORM.type EQ 'forgotPassword' AND VAL(ArrayLen(pageMsg.Messages))>
-                                <p class="pageMessage">
-                                
-                                    <cfloop from="1" to="#ArrayLen(pageMsg.Messages)#" index="i">
-                                       &nbsp; &bull; #pageMsg.Messages[i]# <br />        	
-                                    </cfloop>                                
-                                
-                                </p>
-                            <cfelseif FORM.type EQ 'forgotPassword' AND VAL(ArrayLen(pageMsg.Errors))>
-                                <p class="errorMessage">
-                                    
-                                    <span>Please review the following item(s):</span>
-                                
-                                    <cfloop from="1" to="#ArrayLen(pageMsg.Errors)#" index="i">
-                                       &nbsp; &bull; #pageMsg.Errors[i]# <br />        	
-                                    </cfloop>
-                                
-                                </p>
-                            </cfif>	
-                            
-                            <label for="forgotEmail" class="HFform_wtext">Email Address <span class="requiredField">*</span> </label> 
-                            <cfinput type="text" name="forgotEmail" id="forgotEmail" value="#FORM.forgotEmail#" maxlength="100" class="largeInput" required="yes" message="Please enter an email address." />          							
-                            
-                            <span class="requiredFieldNote">* Required Field</span>
-                            
-                            <input type="image" src="images/hostFamily/HFform_submit.png" /><br /><br />
-                            
-                            <a href="javascript:displayForgotPass();" class="HFform_wtext"> Back to Login </a>
-                            
-                        </cfform>
+                          
+                          
                         
                     </div><!--end loginMid-->
         
