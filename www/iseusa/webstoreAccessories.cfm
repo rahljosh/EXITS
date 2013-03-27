@@ -132,8 +132,8 @@ under:active {
               <p>Business Card Luggage Tag<br />
                 blue with white logo. 2 3/8&quot; h x 4 1/8&quot; w.<br /><br /><img src="images/webstore/greenLine.gif" width="211" height="15" alt="green line" />
                 
-                <h2>Out of Stock! <br /> Please check back.</h2>
-                <!----
+                <!----<h2>Out of Stock! <br /> Please check back.</h2>---->
+                <br />
                   <INPUT NAME="Qty" class="style1" VALUE="" size=3>
       Quantity - <strong>$1.25</strong> each  
  			<INPUT TYPE='HIDDEN' NAME='DiscItm' VALUE='y'>
@@ -145,7 +145,7 @@ under:active {
                   
                   <br />
                 <INPUT TYPE="image" src="images/webstore/addtoCart.png" class="style1"  VALUE="Add to Cart">
-				---->
+				
                 </FORM>
 				</th>
             </tr>

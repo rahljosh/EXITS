@@ -39,13 +39,13 @@ p {
         <div class="shopping">
           <h1 class="enter">Meet Our Students</h1>
           <table width="600" border="0" color="8DC540" cellpadding="10" cellspacing="10"> 
-          
-   <Cfif not isdefined('client.hostid') or client.hostid eq 0>
+        
+   <Cfif not isdefined('cookie.iseLead')>
    	<cfoutput>
     <tr>
     	<td>
-   			You must be logged into to view students. <br />
-			If you have your login or need to register, visit <a href="http://#cgi.SERVER_NAME#/meet-our-students.cfm">http://#cgi.SERVER_NAME#/meet-our-students.cfm</a>.
+   			You must register to view students. <br />
+			If you need to register, visit <a href="http://#cgi.SERVER_NAME#/meet-our-students.cfm">http://#cgi.SERVER_NAME#/meet-our-students.cfm</a>.
         </td>
      </tr>
      </table>
