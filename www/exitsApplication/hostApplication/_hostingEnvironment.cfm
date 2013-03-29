@@ -37,7 +37,7 @@
     <cfparam name="FORM.stuDietRestDesc" default="">
     <cfparam name="FORM.dietaryRestriction" default="">
     <cfparam name="FORM.threesquares" default="">
-
+	<cfparam name="FORM.internetConnections" default="">
 	<cfscript>
 		if ( VAL(URL.animalID) ) {
 			FORM.animalID = URL.animalID;	
@@ -224,6 +224,11 @@
 			if ( NOT LEN(FORM.threesquares) ) {
 				SESSION.formErrors.Add("Please indicate if you are prepared to provide three (3) quality meals per day");
 			}
+			
+			// Student Follow Dietary Restrictions
+			if ( NOT LEN(FORM.internetConnection) ) {
+				SESSION.formErrors.Add("Please indicate the type of internet connection you have in your home.");
+			}
         </cfscript>
         
         <!--- No Errors found --->
@@ -288,7 +293,8 @@
                     stuDietRest = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.stuDietRest#">,
                     stuDietRestDesc = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LEFT(FORM.stuDietRestDesc, 300)#">,
                     dietaryRestriction = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.dietaryRestriction#">,
-                    threesquares = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.threesquares#">
+                    threesquares = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.threesquares#">,
+                    internetConnection = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.internetConnection#">
                 WHERE 
                 	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
             </cfquery>
@@ -318,7 +324,8 @@
             FORM.stuDietRestDesc = qGetHostFamilyInfo.stuDietRestDesc;
             FORM.dietaryRestriction = qGetHostFamilyInfo.dietaryRestriction;
             FORM.threesquares = qGetHostFamilyInfo.threesquares;
-
+			FORM.internetConnection = qGetHostFamilyInfo.internetConnection;
+			
 			if ( qGetWhoIsSharingRoom.recordcount ) {
 				FORM.isStudentSharingBedroom = 1;
 				FORM.sharingWithID = qGetWhoIsSharingRoom.childID;
@@ -567,7 +574,25 @@
                 </td>
             </tr>
         </table>
-
+        <br />
+<h3>Internet</h3>
+    
+        <table width="100%" cellspacing="0" cellpadding="2" class="border">
+            <tr bgcolor="##deeaf3">
+                <td>
+                	What type of internet connection do you have in your home? <span class="required">*</span>
+                    
+                </td>
+                <td>
+                   <select name="internetConnection">
+                   <option value=""></option>
+                   <option value="High Speed - DSL/Cable/Sat/Wireless" <Cfif form.internetConnection is 'High Speed - DSL/Cable/Sat/Wireless'>selected</cfif>>High Speed - DSL/Cable/Sat/Wireless</option>
+                   <option value="Dial-Up" <Cfif form.internetConnection is 'Dial-Up'>selected</cfif>>Dial-Up</option>
+                   <option value="None" <Cfif form.internetConnection is 'None'>selected</cfif>>None</option>
+				</td>          
+            </tr>
+        </table> <br />
+        
         <!--- Check if FORM submission is allowed --->
         <cfif APPLICATION.CFC.UDF.allowFormSubmission(section=URL.section)>
             <table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
