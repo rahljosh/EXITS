@@ -53,7 +53,9 @@
 			if ( VAL(FORM.informReligiousPref) AND NOT VAL(FORM.religion) ) {
 				SESSION.formErrors.Add("Please indicate your religious preference");
 			}
-			
+			if ( VAL(FORM.religion) is 21 and NOT LEN(FORM.religionOther) ) {
+				SESSION.formErrors.Add("You indicated Other as a religious preference, but didn't specify what Other indicates.");
+			}
             // Difficult different religion
             if  ( NOT LEN(FORM.hostingDiff) ) {
 				SESSION.formErrors.Add("Please indicate if anyone in your household has difficulty with hosting a student whoms religious differs from your own.");
@@ -85,6 +87,18 @@
 				}
 			</cfscript>
             
+              <Cfif len(form.religionOther)>
+           		<Cfquery name="updateReligionList" datasource="#APPLICATION.DSN.Source#">
+                insert into smg_religions(religionName)
+                		values(<cfqueryparam cfsqltype="cf_sql_varchar" value="#form.religionOther#">)
+                </Cfquery> 
+                <cfquery name=ReligionID datasource="#APPLICATION.DSN.Source#">
+                select max(religionID) newReligionID
+                from smg_religions
+               
+                </cfquery>
+            </Cfif>
+            
             <cfquery datasource="#APPLICATION.DSN.Source#">
                 UPDATE 
                     smg_hosts
@@ -92,12 +106,18 @@
                     churchtrans = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.churchTrans#" null="#NOT IsBoolean(FORM.churchTrans)#">,
                     informReligiousPref = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.informReligiousPref#" null="#NOT LEN(FORM.informReligiousPref)#">,
                     hostingDiff = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.hostingDiff)#" null="#NOT LEN(FORM.hostingDiff)#">,
-                    religion = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.religion#" null="#NOT LEN(FORM.religion)#">,                 
                     religious_participation = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.religious_participation#">,
+                    <Cfif len(form.religionOther)>
+                     religion = <cfqueryparam cfsqltype="cf_sql_integer" value="#ReligionID.newReligionID#">,
+                    <cfelse>
+                     religion = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.religion#" null="#NOT LEN(FORM.religion)#">,
+                    </Cfif>
                     churchfam = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.churchfam#" null="#NOT IsBoolean(FORM.churchfam)#">
                 WHERE 
                     hostID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
             </cfquery>
+            
+          
                 
             <cfscript>
 				// Successfully Updated - Set navigation page
@@ -120,8 +140,18 @@
         
     </cfif>
 
-</cfsilent>    
-
+</cfsilent>   
+<script type="text/javascript"> 
+	$(document).ready(function(){
+		$('.box').hide();
+		
+		$('#dropdown').change(function() {
+			$('.box').hide();
+			$('#div' + $(this).val()).show();
+		});
+		
+	});
+</script>
 <cfoutput>
 
     <h2>Religious Affiliation</h2>
@@ -189,15 +219,20 @@
                 <tr bgcolor="##deeaf3" >
                     <td>What is your religious affiliation? <span class="required">*</span></td>
                     <td>                    
-                        <select name="religion" onChange="ShowHide();" class="largeField">
+                        <select name="religion" onChange="ShowHide();" class="largeField" id="dropdown">
                             <option value="" <cfif NOT LEN(FORM.religion)> selected </cfif> ></option>
                             <cfloop query="qGetReligionList">
                                 <option value="#qGetReligionList.religionid#" <cfif FORM.religion EQ qGetReligionList.religionid> selected </cfif>>#qGetReligionList.religionname#</option>
                             </cfloop>
+                            
                         </select>
                       </td>
-                </tr>        
+                </tr>     
+				<Tr bgcolor="##deeaf3" >
+                	<td colspan=2><cfif form.religion neq 21> <div id="div21" class="box" display="hidden"></cfif>If Other, please Specify: <input type="text" size=35 name='religionOther'/></div></td>
+                </Tr>
             </table>
+            	
         
             <br />
 		
