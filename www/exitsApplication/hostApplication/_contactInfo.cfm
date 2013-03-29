@@ -24,6 +24,9 @@
     <cfparam name="FORM.race" default="">
     <cfparam name="FORM.ethnicityOther" default="">
     <cfparam name="FORM.primaryLanguage" default="">
+    <!----Previous Hosting---->
+    <Cfparam name="FORM.previousHostingExperience" default="">
+    <Cfparam name="FORM.previousHosting" default="">
     <!--- Address --->
     <cfparam name="FORM.address" default="">
     <cfparam name="FORM.address2" default="">
@@ -138,7 +141,18 @@
 			if ( NOT LEN(TRIM(FORM.primaryLanguage)) ) {
 				SESSION.formErrors.Add("Please indicate what is the primary language spoken in your home.");
 			}
-
+			
+			// Previous Experience
+            if ( NOT LEN(FORM.previousHosting) ) {
+                SESSION.formErrors.Add("Please indicate if you have had pervious hosting experience.");
+			}
+			
+			// Previous Experience Desc
+            if (( FORM.previousHosting EQ 1) AND NOT LEN(TRIM(FORM.previousHostingExperience)) )  {
+                SESSION.formErrors.Add("You have indicated that you have had experience hosting, but have not provided details on previous hosting experience.");
+			}
+			
+			
 			// Functioning Business
             if ( NOT LEN(FORM.homeIsFunctBusiness) ) {
                 SESSION.formErrors.Add("Please indicate if your home is also a functioning business.");
@@ -367,6 +381,9 @@
                     <!--- Business --->
                     homeIsFunctBusiness = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.homeIsFunctBusiness#">,
                     homeBusinessDesc = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LEFT(FORM.homeBusinessDesc, 300)#">,
+                    <!----Previous Hosting Experience  ---->
+                    previousHosting = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.previousHosting#">,
+                    previousHostingExperience =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.previousHostingExperience#">,
                     <!--- Mailing Address --->
                     mailaddress = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.mailaddress#">,
                     mailaddress2 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.mailaddress2#">,
@@ -434,6 +451,8 @@
 			// FORM.password = qGetHostInfo.password;
 			FORM.homeIsFunctBusiness = qGetHostInfo.homeIsFunctBusiness;
 			FORM.homeBusinessDesc = qGetHostInfo.homeBusinessDesc;
+			FORM.previousHosting  = qGetHostInfo.previousHosting;
+			FORM.previousHostingExperience = qGetHostInfo.previousHostingExperience;
 			// Mailing Address --->
 			FORM.mailaddress = qGetHostInfo.mailaddress;
 			FORM.mailaddress2 = qGetHostInfo.mailaddress2;
@@ -539,7 +558,7 @@
         
         <h3>Name &amp; Contact Info</h3>
         
-        <span class="required">* Required fields &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; + One phone field is required</span>
+        <span class="required">* Required fields &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
         
         <table width="100%" cellspacing="0" cellpadding="2" class="border">
             <tr>
@@ -649,7 +668,34 @@
                     </select>
                 </td>
             </tr>
-        </table>  <br />
+            
+        </table>  
+ 
+
+        <br />
+
+         <h3>Previous Hosting Experience</h3>
+        
+        <table width="100%" cellspacing="0" cellpadding="2" class="border">
+            <tr bgcolor="##deeaf3">
+                <td class="label"><h3>Have you ever hosted a foreign exchange student before?<span class="required">*</span></h3> </td>
+                <td>
+                    <cfinput type="radio" name="previousHosting" id="previousHosting1" value="1" checked="#FORM.previousHosting eq 1#" onclick="document.getElementById('previousHostingExperience').style.display='table-row';"/>
+                    <label for="homeIsFunctBusiness1">Yes</label>        
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;        
+                    <cfinput type="radio" name="previousHosting" id="previousHosting0" value="0" checked="#FORM.previousHosting eq 0#" onclick="document.getElementById('previousHostingExperience').style.display='none';" />
+                    <label for="previousHostingExperience0">No</label>
+                </td>
+            </tr>
+            <tr>
+                <td align="left" id="previousHostingExperience" <cfif FORM.previousHosting is ''>class="displayNone"</cfif>>
+                    <strong>Please list the organizations you've worked with and how many <br /> kids you hosted with each organization.<span class="required">*</span></strong><br />
+                    <textarea cols="50" rows="4" name="previousHostingExperience" placeholder="International Student Exchange, 5">#FORM.previousHostingExperience#</textarea>
+                </td>
+            </tr>   
+        </table>
+
+         <br />
         
         <h3>Home Based Business</h3>
         
