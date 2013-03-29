@@ -211,12 +211,12 @@ div.loginBox label {
 #logoBoxB {
 	background-image: url(../../images/logobox.png);
 	background-repeat: no-repeat;
-	width: 1050px;
+	width: 200px;
 	z-index: 50;
-	display: block;
+	display: inline-block;
 	clear: both;
 	position: relative;
-	margin-right: auto;
+	margin-right: 850px;
 	margin-left: auto;
 	padding: 0px;
 	top: 0px;
