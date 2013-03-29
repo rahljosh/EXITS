@@ -5,7 +5,7 @@
 	<div class="clear"></div>
 
     <cfoutput>
-    <div id="bottomLinks">
+    <div id="bottomLinks" style="margin-top: 10px;>
         <a href="#APPLICATION.siteURL#" class="bottomLinks1"></a>
         <a href="#APPLICATION.siteURL#about-ISE.cfm" class="bottomLinks2"></a>
         <a href="#APPLICATION.siteURL#contact-ISE.cfm" class="bottomLinks3"></a>
