@@ -10,6 +10,7 @@
         <a href="#APPLICATION.siteURL#about-ISE.cfm" class="bottomLinks2"></a>
         <a href="#APPLICATION.siteURL#contact-ISE.cfm" class="bottomLinks3"></a>
         <a href="#APPLICATION.siteURL#scholarships.cfm" class="bottomLinks4"></a>
+        <a href="#APPLICATION.siteURL#job-opportunities.cfm" class="bottomLinks6"></a>
         <!---<a href="#APPLICATION.siteURL#international-student-grants.cfm" class="bottomLinks5"></a>--->
     </cfoutput>
     
