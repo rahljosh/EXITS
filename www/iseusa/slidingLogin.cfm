@@ -26,176 +26,27 @@
       $('#forgot_username_link').tipsy({gravity: 'w'});
     });
  </script>
+ 
+   	<link rel="stylesheet" href="css/style.css" type="text/css" media="screen" />
+  	<link rel="stylesheet" href="css/slide.css" type="text/css" media="screen" />
 </head>
 
 <body>
-<style type="text/css">
-#login_container {
-    width:700px;
-    margin:0 auto;
-    position: relative;
-}
-
-#content {
-    width:520px;
-    min-height:500px;
-}
-a:link, a:visited {
-    color:#27b;
-    text-decoration:none;
-}
-a:hover {
-    text-decoration:underline;
-}
-a img {
-    border-width:0;
-}
-#topnav {
-    padding:10px 0px 12px;
-    font-size:11px;
-    line-height:23px;
-    text-align:right;
-}
-#topnav a.signin {
-    background:#88bbd4;
-    padding:4px 6px 6px;
-    text-decoration:none;
-    font-weight:bold;
-    color:#fff;
-    -webkit-border-radius:4px;
-    -moz-border-radius:4px;
-    border-radius:4px;
-    *background:transparent url("images/signin-nav-bg-ie.png") no-repeat 0 0;
-    *padding:4px 12px 6px;
-}
-#topnav a.signin:hover {
-    background:#59B;
-    *background:transparent url("images/signin-nav-bg-hover-ie.png") no-repeat 0 0;
-    *padding:4px 12px 6px;
-}
-#topnav a.signin, #topnav a.signin:hover {
-    *background-position:0 3px!important;
-}
-
-a.signin {
-    position:relative;
-    margin-left:3px;
-}
-a.signin span {
-    background-image:url("images/toggle_down_light.png");
-    background-repeat:no-repeat;
-    background-position:100% 50%;
-    padding:4px 16px 6px 0;
-}
-#topnav a.menu-open {
-    background:#ddeef6!important;
-    color:#666!important;
-    outline:none;
-}
-#small_signup {
-    display:inline;
-    float:none;
-    line-height:23px;
-    margin:25px 0 0;
-    width:170px;
-}
-a.signin.menu-open span {
-    background-image:url("images/toggle_up_dark.png");
-    color:#789;
-}
-
-/****Login Form****/
-#signin_menu {
-    -moz-border-radius-topleft:5px;
-    -moz-border-radius-bottomleft:5px;
-    -moz-border-radius-bottomright:5px;
-    -webkit-border-top-left-radius:0px;
-    -webkit-border-bottom-left-radius:0px;
-    -webkit-border-bottom-right-radius:5px;
-    display:none;
-    background-color:#afcee3;
-    position:absolute;
-    width:210px;
-    z-index:100;
-    border:1px transparent;
-    text-align:left;
-    padding:12px;
-    top: 24.5px; 
-    right: 0px; 
-    margin-top:5px;
-    margin-right: 0px;
-    *margin-right: -1px;
-    color:#789;
-    font-size:11px;
-}
-
-#signin_menu input[type=text], #signin_menu input[type=password] {
-    display:block;
-    -moz-border-radius:4px;
-    -webkit-border-radius:4px;
-    border:1px solid #ACE;
-    font-size:13px;
-    margin:0 0 5px;
-    padding:5px;
-    width:203px;
-}
-#signin_menu p {
-    margin:0;
-}
-#signin_menu a {
-    color:#6AC;
-}
-#signin_menu label {
-    font-weight:normal;
-}
-#signin_menu p.remember {
-    padding:10px 0;
-}
-#signin_menu p.forgot, #signin_menu p.complete {
-    clear:both;
-    margin:5px 0;
-}
-#signin_menu p a {
-    color:#27B!important;
-}
-#signin_submit {
-    -moz-border-radius:4px;
-    -webkit-border-radius:4px;
-    background:#39d url('images/bg-btn-blue.png') repeat-x scroll 0 0;
-    border:1px solid #39D;
-    color:#fff;
-    text-shadow:0 -1px 0 #39d;
-    padding:4px 10px 5px;
-    font-size:11px;
-    margin:0 5px 0 0;
-    font-weight:bold;
-}
-#signin_submit::-moz-focus-inner {
-padding:0;
-border:0;
-}
-#signin_submit:hover, #signin_submit:focus {
-    background-position:0 -5px;
-    cursor:pointer;
-}
-</style>
 
 
 	<!-- stylesheets -->
-  	<link rel="stylesheet" href="http://111cooper.com/css/style.css" type="text/css" media="screen" />
-  	<link rel="stylesheet" href="http://111cooper.com/css/slide.css" type="text/css" media="screen" />
+
 	
   	<!-- PNG FIX for IE6 -->
   	<!-- http://24ways.org/2007/supersleight-transparent-png-in-ie6 -->
 	<!--[if lte IE 6]>
 		<script type="text/javascript" src="js/pngfix/supersleight-min.js"></script>
 	<![endif]-->
-	 
-    <!-- jQuery - the core -->
+	
+	    <!-- jQuery - the core -->
 	<script src="js/jquery-1.3.2.min.js" type="text/javascript"></script>
 	<!-- Sliding effect -->
 	<script src="js/slide.js" type="text/javascript"></script>
-
 </head>
 
 <body>
@@ -208,8 +59,10 @@ border:0;
 					
 				<p class="grey">If you would like to be a host family, but do not have an account, you can create an acocunt here and start the application process right now. <Br />
                 <a href="meet-our-students.cfm">Get started here</a></p>
+                <br>
+                <!----
                 <p class="grey">Students, please contact an agent in your home country to get started on the path to becoming an exchange student. <Br />
-                <a href="">Find an organization in your country</a></p>
+                <a href="">Find an organization in your country</a></p>---->
                 <p class="grey">Looking to travel abroad? Visit our Outbound site for more information <Br />
                 <a href="mailto:john@iseusa.com">Outbound Programs</a></p>
 				
@@ -219,7 +72,7 @@ border:0;
 				<!-- Login Form -->
 				<form class="clearfix" action="" method="post">
 					<h1>Reps & Managers</h1>
-					<a href="http://111cooper.com/login.cfm"><img src="images/exitslogo.png" width="200" height="94" alt="exitslogo" border="0"></a>
+					<a href="http://ise.exitsapplication.com/login.cfm"><img src="images/exitslogo.png" width="200" height="94" alt="exitslogo" border="0"></a>
 				</form>
 			</div>
 			<div class="left right">			
@@ -244,7 +97,7 @@ border:0;
 		<ul class="login">
 			<li class="left">&nbsp;</li>
             <cfoutput>
-			<li><cfif isDefined('client.hostfam')>
+			<li><br><cfif isDefined('client.hostfam')>
             		<cfif client.hostfam is not ''>
                     #client.hostFam# Family
                   	<cfelse>
