@@ -115,7 +115,20 @@
                         smg_hosts
                     SET 
                         hostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="8">,
-                        applicationStarted = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+                        applicationStarted = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
+                        active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                    WHERE 
+                        hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qLoginHostFamily.hostID)#">
+                </cfquery>
+                
+           	<cfelse>
+            	
+                <!--- Ensure that the family is made active if they log in --->
+                <cfquery datasource="#APPLICATION.DSN.Source#">
+                    UPDATE 
+                        smg_hosts
+                    SET 
+                        active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                     WHERE 
                         hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qLoginHostFamily.hostID)#">
                 </cfquery>
