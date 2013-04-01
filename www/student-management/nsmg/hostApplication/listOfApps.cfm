@@ -64,6 +64,19 @@
 		qGetHostApplications = APPLICATION.CFC.HOST.getApplicationList(statusID=URL.status);	
     </cfscript>
     
+    <cfparam name="FORM.notHosting" default="0">
+    <cfif VAL(FORM.notHosting)>
+    	<script type="text/javascript">
+			alert("At least it got here");
+		</script>
+    	<cfquery datasource="#APPLICATION.DSN#">
+            UPDATE smg_hosts
+            SET active = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+            WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.notHosting#">
+        </cfquery>
+        <cflocation url="?#CGI.QUERY_STRING#"/>
+    </cfif>
+    
 </cfsilent>    
 
 <script type="text/javascript">
@@ -179,6 +192,16 @@
                                 </form>
                             	<a href="javascript:setRecordToPaperApplication(#qGetHostApplications.hostID#);"><img src="pics/buttons/convertPaper.png" border="0"></a>
                             </cfif>
+                            
+                            <form 
+                            	action="index.cfm?curdoc=hostApplication/listOfApps&status=#URL.status#" 
+                                method="post" 
+                                style="display:inline;" 
+                                onsubmit="return confirm('Are you sure this family does not want to host this year?')"
+                                id="notHostingForm">
+                                <input type="hidden" name="notHosting" value="#qGetHostApplications.hostID#"/>
+                            	<input type="image" src="pics/buttons/notHosting.png" width="110" border="0"/>
+                            </form>
                         </td>
             		</tr>
             	</cfloop>
