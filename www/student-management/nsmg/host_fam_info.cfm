@@ -167,173 +167,59 @@
     </cfquery>
 
 </cfsilent>
-<!----send EMail to Host Fam to update application.  CHeck for password first.---->
 
-<cfif isDefined('sendAppEmail')>
+<!--- Check if decided to host was clicked because the email should also be sent out in this case. --->
+<cfset goingToHost = 0>
+<cfif isDefined('decideToHost')>
+	<cfif FORM.decideToHost EQ 0>
+    	<cfset goingToHost = 0>
+    <cfelse>
+    	<cfset goingToHost = 1>
+    </cfif>
+</cfif>
 
-		<cfquery datasource="#APPLICATION.DSN#">
-        	UPDATE smg_hosts
-            SET 
-            	<cfif VAL(family_info.hostAppStatus)>
-            		hostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="8">,
-              	<cfelse>
-                    hostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="9">,
-                    applicationSent = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
-               	</cfif>
-            	areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
-                <cfif family_info.password is ''>
-                	, password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#strPassword#">
-                </cfif>
-           	WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(family_info.hostID)#">
-        </cfquery>
-        <cfquery name="qGetUpdatedPassword" datasource="#APPLICATION.DSN#">
-        	SELECT password
-            FROM smg_hosts
-            WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(family_info.hostID)#">
-        </cfquery>
-        
-                    <cfsavecontent variable="hostWelcome">
-                    
-						<style type="text/css">
-                         .rdholder {
-                            height:auto;
-                            width:auto;
-                            margin-bottom:25px;
-                            margin-top: 15px;
-                         } 
-                        
-                        
-                         .rdholder .rdbox {
-                            border-left:1px solid #c6c6c6;
-                            border-right:1px solid #c6c6c6;
-                            padding:2px 15px;
-                            margin:0;
-                            display: block;
-                            min-height: 137px;
-                         } 
-                        
-                         .rdtop {
-                            width:auto;
-                            height:20px;
-                            /* -webkit for Safari and Google Chrome */
-                        
-                          -webkit-border-top-left-radius:12px;
-                            -webkit-border-top-right-radius:12px;
-                            /* -moz for Firefox, Flock and SeaMonkey  */
-                        
-                          -moz-border-radius-topright:12px;
-                            -moz-border-radius-topleft:12px;
-                            background-color: #FFF;
-                            color: #006699;
-                            border-top-width: 1px;
-                            border-right-width: 1px;
-                            border-bottom-width: 0px;
-                            border-left-width: 1px;
-                            border-top-style: solid;
-                            border-right-style: solid;
-                            border-bottom-style: solid;
-                            border-left-style: solid;
-                            border-top-color: #c6c6c6;
-                            border-right-color: #c6c6c6;
-                            border-bottom-color: #c6c6c6;
-                            border-left-color: #c6c6c6;
-                         } 
-                        
-                         .rdtop .rdtitle {
-                            margin:0;
-                            line-height:30px;
-                            font-family:Arial, Geneva, sans-serif;
-                            font-size:20px;
-                            padding-top: 5px;
-                            padding-right: 10px;
-                            padding-bottom: 0px;
-                            padding-left: 10px;
-                            color: #006699;
-                         }
-                        
-                         .rdbottom {
-                        
-                          width:auto;
-                          height:10px;
-                          border-bottom: 1px solid #c6c6c6;
-                          border-left:1px solid #c6c6c6;
-                          border-right:1px solid #c6c6c6;
-                           /* -webkit for Safari and Google Chrome */
-                        
-                          -webkit-border-bottom-left-radius:12px;
-                          -webkit-border-bottom-right-radius:12px;
-                        
-                        
-                         /* -moz for Firefox, Flock and SeaMonkey  */
-                        
-                          -moz-border-radius-bottomright:12px;
-                          -moz-border-radius-bottomleft:12px; 
-                         
-                         }
-                        
-                        .clearfix {
-                            display: block;
-                            height: 5px;
-                            width: 500px;
-                            clear: both;
-                        }
-                        .rdholder .rdbox p, li, td {
-                            font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
-                            font-size: .80em;
-                            padding-top: 0px;
-                            padding-right: 20px;
-                            padding-bottom: 0px;
-                            padding-left: 20px;
-                        }
-                        
-                        </style>
-                        
-        
-                        <div class="rdholder" style="width: 595px;"> 
-                                        <div class="rdtop"> </div> <!-- end top --> 
-                                     <div class="rdbox">
-                        <cfoutput>
-                        
-                           <p><strong> <cfif family_info.fatherfirstname is not ''>#family_info.fatherfirstname#</cfif><Cfif family_info.fatherfirstname is not '' and family_info.motherfirstname is not ''> and</Cfif> <cfif family_info.motherfirstname is not ''>#family_info.motherfirstname#</cfif>-</strong></p>
-                           
-                            <p>I am so excited that you have decided to host a student!</p>
-                            
-                            <p>Everytime you host a student, we require host families to update the information, if needed, that we have on file</p>
-                            
-                            <p>We are required by the Department of State to collect the following information:</p>
-                            <ul>
-                            <li>a background check on any person who is 17 years of age or older and who is living in the home. 
-                            <li>pictures of certain areas of your home and property to reflect where the student will be living.  
-                            <li>basic financial and financial aid information on your family
-                            </ul>
-                            At the end of this email, you will find login information that will allow you to update any information that has changed and to provide new information that may be required since you last hosted. 
-                          
-                           <p>The application process can take any where from 15-60 minutes to complete depending on the information needed and number of pictures you submit.</p> 
-                            
-                            <p>You can always come back to the  application at a later time to complete it or change any information  that you want.  Please keep in mind though, that once the application is  submitted, you will no longer be able to change any information on the  application. </p>
-          <p><em> We have just launched this electronic  host family application, and you are one of the first families to use  this new tool.  Please bear with  us as we work out the final bugs. Should you get any errors or feel  that something is confusing, please feel free to let us know how we can  improve the process.  There is a live chat and email support available  through the application if you need immediate assistance while filling  out the application.  Any and all feedback would be greatly appreciated.</em></p>
-                            
-                              <div style="display: block; float: left; width: 250px;  padding: 10px;  font-family:Arial, Helvetica, sans-serif; font-size: .80em"> <strong><em>To start filling out your application, please click on the following link:</em></strong><br /><br />
-         <Cfif client.companyid eq 10><a href="http://www.case-usa.org/hostApplication/" target="_blank"><cfelse><a href="https://www.iseusa.com/hostApplication/" target="_blank"></cfif><img src="#client.exits_url#/nsmg/pics/hostAppEmail.jpg" width="200" height="56" border="0"></a> <br /></div>
-         <div style="display: block; float: right; width: 270px; padding: 10px; font-family:Arial, Helvetica, sans-serif; font-size: .80em; border: thin solid ##CCC;"><div><strong><em>Please use the following login information:</em></strong></div><br /><br />
-<div style="width: 50px; float: left;"><img src="#client.exits_url#/nsmg/pics/lock.png" width="39" height="56"></div>
-   <div> <strong>Username / Email:</strong><br /> #family_info.email#<br />
-  <strong>Password:<br /></strong>#qGetUpdatedPassword.password#</div>
+<!--- Send email to host family and update application, check for password first. --->
+<cfif isDefined('sendAppEmail') OR goingToHost EQ 1>
 
-</div>
+	<cfquery datasource="#APPLICATION.DSN#">
+    	UPDATE smg_hosts
+      	SET 
+			<cfif NOT VAL(family_info.hostAppStatus)>
+                hostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="9">,
+                applicationSent = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
+            </cfif>
+            areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+            <cfif family_info.password is ''>
+                , password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#strPassword#">
+            </cfif>
+  		WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(family_info.hostID)#">
+	</cfquery>
+    <cfquery name="qGetUpdatedPassword" datasource="#APPLICATION.DSN#">
+        SELECT password
+        FROM smg_hosts
+        WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(family_info.hostID)#">
+    </cfquery>
+ 	<cfscript>
+		APPLICATION.CFC.HOST.sendWelcomeLetter(
+			email=#family_info.email#,
+			password=#qGetUpdatedPassword.password#,
+			fatherFirstName=#family_info.fatherFirstName#,
+			motherFirstName=#family_info.motherFirstName#);
+	</cfscript>
+    <!--- Only reload the page if it does not need to change the host family's active status --->
+    <cfif NOT isDefined('decideToHost')>
+    	<cflocation url="?#CGI.QUERY_STRING#"/>
+    </cfif>                  
+</cfif>
 
-               
-                        </cfoutput>
-                    </cfsavecontent>
-             
-                    <cfinvoke component="nsmg.cfc.email" method="send_mail">
-                        <cfinvokeargument name="email_to" value="#family_info.email#">
-                        <cfinvokeargument name="email_subject" value="Host Family Application">
-                        <cfinvokeargument name="email_message" value="#hostWelcome#">
-                        <cfinvokeargument name="email_from" value="#CLIENT.email#">
-                    </cfinvoke>
-                    
-                </cfif>
+<cfif isDefined('decideToHost')>
+	<cfquery datasource="#APPLICATION.DSN#">
+    	UPDATE smg_hosts
+        SET active = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.decideToHost)#">
+        WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#family_info.hostID#">
+    </cfquery>
+    <cflocation url="?#CGI.QUERY_STRING#"/>
+</cfif>
 
 
 <cfif not isNumeric(url.hostID)>
@@ -460,10 +346,12 @@ div.scroll2 {
                     <td height="24" width="26" background="pics/header_background.gif"><img src="pics/family.gif"></td>
                     <td background="pics/header_background.gif"><h2>&nbsp;&nbsp;Host Family Information</h2></td>
                     <td background="pics/header_background.gif" style="text-align:right">
-                    	<span class="buttonBlue smallerButton" onclick="window.location.href='?curdoc=hostApplication/toDoList&hostID=#family_info.hostID#'">
-                        	Open eHost Application
-                       	</span>
-                        &nbsp;
+                    	<cfif VAL(family_info.hostAppStatus)>
+                            <span class="buttonBlue smallerButton" onclick="window.location.href='?curdoc=hostApplication/toDoList&hostID=#family_info.hostID#'">
+                                Open eHost Application
+                            </span>
+                        	&nbsp;
+                       	</cfif>
                         <span class="buttonBlue smallerButton" onclick="window.location.href='?curdoc=forms/host_fam_form&hostID=#family_info.hostID#'">
                         	Edit
                       	</span>
@@ -577,8 +465,6 @@ div.scroll2 {
                             <tr><td>Address:</td><td><cfif get_school.address is ''>n/a<cfelse>#get_school.address#</cfif></td></tr>
                             <tr><td>City:</td><td><cfif get_school.city is ''>n/a<cfelse>#get_school.city#</cfif></td></tr>
                             <tr><td>State:</td><td><cfif get_school.state is ''>n/a<cfelse>#get_school.state#</cfif></td></tr>
-                            <tr><td>&nbsp;</td></tr>
-                            <tr><td>&nbsp;</td></tr>
                             <tr><td>&nbsp;</td></tr>
                             <tr><td>&nbsp;</td></tr>
                         </table>				
@@ -844,23 +730,32 @@ div.scroll2 {
                             <input type="checkbox" disabled="disabled" /> Not Qualified
                         </td>
                         <td>
-                        	<!---
-                            <Cfif (CLIENT.usertype eq 1 OR listFind(allowedUsers, CLIENT.userID) OR listFind(allowedRegions, CLIENT.regionID) OR CLIENT.userID EQ family_info.arearepid )>
-							--->
-                                <cfif isDefined('sendAppEmail')>
-                                    <strong><em>Link to application was sent succesfully.</em> </strong>
-                                <cfelse>
+                            <cfif (CLIENT.usertype eq 1 OR listFind(allowedUsers, CLIENT.userID) OR listFind(allowedRegions, CLIENT.regionID) OR CLIENT.userID EQ family_info.arearepid )>
+                                <cfif VAL(family_info.active)>
+                                    <form 
+                                        method="post" 
+                                        action="index.cfm?curdoc=host_fam_info&hostid=#url.hostid#" 
+                                        style="display:inline;" 
+                                        onsubmit="return confirm('Are you sure this family does not want to host this year?')">
+                                        <input type="hidden" name="decideToHost" value="0"/>
+                                        <input type="submit" value="Decided Not To Host"  alt="Decided Not To Host" border="0" class="buttonRed" />
+                                    </form>
                                     <cfif VAL(family_info.hostAppStatus)>
-                                        <form method="post" action="index.cfm?curdoc=host_fam_info&hostid=#url.hostid#">
-                                        <input name="sendAppEmail" type="submit" value="Resend Login Info"  alt="Resend Login Info" border="0" class="buttonGreen" /></form>
+                                        <form method="post" action="index.cfm?curdoc=host_fam_info&hostid=#url.hostid#" style="display:inline;">
+                                            <input name="sendAppEmail" type="submit" value="Resend Login Info"  alt="Resend Login Info" border="0" class="buttonGreen" />
+                                        </form>
                                     <cfelse>
-                                        <form method="post" action="index.cfm?curdoc=host_fam_info&hostid=#url.hostid#">
-                                        <input name="sendAppEmail" type="submit" value="Convert to eHost"  alt="Convert to eHost" border="0" class="buttonYellow" /></form>
+                                        <form method="post" action="index.cfm?curdoc=host_fam_info&hostid=#url.hostid#" style="display:inline;">
+                                            <input name="sendAppEmail" type="submit" value="Convert to eHost"  alt="Convert to eHost" border="0" class="buttonYellow" />
+                                        </form>
                                     </cfif>
+                                <cfelse>
+                                    <form method="post" action="index.cfm?curdoc=host_fam_info&hostid=#url.hostid#" style="display:inline;">
+                                        <input type="hidden" name="decideToHost" value="1"/>
+                                        <input type="submit" value="Decided To Host"  alt="Decided To Host" border="0" class="buttonYellow" />
+                                    </form>
                                 </cfif>
-                           	<!---        
-                            </Cfif>
-							--->
+                            </cfif>
                         </td>
                 </tr>
                 <cfelse>
