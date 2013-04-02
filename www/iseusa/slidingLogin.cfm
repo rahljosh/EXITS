@@ -57,7 +57,8 @@
 			<div class="left">
 				
 					
-				<p class="grey">If you would like to be a host family, but do not have an account, you can create an acocunt here and start the application process right now. <Br />
+					<p class="grey">If you would like to be a host family, but do not have an account:
+ <Br />
                 <a href="meet-our-students.cfm">Get started here</a></p>
                 <br>
                 <!----
@@ -65,28 +66,37 @@
                 <a href="">Find an organization in your country</a></p>---->
                 <p class="grey">Looking to travel abroad? Visit our Outbound site for more information <Br />
                 <a href="mailto:john@iseusa.com">Outbound Programs</a></p>
-				
+			
 				
 			</div>
 			<div class="left">
-				<!-- Login Form -->
-				<form class="clearfix" action="" method="post">
-					<h1>Reps & Managers</h1>
-					<a href="http://ise.exitsapplication.com/login.cfm"><img src="images/exitslogo.png" width="200" height="94" alt="exitslogo" border="0"></a>
+				<!-- Staff Form -->
+				
+				<form class="clearfix" action="https://ise.exitsapplication.com/login.cfm" method="post">
+                <input type="hidden" name="login_submitted" value=1>
+					<h1>Students & Field Staff</h1>
+					<label class="grey" for="log">Username:</label>
+					<input class="field" type="text" name="username" id="log" value="" size="23" />
+					<label class="grey" for="pwd">Password:</label>
+					<input class="field" type="password" name="password" id="pwd" size="23" />
+	            	<div class="clear"></div>
+					<input type="submit" name="submit" value="Login" class="bt_login" />
+					<a class="lost-pwd" href="https://ise.exitsapplication.com/login.cfm?forgot=1">Forgot your password?</a>
 				</form>
 			</div>
 			<div class="left right">			
 				<!-- Register Form -->
-				<form class="clearfix" action="hostApp/index.cfm?hello" method="post">
-                <input type="hidden" name="processLogin">
-					<h1>Host Family Login</h1>
+				<form class="clearfix" action="https://www.iseusa.com/hostApplication/index.cfm?section=login" method="post">
+                <input type="hidden" name="submitted" value=1>
+					<h1>Host Families</h1>
 					<label class="grey" for="log">Email:</label>
 					<input class="field" type="text" name="username" id="log" value="" size="23" />
 					<label class="grey" for="pwd">Password:</label>
 					<input class="field" type="password" name="password" id="pwd" size="23" />
 	            	<div class="clear"></div>
 					<input type="submit" name="submit" value="Login" class="bt_login" />
-					<a class="lost-pwd" href="##">Forgot your password?</a>
+					<a class="lost-pwd" href="https://www.iseusa.com/hostApp">Forgot your password?</a>
+                    
 				</form>
 			</div>
 		</div>
@@ -96,19 +106,10 @@
 	<div class="tab">
 		<ul class="login">
 			<li class="left">&nbsp;</li>
-            <cfoutput>
-			<li><br><cfif isDefined('client.hostfam')>
-            		<cfif client.hostfam is not ''>
-                    #client.hostFam# Family
-                  	<cfelse>
-             		Hello Guest!
-                	 </cfif>
-             <cfelse>
-             Hello Guest!
-             </cfif>       
-             </li>
-             </cfoutput>
-			<li class="sep">|</li>
+ 
+			<li><br><font color="#FFFFFF">Welcome!</font></li>
+       
+			<li class="sep"><br>|</li>
 			<li id="toggle">
             <cfoutput>
             <cfif isDefined('client.hostfam')>
