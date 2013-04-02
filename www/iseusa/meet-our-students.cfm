@@ -162,10 +162,21 @@
         	smg_states
     </cfquery>
 
-	
+
     
     <cfif FORM.type EQ 'newAccount'>
+  
+	<cfquery name="checkEmail" datasource="MySQL">
+    select *
+    from smg_host_lead
+    where email = "#form.email#"
+    </cfquery>
 
+    <cfif checkEmail.recordcount gt 0>
+   		<cfcookie name="iseLead" expires="never" domain=".iseusa.com" value="#FORM.email#">
+        <cflocation url="https://www.iseusa.com/viewStudents.cfm" addtoken="no">
+    </cfif>
+    
     	<!--- FORM Validation --->
 		<cfscript>
             // Data Validation
@@ -317,7 +328,7 @@
                         <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
                     )		
                 </cfquery>
-                
+             
                 <cfscript>
 					//Create Host Object
 					//h = createObject("component","extensions.components.host");
@@ -325,7 +336,7 @@
 					// Insert Hash ID and Initial Comment
 					APPLICATION.CFC.HOST.setHostLeadDataIntegrity(ID=newRecord.GENERATED_KEY);
 				</cfscript>
-                
+   
              <cfcookie name="iseLead" expires="never" domain=".iseusa.com" value="#FORM.email#">
              
              <cfsavecontent variable="vEmailMessage">
@@ -350,7 +361,7 @@
                     <cfinvokeargument name="email_message" value="#vEmailMessage#">
                     <cfinvokeargument name="email_from" value="International Student Exchange <#AppEmail.support#>">
                 </cfinvoke>
-             
+       
              <cfscript>
              	location("viewStudents.cfm", "no");
               </cfscript>
