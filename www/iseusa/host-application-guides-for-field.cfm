@@ -24,7 +24,7 @@
 	---->
     <p class="p1">
     We have prepared a few documents to help you get comfortable with the new host family application and the process of moving through EXITS.  You will initiate the application, help the host family with any questions they may have, and then review the information online and submit it to headquarters. <br /><br />
-    The Quick Start Guide is a 1 page summary of the process, while the other two guides are more in-depth on each step of the process. <br />
+    The Quick Start Guide is a one page summary of the process, while the other two guides are more in-depth on each step of the process. <br />
     <br />
     Simply select which type of host family you are interacting with and you'll be set!
     <div align="center">
