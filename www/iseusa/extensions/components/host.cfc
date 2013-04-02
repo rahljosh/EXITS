@@ -2740,7 +2740,7 @@
                 UPDATE
                     smg_host_lead
                 SET
-                    hashID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.hashID(qGetHostNoHashID.ID)#">
+                    hashID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.generateHashID(qGetHostNoHashID.ID)#">
                 WHERE
                     ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostNoHashID.ID#">
             </cfquery>
