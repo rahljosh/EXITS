@@ -2767,15 +2767,14 @@
                             foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="smg_host_lead">
                     ) 
         </cfquery>
-				<cfdump var="#application#">
-                <cfabort>
+				
 		<cfscript>
 			// Loop through query
             For ( i=1; i LTE qGetHostNoHistory.recordCount; i++ ) {
 				
 				// Insert Initial Comment
                 APPLICATION.CFC.LOOKUPTABLES.insertApplicationHistory(
-                    applicationID=APPLICATION.CONSTANTS.TYPE.hostFamilyLead,
+                    applicationID=6,
                     foreignTable='smg_host_lead',
                     foreignID=qGetHostNoHistory.ID[i],
                     actions='Status: Initial - Host Lead Received',
