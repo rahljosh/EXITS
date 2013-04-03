@@ -136,7 +136,7 @@
 		
 		if ( VAL(qGetPlacementHistoryByID.hostID) ) {
 			// Get Host Family Information
-			qGetHostInfo = APPLICATION.CFC.HOST.getHosts(hostID=qGetPlacementHistoryByID.hostID);
+			qGetHostInfo = APPLICATION.CFC.HOST.getHosts(hostID=qGetPlacementHistoryByID.hostID, active="all");
 				
 			// Get Host Kids at Home
 			qGetHostKidsAtHome = APPLICATION.CFC.HOST.getHostMemberByID(hostID=qGetPlacementHistoryByID.hostID,liveAtHome='yes');

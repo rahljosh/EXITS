@@ -30,6 +30,7 @@
     	<cfargument name="hostID" default="" hint="HostID is not required">
         <cfargument name="regionID" default="" hint="regionID is not required">
         <cfargument name="companyID" default="" hint="CompanyID is not required">
+        <cfargument name="active" default="1" hint="active is not required, all returns all hosts">
         
         <cfquery 
 			name="qGetHosts" 
@@ -39,7 +40,11 @@
                 FROM 
                     smg_hosts
                 WHERE
-                	active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                	1 = 1
+				<cfif ARGUMENTS.active NEQ "all">
+                    AND 
+                    	active = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.active)#">
+                </cfif>
                  
                 <cfif LEN(ARGUMENTS.hostID)>
                     AND
