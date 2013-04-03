@@ -8,7 +8,7 @@
 				<th colspan="2" align="center" bgcolor="#bde2ac">Waiting on <cfoutput>#CLIENT.company_submitting#</cfoutput></th>
 			</tr>
 			<tr>
-				<th valign="top">Started</th>
+				<th valign="top">Not Started</th>
 				<th valign="top">Host</th>                
 				<th valign="top">Area Rep.</th>
                 <th valign="top">Advisor</th>
