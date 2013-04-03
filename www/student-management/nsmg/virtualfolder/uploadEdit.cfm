@@ -164,7 +164,7 @@ where id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.docType#">
        <!--- EMAIL FACILITATORS TO LET THEM KNOW THERE IS A DOCUMENT ---->
        
        <cfquery name="qGetCategory" datasource="#application.dsn#">
-       select documenttype
+       select documenttype, viewPermissions
        from virtualfolderdocuments
        where id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.docType#">
        </cfquery>
@@ -242,8 +242,8 @@ where id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.docType#">
     <!----End of Email---->
     
     
-    <!--- Email International Representative if file has been upload by Office and in Production Environment --->
-	<cfif ListFind("1,2,3,4,5,6,7", CLIENT.userType) AND NOT APPLICATION.isServerLocal>
+    <!--- Email International Representative if file has been upload by Office and in Production Environment and Int Rep is in view Permissions--->
+	<cfif ListFind("1,2,3,4,5,6,7", CLIENT.userType) AND NOT APPLICATION.isServerLocal AND listFind(qGetCategory.viewPermissions, 8)>>
     <cfoutput>
         <cfsavecontent variable="email_message">
             This e-mail is just to let you know a new document has been uploaded into #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname#'s (###qGetStudentInfo.studentid#) virtual folder by #qGetUser.businessname# #qGetUser.firstname# #qGetUser.lastname#.
