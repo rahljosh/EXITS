@@ -14,23 +14,9 @@
     <cfparam name="FORM.email" default="">
 
     <cfscript>
-		// Get Program List
 		qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(companyID=CLIENT.companyID);
+		qGetHostCompanyList = APPLICATION.CFC.HOSTCOMPANY.getHostCompanies(companyID=CLIENT.companyID);
 	</cfscript>
-
-    <cfquery name="qGetHostCompanyList" datasource="#APPLICATION.DSN.Source#">
-        SELECT 
-        	hostcompanyID, 
-            name 
-        FROM 
-        	extra_hostcompany 
-        WHERE         	
-            companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-        AND 
-        	name != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
-		ORDER BY 
-        	name
-    </cfquery>
 
     <!--- FORM submitted --->
     <cfif FORM.submitted>

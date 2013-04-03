@@ -109,7 +109,9 @@
                 ej.title AS jobTitle,          
                 u.businessName,
                 conf.confirmed,
-                j1.numberPositions
+                conf.confirmedDate,
+                j1.numberPositions,
+                j1.verifiedDate
             FROM
                 extra_candidates ec
             LEFT OUTER JOIN
@@ -392,7 +394,7 @@
                         <th align="left" class="#tableTitleClass#">Job Title</th>
                         <th align="left" class="#tableTitleClass#">Placement Date</th>                        
                         <th align="left" class="#tableTitleClass#">Job Offer Status</th>
-                        <cfif FORM.selfJobOfferStatus NEQ 'pending'>
+                        <cfif FORM.selfJobOfferStatus NEQ "pending" AND FORM.selfJobOfferStatus NEQ "confirmed" AND FORM.selfJobOfferStatus NEQ "rejected">
                         	<th align="left" class="#tableTitleClass#">Contact Date</th>
                         </cfif>
                         <th align="left" class="#tableTitleClass#">Contact Name</th>
@@ -401,7 +403,7 @@
                         <th align="left" class="#tableTitleClass#">Authentication Missing</th>
                         <th align="left" class="#tableTitleClass#">EIN</th>
                         <th align="left" class="#tableTitleClass#">Workmen's Compensation</th>
-                        <cfif FORM.selfJobOfferStatus NEQ 'pending'>
+                        <cfif FORM.selfJobOfferStatus NEQ "pending" AND FORM.selfJobOfferStatus NEQ "confirmed" AND FORM.selfJobOfferStatus NEQ "rejected">
                         	<th align="left" class="#tableTitleClass#">Contact Method</th>
                         </cfif>
                         <th align="left" class="#tableTitleClass#">Email Confirmation</th>
@@ -431,34 +433,60 @@
                             <td class="style1">#qTotalPerAgent.jobTitle#</td>
                             <td class="style1">#DateFormat(qTotalPerAgent.placement_date, 'mm/dd/yyyy')#</td>                            
                             <td class="style1">#qTotalPerAgent.selfJobOfferStatus#</td>                            
-                            <cfif FORM.selfJobOfferStatus NEQ 'pending'>
+                            <cfif FORM.selfJobOfferStatus NEQ "pending" AND FORM.selfJobOfferStatus NEQ "confirmed" AND FORM.selfJobOfferStatus NEQ "rejected">
 	                            <td class="style1">#DateFormat(qTotalPerAgent.selfConfirmationDate, 'mm/dd/yyyy')#</td>
                             </cfif>
                             <td class="style1">#qTotalPerAgent.selfConfirmationName#</td>
                             <td class="style1">
                             	<cfif qTotalPerAgent.confirmed EQ 1>
-                                	Yes
+                                	<cfif LEN(qTotalPerAgent.confirmedDate)>
+                                    	#DateFormat(qTotalPerAgent.confirmedDate, "mm/dd/yyyy")#
+                                  	<cfelse>
+                                    	<font color="red">Confirmed - Date Missing</font>
+                                    </cfif>
                                	<cfelse>
-                                	No
+                                	<font color="red">Missing</font>
                                	</cfif>
                           	</td>
                             <td class="style1">
                             	<cfif qTotalPerAgent.confirmed EQ 1 AND VAL(qTotalPerAgent.numberPositions)>
-                                	Yes
+                                	<cfif LEN(qTotalPerAgent.verifiedDate)>
+                                    	#DateFormat(qTotalPerAgent.verifiedDate, "mm/dd/yyyy")#
+                                  	<cfelse>
+                                    	<font color="red">Available - Date Missing</font>
+                                    </cfif>
                                	<cfelse>
-                                	No
+                                	<font color="red">Missing</font>
                                	</cfif>
                           	</td>
                             <td class="style1">
-								<cfif NOT VAL(qTotalPerAgent.authentication_secretaryOfState)>-Business License<br /></cfif>
-                                <cfif VAL(qTotalPerAgent.authentication_businessLicenseNotAvailable)>
-                                    <cfif NOT VAL(qTotalPerAgent.authentication_incorporation)>-Incorporation<br /></cfif>
-                                    <cfif NOT VAL(qTotalPerAgent.authentication_certificateOfExistence)>-Certificate of Existence<br /></cfif>
-                                    <cfif NOT VAL(qTotalPerAgent.authentication_certificateOfReinstatement)>-Certificate of Reinstatement<br /></cfif>
-                                    <cfif NOT VAL(qTotalPerAgent.authentication_departmentOfState)>-Department of State<br /></cfif>
+                            	<font color="red">
+									<cfif NOT VAL(qTotalPerAgent.authentication_secretaryOfState) AND NOT VAL(qTotalPerAgent.authentication_businessLicenseNotAvailable)>-Business License<br /></cfif>
+                                    <cfif VAL(qTotalPerAgent.authentication_businessLicenseNotAvailable)>
+                                        <cfif NOT VAL(qTotalPerAgent.authentication_incorporation)>-Incorporation<br /></cfif>
+                                        <cfif NOT VAL(qTotalPerAgent.authentication_certificateOfExistence)>-Certificate of Existence<br /></cfif>
+                                        <cfif NOT VAL(qTotalPerAgent.authentication_certificateOfReinstatement)>-Certificate of Reinstatement<br /></cfif>
+                                        <cfif NOT VAL(qTotalPerAgent.authentication_departmentOfState)>-Department of State<br /></cfif>
+                                    </cfif>
+                                    <cfif NOT VAL(qTotalPerAgent.authentication_departmentOfLabor)>-Department of Labor<br /></cfif>
+                                    <cfif NOT VAL(qTotalPerAgent.authentication_googleEarth)>-Google Earth<br /></cfif>
+                              	</font>
+                                <cfif 
+									( 
+										VAL(qTotalPerAgent.authentication_secretaryOfState)
+										OR 
+										(
+										 	VAL(qTotalPerAgent.authentication_businessLicenseNotAvailable)
+											AND VAL(qTotalPerAgent.authentication_incorporation)
+											AND VAL(qTotalPerAgent.authentication_certificateOfExistence)
+											AND VAL(qTotalPerAgent.authentication_certificateOfReinstatement)
+											AND VAL(qTotalPerAgent.authentication_departmentOfState)
+										)
+									)
+									AND VAL(qTotalPerAgent.authentication_departmentOfLabor) 
+									AND VAL(qTotalPerAgent.authentication_googleEarth)>
+                                	n/a
                                 </cfif>
-                                <cfif NOT VAL(qTotalPerAgent.authentication_departmentOfLabor)>-Department of Labor<br /></cfif>
-                                <cfif NOT VAL(qTotalPerAgent.authentication_googleEarth)>-Google Earth<br /></cfif>
                             </td>
                             <td class="style1">
                             	<cfif CLIENT.userType NEQ 8>
@@ -478,11 +506,23 @@
                                 	N/A
 								</cfif>                                            
 							</td>
-                            <cfif FORM.selfJobOfferStatus NEQ 'pending'>
+                            <cfif FORM.selfJobOfferStatus NEQ "pending" AND FORM.selfJobOfferStatus NEQ "confirmed" AND FORM.selfJobOfferStatus NEQ "rejected">
 	                            <td class="style1">#qTotalPerAgent.selfConfirmationMethod#</td>
                             </cfif>
-                            <td class="style1">#DateFormat(qTotalPerAgent.selfEmailConfirmationDate, 'mm/dd/yyyy')#</td>
-                            <td class="style1">#DateFormat(qTotalPerAgent.selfPhoneConfirmationDate, 'mm/dd/yyyy')#</td>
+                            <td class="style1">
+                            	<cfif LEN(qTotalPerAgent.selfEmailConfirmationDate)>
+                                	#DateFormat(qTotalPerAgent.selfEmailConfirmationDate, 'mm/dd/yyyy')#
+                               	<cfelse>
+                                	<font color="red">Missing</font>
+                                </cfif>
+                          	</td>
+                            <td class="style1">
+                            	<cfif LEN(qTotalPerAgent.selfPhoneConfirmationDate)>
+                                	#DateFormat(qTotalPerAgent.selfPhoneConfirmationDate, 'mm/dd/yyyy')#
+                               	<cfelse>
+                                	<font color="red">Missing</font>
+                                </cfif>
+                     		</td>
                             <cfif CLIENT.userType NEQ 8>
                             	<td class="style1">#qTotalPerAgent.selfConfirmationNotes#</td>
                           	</cfif>

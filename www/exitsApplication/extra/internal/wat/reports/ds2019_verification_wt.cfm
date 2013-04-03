@@ -13,8 +13,6 @@
 	
     <cfscript>
 		qGetIntRepList = APPLICATION.CFC.USER.getIntlRepAssignedToCandidate();
-	
-		// Get Program List
 		qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(companyID=CLIENT.companyID);
 	</cfscript>
 

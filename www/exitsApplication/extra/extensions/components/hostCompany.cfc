@@ -22,8 +22,28 @@
 		</cfscript>
         
 	</cffunction>
-
-	
+    
+    <cffunction name="getHostCompanies" access="remote" returntype="query" hint="Gets a list of host companies">
+    	<cfargument name="companyID" default="0" hint="companyID is not required">
+        <cfargument name="hostID" default="0" hint="hostID is not required">
+        
+        <cfquery name="qGetHostCompanies" datasource="#APPLICATION.DSN.Source#">
+        	SELECT *
+            FROM extra_hostcompany
+            WHERE name != ""
+            <cfif VAL(ARGUMENTS.companyID)>
+            	AND companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
+            </cfif>
+            <cfif VAL(ARGUMENTS.hostID)>
+            	AND hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#">
+            </cfif>
+            ORDER BY name
+        </cfquery>
+        
+        <cfreturn qGetHostCompanies>
+    
+    </cffunction>
+    	
 	<cffunction name="getJobTitle" access="remote" returntype="query" hint="Gets a list of job titles for a given host company">
         <cfargument name="hostcompanyID" default="0">
 

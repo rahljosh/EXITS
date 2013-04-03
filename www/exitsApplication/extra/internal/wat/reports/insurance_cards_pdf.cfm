@@ -11,11 +11,11 @@
 
     <cfquery name="qGetCandidates" datasource="#APPLICATION.DSN.Source#"> 
         SELECT DISTINCT 
-        	c.candidateid, 
-            c.lastname, 
-            c.firstname, 
+        	c.candidateid,
+            c.lastname,
+            c.firstname,
             c.dob,
-            c.startdate, 
+            c.startdate,
             c.enddate,
             u.businessname
         FROM 
@@ -26,18 +26,6 @@
         	smg_programs p ON c.programID = p.programID
         WHERE 
         	c.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-        <!---
-        AND 
-            c.status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-        AND 
-        	c.verification_received =  <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.verification_received#">  
-        AND  
-            c.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> ) 
-        <cfif VAL(FORM.intrep)>
-            AND
-                c.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intrep#">
-        </cfif>        
-		--->
         GROUP BY 
         	c.candidateid        
         ORDER BY 

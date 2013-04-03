@@ -168,12 +168,12 @@
             </cfif>
             
             <cfif FORM.printOption EQ 1>
-            <tr>
-                <td colspan="10">
-                    <img src="../../pics/black_pixel.gif" alt="." width="100%" height="2"> <br/><br/>
-                    <font size=-1>Report Prepared on #DateFormat(now(), 'dddd, mmm, d, yyyy')#</font> 
-                </td>
-            </tr>  
+                <tr>
+                    <td colspan="10">
+                        <img src="../../pics/black_pixel.gif" alt="." width="100%" height="2"> <br/><br/>
+                        <font size=-1>Report Prepared on #DateFormat(now(), 'dddd, mmm, d, yyyy')#</font> 
+                    </td>
+                </tr>  
             </cfif> 
                          
         </table>

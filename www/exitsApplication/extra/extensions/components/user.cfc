@@ -28,12 +28,17 @@
     	<cfargument name="usertype" default="0" hint="usertype is not required">
         <cfargument name="isActive" default="1" hint="isActive is not required">
         <cfargument name="businessNameExists" default="0" hint="businessNameExists is not required">
+        <cfargument name="companyID" default="0" hint="companyID is not required">
 		       
         <cfquery 
 			name="qGetUsers" 
 			datasource="#APPLICATION.DSN.Source#">
                 SELECT *
                 FROM smg_users
+                <cfif VAL(ARGUMENTS.companyID)>
+                	INNER JOIN extra_candidates ON extra_candidates.intRep = smg_users.userID
+                    	AND extra_candidates.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
+                </cfif>
                 WHERE 1 = 1
                     
 				<cfif VAL(ARGUMENTS.usertype)>
@@ -47,6 +52,8 @@
                 <cfif VAL(ARGUMENTS.businessNameExists)>
                 	AND businessname != ""
                 </cfif>
+                
+                GROUP BY smg_users.userID
                 
 				<cfif VAL(ARGUMENTS.usertype)>
                     ORDER BY businessName                

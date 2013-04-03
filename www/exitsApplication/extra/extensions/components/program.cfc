@@ -34,23 +34,7 @@
 			name="qGetPrograms" 
 			datasource="#APPLICATION.DSN.Source#">
                 SELECT
-					p.programID,
-                    p.companyID,
-                    p.programName,
-                    p.type,
-                    p.extra_sponsor,
-                    p.startDate,
-                    p.endDate,
-                    p.programFee,
-                    p.application_fee,
-                    p.insurance_startdate, 
-                    p.insurance_enddate, 
-                    p.insurance_w_deduct,
-                    p.insurance_wo_deduct,
-                    p.active,
-                    p.hold,
-                    p.fieldViewable,
-                    p.insurance_batch,
+					p.*,
                     type.programType,
                     c.companyName
                 FROM 

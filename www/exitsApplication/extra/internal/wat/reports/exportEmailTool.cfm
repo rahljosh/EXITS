@@ -22,49 +22,14 @@
     <cfparam name="FORM.action" default="candidate">
 
 	<cfscript>
-        // Get Program List
         qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(companyID=CLIENT.companyID);
+		qGetHostCompanyList = APPLICATION.CFC.HOSTCOMPANY.getHostCompanies(companyID=CLIENT.companyID);
+		qGetIntlRepList = APPLICATION.CFC.USER.getUsers(usertype=8,isActive=1,businessNameExists=1,companyID=CLIENT.companyID);
 		
 		if ( LEN(URL.action) ) {
 			FORM.action = URL.action;	
 		}
     </cfscript>
-
-    <cfquery name="qGetHostCompanyList" datasource="#APPLICATION.DSN.Source#">
-        SELECT DISTINCT
-        	eh.hostcompanyID, 
-            eh.name 
-        FROM 
-        	extra_hostcompany eh
-        INNER JOIN	
-        	extra_candidate_place_company ecpc ON ecpc.hostCompanyID = eh.hostCompanyID
-        WHERE         	
-            eh.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-        AND 
-        	eh.name != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
-        GROUP BY
-            eh.hostCompanyID
-        ORDER BY
-            eh.name
-    </cfquery>
-	
-    <cfquery name="qGetIntlRepList" datasource="#APPLICATION.DSN.Source#">
-        SELECT 
-        	u.userid, 
-            u.businessname
-        FROM 
-        	smg_users u
-		INNER JOIN 
-        	extra_candidates ec ON ec.intRep = u.userID AND ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-        WHERE         
-        	u.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
-        AND 
-        	u.businessname != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
-		GROUP BY
-        	u.userID            
-        ORDER BY 
-        	u.businessname
-    </cfquery>
     
     <!--- FORM Submitted --->
     <cfif FORM.submitted>

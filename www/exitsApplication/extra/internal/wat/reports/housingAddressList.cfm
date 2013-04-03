@@ -15,6 +15,7 @@
     <cfparam name="FORM.printOption" default="1">
     <cfparam name="FORM.programID" default="0">
     <cfparam name="FORM.intlRepID" default="0"> <!--- 0 for all reps --->
+    <cfparam name="FORM.hostCompanyID" default="0"> <!--- 0 for all host companies --->
     <cfparam name="FORM.hostCompany" default="all"> <!--- all, primary, secondary --->
     <cfparam name="FORM.status" default="all"> <!--- all, active, inactive --->
     
@@ -22,6 +23,7 @@
     <cfscript>
 		qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(companyID=CLIENT.companyID);
 		qGetIntlRepList = APPLICATION.CFC.USER.getIntlReps();
+		qGetHostCompanyList = APPLICATION.CFC.HOSTCOMPANY.getHostCompanies();
 	</cfscript>
  
 </cfsilent>
@@ -43,6 +45,9 @@
             	AND ec.hostcompanyid != 0
           	<cfelseif FORM.hostCompany EQ "secondary">
             	AND ec.candidateID IN (SELECT candidateID FROM extra_candidate_place_company WHERE isSecondary = 1 AND status = 1)
+            </cfif>
+            <cfif VAL(FORM.hostCompanyID)>
+            	AND ec.hostcompanyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostCompanyID#">
             </cfif>
 		WHERE u.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
 		<cfif CLIENT.userType EQ 8>
@@ -109,6 +114,17 @@
                         </select>
                     </td>
                 </tr>
+                <tr valign="middle">
+                    <td align="right" valign="middle" class="style1"><b>Host Companies:</b> </td>
+                    <td valign="middle">
+                        <select name="hostCompanyID" class="style1">
+                            <option value="0">---  All Host Companies  ---</option>
+                            <cfloop query="qGetHostCompanyList">
+                                <option value="#qGetHostCompanyList.hostCompanyID#" <cfif FORM.hostCompanyID EQ qGetHostCompanyList.hostCompanyID>selected="selected"</cfif>>#qGetHostCompanyList.name#</option>
+                            </cfloop>
+                        </select>
+                    </td>
+                </tr>
             </cfif>
             <tr>
                 <td valign="middle" align="right" class="style1"><b>Program:</b></td>
@@ -134,7 +150,7 @@
             <tr>
                 <td valign="middle" align="right" class="style1"><b>Status:</b></td>
                 <td> 
-                    <select name="status" class="style1">
+                    <select name="gf" class="style1">
                         <option value="all" <cfif "all" EQ FORM.status> selected</cfif>>All</option>
                         <option value="1" <cfif 1 EQ FORM.status> selected</cfif>>Active</option>
                         <option value="0" <cfif 0 EQ FORM.status> selected</cfif>>Inactive</option>
@@ -194,6 +210,9 @@
                     	AND ec.hostcompanyid != 0
                     <cfelseif FORM.hostCompany EQ "secondary">
                     	AND ec.candidateID IN (SELECT candidateID FROM extra_candidate_place_company WHERE isSecondary = 1 AND status = 1)
+                    </cfif>
+                    <cfif VAL(FORM.hostCompanyID)>
+                    	AND ec.hostcompanyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostCompanyID#">
                     </cfif>
                     GROUP BY ec.candidateID
                 </cfquery>

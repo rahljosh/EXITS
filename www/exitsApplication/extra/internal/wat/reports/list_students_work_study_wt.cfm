@@ -10,7 +10,6 @@
 	<cfinclude template="../querys/get_company_short.cfm">
 
 	<cfscript>
-        // Get Program List
         qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(companyID=CLIENT.companyID);
     </cfscript>
 
@@ -65,17 +64,10 @@
         </cfquery>
 
     </cfif>
-
-    <cfquery name="qGetProgram" datasource="#APPLICATION.DSN.Source#">
-        SELECT 
-            programID,
-            programName,
-            extra_sponsor
-        FROM 
-            smg_programs
-        WHERE
-            programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.programID)#">
-    </cfquery>
+    
+    <cfscript>
+        qGetProgram = APPLICATION.CFC.PROGRAM.getPrograms(companyID=CLIENT.companyID,programID=FORM.programID);
+    </cfscript>
     
 	<cfscript>
 		if ( qGetProgram.extra_sponsor EQ 'INTO' ) {
@@ -233,17 +225,12 @@
                             <cfif qGetStudents.wat_placement EQ 'Walk-In'>
         
                                 <cfquery name="qInitialEmployment" datasource="#APPLICATION.DSN.Source#">
-                                    SELECT 
-                                        placement_date
-                                    FROM 
-                                        extra_candidate_place_company
-                                    WHERE
-                                        candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudents.candidateID#">
-                                    AND
-                                        status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">                            
+                                    SELECT placement_date
+                                    FROM extra_candidate_place_company
+                                    WHERE candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudents.candidateID#">
+                                    AND status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">                            
                                     <!--- Exclude Seeking Employment --->
-                                    AND
-                                        hostCompanyID != <cfqueryparam cfsqltype="cf_sql_integer" value="195">
+                                    AND hostCompanyID != <cfqueryparam cfsqltype="cf_sql_integer" value="195">
                                 </cfquery>
                                 
                                 <cfif IsDate(qGetStudents.startDate) AND IsDate(qInitialEmployment.placement_date)>
@@ -262,7 +249,10 @@
             <cfif NOT VAL(qGetStudents.recordCount)>
                 <tr>
                     <td align="center" colspan="10">
-                        <div align="center"><font size="2" face="Verdana, Arial, Helvetica, sans-serif">No students found based on the criteria you specified. Please change and re-run the report.</font></div><br />
+                        <div align="center">
+                        	<font size="2" face="Verdana, Arial, Helvetica, sans-serif">No students found based on the criteria you specified. Please change and re-run the report.</font>
+                      	</div>
+                        <br/>
                     </td>
                 </tr>
             </cfif>
