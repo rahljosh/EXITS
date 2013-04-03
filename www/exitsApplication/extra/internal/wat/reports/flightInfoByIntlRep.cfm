@@ -13,27 +13,9 @@
     <cfparam name="FORM.email" default="">
 
     <cfscript>
-		// Get Program List
 		qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(companyID=CLIENT.companyID);
+		qGetIntlRepList = APPLICATION.CFC.USER.getUsers(usertype=8,isActive=1,businessNameExists=1,companyID=CLIENT.companyID);
 	</cfscript>
-
-    <cfquery name="qGetIntlRepList" datasource="#APPLICATION.DSN.Source#">
-        SELECT 
-        	u.userid, 
-            u.businessname
-        FROM 
-        	smg_users u
-		INNER JOIN 
-        	extra_candidates ec ON ec.intRep = u.userID AND ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-        WHERE         
-        	u.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
-        AND 
-        	u.businessname != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
-		GROUP BY
-        	u.userID            
-        ORDER BY 
-        	u.businessname
-    </cfquery>
 
     <!--- FORM submitted --->
     <cfif FORM.submitted>

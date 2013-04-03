@@ -8,9 +8,7 @@
     <cfparam name="FORM.submitted" default="0">
 
     <cfscript>
-		// Get Program List
 		qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(companyID=CLIENT.companyID);
-		// Get Intl. Rep List
 		qGetIntlRepList = APPLICATION.CFC.USER.getUsers(usertype=8,isActive=1,businessNameExists=1);
 	</cfscript>
     
@@ -19,41 +17,27 @@
 		
         <!--- Get Intl Reps --->
 		<cfquery name="qGetIntlReps" datasource="#APPLICATION.DSN.Source#">
-            SELECT DISTINCT
-            	u.userid, 
-                u.businessname
-            FROM 
-            	smg_users u
-           	INNER JOIN
-            	extra_candidates ec ON ec.intRep = u.userID
-                	AND 
-                    	ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">    
-           			AND
-                    	ec.status = <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
-            WHERE 
-            	u.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+            SELECT DISTINCT u.userid, u.businessname
+            FROM smg_users u
+           	INNER JOIN extra_candidates ec ON ec.intRep = u.userID
+          		AND ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">    
+          		AND ec.status = <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
+            WHERE u.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
 			<cfif CLIENT.userType EQ 8>
-            	AND
-                	u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+            	AND u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
             <cfelse>
 				<cfif VAL(FORM.userID)>
-                    AND 
-                        u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">
+                    AND u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">
                 </cfif>
           	</cfif>
-            GROUP BY
-            	u.userID
-            ORDER BY 
-            	u.businessname
+            GROUP BY u.userID
+            ORDER BY u.businessname
 		</cfquery>
 
         <cfquery name="qGetProgramInfo" datasource="#APPLICATION.DSN.Source#">
-            SELECT 
-            	programname
-            FROM 
-            	smg_programs
-            WHERE 
-            	programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
+            SELECT programname
+            FROM smg_programs
+            WHERE programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
         </cfquery> 
     	
         <cfquery name="qGetAllCandidates" datasource="#APPLICATION.DSN.Source#">
@@ -72,25 +56,17 @@
                 ec.wat_placement,
                 ehc.name,                 
                 u.businessName
-            FROM
-                extra_candidates ec
-            LEFT JOIN 
-                extra_hostcompany ehc ON ehc.hostcompanyid = ec.hostcompanyid
-            INNER JOIN 
-                smg_programs ON smg_programs.programID = ec.programID
-            INNER JOIN 
-                smg_users u ON u.userid = ec.intrep
-            WHERE 
-                ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
-            AND 
-                ec.status = <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
+            FROM extra_candidates ec
+            LEFT JOIN extra_hostcompany ehc ON ehc.hostcompanyid = ec.hostcompanyid
+            INNER JOIN smg_programs ON smg_programs.programID = ec.programID
+            INNER JOIN smg_users u ON u.userid = ec.intrep
+            WHERE ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
+            AND ec.status = <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
            	<cfif CLIENT.userType EQ 8>
-            	AND
-                	ec.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+            	AND ec.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
             <cfelse>
 				<cfif VAL(FORM.userID)>
-                    AND 
-                        ec.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">
+                    AND ec.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">
                 </cfif>
           	</cfif>
         </cfquery>
