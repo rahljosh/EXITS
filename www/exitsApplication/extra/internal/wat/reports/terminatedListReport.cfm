@@ -45,7 +45,7 @@
         <cfif FORM.status NEQ "all">
             AND c.status = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.status)#">
         </cfif>
-		AND c.candidateID IN (SELECT candidateID FROM extra_incident_report WHERE subject="Terminated" AND isSolved=0)
+		AND c.candidateID IN (SELECT candidateID FROM extra_incident_report WHERE subject="Terminated")
     </cfquery>
     
     <cfquery name="qGetResultsGrouped" datasource="#APPLICATION.DSN.Source#">
@@ -64,7 +64,7 @@
         <cfif FORM.status NEQ "all">
             AND c.status = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.status)#">
         </cfif>
-        AND c.candidateID IN (SELECT candidateID FROM extra_incident_report WHERE subject="Terminated" AND isSolved=0)
+        AND c.candidateID IN (SELECT candidateID FROM extra_incident_report WHERE subject="Terminated")
         GROUP BY c.candidateID
     </cfquery>
 	
