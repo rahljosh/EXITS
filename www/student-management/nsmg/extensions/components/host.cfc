@@ -725,7 +725,7 @@
 			php_hosts_cbc,
 			php_students_in_program,
 			smg_csiet_history,
-			smg_documents,
+			<!---smg_documents,--->
 			smg_host_app_history,
 			smg_host_missing_docs,
 			smg_host_reference_tracking,
@@ -971,13 +971,13 @@
                     	AND
                         	h.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
                     
-						<!--- ISE - Displays all apps |  OR APPLICATION.CFC.USER.isOfficeUser() --->
-                        <cfif ARGUMENTS.companyID EQ 5>
+						<!--- ISE - Displays all apps |  OR APPLICATION.CFC.USER.isOfficeUser()---> 
+						<cfif ARGUMENTS.companyID EQ 5>
                             AND          
                                 h.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
                         <cfelseif VAL(ARGUMENTS.companyID)>
-                            AND          
-                                h.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#"> 
+                            AND
+                            	h.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
                         </cfif>
                         
 					</cfif>
