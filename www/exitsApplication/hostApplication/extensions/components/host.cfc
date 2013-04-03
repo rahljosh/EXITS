@@ -217,7 +217,7 @@
         <cfargument name="liveAtHome" default="" hint="liveAtHome is not required">
         <cfargument name="getAllMembers" default="0" hint="Returns all family members including deleted">
         <cfargument name="getCBCQualifiedMembers" default="0" hint="Returns all qualified members to run CBCs, any one turning 18 in the next 18 months">
-        
+        <cfargument name="cutOffDate" default="2012-07-01" hint="cut off date for siblings turning 18">
         <cfquery 
 			name="qGetHostMemberByID" 
 			datasource="#APPLICATION.DSN.Source#">
@@ -269,10 +269,13 @@
                           OR liveathomePartTime  = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">)
                 </cfif>
                 
-                <!--- Gets any family member that are turning 18 in the next 18 months and live at home --->
+                <!--- Gets any family member that are turning 18 in the next 12 months and live at home --->
                 <cfif VAL(ARGUMENTS.getCBCQualifiedMembers)>
                     AND
-                        FLOOR(DATEDIFF(DATE_ADD(CURRENT_DATE, INTERVAL 18 MONTH), birthdate)/365) >= <cfqueryparam cfsqltype="cf_sql_integer" value="18">
+                    <!----
+                        FLOOR(DATEDIFF(DATE_ADD(CURRENT_DATE, INTERVAL 12 MONTH), birthdate)/365) >= <cfqueryparam cfsqltype="cf_sql_integer" value="18">
+						---->
+                        FLOOR(DATEDIFF('2013-07-30', birthdate)/365) >= <cfqueryparam cfsqltype="cf_sql_integer" value="18">
                     AND
                         (liveAtHome = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes"> 
                           OR liveathomePartTime  = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">)
