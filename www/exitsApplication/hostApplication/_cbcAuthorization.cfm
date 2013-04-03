@@ -532,7 +532,7 @@
                         <td><h3>#qGetAllFamilyMembersAtHome.name# #qGetAllFamilyMembersAtHome.lastName#</h3></td>
                         <td><h3>#qGetAllFamilyMembersAtHome.membertype#</h3></td>
                         <td><h3><cfif isDate(qGetAllFamilyMembersAtHome.birthDate)>#DateFormat(qGetAllFamilyMembersAtHome.birthDate, 'mmm d, yyyy')#</cfif></h3></td>
-                        <td><h3>#qGetAllFamilyMembersAtHome.age#</h3></td> 
+                        <td><h3>#qGetAllFamilyMembersAtHome.age# </h3></td> 
                         <cfif ListFind(vCBCQualifiedMembersList, qGetAllFamilyMembersAtHome.childID)>
                             <td>	
                                 <cfif NOT LEN(qGetAllFamilyMembersAtHome.ssn)>
@@ -546,8 +546,11 @@
                         </cfif> 
                     </tr>            
                 </cfloop>
+                <tr>
+                	<td colspan=5 bgcolor="##deeaf3"> <em>Background checks are required for anyone turning 18 on or before July 30, 2013</em></td>
+                </tr>
             </table> <br />
-    
+   
     		<!--- Singatures --->
             <h3>Signature(s)</h3>
             
