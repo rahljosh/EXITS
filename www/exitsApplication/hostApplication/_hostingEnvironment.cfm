@@ -487,45 +487,28 @@
         <div class="get_Attention">The student may share a bedroom with someone of the same sex and within a reasonable age difference, but must have his/her own bed.</div>
         
         <table width="100%" cellspacing="0" cellpadding="2" class="border">
-			<cfif NOT qGetHostMembers.recordcount>
-                <tr>
-                    <td colspan="4" bgcolor="##deeaf3">
-                        <div class="get_Attention">
-                        	Since you don't have any kids or other family members living at home, it is assumend the student will not be sharing a room. If this is wrong, 
-                        	you will need to <a href="index.cfm?section=familyMembers">add a family member</a>.
-                		</div>
-                	</td>
-                </tr>
-            <cfelse>
-                <tr bgcolor="##deeaf3">
-                    <td id="shareBedroom" width="50%">Will the student share a bedroom? <span class="required">*</span></td>
-                    <td>
-                    	<select name="isStudentSharingBedroom" id="isStudentSharingBedroom" onchange="showHideStudents(this.value)">
-                        	<option value="0" <cfif FORM.isStudentSharingBedroom EQ 0>selected="selected"</cfif>>Will not share a room</option>
-                            <option value="1" <cfif FORM.isStudentSharingBedroom EQ 1>selected="selected"</cfif>>Will share with a specific family member</option>
-                            <option value="2" <cfif FORM.isStudentSharingBedroom EQ 2>selected="selected"</cfif>>Will share with another exchange student</option>
-                            <option value="3" <cfif FORM.isStudentSharingBedroom EQ 3>selected="selected"</cfif>>Will share - depends on student's gender</option>
-                        </select>
-                        <!---<cfinput type="radio" name="isStudentSharingBedroom" id="isStudentSharingBedroom1" value="1" onclick="document.getElementById('showname').style.display='table-row';" checked="#FORM.isStudentSharingBedroom EQ 1#" />
-                        <label for="isStudentSharingBedroom1">Yes</label>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <cfinput type="radio" name="isStudentSharingBedroom" id="isStudentSharingBedroom0" value="0" onclick="document.getElementById('showname').style.display='none';" checked="#FORM.isStudentSharingBedroom EQ 0#" />
-                        <label for="isStudentSharingBedroom0">No</label>--->
-                    </td>
-                </tr>
-                
-                <tr id="showname" <cfif FORM.isStudentSharingBedroom NEQ 1>class="displayNone"</cfif> >
-                    <td width="50%">Who will they share a room with? <span class="required">*</span></td>
-                    <td> 
-                        <select name="sharingWithID" class="largeField">
-                            <option value=""></option>
-                            <cfloop query="qGetHostMembers">
-                                <option value="#qGetHostMembers.childid#" <cfif qGetHostMembers.childID EQ FORM.sharingWithID> selected</cfif> >#qGetHostMembers.name#</option>
-                            </cfloop>
-                        </select>
-                    </td>
-                </tr>
-            </cfif>
+            <tr bgcolor="##deeaf3">
+                <td id="shareBedroom" width="50%">Will the student share a bedroom? <span class="required">*</span></td>
+                <td>
+                    <select name="isStudentSharingBedroom" id="isStudentSharingBedroom" onchange="showHideStudents(this.value)">
+                        <option value="0" <cfif FORM.isStudentSharingBedroom EQ 0>selected="selected"</cfif>>Will not share a room</option>
+                        <option value="1" <cfif FORM.isStudentSharingBedroom EQ 1>selected="selected"</cfif>>Will share with a specific family member</option>
+                        <option value="2" <cfif FORM.isStudentSharingBedroom EQ 2>selected="selected"</cfif>>Will share with another exchange student</option>
+                        <option value="3" <cfif FORM.isStudentSharingBedroom EQ 3>selected="selected"</cfif>>Will share - depends on student's gender</option>
+                    </select>
+                </td>
+            </tr>
+            <tr id="showname" <cfif FORM.isStudentSharingBedroom NEQ 1>class="displayNone"</cfif> >
+                <td width="50%">Who will they share a room with? <span class="required">*</span></td>
+                <td> 
+                    <select name="sharingWithID" class="largeField">
+                        <option value=""></option>
+                        <cfloop query="qGetHostMembers">
+                            <option value="#qGetHostMembers.childid#" <cfif qGetHostMembers.childID EQ FORM.sharingWithID> selected</cfif> >#qGetHostMembers.name#</option>
+                        </cfloop>
+                    </select>
+                </td>
+            </tr>
         </table> <br />
     
     	<h3>Smoking</h3>
