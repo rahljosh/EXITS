@@ -176,7 +176,7 @@
 			}
 
 			// Room Sharing
-			if ( qGetHostMembers.recordcount AND NOT LEN(FORM.isStudentSharingBedroom) ) {
+			if (NOT LEN(FORM.isStudentSharingBedroom) ) {
 				SESSION.formErrors.Add("Please indicate if the student is going to share a bedroom");
 			}
 
@@ -285,7 +285,19 @@
                 	smg_hosts
                 SET
                 	pet_allergies = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pet_allergies#">,
-                    isStudentSharingBedroom = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.isStudentSharingBedroom#" null="#yesNoFormat(NOT LEN(FORM.isStudentSharingBedroom))#">,
+                    <cfif VAL(isStudentSharingBedroom)>
+                    	isStudentSharingBedroom = <cfqueryparam cfsqltype="cf_sql_bit" value="1">,
+                        <cfif isStudentSharingBedroom EQ 1>
+                        	sharingBedroomOptions = <cfqueryparam cfsqltype="cf_sql_varchar" value="member">,
+                        <cfelseif isStudentSharingBedroom EQ 2>
+                        	sharingBedroomOptions = <cfqueryparam cfsqltype="cf_sql_varchar" value="student">,
+                        <cfelseif isStudentSharingBedroom EQ 3>
+                        	sharingBedroomOptions = <cfqueryparam cfsqltype="cf_sql_varchar" value="depends">,
+                        </cfif>
+                    <cfelse>
+                    	isStudentSharingBedroom = <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
+                        sharingBedroomOptions = NULL,
+                    </cfif>
                 	hostSmokes = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hostSmokes#">,
                     smokeconditions = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.smokeConditions#">,
                     famDietRest = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.famDietRest#">,
@@ -326,17 +338,33 @@
             FORM.threesquares = qGetHostFamilyInfo.threesquares;
 			FORM.internetConnection = qGetHostFamilyInfo.internetConnection;
 			
-			if ( qGetWhoIsSharingRoom.recordcount ) {
+			if ( qGetHostFamilyInfo.sharingBedroomOptions == 'member' ) {
 				FORM.isStudentSharingBedroom = 1;
-				FORM.sharingWithID = qGetWhoIsSharingRoom.childID;
+				if ( qGetWhoIsSharingRoom.recordcount ) {
+					FORM.sharingWithID = qGetWhoIsSharingRoom.childID;
+				}
+			} else if ( qGetHostFamilyInfo.sharingBedroomOptions == 'student' ) {
+				FORM.isStudentSharingBedroom = 2;
+			} else if ( qGetHostFamilyInfo.sharingBedroomOptions == 'depends' ) {
+				FORM.isStudentSharingBedroom = 3;
 			} else {
-				FORM.isStudentSharingBedroom = qGetHostFamilyInfo.isStudentSharingBedroom;
+				FORM.isStudentSharingBedroom = 0;	
 			}
         </cfscript>
     
     </cfif>
 
 </cfsilent>
+
+<script type="text/javascript">
+	function showHideStudents(val) {
+		if (val == 1) {
+			document.getElementById('showname').style.display='table-row';
+		} else {
+			document.getElementById('showname').style.display='none';
+		}
+	}
+</script>
 
 <cfoutput>
 
@@ -472,11 +500,17 @@
                 <tr bgcolor="##deeaf3">
                     <td id="shareBedroom" width="50%">Will the student share a bedroom? <span class="required">*</span></td>
                     <td>
-                        <cfinput type="radio" name="isStudentSharingBedroom" id="isStudentSharingBedroom1" value="1" onclick="document.getElementById('showname').style.display='table-row';" checked="#FORM.isStudentSharingBedroom EQ 1#" />
+                    	<select name="isStudentSharingBedroom" id="isStudentSharingBedroom" onchange="showHideStudents(this.value)">
+                        	<option value="0" <cfif FORM.isStudentSharingBedroom EQ 0>selected="selected"</cfif>>Will not share a room</option>
+                            <option value="1" <cfif FORM.isStudentSharingBedroom EQ 1>selected="selected"</cfif>>Will share with a specific family member</option>
+                            <option value="2" <cfif FORM.isStudentSharingBedroom EQ 2>selected="selected"</cfif>>Will share with another exchange student</option>
+                            <option value="3" <cfif FORM.isStudentSharingBedroom EQ 3>selected="selected"</cfif>>Will share - depends on student's gender</option>
+                        </select>
+                        <!---<cfinput type="radio" name="isStudentSharingBedroom" id="isStudentSharingBedroom1" value="1" onclick="document.getElementById('showname').style.display='table-row';" checked="#FORM.isStudentSharingBedroom EQ 1#" />
                         <label for="isStudentSharingBedroom1">Yes</label>
                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         <cfinput type="radio" name="isStudentSharingBedroom" id="isStudentSharingBedroom0" value="0" onclick="document.getElementById('showname').style.display='none';" checked="#FORM.isStudentSharingBedroom EQ 0#" />
-                        <label for="isStudentSharingBedroom0">No</label>
+                        <label for="isStudentSharingBedroom0">No</label>--->
                     </td>
                 </tr>
                 
