@@ -180,23 +180,22 @@
                         AND watDateEvaluation4 IS NULL
                    	<cfelseif FORM.evaluationStatus EQ "complete">
                     	AND ((
-                        	DATEDIFF(NOW(),watDateCheckedIn) > 120
+                        	DATEDIFF(NOW(),watDateCheckedIn) > 90
                             AND watDateEvaluation1 IS NOT NULL
                             AND watDateEvaluation2 IS NOT NULL
                             AND watDateEvaluation3 IS NOT NULL
                             AND watDateEvaluation4 IS NOT NULL )
                       	OR (
-                        	DATEDIFF(NOW(),watDateCheckedIn) > 90
+                        	DATEDIFF(NOW(),watDateCheckedIn) > 60
                             AND watDateEvaluation1 IS NOT NULL
                             AND watDateEvaluation2 IS NOT NULL
                             AND watDateEvaluation3 IS NOT NULL )
                         OR (
-                        	DATEDIFF(NOW(),watDateCheckedIn) > 60
+                        	DATEDIFF(NOW(),watDateCheckedIn) > 30
                             AND watDateEvaluation1 IS NOT NULL
                             AND watDateEvaluation2 IS NOT NULL )
                         OR (
-                        	DATEDIFF(NOW(),watDateCheckedIn) > 30
-                            AND watDateEvaluation1 IS NOT NULL )
+                            watDateEvaluation1 IS NOT NULL )
                       	)
                   	<cfelseif FORM.evaluationStatus EQ "1">
                     	AND DATEDIFF(NOW(),watDateCheckedIn) > 30
@@ -254,15 +253,13 @@
                                 <td class="style1">#DateFormat(watDateCheckedIn,'mm/dd/yyyy')#</td>
                                 <td class="style1">
                                 	<cfif isDate(watDateCheckedIn)>
-										<cfif DATEDIFF('d', watDateCheckedIn, NOW()) GT 30>
-                                            First Evaluation: 
-                                            <cfif watDateEvaluation1 NEQ "" AND isDate(watDateEvaluation1)>
-                                                #DateFormat(watDateEvaluation1,'mm/dd/yyyy')#
-                                            <cfelse>
-                                                pending
-                                            </cfif>
+                                        First Evaluation: 
+                                        <cfif watDateEvaluation1 NEQ "" AND isDate(watDateEvaluation1)>
+                                            #DateFormat(watDateEvaluation1,'mm/dd/yyyy')#
+                                        <cfelse>
+                                            pending
                                         </cfif>
-                                        <cfif DATEDIFF('d', watDateCheckedIn, NOW()) GT 60>
+                                        <cfif DATEDIFF('d', watDateCheckedIn, NOW()) GT 30>
                                             <br/>
                                             Second Evaluation: 
                                             <cfif watDateEvaluation2 NEQ "" AND isDate(watDateEvaluation2)>
@@ -271,7 +268,7 @@
                                                 pending
                                             </cfif>
                                         </cfif>
-                                        <cfif DATEDIFF('d', watDateCheckedIn, NOW()) GT 90>
+                                        <cfif DATEDIFF('d', watDateCheckedIn, NOW()) GT 60>
                                             <br />
                                             Third Evaluation: 
                                             <cfif watDateEvaluation3 NEQ "" AND isDate(watDateEvaluation3)>
@@ -280,7 +277,7 @@
                                                 pending
                                             </cfif>
                                         </cfif>
-                                        <cfif DATEDIFF('d', watDateCheckedIn, NOW()) GT 120>
+                                        <cfif DATEDIFF('d', watDateCheckedIn, NOW()) GT 90>
                                             <br />
                                             Fourth Evaluation: 
                                             <cfif watDateEvaluation4 NEQ "" AND isDate(watDateEvaluation4)>
