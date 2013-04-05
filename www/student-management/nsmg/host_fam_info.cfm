@@ -185,8 +185,10 @@
     	UPDATE smg_hosts
       	SET
         	hostID = hostID
-        	<cfif NOT VAL(goingToHost)>
-        		,areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+        	<cfif isDefined('sendAppEmail')>
+            	<cfif FORM.sendAppEmail EQ "Convert to eHost">
+        			,areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+              	</cfif>
            	</cfif>
 			<cfif NOT VAL(family_info.hostAppStatus)>
                 ,hostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="9">
