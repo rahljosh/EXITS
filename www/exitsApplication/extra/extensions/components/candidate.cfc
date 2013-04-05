@@ -243,7 +243,7 @@
            		AND ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#">
            	</cfif>
           	<cfif ARGUMENTS.candidateStatus NEQ 'all'>
-            	AND ec.status = <cfqueryparam cfsqltype="cf_sql_integer" value="#candidateStatus.candidateStatus#">
+            	AND ec.status = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.candidateStatus#">
             </cfif>
            	<cfif CLIENT.userType EQ 8>
             	AND ec.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
