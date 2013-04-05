@@ -181,16 +181,19 @@
 <!--- Send email to host family and update application, check for password first. --->
 <cfif isDefined('sendAppEmail') OR goingToHost EQ 1>
 
-	<cfquery datasource="#APPLICATION.DSN#">
+    <cfquery datasource="#APPLICATION.DSN#">
     	UPDATE smg_hosts
-      	SET 
+      	SET
+        	hostID = hostID
+        	<cfif NOT VAL(goingToHost)>
+        		,areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+           	</cfif>
 			<cfif NOT VAL(family_info.hostAppStatus)>
-                hostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="9">,
-                applicationSent = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
+                ,hostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="9">
+                ,applicationSent = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
             </cfif>
-            areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
             <cfif family_info.password is ''>
-                , password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#strPassword#">
+              	,password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#strPassword#">
             </cfif>
   		WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(family_info.hostID)#">
 	</cfquery>
@@ -730,7 +733,7 @@ div.scroll2 {
                             <input type="checkbox" disabled="disabled" /> Not Qualified
                         </td>
                         <td>
-                            <cfif (CLIENT.usertype eq 1 OR listFind(allowedUsers, CLIENT.userID) OR listFind(allowedRegions, CLIENT.regionID) OR CLIENT.userID EQ family_info.arearepid )>
+                            <cfif CLIENT.usertype LTE 7>
                                 <cfif VAL(family_info.active)>
                                     <form 
                                         method="post" 
