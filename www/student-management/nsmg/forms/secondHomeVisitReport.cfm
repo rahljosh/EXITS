@@ -813,14 +813,20 @@
             
             <div class="item">
                 <label class="title">Does #qGetStudentInfo.firstname# have <cfif qGetStudentInfo.sex is 'male'>his<cfelse>her</cfif> own permanent bed? 
-                    <span class="small">Bed may not be a futon or inflatable</span>
+                    <span class="small">Bed may not be a futon or inflatable<br />if two students, two seperate beds</span>
                 </label>
                 <cfif allow_save>
-                    <input type="text" name="ownBed" class="xLargeField" value="#FORM.ownBed#"/>
+                    
+                    <select name="ownBed">
+                    	<option value="Solo bedroom - permanent bed" <cfif FORM.ownBed eq 'Solo bedroom - permanent bed'>selected</cfif>>Solo bedroom - permanent bed</option>
+                        <option value="Shared bedroom - two permanent beds" <cfif FORM.ownBed eq 'Shared bedroom - two permanent beds'>selected</cfif>>Shared bedroom - two permanent beds</option>
+                        <option value="No permanent bed" <cfif FORM.ownBed eq 'No permanent bed'>selected</cfif>>No permanent bed</option>
+                    </select>
                 <cfelse>
                     #FORM.ownBed#
                 </cfif>
-            </div>            
+            </div>   
+                     
                 
                 
             <div class="item">
@@ -846,9 +852,15 @@
     
     
             <div class="item">
-                <label class="title">Does #qGetStudentInfo.firstname# have adequate storage space?</label>
+                <label class="title">Does #qGetStudentInfo.firstname# have a closet and/or dresser that the exchange student can use to store his/her clothing and other belongings? </label>
                 <cfif allow_save>	
-                    <input type="text" name="storageSpace" class="xLargeField" value="#FORM.storageSpace#"/>
+                  
+                    <select name="storageSpace">
+                    	<option value="Yes - in the exchange student's room" <cfif FORM.storageSpace eq "Yes - in the exchange student's room">selected</cfif>>Yes - in the exchange student's room</option>
+                        <option value="Yes - adjacent to the exchange student's room" <cfif FORM.storageSpace eq "Yes - adjacent to the exchange student's room">selected</cfif>>Yes - adjacent to the exchange student's room</option>
+                        <option value="Yes - in another part of the home" <cfif FORM.storageSpace eq 'Yes - in another part of the home'>selected</cfif>>Yes - in another part of the home</option>
+                         <option value="No - no storage for exchange student" <cfif FORM.storageSpace eq 'No - no storage for exchange student'>selected</cfif>>No - no storage for exchange student</option>
+                    </select>
                 <cfelse>
                     #FORM.storageSpace#
                 </cfif>
@@ -866,11 +878,16 @@
                 </cfif>
             </div>
     
-    
+
             <div class="item">
                 <label class="title">Does #qGetStudentInfo.firstname# have adequate study space? </label>
                 <cfif allow_save>	
-                    <input type="text" name="studySpace" class="xLargeField" value="#FORM.studySpace#"/>
+                    
+                       <select name="studySpace">
+                    	<option value="In exchange student's room" <cfif FORM.studySpace eq "In exchange student's room">selected</cfif>>In exchange student's room</option>
+                        <option value="In another part of the home" <cfif FORM.studySpace eq 'In another part of the home'>selected</cfif>>In another part of the home</option>
+                        <option value="No place in home to study" <cfif FORM.studySpace eq 'No place in home to study'>selected</cfif>>No place in home to study</option>
+                    </select>
                 <cfelse>
                     #FORM.studySpace#
                 </cfif>
