@@ -731,7 +731,6 @@
 			php_students_in_program,
 			smg_csiet_history,
 			smg_host_app_history,
-			smg_host_missing_docs,
 			smg_host_reference_tracking,
 			smg_hosthistory,
 			smg_hosts_cbc,
