@@ -730,7 +730,6 @@
 			php_hosts_cbc,
 			php_students_in_program,
 			smg_csiet_history,
-			<!---smg_documents,--->
 			smg_host_app_history,
 			smg_host_missing_docs,
 			smg_host_reference_tracking,
