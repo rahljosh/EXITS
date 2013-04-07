@@ -260,9 +260,13 @@
     	<table width="100%" cellspacing="0" cellpadding="4" class="border">
             <tr>
                 <cfloop query="qGetUploadedImages">
-                <cfset viewImagePath="http://ise.exitsapplication.com/nsmg/uploadedfiles/hostApp/#APPLICATION.CFC.SESSION.getHostSession().ID#/album/large/#qGetUploadedImages.fileName#">
-                <Cfset absoluteLargePath = "c:\websites\student-management\nsmg\uploadedfiles\hostApp\#APPLICATION.CFC.SESSION.getHostSession().ID#\album\large\#qGetUploadedImages.fileName#">
-                <Cfset absoluteThumbPath = "c:\websites\student-management\nsmg\uploadedfiles\hostApp\#APPLICATION.CFC.SESSION.getHostSession().ID#\album\thumbs\#qGetUploadedImages.fileName#">
+                    
+                    <cfscript>
+						viewImagePath = "#APPLICATION.CFC.SESSION.getHostSession().PATH.relativeAlbumLarge##qGetUploadedImages.fileName#";
+                        absoluteLargePath = "#APPLICATION.CFC.SESSION.getHostSession().PATH.albumLarge##qGetUploadedImages.fileName#";
+                        absoluteThumbPath = "#APPLICATION.CFC.SESSION.getHostSession().PATH.albumThumbs##qGetUploadedImages.fileName#";
+					</cfscript>
+                    
                 	<td width="50%" valign="top" align="center">
                         
                         <div style="display:block; margin:5px 0 2px 0;">
@@ -270,8 +274,9 @@
                             <span style="float:left; margin-right:3px;">
                                 <label for="#qGetUploadedImages.ID#" style="font-weight:bold;">
                                 	<span style="display:block; margin-bottom:5px;">#qGetUploadedImages.documentType#</span>
-                                    <cfoutput>
-         <a href="viewImage.cfm?viewImagePath=#viewImagePath#&absoluteLargePath=#absoluteLargePath#&absoluteThumbPath=#absoluteThumbPath#&label=#qGetUploadedImages.documentType#" class="jQueryModal"><img src="http://ise.exitsapplication.com/nsmg/uploadedfiles/hostApp/#APPLICATION.CFC.SESSION.getHostSession().ID#/album/thumbs/#qGetUploadedImages.fileName#" border="0"></a></cfoutput>
+         							<a href="viewImage.cfm?viewImagePath=#viewImagePath#&absoluteLargePath=#absoluteLargePath#&absoluteThumbPath=#absoluteThumbPath#&label=#qGetUploadedImages.documentType#" class="jQueryModal">
+                                    	<img src="#APPLICATION.CFC.SESSION.getHostSession().PATH.relativeAlbumThumbs##qGetUploadedImages.fileName#" border="0">
+                                    </a>
                                     <!--- <cfimage action="writeToBrowser" source="#APPLICATION.CFC.SESSION.getHostSession().PATH.albumThumbs##qGetUploadedImages.fileName#"> --->
                                 </label>
                             </span>    
