@@ -2,10 +2,10 @@
 <div id="main" class="clearfix"></div>
 
 <div id="footer"> <!--- footer1 / sticks at the bottom of the page --->
-	<div class="clear"></div>
+	<div id="clearMenu">&nbsp;</div>
 
     <cfoutput>
-    <div id="bottomLinks" style="margin-top: 10px;>
+    <div id="bottomLinks">
         <a href="#APPLICATION.siteURL#" class="bottomLinks1"></a>
         <a href="#APPLICATION.siteURL#about-ISE.cfm" class="bottomLinks2"></a>
         <a href="#APPLICATION.siteURL#contact-ISE.cfm" class="bottomLinks3"></a>
@@ -28,5 +28,4 @@
 	<!-- end footer -->
     
 </div>
-</body>
-</html>
+
