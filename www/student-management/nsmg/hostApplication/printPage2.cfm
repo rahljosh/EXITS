@@ -3,7 +3,7 @@
 	File:		printPage2.cfm
 	Author:		Marcus Melo
 	Date:		03/17/2013
-	Desc:		Page 2 Print Version
+	Desc:		Family Members - Page 2 Print Version
 
 	Updated:	
 	

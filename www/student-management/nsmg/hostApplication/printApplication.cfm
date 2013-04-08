@@ -13,6 +13,9 @@
 
 <!--- Kill extra output --->
 <cfsilent>
+
+	<!--- Import CustomTag --->
+    <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
 	
 	<!--- Param local variables --->
 	<cfparam name="action" default="">
@@ -32,21 +35,22 @@
 		// Get Host Application Information
 		qGetHostInfo = APPLICATION.CFC.HOST.getApplicationList(hostID=FORM.hostID);	
 	</cfscript>
+    
+    <cfhtmlhead text='<link rel="stylesheet" href="../linked/css/hostApp.css" type="text/css">'>
 
 </cfsilent>
 
 <!--- Page Header --->
 <gui:pageHeader
 	headerType="applicationNoHeader"
-	filePath="../../"
+	filePath="../"
 />	
-	<link rel="stylesheet" href="../linked/css/hostApp.css" type="text/css">
 
 	<!--- Check to see which action we are taking. --->
     <cfswitch expression="#action#">
         
         <!--- Individual Pages --->
-        <cfcase value="printPage1,printPage2,printPage3,printPage4,printPage5,printPage6,printPage7" delimiters=",">
+        <cfcase value="printPage1,printPage2,printPage3,printPage4,printPage5,printPage6,printPage7,printPage8,printPage9,printPage10,printPage11,printPage12" delimiters=",">
     
             <!--- Include template --->
             <cfinclude template="#action#.cfm" />
@@ -63,7 +67,8 @@
             <cfinclude template="printPage2.cfm" />
 
             <!--- Include Page 3 - Background Checks --->
-            <cfinclude template="printPage3.cfm" />
+            <!--- Merge Existing PDFs --->
+            <!--- <cfinclude template="printPage3.cfm" /> --->
 
             <!--- Include Page 4 - Personal Description --->
             <cfinclude template="printPage4.cfm" />
@@ -104,6 +109,6 @@
 
 <!--- Page Footer --->
 <gui:pageFooter
-	footerType="application"
-	filePath="../../"
+	footerType="noFooter"
+	filePath="../"
 />

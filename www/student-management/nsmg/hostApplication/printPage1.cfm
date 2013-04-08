@@ -3,7 +3,7 @@
 	File:		printPage1.cfm
 	Author:		Marcus Melo
 	Date:		03/09/2013
-	Desc:		Page 1 Print Version
+	Desc:		Name & Contact Info - Page 1 Print Version
 
 	Updated:	
 	
@@ -52,7 +52,7 @@
                         <td colspan="2" align="center"><img src="../pics/hostAppBanners/HPpdf_04.jpg"/></td>
                 	</tr>
                     <tr>
-                    	<td>
+                    	<td colspan="2">
                         
                             <table cellpadding="0" cellspacing="0" width="100%" style="line-height:20px;">
                                 <tr>
