@@ -227,7 +227,7 @@
                     memberType,
                     birthDate,
                     FLOOR(datediff (now(), birthDate)/365.25) AS age,
-                    FLOOR(DATEDIFF('2014-07-30', birthdate)/365.25) AS futureAge,
+                    FLOOR(DATEDIFF('2014-06-30', birthdate)/365.25) AS futureAge,
                     sex,
                     liveAtHome,
                     name,
@@ -279,7 +279,7 @@
                         
                         
                         FLOOR(DATEDIFF('2013-07-30', birthdate)/365.25) >= <cfqueryparam cfsqltype="cf_sql_integer" value="18">---->
-                        FLOOR(DATEDIFF('2014-07-30', birthdate)/365.25) >= <cfqueryparam cfsqltype="cf_sql_integer" value="18">
+                        FLOOR(DATEDIFF('2014-06-30', birthdate)/365.25) >= <cfqueryparam cfsqltype="cf_sql_integer" value="18">
                     AND
                         (liveAtHome = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes"> 
                           OR liveathomePartTime  = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">)
