@@ -517,7 +517,8 @@
                     <th width="28%">Name</th>
                     <th width="17%">Relation</th>
                     <th width="20%">Date of Birth</th>
-                    <th width="10%">Age</th>
+                    <th width="10%">Age Now</th>
+                    
                     <th width="25%">Social Security ## <span class="required">*</span></h3></th>
                 </tr>
                 
@@ -533,6 +534,7 @@
                         <td><h3>#qGetAllFamilyMembersAtHome.membertype#</h3></td>
                         <td><h3><cfif isDate(qGetAllFamilyMembersAtHome.birthDate)>#DateFormat(qGetAllFamilyMembersAtHome.birthDate, 'mmm d, yyyy')#</cfif></h3></td>
                         <td><h3>#qGetAllFamilyMembersAtHome.age# </h3></td> 
+                       
                         <cfif ListFind(vCBCQualifiedMembersList, qGetAllFamilyMembersAtHome.childID)>
                             <td>	
                                 <cfif NOT LEN(qGetAllFamilyMembersAtHome.ssn)>
