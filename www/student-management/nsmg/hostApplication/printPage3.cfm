@@ -4,7 +4,7 @@
 	Author:		Marcus Melo
 	Date:		03/17/2013
 	Desc:		Page 3 Print Version
-				This page gets the already created PDF files and merge them on the fly
+				Background Checks - This page gets the already created PDF files and merge them on the fly
 
 	Updated:	
 	
