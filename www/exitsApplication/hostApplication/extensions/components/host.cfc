@@ -226,7 +226,7 @@
                     hostID,
                     memberType,
                     birthDate,
-                    FLOOR(datediff (now(), birthDate)/365) AS age,
+                    FLOOR(datediff (now(), birthDate)/365.25) AS age,
                     
                     sex,
                     liveAtHome,
