@@ -547,7 +547,7 @@
                     </tr>            
                 </cfloop>
                 <tr>
-                	<td colspan=5 bgcolor="##deeaf3"> <em>Background checks are required for anyone turning 18 on or before July 30, 2013</em></td>
+                	<td colspan=5 bgcolor="##deeaf3"> <em>Background checks are required for anyone turning 18 on or before July 30, 2014</em></td>
                 </tr>
             </table> <br />
    
