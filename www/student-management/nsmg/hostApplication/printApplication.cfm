@@ -7,7 +7,7 @@
 
 	Updated:	
 	
-	http://smg.local/nsmg/hostApplication/printApplication.cfm?action=printpage1&hostID=37739
+	http://smg.local/nsmg/hostApplication/printApplication.cfm?hostID=37739
 	
 ----- ------------------------------------------------------------------------- --->
 
@@ -63,8 +63,14 @@
             <!--- Include Page 1 - Name & Contact Info --->
             <cfinclude template="printPage1.cfm" />
 
+            <!--- Page Break --->
+            <div style="margin:0; padding:0; page-break-after:always"></div>
+
             <!--- Include Page 2 - Family Members --->
             <cfinclude template="printPage2.cfm" />
+
+            <!--- Page Break --->
+            <div style="margin:0; padding:0; page-break-after:always"></div>
 
             <!--- Include Page 3 - Background Checks --->
             <!--- Merge Existing PDFs --->
@@ -72,30 +78,57 @@
 
             <!--- Include Page 4 - Personal Description --->
             <cfinclude template="printPage4.cfm" />
-
+			
+            <!--- Page Break --->
+            <div style="margin:0; padding:0; page-break-after:always"></div>
+            
             <!--- Include Page 5 - Hosting Environment --->
             <cfinclude template="printPage5.cfm" />
+
+            <!--- Page Break --->
+            <div style="margin:0; padding:0; page-break-after:always"></div>
 
             <!--- Include Page 6 - Religious Preference --->
             <cfinclude template="printPage6.cfm" />
 
+            <!--- Page Break --->
+            <div style="margin:0; padding:0; page-break-after:always"></div>
+
             <!--- Include Page 7 - Family Rules --->
             <cfinclude template="printPage7.cfm" />
+
+            <!--- Page Break --->
+            <div style="margin:0; padding:0; page-break-after:always"></div>
 
             <!--- Include Page 8 - Family Album --->
             <cfinclude template="printPage8.cfm" />
 
+            <!--- Page Break --->
+            <div style="margin:0; padding:0; page-break-after:always"></div>
+
             <!--- Include Page 9 - School Information --->
             <cfinclude template="printPage9.cfm" />
+
+            <!--- Page Break --->
+            <div style="margin:0; padding:0; page-break-after:always"></div>
 
             <!--- Include Page 10 - Community Profile --->
             <cfinclude template="printPage10.cfm" />
 
+            <!--- Page Break --->
+            <div style="margin:0; padding:0; page-break-after:always"></div>
+
             <!--- Include Page 11 - Confidential Data --->
             <cfinclude template="printPage11.cfm" />
 
+            <!--- Page Break --->
+            <div style="margin:0; padding:0; page-break-after:always"></div>
+
             <!--- Include Page 12 - References --->
             <cfinclude template="printPage12.cfm" />
+
+            <!--- Page Break --->
+            <div style="margin:0; padding:0; page-break-after:always"></div>
             
             <!--- Include Confidential Host Family Visit Form --->
             

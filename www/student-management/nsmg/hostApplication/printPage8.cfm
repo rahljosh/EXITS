@@ -65,7 +65,7 @@
                             </td>
                             <td align="right" valign="top">
                                 <span class="title">Started:</span> #DateFormat(qGetHostInfo.applicationStarted, 'mmm, d, yyyy')#<br />
-                                <span class="title">Page 8</span>
+                                <span class="title">Page 8<cfif qGetUploadedImages.currentRow GT 1>.#qGetUploadedImages.currentRow-1#</cfif></span>
                             </td>
                         </tr>
                     </table>
