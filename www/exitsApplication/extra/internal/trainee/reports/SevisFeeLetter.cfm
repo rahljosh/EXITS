@@ -46,7 +46,7 @@
             In the meantime, please find the necessary information below in order to pay  the required SEVIS fee ($180.00 US for trainees) to the United States  Department of Homeland Security (DHS).
             <br />
             <br />
-            This fee can be  paid by accessing form I-901 at the following web site: <b>https://www.fmjfee.com/index.jhtml</b>
+            This fee can be  paid by accessing form I-901 at the following web site: <b>https://www.fmjfee.com/i901fee/students/formSelection.htm</b>
             <br />
             <br />
             The SEVIS fee must be paid before applying for the J-1 visa at the U.S. Embassy  or Consulate.
