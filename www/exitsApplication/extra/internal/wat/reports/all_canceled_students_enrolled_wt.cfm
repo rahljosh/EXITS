@@ -298,7 +298,7 @@
                     </tr>
 				</cfif>
                 <tr>
-                    <Th align="left" class="#tableTitleClass#">Student</Th>
+                    <Th align="left" class="#tableTitleClass#">Candidate</Th>
                     <th align="left" class="#tableTitleClass#">Sex</th>
                     <th align="left" class="#tableTitleClass#">Start Date</th>
                     <th align="left" class="#tableTitleClass#">End Date</th>

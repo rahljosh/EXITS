@@ -29,7 +29,7 @@
 <cfif FORM.submitted>
 
 	<cfquery name="qGetResults" datasource="#APPLICATION.DSN.Source#">
-    	SELECT c.candidateID, c.lastName, c.firstName, c.sex, c.wat_placement, c.startDate, c.endDate,
+    	SELECT c.candidateID, c.uniqueID, c.lastName, c.firstName, c.sex, c.wat_placement, c.startDate, c.endDate,
             u.userID, u.businessName,
             ecpc.isSecondary,
             eh.hostCompanyID, eh.name AS hostCompanyName
@@ -49,7 +49,7 @@
     </cfquery>
     
     <cfquery name="qGetResultsGrouped" datasource="#APPLICATION.DSN.Source#">
-    	SELECT c.candidateID, c.lastName, c.firstName, c.sex, c.wat_placement, c.startDate, c.endDate,
+    	SELECT c.candidateID, c.uniqueID, c.lastName, c.firstName, c.sex, c.wat_placement, c.startDate, c.endDate,
             u.userID, u.businessName,
             eh.hostCompanyID, eh.name AS hostCompanyName
         FROM extra_candidates c
@@ -183,9 +183,7 @@
                     <tr><td colspan="11"><img src="../../pics/black_pixel.gif" width="100%" height="2"></td></tr>
                 </cfif>
                 <tr>
-                    <th align="left" class="#tableTitleClass#">ID</Th>
-                    <th align="left" class="#tableTitleClass#">Last Name</Th>
-                    <th align="left" class="#tableTitleClass#">First Name</Th>
+                    <th align="left" class="#tableTitleClass#">Candidate</Th>
                     <th align="left" class="#tableTitleClass#">Sex</th>
                     <th align="left" class="#tableTitleClass#">Start Date</th>
                     <th align="left" class="#tableTitleClass#">End Date</th>
@@ -198,9 +196,11 @@
                 </cfif>
                 <cfloop query="qGetResultsGrouped">
                 	<tr <cfif qGetResultsGrouped.currentRow mod 2>bgcolor="##E4E4E4"</cfif>>
-                        <td class="style1">#candidateid#</td>
-                        <td class="style1">#lastname#</td>
-                        <td class="style1">#firstname#</td>
+                        <td class="style1">
+                        	<a href="?curdoc=candidate/candidate_info&uniqueid=#uniqueID#" target="_blank" class="style4">
+                            	#firstname# #lastname# (###candidateid#)
+                          	</a>
+                      	</td>
                         <td class="style1">#sex#</td>
                         <td class="style1">#DateFormat(startDate,'mm/dd/yyyy')#</td>
                         <td class="style1">#DateFormat(endDate,'mm/dd/yyyy')#</td>

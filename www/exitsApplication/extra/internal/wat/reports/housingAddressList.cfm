@@ -191,7 +191,7 @@
         	<cfloop query="qGetIntlReps">
             
             	<cfquery name="qGetCandidates" datasource="#APPLICATION.DSN.Source#">
-                	SELECT ec.candidateID, ec.hostCompanyID, ec.lastName, ec.firstName, ec.sex, ec.startDate, ec.endDate, ec.ds2019, ec.wat_placement, ec.watDateCheckedIn,
+                	SELECT ec.candidateID, ec.uniqueID, ec.hostCompanyID, ec.lastName, ec.firstName, ec.sex, ec.startDate, ec.endDate, ec.ds2019, ec.wat_placement, ec.watDateCheckedIn,
                     	ec.arrivalDate, ec.arrival_address, ec.arrival_city, ec.arrival_zip,
                         s.state, ehc.name, eir.subject
                     FROM extra_candidates ec
@@ -229,10 +229,8 @@
                         <tr><td colspan="11"><img src="../../pics/black_pixel.gif" width="100%" height="2"></td></tr>
                     </cfif>
                     <tr>
-                        <th align="left" class="#tableTitleClass#" width="5%">ID</Th>
-                        <th align="left" class="#tableTitleClass#" width="6%">Last Name</Th>
-                        <th align="left" class="#tableTitleClass#" width="6%">First Name</Th>
-                        <th align="left" class="#tableTitleClass#" width="3%">Sex</th>
+                        <th align="left" class="#tableTitleClass#" width="16%">Candidate</Th>
+                        <th align="left" class="#tableTitleClass#" width="4%">Sex</th>
                         <th align="left" class="#tableTitleClass#" width="8%">Start Date</th>
                         <th align="left" class="#tableTitleClass#" width="8%">End Date</th>
                         <th align="left" class="#tableTitleClass#" width="24%">Placement Information</th>
@@ -257,13 +255,13 @@
                         </cfif>
                     	<tr <cfif qGetCandidates.currentRow mod 2>bgcolor="##E4E4E4"</cfif>>
                         	<td class="style1">
-                            	#candidateid#
+                            	<a href="?curdoc=candidate/candidate_info&uniqueid=#uniqueID#" target="_blank" class="style4">
+                            		#firstname# #lastname# (###candidateid#)
+                              	</a>
                                 <cfif LEN(subject)>
                                     <font color="red"><b>T</b></font>
                                 </cfif>
                            	</td>
-                            <td class="style1">#lastname#</td>
-                            <td class="style1">#firstname#</td>
                             <td class="style1">#sex#</td>
                             <td class="style1">#DateFormat(startDate,'mm/dd/yyyy')#</td>
                             <td class="style1">#DateFormat(endDate,'mm/dd/yyyy')#</td>
