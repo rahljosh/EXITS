@@ -19,7 +19,7 @@
                 SELECT email
                 FROM smg_users
                 WHERE userid = 
-                <Cfif client.reportType eq 2>
+                <Cfif get_report.fk_reportType eq 2>
              	  <cfqueryparam cfsqltype="cf_sql_integer" value="#get_report.fk_secondVisitRep#">
                 <Cfelse>
                	 <cfqueryparam cfsqltype="cf_sql_integer" value="#get_report.fk_sr_user#">
