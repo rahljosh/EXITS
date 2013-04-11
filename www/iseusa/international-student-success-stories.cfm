@@ -14,8 +14,9 @@ a:hover {
 </style>
 </head>
 <body class="oneColFixCtr">
+<cfinclude template="slidingLogin.cfm">
 <div id="topBar">
-<cfinclude template="topBarLinks.cfm">
+
 <div id="logoBox"><a href="/"><img src="images/ISElogo.png" width="214" height="165" alt="ISE logo" border="0" /></a></div>
 <!-- end topBar --></div>
 <div id="container">
