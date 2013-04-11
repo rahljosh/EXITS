@@ -36,7 +36,7 @@
 			Set up DSN information
 		*******************************************/
 		APPLICATION.DSN = StructNew();
-		APPLICATION.DSN.Source = "mySql";
+		APPLICATION.DSN.Source = "smg";
 		APPLICATION.DSN.Username = "";
 		APPLICATION.DSN.Password = "";
 		
