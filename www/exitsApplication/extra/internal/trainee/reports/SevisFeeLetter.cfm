@@ -15,6 +15,10 @@
     </cfquery>
     
     <style type="text/css">
+	p {
+		margin: 1px;
+		padding: 1px;
+	}
     <!--
     .style1 {
         font-family: Verdana, Arial, Helvetica, sans-serif;
