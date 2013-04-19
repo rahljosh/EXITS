@@ -18,7 +18,7 @@
     <cfparam name="submitted" default="0">
     <cfparam name="keyword" default="">
     <cfparam name="hosting" default="">
-    <cfparam name="active" default="1">
+    <cfparam name="active" default="">
     <cfparam name="orderby" default="familylastname">
     <cfparam name="recordsToShow" default="25">
 
@@ -213,9 +213,7 @@
                 LEFT OUTER JOIN
                 	smg_students s ON s.hostID = h.hostID
                 WHERE
-                	h.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-                AND
-                    h.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionID#">
+                	h.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionID#">
                 AND
                     (    
                         s.areaRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vSupervisedUserIDList#" list="yes">  )
@@ -244,9 +242,7 @@
                 LEFT OUTER JOIN
                 	smg_students s ON s.hostID = h.hostID
                 WHERE
-                	h.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-                AND
-                    h.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionID#">
+                	h.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionID#">
                 AND
                     (    
                         s.areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
@@ -276,10 +272,8 @@
                 h.state
             FROM 
             	smg_hosts h
+         	<!--- REGIONAL MANAGER SEES ALL FAMILIES ON THE REGION --->
             WHERE 
-            	h.active = 1
-			<!--- REGIONAL MANAGER SEES ALL FAMILIES ON THE REGION --->
-            AND 
             	h.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionid#">
                 
             <cfif LEN(TRIM(keyword))>
