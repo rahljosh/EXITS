@@ -12,6 +12,8 @@
 
 <!--- Kill Extra Output --->
 <cfsilent>
+
+	<cfsetting requesttimeout="300">
 	    
     <!--- Param Variables --->
     <cfparam name="userType" default="">
