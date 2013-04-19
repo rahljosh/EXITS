@@ -2318,6 +2318,8 @@
                             	getMaxDate.userID = cbc.userID
                             <cfelseif ARGUMENTS.cbcType EQ 'member'>
                             	getMaxDate.familyID = cbc.familyID
+                          	<cfelse>
+                            	1 = 1
                             </cfif>                                                                                                       
                     )  
 				AND                                    
