@@ -15,6 +15,9 @@
 <!--- Kill Extra Output --->
 <cfsilent>
 
+	<!--- Parameter for the folder locations of images --->
+    <cfparam name="relative" default="../">
+
 	<!--- Import CustomTag Used for Page Messages and Form Errors --->
     <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
     
@@ -30,7 +33,13 @@
                 <!--- Host Header --->
                 <table align="center" border="0" cellpadding="4" cellspacing="0" width="800">
                     <tr>
-                        <td colspan="3"><img src="../pics/hostAppBanners/Pdf_Headers_02.jpg"></td>
+                        <td colspan="3">
+                        	<cfif qGetHostInfo.companyID EQ 10>
+                            	<img src="#relative#pics/10_short_profile_header.jpg">
+                           	<cfelse>
+                            	<img src="#relative#pics/hostAppBanners/Pdf_Headers_02.jpg">
+                          	</cfif>
+                      	</td>
                     </tr>
                     <tr>
                         <td valign="top">
@@ -49,7 +58,7 @@
 
                 <table align="center" border="0" cellpadding="4" cellspacing="0" width="800"> 
                     <tr>           
-                        <td align="center"><img src="../pics/hostAppBanners/HPpdf_confidential.jpg"/></td>
+                        <td align="center"><img src="#relative#pics/hostAppBanners/HPpdf_confidential.jpg"/></td>
                     </tr>
                     <tr>
                     	<td>
@@ -57,21 +66,18 @@
                             <table cellpadding="0" cellspacing="0" width="100%" style="line-height:20px;">
                                 <tr>
                                     <td width="450"><span class="title">Is any member of your household receiving any kind of public assistance?</span></td>
-                                    <td valign="top">#YesNoFormat(VAL(qGetHostInfo.publicAssitance))#</td>
+                                    <td valign="top" class="answer">#YesNoFormat(VAL(qGetHostInfo.publicAssitance))#</td>
                            		</tr>
                                 <tr>
-                                    <td colspan="2"><span class="title">Please explain:</span></td>
+                                    <td><span class="title">Please explain:</span></td>
+                                    <td class="answer"><cfif LEN(qGetHostInfo.publicAssitanceExpl)>#qGetHostInfo.publicAssitanceExpl#<cfelse>n/a</cfif></td>
                            		</tr>
-                                <tr>
-                                    <td colspan="2"><cfif LEN(qGetHostInfo.publicAssitanceExpl)>#qGetHostInfo.publicAssitanceExpl#<cfelse>n/a</cfif></td>
-                           		</tr>
-                                
                                 
                                 <tr><td colspan="2">&nbsp;</td></tr>
 
                                 <tr>
                                     <td><span class="title">Average annual income range:</span></td>
-                                    <td valign="top">
+                                    <td valign="top" class="answer">
                                     	<cfswitch expression="#qGetHostInfo.income#">
                                             <cfcase value="25">Less then $25,000</cfcase>
                                             <cfcase value="35">$25,000 - $35,000</cfcase>
@@ -88,26 +94,22 @@
                                 
                                 <tr>
                                     <td><span class="title">Has any member of your household ever been charged with a crime?</span></td>
-                                    <td valign="top">#YesNoFormat(VAL(qGetHostInfo.crime))#</td>
+                                    <td valign="top" class="answer">#YesNoFormat(VAL(qGetHostInfo.crime))#</td>
                            		</tr>
                                 <tr>
-                                    <td colspan="2"><span class="title">Please explain:</span></td>
-                           		</tr>
-                                <tr>
-                                    <td colspan="2"><cfif LEN(qGetHostInfo.crimeExpl)>#qGetHostInfo.crimeExpl#<cfelse>n/a</cfif></td>
+                                    <td><span class="title">Please explain:</span></td>
+                                    <td class="answer"><cfif LEN(qGetHostInfo.crimeExpl)>#qGetHostInfo.crimeExpl#<cfelse>n/a</cfif></td>
                            		</tr>
 
                                 <tr><td colspan="2">&nbsp;</td></tr>
 
                                 <tr>
                                     <td><span class="title">Have you had any contact with Child Protective Services Agency in the past?</span></td>
-                                    <td valign="top">#YesNoFormat(VAL(qGetHostInfo.cps))#</td>
+                                    <td valign="top" class="answer">#YesNoFormat(VAL(qGetHostInfo.cps))#</td>
                            		</tr>
                                 <tr>
-                                    <td colspan="2"><span class="title">Please explain:</span></td>
-                           		</tr>
-                                <tr>
-                                    <td colspan="2"><cfif LEN(qGetHostInfo.cpsexpl)>#qGetHostInfo.cpsexpl#<cfelse>n/a</cfif></td>
+                                    <td><span class="title">Please explain:</span></td>
+                                    <td class="answer"><cfif LEN(qGetHostInfo.cpsexpl)>#qGetHostInfo.cpsexpl#<cfelse>n/a</cfif></td>
                            		</tr>
 							</table>
                     	

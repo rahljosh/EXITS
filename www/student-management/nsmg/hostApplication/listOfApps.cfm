@@ -177,31 +177,53 @@
                         <td>#qGetHostApplications.regionalAdvisor#</td> 
                         <td>#qGetHostApplications.regionalManager#</td> 
                         <td width="350" align="center">
-                            <a class="jQueryModal" href="/hostApplication/index.cfm?uniqueID=#qGetHostApplications.uniqueID#&userID=#CLIENT.userID#" title="Open Application"><img src="pics/buttons/openApplication.png" border="0"></a>
-                            &nbsp; &nbsp; 
-                            <a href="index.cfm?curdoc=hostApplication/toDoList&hostID=#qGetHostApplications.hostID#" title="View Details"><img src="pics/buttons/approve.png" width="110" border="0"></a>
-                            
-                            <!--- Commented out until the print version is redone 02/26/2013 - Marcus Melo
-                            &nbsp; &nbsp; 
-                            <a class="jQueryModal" href="hostApplication/viewPDF.cfm?hostID=#qGetHostApplications.hostID#&pdf" title="Print Application"><img src="pics/buttons/print50x50.png" width="40" border="0"></a>
-                            --->
-                            
-                            <cfif APPLICATION.CFC.USER.isAdminUser()>
-                            	<form id="frSetRecordToPaper#qGetHostApplications.hostID#" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
-                                	<input type="hidden" name="setHostIDAsPaper" value="#qGetHostApplications.hostID#" />
-                                </form>
-                            	<a href="javascript:setRecordToPaperApplication(#qGetHostApplications.hostID#);"><img src="pics/buttons/convertPaper.png" border="0"></a>
-                            </cfif>
-                            
-                            <form 
-                            	action="index.cfm?curdoc=hostApplication/listOfApps&status=#URL.status#" 
-                                method="post" 
-                                style="display:inline;" 
-                                onsubmit="return confirm('Are you sure this family does not want to host this year?')"
-                                id="notHostingForm">
-                                <input type="hidden" name="notHosting" value="#qGetHostApplications.hostID#"/>
-                            	<input type="image" src="pics/buttons/notHosting.png" width="110" border="0"/>
-                            </form>
+                        	<table width="100%">
+                            	<tr>
+                                	<td>
+                                    	<a class="jQueryModal" href="/hostApplication/index.cfm?uniqueID=#qGetHostApplications.uniqueID#&userID=#CLIENT.userID#" title="Open Application">
+                                        	<img src="pics/buttons/openApplication.png" border="0">
+                                      	</a>
+                                    </td>
+                                    <td>
+                                    	<a href="index.cfm?curdoc=hostApplication/toDoList&hostID=#qGetHostApplications.hostID#" title="View Details">
+                                        	<img src="pics/buttons/approve.png" width="110" border="0">
+                                      	</a>
+                                    </td>
+                                    <td>
+                                    	<cfif CLIENT.userType LTE 4> 
+                                            <a class="jQueryModal" href="hostApplication/viewPDF.cfm?hostID=#qGetHostApplications.hostID#&pdf&reportType=office" title="Print Application">
+                                                <img src="pics/buttons/printOffice.png">
+                                            </a>
+                                        </cfif>
+                                    </td>
+                                </tr>
+                                <tr>
+                                	<td>
+                                    	<cfif APPLICATION.CFC.USER.isAdminUser()>
+                                            <form id="frSetRecordToPaper#qGetHostApplications.hostID#" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
+                                                <input type="hidden" name="setHostIDAsPaper" value="#qGetHostApplications.hostID#" />
+                                            </form>
+                                            <a href="javascript:setRecordToPaperApplication(#qGetHostApplications.hostID#);"><img src="pics/buttons/convertPaper.png" border="0"></a>
+                                        </cfif>
+                                    </td>
+                                    <td>
+                                    	<form 
+                                            action="index.cfm?curdoc=hostApplication/listOfApps&status=#URL.status#" 
+                                            method="post" 
+                                            style="display:inline;" 
+                                            onsubmit="return confirm('Are you sure this family does not want to host this year?')"
+                                            id="notHostingForm">
+                                            <input type="hidden" name="notHosting" value="#qGetHostApplications.hostID#"/>
+                                            <input type="image" src="pics/buttons/notHosting.png" width="110" border="0"/>
+                                        </form>
+                                    </td>
+                                    <td>
+                                    	<a class="jQueryModal" href="hostApplication/viewPDF.cfm?hostID=#qGetHostApplications.hostID#&pdf&reportType=agent" title="Print Application">
+                                            <img src="pics/buttons/printAgent.png">
+                                        </a>
+                                    </td>
+                                </tr>
+                            </table>
                         </td>
             		</tr>
             	</cfloop>

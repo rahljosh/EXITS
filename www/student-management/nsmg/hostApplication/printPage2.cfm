@@ -15,6 +15,9 @@
 <!--- Kill Extra Output --->
 <cfsilent>
 
+	<!--- Parameter for the folder locations of images --->
+    <cfparam name="relative" default="../">
+    
 	<!--- Import CustomTag Used for Page Messages and Form Errors --->
     <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
 
@@ -34,7 +37,13 @@
 				<!--- Host Header --->
                 <table align="center" border="0" cellpadding="4" cellspacing="0" width="800" style="line-height:20px;">
                     <tr>
-                        <td colspan="3"><img src="../pics/hostAppBanners/Pdf_Headers_02.jpg"></td>
+                        <td colspan="3">
+                        	<cfif qGetHostInfo.companyID EQ 10>
+                            	<img src="#relative#pics/10_short_profile_header.jpg">
+                           	<cfelse>
+                            	<img src="#relative#pics/hostAppBanners/Pdf_Headers_02.jpg">
+                          	</cfif>
+                      	</td>
                     </tr>
                     <tr>
                         <td valign="top">
@@ -54,7 +63,7 @@
 
                 <table align="center" border="0" cellpadding="4" cellspacing="0" width="800"> 
                     <tr>           
-                        <td colspan="2" align="center"><img src="../pics/hostAppBanners/HPpdf_familymembers.jpg"/></td>
+                        <td colspan="2" align="center"><img src="#relative#pics/hostAppBanners/HPpdf_familymembers.jpg"/></td>
                 	</tr>
                     <tr>
                     	<td>
@@ -85,17 +94,17 @@
                                             <table cellpadding="0" cellspacing="0" width="100%" style="line-height:20px;">
                                                 <tr>
                                                     <td width="150"><span class="title">Name:</span></td>
-                                                    <td width="200">
+                                                    <td width="200" class="answer">
                                                         #qGetHostChildren.name# #qGetHostChildren.middleName# #qGetHostChildren.lastName#
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td><span class="title">Gender:</span></td>
-                                                    <td>#APPLICATION.CFC.UDF.ProperCase(qGetHostChildren.sex)#</td>
+                                                    <td class="answer">#APPLICATION.CFC.UDF.ProperCase(qGetHostChildren.sex)#</td>
                                                 </tr>
                                                 <tr>
                                                     <td><span class="title">Date of Birth:</span></td>
-                                                    <td>
+                                                    <td class="answer">
                                                         <cfif IsDate(qGetHostChildren.birthdate)>
                                                             #DateFormat(qGetHostChildren.birthdate, 'mm/dd/yyyy')# - #DateDiff('yyyy', qGetHostChildren.birthdate, now())# years old                                  
                                                         </cfif>
@@ -103,19 +112,19 @@
                                                 </tr>
                                                 <tr>
                                                     <td><span class="title">Relation:</span></td>
-                                                    <td>#APPLICATION.CFC.UDF.ProperCase(qGetHostChildren.membertype)#</td>
+                                                    <td class="answer">#APPLICATION.CFC.UDF.ProperCase(qGetHostChildren.membertype)#</td>
                                                 </tr>
                                                 <tr>
                                                     <td><span class="title">Living at Home:</span></td>
-                                                    <td><cfif qGetHostChildren.liveathome is 'yes'>Yes<cfelseif qGetHostChildren.liveathome is 'no' and qGetHostChildren.liveathomePartTime is 'yes'>Part Time<cfelse>No</cfif></td>
+                                                    <td class="answer"><cfif qGetHostChildren.liveathome is 'yes'>Yes<cfelseif qGetHostChildren.liveathome is 'no' and qGetHostChildren.liveathomePartTime is 'yes'>Part Time<cfelse>No</cfif></td>
                                                 </tr>
                                                 <tr>
                                                     <td><span class="title">Shared Room:</span></td>
-                                                    <td>#APPLICATION.CFC.UDF.ProperCase(qGetHostChildren.shared)#</td>
+                                                    <td class="answer">#APPLICATION.CFC.UDF.ProperCase(qGetHostChildren.shared)#</td>
                                                 </tr>
                                                 <tr>
                                                     <td><span class="title">Current Employer:</span></td>
-                                                    <td>#APPLICATION.CFC.UDF.ProperCase(qGetHostChildren.employer)#</td>
+                                                    <td class="answer">#APPLICATION.CFC.UDF.ProperCase(qGetHostChildren.employer)#</td>
                                                 </tr>
                                             </table>
                                         
@@ -125,11 +134,11 @@
                                             <table cellpadding="0" cellspacing="0" width="100%" style="line-height:20px;">
                                                 <tr>
                                                     <td width="150"><span class="title">School Attending:</span></td>
-                                                    <td width="200">#qGetSchool.schoolname#</td>
+                                                    <td width="200" class="answer">#qGetSchool.schoolname#</td>
                                                 </tr>
                                                 <tr>
                                                     <td><span class="title">Grade in School:</span></td>
-                                                    <td>
+                                                    <td class="answer">
                                                         <cfswitch expression="#qGetHostChildren.gradeInSchool#">
                                                             <cfcase value="Not-Applicable">
                                                                 Not Applicable
@@ -154,7 +163,7 @@
                                                 </tr>
                                                 <tr>
                                                     <td valign="top" rowspan="3"><span class="title">Interests:</span></td>
-                                                    <td>#qGetHostChildren.interests#</td>
+                                                    <td class="answer">#qGetHostChildren.interests#</td>
                                                 </tr>
                                             </table>
                                         

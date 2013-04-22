@@ -15,10 +15,13 @@
 <!--- Kill Extra Output --->
 <cfsilent>
 
+	<!--- Parameter for the folder locations of images --->
+    <cfparam name="relative" default="../">
+
 	<!--- Import CustomTag Used for Page Messages and Form Errors --->
-    <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
+    <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />
     
-</cfsilent>   
+</cfsilent>  
 
 <cfoutput>
 
@@ -29,7 +32,13 @@
 				<!--- Host Header --->
                 <table align="center" border="0" cellpadding="4" cellspacing="0" width="800" style="line-height:20px;">
                     <tr>
-                        <td colspan="3"><img src="../pics/hostAppBanners/Pdf_Headers_02.jpg"></td>
+                        <td colspan="3">
+                        	<cfif qGetHostInfo.companyID EQ 10>
+                            	<img src="#relative#pics/10_short_profile_header.jpg">
+                           	<cfelse>
+                            	<img src="#relative#pics/hostAppBanners/Pdf_Headers_02.jpg">
+                          	</cfif>
+                      	</td>
                     </tr>
                     <tr>
                         <td valign="top">
@@ -49,7 +58,7 @@
 
                 <table align="center" border="0" cellpadding="4" cellspacing="0" width="800"> 
                     <tr>           
-                        <td colspan="2" align="center"><img src="../pics/hostAppBanners/HPpdf_04.jpg"/></td>
+                        <td colspan="2" align="center"><img src="#relative#pics/hostAppBanners/HPpdf_04.jpg"/></td>
                 	</tr>
                     <tr>
                     	<td colspan="2">
@@ -57,7 +66,7 @@
                             <table cellpadding="0" cellspacing="0" width="100%" style="line-height:20px;">
                                 <tr>
                                     <td width="100" valign="top"><span class="title">Family Name:</span></td>
-                                    <td>#qGetHostInfo.familyLastName# (###qGetHostInfo.hostid#)</td>
+                                    <td class="answer">#qGetHostInfo.familyLastName# (###qGetHostInfo.hostid#)</td>
                            		</tr>
     						</table>
 						
@@ -71,14 +80,14 @@
                             
                                 <tr>
                                     <td width="100" valign="top"><span class="title">Home Address:</span></td>
-                                    <td>
+                                    <td class="answer">
                                         #qGetHostInfo.address# <br />
                                         #qGetHostInfo.city# #qGetHostInfo.state#, #qGetHostInfo.zip#
                                     </td>
                            		</tr>
                                 <tr>
                                     <td valign="top"><span class="title">Home Phone: </span></td>
-                                    <td>#qGetHostInfo.phone#</td>
+                                    <td class="answer">#qGetHostInfo.phone#</td>
                                 </tr>
     						</table>
                         
@@ -89,14 +98,14 @@
                             <table cellpadding="0" cellspacing="0" width="100%" style="line-height:20px;">
                                 <tr>
                                     <td valign="top"><span class="title">Mailing Address:</span></td>
-                                    <td>
-                                        #qGetHostInfo.mailaddress# <br />
-                                        #qGetHostInfo.mailcity# #qGetHostInfo.mailstate#, #qGetHostInfo.mailzip#
+                                    <td class="answer">
+                                    	#qGetHostInfo.mailaddress# <br />
+                                 		#qGetHostInfo.mailcity# #qGetHostInfo.mailstate#, #qGetHostInfo.mailzip#
                                     </td>
                                 </tr>
                                 <tr>
                                     <td valign="top"><span class="title">Email Address: </span></td>
-                                    <td>#qGetHostInfo.email#</td>
+                                    <td class="answer">#qGetHostInfo.email#</td>
                                 </tr>
 							</table>  
                                                           
@@ -108,17 +117,17 @@
                 <!--- Ethnicity --->
                 <table align="center" border="0" cellpadding="4" cellspacing="0" width="800"> 
                     <tr>           
-                        <td colspan="2" align="center"><img src="../pics/hostAppBanners/HPpdf_ethnicity.jpg"/></td>
+                        <td colspan="2" align="center"><img src="#relative#pics/hostAppBanners/HPpdf_ethnicity.jpg"/></td>
                 	</tr>
                     <tr>
                     	<td width="350" valign="top">
                         	<span class="title">What is the ethnicity of your family?</span>
                         </td>
-                        <td valign="top">
-                        	#qGetHostInfo.race#
- 							<cfif LEn(qGetHostInfo.ethnicityOther)>
-                            	<br />
-								Other: #qGetHostInfo.ethnicityOther#
+                        <td valign="top" class="answer">
+                            #qGetHostInfo.race#
+                            <cfif LEn(qGetHostInfo.ethnicityOther)>
+                                <br />
+                                Other: #qGetHostInfo.ethnicityOther#
                             </cfif>
                         </td>
 					</tr> 
@@ -126,29 +135,49 @@
                     	<td width="350" valign="top">
                         	<span class="title">Primary language spoken in your home</span>
                         </td>
-                        <td valign="top">#qGetHostInfo.primaryLanguage#</td>
+                        <td valign="top" class="answer">#qGetHostInfo.primaryLanguage#</td>
 					</tr>  
+                </table>
+                
+                <!--- Hosted Before --->
+                <table align="center" border="0" cellpadding="4" cellspacing="0" width="800"> 
+                    <tr>           
+                        <td colspan="2" align="center">
+                        	<!--- Using this instead of an image --->
+                        	<div style="width:100%; height:20px; font-weight:bold; font-size:14px; background-color: ##0166b8; color: white;">HOSTED BEFORE</div>
+                    	</td>
+                	</tr>
+                    <tr>
+                    	<td width="350" valign="top">
+                        	<span class="title">Have you ever hosted a foreign exchange student before? </span>
+                        </td>
+                        <td valign="top" class="answer">#YesNoFormat(VAL(qGetHostInfo.previousHosting))#</td>
+					</tr> 
+                    <tr>
+                    	<td width="350" valign="top">
+                        	<span class="title">Please Describe</span>
+                        </td>
+                        <td valign="top" class="answer">#qGetHostInfo.previousHostingExperience#</td>
+					</tr>                       
                 </table>
                 
                 
                 <!--- Home Based Business --->
                 <table align="center" border="0" cellpadding="4" cellspacing="0" width="800"> 
                     <tr>           
-                        <td colspan="2" align="center"><img src="../pics/hostAppBanners/HPpdf_homebased.jpg"/></td>
+                        <td colspan="2" align="center"><img src="#relative#pics/hostAppBanners/HPpdf_homebased.jpg"/></td>
                 	</tr>
                     <tr>
                     	<td width="350" valign="top">
                         	<span class="title">Is the residence the site of a functioning business? <br /> (e.g. daycare, farm)</span>
                         </td>
-                        <td valign="top">#YesNoFormat(VAL(qGetHostInfo.homeIsFunctBusiness))#</td>
+                        <td valign="top" class="answer">#YesNoFormat(VAL(qGetHostInfo.homeIsFunctBusiness))#</td>
 					</tr> 
                     <tr>
-                    	<td colspan="2">
+                    	<td width="350" valign="top">
                         	<span class="title">Please Describe</span>
                         </td>
-					</tr>  
-                    <tr>
-                    	<td colspan="2">#qGetHostInfo.homeBusinessDesc#</td>
+                        <td valign="top" class="answer">#qGetHostInfo.homeBusinessDesc#</td>
 					</tr>                        
                 </table>
 
@@ -157,20 +186,20 @@
                 <cfif LEN(qGetHostInfo.fatherfirstname)>
                     <table align="center" border="0" cellpadding="4" cellspacing="0" width="800"> 
                         <tr>           
-                            <td colspan="2" align="center"><img src="../pics/hostAppBanners/HPpdf_father.jpg"/></td>
+                            <td colspan="2" align="center"><img src="#relative#pics/hostAppBanners/HPpdf_father.jpg"/></td>
                         </tr>
                         <tr>
                             <td valign="top" width="50%">
                                 <table cellpadding="0" cellspacing="0" width="100%" style="line-height:20px;">
                                     <tr>
                                         <td width="150"><span class="title">Name:</span></td>
-                                        <td width="200">
+                                        <td width="200" class="answer">
                                             #qGetHostInfo.fatherfirstname# #qGetHostInfo.fatherMiddleName# #qGetHostInfo.fatherlastname#
                                         </td>
                                     </tr>
                                     <tr>
                                         <td><span class="title">Date of Birth:</span></td>
-                                        <td>
+                                        <td class="answer">
                                             <cfif IsDate(qGetHostInfo.fatherDOB)>
                                                 #DateFormat(qGetHostInfo.fatherDOB, 'mm/dd/yyyy')# - #DateDiff('yyyy', qGetHostInfo.fatherDOB, now())# years old                                  
                                             </cfif>
@@ -178,11 +207,11 @@
                                     </tr>
                                     <tr>
                                         <td><span class="title">Education Level:</span></td>
-                                        <td><cfif LEN(qGetHostInfo.fatherEducationLevel)>#qGetHostInfo.fatherEducationLevel#<cfelse>n/a</cfif></td>
+                                        <td class="answer"><cfif LEN(qGetHostInfo.fatherEducationLevel)>#qGetHostInfo.fatherEducationLevel#<cfelse>n/a</cfif></td>
                                     </tr>
                                     <tr>
                                         <td><span class="title">Cell Phone:</span></td>
-                                        <td><cfif NOT LEN(qGetHostInfo.father_cell)>None on File<cfelse>#qGetHostInfo.father_cell#</cfif></td>
+                                        <td class="answer"><cfif NOT LEN(qGetHostInfo.father_cell)>None on File<cfelse>#qGetHostInfo.father_cell#</cfif></td>
                                     </tr>
                                 </table>						
                             </td>
@@ -190,7 +219,7 @@
                                 <table cellpadding="0" cellspacing="0" width="100%" style="line-height:20px;">
                                     <tr>
                                         <td><span class="title">Occupation:</span></td>
-                                        <td>
+                                        <td class="answer">
                                             #qGetHostInfo.fatherworktype#
                                             <cfif qGetHostInfo.fatherfullpart EQ 1>
                                                 - Full Time
@@ -201,11 +230,11 @@
                                     </tr>
                                     <tr>
                                         <td><span class="title">Employer:</span></td>
-                                        <td>#qGetHostInfo.fatherEmployeer#</td>
+                                        <td class="answer">#qGetHostInfo.fatherEmployeer#</td>
                                     </tr>
                                     <tr>
                                         <td><span class="title">Interests:</span></td>
-                                        <td rowspan="2"><cfif LEN(qGetHostInfo.fatherInterests)>#qGetHostInfo.fatherInterests#<cfelse>n/a</cfif></td>
+                                        <td rowspan="2" class="answer"><cfif LEN(qGetHostInfo.fatherInterests)>#qGetHostInfo.fatherInterests#<cfelse>n/a</cfif></td>
                                     </tr>
                                 </table>						
                             </td>
@@ -217,20 +246,20 @@
                 <cfif LEN(qGetHostInfo.motherfirstname)>
                     <table align="center" border="0" cellpadding="4" cellspacing="0" width="800"> 
                         <tr>           
-                            <td colspan="2" align="center"><img src="../pics/hostAppBanners/HPpdf_mother.jpg"/></td>
+                            <td colspan="2" align="center"><img src="#relative#pics/hostAppBanners/HPpdf_mother.jpg"/></td>
                         </tr>
                         <tr>
                             <td valign="top" width="50%">
                                 <table cellpadding="0" cellspacing="0" width="100%" style="line-height:20px;">
                                     <tr>
                                         <td width="150"><span class="title">Name:</span></td>
-                                        <td width="200">
+                                        <td width="200" class="answer">
                                             #qGetHostInfo.motherfirstname# #qGetHostInfo.motherMiddleName# #qGetHostInfo.motherlastname#
                                         </td>
                                     </tr>
                                     <tr>
                                         <td><span class="title">Date of Birth:</span></td>
-                                        <td>
+                                        <td class="answer">
                                             <cfif IsDate(qGetHostInfo.motherDOB)>
                                                 #DateFormat(qGetHostInfo.motherDOB, 'mm/dd/yyyy')# - #DateDiff('yyyy', qGetHostInfo.motherDOB, now())# years old                                  
                                             </cfif>
@@ -238,11 +267,11 @@
                                     </tr>
                                     <tr>
                                         <td><span class="title">Education Level:</span></td>
-                                        <td><cfif LEN(qGetHostInfo.motherEducationLevel)>#qGetHostInfo.motherEducationLevel#<cfelse>n/a</cfif></td>
+                                        <td class="answer"><cfif LEN(qGetHostInfo.motherEducationLevel)>#qGetHostInfo.motherEducationLevel#<cfelse>n/a</cfif></td>
                                     </tr>
                                     <tr>
                                         <td><span class="title">Cell Phone:</span></td>
-                                        <td><cfif NOT LEN(qGetHostInfo.mother_cell)>None on File<cfelse>#qGetHostInfo.mother_cell#</cfif></td>
+                                        <td class="answer"><cfif NOT LEN(qGetHostInfo.mother_cell)>None on File<cfelse>#qGetHostInfo.mother_cell#</cfif></td>
                                     </tr>
                                 </table>						
                             </td>
@@ -250,7 +279,7 @@
                                 <table cellpadding="0" cellspacing="0" width="100%" style="line-height:20px;">
                                     <tr>
                                         <td><span class="title">Occupation:</span></td>
-                                        <td>
+                                        <td class="answer">
                                             #qGetHostInfo.motherworktype#
                                             <cfif qGetHostInfo.motherfullpart EQ 1>
                                                 - Full Time
@@ -261,11 +290,11 @@
                                     </tr>
                                     <tr>
                                         <td><span class="title">Employer:</span></td>
-                                        <td>#qGetHostInfo.motherEmployeer#</td>
+                                        <td class="answer">#qGetHostInfo.motherEmployeer#</td>
                                     </tr>
                                     <tr>
                                         <td><span class="title">Interests:</span></td>
-                                        <td rowspan="2"><cfif LEN(qGetHostInfo.motherInterests)>#qGetHostInfo.motherInterests#<cfelse>n/a</cfif></td>
+                                        <td rowspan="2" class="answer"><cfif LEN(qGetHostInfo.motherInterests)>#qGetHostInfo.motherInterests#<cfelse>n/a</cfif></td>
                                     </tr>
                                 </table>						
                             </td>

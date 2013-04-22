@@ -15,6 +15,9 @@
 <!--- Kill Extra Output --->
 <cfsilent>
 
+	<!--- Parameter for the folder locations of images --->
+    <cfparam name="relative" default="../">
+
 	<!--- Import CustomTag Used for Page Messages and Form Errors --->
     <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
 
@@ -39,7 +42,13 @@
 				<!--- Host Header --->
                 <table align="center" border="0" cellpadding="4" cellspacing="0" width="800" style="line-height:20px;">
                     <tr>
-                        <td colspan="3"><img src="../pics/hostAppBanners/Pdf_Headers_02.jpg"></td>
+                        <td colspan="3">
+                        	<cfif qGetHostInfo.companyID EQ 10>
+                            	<img src="#relative#pics/10_short_profile_header.jpg">
+                           	<cfelse>
+                            	<img src="#relative#pics/hostAppBanners/Pdf_Headers_02.jpg">
+                          	</cfif>
+                      	</td>
                     </tr>
                     <tr>
                         <td valign="top">
@@ -56,35 +65,37 @@
                     </tr>
                 </table>
                 
-                <table align="center" border="0" cellpadding="4" cellspacing="0" width="800"> 
+                <table align="center" border="0" cellpadding="4" cellspacing="0" width="100%"> 
                     <tr>           
-                        <td colspan="2" align="center"><img src="../pics/hostAppBanners/HPpdf_religiouspreference.jpg"/></td>
+                        <td colspan="2" align="center"><img src="#relative#pics/hostAppBanners/HPpdf_religiouspreference.jpg"/></td>
                 	</tr>
+                    <cfif VAL(qGetHostInfo.informReligiousPref) OR URL.reportType EQ "office">
+                        <tr>
+                            <td><span>Are you willing to voluntarily inform your exchange student of your religious affiliation?</span></td>
+                            <td class="answer"><cfif LEN(qGetHostInfo.informReligiousPref)>#YesNoFormat(VAL(qGetHostInfo.informReligiousPref))#<cfelse>n/a</cfif></td>
+                        </tr>
+                        <tr>
+                            <td><span>What is your religious affiliation?</span></td>
+                            <td class="answer"><cfif qGetReligionList.recordCount>#qGetReligionList.religionName#<cfelse>n/a</cfif></td>
+                        </tr>
+                  	</cfif>
                     <tr>
-                        <td width="70%"><span class="title">What is your religious affiliation?</span></td>
-                        <td><cfif qGetReligionList.recordCount>#qGetReligionList.religionName#<cfelse>n/a</cfif></td>
+                        <td><span>Would you provide transportation to the student's church services if they are different from your own?</span></td>
+                        <td class="answer"><cfif LEN(qGetHostInfo.churchTrans)><cfif qGetHostInfo.churchTrans EQ "yes">Yes<cfelse>No</cfif><cfelse>n/a</cfif></td>
                     </tr>
                     <tr>
-                        <td><span class="title">Would you provide transportation to the student's churchTrans services if they are different from your own?</span></td>
-                        <td><cfif LEN(qGetHostInfo.churchTrans)>#YesNoFormat(VAL(qGetHostInfo.churchTrans))#<cfelse>n/a</cfif></td>
-                    </tr>
-                    <tr>
-                        <td width="70%"><span class="title">Are you willing to voluntarily inform your exchange student of your religious affiliation?</span></td>
-                        <td><cfif LEN(qGetHostInfo.informReligiousPref)>#YesNoFormat(VAL(qGetHostInfo.informReligiousPref))#<cfelse>n/a</cfif></td>
-                    </tr>
-                    <tr>
-                        <td width="70%"><span class="title">Does any member of your household have difficulty hosting a student with different religious beliefs?</span></td>
-                        <td><cfif LEN(qGetHostInfo.hostingDiff)>#YesNoFormat(VAL(qGetHostInfo.hostingDiff))#<cfelse>n/a</cfif></td>
+                        <td><span>Does any member of your household have difficulty hosting a student with different religious beliefs?</span></td>
+                        <td class="answer"><cfif LEN(qGetHostInfo.hostingDiff)>#YesNoFormat(VAL(qGetHostInfo.hostingDiff))#<cfelse>n/a</cfif></td>
                     </tr>
 				</table>
                 
                 <table align="center" border="0" cellpadding="4" cellspacing="0" width="800"> 
                     <tr>           
-                        <td colspan="2" align="center"><img src="../pics/hostAppBanners/HPpdf_religiousattendance.jpg"/></td>
+                        <td colspan="2" align="center"><img src="#relative#pics/hostAppBanners/HPpdf_religiousattendance.jpg"/></td>
                 	</tr>
                     <tr>
-                        <td width="70%"><span class="title">How often do you go to your religious place of worship?</span></td>
-                        <td>
+                        <td><span>How often do you go to your religious place of worship?</span></td>
+                        <td class="answer">
                         	<cfswitch expression="#qGetHostInfo.religious_participation#">
                             
                             	<cfcase value="Active">
@@ -111,8 +122,8 @@
                         </td>
                     </tr>
                     <tr>
-                        <td width="70%"><span class="title">Would you expect your exchange student to attend services with your family?</span></td>
-                        <td><cfif LEN(qGetHostInfo.churchFam)>#YesNoFormat(VAL(qGetHostInfo.churchFam))#<cfelse>n/a</cfif></td>
+                        <td><span>Would you expect your exchange student to attend services with your family?</span></td>
+                        <td class="answer"><cfif LEN(qGetHostInfo.churchFam)><cfif qGetHostInfo.churchFam EQ "yes">Yes<cfelse>No</cfif><cfelse>n/a</cfif></td>
                     </tr>
 				</table>
                                 

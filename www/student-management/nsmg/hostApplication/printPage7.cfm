@@ -15,6 +15,9 @@
 <!--- Kill Extra Output --->
 <cfsilent>
 
+	<!--- Parameter for the folder locations of images --->
+    <cfparam name="relative" default="../">
+
 	<!--- Import CustomTag Used for Page Messages and Form Errors --->
     <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
 
@@ -29,7 +32,13 @@
 				<!--- Host Header --->
                 <table align="center" border="0" cellpadding="4" cellspacing="0" width="800" style="line-height:20px;">
                     <tr>
-                        <td colspan="3"><img src="../pics/hostAppBanners/Pdf_Headers_02.jpg"></td>
+                        <td colspan="3">
+                        	<cfif qGetHostInfo.companyID EQ 10>
+                            	<img src="#relative#pics/10_short_profile_header.jpg">
+                           	<cfelse>
+                            	<img src="#relative#pics/hostAppBanners/Pdf_Headers_02.jpg">
+                          	</cfif>
+                      	</td>
                     </tr>
                     <tr>
                         <td valign="top">
@@ -48,49 +57,37 @@
 
                 <table align="center" border="0" cellpadding="4" cellspacing="0" width="800"> 
                     <tr>           
-                        <td colspan="2" align="center"><img src="../pics/hostAppBanners/HPpdf_22.jpg"/></td>
+                        <td colspan="2" align="center"><img src="#relative#pics/hostAppBanners/HPpdf_22.jpg"/></td>
                 	</tr>
                     <tr>
                         <td valign="top"><span class="title">Curfew on school nights:</span></td>
+                        <td class="answer">#qGetHostInfo.houserules_curfewweeknights#</td>
                     </tr>
                     <tr>
-                        <td>#qGetHostInfo.houserules_curfewweeknights#</td>
+                        <td valign="top"><span class="title">Curfew on weekends:</span></td>
+                        <td class="answer">#qGetHostInfo.houserules_curfewweekends#</td>
                     </tr>
                     <tr>
-                        <td valign="top"><span class="title">Curfew on weekends</span></td>
+                        <td valign="top"><span class="title">Chores:</span></td>
+                        <td class="answer">#qGetHostInfo.houserules_chores#</td>
                     </tr>
                     <tr>
-                        <td>#qGetHostInfo.houserules_curfewweekends#</td>
-                    </tr>
-                    <tr>
-                        <td valign="top"><span class="title">Chores</span></td>
-                    </tr>
-                    <tr>
-                        <td>#qGetHostInfo.houserules_chores#</td>
-                    </tr>
-                    <tr>
-                        <td valign="top"><span class="title">Computer, Internet, and Email Usage</span></td>
-                    </tr>
-                    <tr>
-                        <td>#qGetHostInfo.houserules_inet#</td>
+                        <td valign="top"><span class="title">Computer, Internet, and Email Usage:</span></td>
+                        <td class="answer">#qGetHostInfo.houserules_inet#</td>
                     </tr>
                     <tr>
                         <td valign="top">
-                        	<span class="title">Expenses</span> <br />
-                        	<span class="title" style="font-size:0.8em">personal expenses expected to be paid by the students</span>
+                        	<span class="title">Expenses:</span> <br />
+                        	<span class="title" style="font-size:0.8em">(personal expenses expected to be paid by the students)</span>
                         </td>
-                    </tr>
-                    <tr>
-                        <td>#qGetHostInfo.houserules_expenses#</td>
+                        <td class="answer">#qGetHostInfo.houserules_expenses#</td>
                     </tr>
                     <tr>
                         <td valign="top">
-                        	<span class="title">Other</span> <br />
-                        	<span class="title" style="font-size:0.8em">please include any other rules or expectations you will have of your exchange student</span>
+                        	<span class="title">Other:</span> <br />
+                        	<span class="title" style="font-size:0.8em">(please include any other rules or expectations you will have of your exchange student)</span>
                         </td>
-                    </tr>
-                    <tr>
-                        <td>#qGetHostInfo.houserules_other#</td>
+                        <td class="answer">#qGetHostInfo.houserules_other#</td>
                     </tr>
 				</table>
                 
