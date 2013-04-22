@@ -22,6 +22,11 @@
 
     <!--- Param URL Variables --->
     <cfparam name="URL.hostID" default="0">
+    <cfparam name="URL.reportType" default="agent">
+    
+    <cfif CLIENT.userType GTE 5>
+    	<cfset URL.reportType = "agent">
+    </cfif>
 
     <!--- Param FORM Variables --->
     <cfparam name="FORM.hostID" default="0">
@@ -44,7 +49,13 @@
 <gui:pageHeader
 	headerType="applicationNoHeader"
 	filePath="../"
-/>	
+/>
+
+<style type="text/css">
+	.answer {
+    	font-weight: bold;
+    }
+</style>
 
 	<!--- Check to see which action we are taking. --->
     <cfswitch expression="#action#">
@@ -72,9 +83,13 @@
             <!--- Page Break --->
             <div style="margin:0; padding:0; page-break-after:always"></div>
 
-            <!--- Include Page 3 - Background Checks --->
-            <!--- Merge Existing PDFs --->
-            <!--- <cfinclude template="printPage3.cfm" /> --->
+			<cfif URL.reportType EQ "office">
+				<!--- Include Page 3 - Background Checks --->
+                <cfinclude template="printPage3.cfm" />
+                
+                <!--- Page Break --->
+                <div style="margin:0; padding:0; page-break-after:always"></div>
+         	</cfif>
 
             <!--- Include Page 4 - Personal Description --->
             <cfinclude template="printPage4.cfm" />
@@ -118,17 +133,19 @@
             <!--- Page Break --->
             <div style="margin:0; padding:0; page-break-after:always"></div>
 
-            <!--- Include Page 11 - Confidential Data --->
-            <cfinclude template="printPage11.cfm" />
-
-            <!--- Page Break --->
-            <div style="margin:0; padding:0; page-break-after:always"></div>
-
-            <!--- Include Page 12 - References --->
-            <cfinclude template="printPage12.cfm" />
-
-            <!--- Page Break --->
-            <div style="margin:0; padding:0; page-break-after:always"></div>
+			<cfif URL.reportType EQ "office">
+				<!--- Include Page 11 - Confidential Data --->
+                <cfinclude template="printPage11.cfm" />
+    
+                <!--- Page Break --->
+                <div style="margin:0; padding:0; page-break-after:always"></div>
+    
+                <!--- Include Page 12 - References --->
+                <cfinclude template="printPage12.cfm" />
+    
+                <!--- Page Break --->
+                <div style="margin:0; padding:0; page-break-after:always"></div>
+          	</cfif>
             
             <!--- Include Confidential Host Family Visit Form --->
             

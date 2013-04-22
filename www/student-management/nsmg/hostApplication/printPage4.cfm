@@ -15,6 +15,9 @@
 <!--- Kill Extra Output --->
 <cfsilent>
 
+	<!--- Parameter for the folder locations of images --->
+    <cfparam name="relative" default="../">
+
 	<!--- Import CustomTag Used for Page Messages and Form Errors --->
     <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
 
@@ -29,7 +32,13 @@
 				<!--- Host Header --->
                 <table align="center" border="0" cellpadding="4" cellspacing="0" width="800" style="line-height:20px;">
                     <tr>
-                        <td colspan="3"><img src="../pics/hostAppBanners/Pdf_Headers_02.jpg"></td>
+                        <td colspan="3">
+                        	<cfif qGetHostInfo.companyID EQ 10>
+                            	<img src="#relative#pics/10_short_profile_header.jpg">
+                           	<cfelse>
+                            	<img src="#relative#pics/hostAppBanners/Pdf_Headers_02.jpg">
+                          	</cfif>
+                      	</td>
                     </tr>
                     <tr>
                         <td valign="top">
@@ -49,10 +58,13 @@
 
                 <table align="center" border="0" cellpadding="4" cellspacing="0" width="800"> 
                     <tr>           
-                        <td colspan="2" align="center"><img src="../pics/hostAppBanners/HPpdf_15.jpg"/></td>
+                        <td colspan="2" align="center"><img src="#relative#pics/hostAppBanners/HPpdf_15.jpg"/></td>
                 	</tr>
                     <tr>
-                    	<td>#qGetHostInfo.familyLetter#</td>
+                    	<td style="font-size:16px; line-height:20px;">
+                        	<cfset description=replace(#qGetHostInfo.familyLetter#,chr(13)&chr(10),"<BR>","ALL")> 
+                        	#description#
+                    	</td>
 					</tr>                                                
 				</table>
                 

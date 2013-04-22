@@ -15,6 +15,9 @@
 <!--- Kill Extra Output --->
 <cfsilent>
 
+	<!--- Parameter for the folder locations of images --->
+    <cfparam name="relative" default="../">
+
 	<!--- Import CustomTag Used for Page Messages and Form Errors --->
     <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
 
@@ -34,7 +37,13 @@
 				<!--- Host Header --->
                 <table align="center" border="0" cellpadding="4" cellspacing="0" width="800" style="line-height:20px;">
                     <tr>
-                        <td colspan="3"><img src="../pics/hostAppBanners/Pdf_Headers_02.jpg"></td>
+                        <td colspan="3">
+                        	<cfif qGetHostInfo.companyID EQ 10>
+                            	<img src="#relative#pics/10_short_profile_header.jpg">
+                           	<cfelse>
+                            	<img src="#relative#pics/hostAppBanners/Pdf_Headers_02.jpg">
+                          	</cfif>
+                      	</td>
                     </tr>
                     <tr>
                         <td valign="top">
@@ -53,7 +62,7 @@
 				
                 <table align="center" border="0" cellpadding="4" cellspacing="0" width="800"> 
                     <tr>           
-                        <td colspan="2" align="center"><img src="../pics/hostAppBanners/HPpdf_18.jpg"/></td>
+                        <td colspan="2" align="center"><img src="#relative#pics/hostAppBanners/HPpdf_18.jpg"/></td>
                 	</tr>
                     <tr>
                     	<td>
@@ -69,31 +78,31 @@
                                             <table cellpadding="0" cellspacing="0" width="100%" style="line-height:20px;">
                                                 <tr>
                                                     <td width="100"><span class="title">Name:</span></td>
-                                                    <td>
+                                                    <td class="answer">
                                                         #qGetReferences.firstName# #qGetReferences.lastName#
                                                     </td>
                                                 </tr>
                                                 <tr>
                                                     <td><span class="title">Phone:</span></td>
-                                                    <td>#qGetReferences.phone#</td>
+                                                    <td class="answer">#qGetReferences.phone#</td>
                                                 </tr>
                                                 <tr>
                                                     <td><span class="title">Address:</span></td>
-                                                    <td>#qGetReferences.address#</td>
+                                                    <td class="answer">#qGetReferences.address#</td>
                                                 </tr>
                                                 <cfif LEN(qGetReferences.address2)>
                                                     <tr>
                                                         <td>&nbsp;</td>
-                                                        <td>#qGetReferences.address2#</td>
+                                                        <td class="answer">#qGetReferences.address2#</td>
                                                     </tr>
                                                 </cfif>
                                                 <tr>
                                                 	<td>&nbsp;</td>
-                                                    <td>#qGetReferences.city#, #qGetReferences.state# #qGetReferences.zip#</td>
+                                                    <td class="answer">#qGetReferences.city#, #qGetReferences.state# #qGetReferences.zip#</td>
                                                 </tr>
                                                 <tr>
                                                     <td><span class="title">Email:</span></td>
-                                                    <td>#qGetReferences.email#</td>
+                                                    <td class="answer">#qGetReferences.email#</td>
                                                 </tr>
                                             </table>
                                         

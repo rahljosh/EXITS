@@ -15,6 +15,9 @@
 <!--- Kill Extra Output --->
 <cfsilent>
 
+	<!--- Parameter for the folder locations of images --->
+    <cfparam name="relative" default="../">
+
 	<!--- Import CustomTag Used for Page Messages and Form Errors --->
     <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
     
@@ -49,7 +52,13 @@
 				<!--- Host Header --->
                 <table align="center" border="0" cellpadding="4" cellspacing="0" width="800" style="line-height:20px;">
                     <tr>
-                        <td colspan="3"><img src="../pics/hostAppBanners/Pdf_Headers_02.jpg"></td>
+                        <td colspan="3">
+                        	<cfif qGetHostInfo.companyID EQ 10>
+                            	<img src="#relative#pics/10_short_profile_header.jpg">
+                           	<cfelse>
+                            	<img src="#relative#pics/hostAppBanners/Pdf_Headers_02.jpg">
+                          	</cfif>
+                      	</td>
                     </tr>
                     <tr>
                         <td valign="top">
@@ -68,7 +77,7 @@
                 
                 <table align="center" border="0" cellpadding="4" cellspacing="0" width="800"> 
                     <tr>           
-                        <td align="center"><img src="../pics/hostAppBanners/HPpdf_pets.jpg"/></td>
+                        <td align="center"><img src="#relative#pics/hostAppBanners/HPpdf_pets.jpg"/></td>
                 	</tr>
                     <tr>
                         <td>
@@ -85,9 +94,9 @@
                                 <cfelse>
                                     <cfloop query="qPets">
                                         <tr <cfif qPets.currentrow mod 2> bgcolor="##deeaf3"</cfif>>
-                                            <td><p class=p_uppercase>#qPets.animaltype#</td>
-                                            <td><p class=p_uppercase>#qPets.indoor#</td>
-                                            <td>#qPets.number#</td>
+                                            <td class="answer"><p class=p_uppercase>#qPets.animaltype#</td>
+                                            <td class="answer"><p class=p_uppercase>#qPets.indoor#</td>
+                                            <td class="answer">#qPets.number#</td>
                                         </tr>
                                     </cfloop>
                                 </cfif>
@@ -98,7 +107,7 @@
                 
                 <table align="center" border="0" cellpadding="4" cellspacing="0" width="800"> 
                     <tr>           
-                        <td align="center"><img src="../pics/hostAppBanners/HPpdf_allergies.jpg"/></td>
+                        <td align="center"><img src="#relative#pics/hostAppBanners/HPpdf_allergies.jpg"/></td>
                 	</tr>
                     <tr>
                     	<td>
@@ -108,7 +117,7 @@
                                     	<span class="title">Would you be willing to host a student who is allergic to animals?</span>
                                         <span class="formNote">(If they are able to handle the allergy with medication)</span>
                                     </td>
-                            		<td valign="top"><cfif qGetHostInfo.pet_allergies eq 0>No<cfelse>Yes</cfif></td>
+                            		<td valign="top" class="answer"><cfif qGetHostInfo.pet_allergies eq 0>No<cfelse>Yes</cfif></td>
                             	</tr>
                             </table> 
 						</td>
@@ -117,7 +126,7 @@
 
                 <table align="center" border="0" cellpadding="4" cellspacing="0" width="800"> 
                     <tr>           
-                        <td align="center"><img src="../pics/hostAppBanners/HPpdf_roomsharing.jpg"/></td>
+                        <td align="center"><img src="#relative#pics/hostAppBanners/HPpdf_roomsharing.jpg"/></td>
                 	</tr>
                     <tr>
                     	<td>
@@ -127,12 +136,20 @@
                                     	<span class="title">Will the student share a bedroom?</span>
                                         <span class="formNote">(The student may share a bedroom with someone of the same sex and within a reasonable age difference, but must have his/her own bed.)</span>
                                     </td>
-                            		<td valign="top">#YesNoFormat(VAL(qGetHostInfo.isStudentSharingBedroom))#</td>
+                            		<td valign="top" class="answer">#YesNoFormat(VAL(qGetHostInfo.isStudentSharingBedroom))#</td>
                             	</tr>
-                                <cfif qGetWhoIsSharingRoom.recordCount>
+                                <cfif VAL(qGetHostInfo.isStudentSharingBedroom)>
                                     <tr>
                                         <td><span class="title">Who will they share a room with?</span></td>
-                                        <td valign="top">#qGetWhoIsSharingRoom.name#</td>
+                                        <td valign="top" class="answer">
+                                        	<cfif qGetHostInfo.sharingBedroomOptions EQ "member">
+                                        		#qGetWhoIsSharingRoom.name#
+                                         	<cfelseif qGetHostInfo.sharingBedroomOptions EQ "student">
+                                            	With another exchange student
+                                         	<cfelseif qGetHostInfo.sharingBedroomOptions EQ "depends">
+                                            	Depends on student's gender
+                                            </cfif>
+                                     	</td>
                                     </tr>
                                 </cfif>
                             </table> 
@@ -142,17 +159,17 @@
                            
                 <table align="center" border="0" cellpadding="4" cellspacing="0" width="800"> 
                     <tr>           
-                        <td align="center"><img src="../pics/hostAppBanners/HPpdf_smoking.jpg"/></td>
+                        <td align="center"><img src="#relative#pics/hostAppBanners/HPpdf_smoking.jpg"/></td>
                 	</tr>
                     <tr>
                         <td>
                             <table width="100%" cellspacing="0" cellpadding="2" class="border">
                                 <tr>
                                     <td width="70%"><span class="title">Does anyone in your home smoke?</span></td>
-                                    <td>#qGetHostInfo.hostsmokes#</td>
+                                    <td class="answer">#APPLICATION.CFC.UDF.ProperCase(qGetHostInfo.hostsmokes)#</td>
                                 </tr>
                                 <tr>
-                                    <td colspan="2"><span class="title">Conditions:</span> #qGetHostInfo.smokeconditions#</td>
+                                    <td colspan="2" class="answer"><span class="title">Conditions:</span> #qGetHostInfo.smokeconditions#</td>
                                 </tr>
                             </table> 
                         </td>
@@ -161,29 +178,29 @@
                 
                 <table align="center" border="0" cellpadding="4" cellspacing="0" width="800"> 
                     <tr>           
-                        <td align="center"><img src="../pics/hostAppBanners/HPpdf_dietaryneeds.jpg"/></td>
+                        <td align="center"><img src="#relative#pics/hostAppBanners/HPpdf_dietaryneeds.jpg"/></td>
                 	</tr>
                     <tr>
                         <td>
                             <table width="100%" cellspacing="0" cellpadding="2" class="border">
                                 <tr>
                                     <td width="70%"><span class="title">Does anyone in your family follow any dietary restrictions?</span></td>
-                                    <td><cfif qGetHostInfo.famDietRest eq 0>No<cfelse>Yes</cfif></td>
+                                    <td class="answer"><cfif qGetHostInfo.famDietRest eq 0>No<cfelse>Yes</cfif></td>
                                 </tr>
                                 <tr>
                                     <td colspan="2">
-                                    	<span class="title">Restrictions:</span><br />
-										<cfif qGetHostInfo.famDietRestDesc is ''>No Restrictions Noted<cfelse>#qGetHostInfo.famDietRestDesc#</cfif>
+                                    	<span class="title">Restrictions:</span>
+										<span class="answer"><cfif qGetHostInfo.famDietRestDesc is ''>No Restrictions Noted<cfelse>#qGetHostInfo.famDietRestDesc#</cfif></span>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td><span class="title">Do you expect the student to follow any dietary restrictions?</span></td>
-                               		<td><cfif qGetHostInfo.stuDietRest eq 0>No<cfelse>Yes</cfif></td>
+                               		<td class="answer"><cfif qGetHostInfo.stuDietRest eq 0>No<cfelse>Yes</cfif></td>
                                 </tr>
                                 <tr>
                                     <td colspan="2">
-                                    	<span class="title">Restrictions:</span><br />
-                                    	<cfif qGetHostInfo.stuDietRestDesc is ''>No Restrictions Noted<cfelse>#qGetHostInfo.stuDietRestDesc#</cfif>
+                                    	<span class="title">Restrictions:</span>
+                                    	<span class="answer"><cfif qGetHostInfo.stuDietRestDesc is ''>No Restrictions Noted<cfelse>#qGetHostInfo.stuDietRestDesc#</cfif></span>
                                     </td>
                                 </tr>
                                 <tr>
@@ -191,19 +208,38 @@
                                     	<span class="title">Would you feel comfortable hosting a student with a dietary restriction?</span>
                                     	<span class="formNote">(vegetarian, vegan, etc.)</span>
                                     </td>
-                                    <td><cfif qGetHostInfo.dietaryRestriction eq 0>No<cfelse>Yes</cfif></td>
+                                    <td class="answer"><cfif qGetHostInfo.dietaryRestriction eq 0>No<cfelse>Yes</cfif></td>
                                 </tr>
                                 <tr>
                                     <td>
                                     	<span class="title">Are you prepared to provide three (3) quality meals per day?</span>
                                     	<span class="formNote">(students are expected to provide and/or pay for school lunches)</span>
                                     </td>
-                                    <td><cfif qGetHostInfo.threesquares eq 0>No<cfelse>Yes</cfif></td> 
+                                    <td class="answer"><cfif qGetHostInfo.threesquares eq 0>No<cfelse>Yes</cfif></td> 
                                 </tr>
                             </table> 
                         </td>
 					</tr>
 				</table>
+                
+                <table align="center" border="0" cellpadding="4" cellspacing="0" width="800"> 
+                	<tr>
+                    	<td align="center">
+                        	<!--- Using this instead of an image --->
+                        	<div style="width:100%; height:20px; font-weight:bold; font-size:14px; background-color: ##0166b8; color: white;">INTERNET</div>
+                     	</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table width="100%" cellspacing="0" cellpadding="2" class="border">
+                                <tr>
+                                    <td width="70%"><span class="title">What type of internet connection do you have in your home?</span></td>
+                                    <td class="answer">#qGetHostInfo.internetConnection#</td>
+                                </tr>
+                          	</table>
+                     	</td>
+                 	</tr>                
+                </table>
                                 
             </td>
 		</tr>

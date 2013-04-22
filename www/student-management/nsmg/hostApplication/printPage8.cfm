@@ -16,6 +16,9 @@
 <!--- Kill Extra Output --->
 <cfsilent>
 
+	<!--- Parameter for the folder locations of images --->
+    <cfparam name="relative" default="../">
+
 	<!--- Import CustomTag Used for Page Messages and Form Errors --->
     <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
 	
@@ -32,82 +35,28 @@
 
 <cfoutput>
 
-    <cfloop query="qGetUploadedImages">
-	
-	    <!--- Get Image Information --->
-		<cfimage action="info" source="#qGetUploadedImages.filePath#" structname="stImageInfo"> 
+	<cfset records = qGetUploadedImages.recordCount>
+    <cfset i = 1>
+    <cfset showAnything = true>
+    <cfset noImages = false>
     
-        <cfscript>
-			if ( stImageInfo.height GT stImageInfo.width ) {
-            	vSetSize = 'height="650px"';
-            } else {
-                vSetSize = 'width="750px"';
-            }
-		</cfscript>
-        
-        <!--- Page Header --->
+    <cfloop condition="records GTE i">
+    
+    	<!--- Page Header --->
         <table class="profileTable" align="center">
             <tr>
                 <td>
-                
-                    <!--- Host Header --->
-                    <table align="center" border="0" cellpadding="4" cellspacing="0" width="800">
-                        <tr>
-                            <td colspan="3"><img src="../pics/hostAppBanners/Pdf_Headers_02.jpg"></td>
-                        </tr>
-                        <tr>
-                            <td valign="top">
-                                <span class="title">Region:</span> #qGetHostInfo.regionName#<br />
-                                <span class="title">Area Representative:</span> #qGetHostInfo.areaRepresentative#
-                            </td>
-                            <td align="center" valign="top">
-                                <span class="title" style="font-size:18px;">#qGetHostInfo.familyLastName# (###qGetHostInfo.hostid#) <br /> Host Family Application</span>
-                            </td>
-                            <td align="right" valign="top">
-                                <span class="title">Started:</span> #DateFormat(qGetHostInfo.applicationStarted, 'mmm, d, yyyy')#<br />
-                                <span class="title">Page 8<cfif qGetUploadedImages.currentRow GT 1>.#qGetUploadedImages.currentRow-1#</cfif></span>
-                            </td>
-                        </tr>
-                    </table>
-    
-    				<!--- Display Images | 1 per page --->
-                    <table align="center" border="0" cellpadding="4" cellspacing="0" width="800"> 
-                        <tr>           
-                            <td colspan="2" align="center"><img src="../pics/hostAppBanners/HPpdf_20.jpg"/></td>
-                        </tr>
-						
-                        <tr>
-                            <td colspan="2" align="center">
-                                <img src="../uploadedfiles/hostApp/#VAL(qGetHostInfo.hostID)#/album/large/#qGetUploadedImages.fileName#" style="border:1px solid ##999" #vSetSize# />
-                            </td>
-                        </tr>   
-                        <tr>
-                            <td width="75px"><span class="title">Description:</span></td>  
-                            <td>#qGetUploadedImages.description#</td>
-                        </tr>                                                       
-                    </table>
-                    
-                </td>
-            </tr>
-        </table>             
-            
-		<!--- Page Break --->
-        <cfif qGetUploadedImages.recordCount NEQ qGetUploadedImages.currentRow>
-	        <div style="margin:0; padding:0; page-break-after:always"></div>
-        </cfif>
-    
-    <!--- 2 Images Per Sheet --->
-    <!---    
-        <!--- Page Header --->
-        <cfif qGetUploadedImages.currentRow MOD 2 EQ 1>
-            <table class="profileTable" align="center">
-                <tr>
-                    <td>
-                    
-                        <!--- Host Header --->
+                	<!--- Host Header --->
+                	<cfif showAnything>
                         <table align="center" border="0" cellpadding="4" cellspacing="0" width="800">
                             <tr>
-                                <td colspan="3"><img src="../pics/hostAppBanners/Pdf_Headers_02.jpg"></td>
+                                <td colspan="3">
+                                    <cfif qGetHostInfo.companyID EQ 10>
+                                        <img src="#relative#pics/10_short_profile_header.jpg">
+                                    <cfelse>
+                                        <img src="#relative#pics/hostAppBanners/Pdf_Headers_02.jpg">
+                                    </cfif>
+                                </td>
                             </tr>
                             <tr>
                                 <td valign="top">
@@ -119,45 +68,183 @@
                                 </td>
                                 <td align="right" valign="top">
                                     <span class="title">Started:</span> #DateFormat(qGetHostInfo.applicationStarted, 'mmm, d, yyyy')#<br />
-                                    <span class="title">Page 8</span>
+                                    <span class="title">Page 8<cfif qGetUploadedImages.currentRow GT 1>.#qGetUploadedImages.currentRow-1#</cfif></span>
                                 </td>
                             </tr>
                         </table>
-        
-        
+                 	</cfif>
+                    
+                    <!--- Keeps track of how many images are being shown, used to add to the index of the query --->
+                    <cfset addToI = 1>
+                    
+                    <!--- Keeps track of what images are being displayed, by default we should be able to display the first one. --->
+                    <cfset display1 = true>
+                    <cfset display2 = false>
+                    <cfset display3 = false>
+                    <cfset display4 = false>
+                    
+                    <!--- First Image --->
+                    <cftry>
+                        <cfimage action="info" source="#qGetUploadedImages.filePath[i]#" structname="stImageInfo1">
+                        <cfscript>
+                            if ( stImageInfo1.height GT stImageInfo1.width ) {
+                                vSetSize1 = 'height: 350px;';
+                            } else {
+                                vSetSize1 = 'width: 375px;';
+                            }
+                        </cfscript>
+                        <cfcatch type="any">
+                        	<cfset display1 = false>
+                      	</cfcatch>
+                 	</cftry>
+                      
+                  	<!--- Second Image ---> 
+                	<cfif i+1 LTE records>
+						<cfset addToI = addToI + 1>
+                        <cftry>
+                            <cfimage action="info" source="#qGetUploadedImages.filePath[i+1]#" structname="stImageInfo2">
+                            <cfscript>
+                                if ( stImageInfo2.height GT stImageInfo2.width ) {
+                                    vSetSize2 = 'height: 350px;';
+                                } else {
+                                    vSetSize2 = 'width: 375px;';
+                                }
+                            </cfscript>
+                            <cfset display2 = true>
+                            <cfcatch type="any">
+                            	<cfset display2 = false>
+                            </cfcatch>
+                     	</cftry>
+                    </cfif>
+                  	
+                    <!--- Third Image --->   
+					<cfif i+2 LTE records>
+                        <cfset addToI = addToI + 1>
+                        <cftry>
+                            <cfimage action="info" source="#qGetUploadedImages.filePath[i+2]#" structname="stImageInfo3">
+                            <cfscript>
+                                if ( stImageInfo3.height GT stImageInfo3.width ) {
+                                    vSetSize3 = 'height: 350px;';
+                                } else {
+                                    vSetSize3 = 'width: 375px;';
+                                }
+                            </cfscript>
+                            <cfset display3 = true>
+                            <cfcatch type="any">
+                            	<cfset display3 = false>
+                          	</cfcatch>
+                      	</cftry>
+                    </cfif>
+                        
+                  	<!--- Fourth Image --->
+					<cfif i+3 LTE records>
+                        <cfset addToI = addToI + 1>
+                        <cftry>
+                            <cfimage action="info" source="#qGetUploadedImages.filePath[i+3]#" structname="stImageInfo4">
+                            <cfscript>
+                                if ( stImageInfo4.height GT stImageInfo4.width ) {
+                                    vSetSize4 = 'height: 350px;';
+                                } else {
+                                    vSetSize4 = 'width: 375px;';
+                                }
+                            </cfscript>
+                            <cfset display4 = true>
+                            <cfcatch type="any">
+                            	<cfset display4 = false>
+                          	</cfcatch>
+                     	</cftry>
+                    </cfif>
+                    
+                    <!--- If no images will be displayed here we don't want to have a blank page, so this variable will prevent showing anything and breaking the page. --->
+                    <cfset showAnything = display1 OR display2 OR display3 OR display4>
+                    <cfif i+3 GTE records AND NOT showAnything>
+                    	<cfset noImages = true>
+                    </cfif>
+                    
+                    <cfif noImages>
+                    	<table align="center" border="0" cellpadding="4" cellspacing="0" width="800"> 
+                            <tr>           
+                                <td colspan="2" align="center"><img src="#relative#pics/hostAppBanners/HPpdf_20.jpg"/></td>
+                            </tr>
+                            <tr>
+                            	<td colspan="2" align="center">No images could be found for this family.</td>
+                            </tr>
+                     	</table>
+                    </cfif>
+    
+                    <!--- Display Images | 4 per page --->
+                    <cfif showAnything>
                         <table align="center" border="0" cellpadding="4" cellspacing="0" width="800"> 
                             <tr>           
-                                <td colspan="2" align="center"><img src="../pics/hostAppBanners/HPpdf_20.jpg"/></td>
+                                <td colspan="2" align="center"><img src="#relative#pics/hostAppBanners/HPpdf_20.jpg"/></td>
                             </tr>
-		</cfif>
-		
-		<!--- Display Images | 2 per page --->
-        <tr>
-            <td colspan="2" align="center">
-                <img src="../uploadedfiles/hostApp/#VAL(qGetHostInfo.hostID)#/album/large/#qGetUploadedImages.fileName#" width="400px" height="300px" />
-            </td>
-        </tr>   
-        <tr>
-         	<td width="75px"><span class="title">Description:</span></td>  
-            <td>#qGetUploadedImages.description#</td>
-		</tr>                                                       
-        
-        <!--- Page Footer --->             
-        <cfif qGetUploadedImages.currentRow MOD 2 EQ 0 OR qGetUploadedImages.recordCount EQ qGetUploadedImages.currentRow>
+                            
+                            <tr>
+                                <td align="center">
+                                    <cfif display1>
+                                        <img src="#relative#uploadedfiles/hostApp/#VAL(qGetHostInfo.hostID)#/album/large/#qGetUploadedImages.fileName[i]#" style="border:1px solid ##999; #vSetSize1#" />
+                                    </cfif>
+                                </td>
+                                <td align="center">
+                                    <cfif display2>
+                                        <img src="#relative#uploadedfiles/hostApp/#VAL(qGetHostInfo.hostID)#/album/large/#qGetUploadedImages.fileName[i+1]#" style="border:1px solid ##999; #vSetSize2#" />
+                                    </cfif>
+                                </td>
+                            </tr>   
+                            <tr>
+                                <td align="center">
+                                    <cfif display1>
+                                    	<span class="title">Image Of:</span> <span class="answer">#qGetUploadedImages.documentType[i]#</span><br/>
+                                        <span class="title">Description:</span> <span class="answer">#qGetUploadedImages.description[i]#</span>
+                                    </cfif>
+                                </td>  
+                                <td align="center">
+                                    <cfif display2>
+                                    	<span class="title">Image Of:</span> <span class="answer">#qGetUploadedImages.documentType[i+1]#</span><br/>
+                                        <span class="title">Description:</span> <span class="answer">#qGetUploadedImages.description[i+1]#</span>
+                                    </cfif>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center">
+                                    <cfif display3>
+                                        <img src="#relative#uploadedfiles/hostApp/#VAL(qGetHostInfo.hostID)#/album/large/#qGetUploadedImages.fileName[i+2]#" style="border:1px solid ##999; #vSetSize3#" />
+                                    </cfif>
+                                </td>
+                                <td align="center">
+                                    <cfif display4>
+                                        <img src="#relative#uploadedfiles/hostApp/#VAL(qGetHostInfo.hostID)#/album/large/#qGetUploadedImages.fileName[i+3]#" style="border:1px solid ##999; #vSetSize4#" />
+                                    </cfif>
+                                </td>
+                            </tr>   
+                            <tr>
+                                <td align="center">
+                                    <cfif display3>
+                                    	<span class="title">Image Of:</span> <span class="answer">#qGetUploadedImages.documentType[i+2]#</span><br/>
+                                        <span class="title">Description:</span> <span class="answer">#qGetUploadedImages.description[i+2]#</span>
+                                    </cfif>
+                                </td>  
+                                <td align="center">
+                                    <cfif display4>
+                                    	<span class="title">Image Of:</span> <span class="answer">#qGetUploadedImages.documentType[i+3]#</span><br/>
+                                        <span class="title">Description:</span> <span class="answer">#qGetUploadedImages.description[i+3]#</span>
+                                    </cfif>
+                                </td>
+                            </tr>                                                      
                         </table>
-                        
-                    </td>
-                </tr>
-            </table>             
+                 	</cfif>
+                    
+                    <cfset i = i + addToI>
+                    
+                </td>
+            </tr>
+        </table>             
             
-            <!--- Page Break --->
-            <cfif qGetUploadedImages.recordCount NEQ qGetUploadedImages.currentRow>
-	            <div style="margin:0; padding:0; page-break-after:always"></div>
-            </cfif>
-            
-		</cfif>
-	--->		
-
-	</cfloop>       
+        <!--- Page Break --->
+        <cfif (qGetUploadedImages.recordCount NEQ qGetUploadedImages.currentRow) AND showAnything>
+            <div style="margin:0; padding:0; page-break-after:always"></div>
+        </cfif>
+    
+    </cfloop>
 
 </cfoutput>

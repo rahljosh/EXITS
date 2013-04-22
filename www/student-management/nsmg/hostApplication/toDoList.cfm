@@ -328,7 +328,7 @@
                     <th width="13%" align="left">Regional Manager</th>
                     <th width="13%" align="left">Facilitator</th>
                     <th width="16%" align="left">Status</th>
-            		<th width="14%" align="left">Actions</th>
+            		<th width="14%" align="center">Actions</th>
             	</tr>
                 <tr>
                     <td valign="top">
@@ -406,12 +406,18 @@
                         
                         </cfif>
                     </td>                    
-                    <td valign="top">
+                    <td valign="top" align="center">
                         <a class="jQueryModal" href="/hostApplication/index.cfm?uniqueID=#qGetHostInfo.uniqueID#&userID=#CLIENT.userID#" title="View Complete Application"><img src="pics/buttons/openApplication.png" border="0"></a>
-                        <!--- Commented out until the print version is redone 02/26/2013 - Marcus Melo
-                        &nbsp; &nbsp; 
-                        <a class="jQueryModal" href="hostApplication/viewPDF.cfm?hostID=#hostID#&pdf" title="Print Application"><img src="pics/buttons/print50x50.png" width="40" border="0"></a>
-						--->
+                        <br/>
+                        <cfif CLIENT.userType LTE 4> 
+                            <a class="jQueryModal" href="hostApplication/viewPDF.cfm?hostID=#qGetHostInfo.hostID#&pdf&reportType=office" title="Print Application">
+                                <img src="pics/buttons/printOffice.png">
+                            </a>
+                            <br/>
+                        </cfif>
+                        <a class="jQueryModal" href="hostApplication/viewPDF.cfm?hostID=#qGetHostInfo.hostID#&pdf&reportType=agent" title="Print Application">
+                            <img src="pics/buttons/printAgent.png">
+                        </a>
                     </td>
             	</tr>
             </table>
