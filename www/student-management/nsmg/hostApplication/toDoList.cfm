@@ -25,7 +25,17 @@
     <!--- Param FORM Variables --->
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.hostID" default="0">
+    <!----Delete the school acceptance letter---->
+	<cfif isDefined('url.deleteSchoolAccept')>
+	<cfquery name="deleteSchoolAccept" datasource="#application.dsn#">
+        update document
+        set isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+        where id = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.id#">
+        and hashID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#url.key#">
+        </cfquery>
 
+        <cflocation url="index.cfm?curdoc=hostApplication/toDoList&hostID=#url.hostid#">
+	</cfif>
     <cfscript>	
 		// Check if we have a valid URL.hostID
 		if ( VAL(URL.hostID) AND NOT VAL(FORM.hostID) ) {
@@ -328,7 +338,7 @@
                     <th width="13%" align="left">Regional Manager</th>
                     <th width="13%" align="left">Facilitator</th>
                     <th width="16%" align="left">Status</th>
-            		<th width="14%" align="center">Actions</th>
+            		<th width="14%" align="left">Actions</th>
             	</tr>
                 <tr>
                     <td valign="top">
@@ -480,6 +490,7 @@
                         <td width="14%"><h2 style="color:##FFFFFF;">Regional Advisor</h2></td>
                         <td width="14%"><h2 style="color:##FFFFFF;">Regional Manager</h2></td>
                         <td width="14%"><h2 style="color:##FFFFFF;">Facilitator</h2></td>
+                        <td></td>
                     </tr>
                                        
                     <cfloop query="qGetApprovalHistory">
@@ -714,11 +725,20 @@
 								</cfif>  
                                 
                             </td>
+                            <TD>
+                            <cfif qGetApprovalHistory.ID EQ 15>
+								<cfif qGetSchoolAcceptance.recordCount>
+                                    <a href="index.cfm?curdoc=hostApplication/toDoList&id=#qGetSchoolAcceptance.ID#&key=#qGetSchoolAcceptance.hashID#&hostID=#url.hostid#&deleteSchoolAccept" style="display:block;">
+                                    <img src="pics/deletex.gif" height="10" border=0/>
+                                    </a>
+                                </cfif>
+                            </cfif>
+                            </TD>
                         </tr>
 
                         <cfif qGetApprovalHistory.listOrder EQ 12>
                             <tr bgcolor="##1b99da">
-                                <td colspan="7" align="center"><h2 style="color:##FFFFFF;">FORMS</h2></td>
+                                <td colspan="8" align="center"><h2 style="color:##FFFFFF;">FORMS</h2></td>
                             </tr>
                         </cfif> 
                         
@@ -726,7 +746,7 @@
                     
                     <!--- References: Everyone Sees these ---->
                     <tr bgcolor="##1b99da">
-                        <td colspan="7" align="center">
+                        <td colspan="8" align="center">
                         	<h2 style="color:##FFFFFF;">REFERENCE QUESTIONNAIRE</h2>
 						
                         	<span style="color:##FFFFFF; font-weight:bold;">
@@ -883,6 +903,7 @@
                                 	<font color="##CCCCCC"><em>N/A</em></font>
 								</cfif>  
                             </td>
+                            <td></td>
                         </tr>
                     </cfloop>
                 </table>
