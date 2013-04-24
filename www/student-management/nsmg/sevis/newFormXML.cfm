@@ -153,10 +153,6 @@
     
 </cfsilent>   
 
-
-   <CFdump var="#qGetStudents#">
-   
-  <cfabort>
 <cfif NOT VAL(qGetStudents.recordcount)>
 	Sorry, there were no students to populate the XML file at this time.
 	<cfabort>
