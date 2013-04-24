@@ -116,9 +116,14 @@
             AND
                 s.intRep IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intRep#" list="yes"> )
        	</cfif>
-
-        AND
-            s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+         AND
+		<Cfif client.companyid lte 4 or client.companyid eq 12>
+          ( s.companyID < <cfqueryparam cfsqltype="cf_sql_integer" value="5"> or s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="12">)
+        <cfelse>
+           s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        </Cfif>
+       
+           
     
         <!--- Get Current Division Students --->
         <!---
@@ -146,8 +151,12 @@
             250
     </cfquery>
     
-</cfsilent>    
+</cfsilent>   
 
+
+   <CFdump var="#qGetStudents#">
+   
+  <cfabort>
 <cfif NOT VAL(qGetStudents.recordcount)>
 	Sorry, there were no students to populate the XML file at this time.
 	<cfabort>
