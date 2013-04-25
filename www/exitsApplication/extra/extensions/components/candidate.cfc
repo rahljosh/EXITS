@@ -1199,6 +1199,7 @@
             <cfif VAL(ARGUMENTS.incidentID)>
             	WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.incidentID#">
             </cfif>
+            ORDER BY subject ASC
         </cfquery>
         
         <cfreturn qGetIncidentSubjects>
