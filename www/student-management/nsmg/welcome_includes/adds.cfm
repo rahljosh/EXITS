@@ -17,10 +17,10 @@
              </cfoutput>
                 </Td>
                 <td>
-                <cfoutput> placements away from a trip to <A href="uploadedFiles/Incentive_trip/incentiveTrip_#client.companyid#.pdf" target="_blank">#incentive_trip.trip_place#</cfoutput>!</A>
+                 placements away from a trip to <A href="../uploadedFiles/Incentive_trip/incentiveTrip_#client.companyid#.pdf" target="_blank"><cfoutput>#incentive_trip.trip_place#</cfoutput>!</A>
                
                 <cfelse>
-                 <td colspan=2>   You've earned a trip to <A href="uploadedFiles/Incentive_trip/incentiveTrip_#client.companyid#.pdf" target="_blank"><cfoutput>#incentive_trip.trip_place#</cfoutput>!!!</A> 
+                 <td colspan=2>   You've earned a trip to <A href="../uploadedFiles/Incentive_trip/incentiveTrip_#client.companyid#.pdf" target="_blank"><cfoutput>#incentive_trip.trip_place#</cfoutput>!!!</A> 
                 </td></cfif>
            
                         
