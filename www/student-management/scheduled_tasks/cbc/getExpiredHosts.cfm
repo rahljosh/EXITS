@@ -22,10 +22,10 @@
 	<cfscript>
 		if ( VAL(isUpcomingProgram) ) {
 			// Get Expired CBCs for hosts linked to an upcoming student
-			qGetExpiredHostCBC = APPLICATION.CFC.CBC.getExpiredHostCBC(cbcType=userType, isUpcomingProgram=isUpcomingProgram);
+			qGetExpiredHostCBC = APPLICATION.CFC.CBC.getExpiredHostCBC(isUpcomingProgram=isUpcomingProgram);
 		} else {
 			// Get Expired CBCs
-			qGetExpiredHostCBC = APPLICATION.CFC.CBC.getExpiredHostCBC(cbcType=userType);
+			qGetExpiredHostCBC = APPLICATION.CFC.CBC.getExpiredHostCBC();
 		}
     </cfscript>
     
@@ -55,7 +55,7 @@
 			APPLICATION.CFC.CBC.insertHostCBC(
 				hostID = qGetExpiredHostCBC.hostID,								 
 				familyMemberID = qGetExpiredHostCBC.familyID,
-				cbcType=userType,
+				cbcType=qGetExpiredHostCBC.cbc_type,
 				seasonID = newSeason,
 				companyID = qGetExpiredHostCBC.companyID,
 				dateAuthorized = qGetExpiredHostCBC.date_authorized,
