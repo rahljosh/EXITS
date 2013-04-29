@@ -1,4 +1,4 @@
-<cfsetting requesttimeout="300">
+<cfsetting requesttimeout="600">
 
 <cfquery name="qGetStudentsMissingHostApp" datasource="#APPLICATION.DSN#">
     SELECT studentID, hostID
@@ -6,6 +6,7 @@
     WHERE active = 1
     AND hostID != 0
     AND host_fam_approved IN (1,2,3,4)
+    AND hostID IN (SELECT hostID FROM smg_hosts WHERE hostAppStatus != 0 AND active = 1)
     AND studentID NOT IN (SELECT DISTINCT fk_studentID FROM virtualFolder WHERE fk_documentType = 28)
 </cfquery>
 

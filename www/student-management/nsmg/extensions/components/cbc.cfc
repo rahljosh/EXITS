@@ -2365,8 +2365,69 @@
     	<cfreturn qGetExpiredUserCBC>
     </cffunction>    
     
-
 	<cffunction name="getExpiredHostCBC" access="public" returntype="query" output="false" hint="Return expires CBC for users">
+    	<cfargument name="isUpcomingProgram" type="numeric" default="0" hint="Set to 1 to run this query and search host families hosting upcoming students">
+        <cfargument name="hostID" type="numeric" default="0" hint="Pass hostID to check if there are CBCs expired">
+        <cfargument name="studentID" type="numeric" default="0" hint="Pass studentID to check if there are CBCs expired">
+        
+        <cfscript>
+			var vUpcomingProgramList = '';
+			
+			// Get Upcoming Programs
+			if ( VAL(ARGUMENTS.isUpcomingProgram) ) {
+				qGetUpcomingPrograms = APPLICATION.CFC.PROGRAM.getPrograms(isUpcomingProgram=1);
+				
+				vUpcomingProgramList = ValueList(qGetUpcomingPrograms.programID);
+			}
+		</cfscript>
+        
+        <cfquery name="qGetExpiredHostCBC" datasource="#APPLICATION.dsn#">
+        	SELECT cbc.hostID, cbc.cbc_type, cbc.familyID, cbc.date_expired, cbc.isRerun, child.liveathome, child.name, h.fatherfirstname, h.motherfirstname, h.familylastname
+            FROM smg_hosts_cbc cbc
+            INNER JOIN smg_hosts h ON h.hostID = cbc.hostID
+            	<cfif VAL(ARGUMENTS.hostID)>
+               		AND h.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#">
+                </cfif>
+            LEFT JOIN smg_host_children child ON child.childID = cbc.familyID
+            WHERE (cbc.date_expired < NOW() AND cbc.date_expired IS NOT NULL)
+            <!--- Make sure there isn't a more recent non-expired cbc --->
+            AND cbc.hostID NOT IN (
+                SELECT hostID 
+                FROM smg_hosts_cbc 
+                WHERE (date_expired >= NOW() OR date_expired IS NULL)
+                AND cbc_type = cbc.cbc_type 
+                AND familyID = cbc.familyID
+            )
+            <!--- Check for a valid student --->
+            AND cbc.hostID IN (
+                SELECT hostID 
+                FROM smg_students 
+                WHERE active = 1
+                AND host_fam_approved = 4
+                <cfif LEN(vUpcomingProgramList)>
+                	AND programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vUpcomingProgramList#" list="yes"> )
+               	</cfif>
+                <cfif VAL(ARGUMENTS.studentID)>
+                	AND studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">
+                </cfif>
+            )
+            <!--- Check for a valid host child --->
+            AND (
+                child.liveathome IS NULL <!--- This is not a host child --->
+                OR (
+                   child.liveathome = "yes" 
+                   AND NOW() < ADDDATE(child.birthdate, INTERVAL 17 YEAR)
+                   AND child.isDeleted = 0
+                )
+            )
+            GROUP BY cbc.hostID, cbc.cbc_type, cbc.familyID
+        </cfquery>
+		
+    	<cfreturn qGetExpiredHostCBC>
+    </cffunction>
+
+	<!--- OLD VERSION - For Reference --->
+	<!---<cffunction name="getExpiredHostCBC" access="public" returntype="query" output="false" hint="Return expires CBC for users">
         <cfargument name="cbcType" type="string" hint="cbcType is required. Father/Mother/Member">
         <cfargument name="isUpcomingProgram" type="numeric" default="0" hint="Set to 1 to run this query and search host families hosting upcoming students">
         <cfargument name="hostID" type="numeric" default="0" hint="Pass hostID to check if there are CBCs expired">
@@ -2386,8 +2447,8 @@
         <cfquery 
         	name="qGetExpiredHostCBC" 
         	datasource="#APPLICATION.dsn#">
-                SELECT DISTINCT 
-                    cbc.hostID,
+       			SELECT DISTINCT 
+                    cbc.hostID,	
                     cbc.familyID,
                     cbc.cbc_type,
                     h.companyID,
@@ -2529,11 +2590,11 @@
                 
                 ORDER BY 
                     p.endDate DESC,
-                    date_sent 
+                    date_sent
         </cfquery>
 		
     	<cfreturn qGetExpiredHostCBC>
-    </cffunction>        
+    </cffunction>--->       
     <!--- CBC Re-Run Functions --->
 
                     
