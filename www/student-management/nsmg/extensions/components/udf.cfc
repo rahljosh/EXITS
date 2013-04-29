@@ -993,6 +993,7 @@
     	<cfargument name="filePath" type="string" required="yes" hint="The full path to the file that will be added">
         <cfargument name="fieldID" type="numeric" required="yes" hint="The type of document being uploaded (such as Flight Information or Welcome Letters)">
         <cfargument name="studentID" type="numeric" required="yes" hint="The ID of the student this file belongs to">
+        <cfargument name="hostID" type="numeric" required="no" default="0" hint="Places the file into the hostID folder">
         <cfargument name="folder" type="string" default="" required="no" hint="folder name if needed.">
         
         <cfscript>
@@ -1000,8 +1001,12 @@
 			// Get active placement history record
 			qGetActivePlacement = APPLICATION.CFC.STUDENT.getPlacementHistory(studentID=ARGUMENTS.studentID);
 			    
-			// Get folder path 
-			currentDirectory = "#APPLICATION.PATH.onlineApp.virtualFolder##ARGUMENTS.studentid#";
+			// Get folder path
+			if (ARGUMENTS.hostID NEQ 0) {
+				currentDirectory = "#APPLICATION.PATH.onlineApp.virtualFolder##ARGUMENTS.studentid#/#ARGUMENTS.hostID#";
+			} else {
+				currentDirectory = "#APPLICATION.PATH.onlineApp.virtualFolder##ARGUMENTS.studentid#";
+			}
 			
 			// Set to the flightInformation directory
 			if (fieldID == 1) {
@@ -1080,7 +1085,7 @@
     
 
 
- <!--- Gnerate Auto Files and place in Virtual Folder --->
+ 	<!--- Gnerate Auto Files and place in Virtual Folder --->
     <cffunction name="createAutoFiles" access="public" returntype="string">
     	<cfargument name="studentID" required="no" hint="student of id of placement">
     	<cfargument name="hostID"  required="no" hint="pass in name and id of student with problem">
@@ -1089,657 +1094,726 @@
 		<cfargument name="documentType" required="no" default="" hint="ID from virtualFolderDocuments">
 		<cfargument name="category" required="no" default="" hint="ID from virtualFolderCategory">
 		<cfargument name="fileDescription" required="no" default="" hint="Description of File">
-		<cfscript>
-			// Get Student by uniqueID
-			//qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(uniqueID=ARGUMENTS.uniqueID);
-			
-			// Get History ID
-           // qHostHistoryID = getPlacementHistory(studentID=ARGUMENTS.studentID,isActive=1).hostid;
-		</cfscript>
+		
+        <!--- Kill Extra Output --->
+		<cfsilent>
+	
+			<!--- Param URL Variables --->    
+            <cfparam name="uniqueID" default="">
+            <cfparam name="profileType" default="">
+            <cfparam name="URL.studentID" default="0">
+            <cfparam name="URL.historyID" default="0">
+            <cfparam name="URL.printPage" default="0">
+            <cfparam name="URL.closeModal" default="0">
+            
+            <!--- Param FORM Variables --->    
+            <cfparam name="FORM.submitted" default="0">
+            <cfparam name="FORM.report_mode" default="">
+            <cfparam name="FORM.historyID" default="0">
+            <cfparam name="FORM.emailTo" default="">
+            <cfparam name="FORM.NewDatePlaced" default="">
+
+			<cfscript>
+                // Create Structure to store errors
+                Errors = StructNew();
+                // Create Array to store error messages
+                Errors.Messages = ArrayNew(1);
+                
+                if ( NOT LEN(uniqueID) ) {
+                    ArrayAppend(Errors.Messages, "You have not specified a valid studentID");
+                }	
+                
+                // Get Student by uniqueID
+                qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(uniqueID=uniqueID);
+                
+                if ( VAL(URL.historyID) ) {
+                    FORM.historyID = URL.historyID;	
+                }
+                
+                // Check if we are displaying current or history PIS
+                if ( VAL(FORM.historyID) ) {
+                    
+                    // History PIS
+                    qGetPlacementHistory = APPLICATION.CFC.STUDENT.getHostHistoryByID(studentID=qGetStudentInfo.studentID, historyID=FORM.historyID);
+                    
+                } else {
+                    
+                    // Current PIS
+                    qGetPlacementHistory = APPLICATION.CFC.STUDENT.getPlacementHistory(studentID=qGetStudentInfo.studentID, isActive=1);
+                    
+                }
+                
+                // Get Region
+                qGetRegion = APPLICATION.CFC.REGION.getRegions(regionID=qGetStudentInfo.regionassigned);
+        
+                // Get International Representative
+                qIntlRep = APPLICATION.CFC.USER.getUserByID(userID=qGetStudentInfo.intrep);
+                
+                // Get Company
+                qGetCompany = APPLICATION.CFC.COMPANY.getCompanies(companyID=CLIENT.companyID);
+                
+                // Facilitator
+                qGetFacilitator = APPLICATION.CFC.USER.getUsers(qGetRegion.regionfacilitator); 
+        
+                // Area Representative
+                qGetAreaRep = APPLICATION.CFC.USER.getUserByID(userID=qGetPlacementHistory.areaRepID);
+                
+                // Host Family
+                qGetHostFamily = APPLICATION.CFC.HOST.getHosts(hostID=VAL(qGetPlacementHistory.hostID));
+                
+                // Host Family Children
+                qGetHostChildren = APPLICATION.CFC.HOST.getHostMemberByID(hostID=VAL(qGetPlacementHistory.hostID));
+                
+                // Host Family Pets
+                qGetHostPets = APPLICATION.CFC.HOST.getHostPets(hostID=VAL(qGetPlacementHistory.hostID));
+                
+                // School
+                qGetSchool = APPLICATION.CFC.SCHOOL.getSchools(schoolID=VAL(qGetPlacementHistory.schoolID));
+                                
+                // Get Host Interests
+                qGetHostInterests = APPLICATION.CFC.LOOKUPTABLES.getInterest(interestID=qGetHostFamily.interests,limit=6);
+                
+                // set Interest List
+                interestHostList = ValueList(qGetHostInterests.interest, "<br />");
+                
+                // FORM SUBMITTED
+                if ( VAL(FORM.submitted) ) {
+        
+                    // Data Validation
+                    if ( NOT IsValid("email", FORM.emailTo) ) {
+                        ArrayAppend(Errors.Messages, "Please enter a valid email address");
+                    }
+        
+                }
+            </cfscript>
+    
+			<!--- Update Date Placed | Update on both tables students and smg_hostHistory --->
+            <cfif IsDate(FORM.NewDatePlaced)>
+                
+                <cfscript>
+                    // Update Date Placed
+                    APPLICATION.CFC.STUDENT.updateDatePlaced(studentID=qGetStudentInfo.studentID, historyID=FORM.historyID, datePlaced=FORM.newDatePlaced);
+                    
+                    // Reload page
+                    location("#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#", "no");		
+                </cfscript>
+        
+            </cfif>
+    
+            <cfquery name="qGetSchoolDates" datasource="#APPLICATION.DSN#">
+                SELECT 
+                    schooldateid, 
+                    schoolid, 
+                    smg_school_dates.seasonid, 
+                    enrollment, 
+                    year_begins, 
+                    semester_ends, 
+                    semester_begins, 
+                    year_ends,
+                    p.programid
+                FROM 
+                    smg_school_dates
+                INNER JOIN 
+                    smg_programs p ON p.seasonid = smg_school_dates.seasonid
+                WHERE 
+                    schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetPlacementHistory.schoolID)#">
+                AND 
+                    p.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.programid)#">
+            </cfquery>
+    
+			<!---number kids at home---->
+            <cfquery name="qGetHostChildrenAtHome" dbtype="query">
+                SELECT 
+                    count(childid)
+                FROM 
+                    qGetHostChildren
+                WHERE
+                    liveathome = 'yes'
+            </cfquery>
+    
+			<cfscript>
+                // Calculates how many family members
+                vFather=0;
+                vMother=0;
+                
+                if ( LEN(qGetHostFamily.fatherfirstname) ) {
+                    vFather = 1;
+                }
+        
+                if ( LEN(qGetHostFamily.motherfirstname) ) {
+                    vMother = 1;
+                }
+                
+                vTotalFamilyMembers = vMother + vFather + qGetHostChildrenAtHome.recordcount;
+            </cfscript>
+    
+		</cfsilent>
+        
+        <!--- Host Family Application - Office Version--->
+        <cfoutput>
+        	<cfsavecontent variable="hostFamilyApplication">
+                <cfset FORM.hostID = #qGetStudentInfo.hostID#>
+                <cfset URL.reportType = "office">
+                <cfset relative = "../../">
+            	<cfinclude template="../../hostApplication/printApplication.cfm">
+            </cfsavecontent>
+            <cfset fileName="#qGetHostFamily.familyLastName#-#DateFormat(NOW(),'mm-dd-yyyy')#-office">
+			<cfoutput>
+                <cfdocument format="pdf" filename="#fileName#.pdf" overwrite="yes" orientation="portrait" name="uploadFile">
+                    #hostFamilyApplication#
+                </cfdocument>
+            </cfoutput>
+            <cfscript>
+                fullPath=GetDirectoryFromPath(GetCurrentTemplatePath()) & fileName & '.pdf';
+                APPLICATION.CFC.UDF.insertInternalFile(filePath=fullPath,fieldID=1,studentID=qGetStudentInfo.studentID,hostID=qGetStudentInfo.hostID);
+            </cfscript>
+            <cfquery name="insertFileDetails" datasource="#application.dsn#">
+                INSERT INTO  virtualFolder (
+                    fk_categoryID, 
+                    fk_documentType, 
+                    fileDescription,
+                    fileName, 
+                    filePath, 
+                    fk_studentID,
+                    fk_hostid,
+                    dateAdded,
+                    generatedHow,
+                    uploadedBy)
+                VALUES(
+                    6,
+                    28,
+                    'Host Family Application',
+                    '#fileName#.pdf', 
+                    'uploadedfiles/virtualFolder/#qGetStudentInfo.studentID#/#qGetStudentInfo.hostID#/',
+                    #qGetStudentInfo.studentID#,
+                    #qGetStudentInfo.hostID#,
+                    #now()#,
+                    'auto',
+                    #client.userid#)
+            </cfquery>
+        </cfoutput>
+        
+        <!--- Host Family Application - Agent Version--->
+        <cfoutput>
+        	<cfsavecontent variable="hostFamilyApplication">
+                <cfset FORM.hostID = #qGetStudentInfo.hostID#>
+                <cfset URL.reportType = "agent">
+                <cfset relative = "../../">
+            	<cfinclude template="../../hostApplication/printApplication.cfm">
+            </cfsavecontent>
+            <cfset fileName="#qGetHostFamily.familyLastName#-#DateFormat(NOW(),'mm-dd-yyyy')#-agent">
+			<cfoutput>
+                <cfdocument format="pdf" filename="#fileName#.pdf" overwrite="yes" orientation="portrait" name="uploadFile">
+                    #hostFamilyApplication#
+                </cfdocument>
+            </cfoutput>
+            <cfscript>
+                fullPath=GetDirectoryFromPath(GetCurrentTemplatePath()) & fileName & '.pdf';
+                APPLICATION.CFC.UDF.insertInternalFile(filePath=fullPath,fieldID=1,studentID=qGetStudentInfo.studentID,hostID=qGetStudentInfo.hostID);
+            </cfscript>
+            <cfquery name="insertFileDetails" datasource="#application.dsn#">
+                INSERT INTO  virtualFolder (
+                    fk_categoryID, 
+                    fk_documentType, 
+                    fileDescription,
+                    fileName, 
+                    filePath, 
+                    fk_studentID,
+                    fk_hostid,
+                    dateAdded,
+                    generatedHow,
+                    uploadedBy)
+                VALUES(
+                    2,
+                    28,
+                    'Host Family Application',
+                    '#fileName#.pdf', 
+                    'uploadedfiles/virtualFolder/#qGetStudentInfo.studentID#/#qGetStudentInfo.hostID#/',
+                    #qGetStudentInfo.studentID#,
+                    #qGetStudentInfo.hostID#,
+                    #now()#,
+                    'auto',
+                    #client.userid#)
+            </cfquery>
+        </cfoutput>
         
         <!----Placement Information Sheet---->
-    	<!--- Kill Extra Output --->
-<cfsilent>
+		<cfoutput>
+		
+			<!----Save profile as variable---->
+			<cfsavecontent variable="PlacementInfo">
 	
-	
-	
-    <!--- Param URL Variables --->    
-    <cfparam name="uniqueID" default="">
-    <cfparam name="profileType" default="">
-    <cfparam name="URL.studentID" default="0">
-    <cfparam name="URL.historyID" default="0">
-    <cfparam name="URL.printPage" default="0">
-    <cfparam name="URL.closeModal" default="0">
-    
-    <!--- Param FORM Variables --->    
-    <cfparam name="FORM.submitted" default="0">
-    <cfparam name="FORM.report_mode" default="">
-    <cfparam name="FORM.historyID" default="0">
-    <cfparam name="FORM.emailTo" default="">
-    <cfparam name="FORM.NewDatePlaced" default="">
-
-    <cfscript>
-		// Create Structure to store errors
-		Errors = StructNew();
-		// Create Array to store error messages
-		Errors.Messages = ArrayNew(1);
-		
-		if ( NOT LEN(uniqueID) ) {
-			ArrayAppend(Errors.Messages, "You have not specified a valid studentID");
-		}	
-		
-		// Get Student by uniqueID
-		qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(uniqueID=uniqueID);
-		
-		if ( VAL(URL.historyID) ) {
-			FORM.historyID = URL.historyID;	
-		}
-		
-		// Check if we are displaying current or history PIS
-		if ( VAL(FORM.historyID) ) {
-			
-			// History PIS
-			qGetPlacementHistory = APPLICATION.CFC.STUDENT.getHostHistoryByID(studentID=qGetStudentInfo.studentID, historyID=FORM.historyID);
-			
-		} else {
-			
-			// Current PIS
-			qGetPlacementHistory = APPLICATION.CFC.STUDENT.getPlacementHistory(studentID=qGetStudentInfo.studentID, isActive=1);
-			
-		}
-		
-		// Get Region
-		qGetRegion = APPLICATION.CFC.REGION.getRegions(regionID=qGetStudentInfo.regionassigned);
-
-		// Get International Representative
-		qIntlRep = APPLICATION.CFC.USER.getUserByID(userID=qGetStudentInfo.intrep);
-		
-		// Get Company
-		qGetCompany = APPLICATION.CFC.COMPANY.getCompanies(companyID=CLIENT.companyID);
-		
-		// Facilitator
-		qGetFacilitator = APPLICATION.CFC.USER.getUsers(qGetRegion.regionfacilitator); 
-
-		// Area Representative
-		qGetAreaRep = APPLICATION.CFC.USER.getUserByID(userID=qGetPlacementHistory.areaRepID);
-		
-		// Host Family
-		qGetHostFamily = APPLICATION.CFC.HOST.getHosts(hostID=VAL(qGetPlacementHistory.hostID));
-		
-		// Host Family Children
-		qGetHostChildren = APPLICATION.CFC.HOST.getHostMemberByID(hostID=VAL(qGetPlacementHistory.hostID));
-		
-		// Host Family Pets
-		qGetHostPets = APPLICATION.CFC.HOST.getHostPets(hostID=VAL(qGetPlacementHistory.hostID));
-		
-		// School
-		qGetSchool = APPLICATION.CFC.SCHOOL.getSchools(schoolID=VAL(qGetPlacementHistory.schoolID));
-						
-		// Get Host Interests
-		qGetHostInterests = APPLICATION.CFC.LOOKUPTABLES.getInterest(interestID=qGetHostFamily.interests,limit=6);
-		
-		// set Interest List
-		interestHostList = ValueList(qGetHostInterests.interest, "<br />");
-		
-		// FORM SUBMITTED
-		if ( VAL(FORM.submitted) ) {
-
-			// Data Validation
-			if ( NOT IsValid("email", FORM.emailTo) ) {
-				ArrayAppend(Errors.Messages, "Please enter a valid email address");
-			}
-
-		}
-	</cfscript>
-    
-	<!--- Update Date Placed | Update on both tables students and smg_hostHistory --->
-    <cfif IsDate(FORM.NewDatePlaced)>
-    	
-        <cfscript>
-			// Update Date Placed
-			APPLICATION.CFC.STUDENT.updateDatePlaced(studentID=qGetStudentInfo.studentID, historyID=FORM.historyID, datePlaced=FORM.newDatePlaced);
-			
-			// Reload page
-			location("#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#", "no");		
-		</cfscript>
-
-    </cfif>
-    
-    <cfquery name="qGetSchoolDates" datasource="#APPLICATION.DSN#">
-        SELECT 
-        	schooldateid, 
-            schoolid, 
-            smg_school_dates.seasonid, 
-            enrollment, 
-            year_begins, 
-            semester_ends, 
-            semester_begins, 
-            year_ends,
-            p.programid
-        FROM 
-        	smg_school_dates
-        INNER JOIN 
-        	smg_programs p ON p.seasonid = smg_school_dates.seasonid
-        WHERE 
-        	schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetPlacementHistory.schoolID)#">
-        AND 
-        	p.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.programid)#">
-    </cfquery>
-    
-    <!---number kids at home---->
-    <cfquery name="qGetHostChildrenAtHome" dbtype="query">
-        SELECT 
-        	count(childid)
-        FROM 
-        	qGetHostChildren
-        WHERE
-        	liveathome = 'yes'
-    </cfquery>
-    
-    <cfscript>
-		// Calculates how many family members
-		vFather=0;
-		vMother=0;
-		
-		if ( LEN(qGetHostFamily.fatherfirstname) ) {
-			vFather = 1;
-		}
-
-		if ( LEN(qGetHostFamily.motherfirstname) ) {
-			vMother = 1;
-		}
-		
-		vTotalFamilyMembers = vMother + vFather + qGetHostChildrenAtHome.recordcount;
-	</cfscript>
-    
-</cfsilent>
-
-
-<Cfoutput>
-
-
-
-
-
-
-
-
-<!----Save profile as variable---->
-<cfsavecontent variable="PlacementInfo">
-	
-    <link rel="stylesheet" href="https://ise.exitsapplication.com/nsmg/linked/css/student_profile.css" type="text/css">
-    
-    <table class="profileTable" align="center">
-        <tr>
-            <td>
-    
-				<!--- Header --->
-                <table align="center">
-                    <tr>
-                        <td class="bottom_center" width="800"  valign="top">
-                            <img src="https://ise.exitsapplication.com/nsmg/pics/#CLIENT.companyid#_short_profile_header.jpg" />
-                            <span class="title"><font size=+1>Placement Information for</font></span><font size=+1>#qGetStudentInfo.firstname# #qGetStudentInfo.familylastname#</font><font size=+1> (###qGetStudentInfo.studentID#)</font><br />
-                            <span class="title">Facilitator:</span>  #qGetFacilitator.firstname# #qGetFacilitator.lastname# 
-                        </td>
-                    </tr>	
-                </table>
+                <link rel="stylesheet" href="https://ise.exitsapplication.com/nsmg/linked/css/student_profile.css" type="text/css">
                 
-				<cfif vTotalFamilyMembers eq 1>
-                    <div class="alert" align="Center">
-                    	<h3>Single Person Placement </h3>
-                    </div>
-                </cfif>
-                
-				<cfif VAL(qGetPlacementHistory.doublePlacementID)>
-                    <div class="alert" align="Center">
-                    	<h3>Double Placement: Two exchange students will be living with this host family. </h3>
-                    </div>
-                </cfif>
-                
-				<cfif qGetPlacementHistory.isWelcomeFamily EQ 1>	
-                    <div class="alert" align="Center">
-                        <h3>This is a welcome family.  Permanent family information will be sent shortly.</h3>
-                    </div>
-				</cfif>
-                
-				<cfif VAL(qGetPlacementHistory.isRelocation)>
-                    <div class="alert" align="Center">
-                        <h3>This is a relocation. The student will be moving to this host family and/or school shortly.</h3>
-                    </div>
-                </cfif>
-    
-				<!--- Student Information #qGetStudentInfo.countryresident# --->
-                <table  align="center" border="0" cellpadding="4" cellspacing="0" width="800">
-                    <tr>           
-                        <td colspan=5 align="center"><img src="https://ise.exitsapplication.com/nsmg/pics/HFbanner.png" /></Td>
-                    </tr>
-                    <tr>
-                        <td valign="top">
-    
-							<!---Host Family Information---->
-                            <table>
-                            
-								<cfif LEN(qGetHostFamily.fatherfirstname)>
-	                                <tr>
-                                    	<td width="100"><span class="title">Host Father:</span></td>
-                                        <td width="250">
-                                            #qGetHostFamily.fatherfirstname# #qGetHostFamily.fatherlastname#, 
-                                            <cfif IsDate(qGetHostFamily.fatherDOB)>
-                                                (#DateDiff('yyyy', qGetHostFamily.fatherDOB, now())#)
-                                            </cfif>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                    	<td><span class="title">Occupation:</span></td>
-                                        <td>#qGetHostFamily.fatherworktype#</td>
-                                    </tr>
-                                    <tr><td>&nbsp;</td></tr>
-								</cfif>
-                                
-                                <cfif LEN(qGetHostFamily.motherfirstname)>
-	                                <tr>
-                                    	<td width="100"><span class="title">Host Mother:</span></td>
-    	                            	<td width="250">
-                                        	#qGetHostFamily.motherfirstname# #qGetHostFamily.motherlastname#, 
-											<cfif IsDate(qGetHostFamily.motherDOB)>
-                                                (#DateDiff('yyyy', qGetHostFamily.motherDOB, now())#)
-                                            </cfif>
-                                        </td>
-									</tr>
-                                	<tr>
-                                    	<td><span class="title">Occupation:</span></td>
-		                                <td>#qGetHostFamily.motherworktype#</td>
-                                    </tr>
-								</cfif>
-                            </table>
-    				
-                    	</td>
-    
-                        <td valign="top">
-                        
-							<!----Address & Contact Info----> 
-                            <Table>
-                                <tr>
-                                	<td width="100" valign="top"><span class="title">Address:</span></td>
-	                                <td>
-                                    	#qGetHostFamily.address#<br />
-    		                            <a href="http://en.wikipedia.org/wiki/#qGetHostFamily.city#,_#qGetHostFamily.state#" target="_blank" class="wiki">#qGetHostFamily.city# #qGetHostFamily.state# </a>, #qGetHostFamily.zip#
-									</td>
-                                </tr>
-                                <tr>
-	                                <td width="100" valign="top"><span class="title">Phone: </span></td>
-                                    <td>#qGetHostFamily.phone#</td>
-                                </tr>
-                                <tr>
-                                	<td width="100" valign="top"><span class="title">Email: </span></td>
-                                    <td>#qGetHostFamily.email#</td>
-                                </tr>
-                               
-                                <tr>
-                                	<td width="100" valign="top"><span class="title">Placed: </span></td>
-                                    <td>#DateFormat(qGetPlacementHistory.datePlaced, 'mmmm d, yyyy')#</td>
-                                </tr>
-								
-                            </table>
-    
-                        </td>
-                    </tr>                
-				</table>
-                
-				<!----Siblings and Pets---->
-                <table  align="center" border="0" cellpadding="4" cellspacing="0" width="800">
-                    <tr>           
-                        <Td><img src="https://ise.exitsapplication.com/nsmg/pics/sib.png" /></Td>
-                        <td><img src="https://ise.exitsapplication.com/nsmg/pics/pets.png" /></td>
-                        <td><img src="https://ise.exitsapplication.com/nsmg/pics/interest.png" /></td>
-                    </tr>
-                    <tr>
-                        <td valign="top" width=40%>
-                    
-							<!---Siblings---->
-                            <table width="100%" align="Center">
-                                <tr>
-                                    <td><span class="title">Name</span><br /></td>
-                                    <td align="center"><span class="title">Age</span><br /></td>
-                                    <td align="center"><span class="title">Sex</span><br /></td>
-                                    <td align="center"><span class="title">At home</span><br /></td>
-                                    <td align="center"><span class="title">Relation</span><br /></td>
-                                </tr>
-                            	<cfloop query="qGetHostChildren">
-                                    <tr>
-                                        <td>
-                            				<cfset maxwords = 1>
-                                            #REReplace(qGetHostChildren.name,"^(#RepeatString('[^ ]* ',maxwords)#).*","\1")#
-                            			</td>
-                                        <td align="center">
-											<cfif IsDate(qGetHostChildren.birthdate)>
-                                            	#DateDiff('yyyy', qGetHostChildren.birthdate, now())#
-											<cfelse>
-                                            	n/a
-											</cfif>
-                                        </td>
-                                        <td align="center">#qGetHostChildren.sex#</td>
-                                        <td align="center">#qGetHostChildren.liveathome#</td>
-                                        <td align="center">#qGetHostChildren.membertype#</td>
-                                    </tr>
-                                </cfloop>
-                                
-                                <cfquery name="qGetShareChildren" datasource="#APPLICATION.DSN#">
-                                	SELECT
-                                    	name AS firstName,
-                                        'host sibling' AS relation                                        
-                                   	FROM
-                                    	smg_host_children
-                                   	WHERE
-                                    	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetPlacementHistory.hostID)#">
-                                    AND
-                                    	roomShareWith = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentID)#">
-                                    
-                                    UNION
-                                   
-                                   	SELECT
-                                    	s.firstName,
-                                        'foreign student' AS relation
-                                    FROM
-                                    	smg_students s
-                                    WHERE
-                                    	s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-                                    AND
-                                    	double_place_share = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentID)#">
-                                </cfquery>
-                                
-                            </table>
-						
-							<cfif VAL(qGetShareChildren.recordCount)>
-                                <table width="100%" align="Center" style="margin-top:10px;">
-                                    <tr>
-                                        <td>
-                                            #qGetStudentInfo.firstname# is sharing a room with #qGetShareChildren.relation# #qGetShareChildren.firstName#
-                                        </td>
-                                    </tr>
-                                </table>                                       	
-                            </cfif>
-
-                        </td>
-    
-                        <td valign="top">
-                        
-							<!----Animals---->
-                            <Table align="Center">
-                            <tr>
-                                <td align="center"><span class="title">Type</span></td>
-                                <td align="center"><span class="title">Number</span></td>
-                                <td align="center"><span class="title">Indoor</span></td>
-                            </tr>
-                            <cfloop query="qGetHostPets">
-                                <tr>		
-                                    <td>#qGetHostPets.animaltype#</td>
-                                    <td align="center">
-                                    	<cfif qGetHostPets.number EQ 11>
-                                        	10+
-                                        <cfelse>
-                                        	#qGetHostPets.number#
-                                        </cfif>
-                                    </td>
-                                    <td align="center">#qGetHostPets.indoor#</td>
-                                </tr>
-                            </cfloop>
-                            </table>
-    
-                        </td>
-
-                        <td valign="top">
-
-							<!----Interests---->
-                            <Table align="Center">
-                                <tr>
-                                    <td>
-										#interestHostList#                                    
-                                    </td>
-                                </tr>
-                            </table>
-    
-                        </td>
-                    </tr>                
-                </table>
-    
-				<!--- Community Information --->
-                <table align="center" class="profileTable2" width="100%">
-                    <tr bgcolor="##0854a0" align="center" ><img src="https://ise.exitsapplication.com/nsmg/pics/CIinfo.png" /></td></tr>     
+                <table class="profileTable" align="center">
                     <tr>
                         <td>
-							<cfif LEN(qGetHostFamily.community)>
-                                The community is #qGetHostFamily.community#
+                
+                            <!--- Header --->
+                            <table align="center">
+                                <tr>
+                                    <td class="bottom_center" width="800"  valign="top">
+                                        <img src="https://ise.exitsapplication.com/nsmg/pics/#CLIENT.companyid#_short_profile_header.jpg" />
+                                        <span class="title"><font size=+1>Placement Information for</font></span><font size=+1>#qGetStudentInfo.firstname# #qGetStudentInfo.familylastname#</font><font size=+1> (###qGetStudentInfo.studentID#)</font><br />
+                                        <span class="title">Facilitator:</span>  #qGetFacilitator.firstname# #qGetFacilitator.lastname# 
+                                    </td>
+                                </tr>	
+                            </table>
+                            
+                            <cfif vTotalFamilyMembers eq 1>
+                                <div class="alert" align="Center">
+                                    <h3>Single Person Placement </h3>
+                                </div>
                             </cfif>
-                                
-                            <cfif qGetHostFamily.community is 'small'>town</cfif>.
                             
-							<cfif LEN(qGetHostFamily.nearbigcity)>
-                            	The nearest big city is <a href="http://en.wikipedia.org/wiki/#qGetHostFamily.nearbigcity#" target="_blank" class="wiki">#qGetHostFamily.nearbigcity# </a> is #qGetHostFamily.near_city_dist# miles away.
-							</cfif>
-                            
-							<cfif LEN(qGetHostFamily.major_air_code)>
-                            	The Closest arrival airport is <a href="http://www.airnav.com/airport/K#qGetHostFamily.major_air_code#" target="_blank" class="airport">#qGetHostFamily.major_air_code#</A>
-	                            <cfif LEN(qGetHostFamily.airport_city)>
-                                	, in the city of  <a href="http://en.wikipedia.org/wiki/#qGetHostFamily.airport_city#" target="_blank" class="wiki">#qGetHostFamily.airport_city# </a> 
-								</cfif>                            
+                            <cfif VAL(qGetPlacementHistory.doublePlacementID)>
+                                <div class="alert" align="Center">
+                                    <h3>Double Placement: Two exchange students will be living with this host family. </h3>
+                                </div>
                             </cfif>
                             
-                            <br /><br />
+                            <cfif qGetPlacementHistory.isWelcomeFamily EQ 1>	
+                                <div class="alert" align="Center">
+                                    <h3>This is a welcome family.  Permanent family information will be sent shortly.</h3>
+                                </div>
+                            </cfif>
                             
-							<cfif LEN(qGetHostFamily.pert_info)>Points of interest in the community: #qGetHostFamily.pert_info#</cfif>
-                        </td>
-                    </tr>
-                </table>
-    
-                <table align="center" class="profileTable2" width="100%">
-                    <tr bgcolor="##0854a0" align="center" ><img src="https://ise.exitsapplication.com/nsmg/pics/schoolinfo.png" /></td></tr>            
-                    <tr>
-                        <td valign="top">
-                        
-                   			<!---School Dates---->
-                            <table>
-								<cfif LEN(qGetSchoolDates.enrollment)>
-                                    <Tr>
-                                        <td><span class="title">Orientation</span></td>
-                                        <td>
-                                            <cfif IsDate(qGetSchoolDates.enrollment)>
-                                                #DateFormat(qGetSchoolDates.enrollment, 'mmmm d, yyyy')#
-                                            <cfelse>
-                                                Not Available
+                            <cfif VAL(qGetPlacementHistory.isRelocation)>
+                                <div class="alert" align="Center">
+                                    <h3>This is a relocation. The student will be moving to this host family and/or school shortly.</h3>
+                                </div>
+                            </cfif>
+                
+                            <!--- Student Information #qGetStudentInfo.countryresident# --->
+                            <table  align="center" border="0" cellpadding="4" cellspacing="0" width="800">
+                                <tr>           
+                                    <td colspan=5 align="center"><img src="https://ise.exitsapplication.com/nsmg/pics/HFbanner.png" /></Td>
+                                </tr>
+                                <tr>
+                                    <td valign="top">
+                
+                                        <!---Host Family Information---->
+                                        <table>
+                                        
+                                            <cfif LEN(qGetHostFamily.fatherfirstname)>
+                                                <tr>
+                                                    <td width="100"><span class="title">Host Father:</span></td>
+                                                    <td width="250">
+                                                        #qGetHostFamily.fatherfirstname# #qGetHostFamily.fatherlastname#, 
+                                                        <cfif IsDate(qGetHostFamily.fatherDOB)>
+                                                            (#DateDiff('yyyy', qGetHostFamily.fatherDOB, now())#)
+                                                        </cfif>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span class="title">Occupation:</span></td>
+                                                    <td>#qGetHostFamily.fatherworktype#</td>
+                                                </tr>
+                                                <tr><td>&nbsp;</td></tr>
                                             </cfif>
-                                        </td>
+                                            
+                                            <cfif LEN(qGetHostFamily.motherfirstname)>
+                                                <tr>
+                                                    <td width="100"><span class="title">Host Mother:</span></td>
+                                                    <td width="250">
+                                                        #qGetHostFamily.motherfirstname# #qGetHostFamily.motherlastname#, 
+                                                        <cfif IsDate(qGetHostFamily.motherDOB)>
+                                                            (#DateDiff('yyyy', qGetHostFamily.motherDOB, now())#)
+                                                        </cfif>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td><span class="title">Occupation:</span></td>
+                                                    <td>#qGetHostFamily.motherworktype#</td>
+                                                </tr>
+                                            </cfif>
+                                        </table>
+                                
+                                    </td>
+                
+                                    <td valign="top">
+                                    
+                                        <!----Address & Contact Info----> 
+                                        <Table>
+                                            <tr>
+                                                <td width="100" valign="top"><span class="title">Address:</span></td>
+                                                <td>
+                                                    #qGetHostFamily.address#<br />
+                                                    <a href="http://en.wikipedia.org/wiki/#qGetHostFamily.city#,_#qGetHostFamily.state#" target="_blank" class="wiki">#qGetHostFamily.city# #qGetHostFamily.state# </a>, #qGetHostFamily.zip#
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td width="100" valign="top"><span class="title">Phone: </span></td>
+                                                <td>#qGetHostFamily.phone#</td>
+                                            </tr>
+                                            <tr>
+                                                <td width="100" valign="top"><span class="title">Email: </span></td>
+                                                <td>#qGetHostFamily.email#</td>
+                                            </tr>
+                                           
+                                            <tr>
+                                                <td width="100" valign="top"><span class="title">Placed: </span></td>
+                                                <td>#DateFormat(qGetPlacementHistory.datePlaced, 'mmmm d, yyyy')#</td>
+                                            </tr>
+                                            
+                                        </table>
+                
+                                    </td>
+                                </tr>                
+                            </table>
+                            
+                            <!----Siblings and Pets---->
+                            <table  align="center" border="0" cellpadding="4" cellspacing="0" width="800">
+                                <tr>           
+                                    <Td><img src="https://ise.exitsapplication.com/nsmg/pics/sib.png" /></Td>
+                                    <td><img src="https://ise.exitsapplication.com/nsmg/pics/pets.png" /></td>
+                                    <td><img src="https://ise.exitsapplication.com/nsmg/pics/interest.png" /></td>
+                                </tr>
+                                <tr>
+                                    <td valign="top" width=40%>
+                                
+                                        <!---Siblings---->
+                                        <table width="100%" align="Center">
+                                            <tr>
+                                                <td><span class="title">Name</span><br /></td>
+                                                <td align="center"><span class="title">Age</span><br /></td>
+                                                <td align="center"><span class="title">Sex</span><br /></td>
+                                                <td align="center"><span class="title">At home</span><br /></td>
+                                                <td align="center"><span class="title">Relation</span><br /></td>
+                                            </tr>
+                                            <cfloop query="qGetHostChildren">
+                                                <tr>
+                                                    <td>
+                                                        <cfset maxwords = 1>
+                                                        #REReplace(qGetHostChildren.name,"^(#RepeatString('[^ ]* ',maxwords)#).*","\1")#
+                                                    </td>
+                                                    <td align="center">
+                                                        <cfif IsDate(qGetHostChildren.birthdate)>
+                                                            #DateDiff('yyyy', qGetHostChildren.birthdate, now())#
+                                                        <cfelse>
+                                                            n/a
+                                                        </cfif>
+                                                    </td>
+                                                    <td align="center">#qGetHostChildren.sex#</td>
+                                                    <td align="center">#qGetHostChildren.liveathome#</td>
+                                                    <td align="center">#qGetHostChildren.membertype#</td>
+                                                </tr>
+                                            </cfloop>
+                                            
+                                            <cfquery name="qGetShareChildren" datasource="#APPLICATION.DSN#">
+                                                SELECT
+                                                    name AS firstName,
+                                                    'host sibling' AS relation                                        
+                                                FROM
+                                                    smg_host_children
+                                                WHERE
+                                                    hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetPlacementHistory.hostID)#">
+                                                AND
+                                                    roomShareWith = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentID)#">
+                                                
+                                                UNION
+                                               
+                                                SELECT
+                                                    s.firstName,
+                                                    'foreign student' AS relation
+                                                FROM
+                                                    smg_students s
+                                                WHERE
+                                                    s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                                                AND
+                                                    double_place_share = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentID)#">
+                                            </cfquery>
+                                            
+                                        </table>
+                                    
+                                        <cfif VAL(qGetShareChildren.recordCount)>
+                                            <table width="100%" align="Center" style="margin-top:10px;">
+                                                <tr>
+                                                    <td>
+                                                        #qGetStudentInfo.firstname# is sharing a room with #qGetShareChildren.relation# #qGetShareChildren.firstName#
+                                                    </td>
+                                                </tr>
+                                            </table>                                       	
+                                        </cfif>
+            
+                                    </td>
+                
+                                    <td valign="top">
+                                    
+                                        <!----Animals---->
+                                        <Table align="Center">
+                                        <tr>
+                                            <td align="center"><span class="title">Type</span></td>
+                                            <td align="center"><span class="title">Number</span></td>
+                                            <td align="center"><span class="title">Indoor</span></td>
+                                        </tr>
+                                        <cfloop query="qGetHostPets">
+                                            <tr>		
+                                                <td>#qGetHostPets.animaltype#</td>
+                                                <td align="center">
+                                                    <cfif qGetHostPets.number EQ 11>
+                                                        10+
+                                                    <cfelse>
+                                                        #qGetHostPets.number#
+                                                    </cfif>
+                                                </td>
+                                                <td align="center">#qGetHostPets.indoor#</td>
+                                            </tr>
+                                        </cfloop>
+                                        </table>
+                
+                                    </td>
+            
+                                    <td valign="top">
+            
+                                        <!----Interests---->
+                                        <Table align="Center">
+                                            <tr>
+                                                <td>
+                                                    #interestHostList#                                    
+                                                </td>
+                                            </tr>
+                                        </table>
+                
+                                    </td>
+                                </tr>                
+                            </table>
+                
+                            <!--- Community Information --->
+                            <table align="center" class="profileTable2" width="100%">
+                                <tr bgcolor="##0854a0" align="center" ><img src="https://ise.exitsapplication.com/nsmg/pics/CIinfo.png" /></td></tr>     
+                                <tr>
+                                    <td>
+                                        <cfif LEN(qGetHostFamily.community)>
+                                            The community is #qGetHostFamily.community#
+                                        </cfif>
+                                            
+                                        <cfif qGetHostFamily.community is 'small'>town</cfif>.
+                                        
+                                        <cfif LEN(qGetHostFamily.nearbigcity)>
+                                            The nearest big city is <a href="http://en.wikipedia.org/wiki/#qGetHostFamily.nearbigcity#" target="_blank" class="wiki">#qGetHostFamily.nearbigcity# </a> is #qGetHostFamily.near_city_dist# miles away.
+                                        </cfif>
+                                        
+                                        <cfif LEN(qGetHostFamily.major_air_code)>
+                                            The Closest arrival airport is <a href="http://www.airnav.com/airport/K#qGetHostFamily.major_air_code#" target="_blank" class="airport">#qGetHostFamily.major_air_code#</A>
+                                            <cfif LEN(qGetHostFamily.airport_city)>
+                                                , in the city of  <a href="http://en.wikipedia.org/wiki/#qGetHostFamily.airport_city#" target="_blank" class="wiki">#qGetHostFamily.airport_city# </a> 
+                                            </cfif>                            
+                                        </cfif>
+                                        
+                                        <br /><br />
+                                        
+                                        <cfif LEN(qGetHostFamily.pert_info)>Points of interest in the community: #qGetHostFamily.pert_info#</cfif>
+                                    </td>
+                                </tr>
+                            </table>
+                
+                            <table align="center" class="profileTable2" width="100%">
+                                <tr bgcolor="##0854a0" align="center" ><img src="https://ise.exitsapplication.com/nsmg/pics/schoolinfo.png" /></td></tr>            
+                                <tr>
+                                    <td valign="top">
+                                    
+                                        <!---School Dates---->
+                                        <table>
+                                            <cfif LEN(qGetSchoolDates.enrollment)>
+                                                <Tr>
+                                                    <td><span class="title">Orientation</span></td>
+                                                    <td>
+                                                        <cfif IsDate(qGetSchoolDates.enrollment)>
+                                                            #DateFormat(qGetSchoolDates.enrollment, 'mmmm d, yyyy')#
+                                                        <cfelse>
+                                                            Not Available
+                                                        </cfif>
+                                                    </td>
+                                                </Tr>
+                                            </cfif>
+                                            <Tr>
+                                                <td><span class="title">1<sup>st</sup> Semester Begins:</span></td>
+                                                <td>
+                                                    <cfif IsDate(qGetSchoolDates.year_begins)>
+                                                        #DateFormat(qGetSchoolDates.year_begins, 'mmmm d, yyyy')#
+                                                    <cfelse>
+                                                        Not Available
+                                                    </cfif>
+                                                </td>
+                                            </Tr>
+                                            <Tr>
+                                                <td><span class="title">1<sup>st</sup> Semester Ends:</span></td>
+                                                <td>
+                                                    <cfif IsDate(qGetSchoolDates.semester_ends)>
+                                                        #DateFormat(qGetSchoolDates.semester_ends, 'mmmm d, yyyy')#
+                                                    <cfelse>
+                                                        Not Available
+                                                    </cfif>                                    
+                                                </td>
+                                            </Tr>
+                                            <Tr>
+                                                <td><span class="title">2<sup>nd</sup> Semester Begins:</span></td>
+                                                <td>
+                                                    <cfif IsDate(qGetSchoolDates.semester_begins)>
+                                                        #DateFormat(qGetSchoolDates.semester_begins, 'mmmm d, yyyy')#
+                                                    <cfelse>
+                                                        Not Available
+                                                    </cfif>
+                                                </td>
+                                            </Tr>
+                                            <Tr>
+                                                <td><span class="title">Year Ends:</span></td>
+                                                <td>
+                                                    <cfif IsDate(qGetSchoolDates.year_ends)>
+                                                        #DateFormat(qGetSchoolDates.year_ends, 'mmmm d, yyyy')#
+                                                    <cfelse>
+                                                        Not Available
+                                                    </cfif>
+                                                </td>
+                                            </Tr>
+                                        </table>
+                                        
+                                    </td>
+                                    <td valign="top">
+                                    
+                                        <!---- School Address & Contact Info---->
+                                        <Table>
+                                            <Tr>
+                                            
+                                            <tr>
+                                                <td valign="top"><span class="title">Name:</span></td>
+                                                <td><a href="#qGetSchool.url#">#qGetSchool.schoolname#</a></td>
+                                            </tr>
+                                            <tr>
+                                                <td width="100" valign="top"><span class="title">Address:</span></td>
+                                                <td>
+                                                    #qGetSchool.address#
+                                                    <cfif LEN(qGetSchool.address2)>
+                                                        <br />#qGetSchool.address2#
+                                                    </cfif>
+                                            
+                                                    <a href="http://en.wikipedia.org/wiki/#qGetSchool.city#,_#qGetSchool.state#" target="_blank" class="wiki">
+                                                        #qGetSchool.city#, #qGetSchool.state# 
+                                                    </a>, 
+                                                    
+                                                    #qGetSchool.zip#
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td width="100" valign="top"><span class="title">Phone: </span></td>
+                                                <td>#qGetSchool.phone#</td>
+                                            </tr>
+                                            <tr>
+                                                <td width="100" valign="top"><span class="title">Contact: </span></td>
+                                                <td><a href="#qGetSchool.url#">#qGetSchool.principal#</a></td>
+                                            </tr>
+                                        </table>
+                
+                                    </td>
+                                </tr>
+                                
+                                <cfif LEN(qGetHostFamily.schoolcosts)>
+                                    <Tr>
+                                        <Td colspan=2>The student is responsible for the following expenses: #qGetHostFamily.schoolcosts#</Td>
                                     </Tr>
                                 </cfif>
+                            </table>
+                
+                            <table width="800">
                                 <Tr>
-                                    <td><span class="title">1<sup>st</sup> Semester Begins:</span></td>
-                                    <td>
-										<cfif IsDate(qGetSchoolDates.year_begins)>
-                                        	#DateFormat(qGetSchoolDates.year_begins, 'mmmm d, yyyy')#
-										<cfelse>
-											Not Available
-										</cfif>
-									</td>
+                                    <Td width="100%" valign="top">
+                                        
+                                        <!--- Area Representative --->
+                                        <table align="center" width="100%">
+                                            <tr bgcolor="##0854a0"><td colspan=10 align="center" ><img src="https://ise.exitsapplication.com/nsmg/pics/ARbanner.png" /></td></tr>     
+                                            <tr>
+                                                <td valign="top"><span class="title">Name:</span></td>
+                                                <Td valign="top">#qGetAreaRep.firstname# #qGetAreaRep.lastname#</Td>
+                                                <td  valign="top"><span class="title">Address:</span></td>
+                                                <Td valign="top">
+                                                    #qGetAreaRep.address#<br />
+                                                    <Cfif LEN(qGetAreaRep.address2)>#qGetAreaRep.address2#<br /></Cfif>
+                                                    #qGetAreaRep.city# #qGetAreaRep.state#, #qGetAreaRep.zip#
+                                                </Td>
+                                                <td  valign="top"><span class="title">Phone:</span></td>
+                                                <Td valign="top">#qGetAreaRep.phone#</Td>
+                                            </tr>
+                                            <tr>
+                                            <td colspan="4"></td>
+                                            <td  valign="top"><span class="title">Email:</span></td>
+                                            <td  valign="top">#qGetAreaRep.email#</td>
+                                        </table>
+               
+                                    </Td>
                                 </Tr>
-                                <Tr>
-                                    <td><span class="title">1<sup>st</sup> Semester Ends:</span></td>
-                                    <td>
-										<cfif IsDate(qGetSchoolDates.semester_ends)>
-                                        	#DateFormat(qGetSchoolDates.semester_ends, 'mmmm d, yyyy')#
-										<cfelse>
-                                        	Not Available
-										</cfif>                                    
+                                
+                                <tr>
+                                    <td  valign="top">
+                                    
+                                        <table align="center" width="100%"  >
+                                            <tr bgcolor="##0854a0"><td colspan=10 align="center" ><img src="https://ise.exitsapplication.com/nsmg/pics/addinfo.png" /></td></tr>     
+                                            <tr>
+                                                <td>
+                                                    <cfif LEN(qGetStudentInfo.placement_notes) AND NOT VAL(FORM.historyID)>
+                                                        #qGetStudentInfo.placement_notes#<br /><br />
+                                                    </cfif>		
+                                                    
+                                                    <cfif NOT VAL(qGetPlacementHistory.isRelocation)>
+                                                        The student should plan to arrive within five days from start of school. Please advise us of 
+                                                        #qGetStudentInfo.firstname#'s arrival information as soon as possible. Please upload flight information through EXITS.
+                                                    </cfif><br />
+                                                    
+                                                </td>
+                                            </tr>
+                                        </table>
+                
                                     </td>
-                                </Tr>
-                                <Tr>
-                                    <td><span class="title">2<sup>nd</sup> Semester Begins:</span></td>
-                                    <td>
-										<cfif IsDate(qGetSchoolDates.semester_begins)>
-                                        	#DateFormat(qGetSchoolDates.semester_begins, 'mmmm d, yyyy')#
-										<cfelse>
-                                        	Not Available
-										</cfif>
-                                    </td>
-                                </Tr>
-                                <Tr>
-                                	<td><span class="title">Year Ends:</span></td>
-                                    <td>
-										<cfif IsDate(qGetSchoolDates.year_ends)>
-                                        	#DateFormat(qGetSchoolDates.year_ends, 'mmmm d, yyyy')#
-										<cfelse>
-                                        	Not Available
-										</cfif>
-                                    </td>
-                                </Tr>
+                                </tr>
                             </table>
                             
                         </td>
-                        <td valign="top">
-                        
-							<!---- School Address & Contact Info---->
-                            <Table>
-                                <Tr>
-                                
-                                <tr>
-                                	<td valign="top"><span class="title">Name:</span></td>
-                                    <td><a href="#qGetSchool.url#">#qGetSchool.schoolname#</a></td>
-                                </tr>
-                                <tr>
-                                	<td width="100" valign="top"><span class="title">Address:</span></td>
-                                	<td>
-                                    	#qGetSchool.address#
-										<cfif LEN(qGetSchool.address2)>
-                                        	<br />#qGetSchool.address2#
-										</cfif>
-                                
-		                                <a href="http://en.wikipedia.org/wiki/#qGetSchool.city#,_#qGetSchool.state#" target="_blank" class="wiki">
-                                        	#qGetSchool.city#, #qGetSchool.state# 
-                                        </a>, 
-                                        
-                                        #qGetSchool.zip#
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td width="100" valign="top"><span class="title">Phone: </span></td>
-                                    <td>#qGetSchool.phone#</td>
-                                </tr>
-                                <tr>
-                                    <td width="100" valign="top"><span class="title">Contact: </span></td>
-                                    <td><a href="#qGetSchool.url#">#qGetSchool.principal#</a></td>
-                                </tr>
-                            </table>
-    
-                        </td>
-                    </tr>
-                    
-					<cfif LEN(qGetHostFamily.schoolcosts)>
-                        <Tr>
-                            <Td colspan=2>The student is responsible for the following expenses: #qGetHostFamily.schoolcosts#</Td>
-                        </Tr>
-                    </cfif>
-                </table>
-    
-                <table width="800">
-                    <Tr>
-                        <Td width="100%" valign="top">
-                    		
-                            <!--- Area Representative --->
-                            <table align="center" width="100%">
-                                <tr bgcolor="##0854a0"><td colspan=10 align="center" ><img src="https://ise.exitsapplication.com/nsmg/pics/ARbanner.png" /></td></tr>     
-                                <tr>
-	                                <td valign="top"><span class="title">Name:</span></td>
-                                    <Td valign="top">#qGetAreaRep.firstname# #qGetAreaRep.lastname#</Td>
-                                    <td  valign="top"><span class="title">Address:</span></td>
-                                    <Td valign="top">
-                                    	#qGetAreaRep.address#<br />
-		                                <Cfif LEN(qGetAreaRep.address2)>#qGetAreaRep.address2#<br /></Cfif>
-		                                #qGetAreaRep.city# #qGetAreaRep.state#, #qGetAreaRep.zip#
-                                    </Td>
-                                	<td  valign="top"><span class="title">Phone:</span></td>
-                                    <Td valign="top">#qGetAreaRep.phone#</Td>
-                                </tr>
-                                <tr>
-                                <td colspan="4"></td>
-                                <td  valign="top"><span class="title">Email:</span></td>
-                                <td  valign="top">#qGetAreaRep.email#</td>
-                        	</table>
-   
-    					</Td>
-    				</Tr>
-                    
-                    <tr>
-                        <td  valign="top">
-                        
-                            <table align="center" width="100%"  >
-                                <tr bgcolor="##0854a0"><td colspan=10 align="center" ><img src="https://ise.exitsapplication.com/nsmg/pics/addinfo.png" /></td></tr>     
-                                <tr>
-                                    <td>
-										<cfif LEN(qGetStudentInfo.placement_notes) AND NOT VAL(FORM.historyID)>
-                                        	#qGetStudentInfo.placement_notes#<br /><br />
-										</cfif>		
-                                        
-                                        <cfif NOT VAL(qGetPlacementHistory.isRelocation)>
-                                            The student should plan to arrive within five days from start of school. Please advise us of 
-                                            #qGetStudentInfo.firstname#'s arrival information as soon as possible. Please upload flight information through EXITS.
-                                        </cfif><br />
-                                        
-                                    </td>
-                                </tr>
-                            </table>
-    
-    					</td>
                     </tr>
                 </table>
                 
-            </td>
-        </tr>
-    </table>
-    
-</cfsavecontent>
-
-
-
-</cfoutput>
-
-
-
-
-          <cfset fileName="placementInformationSheet_#qGetStudentInfo.studentID#_#DateFormat(NOW(),'mm-dd-yyyy')#-#TimeFormat(NOW(),'hh-mm')#">
-            <cfoutput>
+            </cfsavecontent>
+            
+		</cfoutput>
+      
+	  	<cfset fileName="placementInformationSheet_#qGetStudentInfo.studentID#_#DateFormat(NOW(),'mm-dd-yyyy')#-#TimeFormat(NOW(),'hh-mm')#">
+		<cfoutput>
             <cfdocument format="pdf" filename="#fileName#.pdf" overwrite="yes" orientation="landscape" name="uploadFile">
-            	#PlacementInfo#
-           	</cfdocument>
-            </cfoutput>
-			<cfscript>
-				//fullPath='#APPLICATION.PATH.onlineApp.virtualFolder#//#qGetStudentInfo.studentid#';
-				fullPath=GetDirectoryFromPath(GetCurrentTemplatePath()) & fileName & '.pdf';
-				APPLICATION.CFC.UDF.insertInternalFile(filePath=fullPath,fieldID=1,studentID=qGetStudentInfo.studentID);
-			</cfscript>
-            <cfquery name="insertFileDetails" datasource="#application.dsn#">
-            insert into  virtualFolder (fk_categoryID, 
-            							fk_documentType, 
-                                        fileDescription,
-                                        fileName, 
-                                        filePath, 
-                                        fk_studentID,
-                                        fk_hostid,
-                                        dateAdded,
-                                        generatedHow,
-                                        uploadedBy)
-            				     values(2,
-                                 		3,
-                                        'PIS',
-                                        '#fileName#.pdf', 
-                                        'uploadedfiles/virtualFolder/#qGetStudentInfo.studentID#/',
-                                        #qGetStudentInfo.studentID#,
-                                        #qGetHostFamily.hostID#,
-                                        #now()#,
-                                        'auto',
-                                        #client.userid#)
-            </cfquery>
-<!----Host Welcome Letter---->          
-<!-----Company Information----->
-<!-----Company Information----->
+                #PlacementInfo#
+            </cfdocument>
+        </cfoutput>
+        <cfscript>
+            //fullPath='#APPLICATION.PATH.onlineApp.virtualFolder#//#qGetStudentInfo.studentid#';
+            fullPath=GetDirectoryFromPath(GetCurrentTemplatePath()) & fileName & '.pdf';
+            APPLICATION.CFC.UDF.insertInternalFile(filePath=fullPath,fieldID=1,studentID=qGetStudentInfo.studentID,hostID=qGetStudentInfo.hostID);
+        </cfscript>
+     	<cfquery name="insertFileDetails" datasource="#application.dsn#">
+   			INSERT INTO  virtualFolder (
+            	fk_categoryID, 
+                fk_documentType, 
+                fileDescription,
+                fileName, 
+                filePath, 
+                fk_studentID,
+                fk_hostid,
+                dateAdded,
+                generatedHow,
+                uploadedBy)
+         	VALUES(
+            	2,
+                3,
+                'PIS',
+                '#fileName#.pdf', 
+                'uploadedfiles/virtualFolder/#qGetStudentInfo.studentID#/#qGetStudentInfo.hostID#/',
+                #qGetStudentInfo.studentID#,
+                #qGetHostFamily.hostID#,
+                #now()#,
+                'auto',
+                #client.userid#)
+		</cfquery>
+        
+		<!----Host Welcome Letter---->          
+        <!-----Company Information----->
+        <!-----Company Information----->
 <Cfquery name="companyshort" datasource="#APPLICATION.DSN#">
 	select *
 	from smg_companies
@@ -1877,7 +1951,7 @@
 			<cfscript>
 				//fullPath='#APPLICATION.PATH.onlineApp.virtualFolder#//#qGetStudentInfo.studentid#';
 				fullPath=GetDirectoryFromPath(GetCurrentTemplatePath()) & fileName & '.pdf';
-				APPLICATION.CFC.UDF.insertInternalFile(filePath=fullPath,fieldID=1,studentID=qGetStudentInfo.studentID);
+				APPLICATION.CFC.UDF.insertInternalFile(filePath=fullPath,fieldID=1,studentID=qGetStudentInfo.studentID,hostID=qGetStudentInfo.hostID);
 			</cfscript>
             <cfquery name="insertFileDetails" datasource="#application.dsn#">
             insert into  virtualFolder (fk_categoryID, 
@@ -1894,7 +1968,7 @@
                                  		23,
                                         'Welcome Letter',
                                         '#fileName#.pdf', 
-                                        'uploadedfiles/virtualFolder/#qGetStudentInfo.studentID#/',
+                                        'uploadedfiles/virtualFolder/#qGetStudentInfo.studentID#/#qGetStudentInfo.hostID#/',
                                         #qGetStudentInfo.studentID#,
                                         #qGetHostFamily.hostID#,
                                         #now()#,
@@ -2107,7 +2181,7 @@
 			<cfscript>
 				//fullPath='#APPLICATION.PATH.onlineApp.virtualFolder#//#qGetStudentInfo.studentid#';
 				fullPath=GetDirectoryFromPath(GetCurrentTemplatePath()) & fileName & '.pdf';
-				APPLICATION.CFC.UDF.insertInternalFile(filePath=fullPath,fieldID=1,studentID=qGetStudentInfo.studentID);
+				APPLICATION.CFC.UDF.insertInternalFile(filePath=fullPath,fieldID=1,studentID=qGetStudentInfo.studentID,hostID=qGetStudentInfo.hostID);
 			</cfscript>
             <cfquery name="insertFileDetails" datasource="#application.dsn#">
             insert into  virtualFolder (fk_categoryID, 
@@ -2124,7 +2198,7 @@
                                  		24,
                                         'School Welcome Letter',
                                         '#fileName#.pdf', 
-                                        'uploadedfiles/virtualFolder/#qGetStudentInfo.studentID#/',
+                                        'uploadedfiles/virtualFolder/#qGetStudentInfo.studentID#/#qGetStudentInfo.hostID#/',
                                         #qGetStudentInfo.studentID#,
                                         #qGetHostFamily.hostID#,
                                         #now()#,
@@ -2784,7 +2858,7 @@
 			<cfscript>
 				//fullPath='#APPLICATION.PATH.onlineApp.virtualFolder#//#qGetStudentInfo.studentid#';
 				fullPath=GetDirectoryFromPath(GetCurrentTemplatePath()) & fileName & '.pdf';
-				APPLICATION.CFC.UDF.insertInternalFile(filePath=fullPath,fieldID=1,studentID=qGetStudentInfo.studentID);
+				APPLICATION.CFC.UDF.insertInternalFile(filePath=fullPath,fieldID=1,studentID=qGetStudentInfo.studentID,hostID=qGetStudentInfo.hostID);
 			</cfscript>
             <cfquery name="insertFileDetails" datasource="#application.dsn#">
             insert into  virtualFolder (fk_categoryID, 
@@ -2801,7 +2875,7 @@
                                  		25,
                                         'Student ID Card',
                                         '#fileName#.pdf', 
-                                        'uploadedfiles/virtualFolder/#qGetStudentInfo.studentID#/',
+                                        'uploadedfiles/virtualFolder/#qGetStudentInfo.studentID#/#qGetStudentInfo.hostID#/',
                                         #qGetStudentInfo.studentID#,
                                         #qGetHostFamily.hostID#,
                                         #now()#,
@@ -2811,5 +2885,135 @@
      
             
  	</cffunction>
+    
+    <!--- Function to check new host family data against host family data already stored --->
+    <cffunction name="checkHostFamilyExists" access="remote" returnFormat="json" output="false">
+        <cfargument name="address" type="string" hint="address is required">
+        <cfargument name="zip" type="string" hint="zip is required">
+        <cfargument name="email" type="string" default="" hint="email is not required">
+        <cfargument name="fatherFirstName" type="string" default="" hint="fatherFirstName is not required">
+        <cfargument name="fatherLastName" type="string" default="" hint="fatherLastName is not required">
+        <cfargument name="motherFirstName" type="string" default="" hint="motherFirstName is not required">
+        <cfargument name="motherLastName" type="string" default="" hint="motherFirstName is not required">
+        <cfargument name="fatherSSN" type="string" default="" hint="fatherSSN is not required">
+        <cfargument name="motherSSN" type="string" default="" hint="motherSSN is not required">
+        
+        <cfscript>
+			// Return structure
+			stResult = structNew();
+			// Returns 0 if no family is found, 1 if the family definately exists, and 2 if the family might exist
+			stResult.status = 0;
+			// 0 if they do not exist, 1 if they do
+			stResult.address = 0;
+			stResult.zip = 0;
+			stResult.email = 0;
+			stResult.fatherFirstName = 0;
+			stResult.fatherLastName = 0;
+			stResult.motherFirstName = 0;
+			stResult.motherLastName = 0;
+			stResult.fatherSSN = 0;
+			stResult.motherSSN = 0;
+			
+			stResult.hostID = 0;
+			stResult.familyLastName = "";
+			
+			// Each SSN is checked against both the fatherSSN and the motherSSN and must be encrypted
+			vSSNfather = "";
+			vSSNmother = "";
+			if (LEN(ARGUMENTS.fatherSSN)) {
+				vSSNfather = encryptVariable(ARGUMENTS.fatherSSN);	
+			}
+			if (LEN(ARGUMENTS.motherSSN)) {
+				vSSNmother = encryptVariable(ARGUMENTS.motherSSN);	
+			}
+		</cfscript>
+        
+        <cfquery name="qGetResultByAddress" datasource="#APPLICATION.DSN#">
+        	SELECT hostID, familyLastName
+            FROM smg_hosts
+            WHERE address = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.address#">
+            AND zip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.zip#">
+      	</cfquery>
+        <cfquery name="qGetResultByEmail" datasource="#APPLICATION.DSN#">
+            SELECT hostID, familyLastName
+            FROM smg_hosts
+            WHERE email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.email#">
+        </cfquery>
+        <cfquery name="qGetResultByFather" datasource="#APPLICATION.DSN#">
+            SELECT hostID, familyLastName
+            FROM smg_hosts
+            WHERE fatherFirstName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.fatherFirstName#">
+            AND fatherLastName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.fatherLastName#">
+        </cfquery>
+        <cfquery name="qGetResultByMother" datasource="#APPLICATION.DSN#">
+            SELECT hostID, familyLastName
+            FROM smg_hosts
+            WHERE motherFirstName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.motherFirstName#">
+            AND motherLastName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.motherLastName#">
+        </cfquery>
+        <cfquery name="qGetResultByFatherSSN" datasource="#APPLICATION.DSN#">
+            SELECT hostID, familyLastName
+            FROM smg_hosts
+            WHERE fatherSSN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#vSSNFather#">
+            OR motherSSN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#vSSNFather#">
+        </cfquery>
+        <cfquery name="qGetResultByMotherSSN" datasource="#APPLICATION.DSN#">
+            SELECT hostID, familyLastName
+            FROM smg_hosts
+            WHERE fatherSSN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#vSSNMother#">
+            OR motherSSN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#vSSNMother#">
+        </cfquery>
+        
+        <cfscript>
+			if (VAL(qGetResultByAddress.recordCount)) {
+				if (stResult.status NEQ 1) {
+					stResult.status = 2;
+				}
+				stResult.address = 1;
+				stResult.zip = 1;
+				stResult.hostID = qGetResultByAddress.hostID;
+				stResult.familyLastName = qGetResultByAddress.familyLastName;
+			}
+			if (VAL(qGetResultByFather.recordCount) AND LEN(ARGUMENTS.fatherFirstName)) {
+				if (stResult.status NEQ 1) {
+					stResult.status = 2;
+				}
+				stResult.fatherFirstName = 1;
+				stResult.fatherLastName = 1;
+				stResult.hostID = qGetResultByFather.hostID;
+				stResult.familyLastName = qGetResultByFather.familyLastName;
+			}
+			if (VAL(qGetResultByMother.recordCount) AND LEN(ARGUMENTS.motherFirstName)) {
+				if (stResult.status NEQ 1) {
+					stResult.status = 2;
+				}
+				stResult.motherFirstName = 1;
+				stResult.motherLastName = 1;
+				stResult.hostID = qGetResultByMother.hostID;
+				stResult.familyLastName = qGetResultByMother.familyLastName;
+			}
+			if (VAL(qGetResultByEmail.recordCount) AND LEN(ARGUMENTS.email)) {
+				stResult.status = 1;
+				stResult.email = 1;
+				stResult.hostID = qGetResultByEmail.hostID;
+				stResult.familyLastName = qGetResultByEmail.familyLastName;
+			}
+			if (VAL(qGetResultByFatherSSN.recordCount) AND LEN(ARGUMENTS.fatherSSN)) {
+				stResult.status = 1;
+				stResult.fatherSSN = 1;
+				stResult.hostID = qGetResultByFatherSSN.hostID;
+				stResult.familyLastName = qGetResultByFatherSSN.familyLastName;
+			}
+			if (VAL(qGetResultByMotherSSN.recordCount) AND LEN(ARGUMENTS.motherSSN)) {
+				stResult.status = 1;
+				stResult.motherSSN = 1;
+				stResult.hostID = qGetResultByMotherSSN.hostID;
+				stResult.familyLastName = qGetResultByMotherSSN.familyLastName;
+			}
+			
+			return stResult;
+		</cfscript>
+        
+	</cffunction>
     
 </cfcomponent>

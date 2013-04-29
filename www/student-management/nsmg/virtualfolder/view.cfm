@@ -137,13 +137,27 @@
        and isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.isDeleted#">
         ORDER by categoryName
     </cfquery>
-    <cfset currentDirectory = "#AppPath.onlineApp.virtualFolder##qGetStudentInfo.studentID#/page22">
+    <cfif VAL(url.placement)>
+    	<cfset currentDirectory = "#AppPath.onlineApp.virtualFolder##qGetStudentInfo.studentID#/#qGetStudentInfo.hostID#">
+   	<cfelse>
+    	<cfset currentDirectory = "#AppPath.onlineApp.virtualFolder##qGetStudentInfo.studentID#">
+    </cfif>
 	<!--- Check to see if the Directory exists. --->
     <cfif NOT DirectoryExists(currentDirectory)>
        <!--- If TRUE, create the directory. --->
        <cfdirectory action = "create" directory = "#currentDirectory#" mode="777">
     </cfif>
     <cfdirectory directory="#currentDirectory#" name="mydirectory" sort="datelastmodified DESC" filter="*.*">
+    <cfquery name="qGetUploadedFiles" datasource="#APPLICATION.DSN#">
+    	SELECT v.*, u.userID, u.firstName, u.lastName
+        FROM virtualfolder v
+        LEFT JOIN smg_users u on u.userID = v.uploadedBy
+        WHERE v.fk_studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.studentID#">
+        <cfif VAL(URL.placement)>
+        	AND v.fk_hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.placement#">
+        </cfif>
+        AND <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userType)#"> IN (SELECT categoryAccessList FROM virtualfoldercategory WHERE categoryID = v.fk_categoryID)
+    </cfquery>
     <cfquery name="check_allergies" datasource="#application.dsn#">
     select has_an_allergy
     from smg_student_app_health
@@ -260,8 +274,6 @@
          <cfloop query="flightDocs">
                     <tr>
                     
-                    
-                    
                         <td>Flight Information</td>
                         <td><a href="uploadedfiles/internalVirtualFolder/#qGetStudentInfo.studentID#/#selectedPlacement#/flightInformation/#name#" target="_blank"ß>#name#</td> 	
                         <td>#DateFormat(dateLastModified,'mmm d, yyyy')#</td>
@@ -276,23 +288,25 @@
             <tr bgcolor="##CCCCCC">
             	<Td colspan=6 align="left"><strong>Supplements on Student App</strong></th>
             </tr> 
-			 <cfif VAL(check_allergies.has_an_allergy)>
-            <tr>
-                <td><a href="?curdoc=section3/allergy_info_request">Allergy Clarification Form</a></td>
-            </tr>
-            </cfif>
-    
-	
-
-            <cfloop query="mydirectory">
-                
+			<cfif VAL(check_allergies.has_an_allergy)>
                 <tr>
-                  <td>Student Suppliment</td>
-                  <td><a href="javascript:OpenApp('uploadedfiles/virtualfolder/#qGetStudentInfo.studentID#/page22/#name#');" target="_blank">#mydirectory.name#</a></td>
-                  <td>#DateFormat(mydirectory.dateLastModified,'mmm d, yyyy')#</td>
-                  <td>Student/Int Rep</td>
-                  <td>Manual</td>  
-                  </td>	
+                    <td><a href="?curdoc=student_app/section3/allergy_info_request">Allergy Clarification Form</a></td>
+                </tr>
+            </cfif>
+            
+            <cfloop query="qGetUploadedFiles">
+				<tr>
+            		<td>#fileDescription#</td>
+                  	<td><a href="javascript:OpenApp('#filePath#/#fileName#');" target="_blank">#fileName#</a></td>
+                  	<td>#DateFormat(dateAdded,'mmm d, yyyy')#</td>
+                  	<td>
+                    	<cfif generatedHow EQ "auto">
+                        	System
+                       	<cfelse>
+                        	#firstName# #lastName# (###userID#)
+                      	</cfif>
+                  	</td>
+                  	<td>#generatedHow#</td>	
                 </tr>
             </cfloop>
        </cfif>
