@@ -342,7 +342,7 @@
 					changedBy = CLIENT.userID,
 					userType = CLIENT.userType,
 					placementStatus = vPlacementStatus
-				);													 
+				);
 			
 				// Set Page Message
 				SESSION.pageMessages.Add("Form successfully submitted.");
@@ -375,10 +375,9 @@
 					dateRelocated=FORM.dateRelocated
 				 );
 			if (val(CLIENT.userType) lte 4) {
-				
-				
 				APPLICATION.CFC.UDF.createAutoFiles(studentID=FORM.studentID,hostID=FORM.hostID,uniqueID=qGetStudentInfo.uniqueid,documentType=3, category=2,fileDescription='PIS');
-			};
+			};			
+				
 				// Set Page Message
 				SESSION.pageMessages.Add("Placement has been approved.");
 				
@@ -1293,7 +1292,7 @@
                                 name="hostIDSuggest" 
                                 id="hostIDSuggest"
                                 value="#FORM.hostIDSuggest#" 
-                                autosuggest="cfc:nsmg.extensions.components.host.lookupHostFamily({cfautosuggestvalue}, #qGetStudentInfo.regionAssigned#)" 
+                                autosuggest="cfc:nsmg.extensions.components.host.lookupHostFamily({cfautosuggestvalue},#qGetStudentInfo.regionAssigned#)" 
                                 class="xLargeField"
                                 maxResultsDisplayed="25"
                                 showautosuggestloadingicon="true"
