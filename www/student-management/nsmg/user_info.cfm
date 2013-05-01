@@ -462,7 +462,7 @@
 									#firstname# #middlename# #lastname# - #userID#<br>
 									#address#<br>
 									<cfif address2 NEQ ''>#address2#<br></cfif>
-									#city# #state#, #zip# #country#<br>
+									#city#, #state##zip# #country#<br>
 									<cfif phone NEQ ''>Home: #phone#<br></cfif>
 									<cfif work_phone NEQ ''>Work: #work_phone#<br></cfif>
 									<cfif cell_phone NEQ ''>Cell: #cell_phone#<br></cfif>
