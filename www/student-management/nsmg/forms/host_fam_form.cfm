@@ -721,7 +721,7 @@
         <table width="95%" align="center" class="section" border="0" cellpadding="4" cellspacing="0">
             <tr>
             	<td colspan="2">
-  					<span class="required" style="padding-right:30px;">* Required fields &nbsp; &nbsp; + One phone field is required</span>
+  					<span class="required" style="padding-right:30px;">* Required fields &nbsp; &nbsp;</span>
                 </td>
 			</tr>
             <tr>
@@ -765,7 +765,7 @@
                 <td><input type="text" name="zip" id="zip" value="#FORM.zip#" class="smallField" maxlength="10"></td>
             </tr>
         <tr>
-                <td class="label">Phone: <span class="required">+</span></td>
+                <td class="label">Phone:</td>
                 <td><input type="text" name="phone" id="phone" value="#FORM.phone#" class="largeField" maxlength="14"></td>
             </tr>
             <tr>
@@ -813,7 +813,7 @@
                 <td><input type="text" name="fatherWorkType" value="#FORM.fatherWorkType#" class="largeField" maxlength="200"></td>
             </tr>
             <tr>
-                <td class="label">Cell Phone: <span class="required">+</span></td>
+                <td class="label">Cell Phone:</td>
                 <td><input type="text" name="father_cell" id="father_cell" value="#FORM.father_cell#" class="largeField" maxlength="14"></td>
             </tr>
         </table>
@@ -852,7 +852,7 @@
                 <td><input type="text" name="motherWorkType" value="#FORM.motherWorkType#" class="largeField" maxlength="200"></td>
             </tr>
             <tr>
-                <td class="label">Cell Phone: <span class="required">+</span></td>
+                <td class="label">Cell Phone:</td>
                 <td><input type="text" name="mother_cell" id="mother_cell" value="#FORM.mother_cell#" class="largeField" maxlength="14"></td>
             </tr>
 		</table> 		
