@@ -106,7 +106,7 @@
                                                     <td><span class="title">Date of Birth:</span></td>
                                                     <td class="answer">
                                                         <cfif IsDate(qGetHostChildren.birthdate)>
-                                                            #DateFormat(qGetHostChildren.birthdate, 'mm/dd/yyyy')# - #DateDiff('yyyy', qGetHostChildren.birthdate, now())# years old                                  
+                                                            #DateDiff('yyyy', qGetHostChildren.birthdate, now())# years old                                  
                                                         </cfif>
                                                     </td>
                                                 </tr>
