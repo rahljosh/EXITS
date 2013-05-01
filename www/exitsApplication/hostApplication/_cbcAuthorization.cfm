@@ -575,7 +575,7 @@
                             <cfif NOT qGetFatherCBCAuthorization.recordcount>
                                 <input type="text" name="fatherSignature" value="#FORM.fatherSignature#" class="largeField"/>
                             <cfelse>
-                                <a href="publicDocument.cfm?ID=#qGetFatherCBCAuthorization.ID#&Key=#APPLICATION.CFC.DOCUMENT.generateHashID(qGetFatherCBCAuthorization.ID)#" target="_blank">Download CBC Authoriaztion</a>
+                                <a href="publicDocument.cfm?ID=#qGetFatherCBCAuthorization.ID#&Key=#APPLICATION.CFC.DOCUMENT.generateHashID(qGetFatherCBCAuthorization.ID)#" target="_blank">Download Copy of Electronic Authorization</a>
                                 <!--- <a href="#APPLICATION.CFC.SESSION.getHostSession().PATH.relativeDocs##qGetFatherCBCAuthorization.fileName#" target="_blank">View CBC Authoriaztion</a> --->
                             </cfif>
                         </td>                        
@@ -594,7 +594,7 @@
                             <cfif NOT qGetMotherCBCAuthorization.recordcount>
                                 <input type="text" name="motherSignature" value="#FORM.motherSignature#" class="largeField"/>
                             <cfelse>
-                            	<a href="publicDocument.cfm?ID=#qGetMotherCBCAuthorization.ID#&Key=#APPLICATION.CFC.DOCUMENT.generateHashID(qGetMotherCBCAuthorization.ID)#" target="_blank">Download CBC Authoriaztion</a>
+                            	<a href="publicDocument.cfm?ID=#qGetMotherCBCAuthorization.ID#&Key=#APPLICATION.CFC.DOCUMENT.generateHashID(qGetMotherCBCAuthorization.ID)#" target="_blank">Download Copy of Electronic Authorization</a>
                             </cfif>
                         </td>
                     </tr> 
@@ -614,7 +614,7 @@
                             <cfif NOT LEN(FORM[qGetCBCQualifiedMembers.childID & "documentID"])>
                                 <input type="text" name="#qGetCBCQualifiedMembers.childID#memberSignature" value="#FORM[qGetCBCQualifiedMembers.childID & 'memberSignature']#" class="largeField" />
                             <cfelse>
-                                <a href="publicDocument.cfm?ID=#FORM[qGetCBCQualifiedMembers.childID & 'documentID']#&Key=#APPLICATION.CFC.DOCUMENT.generateHashID(FORM[qGetCBCQualifiedMembers.childID & 'documentID'])#" target="_blank">Download CBC Authoriaztion</a>
+                                <a href="publicDocument.cfm?ID=#FORM[qGetCBCQualifiedMembers.childID & 'documentID']#&Key=#APPLICATION.CFC.DOCUMENT.generateHashID(FORM[qGetCBCQualifiedMembers.childID & 'documentID'])#" target="_blank">Download Copy of Electronic Authorization</a>
                             </cfif>
 							
                         </td>
