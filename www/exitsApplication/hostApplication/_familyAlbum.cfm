@@ -130,7 +130,14 @@
 	</cfif>    
     
 </cfsilent>
-
+<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+<META HTTP-EQUIV="EXPIRES" CONTENT="01 Jan 1970 00:00:00 GMT">
+<META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
+<head>
+<cfheader name="expires" value="#now()#"> 
+<cfheader name="pragma" value="no-cache"> 
+<cfheader name="cache-control" value="no-cache, no-store, must-revalidate">
+</head>
 <style type="text/css">
 	.box{
 		margin: 10px 0px;
@@ -249,7 +256,7 @@
     
     </cfif>
     
-    <span class="required">*At least one picture from this catagory is required. More than one photo may be needed to clearly depict each room.</span> <br /><br />
+    <span class="required">*At least one picture from this category is required. More than one photo may be needed to clearly depict each room.</span> <br /><br />
 
     <h3>Your Photo Album</h3>
     

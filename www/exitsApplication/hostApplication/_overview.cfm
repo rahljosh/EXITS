@@ -234,7 +234,7 @@
                     
 						<p>
                             Your student's family will receive selected information from this application. 
-                            Student and their families will not receive any confidential information.
+                            Students and their families will not receive any confidential information.
                         </p>
                         
                         <p>
