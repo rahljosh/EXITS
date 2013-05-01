@@ -1280,7 +1280,7 @@
                     generatedHow,
                     uploadedBy)
                 VALUES(
-                    6,
+                    2,
                     28,
                     'Host Family Application',
                     '#fileName#.pdf', 
@@ -1325,7 +1325,7 @@
                     uploadedBy)
                 VALUES(
                     2,
-                    28,
+                    29,
                     'Host Family Application',
                     '#fileName#.pdf', 
                     'uploadedfiles/virtualFolder/#qGetStudentInfo.studentID#/#qGetStudentInfo.hostID#/',
