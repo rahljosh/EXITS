@@ -350,7 +350,7 @@
                 <td class="form_text"><input type="text" name="population" value="#FORM.population#" class="largeField" maxlength="45"/></td>
             </tr>
             <tr>	
-                <td>City or Town Website:</td>
+                <td>City or Town Website: <span class="required">*</span></td>
                 <td class="form_text"><input type="text" name="cityWebsite" value="#FORM.cityWebsite#" class="xxLargeField" maxlength="200"/></td>
             </tr>
             <tr bgcolor="##deeaf3">

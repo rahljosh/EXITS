@@ -459,7 +459,7 @@
                 <td><cftextarea name="interests" rows="5" cols="30" placeholder="Mountain biking, swimming, theatre, music, movies">#FORM.interests#</cftextarea></td>
             </tr>
             <tr>
-                <td class="label" valign="top"><h3>Does this family member participates in any school sponsored activities? <span class="required">*</span></h3></td>
+                <td class="label" valign="top"><h3>Does this family member participate in any school sponsored activities? <span class="required">*</span></h3></td>
                 <td>
                     <input type="radio" name="radioSchoolActivities" id="radioSchoolActivitiesYes" value="1" <cfif LEN(FORM.schoolActivities)> checked="checked" </cfif> onclick="document.getElementById('schoolActivitiesExplanation').style.display='table-row';" />
                     <label for="radioSchoolActivitiesYes">Yes</label>

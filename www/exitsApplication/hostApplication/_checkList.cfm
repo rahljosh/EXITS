@@ -44,11 +44,11 @@
     <p>Please use the menu on the left or the section title to navigate to the section that is missing information.</p>
     
     <p>
-        This is a preliminary check list to make sure certain information that is required is submitted. An indication of all sections complete does not indicate that you have been approved 
+        This is a preliminary checklist to make sure certain information that is required is submitted. An indication of all sections complete does not indicate that you have been approved 
         as a host family, it simpliy indicates that your application is ready to submit.
 	</p>
     
-    <p>Once your application is submitted, you will be contacted be your local area representative so that they can conduct a tour of your home and to help you select an exchange student.</p>
+    <p>Once your application is submitted, you will be contacted by your local area representative so that they can conduct a tour of your home and to help you select an exchange student.</p>
 
 
     <!--- Loop Through Results --->
