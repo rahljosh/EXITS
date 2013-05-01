@@ -216,10 +216,11 @@
             	smg_users 
             WHERE 
             	username = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(FORM.username)#">
-            <cfif not new>
+           <cfif not new>
                 AND 
                 	userID != <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#">
-            </cfif>
+           </cfif>
+            and active = 1
         </cfquery>
         
     </cfif>
@@ -228,7 +229,7 @@
     
         <cfquery name="check_email" datasource="#APPLICATION.DSN#">
             SELECT 
-            	userID
+            	userID, lastname, firstname
             FROM 
             	smg_users 
             WHERE 
@@ -237,10 +238,10 @@
                 AND 
                 	userID != <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#">
             </cfif>
+          and active = 1
         </cfquery>
         
     </cfif>
-
 	<cfif FORM.lookup_success NEQ 1>
 		<cfset errorMsg = 'Please lookup the address.'>
 	<cfelseif trim(FORM.firstname) EQ ''>
@@ -286,7 +287,7 @@
 	<cfelseif isDefined("FORM.username") and check_username.recordcount NEQ 0>
 		<cfset errorMsg = "Sorry, this Username has already been entered in the database.">
     <cfelseif isDefined("FORM.email") and check_email.recordcount NEQ 0>
-		<cfset errorMsg = "Sorry, this email address has already been entered in the database.">
+		<cfset errorMsg = "Sorry, this email address has already been entered in the database for user #check_email.firstname# #check_email.lastname# (#check_email.userid#) ">
 	<cfelseif new and trim(FORM.password) EQ ''>
 		<cfset errorMsg = "Please enter the Password.">
 	<cfelseif new and trim(FORM.confirm_password) EQ ''>
