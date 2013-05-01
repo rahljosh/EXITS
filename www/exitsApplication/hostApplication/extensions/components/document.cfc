@@ -621,7 +621,7 @@
                 
                     <u>Electronically Signed</u><br />
                     #ARGUMENTS.signature#<br />
-                    <em>(typing your name above is considered the same as a physical signature)</em> <br />
+                    <em>This form has already been electronically signed and submitted.  This copy is for your records only.</em> <br />
                     #DateFormat(now(), 'mmm d, yyyy')# at #TimeFormat(now(), 'h:mm:ss tt')#<br />
                     IP: #CGI.REMOTE_ADDR# <br /><br />
                 </cfoutput>
@@ -738,7 +738,7 @@
                 
                     <u>Electronically Signed</u><br />
                     #ARGUMENTS.signature#<br />
-                    <em>(typing your name above is considered the same as a physical signature)</em> <br />
+                    <em>This form has already been electronically signed and submitted.  This copy is for your records only.</em> <br />
                     #DateFormat(now(), 'mmm d, yyyy')# at #TimeFormat(now(), 'h:mm:ss tt')#<br />
                     IP: #CGI.REMOTE_ADDR# <br /><br />
                 </cfoutput>
