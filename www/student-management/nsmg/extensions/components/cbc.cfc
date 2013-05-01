@@ -971,6 +971,7 @@
                 	smg_users_cbc cbc
                 INNER JOIN 
                 	smg_users u ON u.userID = cbc.userID
+                    AND u.active = 1
                 INNER JOIN 
                 	user_access_rights uar ON uar.userID = u.userID
 				LEFT OUTER JOIN
