@@ -1195,7 +1195,7 @@
                     APPLICATION.CFC.STUDENT.updateDatePlaced(studentID=qGetStudentInfo.studentID, historyID=FORM.historyID, datePlaced=FORM.newDatePlaced);
                     
                     // Reload page
-                    location("#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#", "no");		
+                    //location("#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#", "no");		
                 </cfscript>
         
             </cfif>
