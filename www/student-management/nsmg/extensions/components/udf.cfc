@@ -1249,6 +1249,8 @@
     
 		</cfsilent>
         
+        <!--- These are now being set in a scheduled task --->
+        <!---
         <!--- Host Family Application - Office Version--->
         <cfoutput>
         	<cfsavecontent variable="hostFamilyApplication">
@@ -1336,6 +1338,7 @@
                     #client.userid#)
             </cfquery>
         </cfoutput>
+		--->
         
         <!----Placement Information Sheet---->
 		<cfoutput>
