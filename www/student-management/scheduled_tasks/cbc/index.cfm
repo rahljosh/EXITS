@@ -62,7 +62,36 @@
 	include "runUsersCase.cfm";
 </cfscript>
 
+<!-------------------------------------------------------------	
+	Hosts
+-------------------------------------------------------------->
 
+<cfscript>
+	// Current Students
+	isUpcomingProgram = 0;
+	include "getExpiredHosts.cfm";
+
+	// Upcoming Students 
+	isUpcomingProgram = 1;
+	include "getExpiredHosts.cfm";
+	
+	// Run for father
+	userType = 'father';
+	include "runHosts.cfm";
+	include "runHostsCase.cfm";
+	
+	// Run for mother
+	userType = 'mother';
+	include "runHosts.cfm";
+	include "runHostsCase.cfm";
+	
+	// Run for members
+	userType = 'member';
+	include "runHosts.cfm";
+	include "runHostsCase.cfm";
+</cfscript>
+
+<!---
 <!-------------------------------------------------------------	
 	Host Father
 -------------------------------------------------------------->
@@ -144,7 +173,7 @@
 	
 	// Host Member CASE - Run CBCs
 	include "runHostsCase.cfm";
-</cfscript>
+</cfscript>--->
 
 
 <p>CBC Scheduled task completed!</p>
