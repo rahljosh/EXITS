@@ -8,7 +8,9 @@
 <cfparam name="url.viewImagePath" default="">
 <cfparam name="url.absoluteLargePath" default="">
 <cfparam name="url.absoluteThumbPath" default="">
-
+<cfheader name="expires" value="#now()#"> 
+<cfheader name="pragma" value="no-cache"> 
+<cfheader name="cache-control" value="no-cache, no-store, must-revalidate">
 </head>
 
 
@@ -19,44 +21,38 @@
     <!--- Rotate the image by 90 degrees clockwise. --->
     <cfset ImageRotate(myImage,#url.rotate#)>
     <cfimage source="#myImage#" destination="#url.absoluteLargePath#" action="write" overwrite="yes">
-    
+   
     <cfset myImage2=ImageNew("#url.absoluteThumbPath#")>
+   
     <cfset ImageSetAntialiasing(myImage2,"on")>
     <!--- Rotate the image by 90 degrees clockwise. --->
     <cfset ImageRotate(myImage2,#url.rotate#)>
     <cfimage source="#myImage2#" destination="#url.absoluteThumbPath#" action="write" overwrite="yes">
 
-   <cfscript>
-   
-     
-	  
-    // Reload page
-		location.reload(forceGet);
-    </cfscript>
-	
-	
+<cfelse>	
+	<Cfset myImage = #url.viewImagePath#>
 </Cfif>
-<Cfset vDisplayImage=#url.viewImagePath#>
+
 <Cfoutput>
 <table align="Center" cellpadding="4" cellspacing="0">
-<!----
+
 	<Tr>
     	<Td align="left" valign="Center">
-        <form method="post" action="viewImage.cfm">
+        
         	
             
         <a href="viewImage.cfm?viewImagePath=#url.viewImagePath#&absoluteLargePath=#url.absoluteLargePath#&absoluteThumbPath=#url.absoluteThumbPath#&label=#url.label#&rotate=90">Rotate <input type="image" src="https://www.iseusa.com/hostApplication/images/buttons/arrow_left.png" height=20/></a>
-        </form>
+       
         </Td>
         <td align="Center"><h2>#url.label#</h2></td>
         <td align="right" valign="Center">
         <a href="viewImage.cfm?viewImagePath=#url.viewImagePath#&absoluteLargePath=#url.absoluteLargePath#&absoluteThumbPath=#url.absoluteThumbPath#&label=#url.label#&rotate=-90"><img src="https://www.iseusa.com/hostApplication/images/buttons/arrow_right.png" height=20/> Rotate</a></td>
     </Tr>
-	---->
+	
 	<tr>
     	<td colspan="3">
        <!---- <cfimage action="writetobrowser" source="#vDisplayImage#"/>---->
-      <img src="#url.viewImagePath#" /></td>
+      <cfimage source="#myImage#" action="writetobrowser" ></td>
     </tr>
 </table>
 </Cfoutput>
