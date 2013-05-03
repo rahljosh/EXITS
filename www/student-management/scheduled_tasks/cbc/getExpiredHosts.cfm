@@ -34,7 +34,7 @@
 <cfoutput>
 
 <table width="70%" cellpadding="2" style="margin-top:20px; margin-bottom:20px; border:1px solid ##CCCCCC">
-	<tr bgcolor="##CCCCCC"><td colspan="4"><b>Get Expired CBCs for Host #userType#</b></td></tr>
+	<tr bgcolor="##CCCCCC"><td colspan="4"><b>Get Expired CBCs for Hosts</b></td></tr>
 	<tr bgcolor="##CCCCCC">
     	<td><b>Host Family</b></td>
         <td><b>CBC Sent Date</b></td>
@@ -65,6 +65,6 @@
             
 	</cfloop>
 
-	<tr><td colspan="4">Total of host #userType# #qGetExpiredHostCBC.recordCount# records</td></tr>
+	<tr><td colspan="4">Total of host #qGetExpiredHostCBC.recordCount# records</td></tr>
 </table>
 </cfoutput>

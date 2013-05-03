@@ -1494,7 +1494,7 @@
 
 				// Set Email To
 				if ( APPLICATION.isServerLocal ) {
-					emailTo = 'marcus@iseusa.com';
+					emailTo = 'james@iseusa.com';
 				} else if ( listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, qGetCompany.companyID) AND VAL(ARGUMENTS.isRerun) ) {
 					// ISE - ReRun - Send email to cbcResults and Program Manager
 					emailTo = "#qGetCompany.gis_email#,#qGetCompany.pm_email#";
@@ -1514,6 +1514,7 @@
             <cfmail 
             	from="#qGetCompany.support_email#" 
                 to="#emailTo#"
+                cc="james@iseusa.com"
                 subject="#emailSubject#" 
                 failto="#qGetCompany.support_email#"
                 type="html">
