@@ -65,7 +65,7 @@
         <cfsavecontent variable="hostFamilyApplication">
             <cfset FORM.hostID = #hostID#>
             <cfset URL.reportType = "agent">
-            <cfset relative = "../">
+            <cfset relative = "../nsmg/">
             <cfinclude template="../nsmg/hostApplication/printApplication.cfm">
         </cfsavecontent>
         <cfset fileName="#qGetHostFamily.familyLastName#-#DateFormat(NOW(),'mm-dd-yyyy')#-agent">
