@@ -1249,97 +1249,6 @@
     
 		</cfsilent>
         
-        <!--- These are now being set in a scheduled task --->
-        <!---
-        <!--- Host Family Application - Office Version--->
-        <cfoutput>
-        	<cfsavecontent variable="hostFamilyApplication">
-                <cfset FORM.hostID = #qGetStudentInfo.hostID#>
-                <cfset URL.reportType = "office">
-                <cfset relative = "../../">
-            	<cfinclude template="../../hostApplication/printApplication.cfm">
-            </cfsavecontent>
-            <cfset fileName="#qGetHostFamily.familyLastName#-#DateFormat(NOW(),'mm-dd-yyyy')#-office">
-			<cfoutput>
-                <cfdocument format="pdf" filename="#fileName#.pdf" overwrite="yes" orientation="portrait" name="uploadFile">
-                    #hostFamilyApplication#
-                </cfdocument>
-            </cfoutput>
-            <cfscript>
-                fullPath=GetDirectoryFromPath(GetCurrentTemplatePath()) & fileName & '.pdf';
-                APPLICATION.CFC.UDF.insertInternalFile(filePath=fullPath,fieldID=1,studentID=qGetStudentInfo.studentID,hostID=qGetStudentInfo.hostID);
-            </cfscript>
-            <cfquery name="insertFileDetails" datasource="#application.dsn#">
-                INSERT INTO  virtualFolder (
-                    fk_categoryID, 
-                    fk_documentType, 
-                    fileDescription,
-                    fileName, 
-                    filePath, 
-                    fk_studentID,
-                    fk_hostid,
-                    dateAdded,
-                    generatedHow,
-                    uploadedBy)
-                VALUES(
-                    2,
-                    28,
-                    'Host Family Application',
-                    '#fileName#.pdf', 
-                    'uploadedfiles/virtualFolder/#qGetStudentInfo.studentID#/#qGetStudentInfo.hostID#/',
-                    #qGetStudentInfo.studentID#,
-                    #qGetStudentInfo.hostID#,
-                    #now()#,
-                    'auto',
-                    #client.userid#)
-            </cfquery>
-        </cfoutput>
-        
-        <!--- Host Family Application - Agent Version--->
-        <cfoutput>
-        	<cfsavecontent variable="hostFamilyApplication">
-                <cfset FORM.hostID = #qGetStudentInfo.hostID#>
-                <cfset URL.reportType = "agent">
-                <cfset relative = "../../">
-            	<cfinclude template="../../hostApplication/printApplication.cfm">
-            </cfsavecontent>
-            <cfset fileName="#qGetHostFamily.familyLastName#-#DateFormat(NOW(),'mm-dd-yyyy')#-agent">
-			<cfoutput>
-                <cfdocument format="pdf" filename="#fileName#.pdf" overwrite="yes" orientation="portrait" name="uploadFile">
-                    #hostFamilyApplication#
-                </cfdocument>
-            </cfoutput>
-            <cfscript>
-                fullPath=GetDirectoryFromPath(GetCurrentTemplatePath()) & fileName & '.pdf';
-                APPLICATION.CFC.UDF.insertInternalFile(filePath=fullPath,fieldID=1,studentID=qGetStudentInfo.studentID,hostID=qGetStudentInfo.hostID);
-            </cfscript>
-            <cfquery name="insertFileDetails" datasource="#application.dsn#">
-                INSERT INTO  virtualFolder (
-                    fk_categoryID, 
-                    fk_documentType, 
-                    fileDescription,
-                    fileName, 
-                    filePath, 
-                    fk_studentID,
-                    fk_hostid,
-                    dateAdded,
-                    generatedHow,
-                    uploadedBy)
-                VALUES(
-                    2,
-                    29,
-                    'Host Family Application',
-                    '#fileName#.pdf', 
-                    'uploadedfiles/virtualFolder/#qGetStudentInfo.studentID#/#qGetStudentInfo.hostID#/',
-                    #qGetStudentInfo.studentID#,
-                    #qGetStudentInfo.hostID#,
-                    #now()#,
-                    'auto',
-                    #client.userid#)
-            </cfquery>
-        </cfoutput>
-		--->
-        
         <!----Placement Information Sheet---->
 		<cfoutput>
 		
@@ -2005,11 +1914,6 @@
 		WHERE stu.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#arguments.studentid#">
 	</cfquery>
 
-    
-
-
-
-
 <cfsavecontent variable="schoolLetter">
 
 	<cfoutput>
@@ -2188,25 +2092,25 @@
 			</cfscript>
             <cfquery name="insertFileDetails" datasource="#application.dsn#">
             insert into  virtualFolder (fk_categoryID, 
-            							fk_documentType, 
-                                        fileDescription,
-                                        fileName, 
-                                        filePath, 
-                                        fk_studentID,
-                                        fk_hostid,
-                                        dateAdded,
-                                        generatedHow,
-                                        uploadedBy)
-            				     values(2,
-                                 		24,
-                                        'School Welcome Letter',
-                                        '#fileName#.pdf', 
-                                        'uploadedfiles/virtualFolder/#qGetStudentInfo.studentID#/#qGetStudentInfo.hostID#/',
-                                        #qGetStudentInfo.studentID#,
-                                        #qGetHostFamily.hostID#,
-                                        #now()#,
-                                        'auto',
-                                        #client.userid#)
+                    fk_documentType, 
+                    fileDescription,
+                    fileName, 
+                    filePath, 
+                    fk_studentID,
+                    fk_hostid,
+                    dateAdded,
+                    generatedHow,
+                    uploadedBy)
+             values(2,
+                    24,
+                    'School Welcome Letter',
+                    '#fileName#.pdf', 
+                    'uploadedfiles/virtualFolder/#qGetStudentInfo.studentID#/#qGetStudentInfo.hostID#/',
+                    #qGetStudentInfo.studentID#,
+                    #qGetHostFamily.hostID#,
+                    #now()#,
+                    'auto',
+                    #client.userid#)
             </cfquery> 
   <!----Student ID Card--->
   <!--- Kill Extra Output --->
@@ -2351,12 +2255,8 @@
                 	smg_companies c ON c.companyID = r.company
                 LEFT OUTER JOIN
                 	smg_users u ON u.userID = r.regionFacilitator
-                WHERE
-                	1 = 1
-				
-         
-                	AND
-                    	r.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.regionalguarantee#">
+                WHERE 
+                	r.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.regionalguarantee#">
     </cfquery>
 	
 </cfsilent>
@@ -2865,25 +2765,25 @@
 			</cfscript>
             <cfquery name="insertFileDetails" datasource="#application.dsn#">
             insert into  virtualFolder (fk_categoryID, 
-            							fk_documentType, 
-                                        fileDescription,
-                                        fileName, 
-                                        filePath, 
-                                        fk_studentID,
-                                        fk_hostid,
-                                        dateAdded,
-                                        generatedHow,
-                                        uploadedBy)
-            				     values(2,
-                                 		25,
-                                        'Student ID Card',
-                                        '#fileName#.pdf', 
-                                        'uploadedfiles/virtualFolder/#qGetStudentInfo.studentID#/#qGetStudentInfo.hostID#/',
-                                        #qGetStudentInfo.studentID#,
-                                        #qGetHostFamily.hostID#,
-                                        #now()#,
-                                        'auto',
-                                        #client.userid#)
+                    fk_documentType, 
+                    fileDescription,
+                    fileName, 
+                    filePath, 
+                    fk_studentID,
+                    fk_hostid,
+                    dateAdded,
+                    generatedHow,
+                    uploadedBy)
+             values(2,
+                    25,
+                    'Student ID Card',
+                    '#fileName#.pdf', 
+                    'uploadedfiles/virtualFolder/#qGetStudentInfo.studentID#/#qGetStudentInfo.hostID#/',
+                    #qGetStudentInfo.studentID#,
+                    #qGetHostFamily.hostID#,
+                    #now()#,
+                    'auto',
+                    #client.userid#)
             </cfquery> 
      
             
