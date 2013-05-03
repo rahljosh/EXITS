@@ -25,7 +25,7 @@
             <cfset FORM.hostID = #hostID#>
             <cfset URL.reportType = "office">
             <cfset relative = "../">
-            <cfinclude template="../hostApplication/printApplication.cfm">
+            <cfinclude template="../nsmg/hostApplication/printApplication.cfm">
         </cfsavecontent>
         <cfset fileName="#qGetHostFamily.familyLastName#-#DateFormat(NOW(),'mm-dd-yyyy')#-office">
         <cfoutput>
@@ -66,7 +66,7 @@
             <cfset FORM.hostID = #hostID#>
             <cfset URL.reportType = "agent">
             <cfset relative = "../">
-            <cfinclude template="../hostApplication/printApplication.cfm">
+            <cfinclude template="../nsmg/hostApplication/printApplication.cfm">
         </cfsavecontent>
         <cfset fileName="#qGetHostFamily.familyLastName#-#DateFormat(NOW(),'mm-dd-yyyy')#-agent">
         <cfoutput>
