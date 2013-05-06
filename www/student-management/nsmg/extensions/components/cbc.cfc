@@ -1497,10 +1497,11 @@
 					emailTo = 'james@iseusa.com';
 				} else if ( listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, qGetCompany.companyID) AND VAL(ARGUMENTS.isRerun) ) {
 					// ISE - ReRun - Send email to cbcResults and Program Manager
-					emailTo = "#qGetCompany.gis_email#,#qGetCompany.pm_email#";
+					emailTo = "#qGetCompany.gis_email#,#qGetCompany.pm_email#,stephen@iseusa.com";
 				} else {
 					// Not Re-Run - Send email to cbcResults only
-					emailTo = qGetCompany.gis_email;
+					// emailTo = qGetCompany.gis_email;
+					emailTo = "#qGetCompany.gis_email#,#qGetCompany.pm_email#,stephen@iseusa.com";
 				}
 				
 				// Set Email Subject
