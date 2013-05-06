@@ -282,7 +282,20 @@
                                 <label for="#qGetUploadedImages.ID#" style="font-weight:bold;">
                                 	<span style="display:block; margin-bottom:5px;">#qGetUploadedImages.documentType#</span>
          							<a href="viewImage.cfm?viewImagePath=#viewImagePath#&absoluteLargePath=#absoluteLargePath#&absoluteThumbPath=#absoluteThumbPath#&label=#qGetUploadedImages.documentType#" class="jQueryModal">
+                                    
+                         <Cfif FileExists('#qGetUploadedImages.filepath#')> 
+                                    <!--- specify image via filename --->
+								<cfset myImage = APPLICATION.CFC.UDF.imageExifOrientationRotate('#APPLICATION.CFC.SESSION.getHostSession().PATH.relativeAlbumThumbs##qGetUploadedImages.fileName#') />
+                                <!--- resize --->
+                                <cfset imageResize(myImage,"100","") />
+                                <!--- display --->
+                                <cfimage action="writeToBrowser" source="#myImage#" />
+                          <cfelse>
+                          		<img src="images/problemPhoto.jpg" border="0">
+                          </cfif>
+                                    <!----
                                     	<img src="#APPLICATION.CFC.SESSION.getHostSession().PATH.relativeAlbumThumbs##qGetUploadedImages.fileName#" border="0">
+										---->
                                     </a>
                                     <!--- <cfimage action="writeToBrowser" source="#APPLICATION.CFC.SESSION.getHostSession().PATH.albumThumbs##qGetUploadedImages.fileName#"> --->
                                 </label>
