@@ -164,11 +164,12 @@
         	<cfloop query="qGetIntlReps">
             
             	<cfquery name="qGetCandidates" datasource="#APPLICATION.DSN.Source#">
-                	SELECT ec.candidateID, ec.lastName, ec.firstName, ec.sex, ec.watDateCheckedIn, ec.watDateEvaluation1, ec.watDateEvaluation2, ec.watDateEvaluation3, ec.watDateEvaluation4, eir.subject
+                	SELECT ec.candidateID, ec.lastName, ec.firstName, ec.email, ec.sex, ec.watDateCheckedIn, ec.watDateEvaluation1, ec.watDateEvaluation2, ec.watDateEvaluation3, ec.watDateEvaluation4, eir.subject, eh.name as hostcompanyname
                     FROM extra_candidates ec
                     LEFT JOIN extra_incident_report eir ON eir.candidateID = ec.candidateID
             			AND eir.isSolved = 0
             			AND eir.subject = "Terminated"
+                    LEFT JOIN extra_hostcompany eh on eh.hostcompanyid = ec.hostcompanyid
                     WHERE ec.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(userID)#">
                     AND ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.programID)#">
                     AND ec.status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
@@ -217,7 +218,7 @@
                 
                 	<cfset totalCandidatesCount = totalCandidatesCount + qGetCandidates.recordCount>
                 
-                	<table width="99%" cellpadding="4" cellspacing=0 align="center">
+                	<table width="100%" cellpadding="4" cellspacing=0 align="center">
                         <tr>
                             <td colspan="11">
                                 <small>
@@ -229,12 +230,14 @@
                             <tr><td colspan="11"><img src="../../pics/black_pixel.gif" width="100%" height="2"></td></tr>
                         </cfif>
                         <tr>
-                            <th align="left" class="#tableTitleClass#" width="10%">ID</Th>
-                            <th align="left" class="#tableTitleClass#" width="20%">Last Name</Th>
-                            <th align="left" class="#tableTitleClass#" width="20%">First Name</Th>
-                            <th align="left" class="#tableTitleClass#" width="10%">Sex</th>
-                            <th align="left" class="#tableTitleClass#" width="10%">Check-in Date</th>
-                            <th align="left" class="#tableTitleClass#" width="30%">Evaluations</th>
+                            <th align="left" class="#tableTitleClass#" width="2%">ID</Th>
+                            <th align="left" class="#tableTitleClass#" width="7%">Last Name</Th>
+                            <th align="left" class="#tableTitleClass#" width="7%">First Name</Th>
+                            <th align="left" class="#tableTitleClass#" width="8%">E-mail</Th>
+                            <th align="left" class="#tableTitleClass#" width="20%">Host Company</Th>
+                            <th align="left" class="#tableTitleClass#">Sex</th>
+                            <th align="left" class="#tableTitleClass#">Check-in Date</th>
+                            <th align="left" class="#tableTitleClass#">Evaluations</th>
                         </tr>
                         <cfif ListFind("2,3", FORM.printOption)>
                             <tr><td colspan="11"><img src="../../pics/black_pixel.gif" width="100%" height="2"></td></tr>
@@ -249,6 +252,8 @@
                                	</td>
                                 <td class="style1">#lastname#</td>
                                 <td class="style1">#firstname#</td>
+                                <td class="style1">#email#</td>
+                                <td class="style1">#hostcompanyname#</td>
                                 <td class="style1">#sex#</td>
                                 <td class="style1">#DateFormat(watDateCheckedIn,'mm/dd/yyyy')#</td>
                                 <td class="style1">
