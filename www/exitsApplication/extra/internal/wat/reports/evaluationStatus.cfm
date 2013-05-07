@@ -164,7 +164,7 @@
         	<cfloop query="qGetIntlReps">
             
             	<cfquery name="qGetCandidates" datasource="#APPLICATION.DSN.Source#">
-                	SELECT ec.candidateID, ec.lastName, ec.firstName, ec.email, ec.sex, ec.watDateCheckedIn, ec.watDateEvaluation1, ec.watDateEvaluation2, ec.watDateEvaluation3, ec.watDateEvaluation4, eir.subject, eh.name as hostcompanyname
+                	SELECT ec.uniqueID, ec.candidateID, ec.lastName, ec.firstName, ec.email, ec.sex, ec.watDateCheckedIn, ec.watDateEvaluation1, ec.watDateEvaluation2, ec.watDateEvaluation3, ec.watDateEvaluation4, eir.subject, eh.name as hostcompanyname
                     FROM extra_candidates ec
                     LEFT JOIN extra_incident_report eir ON eir.candidateID = ec.candidateID
             			AND eir.isSolved = 0
@@ -245,13 +245,13 @@
                         <cfloop query="qGetCandidates">
                             <tr <cfif qGetCandidates.currentRow mod 2>bgcolor="##E4E4E4"</cfif>>
                                 <td class="style1">
-                                	#candidateid#
+                                	<a href="index.cfm?curdoc=candidate/candidate_info&uniqueid=#uniqueid#">#candidateid#</a>
                                     <cfif LEN(subject)>
                                     	<font color="red"><b>T</b></font>
                                     </cfif>
                                	</td>
-                                <td class="style1">#lastname#</td>
-                                <td class="style1">#firstname#</td>
+                                <td class="style1"><a href="index.cfm?curdoc=candidate/candidate_info&uniqueid=#uniqueid#">#lastname#</a></td>
+                                <td class="style1"><a href="index.cfm?curdoc=candidate/candidate_info&uniqueid=#uniqueid#">#firstname#</a></td>
                                 <td class="style1">#email#</td>
                                 <td class="style1">#hostcompanyname#</td>
                                 <td class="style1">#sex#</td>
