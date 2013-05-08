@@ -1500,14 +1500,7 @@
 					emailTo = "#qGetCompany.gis_email#,#qGetCompany.pm_email#";
 				} else {
 					// Not Re-Run - Send email to cbcResults only
-					// emailTo = qGetCompany.gis_email;
-					
-					// Do not send to pm_email if the company is JAN or ESI
-					if ( #qGetCompany.companyID# EQ 12 OR #qGetCompany.companyID# EQ 14 ) {
-						emailTo = "#qGetCompany.gis_email#";
-					} else {
-						emailTo = "#qGetCompany.gis_email#,#qGetCompany.pm_email#";
-					}
+					emailTo = qGetCompany.gis_email;
 				}
 				
 				// Set Email Subject
