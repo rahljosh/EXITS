@@ -1501,7 +1501,13 @@
 				} else {
 					// Not Re-Run - Send email to cbcResults only
 					// emailTo = qGetCompany.gis_email;
-					emailTo = "#qGetCompany.gis_email#,#qGetCompany.pm_email#";
+					
+					// Do not send to pm_email if the company is JAN or ESI
+					if ( #qGetCompany.companyID# EQ 12 OR #qGetCompany.companyID# EQ 14 ) {
+						emailTo = "#qGetCompany.gis_email#";
+					} else {
+						emailTo = "#qGetCompany.gis_email#,#qGetCompany.pm_email#";
+					}
 				}
 				
 				// Set Email Subject
@@ -1515,7 +1521,7 @@
             <cfmail 
             	from="#qGetCompany.support_email#" 
                 to="#emailTo#"
-                cc="james@iseusa.com"
+                bcc="james@iseusa.com"
                 subject="#emailSubject#" 
                 failto="#qGetCompany.support_email#"
                 type="html">
@@ -2385,7 +2391,9 @@
 		</cfscript>
         
         <cfquery name="qGetExpiredHostCBC" datasource="#APPLICATION.dsn#">
-        	SELECT cbc.hostID, cbc.cbc_type, cbc.familyID, cbc.date_expired, cbc.isRerun, child.liveathome, child.name, h.fatherfirstname, h.motherfirstname, h.familylastname
+        	SELECT cbc.hostID, cbc.cbc_type, cbc.familyID, cbc.date_expired, cbc.date_sent, cbc.date_authorized, cbc.isRerun, cbc.seasonID,
+            child.liveathome, child.name, 
+            h.fatherfirstname, h.motherfirstname, h.familylastname, h.companyID
             FROM smg_hosts_cbc cbc
             INNER JOIN smg_hosts h ON h.hostID = cbc.hostID
             	<cfif VAL(ARGUMENTS.hostID)>
