@@ -1514,7 +1514,6 @@
             <cfmail 
             	from="#qGetCompany.support_email#" 
                 to="#emailTo#"
-                bcc="james@iseusa.com"
                 subject="#emailSubject#" 
                 failto="#qGetCompany.support_email#"
                 type="html">
