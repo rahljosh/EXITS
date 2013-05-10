@@ -184,6 +184,10 @@ return false;
 }
 }
 //  End -->
+
+	$(document).ready(function() {
+		$(".ssnField").mask("999-99-9999");					   
+	});
 </script>
 
 </HEAD>
@@ -311,8 +315,7 @@ return false;
       </tr>
       <tr bgcolor="#C2D1EF">
         <td width="50%" class="label">Fathers SSN:</td>
-        <td bgcolor="#C2D1EF"><input type="text" name="fatherssn" size="20" />
-          XXX-XX-XXXX </td>
+        <td bgcolor="#C2D1EF"><input type="text" name="fatherssn" class="ssnField" size="8" /></td>
       </tr>
       <tr bgcolor="#C2D1EF">
         <td width="50%" class="label">Year of Birth:</td>
@@ -341,8 +344,7 @@ return false;
       </tr>
       <tr>
         <td width="50%" class="label">Mothers SSN:</td>
-        <td ><input type="text" name="motherssn" size="20" />
-          XXX-XX-XXXX </td>
+        <td ><input type="text" name="motherssn" class="ssnField" size="8" /></td>
       </tr>
       <tr>
         <td width="50%" class="label">Year of Birth:</td>

@@ -22,11 +22,13 @@
     <cfparam name="FORM.fatherBirth" default="">
     <cfparam name="FORM.fatherWorkType" default="">
     <cfparam name="FORM.father_cell" default="">
+    <cfparam name="FORM.fatherSSN" default="">
     <cfparam name="FORM.motherLastName" default="">
     <cfparam name="FORM.motherFirstName" default="">
     <cfparam name="FORM.motherBirth" default="">
     <cfparam name="FORM.motherWorkType" default="">
     <cfparam name="FORM.mother_cell" default="">
+    <cfparam name="FORM.motherSSN" default="">
     <cfparam name="FORM.address" default="">
     <cfparam name="FORM.address2" default="">
     <cfparam name="FORM.city" default="">
@@ -120,6 +122,12 @@
 		<!------------------------------------------------------
 			END OF ADDRESS CHANGE - SEND EMAIL NOTIFICATION 
 		------------------------------------------------------->
+        
+        <!--- Encrypt SSNs --->
+        <cfscript>
+			FORM.fatherSSN = APPLICATION.CFC.UDF.encryptVariable(FORM.fatherSSN);
+			FORM.motherSSN = APPLICATION.CFC.UDF.encryptVariable(FORM.motherSSN);
+		</cfscript>
 
         <cfquery datasource="mysql">
             UPDATE 
@@ -130,6 +138,7 @@
 				fatherBirth = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.fatherBirth)#">,
                 fatherworktype = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherworktype#">,
                 father_cell = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.father_cell#">,
+                fatherSSN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherSSN#">,
                 motherfirstname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherfirstname#">,
                 motherlastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherlastname#">, 		
                 emergency_contact_name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.emergency_contact_name#">,
@@ -137,6 +146,7 @@
                 motherBirth = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.motherBirth)#">,
                 motherworktype = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherworktype#">,
                 mother_cell = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.mother_cell#">,
+                motherSSN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherSSN#">,
                 address = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address#">,
                 address2 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address2#">,
                 city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city#">,
@@ -160,12 +170,14 @@
 			FORM.fatherDOB = qGetHostFamilyInfo.fatherDOB;
 			FORM.fatherWorkType = qGetHostFamilyInfo.fatherWorkType;
 			FORM.father_cell = qGetHostFamilyInfo.father_cell;
+			FORM.fatherSSN = APPLICATION.CFC.UDF.displaySSN(varString=qGetHostFamilyInfo.fatherSSN, displayType='user');
 			FORM.motherLastName = qGetHostFamilyInfo.motherLastName;
 			FORM.motherFirstName = qGetHostFamilyInfo.motherFirstName;
 			FORM.motherDOB = qGetHostFamilyInfo.motherDOB;
 			FORM.motherSSN = qGetHostFamilyInfo.motherSSN;
 			FORM.motherWorkType = qGetHostFamilyInfo.motherWorkType;
 			FORM.mother_cell = qGetHostFamilyInfo.mother_cell;
+			FORM.motherSSN = APPLICATION.CFC.UDF.displaySSN(varString=qGetHostFamilyInfo.motherSSN, displayType='user');
 			FORM.address = qGetHostFamilyInfo.address;
 			FORM.address2 = qGetHostFamilyInfo.address2;
 			FORM.city = qGetHostFamilyInfo.city;
@@ -190,6 +202,10 @@
 			return false; 
 	   } 
 	}
+	
+	$(document).ready(function() {
+		$(".ssnField").mask("999-99-9999");					   
+	});
 </script>
 
 <cfoutput query="qGetHostFamilyInfo">
@@ -257,6 +273,10 @@
                             <td colspan="3"><input type="text" name="fatherbirth" class="smallField" value="#FORM.fatherbirth#"> yyyy</td>
                         </tr>
                         <tr bgcolor="##C2D1EF">
+                        	<td class="label">SSN:</td>
+                            <td colspan="3"><input type="text" name="fatherSSN" class="smallField ssnField" value="#FORM.fatherSSN#"></td>
+                        </tr>
+                        <tr bgcolor="##C2D1EF">
                         	<td class="label">Occupation:</td>
                             <td colspan="3"><input type="text" name="fatherWorkType" class="largeField" value="#FORM.fatherworktype#"></td>
                         </tr>
@@ -275,6 +295,10 @@
                         <tr>
                         	<td class="label">Year of Birth:</td>
                             <td colspan="3"><input type="text" name="motherbirth" class="smallField" value="#FORM.motherbirth#"> yyyy</td>
+                        </tr>
+                        <tr>
+                        	<td class="label">SSN:</td>
+                            <td colspan="3"><input type="text" name="motherSSN" class="smallField ssnField" value="#FORM.motherSSN#"></td>
                         </tr>
                         <tr>
                         	<td class="label">Occupation:</td>

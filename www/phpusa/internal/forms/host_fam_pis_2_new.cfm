@@ -1,5 +1,11 @@
 <cfinclude template="../querys/family_info.cfm">
 
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(".ssnField").mask("999-99-9999");					   
+	});
+</script>
+
 <cfoutput>
 
 <h2>&nbsp;&nbsp;&nbsp;&nbsp;O t h e r &nbsp;&nbsp; M e m b e r s &nbsp;&nbsp; a t &nbsp;&nbsp; h o m e <font size=-2>[ <a href="?curdoc=host_fam_info&hostid=#client.hostid#">overview</a> ] </font></h2>
@@ -22,6 +28,10 @@
 									<td class="label">Date of Birth: </td>
 									<td class="form_text"> <cfinput type="text" name="dob#i#" size="20" maxlength="10" validate="date"> mm/dd/yyyy</td>
 								</tr>
+                                <tr bgcolor="#iif(i MOD 2 ,DE("ffffff") ,DE("C2D1EF") )#">
+                                    <td class="label">SSN: </td>
+                                    <td class="form_text"> <cfinput type="text" name="ssn#i#" size="20" maxlength="10" class="ssnField"></td>
+                                </tr>
 								<tr bgcolor="#iif(i MOD 2 ,DE("ffffff") ,DE("C2D1EF") )#">
 									<td class="label">Relation: </td>
 									<td class="form_text"> <cfinput type="text" name="membertype#i#" size="20"></td>

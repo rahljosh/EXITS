@@ -6,7 +6,10 @@ function areYouSure() {
    } else { 
         return false; 
    } 
-} 
+}
+	$(document).ready(function() {
+		$(".ssnField").mask("999-99-9999");					   
+	});
 </script>
 
 <cfinclude template="../querys/family_info.cfm">
@@ -40,6 +43,10 @@ function areYouSure() {
 									<tr bgcolor="#iif(i MOD 2 ,DE("ffffff") ,DE("C2D1EF") )#">
 										<td class="label">Date of Birth: </td>
 										<td class="form_text"> <cfinput type="text" name="dob#i#" size="20" maxlength="10" validate="date"> mm/dd/yyyy</td>
+									</tr>
+                                    <tr bgcolor="#iif(i MOD 2 ,DE("ffffff") ,DE("C2D1EF") )#">
+										<td class="label">SSN: </td>
+										<td class="form_text"> <cfinput type="text" name="ssn#i#" size="20" maxlength="10" class="ssnField"></td>
 									</tr>
 									<tr bgcolor="#iif(i MOD 2 ,DE("ffffff") ,DE("C2D1EF") )#">
 										<td class="label">Relation: </td>
@@ -85,6 +92,15 @@ function areYouSure() {
 									<tr bgcolor="#iif(children.currentrow MOD 2 ,DE("ffffff") ,DE("C2D1EF") )#">
 										<td class="label">Date of Birth: </td>
 										<td class="form_text"> <cfinput type="text" name="dob#children.currentrow#" size="20" value="#DateFormat(birthdate,'mm-dd-yyyy')#" maxlength="10" validate="date"> mm-dd-yyyy</td>
+									</tr>
+                                    <tr bgcolor="#iif(children.currentrow MOD 2 ,DE("ffffff") ,DE("C2D1EF") )#">
+										<td class="label">SSN: </td>
+										<td class="form_text">
+                                        	<cfscript>
+												thisSSN = APPLICATION.CFC.UDF.displaySSN(varString=children.ssn, displayType='user');
+											</cfscript>
+                                        	<cfinput type="text" name="ssn#children.currentrow#" size="20" maxlength="10" class="ssnField" value="#thisSSN#">
+                                     	</td>
 									</tr>
 									<tr bgcolor="#iif(children.currentrow MOD 2 ,DE("ffffff") ,DE("C2D1EF") )#">
 										<td class="label">Relation: </td>
