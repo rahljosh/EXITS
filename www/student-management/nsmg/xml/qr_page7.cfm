@@ -109,6 +109,12 @@
 			<cfelseif client.userid eq 21>
 			app_school_add = 'Waehringer Strasse 145/15, 1180 Wien, Austria',
 			app_school_phone = '+43-1-478-75 15',
+            <cfelseif client.userid eq 15310>
+			app_school_add = 'Roenneholmsvaegen 7 211 47 Malmo Sweden',
+			app_school_phone = '+0707-31 10 50',
+            <cfelseif client.userid eq 19268>
+			app_school_add = 'Calle Galileo, 54 - Bajo A 28015 Madrid',
+			app_school_phone = '914 443 717',
 			</cfif>
 			convalidation_needed = 'no',
 			
