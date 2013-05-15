@@ -124,11 +124,17 @@
 		------------------------------------------------------->
         
         <!--- Encrypt SSNs --->
-        <cfscript>
-			FORM.fatherSSN = APPLICATION.CFC.UDF.encryptVariable(FORM.fatherSSN);
-			FORM.motherSSN = APPLICATION.CFC.UDF.encryptVariable(FORM.motherSSN);
-		</cfscript>
-
+        <cfif left(form.fatherSSN,3) neq 'XXX'>
+			<cfscript>
+                FORM.fatherSSN = APPLICATION.CFC.UDF.encryptVariable(FORM.fatherSSN);
+            </cfscript>
+        </cfif>
+        <cfif left(form.motherSSN,3) neq 'XXX'>
+			<cfscript>
+                 FORM.motherSSN = APPLICATION.CFC.UDF.encryptVariable(FORM.motherSSN);   
+            </cfscript>
+        </cfif>
+ 
         <cfquery datasource="mysql">
             UPDATE 
                 smg_hosts
@@ -138,7 +144,9 @@
 				fatherBirth = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.fatherBirth)#">,
                 fatherworktype = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherworktype#">,
                 father_cell = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.father_cell#">,
-                fatherSSN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherSSN#">,
+                <cfif left(form.fatherSSN,3) neq 'XXX'>
+                	fatherSSN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherSSN#">,
+                </cfif>
                 motherfirstname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherfirstname#">,
                 motherlastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherlastname#">, 		
                 emergency_contact_name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.emergency_contact_name#">,
@@ -146,7 +154,9 @@
                 motherBirth = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.motherBirth)#">,
                 motherworktype = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherworktype#">,
                 mother_cell = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.mother_cell#">,
-                motherSSN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherSSN#">,
+                <cfif left(form.motherSSN,3) neq 'XXX'>
+                	motherSSN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherSSN#">,
+                </cfif>
                 address = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address#">,
                 address2 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address2#">,
                 city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city#">,
@@ -171,6 +181,7 @@
 			FORM.fatherWorkType = qGetHostFamilyInfo.fatherWorkType;
 			FORM.father_cell = qGetHostFamilyInfo.father_cell;
 			FORM.fatherSSN = APPLICATION.CFC.UDF.displaySSN(varString=qGetHostFamilyInfo.fatherSSN, displayType='user');
+	
 			FORM.motherLastName = qGetHostFamilyInfo.motherLastName;
 			FORM.motherFirstName = qGetHostFamilyInfo.motherFirstName;
 			FORM.motherDOB = qGetHostFamilyInfo.motherDOB;
@@ -203,9 +214,7 @@
 	   } 
 	}
 	
-	$(document).ready(function() {
-		$(".ssnField").mask("999-99-9999");					   
-	});
+	
 </script>
 
 <cfoutput query="qGetHostFamilyInfo">
