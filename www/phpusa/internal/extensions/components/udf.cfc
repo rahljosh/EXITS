@@ -138,8 +138,8 @@
 			// ISE
 			var vUserListISE = '7657,9719'; // Thea Brewer | Bryan McCready 
 
-			// Stores all IDs so we can check quickly and return a masked SSN
-			var vAllowedIDList = '7657,9719,17427';
+			// Stores all IDs so we can check quickly and return a masked SSN - PHP
+			var vAllowedIDList = '7657,9719';
 			
 			// Stores the return variable
 			var vReturnSSN = '';
@@ -150,11 +150,10 @@
 			// Format SSN Display
 			if ( LEN(vDecryptedSSN) AND ListFind(vAllowedIDList, CLIENT.userID) ) {
 
-				// PHP - SHOW ONLY FOR USER 
-				if ( ARGUMENTS.displayType EQ 'user' ) {
+			
 					// return full SSN
 					vReturnSSN = vDecryptedSSN;
-				}
+			
 				
 			} else if ( LEN(vDecryptedSSN) ) {
 
