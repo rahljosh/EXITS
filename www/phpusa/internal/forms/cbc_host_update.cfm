@@ -17,8 +17,26 @@
 
 	<cfscript>
         qGetHostChildrenForCBC = APPLICATION.CFC.host.getHostChildrenForCBC(hostID = #CLIENT.hostID#);
-		qGetCBCFather = APPLICATION.CFC.Host.getCBC(hostID = #family_info.hostID#, memberType = "father");
-		qGetCBCMother = APPLICATION.CFC.Host.getCBC(hostID = #family_info.hostID#, memberType = "mother");
+	
+		
+		 // Get Host Mother CBC
+        qGetCBCMother = APPLICATION.CFC.CBC.getCBCHostByID(
+            hostID=hostID, 
+            cbcType='mother'
+        );
+        
+        // Gets Host Father CBC
+        qGetCBCFather = APPLICATION.CFC.CBC.getCBCHostByID(
+            hostID=hostID, 
+            cbcType='father'
+        );
+        
+        // Get Family Member CBC
+        qGetHostMembers = APPLICATION.CFC.CBC.getCBCHostByID(
+            hostID=hostID,
+            cbcType='member',
+			sortBy='familyID'
+        );
     </cfscript>
     
     <!--- Form submitted --->
@@ -27,8 +45,7 @@
         <cfloop query="qGetCBCFather">
         	<cfscript>
 				APPLICATION.CFC.Host.setCBC(
-					date_submitted = #FORM["date_submitted_#id#"]#,
-					date_authorization = #FORM["date_authorization_#id#"]#,
+					
 					date_approved = #FORM["date_approved_#id#"]#,
 					notes = #FORM["notes_#id#"]#,
 					id = #id#);
@@ -38,8 +55,7 @@
         <cfloop query="qGetCBCMother">
         	<cfscript>
 				APPLICATION.CFC.Host.setCBC(
-					date_submitted = #FORM["date_submitted_#id#"]#,
-					date_authorization = #FORM["date_authorization_#id#"]#,
+					
 					date_approved = #FORM["date_approved_#id#"]#,
 					notes = #FORM["notes_#id#"]#,
 					id = #id#);
@@ -53,8 +69,7 @@
             <cfloop query="qGetCBCMember">
             	<cfscript>
 					APPLICATION.CFC.Host.setCBC(
-						date_submitted = #FORM["date_submitted_#id#"]#,
-						date_authorization = #FORM["date_authorization_#id#"]#,
+						
 						date_approved = #FORM["date_approved_#id#"]#,
 						notes = #FORM["notes_#id#"]#,
 						id = #id#);
@@ -67,8 +82,8 @@
 				APPLICATION.CFC.Host.setCBC(
 					hostID = #family_info.hostID#,
 					memberType = "father",
-					date_submitted = #FORM["date_submitted_father"]#,
-					date_authorization = #FORM["date_authorization_father"]#,
+					date_sent = #FORM["date_sent_father"]#,
+					date_authorized = #FORM["date_authorized_father"]#,
 					date_approved = #FORM["date_approved_father"]#,
 					notes = #FORM["notes_father"]#);
 			</cfscript>
@@ -79,8 +94,8 @@
 				APPLICATION.CFC.Host.setCBC(
 					hostID = #family_info.hostID#,
 					memberType = "mother",
-					date_submitted = #FORM["date_submitted_mother"]#,
-					date_authorization = #FORM["date_authorization_mother"]#,
+					date_sent = #FORM["date_sent_mother"]#,
+					date_authorized = #FORM["date_authorized_mother"]#,
 					date_approved = #FORM["date_approved_mother"]#,
 					notes = #FORM["notes_mother"]#);
 			</cfscript>
@@ -93,8 +108,8 @@
 						hostID = #family_info.hostID#,
 						childID = #childID#,
 						memberType = "member",
-						date_submitted = #FORM["date_submitted_#childID#member"]#,
-						date_authorization = #FORM["date_authorization_#childID#member"]#,
+						date_sent = #FORM["date_sent_#childID#member"]#,
+						date_authorized = #FORM["date_authorized_#childID#member"]#,
 						date_approved = #FORM["date_approved_#childID#member"]#,
 						notes = #FORM["notes_#childID#member"]#);
 				</cfscript>
@@ -120,14 +135,14 @@
 	// This function makes sure that all displayed date submitted fields are filled in (they are the only required fields)
 	var validate = function() {
 		var errors = 0;
-		$(":input[name^='date_submitted_']").each(function() {
+		$(":input[name^='date_sent_']").each(function() {
 			if ($(this).val() == "") {
 				var theName = $(this).attr("name");
 				$(this).attr("style","border:2px solid red");
-				if (theName == "date_submitted_father") {
+				if (theName == "date_sent_father") {
 					if ($("#fatherInputUsed").val() == 1)
 						errors++;
-				} else if (theName == "date_submitted_mother") {
+				} else if (theName == "date_sent_mother") {
 					if ($("#motherInputUsed").val() == 1)
 						errors++;
 				} else if (theName.substring(theName.length - 6) == "member") {
@@ -174,27 +189,27 @@
                             <tr>
                             	<td colspan="6" style="font-size:12px; font-weight:bold;">
                                 	Father: #family_info.fatherFirstName# #family_info.familyLastName# 
-                                    <a href="javascript:showRow('fatherInput')" style="font-size:9px;">[ADD]</a>
+                                  
                                 </td>
                           	</tr>
                             <tr id="fatherInput" style="display:none;">
                             	<input type="hidden" id="fatherInputUsed" name="fatherInputUsed" value="0" />
-                            	<td><input type="text" class="datePicker" name="date_authorization_father" /></td>
-                                <td><input type="text" class="datePicker" name="date_submitted_father" /></td>
+                            	<td><input type="text" class="datePicker" name="date_authorized_father" /></td>
+                                <td><input type="text" class="datePicker" name="date_sent_father" /></td>
                                 <td></td>
                                 <td><input type="text" class="datePicker" name="date_approved_father" /></td>
                                 <td><textarea name="notes_father"></textarea></td>
                             </tr>
                             <cfif NOT VAL(qGetCBCFather.recordCount)>
                                 <tr>
-                                    <td colspan="5">CBC is missing</td>
+                                    <td colspan="5">CBC has not been run.</td>
                                 </tr>
                             <cfelse>
                                 <cfloop query="qGetCBCFather">
                                     <tr>
-                                        <td><input type="text" class="datePicker" value="#DateFormat(date_authorization,'mm/dd/yyyy')#" name="date_authorization_#id#" /></td>
-                                        <td><input type="text" class="datePicker" value="#DateFormat(date_submitted,'mm/dd/yyyy')#" name="date_submitted_#id#" /></td>
-                                        <td><font <cfif date_expiration LT NOW()>color="red"</cfif>>#DateFormat(date_expiration,'mm/dd/yyyy')#</font></td>
+                                        <td>#DateFormat(date_authorized,'mm/dd/yyyy')#</td>
+                                        <td>#DateFormat(date_sent,'mm/dd/yyyy')#</td>
+                                        <td><font <cfif date_expired LT NOW()>color="red"</cfif>>#DateFormat(date_expired,'mm/dd/yyyy')#</font></td>
                                         <td><input type="text" class="datePicker" value="#DateFormat(date_approved,'mm/dd/yyyy')#" name="date_approved_#id#" /></td>
                                         <td><textarea name="notes_#id#">#notes#</textarea></td>
                                     </tr>
@@ -206,27 +221,27 @@
                             <tr>
                             	<td colspan="6" style="font-size:12px; font-weight:bold;">
                                 	Mother: #family_info.motherFirstName# #family_info.familyLastName#
-                                    <a href="javascript:showRow('motherInput')" style="font-size:9px;">[ADD]</a>
+                                   
                                	</td>
                           	</tr>
                             <tr id="motherInput" style="display:none;">
                             	<input type="hidden" id="motherInputUsed" name="motherInputUsed" value="0" />
-                            	<td><input type="text" class="datePicker" name="date_authorization_mother" /></td>
-                                <td><input type="text" class="datePicker" name="date_submitted_mother" /></td>
+                            	<td><input type="text" class="datePicker" name="date_authorized_mother" /></td>
+                                <td><input type="text" class="datePicker" name="date_sent_mother" /></td>
                                 <td></td>
                                 <td><input type="text" class="datePicker" name="date_approved_mother" /></td>
                                 <td><textarea name="notes_mother"></textarea></td>
                             </tr>
                             <cfif NOT VAL(qGetCBCMother.recordCount)>
                                 <tr>
-                                    <td colspan="5">CBC is missing</td>
+                                    <td colspan="5">CBC has not been run.</td>
                                 </tr>
                             <cfelse>
                                 <cfloop query="qGetCBCMother">
                                     <tr>
-                                        <td><input type="text" class="datePicker" value="#DateFormat(date_authorization,'mm/dd/yyyy')#" name="date_authorization_#id#" /></td>
-                                        <td><input type="text" class="datePicker" value="#DateFormat(date_submitted,'mm/dd/yyyy')#" name="date_submitted_#id#" /></td>
-                                        <td><font <cfif date_expiration LT NOW()>color="red"</cfif>>#DateFormat(date_expiration,'mm/dd/yyyy')#</font></td>
+                                        <td>#DateFormat(date_authorized,'mm/dd/yyyy')#</td>
+                                        <td>#DateFormat(date_sent,'mm/dd/yyyy')#</td>
+                                        <td><font <cfif date_expired LT NOW()>color="red"</cfif>>#DateFormat(date_expired,'mm/dd/yyyy')#</font></td>
                                         <td><input type="text" class="datePicker" value="#DateFormat(date_approved,'mm/dd/yyyy')#" name="date_approved_#id#" /></td>
                                         <td><textarea name="notes_#id#">#notes#</textarea></td>
                                     </tr>
@@ -234,41 +249,41 @@
                             </cfif>
                         </cfif>
                         <!--- Loop through all children that need a cbc --->
-                        <cfloop query="qGetHostChildrenForCBC">
+                        <cfloop query="qGetHostMembers">
                             <cfscript>
                                 qGetCBC = APPLICATION.CFC.Host.getCBC(hostID = #family_info.hostID#, memberType = "member", childID = #qGetHostChildrenForCBC.childID#);
                             </cfscript>
                             <tr>
                                 <td colspan="6" style="font-size:12px; font-weight:bold;">
-                                    <cfif qGetHostChildrenForCBC.sex EQ "male">
+                                    <cfif qGetCBC.sex EQ "male">
                                         Son: 
-                                    <cfelseif qGetHostChildrenForCBC.sex EQ "female">
+                                    <cfelseif qGetCBC.sex EQ "female">
                                         Daughter: 
                                     <cfelse>
                                         Member:
                                     </cfif>
-                                    #qGetHostChildrenForCBC.name#
-                                    <a href="javascript:showRow('member#childID#Input')" style="font-size:9px;">[ADD]</a>
+                                    #qGetCBC.name# #qGetCBC.lastname#
+                                    
                                 </td>
                             </tr>
-                            <tr id="member#childID#Input" style="display:none;">
-                            	<input type="hidden" id="member#childID#InputUsed" name="member#childID#InputUsed" value="0" />
-                            	<td><input type="text" class="datePicker" name="date_authorization_#childID#member" /></td>
-                                <td><input type="text" class="datePicker" name="date_submitted_#childID#member" /></td>
+                            <tr id="member#familyID#Input" style="display:none;">
+                            	<input type="hidden" id="member#familyID#InputUsed" name="member#familyID#InputUsed" value="0" />
+                            	<td><input type="text" class="datePicker" name="date_authorized_#familyID#member" /></td>
+                                <td><input type="text" class="datePicker" name="date_sent_#familyID#member" /></td>
                                 <td></td>
-                                <td><input type="text" class="datePicker" name="date_approved_#childID#member" /></td>
-                                <td><textarea name="notes_#childID#member"></textarea></td>
+                                <td><input type="text" class="datePicker" name="date_approved_#familyID#member" /></td>
+                                <td><textarea name="notes_#familyID#member"></textarea></td>
                             </tr>
-                            <cfif NOT VAL(qGetCBC.recordCount)>
+                            <cfif NOT VAL(qGetHostMembers.recordCount)>
                                 <tr>
-                                    <td colspan="5">CBC is missing</td>
+                                    <td colspan="5">CBC has not been run.</td>
                                 </tr>
                             <cfelse>
-                                <cfloop query="qGetCBC">
+                                <cfloop query="qGetHostMembers">
                                     <tr>
-                                        <td><input type="text" class="datePicker" value="#DateFormat(date_authorization,'mm/dd/yyyy')#" name="date_authorization_#id#" /></td>
-                                        <td><input type="text" class="datePicker" value="#DateFormat(date_submitted,'mm/dd/yyyy')#" name="date_submitted_#id#" /></td>
-                                        <td><font <cfif date_expiration LT NOW()>color="red"</cfif>>#DateFormat(date_expiration,'mm/dd/yyyy')#</font></td>
+                                        <td>#DateFormat(date_authorized,'mm/dd/yyyy')#</td>
+                                        <td>#DateFormat(date_sent,'mm/dd/yyyy')#</td>
+                                        <td><font <cfif date_expired LT NOW()>color="red"</cfif>>#DateFormat(date_expired,'mm/dd/yyyy')#</font></td>
                                         <td><input type="text" class="datePicker" value="#DateFormat(date_approved,'mm/dd/yyyy')#" name="date_approved_#id#" /></td>
                                         <td><textarea name="notes_#id#">#notes#</textarea></td>
                                     </tr>

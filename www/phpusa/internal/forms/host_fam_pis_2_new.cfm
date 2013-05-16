@@ -1,10 +1,6 @@
 <cfinclude template="../querys/family_info.cfm">
 
-<script type="text/javascript">
-	$(document).ready(function() {
-		$(".ssnField").mask("999-99-9999");					   
-	});
-</script>
+
 
 <cfoutput>
 
