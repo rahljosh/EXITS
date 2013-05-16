@@ -139,6 +139,102 @@
         <cfreturn qGetCBCHost>
     </cffunction>
     
+    <!----Get CBC info by ID---->
+    <cffunction name="getCBCHostByID" access="public" returntype="query" output="false" hint="Returns CBC records for a mother, father or family member">
+		<cfargument name="hostID" required="yes" hint="Host ID is required">
+        <cfargument name="familyMemberID" default="0" hint="Family Member ID is not required">
+        <cfargument name="cbcType" default="" hint="cbcType is required (mother, father or member)">
+        <cfargument name="cbcfamID" default="0" hint="CBCFamID is not required">
+        <cfargument name="sortBy" type="string" default="seasonID" hint="sortBy is not required">
+        <cfargument name="sortOrder" type="string" default="ASC" hint="sortOrder is not required">
+        <cfargument name="getOneRecord" type="numeric" default="0" hint="getOneRecord is not required">
+
+			<cfscript>
+				// Make sure we have a valid sortOrder value
+                if ( NOT ListFind("ASC,DESC", ARGUMENTS.sortOrder ) ) {
+                    ARGUMENTS.sortOrder = 'DESC';			  
+                }
+            </cfscript>
+
+            <cfquery 
+            	name="qGetCBCHostByID" 
+                datasource="#APPLICATION.dsn#">
+                    SELECT 
+                        h.cbcfamID, 
+                        h.hostID, 
+                        h.familyID,
+                        h.batchID,  <!--- phase out | storing cbc in the database --->
+                        h.cbc_type,
+                        h.notes,
+                        h.date_authorized, 
+                        h.date_sent, 
+                        h.date_expired,
+                        h.date_approved,
+                        h.xml_received, 
+                        h.requestID, 
+                        h.isNoSSN,
+                        h.flagcbc,
+                        h.seasonID, 
+                        s.season,
+                        c.companyID,
+                        c.companyshort
+                    FROM 
+                       php_hosts_cbc_new h
+                    LEFT OUTER JOIN 
+                        smg_seasons s ON s.seasonID = h.seasonID
+                    LEFT OUTER JOIN 
+                        smg_companies c ON c.companyID = h.companyID
+                    WHERE 
+                        h.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#"> 
+
+                    <cfif VAL(ARGUMENTS.cbcfamID)>
+                        AND
+                            h.cbcfamID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.cbcfamID#">                                	
+                    </cfif>
+	                    
+                    <cfif LEN(ARGUMENTS.cbcType)>
+                        AND 
+                            h.cbc_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.cbcType#">
+                    </cfif>
+                    
+                    <cfif VAL(ARGUMENTS.familyMemberID)>
+                        AND 
+                            h.familyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.familyMemberID#">
+                    </cfif>
+                    
+                    ORDER BY 
+                            
+                    <cfswitch expression="#ARGUMENTS.sortBy#">
+                        
+                        <cfcase value="seasonID">                    
+                            h.seasonID #ARGUMENTS.sortOrder#
+                        </cfcase>
+
+                        <cfcase value="familyID">                    
+                            h.familyID #ARGUMENTS.sortOrder#,
+                            h.seasonID #ARGUMENTS.sortOrder#
+                        </cfcase>
+
+                        <cfcase value="date_sent">
+                            h.date_sent #ARGUMENTS.sortOrder#
+                        </cfcase>
+        
+                        <cfdefaultcase>
+                            h.seasonID #ARGUMENTS.sortOrder#
+                        </cfdefaultcase>
+        
+                    </cfswitch> 
+                    
+                    <cfif VAL(ARGUMENTS.getOneRecord)>
+                    	LIMIT 1
+                    </cfif>
+                                        
+            </cfquery>    
+
+		<cfreturn qGetCBCHostByID>
+	</cffunction>
+    
+    
 <!--- CBC Batch Functions --->
 	<cffunction name="processBatch" access="public" returntype="struct" output="false" hint="Process XML Batch. Creates, submits and sends email">
         <cfargument name="companyID" type="numeric" required="yes">
