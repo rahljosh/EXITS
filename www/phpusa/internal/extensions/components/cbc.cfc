@@ -44,7 +44,101 @@
 		</cfscript>
 		
 	</cffunction>
+    
+    <!----Get pending hosts who need CBC run---->
+<cffunction name="getPendingCBCHost" access="public" returntype="query" output="false" hint="Returns CBC records that need to be run for a host">
+        <cfargument name="companyID" type="numeric" default="0" hint="CompanyID is not required">
+        <cfargument name="seasonID" type="numeric" default="0" hint="SeasonID is not required">
+        <cfargument name="userType" type="string" default="" hint="UserType is not required. List of values such as mother,father">
+        <cfargument name="hostID" type="numeric" default="0" hint="HostID is not required">
+        <cfargument name="noSSN" type="numeric" default="0" hint="Optional - Set to 1 to send batch with no SSN">
+        
+        <cfquery 
+        	name="qGetCBCHost" 	
+        	datasource="#APPLICATION.dsn#">
+                SELECT DISTINCT 
+                    cbc.cbcfamID, 
+                    cbc.hostID, 
+                    cbc.cbc_type,
+                    cbc.seasonID,
+                    cbc.isNoSSN,
+                    cbc.date_authorized, 
+                    cbc.date_sent, 
+                    cbc.date_expired,
+                    h.companyID,
+                    h.familylastName,
+                    h.fatherlastName, 
+                    h.fatherfirstName, 
+                    h.fathermiddlename, 
+                    h.fatherdob, 
+                    h.fatherssn,
+                    h.motherlastName, 
+                    h.motherfirstName, 
+                    h.mothermiddlename, 
+                    h.motherdob,
+                    h.motherssn,
+                    c.companyShort,
+                    c.gis_username,
+                    c.gis_password,
+                    c.gis_account                                           
+                FROM 
+                   php_hosts_cbc_new cbc
+                INNER JOIN 
+                    smg_hosts h ON h.hostID = cbc.hostID
+                LEFT OUTER JOIN
+                	smg_companies c ON c.companyID = h.companyID
+                WHERE 
+                    cbc.date_authorized IS NOT NULL                
+				AND
+                	cbc.date_sent IS NULL 	
+                AND 
+                    cbc.requestID = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+                
+                <!--- Check if we are running ISE's CBC --->
+              
 
+                AND 
+                    h.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
+             
+
+            	<!--- Check if we have a valid SeasonID --->
+				<cfif VAL(ARGUMENTS.seasonID)>
+                AND 
+                    cbc.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.seasonID#">
+				</cfif>
+                
+                <!--- Check if userType was passed --->
+                <cfif LEN(ARGUMENTS.userType)>
+                AND 
+                    cbc.cbc_type IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.userType#" list="yes">)
+                
+                	<!--- NO SSN --->
+                	<cfif VAL(ARGUMENTS.noSSN) AND ARGUMENTS.userType EQ 'father'>
+					AND 
+                        h.fatherSSN = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+                    <cfelseif VAL(ARGUMENTS.noSSN) AND ARGUMENTS.userType EQ 'mother'>
+					AND 
+                        h.motherSSN = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+                    </cfif>
+                
+                </cfif>
+				
+            	<!--- Check if we have a valid hostID --->
+				<cfif VAL(ARGUMENTS.hostID)>
+                AND 
+                    cbc.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#">
+				</cfif>
+                
+                ORDER BY	
+                	c.companyID
+                
+                <!--- If running batch, limit to 20 so we don't get time outs --->
+                LIMIT 20
+        </cfquery>
+   
+        <cfreturn qGetCBCHost>
+    </cffunction>
+    
 <!--- CBC Batch Functions --->
 	<cffunction name="processBatch" access="public" returntype="struct" output="false" hint="Process XML Batch. Creates, submits and sends email">
         <cfargument name="companyID" type="numeric" required="yes">
@@ -218,18 +312,7 @@
                     // Parse XML we received back to a variable
                     responseXML = XmlParse(cfhttp.filecontent);		
 					
-                    // Reads XML File and Send Email CFC
-                    batchResult.message = sendEmailResult(
-                        companyID=ARGUMENTS.companyID,
-                        responseXML=responseXML,
-                        userType=ARGUMENTS.userType,
-                        hostID=ARGUMENTS.hostID,
-                        userID=ARGUMENTS.userID,
-                        lastName=ARGUMENTS.lastName,
-                        firstName=ARGUMENTS.firstName,
-						isRerun=ARGUMENTS.isRerun
-                    );				
-    
+                  
                     // Get Report ID
 					try { 
 						// Try to get from US One Search (if there is an error, get it from BCG order number)
@@ -282,7 +365,7 @@
 						
                         <cfmailparam file="#APPLICATION.PATH.temp#xmlReceived.xml" type="text">
                         
-                    	<p>#CLIENT.exits_url#</p>
+                    	<p>http://www.phpusa.com/</p>
                     
                         <p>
                         	<strong>
@@ -320,5 +403,139 @@
                 
             </cftry>
 
+	</cffunction>
+    
+    <cffunction name="updateHostCBC" access="public" returntype="void" output="false" hint="Updates CBC Information">
+        <cfargument name="ReportID" type="string" required="yes">  
+        <cfargument name="cbcFamID" type="numeric" required="yes">      
+        <cfargument name="xmlReceived" type="string" default="">
+        
+        <cfquery 
+        	datasource="MySql">
+            UPDATE 
+            	php_hosts_cbc_new
+            SET 
+            	date_sent = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
+                date_expired = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#DateAdd('yyyy', 1, now())#">, <!--- Expires in 1 Year --->
+                requestID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.reportID#">,
+                xml_received = <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#ARGUMENTS.xmlReceived#">
+            WHERE 
+            	cbcfamID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.cbcFamID#">
+        </cfquery>
+
+	</cffunction>
+    
+    <!----Send Email Results---->
+    <cffunction name="sendEmailResult" access="public" returntype="string" output="false" hint="Reads XML File and Sends Email Result">
+    	<cfargument name="companyID" required="yes">
+        <cfargument name="responseXML" default="" hint="responseXML or XMLFilePath must be passed to this function">
+        <cfargument name="XMLFilePath" default="" hint="responseXML or XMLFilePath must be passed to this function">
+        <cfargument name="userType" type="string" default="" hint="Father,Mother,User,Member">
+        <cfargument name="hostID" type="numeric" default="0" hint="Optional">
+        <cfargument name="userID" type="numeric" default="0" hint="Optional">        
+        <cfargument name="firstName" type="string" default="" hint="Optional">
+		<cfargument name="lastName" type="string" default="" hint="Optional">
+        <cfargument name="isRerun" type="numeric" default="0" hint="Optional - Set to 1 if re running batches automtically">
+        	
+            <cfscript>
+				// Set return variable
+				var emailResult = 'Success';
+				var readXML = '';
+				var setCBCType = '';
+				
+				// check if we have at least one of the required arguments
+				if ( NOT LEN(ARGUMENTS.responseXML) AND NOT LEN(ARGUMENTS.XMLFilePath) ) {										
+					emailResult = 'Error - responseXML or XMLFilePath must be passed to this function';
+					return emailResult;
+				}
+				
+				// check if we have a valid XML
+				if ( LEN(ARGUMENTS.responseXML) AND NOT IsXML(ARGUMENTS.responseXML) ) {
+					emailResult = 'Error - Not a valid XML';
+					return emailResult;
+				}				
+			</cfscript>
+            
+            <!--- Check if we have a file Path, if we do read the XML and store it in ARGUMENTS.responseXML --->
+			<cfif LEN(ARGUMENTS.XMLFilePath)>
+				             
+				<cftry>               
+                    
+                    <cffile 
+                        action="read" 
+                        variable="ARGUMENTS.responseXML"
+                        file="#ARGUMENTS.XMLFilePath#">		
+				
+                    <cfcatch type="any">
+                        <cfscript>
+							emailResult = 'Error - Could not find XML file #ARGUMENTS.XMLFilePath#';
+							
+							return emailResult;
+						</cfscript>
+                    </cfcatch>
+                    
+                </cftry>
+                            
+            </cfif>
+			
+            <cfscript>
+				// Parse XML
+				readXML = XmlParse(ARGUMENTS.responseXML);
+
+				// Get Company Information
+				qGetCompany = APPLICATION.CFC.COMPANY.getCompanies(companyID=ARGUMENTS.companyID);
+				
+				// These are used in the email subject to display User, User Member, Host Father, Host Mother and Host Member
+				if ( VAL(ARGUMENTS.hostID) ) {
+					setCBCType = 'Host';	
+					setCBCID = ' (###ARGUMENTS.hostID#)';
+				} else if ( VAL(ARGUMENTS.userID) AND ARGUMENTS.userType EQ 'user' ) {
+					setCBCType = '';	
+					setCBCID = ' (###ARGUMENTS.userID#)';
+				} else if ( VAL(ARGUMENTS.userID) ) {
+					setCBCType = 'User';	
+					setCBCID = ' (###ARGUMENTS.userID#)';
+				}
+
+				// Set Email To
+				if ( APPLICATION.isServerLocal ) {
+					emailTo = 'marcus@iseusa.com';
+				} else if ( listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, qGetCompany.companyID) AND VAL(ARGUMENTS.isRerun) ) {
+					// ISE - ReRun - Send email to cbcResults and Program Manager
+					emailTo = "#qGetCompany.gis_email#,#qGetCompany.pm_email#";
+				} else {
+					// Not Re-Run - Send email to cbcResults only
+					emailTo = qGetCompany.gis_email;
+				}
+				
+				// Set Email Subject
+				if ( NOT VAL(ARGUMENTS.isRerun) ) {
+	            	emailSubject = 'Background Check Search for #qGetCompany.companyshort# - #setCBCType# #ARGUMENTS.userType# - #ARGUMENTS.firstName# #ARGUMENTS.lastName# #setCBCID#';
+				} else {
+	            	emailSubject = 'Scheduled Rerun Background Check Search for #qGetCompany.companyshort# - #setCBCType# #ARGUMENTS.userType# - #ARGUMENTS.firstName# #ARGUMENTS.lastName# #setCBCID#';
+				}
+			</cfscript>        	
+            	
+            <cfmail 
+            	from="#qGetCompany.support_email#" 
+                to="#emailTo#"
+                subject="#emailSubject#" 
+                failto="#qGetCompany.support_email#"
+                type="html">
+                
+                    <cfscript>
+						// Display Formatted Results
+                        displayXMLResult(
+                            companyID=ARGUMENTS.companyID, 
+                            responseXML=ARGUMENTS.responseXML, 
+                            userType=ARGUMENTS.userType,
+                            hostID=ARGUMENTS.hostID,
+                            userID=ARGUMENTS.userID
+                        );
+                    </cfscript>
+                    
+            </cfmail>
+
+		<cfreturn emailResult>
 	</cffunction>
 </cfcomponent>
