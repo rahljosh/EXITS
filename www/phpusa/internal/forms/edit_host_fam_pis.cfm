@@ -18,14 +18,16 @@
     <cfparam name="FORM.hostID" default="0">
     <cfparam name="FORM.familyLastName" default="">
     <cfparam name="FORM.fatherLastName" default="">
+    <cfparam name="FORM.fatherMiddleName" default="">
     <cfparam name="FORM.fatherFirstName" default="">
-    <cfparam name="FORM.fatherBirth" default="">
+    <cfparam name="FORM.fatherdob" default="">
     <cfparam name="FORM.fatherWorkType" default="">
     <cfparam name="FORM.father_cell" default="">
     <cfparam name="FORM.fatherSSN" default="">
     <cfparam name="FORM.motherLastName" default="">
+    <cfparam name="FORM.motherMiddleName" default="">
     <cfparam name="FORM.motherFirstName" default="">
-    <cfparam name="FORM.motherBirth" default="">
+    <cfparam name="FORM.motherdob" default="">
     <cfparam name="FORM.motherWorkType" default="">
     <cfparam name="FORM.mother_cell" default="">
     <cfparam name="FORM.motherSSN" default="">
@@ -122,16 +124,98 @@
 		<!------------------------------------------------------
 			END OF ADDRESS CHANGE - SEND EMAIL NOTIFICATION 
 		------------------------------------------------------->
-        
+        <Cfquery name="qGetCompanyID"  datasource="#application.dsn#">
+                select *
+                from smg_companies 
+                where companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+            </Cfquery>
+            
         <!--- Encrypt SSNs --->
         <cfif left(form.fatherSSN,3) neq 'XXX'>
+			<cfquery name="insertHostFather" datasource="#application.dsn#">
+            	insert into php_hosts_cbc_new (companyid, cbc_type, hostid, date_authorized)
+            	values (<cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="father">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostID#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">)
+            </cfquery>     
+           
+            
+        	
 			<cfscript>
+				// Get CBCs Host Parents Updated
+				qGetCBCHost = APPLICATION.CFC.CBC.getPendingCBCHost(
+					companyID=CLIENT.companyID,
+					hostID=FORM.hostID,
+					userType='mother,father'
+				);	
+			
+            
                 FORM.fatherSSN = APPLICATION.CFC.UDF.encryptVariable(FORM.fatherSSN);
-            </cfscript>
+				
+				// Process Batch
+					APPLICATION.CFC.CBC.processBatch(
+                       companyID=qGetCBCHost.companyID,
+                        companyShort=qGetCompanyID.companyShort,
+                        userType=qGetCBCHost.cbc_type,
+                        hostID=qGetCBCHost.hostid,
+                        cbcID=qGetCBCHost.CBCFamID,
+                        // XML variables
+                        username=qGetCompanyID.gis_username,
+                        password=qGetCompanyID.gis_password,
+                        account=qGetCompanyID.gis_account,
+                        SSN=Evaluate(qGetCBCHost.cbc_type & 'ssn'),
+                        lastName=Evaluate(qGetCBCHost.cbc_type & 'lastname'),
+						middleName=Evaluate(qGetCBCHost.cbc_type & 'middlename',1),
+                        firstName=Evaluate(qGetCBCHost.cbc_type & 'firstname'),
+                        DOBYear=DateFormat(Evaluate(qGetCBCHost.cbc_type & 'dob'), 'yyyy'),
+                        DOBMonth=DateFormat(Evaluate(qGetCBCHost.cbc_type & 'dob'), 'mm'),
+                        DOBDay=DateFormat(Evaluate(qGetCBCHost.cbc_type & 'dob'), 'dd'),
+						noSSN=qGetCBCHost.isNoSSN
+                    );
+			</cfscript>
+	
         </cfif>
         <cfif left(form.motherSSN,3) neq 'XXX'>
+        <cfquery name="insertHostFather" datasource="#application.dsn#">
+            	insert into php_hosts_cbc_new (companyid, cbc_type, hostid, date_authorized)
+            	values (<cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="mother">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostID#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">)
+            </cfquery>   
 			<cfscript>
+				// Get CBCs Host Parents Updated
+				qGetCBCHost = APPLICATION.CFC.CBC.getPendingCBCHost(
+					companyID=CLIENT.companyID,
+					hostID=FORM.hostID,
+					userType='mother,father'
+				);	
+			
                  FORM.motherSSN = APPLICATION.CFC.UDF.encryptVariable(FORM.motherSSN);   
+				 
+				 
+				
+				// Process Batch
+					APPLICATION.CFC.CBC.processBatch(
+                       companyID=qGetCBCHost.companyID,
+                        companyShort=qGetCompanyID.companyShort,
+                        userType=qGetCBCHost.cbc_type,
+                        hostID=qGetCBCHost.hostid,
+                        cbcID=qGetCBCHost.CBCFamID,
+                        // XML variables
+                        username=qGetCompanyID.gis_username,
+                        password=qGetCompanyID.gis_password,
+                        account=qGetCompanyID.gis_account,
+                        SSN=Evaluate(qGetCBCHost.cbc_type & 'ssn'),
+                        lastName=Evaluate(qGetCBCHost.cbc_type & 'lastname'),
+						middleName=Evaluate(qGetCBCHost.cbc_type & 'middlename',1),
+                        firstName=Evaluate(qGetCBCHost.cbc_type & 'firstname'),
+                        DOBYear=DateFormat(Evaluate(qGetCBCHost.cbc_type & 'dob'), 'yyyy'),
+                        DOBMonth=DateFormat(Evaluate(qGetCBCHost.cbc_type & 'dob'), 'mm'),
+                        DOBDay=DateFormat(Evaluate(qGetCBCHost.cbc_type & 'dob'), 'dd'),
+						noSSN=qGetCBCHost.isNoSSN
+                    );
             </cfscript>
         </cfif>
  
@@ -141,7 +225,7 @@
             SET familylastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.familylastname#">,
                 fatherlastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherlastname#">,
                 fatherfirstname= <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherfirstname#">,
-				fatherBirth = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.fatherBirth)#">,
+				fatherdob = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.fatherdob#">,
                 fatherworktype = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherworktype#">,
                 father_cell = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.father_cell#">,
                 <cfif left(form.fatherSSN,3) neq 'XXX'>
@@ -151,7 +235,7 @@
                 motherlastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherlastname#">, 		
                 emergency_contact_name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.emergency_contact_name#">,
                 emergency_phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.emergency_phone#">,
-                motherBirth = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.motherBirth)#">,
+                motherdob = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.motherdob#">,
                 motherworktype = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherworktype#">,
                 mother_cell = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.mother_cell#">,
                 <cfif left(form.motherSSN,3) neq 'XXX'>
@@ -181,7 +265,6 @@
 			FORM.fatherWorkType = qGetHostFamilyInfo.fatherWorkType;
 			FORM.father_cell = qGetHostFamilyInfo.father_cell;
 			FORM.fatherSSN = APPLICATION.CFC.UDF.displaySSN(varString=qGetHostFamilyInfo.fatherSSN, displayType='user');
-	
 			FORM.motherLastName = qGetHostFamilyInfo.motherLastName;
 			FORM.motherFirstName = qGetHostFamilyInfo.motherFirstName;
 			FORM.motherDOB = qGetHostFamilyInfo.motherDOB;
@@ -278,8 +361,8 @@
                             <td colspan="3"><input type="text" name="father_cell" class="mediumField" value="#FORM.father_cell#"></td>
                         </tr>
                         <tr bgcolor="##C2D1EF">
-                        	<td class="label">Year of Birth:</td>
-                            <td colspan="3"><input type="text" name="fatherbirth" class="smallField" value="#FORM.fatherbirth#"> yyyy</td>
+                        	<td class="label">Date of Birth:</td>
+                            <td colspan="3"><input type="text" name="fatherdob" class="smallField" value="#DateFormat(FORM.fatherdob, 'mm/dd/yyyy')#"> mm/dd/yyyy</td>
                         </tr>
                         <tr bgcolor="##C2D1EF">
                         	<td class="label">SSN:</td>
@@ -302,8 +385,8 @@
                             <td colspan="3"><input type="text" name="mother_cell" class="mediumField" value="#FORM.mother_cell#"></td>
                         </tr>
                         <tr>
-                        	<td class="label">Year of Birth:</td>
-                            <td colspan="3"><input type="text" name="motherbirth" class="smallField" value="#FORM.motherbirth#"> yyyy</td>
+                        	<td class="label">Date of Birth:</td>
+                            <td colspan="3"><input type="text" name="motherdob" class="smallField" value="#DateFormat(FORM.motherdob, 'mm/dd/yyyy')#"> mm/dd/yyyy</td>
                         </tr>
                         <tr>
                         	<td class="label">SSN:</td>
