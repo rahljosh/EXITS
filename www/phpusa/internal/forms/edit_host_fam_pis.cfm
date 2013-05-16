@@ -133,7 +133,7 @@
         <!--- Encrypt SSNs --->
         <cfif left(form.fatherSSN,3) neq 'XXX'>
 			<cfquery name="insertHostFather" datasource="#application.dsn#">
-            	insert into php_hosts_cbc_new (companyid, cbc_type, hostid, date_authorized)
+            	insert into php_hosts_cbc (companyid, cbc_type, hostid, date_authorized)
             	values (<cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="father">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostID#">,
@@ -178,7 +178,7 @@
         </cfif>
         <cfif left(form.motherSSN,3) neq 'XXX'>
         <cfquery name="insertHostFather" datasource="#application.dsn#">
-            	insert into php_hosts_cbc_new (companyid, cbc_type, hostid, date_authorized)
+            	insert into php_hosts_cbc (companyid, cbc_type, hostid, date_authorized)
             	values (<cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="mother">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostID#">,

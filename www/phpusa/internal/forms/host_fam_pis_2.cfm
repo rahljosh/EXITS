@@ -7,9 +7,7 @@ function areYouSure() {
         return false; 
    } 
 }
-	$(document).ready(function() {
-		$(".ssnField").mask("999-99-9999");					   
-	});
+	;
 </script>
 
 <cfinclude template="../querys/family_info.cfm">
@@ -37,9 +35,13 @@ function areYouSure() {
 							<table border=0 cellpadding=3 cellspacing=0 align="left" width="100%">
 								<cfloop from="1" to="5" index="i">
 									<tr bgcolor="#iif(i MOD 2 ,DE("ffffff") ,DE("C2D1EF") )#">
-										<td class="label">Name: </td>
+										<td class="label">First Name: </td>
 										<td class="form_text"> <cfinput type="text" name="name#i#" size="20"> <cfinput type="radio" name="sex#i#" value="male">Male <cfinput type="radio" name="sex#i#" value="female">Female</td>
 									</tr>
+                                   <tr bgcolor="#iif(i MOD 2 ,DE("ffffff") ,DE("C2D1EF") )#">
+                                   <td class="label">Last Name: </td>
+                                   <td class="form_text"> <cfinput type="text" name="lastname#i#" size="20">
+                                   </tr>
 									<tr bgcolor="#iif(i MOD 2 ,DE("ffffff") ,DE("C2D1EF") )#">
 										<td class="label">Date of Birth: </td>
 										<td class="form_text"> <cfinput type="text" name="dob#i#" size="20" maxlength="10" validate="date"> mm/dd/yyyy</td>
@@ -75,9 +77,14 @@ function areYouSure() {
 						<td width="80%" valign="top">
 							<table border=0 cellpadding=3 cellspacing=0 align="left" width="100%">
 								<cfloop query="children">	
+                                	<Cfif lastname is ''>
+                                    	<cfset form.lastname = "#family_info.familylastname#">
+                                    <cfelse>
+                                    	<cfset form.lastname = '#children.lastname#'>
+                                    </Cfif>
 									<tr bgcolor="#iif(children.currentrow MOD 2 ,DE("ffffff") ,DE("C2D1EF") )#">
 										<cfinput type="hidden" name="childid#children.currentrow#" value="#childid#">
-										<td class="label">Name:</td>
+										<td class="label">First Name:</td>
 										<td class="form_text">
 											<cfinput type="text" name="name#children.currentrow#" size="20" value="#name#"> 
 											<Cfif sex is 'male'>
@@ -89,6 +96,11 @@ function areYouSure() {
 											</cfif>
 										</td>
 									</tr>
+                                    <tr>
+                                    <td class="label">Last Name:</td>
+										<td class="form_text"><cfinput type="text" name="lastname#children.currentrow#" size="20" value="#form.lastName#">
+                                    </tr>
+                                    
 									<tr bgcolor="#iif(children.currentrow MOD 2 ,DE("ffffff") ,DE("C2D1EF") )#">
 										<td class="label">Date of Birth: </td>
 										<td class="form_text"> <cfinput type="text" name="dob#children.currentrow#" size="20" value="#DateFormat(birthdate,'mm-dd-yyyy')#" maxlength="10" validate="date"> mm-dd-yyyy</td>
