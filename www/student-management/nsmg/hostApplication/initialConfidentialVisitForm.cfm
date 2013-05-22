@@ -39,6 +39,13 @@
     <cfparam name="FORM.exchangeInterest" default= "">
     <cfparam name="FORM.livingYear" default= "">
     <cfparam name="FORM.famReservations" default= "">
+    <cfparam name="FORM.ownBed" default= "">
+    <cfparam name="FORM.bathRoom" default= "">
+    <cfparam name="FORM.outdoorsFromBedroom" default= "">
+    <cfparam name="FORM.storageSpace" default= "">
+    <cfparam name="FORM.studySpace" default= "">
+    <cfparam name="FORM.privacy" default= "">
+    <cfparam name="FORM.pets" default= "">
     <cfparam name="FORM.other" default= "">
 
     <cfscript>
@@ -182,6 +189,50 @@
                 // Get all the missing items in a list
                 SESSION.formErrors.Add("Please indicate any reservations you have about this family.");
             }
+			
+			
+			// Bedroom
+            if ( NOT LEN(TRIM(FORM.ownBed)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please indicate if student will have their own bed.");
+            }
+            
+            // Bathroom
+            if ( NOT LEN(TRIM(FORM.bathRoom)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please indicate if student will have access to a bathroom.");
+            }
+            
+            // Outdoors from Bedroom
+            if ( NOT LEN(TRIM(FORM.outdoorsFromBedroom)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please indicate if student will be able to access the outdoors from their bedroom.");
+            }
+            
+            // Storage Space
+            if ( NOT LEN(TRIM(FORM.storageSpace)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please indicate if student will have adequte storage space.");
+            }
+			
+			  // Privacy
+            if ( NOT LEN(TRIM(FORM.studySpace)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please indicate if student will have adequte space to study.");
+            }
+            
+            // Privacy
+            if ( NOT LEN(TRIM(FORM.privacy)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please indicate if student will have privacy.");
+            }
+           
+            //  Pets
+            if ( NOT LEN(TRIM(FORM.pets)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please indicate if there are any pets in the home.");
+            }
+			
         </cfscript>
         
 		<!--- Check if there are no errors --->
@@ -210,6 +261,13 @@
                         famReservations = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.famReservations#">,
                         exchangeInterest =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.exchangeInterest#">,
                         livingYear = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.livingYear#">,
+                        ownBed = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.ownBed#">,
+                        bathRoom =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.bathRoom#">,
+                        outdoorsFromBedroom = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.outdoorsFromBedroom#">,
+                        storageSpace = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.storageSpace#">,
+                        studySpace = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.studySpace#">,
+                        privacy = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.privacy#">,
+                        pets = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pets#">,
                         other =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.other#">
                     WHERE 
                         fk_reportID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.pr_ID)#">                  
@@ -274,6 +332,13 @@
                         famReservations,
                         exchangeInterest,
                         livingYear,
+                        ownBed,
+                        bathRoom,
+                        outdoorsFromBedroom,
+                        storageSpace,
+                        studySpace,
+                        privacy,
+                        pets,
                         other
                     )
                     VALUES
@@ -295,6 +360,13 @@
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.famReservations#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.exchangeInterest#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.livingYear#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.ownBed#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.bathRoom#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.outdoorsFromBedroom#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.storageSpace#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.studySpace#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.privacy#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pets#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.other#">
                     )
                 </cfquery>
@@ -359,6 +431,13 @@
 			FORM.famReservations = qGetConfidentialVisitForm.famReservations;
 			FORM.exchangeInterest = qGetConfidentialVisitForm.exchangeInterest;
 			FORM.livingYear = qGetConfidentialVisitForm.livingYear;
+		    FORM.ownBed = qGetConfidentialVisitForm.ownBed;
+			FORM.bathRoom = qGetConfidentialVisitForm.bathRoom;
+			FORM.outdoorsFromBedroom = qGetConfidentialVisitForm.outdoorsFromBedroom;
+			FORM.storageSpace = qGetConfidentialVisitForm.storageSpace;
+			FORM.studySpace = qGetConfidentialVisitForm.studySpace;
+			FORM.privacy = qGetConfidentialVisitForm.privacy;
+			FORM.pets = qGetConfidentialVisitForm.pets;
 			FORM.other = qGetConfidentialVisitForm.other;
     	</cfscript>
         
@@ -735,15 +814,126 @@
                 
                 <br /><br /><br /><br />
                 
-                <span class="title">
-                    Other Comments 
-                    <span class="small"></span>
+                 
+                
+                  <span class="title">
+               Will the exchange student have their own permanent bed?<span class="required">*</span> 
+                    <span class="small">Bed may not be a futon or inflatable<br />if two students, two seperate beds</span>
+                
                 </span>
+                <cfif vIsEditAllowed>	
+                    
+                    <select name="ownBed">
+                    <option value=""></option>
+                    	<option value="Solo bedroom - permanent bed" <cfif FORM.ownBed eq 'Solo bedroom - permanent bed'>selected</cfif>>Solo bedroom - permanent bed</option>
+                        <option value="Shared bedroom - two permanent beds" <cfif FORM.ownBed eq 'Shared bedroom - two permanent beds'>selected</cfif>>Shared bedroom - two permanent beds</option>
+                        <option value="No permanent bed" <cfif FORM.ownBed eq 'No permanent bed'>selected</cfif>>No permanent bed</option>
+                    </select>
+                <cfelse>
+                    #FORM.ownBed#
+                </cfif>
+           
+                          <br /><br /><br /><br /><br />
+                
+                
+           <span class="title">
+              Will the exchange student have access to a bathroom?<span class="required">*</span>   
+           </span>      
+                <cfif vIsEditAllowed>	
+                    <input type="text" name="bathRoom" class="xLargeField" value="#FORM.bathRoom#"/>
+                <cfelse>
+                    #FORM.bathRoom#
+                </cfif>
+         
+         <br /><br /><br /><br />
+    
+          <span class="title">
+               Will exchange student have access to the outdoors from their bedroom?<span class="required">*</span> 
+                    <span class="small">i.e. a door or window</span>
+              
+          </span>
+                <cfif vIsEditAllowed>	
+                    <input type="text" name="outdoorsFromBedroom" class="xLargeField" value="#FORM.outdoorsFromBedroom#"/>
+                <cfelse>
+                    #FORM.outdoorsFromBedroom#
+                </cfif>
+                   
+         <br /><br /><br /><br />
+    
+            <span class="title">
+               Will the exchange student have a closet and/or dresser that the exchange student can use to store his/her clothing and other belongings?<span class="required">*</span>
+            </span>
+                <cfif vIsEditAllowed>	
+                  
+                    <select name="storageSpace">
+                    <option value=""></option>
+                    	<option value="Yes - in the exchange student's room" <cfif FORM.storageSpace eq "Yes - in the exchange student's room">selected</cfif>>Yes - in the exchange student's room</option>
+                        <option value="Yes - adjacent to the exchange student's room" <cfif FORM.storageSpace eq "Yes - adjacent to the exchange student's room">selected</cfif>>Yes - adjacent to the exchange student's room</option>
+                        <option value="Yes - in another part of the home" <cfif FORM.storageSpace eq 'Yes - in another part of the home'>selected</cfif>>Yes - in another part of the home</option>
+                         <option value="No - no storage for exchange student" <cfif FORM.storageSpace eq 'No - no storage for exchange student'>selected</cfif>>No - no storage for exchange student</option>
+                    </select>
+                <cfelse>
+                    #FORM.storageSpace#
+                </cfif>
+                     
+                 <br /><br /><br /><br />
+                 <br /><br />
+            
+           <span class="title">
+               Will the exchange student have privacy?<span class="required">*</span>
+                    <span class="small">i.e. a door on their room</span>
+               
+            </span>
+                <cfif vIsEditAllowed>	
+                    <input type="text" name="privacy" class="xLargeField" value="#FORM.privacy#"/>
+                <cfelse>
+                    #FORM.privacy#
+                </cfif>
+          
+         <br /><br /><br /><br />
+
+            <span class="title">
+               Will the exchange student have adequate study space?<span class="required">*</span>
+            </span>
+                <cfif vIsEditAllowed>		
+                    
+                       <select name="studySpace">
+                       <option value=""></option>
+                    	<option value="In exchange student's room" <cfif FORM.studySpace eq "In exchange student's room">selected</cfif>>In exchange student's room</option>
+                        <option value="In another part of the home" <cfif FORM.studySpace eq 'In another part of the home'>selected</cfif>>In another part of the home</option>
+                        <option value="No place in home to study" <cfif FORM.studySpace eq 'No place in home to study'>selected</cfif>>No place in home to study</option>
+                    </select>
+                <cfelse>
+                    #FORM.studySpace#
+                </cfif>
+       
+         <br /><br /><br /><br />
+           <span class="title">
+               Are there pets present in the home?<span class="required">*</span>
+                    <span class="small">How many & what kind</span>
+             
+            </span>
+                <cfif vIsEditAllowed>		
+                    <input type="text" name="pets"  value="#FORM.pets#" class="xLargeField"/>
+                <cfelse>
+                    #FORM.pets#
+                </cfif>
+           
+         <br /><br /><br /><br />
+          <span class="title">
+               Other Comments
+          </span>
                 <cfif vIsEditAllowed>	
                     <textarea name="other" class="xLargeTextArea">#FORM.other#</textarea>
                 <cfelse>
                     #FORM.other#
-                </cfif>    
+                </cfif>
+         
+
+    	
+                
+                
+                
                 
                 <cfif vIsEditAllowed>
                     <p>&nbsp;</p> 
