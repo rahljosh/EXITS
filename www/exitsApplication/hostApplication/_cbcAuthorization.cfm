@@ -98,11 +98,6 @@
 					SESSION.formErrors.Add("The CBC authorization signature for #qGetHostFamilyInfo.fatherFirstName# #qGetHostFamilyInfo.fatherLastName# is missing.");
 				}	
 				
-				vFatherName = TRIM(qGetHostFamilyInfo.fatherFirstName) & " " & TRIM(qGetHostFamilyInfo.fatherLastName);
-				
-				if ( LEN(FORM.fatherSignature) AND TRIM(FORM.fatherSignature) NEQ vFatherName ) {
-					SESSION.formErrors.Add("Please make sure you enter the exact name as displayed for host father signature.");
-				}
 			
 			}
 			
@@ -119,11 +114,6 @@
 					SESSION.formErrors.Add("The CBC authorization signature for #qGetHostFamilyInfo.motherFirstName# #qGetHostFamilyInfo.motherLastName# is missing.");
 				}	
 				
-				vMotherName = TRIM(qGetHostFamilyInfo.motherFirstName) & " " & TRIM(qGetHostFamilyInfo.motherLastName);
-				
-				if ( LEN(FORM.motherSignature) AND TRIM(FORM.motherSignature) NEQ vMotherName ) {
-					SESSION.formErrors.Add("Please make sure you enter the exact name as displayed for host mother signature.");
-				}
 			
 			}
 			
@@ -142,9 +132,6 @@
 				
 				vMemberName = TRIM(qGetCBCQualifiedMembers.name[i]) & " " & TRIM(qGetCBCQualifiedMembers.lastName[i]);
 				
-				if ( LEN(FORM[qGetCBCQualifiedMembers.childID[i] & "memberSignature"]) AND TRIM(FORM[qGetCBCQualifiedMembers.childID[i] & "memberSignature"]) NEQ vMemberName ) {
-					SESSION.formErrors.Add("Please make sure you enter the exact name as displayed for host member #vMemberName# signature.");
-				}
 				
 			}			
 		</cfscript>	
