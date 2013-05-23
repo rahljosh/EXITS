@@ -200,10 +200,26 @@
   		WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(family_info.hostID)#">
 	</cfquery>
     <cfquery name="qGetUpdatedPassword" datasource="#APPLICATION.DSN#">
-        SELECT password
+        SELECT password, email
         FROM smg_hosts
         WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(family_info.hostID)#">
     </cfquery>
+    
+       <cfscript>
+			// Data Validation
+			
+			// Email Address
+            if ( NOT LEN(TRIM(qGetUpdatedPassword.email)) ) {
+                SESSION.formErrors.Add("Please provide an email address.");
+            }	
+			
+			// Valid Email Address
+            if ( LEN(TRIM(qGetUpdatedPassword.email)) AND NOT isValid("email", TRIM(qGetUpdatedPassword.email)) ) {
+                SESSION.formErrors.Add("The email address you have entered does not appear to be valid.");
+            }	
+		</cfscript>	
+        
+    <cfif NOT SESSION.formErrors.length()>
  	<cfscript>
 		APPLICATION.CFC.HOST.sendWelcomeLetter(
 			email=#family_info.email#,
@@ -211,6 +227,7 @@
 			fatherFirstName=#family_info.fatherFirstName#,
 			motherFirstName=#family_info.motherFirstName#);
 	</cfscript>
+    </cfif>
     <!--- Only reload the page if it does not need to change the host family's active status --->
     <cfif NOT isDefined('decideToHost')>
     	<cflocation url="?#CGI.QUERY_STRING#"/>
