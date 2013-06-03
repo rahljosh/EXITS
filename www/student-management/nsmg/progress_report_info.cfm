@@ -97,9 +97,19 @@
             WHERE 
             	pr_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.pr_id)#">
         </cfquery>
+        <cfquery name="get_international_rep" datasource="#application.dsn#">
+            SELECT userid, businessname, email
+            FROM smg_users
+            WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_report.fk_intrep_user)#">
+        </cfquery>
+        <cfquery name="get_student" datasource="#application.dsn#">
+            SELECT studentid, firstname, familylastname, companyid
+            FROM smg_students
+            WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_report.fk_student)#">
+        </cfquery>
         
         <cfset approve_field = ''>
-        
+        <cfset date_sent = ''>
         <!--- in case the user has multiple approval levels, check them in order and just do the first one. --->
         <!--- supervising rep --->
         <cfif CLIENT.userid EQ get_report.fk_sr_user and get_report.pr_sr_approved_date EQ ''>
@@ -113,7 +123,41 @@
         <!--- facilitator OR any office user --->
         <cfelseif get_report.pr_ny_approved_date EQ '' AND (CLIENT.userid EQ get_report.fk_ny_user OR CLIENT.userType LTE 4)>
             <cfset approve_field = 'pr_ny_approved_date'>
+            <cfif get_report.pr_month_of_report  mod 2 is 0>
+            	<cfset date_sent = '#now()#'>
+            <!----send email to Int Rep that report has been completed and available for review.---->    
+            <cfoutput>
+                <cfsavecontent variable="email_message">
+                
+                 A progress report has been submitted for #get_student.firstname# #get_student.familylastname#.  
+                 <br /><br />
+                 This report is available to view by clicking on this <a href="https://#client.companyshort#.exitsapplication.com/externalReports/progressReport.cfm?report=#get_report.pr_uniqueid#">link.</a><br /><br />
+                 
+                 If that link doesn't work, copy and paste this url into your browser:<Br /><br />
+                 #client.exits_url#/externalReports/progressReport.cfm?report=#get_report.pr_uniqueid#
+                 <br /><br />
+                 
+                 Regards-<br /><br />
+                 #client.companyname#
+                     
+                     
+                      
+                </cfsavecontent>
+                    </Cfoutput>			
+			<!--- send email --->
+            <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                <cfinvokeargument name="email_to" value="#get_international_rep.email#">
+                <cfinvokeargument name="email_subject" value="Progress Report for #get_student.firstname# #get_student.familylastname# ">
+                <cfinvokeargument name="email_message" value="#email_message#">
+               <cfinvokeargument name="email_cc" value="#client.email#">
+                <cfinvokeargument name="email_from" value="#client.companyshort#-support@exitsapplication.com">
+            </cfinvoke>
+    		</cfif>
+	        
         </cfif>
+        
+        
+        
         
         <cfif approve_field NEQ ''>
         
@@ -122,6 +166,7 @@
                 	progress_reports 
                 SET
                     #approve_field# = <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">,
+                    dateSentIntRep = <cfqueryparam cfsqltype="cf_sql_date" value="#date_sent#">,
                     pr_rejected_date = NULL
                 WHERE 
                 	pr_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.pr_id)#">
@@ -296,7 +341,7 @@ function OpenLetter(url) {
 </cfquery>
 
 <cfquery name="get_international_rep" datasource="#application.dsn#">
-    SELECT userid, businessname
+    SELECT userid, businessname, email
     FROM smg_users
     WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_report.fk_intrep_user)#">
 </cfquery>
@@ -629,8 +674,13 @@ function OpenLetter(url) {
   </tr>
   <tr>
     <th align="right">International Agent:</th>
-    <td>#get_international_rep.businessname# (#get_international_rep.userid#)</td>
+    <td>#get_international_rep.businessname# (#get_international_rep.userid#) </td>
   </tr>
+  <Cfif get_report.dateSentIntRep is not ''>
+  <tr>
+  	<th align="right">Report Sent:</th><td> #DateFormat(get_report.dateSentIntRep, 'dd-MMM-yy')# to #get_international_rep.email# </td>
+  </tr>  
+  </Cfif>
 </table>
 
 <br />
