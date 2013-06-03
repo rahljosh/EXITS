@@ -183,26 +183,13 @@
 		
         <!--- Check for duplicate accounts --->
 		<cfif isValid("email", FORM.email)>
-            
-            <!--- Check for duplicate accounts (Email Address) --->
-            <cfquery name="qCheckEmail" datasource="#APPLICATION.DSN#">
-                SELECT 
-                    hostID, 
-                    familylastname,
-                    password
-                FROM 
-                    smg_hosts
-                WHERE
-                    active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-                AND
-                    email LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">
-                <cfif VAL(FORM.hostID)>
-                    AND
-                        hostID != <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hostID#">
-                </cfif>
-            </cfquery>
-            
-            <cfscript>
+        
+        	<cfscript>
+				if (VAL(FORM.hostID)) {
+					qCheckEmail = APPLICATION.CFC.host.checkHostEmail(hostID=FORM.hostID,email=FORM.email,companyID=CLIENT.companyID);
+				} else {
+					qCheckEmail = APPLICATION.CFC.host.checkHostEmail(email=FORM.email,companyID=CLIENT.companyID);
+				}
                 // Check for email address. 
                 if ( qCheckEmail.recordCount ) {
                     //Get all the missing items in a list
