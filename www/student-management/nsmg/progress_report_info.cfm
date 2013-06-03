@@ -149,7 +149,7 @@
                 <cfinvokeargument name="email_to" value="#get_international_rep.email#">
                 <cfinvokeargument name="email_subject" value="Progress Report for #get_student.firstname# #get_student.familylastname# ">
                 <cfinvokeargument name="email_message" value="#email_message#">
-               <cfinvokeargument name="email_cc" value="#client.email#">
+        
                 <cfinvokeargument name="email_from" value="#client.companyshort#-support@exitsapplication.com">
             </cfinvoke>
     		</cfif>
