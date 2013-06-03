@@ -71,6 +71,43 @@
 		<cfreturn qGetHosts>
 	</cffunction>
     
+    <cffunction 
+    	name="checkHostEmail" 
+        access="public" 
+        returntype="query" 
+        output="no" 
+        hint="Checks if the host family email is in use by another host in the same company">
+        <cfargument name="hostID" default="0" hint="hostID is only required if the host already exists">
+        <cfargument name="email" hint="email is required">
+        <cfargument name="companyID" hint="companyID is required">
+        
+        <cfscript>
+			// Create a list of companies that this will be compared with.
+			companyIDList = "";
+			
+			if (ListFind("1,2,3,4,5,12",ARGUMENTS.companyID)) {
+				companyIDList = "1,2,3,4,5,12";
+			} else if (ListFind("7,8,9",ARGUMENTS.companyID)) {
+				companyIDList = "7,8,9";
+			} else {
+				companyIDList = ARGUMENTS.companyID;
+			}
+		</cfscript>
+        
+        <cfquery name="qCheckEmail" datasource="#APPLICATION.DSN#">
+            SELECT hostID, familylastname, password
+            FROM smg_hosts
+            WHERE active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+            AND companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#companyIDList#" list="yes">)
+            AND email LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.email#">
+            <cfif VAL(ARGUMENTS.hostID)>
+                AND hostID != <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.hostID#">
+            </cfif>
+        </cfquery>
+        
+        <cfreturn qCheckEmail>
+    
+    </cffunction>
 
 	<cffunction name="getCompleteHostAddress" access="public" returntype="query" output="false" hint="Returns complete host family address">
     	<cfargument name="hostID" default="" hint="HostID is required">
