@@ -15,7 +15,7 @@
 	<cfsetting requesttimeout="9999">
     
     <!--- Arrival Information --->
-	<cfquery name="qStudentsMissingArrival" datasource="mysql">
+	<cfquery name="qStudentsMissingArrival" datasource="#application.dsn#">
 		SELECT DISTINCT 
         	s.studentID, 
             s.uniqueID, 
@@ -36,7 +36,7 @@
             sc.schoolName,
             preAYPArrival.flightID AS preAYPFlightID
 		FROM 
-        	smg_students s
+        	#application.dsn#_students s
 		INNER JOIN 
         	smg_programs p ON s.programid = p.programid
 		LEFT OUTER JOIN
@@ -137,7 +137,7 @@
 	</cfquery>
 	
 	<!----Departure Information---->
-	<cfquery name="qStudentsMissingDeparture" datasource="mysql">
+	<cfquery name="qStudentsMissingDeparture" datasource="#APPLICATION.dsn#">
 		SELECT DISTINCT 
         	s.studentID, 
             s.uniqueID,
@@ -147,6 +147,7 @@
             s.host_fam_approved, 
             s.dateplaced,
 			p.programname, 
+            DATE_SUB(p.enddate, INTERVAL 3 MONTH) AS startInputDate,
 			h.familylastname AS hostFamilyName, 
             h.fatherlastname, 
             h.motherlastname, 
@@ -215,7 +216,7 @@
     <cfif APPLICATION.SETTINGS.COMPANYLIST.Canada NEQ CLIENT.companyID>
     
 		<!----PHP flight info---->
-        <cfquery name="qPHPStudentsMissingArrival" datasource="mysql">
+        <cfquery name="qPHPStudentsMissingArrival" datasource="#APPLICATION.dsn#">
             SELECT DISTINCT 
                 s.studentid, 
                 s.uniqueid, 
@@ -280,13 +281,14 @@
                 s.familylastname
         </cfquery>
 
-        <cfquery name="qPHPStudentsMissingDeparture" datasource="mysql">
+        <cfquery name="qPHPStudentsMissingDeparture" datasource="#APPLICATION.dsn#">
             SELECT DISTINCT 
                 s.studentid, 
                 s.uniqueid, 
                 s.firstname, 
                 s.familylastname, 
                 p.programname, 
+                DATE_SUB(p.enddate, INTERVAL 3 MONTH) AS startInputDate,
                 h.familylastname AS hostFamilyName, 
                 h.fatherlastname, 
                 h.motherlastname, 
@@ -451,6 +453,8 @@
                             </cfif>
                         </td>
                         <td style="font-weight:bold;">
+                        
+                       
                             <cfif VAL(qStudentsMissingArrival.aypEnglish) AND NOT LEN(qStudentsMissingArrival.preAYPFlightID)>
                                 <a href="student/index.cfm?action=flightInformation&uniqueID=#qStudentsMissingArrival.uniqueID#&programID=#qStudentsMissingArrival.programID#" class="jQueryModal">
                                     [ Submit Pre-AYP Arrival ] 
@@ -467,6 +471,7 @@
                                 </a>
                             </cfif>
                         </td>
+                        
                     </tr>
                 </cfloop>
 				<cfif NOT VAL(qStudentsMissingArrival.recordcount)>
@@ -536,9 +541,13 @@
                             </cfif>
                         </td>
                         <td style="font-weight:bold;">
-                            <a href="student/index.cfm?action=flightInformation&uniqueID=#qStudentsMissingDeparture.uniqueID#" class="jQueryModal">
-                                [ Submit Departure ]
-                            </a>
+                        	<cfif '#now()#' gt #qStudentsMissingDeparture.startInputDate# and client.companyid eq 10>
+                        Submit after #DateFormat(qStudentsMissingDeparture.startInputDate, 'mm/dd/yyyy')# 
+                            <cfelse>
+                                <a href="student/index.cfm?action=flightInformation&uniqueID=#qStudentsMissingDeparture.uniqueID#" class="jQueryModal">
+                                    [ Submit Departure ]
+                                </a>
+                            </cfif>
                         </td>
                     </tr>
                 </cfloop>
