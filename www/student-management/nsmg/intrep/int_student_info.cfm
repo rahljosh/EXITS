@@ -288,12 +288,14 @@
 		<td align="right" valign="top">
 			<div id="subMenuNav"> 
 				<div id="subMenuLinks">  
-				<a href="" onClick="javascript: win=window.open('virtualfolder/list_vfolder.cfm?unqid=#qGetStudentInfo.uniqueid#', 'Settings', 'height=600, width=700, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Virtual Folder</a>		
+                <a href="index.cfm?curdoc=virtualFolder/view&unqid=#qGetStudentInfo.uniqueID#" >Virtual Folder</a>
+					
 				<a class=nav_bar href="" onClick="javascript: win=window.open('forms/received_progress_reports.cfm?stuid=#CLIENT.studentID#', 'Reports', 'height=250, width=620, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Progress Reports</A>  
                 <a href="student/index.cfm?action=flightInformation&uniqueID=#qGetStudentInfo.uniqueID#&programID=#qGetStudentInfo.programID#" class="jQueryModal">Flight Information</a>
 				<cfif vIsStudentPlaced>
 					<a class=nav_bar href="index.cfm?curdoc=intrep/int_host_fam_info&hostid=#qGetStudentInfo.hostid#">Host Family</A>
 				</cfif>
+               
 				</div>
 			</div>
 		</td>
