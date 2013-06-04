@@ -1,20 +1,20 @@
 <cfsetting requesttimeout="400">
 
-<cfquery name="qGetStudentsMissingHostApp" datasource="#APPLICATION.DSN#">
+<cfquery name="qGetStudentsMissingHostAppOffice" datasource="#APPLICATION.DSN#">
     SELECT studentID, hostID
     FROM smg_students
     WHERE active = 1
     AND hostID != 0
     AND host_fam_approved IN (1,2,3,4)
     AND hostID IN (SELECT hostID FROM smg_hosts WHERE hostAppStatus IN (1,2,3,4) AND active = 1)
-    AND studentID NOT IN (SELECT DISTINCT fk_studentID FROM virtualFolder WHERE fk_hostID = hostID AND (fk_documentType = 28 OR fk_documentType = 29) AND isDeleted = 0)
+    AND studentID NOT IN (SELECT DISTINCT fk_studentID FROM virtualFolder WHERE fk_hostID = hostID AND fk_documentType = 28 AND isDeleted = 0)
 </cfquery>
 
 <cfoutput>
-	#qGetStudentsMissingHostApp.recordCount#<br/>
+	#qGetStudentsMissingHostAppOffice.recordCount#<br/>
 </cfoutput>
 
-<cfloop query="qGetStudentsMissingHostApp">
+<cfloop query="qGetStudentsMissingHostAppOffice">
 	<cfoutput>#studentID#<br/></cfoutput>
 	<cfscript>
 		qGetHostFamily = APPLICATION.CFC.HOST.getHosts(hostID=VAL(hostID));
@@ -61,7 +61,30 @@
                 'auto',
                 #client.userid#)
         </cfquery>
+ 	</cfoutput>
+</cfloop>
+
+<cfquery name="qGetStudentsMissingHostAppAgent" datasource="#APPLICATION.DSN#">
+    SELECT studentID, hostID
+    FROM smg_students
+    WHERE active = 1
+    AND hostID != 0
+    AND host_fam_approved IN (1,2,3,4)
+    AND hostID IN (SELECT hostID FROM smg_hosts WHERE hostAppStatus IN (1,2,3,4) AND active = 1)
+    AND studentID NOT IN (SELECT DISTINCT fk_studentID FROM virtualFolder WHERE fk_hostID = hostID AND fk_documentType = 29 AND isDeleted = 0)
+</cfquery>
+
+<cfoutput>
+	#qGetStudentsMissingHostAppAgent.recordCount#<br/>
+</cfoutput>
+
+<cfloop query="qGetStudentsMissingHostAppAgent">
+	<cfoutput>#studentID#<br/></cfoutput>
+	<cfscript>
+		qGetHostFamily = APPLICATION.CFC.HOST.getHosts(hostID=VAL(hostID));
+    </cfscript>
         
+   	<cfoutput>
         <cfsavecontent variable="hostFamilyApplication">
             <cfset FORM.hostID = #hostID#>
             <cfset URL.reportType = "agent">
