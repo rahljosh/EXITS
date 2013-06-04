@@ -2377,7 +2377,9 @@
 			// Get Upcoming Programs
 			if ( VAL(ARGUMENTS.isUpcomingProgram) ) {
 				qGetUpcomingPrograms = APPLICATION.CFC.PROGRAM.getPrograms(isUpcomingProgram=1);
-				
+				vUpcomingProgramList = ValueList(qGetUpcomingPrograms.programID);
+			} else {
+				qGetUpcomingPrograms = APPLICATION.CFC.PROGRAM.getPrograms(isActive=1);
 				vUpcomingProgramList = ValueList(qGetUpcomingPrograms.programID);
 			}
 		</cfscript>
