@@ -27,7 +27,7 @@
             <cfset relative = "../nsmg/">
             <cfinclude template="../nsmg/hostApplication/printApplication.cfm">
         </cfsavecontent>
-        <cfset fileName="#qGetHostFamily.familyLastName#-#DateFormat(NOW(),'mm-dd-yyyy')#-office">
+        <cfset fileName="#replace(qGetHostFamily.familyLastName,'/','','ALL')#-#DateFormat(NOW(),'mm-dd-yyyy')#-office">
         <cfoutput>
             <cfdocument format="pdf" filename="#fileName#.pdf" overwrite="yes" orientation="portrait" name="uploadFile">
                 #hostFamilyApplication#
@@ -68,7 +68,7 @@
             <cfset relative = "../nsmg/">
             <cfinclude template="../nsmg/hostApplication/printApplication.cfm">
         </cfsavecontent>
-        <cfset fileName="#qGetHostFamily.familyLastName#-#DateFormat(NOW(),'mm-dd-yyyy')#-agent">
+        <cfset fileName="#replace(qGetHostFamily.familyLastName,'/','','ALL')#-#DateFormat(NOW(),'mm-dd-yyyy')#-agent">
         <cfoutput>
             <cfdocument format="pdf" filename="#fileName#.pdf" overwrite="yes" orientation="portrait" name="uploadFile">
                 #hostFamilyApplication#
