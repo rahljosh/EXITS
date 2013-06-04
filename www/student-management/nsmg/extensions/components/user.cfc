@@ -1960,7 +1960,7 @@
                 SELECT DISTINCT
 					id,
                     date_trained,
-                    DATE_ADD(date_trained, INTERVAL 11 MONTH) AS dateExpired
+                    DATE_ADD(date_trained, INTERVAL 12 MONTH) AS dateExpired
                 FROM 
                     smg_users_training sut
                 WHERE
@@ -1977,7 +1977,7 @@
                 AND
                     training_id = <cfqueryparam cfsqltype="cf_sql_integer" value="2">
                 AND
-                	DATE_ADD(date_trained, INTERVAL 11 MONTH) >= NOW()
+                	DATE_ADD(date_trained, INTERVAL 12 MONTH) >= NOW()
                 ORDER BY
                 	dateExpired DESC
 				LIMIT 1                                        
