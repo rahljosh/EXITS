@@ -56,6 +56,8 @@
                             hostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#"> 
                         AND
                         	active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                      	AND
+                        	isHosting = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
                     
 						
                         <!--- ISE Divisions --->
