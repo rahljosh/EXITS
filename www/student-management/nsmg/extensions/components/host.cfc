@@ -1010,6 +1010,8 @@
                     
                     	AND
                         	h.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                      	AND
+                        	h.isHosting = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
                     
 						<!--- ISE - Displays all apps |  OR APPLICATION.CFC.USER.isOfficeUser()---> 
 						<cfif ARGUMENTS.companyID EQ 5>

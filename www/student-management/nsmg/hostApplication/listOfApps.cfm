@@ -66,12 +66,9 @@
     
     <cfparam name="FORM.notHosting" default="0">
     <cfif VAL(FORM.notHosting)>
-    	<script type="text/javascript">
-			alert("At least it got here");
-		</script>
     	<cfquery datasource="#APPLICATION.DSN#">
             UPDATE smg_hosts
-            SET active = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+            SET isHosting = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
             WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.notHosting#">
         </cfquery>
         <cflocation url="?#CGI.QUERY_STRING#"/>

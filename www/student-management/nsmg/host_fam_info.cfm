@@ -237,7 +237,7 @@
 <cfif isDefined('decideToHost')>
 	<cfquery datasource="#APPLICATION.DSN#">
     	UPDATE smg_hosts
-        SET active = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.decideToHost)#">
+        SET isHosting = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.decideToHost)#">
         WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#family_info.hostID#">
     </cfquery>
     <cflocation url="?#CGI.QUERY_STRING#"/>
@@ -753,7 +753,7 @@ div.scroll2 {
                         </td>
                         <td>
                             <cfif CLIENT.usertype LTE 7>
-                                <cfif VAL(family_info.active)>
+                                <cfif VAL(family_info.isHosting)>
                                     <form 
                                         method="post" 
                                         action="index.cfm?curdoc=host_fam_info&hostid=#url.hostid#" 
