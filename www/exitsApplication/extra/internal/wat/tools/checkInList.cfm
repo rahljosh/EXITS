@@ -137,8 +137,6 @@
 			var arrivalDate = "n/a";
 			var departDate = verList.DATA[i][verList.COLUMNS.findIdx('DEPARTDATE')];
 			var isOvernightFlight = verList.DATA[i][verList.COLUMNS.findIdx('ISOVERNIGHTFLIGHT')];
-			var warning = 1;
-			var nonCompliant = 1;
 			if (departDate != null) {
 				var arrive;
 				if (isOvernightFlight == 1) {
@@ -149,17 +147,26 @@
 				}
 				var month = arrive.getMonth() + 1;
 				arrivalDate = month.toString() + "/" + arrive.getDate().toString() + "/" + arrive.getFullYear().toString();
-				
-				var now = new Date();
-				var nowInMillis = now.getTime();
-				var arrivalInMillis = arrive.getTime();
-				var millisInDay = 86400000;
-				if (nowInMillis - arrivalInMillis < (10*millisInDay)) {
-					nonCompliant = 0;
-				}
-				if (nowInMillis - arrivalInMillis < (5*millisInDay)) {
-					warning = 0;
-				}
+			}
+			
+			var warning = 1;
+			var nonCompliant = 1;
+			var now = new Date();
+			var nowInMillis = now.getTime();
+			var start = new Date(startDate);
+			var startInMillis = start.getTime();
+			var millisInDay = 86400000;
+			// They are non compliant if the program began more than 10 days ago.
+			if (nowInMillis - startInMillis < (10*millisInDay)) {
+				nonCompliant = 0;
+			}
+			// They are in a warning state if the program began more than 5 days ago.
+			if ((nowInMillis - startInMillis < (5*millisInDay))) {
+				warning = 0;
+			}
+			// If they are non compliant then they should NOT be in a warning state.
+			if (nonCompliant == 1) {
+				warning = 0;	
 			}
 			
 			var show = $("#reportType").val();
