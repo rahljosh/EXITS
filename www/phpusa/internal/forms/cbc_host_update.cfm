@@ -41,14 +41,15 @@
     
     <!--- Form submitted --->
     <cfif VAL(FORM.submitted)>
+    
     	<!--- Update all of the father's records --->
         <cfloop query="qGetCBCFather">
         	<cfscript>
 				APPLICATION.CFC.Host.setCBC(
 					
-					date_approved = #FORM["date_approved_#id#"]#,
-					notes = #FORM["notes_#id#"]#,
-					id = #id#);
+					date_approved = #FORM["father_Date_approved_#cbcfamid#"]#,
+					notes = #FORM["father_notes_#cbcfamid#"]#,
+					id = #cbcfamid#);
 			</cfscript>
         </cfloop>
         <!--- Update all of the mother's records --->
@@ -56,9 +57,9 @@
         	<cfscript>
 				APPLICATION.CFC.Host.setCBC(
 					
-					date_approved = #FORM["date_approved_#id#"]#,
-					notes = #FORM["notes_#id#"]#,
-					id = #id#);
+					date_approved = #FORM["mother_Date_approved_#cbcfamid#"]#,
+					notes = #FORM["mother_notes_#cbcfamid#"]#,
+					id = #cbcfamid#);
 			</cfscript>
         </cfloop>
         <!--- Loop through each child and update their records --->
@@ -70,51 +71,13 @@
             	<cfscript>
 					APPLICATION.CFC.Host.setCBC(
 						
-						date_approved = #FORM["date_approved_#id#"]#,
-						notes = #FORM["notes_#id#"]#,
-						id = #id#);
+						date_approved = #FORM["member_date_approved_#cbcfamid#"]#,
+						notes = #FORM["member_notes_#cbcfamid#"]#,
+						id = #cbcfamid#);
 				</cfscript>
             </cfloop>
         </cfloop>
-        <!--- Add record for the father's cbc if it is shown --->
-        <cfif VAL(FORM.fatherInputUsed)>
-        	<cfscript>
-				APPLICATION.CFC.Host.setCBC(
-					hostID = #family_info.hostID#,
-					memberType = "father",
-					date_sent = #FORM["date_sent_father"]#,
-					date_authorized = #FORM["date_authorized_father"]#,
-					date_approved = #FORM["date_approved_father"]#,
-					notes = #FORM["notes_father"]#);
-			</cfscript>
-        </cfif>
-        <!--- Add record for the mother's cbc if it is shown --->
-        <cfif VAL(FORM.motherInputUsed)>
-        	<cfscript>
-				APPLICATION.CFC.Host.setCBC(
-					hostID = #family_info.hostID#,
-					memberType = "mother",
-					date_sent = #FORM["date_sent_mother"]#,
-					date_authorized = #FORM["date_authorized_mother"]#,
-					date_approved = #FORM["date_approved_mother"]#,
-					notes = #FORM["notes_mother"]#);
-			</cfscript>
-        </cfif>
-        <!--- Loop through each child and add record for their cbc if it is shown --->
-        <cfloop query="qGetHostChildrenForCBC">
-        	<cfif VAL(#FORM["member#childID#InputUsed"]#)>
-            	<cfscript>
-            		APPLICATION.CFC.Host.setCBC(
-						hostID = #family_info.hostID#,
-						childID = #childID#,
-						memberType = "member",
-						date_sent = #FORM["date_sent_#childID#member"]#,
-						date_authorized = #FORM["date_authorized_#childID#member"]#,
-						date_approved = #FORM["date_approved_#childID#member"]#,
-						notes = #FORM["notes_#childID#member"]#);
-				</cfscript>
-            </cfif>
-        </cfloop>
+        
         <!--- redirect back to the overview page --->
         <cflocation url="/internal/index.cfm?curdoc=host_fam_info&hostID=#family_info.hostID#" addtoken="no">
     </cfif>
@@ -192,14 +155,7 @@
                                   
                                 </td>
                           	</tr>
-                            <tr id="fatherInput" style="display:none;">
-                            	<input type="hidden" id="fatherInputUsed" name="fatherInputUsed" value="0" />
-                            	<td><input type="text" class="datePicker" name="date_authorized_father" /></td>
-                                <td><input type="text" class="datePicker" name="date_sent_father" /></td>
-                                <td></td>
-                                <td><input type="text" class="datePicker" name="date_approved_father" /></td>
-                                <td><textarea name="notes_father"></textarea></td>
-                            </tr>
+                         
                             <cfif NOT VAL(qGetCBCFather.recordCount)>
                                 <tr>
                                     <td colspan="5">CBC has not been run.</td>
@@ -210,8 +166,8 @@
                                         <td>#DateFormat(date_authorized,'mm/dd/yyyy')#</td>
                                         <td>#DateFormat(date_sent,'mm/dd/yyyy')#</td>
                                         <td><font <cfif date_expired LT NOW()>color="red"</cfif>>#DateFormat(date_expired,'mm/dd/yyyy')#</font></td>
-                                        <td><input type="text" class="datePicker" value="#DateFormat(date_approved,'mm/dd/yyyy')#" name="date_approved_#id#" /></td>
-                                        <td><textarea name="notes_#id#">#notes#</textarea></td>
+                                        <td><input type="text" class="datePicker" value="#DateFormat(date_approved,'mm/dd/yyyy')#" name="father_Date_approved_#cbcfamid#" /></td>
+                                        <td><textarea name="father_notes_#cbcfamid#">#notes#</textarea></td>
                                     </tr>
                                 </cfloop>
                             </cfif>
@@ -224,14 +180,7 @@
                                    
                                	</td>
                           	</tr>
-                            <tr id="motherInput" style="display:none;">
-                            	<input type="hidden" id="motherInputUsed" name="motherInputUsed" value="0" />
-                            	<td><input type="text" class="datePicker" name="date_authorized_mother" /></td>
-                                <td><input type="text" class="datePicker" name="date_sent_mother" /></td>
-                                <td></td>
-                                <td><input type="text" class="datePicker" name="date_approved_mother" /></td>
-                                <td><textarea name="notes_mother"></textarea></td>
-                            </tr>
+                           
                             <cfif NOT VAL(qGetCBCMother.recordCount)>
                                 <tr>
                                     <td colspan="5">CBC has not been run.</td>
@@ -242,8 +191,8 @@
                                         <td>#DateFormat(date_authorized,'mm/dd/yyyy')#</td>
                                         <td>#DateFormat(date_sent,'mm/dd/yyyy')#</td>
                                         <td><font <cfif date_expired LT NOW()>color="red"</cfif>>#DateFormat(date_expired,'mm/dd/yyyy')#</font></td>
-                                        <td><input type="text" class="datePicker" value="#DateFormat(date_approved,'mm/dd/yyyy')#" name="date_approved_#id#" /></td>
-                                        <td><textarea name="notes_#id#">#notes#</textarea></td>
+                                        <td><input type="text" class="datePicker" value="#DateFormat(date_approved,'mm/dd/yyyy')#" name="mother_date_approved_#cbcfamid#" /></td>
+                                        <td><textarea name="mother_notes_#cbcfamid#">#notes#</textarea></td>
                                     </tr>
                                 </cfloop>
                             </cfif>
@@ -266,14 +215,7 @@
                                     
                                 </td>
                             </tr>
-                            <tr id="member#familyID#Input" style="display:none;">
-                            	<input type="hidden" id="member#familyID#InputUsed" name="member#familyID#InputUsed" value="0" />
-                            	<td><input type="text" class="datePicker" name="date_authorized_#familyID#member" /></td>
-                                <td><input type="text" class="datePicker" name="date_sent_#familyID#member" /></td>
-                                <td></td>
-                                <td><input type="text" class="datePicker" name="date_approved_#familyID#member" /></td>
-                                <td><textarea name="notes_#familyID#member"></textarea></td>
-                            </tr>
+                           
                             <cfif NOT VAL(qGetHostMembers.recordCount)>
                                 <tr>
                                     <td colspan="5">CBC has not been run.</td>
@@ -284,8 +226,8 @@
                                         <td>#DateFormat(date_authorized,'mm/dd/yyyy')#</td>
                                         <td>#DateFormat(date_sent,'mm/dd/yyyy')#</td>
                                         <td><font <cfif date_expired LT NOW()>color="red"</cfif>>#DateFormat(date_expired,'mm/dd/yyyy')#</font></td>
-                                        <td><input type="text" class="datePicker" value="#DateFormat(date_approved,'mm/dd/yyyy')#" name="date_approved_#id#" /></td>
-                                        <td><textarea name="notes_#id#">#notes#</textarea></td>
+                                        <td><input type="text" class="datePicker" value="#DateFormat(date_approved,'mm/dd/yyyy')#" name="member_date_approved_#cbcfamid#" /></td>
+                                        <td><textarea name="member_notes_#cbcfamid#">#notes#</textarea></td>
                                     </tr>
                                 </cfloop>
                             </cfif>

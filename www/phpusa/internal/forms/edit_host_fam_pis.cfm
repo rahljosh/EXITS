@@ -58,7 +58,7 @@
 
 	<!--- FORM Submitted --->
     <cfif FORM.submitted>
-
+	
 		<!------------------------------------------------------
 			ADDRESS CHANGE - SEND EMAIL NOTIFICATION 
 		------------------------------------------------------->
@@ -124,14 +124,17 @@
 		<!------------------------------------------------------
 			END OF ADDRESS CHANGE - SEND EMAIL NOTIFICATION 
 		------------------------------------------------------->
+         
+        
+        
         <Cfquery name="qGetCompanyID"  datasource="#application.dsn#">
                 select *
                 from smg_companies 
                 where companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
             </Cfquery>
-            
+          
         <!--- Encrypt SSNs --->
-        <cfif left(form.fatherSSN,3) neq 'XXX'>
+        <cfif len(trim(form.fatherssn)) and left(form.fatherSSN,3) neq 'XXX'>
 			<cfquery name="insertHostFather" datasource="#application.dsn#">
             	insert into php_hosts_cbc (companyid, cbc_type, hostid, date_authorized)
             	values (<cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">,
@@ -147,7 +150,7 @@
 				qGetCBCHost = APPLICATION.CFC.CBC.getPendingCBCHost(
 					companyID=CLIENT.companyID,
 					hostID=FORM.hostID,
-					userType='mother,father'
+					userType='father'
 				);	
 			
             
@@ -174,24 +177,26 @@
 						noSSN=qGetCBCHost.isNoSSN
                     );
 			</cfscript>
-	
+			
         </cfif>
-        <cfif left(form.motherSSN,3) neq 'XXX'>
-        <cfquery name="insertHostFather" datasource="#application.dsn#">
+        <cfif len(trim(form.motherssn)) and left(form.motherSSN,3) neq 'XXX'>
+          
+        <cfquery name="insertHostMother" datasource="#application.dsn#">
             	insert into php_hosts_cbc (companyid, cbc_type, hostid, date_authorized)
             	values (<cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="mother">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostID#">,
                         <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">)
             </cfquery>   
+            
 			<cfscript>
 				// Get CBCs Host Parents Updated
 				qGetCBCHost = APPLICATION.CFC.CBC.getPendingCBCHost(
 					companyID=CLIENT.companyID,
 					hostID=FORM.hostID,
-					userType='mother,father'
+					userType='mother'
 				);	
-			
+	
                  FORM.motherSSN = APPLICATION.CFC.UDF.encryptVariable(FORM.motherSSN);   
 				 
 				 
@@ -217,6 +222,8 @@
 						noSSN=qGetCBCHost.isNoSSN
                     );
             </cfscript>
+            
+         
         </cfif>
  
         <cfquery datasource="mysql">
