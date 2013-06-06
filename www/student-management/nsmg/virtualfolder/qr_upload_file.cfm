@@ -82,11 +82,13 @@
 			emailRecipient = APPLICATION.EMAIL.support; 	
 		// Check if is a PHP student - Email PHP
 		} else if ( qGetStudentInfo.companyid EQ 6 ) {
-            emailRecipient = APPLICATION.EMAIL.PHPContact; 	
+            emailRecipient = APPLICATION.EMAIL.PHPContact;
+		}
+		// The facilitators no longer want this email, commented out in case they change their mind.
         // Check if there is a valid facilitator email address
-        } else if ( IsValid("email", qGetRegionInfo.email) ) {
+		/*else if ( IsValid("email", qGetRegionInfo.email) ) {
             emailRecipient = qGetRegionInfo.email;
-        }
+        }*/
 	</cfscript>	
     
 </cfsilent>
