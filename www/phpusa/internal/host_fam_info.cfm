@@ -16,9 +16,29 @@
 <cfinclude template="querys/family_info.cfm">
 
 <cfscript>
-	qGetHostChildrenForCBC = APPLICATION.CFC.host.getHostChildrenForCBC(hostID = #family_info.hostID#);
-	vCBCValid = APPLICATION.CFC.host.isCBCValid(hostID = #family_info.hostID#);
+	 qGetHostChildrenForCBC = APPLICATION.CFC.host.getHostChildrenForCBC(hostID = #family_info.hostID#);
+	 vCBCValid = APPLICATION.CFC.host.isCBCValid(hostID = #family_info.hostID#);
+	
+	 // Get Host Mother CBC
+        qGetCBCMother = APPLICATION.CFC.CBC.getCBCHostByID(
+            hostID=hostID, 
+            cbcType='mother'
+        );
+        
+        // Gets Host Father CBC
+        qGetCBCFather = APPLICATION.CFC.CBC.getCBCHostByID(
+            hostID=hostID, 
+            cbcType='father'
+        );
+        
+        // Get Family Member CBC
+        qGetHostMembers = APPLICATION.CFC.CBC.getCBCHostByID(
+            hostID=hostID,
+            cbcType='member',
+			sortBy='familyID'
+        );
 </cfscript>
+
 
 <!-----Host Children----->
 <cfquery name="host_children" datasource="mysql">
@@ -330,25 +350,25 @@
                         <td><u>Date Expires</u></td>
                         <td><u>Date Approved</u></td>
                         <td><u>Notes</u></td>
+                        <td><u>View</u></td>
                     </tr>
                     <!--- Host Father (only display if there is one) --->
                     <cfif LEN(family_info.fatherFirstName) OR LEN(family_info.fatherLastName) OR LEN(family_info.fatherSSN)>
                     	<tr><td colspan="6" style="font-size:12px; font-weight:bold;">Father: #family_info.fatherFirstName# #family_info.familyLastName#</td></tr>
-						<cfscript>
-                            qGetCBC = APPLICATION.CFC.Host.getCBC(hostID = #family_info.hostID#, memberType = "father");
-                        </cfscript>
-						<cfif NOT VAL(qGetCBC.recordCount)>
+						
+						<cfif NOT VAL(qGetCBCFather.recordCount)>
                             <tr>
                                 <td colspan="5">CBC is missing</td>
                             </tr>
                         <cfelse>
-                            <cfloop query="qGetCBC">
+                            <cfloop query="qGetCBCFather">
                                 <tr>
-                                    <td>#DateFormat(date_authorization,'mm/dd/yyyy')#</td>
-                                    <td>#DateFormat(date_submitted,'mm/dd/yyyy')#</td>
-                                    <td><font <cfif date_expiration LT NOW()>color="red"</cfif>>#DateFormat(date_expiration,'mm/dd/yyyy')#</font></td>
+                                    <td>#DateFormat(date_authorized,'mm/dd/yyyy')#</td>
+                                    <td>#DateFormat(date_sent,'mm/dd/yyyy')#</td>
+                                    <td><font <cfif date_expired LT NOW()>color="red"</cfif>>#DateFormat(date_expired,'mm/dd/yyyy')#</font></td>
                                     <td><cfif LEN(date_approved)>#DateFormat(date_approved,'mm/dd/yyyy')#<cfelse><font color="red">Missing</font></cfif></td>
                                     <td>#notes#</td>
+                                    <td> <a href="cbc/view_host_cbc.cfm?hostID=#qGetCBCFather.hostID#&CBCFamID=#qGetCBCFather.CBCFamID#&file=batch_#qGetCBCFather.batchid#_host_mother_#qGetCBCFather.hostID#_rec.xml" target="_blank">#requestid#</a></td>
                                 </tr>
                             </cfloop>
                         </cfif>
@@ -359,18 +379,19 @@
 						<cfscript>
                             qGetCBC = APPLICATION.CFC.Host.getCBC(hostID = #family_info.hostID#, memberType = "mother");
                         </cfscript>
-                        <cfif NOT VAL(qGetCBC.recordCount)>
+                        <cfif NOT VAL(qGetCBCMother.recordCount)>
                             <tr>
                                 <td colspan="5">CBC is missing</td>
                             </tr>
                         <cfelse>
-                            <cfloop query="qGetCBC">
+                            <cfloop query="qGetCBCMother">
                                 <tr>
-                                    <td>#DateFormat(date_authorization,'mm/dd/yyyy')#</td>
-                                    <td>#DateFormat(date_submitted,'mm/dd/yyyy')#</td>
-                                    <td><font <cfif date_expiration LT NOW()>color="red"</cfif>>#DateFormat(date_expiration,'mm/dd/yyyy')#</font></td>
+                                    <td>#DateFormat(date_authorized,'mm/dd/yyyy')#</td>
+                                    <td>#DateFormat(date_sent,'mm/dd/yyyy')#</td>
+                                    <td><font <cfif date_expired LT NOW()>color="red"</cfif>>#DateFormat(date_expired,'mm/dd/yyyy')#</font></td>
                                     <td><cfif LEN(date_approved)>#DateFormat(date_approved,'mm/dd/yyyy')#<cfelse><font color="red">Missing</font></cfif></td>
                                     <td>#notes#</td>
+                                     <td> <a href="cbc/view_host_cbc.cfm?hostID=#qGetCBCMother.hostID#&CBCFamID=#qGetCBCMother.CBCFamID#&file=batch_#qGetCBCMother.batchid#_host_mother_#qGetCBCMother.hostID#_rec.xml" target="_blank">#requestid#</a></td>
                                 </tr>
                             </cfloop>
                         </cfif>
@@ -392,18 +413,21 @@
                                 #qGetHostChildrenForCBC.name#
                           	</td>
                      	</tr>
-                        <cfif NOT VAL(qGetCBC.recordCount)>
+                        <cfif NOT VAL(qGetHostMembers.recordCount)>
                             <tr>
                                 <td colspan="5">CBC is missing</td>
                             </tr>
                         <cfelse>
-                            <cfloop query="qGetCBC">
+                            <cfloop query="qGetHostMembers">
                                 <tr>
-                                    <td>#DateFormat(date_authorization,'mm/dd/yyyy')#</td>
-                                    <td>#DateFormat(date_submitted,'mm/dd/yyyy')#</td>
-                                    <td><font <cfif date_expiration LT NOW()>color="red"</cfif>>#DateFormat(date_expiration,'mm/dd/yyyy')#</font></td>
+                                    <td>#DateFormat(date_authorized,'mm/dd/yyyy')#</td>
+                                    <td>#DateFormat(date_sent,'mm/dd/yyyy')#</td>
+                                    <td><font <cfif date_expired LT NOW()>color="red"</cfif>>#DateFormat(date_expired,'mm/dd/yyyy')#</font></td>
                                     <td><cfif LEN(date_approved)>#DateFormat(date_approved,'mm/dd/yyyy')#<cfelse><font color="red">Missing</font></cfif></td>
                                     <td>#notes#</td>
+                                     <td>
+  
+                                      <a href="cbc/view_host_cbc.cfm?hostID=#qGetHostMembers.hostID#&CBCFamID=#qGetHostMembers.CBCFamID#&file=batch_#qGetHostMembers.batchid#_host_mother_#qGetHostMembers.hostid#_rec.xml" target="_blank">#requestid#</a></td>
                                 </tr>
                             </cfloop>
                         </cfif>
