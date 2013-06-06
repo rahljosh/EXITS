@@ -11,7 +11,7 @@
 ---->
 <cfif isDefined('url.unqid')>
 	<!----Get student id  for office folks linking into the student app---->
-	<cfquery name="get_student_id" datasource="MySQL">
+	<cfquery name="get_student_id" datasource="#application.dsn#">
     	SELECT
         	studentID
       	FROM
@@ -41,25 +41,25 @@
 	qGetCanadaAreaChoiceList = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='canadaAreaChoice',includeFieldIDList=get_student_info.app_canada_area);
 </cfscript>
 
-<cfquery name="qGetIntlRep" datasource="MySql">
+<cfquery name="qGetIntlRep" datasource="#application.dsn#">
 	SELECT userid, businessname
 	FROM smg_users 
 	WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value='#VAL(get_student_info.intrep)#'>
 </cfquery>
 
-<cfquery name="qCountryList" datasource="MySQL">
+<cfquery name="qCountryList" datasource="#application.dsn#">
 	SELECT countryid, countryname
 	FROM smg_countrylist
 	ORDER BY Countryname
 </cfquery>
 
-<cfquery name="qReligionList" datasource="MySQL">
+<cfquery name="qReligionList" datasource="#application.dsn#">
 	SELECT religionid, religionname
 	FROM smg_religions
 	ORDER BY religionname
 </cfquery>
  
-<cfquery name="qAppProgramList" datasource="MySQL">
+<cfquery name="qAppProgramList" datasource="#application.dsn#">
     SELECT 
         app_programID, 
         app_program, 
