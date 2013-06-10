@@ -251,6 +251,7 @@
         	<Td colspan=6 align="left"><strong>#categoryName#</strong></Td>
         </tr>
         </cfif>
+        
    		<cfif listFind(viewPermissions, client.usertype)>
  		<Tr>
         	<td>#documentType#</td><td><a href="#filePath##filename#" target="_blank">#filename# <cfif val(fk_hostID)> - #familyLastName#</cfif></td><td>#DateFormat(dateAdded, 'mmm d, yyyy')#</td><td>#firstname# #lastname#</td>
