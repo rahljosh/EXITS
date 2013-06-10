@@ -36,6 +36,7 @@
 select *
 from smg_userType
 where usertypeid <= <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+or usertypeid = <cfqueryparam cfsqltype="cf_sql_integer" value="11">
 or usertypeid = <cfqueryparam cfsqltype="cf_sql_integer" value="14">
 </cfquery>
 
