@@ -612,7 +612,7 @@
                             <cfelse>
                             	
                             	<!--- to add a progress report, user must be the supervising rep, and the program has a report for this phase. --->
-								<cfif NOT VAL(vIsStudentInCountry)>
+								<cfif NOT VAL(vIsStudentInCountry) >
                                
                                    Not in Country - No Report Required
                                     
