@@ -281,10 +281,10 @@ where religionid = #qGetStudentInfo.religiousaffiliation#
       
         <tr>
             <td>
-           <span class="title">Sisters</span> #numberSis.numberSis# 
+           <span class="title">Sisters</span><cfif numberSis.recordcount eq 0> 0 <cfelse> #numberSis.numberSis# </cfif>
             </td>
             <td>
-       		 <span class="title">Brothers</span> #numberBro.numberBro# 
+       		 <span class="title">Brothers</span><cfif numberBro.recordcount eq 0>0<cfelse> #numberBro.numberBro# </cfif>
             </td>
             
         </tr>    
