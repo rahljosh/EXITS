@@ -452,12 +452,13 @@
         </cfcase>
         <cfcase value="Work Program">
             <cfquery name="getChargesCancellations" datasource="MySQL">
-            SELECT s.chargeid, s.agentid, s.invoiceid, s.description, s.amount_due, s.stuid, s.companyid, s.programid, s.active, s.type AS charge_type, sp.type, sp.programname, e.firstname, e.lastname, e.status AS stud_active, sc.creditid AS creditid, sc.amount AS amount, sc.description AS credDescription, sc.type AS creditType, su.extra_accepts_sevis_fee
+            SELECT s.chargeid, s.agentid, s.invoiceid, s.description, s.amount_due, s.stuid, s.companyid, s.programid, s.active, s.type AS charge_type, sp.type, sp.programname, e.firstname, e.lastname, e.status AS stud_active, sc.creditid AS creditid, sc.amount AS amount, sc.description AS credDescription, sc.type AS creditType, ewp.includeSevis, ewp.sevis
             FROM  `smg_charges` s
             LEFT JOIN smg_credit sc ON s.chargeid = sc.chargeid
             INNER JOIN smg_programs sp ON sp.programid = s.programid
             INNER JOIN extra_candidates e ON e.candidateid = s.stuid
             INNER JOIN smg_users su ON su.userid = s.agentid
+            INNER JOIN extra_wt_prices ewp on ewp.userid = s.agentid
             WHERE s.stuid =#student#
             AND s.agentid =#url.userid#
 <!---             AND s.companyid =#client.companyid# --->
@@ -487,10 +488,11 @@
             </cfquery>          
     
             <cfquery name="getCurrStudInfo" datasource="MySQL">
-            SELECT e.candidateid AS stuid, e.firstname, e.lastname, e.status AS stud_active, e.intrep AS agentid, e.programid, e.companyid, e.cancel_date AS canceldate, e.cancel_reason AS cancelreason, sp.programname, sp.type AS progType, su.extra_accepts_sevis_fee
+            SELECT e.candidateid AS stuid, e.firstname, e.lastname, e.status AS stud_active, e.intrep AS agentid, e.programid, e.companyid, e.cancel_date AS canceldate, e.cancel_reason AS cancelreason, sp.programname, sp.type AS progType, ewp.includeSevis
             FROM extra_candidates e
             LEFT JOIN smg_programs sp ON sp.programid = e.programid
             LEFT JOIN smg_users su ON su.userid = e.intrep
+            LEFT JOIN extra_wt_prices ewp on ewp.userid = e.intrep
             WHERE e.candidateid =#student#
             </cfquery>
         </cfcase>
@@ -792,7 +794,7 @@
             <td class="right">#getCreditsDiscounts.description#</td>                     
         </tr>
     </cfoutput>
-    <cfdump var="#getChargesCancellations#">
+
 	<cfif getChargesCancellations.recordCount EQ 0>
     	<cfset progrName = #getCurrStudInfo.programname#>
 		<cfelse>
@@ -878,9 +880,9 @@
                 <td class="right"></td>                    
             </tr>
             <cfif getChargesCancellations.recordCount NEQ 0>
-            	<cfset extraSevis = #getChargesCancellations.extra_accepts_sevis_fee#>
+            	<cfset extraSevis = #getChargesCancellations.includeSevis#>
                 <cfelse>
-                	<cfset extraSevis = #getCurrStudInfo.extra_accepts_sevis_fee#>
+                	<cfset extraSevis = #getCurrStudInfo.includeSevis#>
             </cfif>
             
             <cfif variables.extraSevis EQ 1>
@@ -895,7 +897,7 @@
                     <td class="right">
                     <cfinput type="text" id="sevisType#student#" name="sevisType#student#" value="Sevis fee" size="8"></td>
                     <td class="right">
-                    <cfinput type="text" id="sevisAmount#student#" name="sevisAmount#student#" value="35" size="4"></td>
+                    <cfinput type="text" id="sevisAmount#student#" name="sevisAmount#student#" value="#getChargesCancellations.sevis#" size="4"></td>
                     <td class="right"></td> 
                     <td class="right"></td>                        
                     <td class="right"></td>                        
