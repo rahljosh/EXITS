@@ -66,7 +66,7 @@
                       <cfselect name="country">
                         <option value="0"></option>
                             <cfloop query="qCountryList">
-                                <option value="#countryname#">#countryname#</option>
+                                <option value="#countryid#">#countryname#</option>
                             </cfloop>
                         </cfselect>
                     </cfoutput>
