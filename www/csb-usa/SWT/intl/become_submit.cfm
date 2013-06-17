@@ -47,9 +47,9 @@ function test(){
   
  
   <cfif url.request is 'send'>
-    <cfmail to="info@csb-usa.com" cc="#form.email#"  from="info@csb-usa.com" subject="#form.country# - #form.companyName# - Become a Partner" bcc="jeimi@exitgroup.org" type="html">
+    <cfmail to="info@csb-usa.com, jeimi@exitgroup.org" cc="#form.email#"  from="info@csb-usa.com" subject="International Become a Partner Form Information" bcc="jeimi@exitgroup.org" type="html">
 
-    #desc# from the CSB International website #dateformat(Now())#.
+    #desc# from the CSB International Become a Partner on #dateformat(Now())#.
       
 	  <p>
       <strong>Company Name:</strong> #form.companyName#<br>
@@ -71,7 +71,7 @@ function test(){
        <strong>Number of Registration (if applicable):</strong> #form.numberRegistration#<br />
        <strong>Number of Summer Work Travel Participants per Year:</strong> #form.numberParticipants#<br />
        <strong>Visa denial rate (percentage):</strong> #form.visaDenial#<br />
-       <strong>Previous Sponsors you have worked with:</strong> #form.sponsorWorked#<br />
+       <strong>P</strong>revious Sponsors you have worked with: #form.sponsorWorked#<br />
        <strong>Target Number of Participants to be Enrolled with CSB:</strong> #form.studentsEnrolled#<br />
        <strong>Target Number of Participants that Would Require Placement Assistance (percentage):</strong> #form.numberAssistance#<br />
        <strong>Official Summer Vacation Dates of Participants (average):</strong> <em>From</em> #form.vacFrom# <em>To:</em> #form.vacTo#<br>
@@ -85,7 +85,7 @@ function test(){
 	      <tr>
 		        <td class="text">
      <p>
-      <strong>Company Name:</strong> #form.companyName#<br>
+      <strong>Company name:</strong> #form.companyName#<br>
       <strong>Primary Contact:</strong> #form.primaryContact#<br>
       <strong>Title:</strong> #form.title#<br />
       <strong>Name of Owner:</strong> #form.owner#<br />
