@@ -109,8 +109,8 @@
                     </td>
                 <cfelse>
                     <td>
-                        Looks like your still missing some information, please review the sections listed above. 
-                        The botton to the right will not be active (the arrow will turn red) until all the required information above has been filled out. 
+                        Looks like you're still missing some information. Please review the sections listed above. 
+                        The button to the right will not be active (the arrow will turn red) until all the required information above has been filled out. 
                     </td>
                     <td>
                         <img src="images/buttons/#APPLICATION.CFC.SESSION.getCompanySessionByKey(structKey='submitGreyImage')#" border="0"/>
