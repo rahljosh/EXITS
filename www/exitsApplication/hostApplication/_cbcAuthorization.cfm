@@ -311,7 +311,7 @@
                     <cfoutput>	
                         <p>Dear Host Family,</p>
                         
-                        <p>Attached are copies of the Criminal Background Check Authorization for you and any members of your family have electronically signed.</p> <br />
+                        <p>Attached are copies of the Criminal Background Check Authorization that you and any required members of your family electronically signed.</p> <br />
                         
                         Regards-<br />
                         #APPLICATION.CFC.SESSION.getCompanySessionByKey(structKey='shortName')# Support
