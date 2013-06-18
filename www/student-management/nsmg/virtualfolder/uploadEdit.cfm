@@ -217,11 +217,10 @@ where id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.docType#">
 		} else if ( qGetStudentInfo.companyid EQ 6 ) {
             emailRecipient = APPLICATION.EMAIL.PHPContact; 	
         }
-		// The facilitators no longer want this email, commented out in case they change their mind.
-        // Check if there is a valid facilitator email address
-		/*else if ( IsValid("email", qGetRegionInfo.email) ) {
+        // Check if there is a valid facilitator email address and only email the facilitator if they are not the ones uploading the file.
+		else if ( IsValid("email", qGetRegionInfo.email) AND qGetRegionInfo.regionfacilitator NEQ CLIENT.userID ) {
             emailRecipient = qGetRegionInfo.email;
-        }*/
+        }
 	</cfscript>	
     
     <Cfoutput>
