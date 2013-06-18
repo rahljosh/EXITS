@@ -74,7 +74,7 @@
     	<font size="-2">
             * - I-94 Card is the Arrival/Departure Record issued to each foreign traveler who is admitted to the United States. Starting April 30, 2013 the United States Customs and Border 
             Protection will create an I-94 record in an electronic format and the paper form will no longer be provided upon arrival. If the traveler needs a copy of the I-94 record (for 
-            example to apply for a Social Security Number or Driving license), it can be obtained from <a href="www.cbp.gov/I94">www.cbp.gov/I94</a>
+            example to apply for a Social Security Number or Driving license), it can be obtained from &nbsp;&nbsp;&nbsp;<a href="www.cbp.gov/I94">www.cbp.gov/I94</a>
             <br />
             <br />
             <b>How to get the I-94?</b>
@@ -95,7 +95,9 @@
                         <li>Date of Entry</li>
                         <li>Class of Admission (J1)</li>
                     </ul>
-                    §  After entering the required information, print your record.
+                </li>
+                <li>
+                	After entering the required information, print your record.
                 </li>
             </ul>
         </font>
