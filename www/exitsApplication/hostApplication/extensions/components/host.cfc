@@ -1062,7 +1062,7 @@
 			for( x=1; x LTE ArrayLen(vCategoryArray); x++ ) {
 				
 				if ( NOT ListFindNoCase(vUploadedPictureCategoryList, vCategoryArray[x]) AND qCategoryList.ID[x] NEQ 26 ) {
-					SESSION.formErrors.Add("You seem to be missing a picutre of: #qCategoryList.name[x]#");
+					SESSION.formErrors.Add("You seem to be missing a picture of: #qCategoryList.name[x]#");
 				}
 				
 			}
