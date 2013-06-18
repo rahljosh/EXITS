@@ -224,7 +224,7 @@
     <cfif APPLICATION.CFC.UDF.allowFormSubmission(section=URL.section)>
         
         <!--- Upload Form --->        
-        <form method="post" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" enctype="multipart/form-data">  
+        <cfform method="post" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" enctype="multipart/form-data">  
             <input type="hidden" name="action" value="uploadFile" />
             <table width="100%" cellspacing="0" cellpadding="2" class="border">
                 <tr>
@@ -248,18 +248,19 @@
                             </cfloop>
                         </select>
                     </td>
-                    <td><input type="file" name="fileData" /><br /></td>
-                    <td><input type="image" src="images/buttons/BlkSubmit.png" /></td>
+                    <td><input type="file" name="fileData"   /><br /></td>
+                    <td><cfinput type="submit" name="Submit" validateat="onSubmit"  validate="submitonce" value="Submit" /></td>
+                    <!----src="images/buttons/BlkSubmit.png"---->
                 </tr>
             </table>
-        </form> <br />
+        </cfform> <br />
     
     </cfif>
     
     <span class="required">*At least one picture from this category is required. More than one photo may be needed to clearly depict each room.</span> <br /><br />
 
     <h3>Your Photo Album</h3>
-    
+   
     <!--- Update Description --->
     <form method="post" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#">
     	<input type="hidden" name="action" value="updateDescription" />
@@ -282,17 +283,21 @@
                                 <label for="#qGetUploadedImages.ID#" style="font-weight:bold;">
                                 	<span style="display:block; margin-bottom:5px;">#qGetUploadedImages.documentType#</span>
          							<a href="viewImage.cfm?viewImagePath=#viewImagePath#&absoluteLargePath=#absoluteLargePath#&absoluteThumbPath=#absoluteThumbPath#&label=#qGetUploadedImages.documentType#" class="jQueryModal">
-                                    
-                         <Cfif FileExists('#qGetUploadedImages.filepath#')> 
-                                    <!--- specify image via filename --->
+                                   
+                         <Cfif FileExists('#SESSION.HOST.PATH.albumThumbs##qGetUploadedImages.fileName#')> 
+                       
+                                    <!--- specify image via filename
 								<cfset myImage = APPLICATION.CFC.UDF.imageExifOrientationRotate('#APPLICATION.CFC.SESSION.getHostSession().PATH.relativeAlbumThumbs##qGetUploadedImages.fileName#') />
                                 <!--- resize --->
                                 <cfset imageResize(myImage,"100","") />
                                 <!--- display --->
                                 <cfimage action="writeToBrowser" source="#myImage#" />
+							 --->
+                             <img src="#APPLICATION.CFC.SESSION.getHostSession().PATH.relativeAlbumThumbs##qGetUploadedImages.fileName#" border="0" width = 100>
                           <cfelse>
                           		<img src="images/problemPhoto.jpg" border="0">
                           </cfif>
+						  
                                     <!----
                                     	<img src="#APPLICATION.CFC.SESSION.getHostSession().PATH.relativeAlbumThumbs##qGetUploadedImages.fileName#" border="0">
 										---->
