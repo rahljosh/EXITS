@@ -51,7 +51,7 @@
         <br /><br />
     
         Participants must obtain Social Security Numbers for payroll purposes. Trainees must apply on their own behalf and in person at the local Social Security Office and 
-        present <cfif qGetCandidateInfo.sex EQ 'm'>his<cfelse>her</cfif> passport with the I-94 card and the Certificate of Eligibility (DS-2019).  Trainees can locate the
+        present <cfif qGetCandidateInfo.sex EQ 'm'>his<cfelse>her</cfif> passport with the I-94 card* and the Certificate of Eligibility (DS-2019).  Trainees can locate the
         nearest office by visiting:
         <br /><br />
     
@@ -65,28 +65,40 @@
         Participants are, however, subject to all applicable federal, state and local tax withholdings.  For further information regarding employer responsibilities when engaging foreign 
         personnel, please visit: 
         <br /><br />
-    
+   
         <span class="style3">http://www.ssa.gov/employer/hiring.htm</span>
         <br />
         <br />
+   		<br />
         <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
-        <br />
+    	<font size="-2">
+            * - I-94 Card is the Arrival/Departure Record issued to each foreign traveler who is admitted to the United States. Starting April 30, 2013 the United States Customs and Border 
+            Protection will create an I-94 record in an electronic format and the paper form will no longer be provided upon arrival. If the traveler needs a copy of the I-94 record (for 
+            example to apply for a Social Security Number or Driving license), it can be obtained from <a href="www.cbp.gov/I94">www.cbp.gov/I94</a>
+            <br />
+            <br />
+            <b>How to get the I-94?</b>
+            After entry in the United States, go to <a href="www.cbp.gov/I94">www.cbp.gov/I94</a>
+            <ul>
+            	<li>
+        			<b>Information should be entered <u>exactly</u> as it appears on the visa.</b> If the visa is not accessible, use the information as it appears on the biographic page 
+                    of the passport used to enter the United States.
+                </li>
+                <li>
+                	The following information is required to retrieve an Admission (I-94) number:
+                	<ul>
+                    	<li>Family Name</li>
+                        <li>First (Given) Name</li>
+                        <li>Birth Date</li>
+                        <li>Passport Number</li>
+                        <li>Country of Issuance</li>
+                        <li>Date of Entry</li>
+                        <li>Class of Admission (J1)</li>
+                    </ul>
+                    §  After entering the required information, print your record.
+                </li>
+            </ul>
+        </font>
         <br />
         <br />
         <br />
