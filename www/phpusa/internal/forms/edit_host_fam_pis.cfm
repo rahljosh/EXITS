@@ -24,6 +24,7 @@
     <cfparam name="FORM.fatherWorkType" default="">
     <cfparam name="FORM.father_cell" default="">
     <cfparam name="FORM.fatherSSN" default="">
+    <cfparam name="FORM.fatherIsNoSSN" default="0">
     <cfparam name="FORM.motherLastName" default="">
     <cfparam name="FORM.motherMiddleName" default="">
     <cfparam name="FORM.motherFirstName" default="">
@@ -31,6 +32,7 @@
     <cfparam name="FORM.motherWorkType" default="">
     <cfparam name="FORM.mother_cell" default="">
     <cfparam name="FORM.motherSSN" default="">
+    <cfparam name="FORM.motherIsNoSSN" default="0">
     <cfparam name="FORM.address" default="">
     <cfparam name="FORM.address2" default="">
     <cfparam name="FORM.city" default="">
@@ -40,6 +42,7 @@
     <cfparam name="FORM.email" default="">
     <cfparam name="FORM.emergency_contact_name" default="">
     <cfparam name="FORM.emergency_phone" default="">
+    <cfparam name="FORM.runCBC" default="0">
 
 	<cfscript>
     	if ( VAL(URL.hostID) ) {
@@ -54,8 +57,18 @@
 		qGetHostFamilyInfo = APPLICATION.CFC.HOST.getHosts(hostID=VAL(FORM.hostID));
 		
 		qGetStateList = APPLICATION.CFC.LOOKUPTABLES.getState();
-	</cfscript>
-
+	// Gets Host Father CBC
+			qGetCBCFather = APPCFC.CBC.getCBCHostByID(
+				hostID=FORM.hostID, 
+				cbcType='father'
+			);
+    // Gets Host Mother CBC
+			qGetCBCMother = APPCFC.CBC.getCBCHostByID(
+				hostID=FORM.hostID, 
+				cbcType='mother'
+			);
+    </cfscript>
+	
 	<!--- FORM Submitted --->
     <cfif FORM.submitted>
 	
@@ -134,13 +147,15 @@
             </Cfquery>
           
         <!--- Encrypt SSNs --->
-        <cfif len(trim(form.fatherssn)) and left(form.fatherSSN,3) neq 'XXX'>
+        <cfif (len(trim(form.fatherssn)) or form.fatherIsNoSSN eq 1) and val(form.runCBC)>
 			<cfquery name="insertHostFather" datasource="#application.dsn#">
-            	insert into php_hosts_cbc (companyid, cbc_type, hostid, date_authorized)
+            	insert into php_hosts_cbc (companyid, cbc_type, hostid, date_authorized,isNoSSN)
             	values (<cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="father">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostID#">,
-                        <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">)
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.fatherIsNoSSN#">
+                        )
             </cfquery>     
            
             
@@ -179,14 +194,18 @@
 			</cfscript>
 			
         </cfif>
+        <!----
         <cfif len(trim(form.motherssn)) and left(form.motherSSN,3) neq 'XXX'>
+          ---->
+         <cfif (len(trim(form.motherssn)) or FORM.motherIsNoSSN eq 1) and val(form.runCBC)> 
           
         <cfquery name="insertHostMother" datasource="#application.dsn#">
-            	insert into php_hosts_cbc (companyid, cbc_type, hostid, date_authorized)
+            	insert into php_hosts_cbc (companyid, cbc_type, hostid, date_authorized,isNoSSN)
             	values (<cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="mother">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostID#">,
-                        <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">)
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.motherIsNoSSN#">)
             </cfquery>   
             
 			<cfscript>
@@ -373,8 +392,15 @@
                         </tr>
                         <tr bgcolor="##C2D1EF">
                         	<td class="label">SSN:</td>
-                            <td colspan="3"><input type="text" name="fatherSSN" class="smallField ssnField" value="#FORM.fatherSSN#"></td>
+                            <td colspan="3"><input type="text" name="fatherSSN" class="smallField ssnField" value="#FORM.fatherSSN#">
+                         
+                             No SSN:
+                            
+                                	<input type="checkbox" name="fatherIsNoSSN" value="1" <cfif VAL(qGetCBCFather.isNoSSN)>checked="checked"</cfif>>
+                       
+                             </td>
                         </tr>
+                        
                         <tr bgcolor="##C2D1EF">
                         	<td class="label">Occupation:</td>
                             <td colspan="3"><input type="text" name="fatherWorkType" class="largeField" value="#FORM.fatherworktype#"></td>
@@ -395,10 +421,22 @@
                         	<td class="label">Date of Birth:</td>
                             <td colspan="3"><input type="text" name="motherdob" class="smallField" value="#DateFormat(FORM.motherdob, 'mm/dd/yyyy')#"> mm/dd/yyyy</td>
                         </tr>
+                   
                         <tr>
                         	<td class="label">SSN:</td>
-                            <td colspan="3"><input type="text" name="motherSSN" class="smallField ssnField" value="#FORM.motherSSN#"></td>
+                            
+                            <td colspan="3"><input type="text" name="motherSSN" class="smallField ssnField" value="#FORM.motherSSN#">
+                          
+                              No SSN:  
+                      
+                                	<input type="checkbox" name="fatherIsNoSSN" value="1" <cfif VAL(qGetCBCFather.isNoSSN)>checked="checked"</cfif>>
+                               
+                              
+                      
+                            
+                              </td>
                         </tr>
+					
                         <tr>
                         	<td class="label">Occupation:</td>
                             <td colspan="3"><input type="text" class="largeField" name="motherWorkType" value="#FORM.motherworktype#"></td>
@@ -411,7 +449,14 @@
                         	<td class="label">Emergency Phone:</td>
                             <td colspan="3"><input type="text" class="largeField" name="emergency_phone" value="#FORM.emergency_phone#"></td>
                         </tr>
+                        <cfif client.userID eq 1>
+                        <Tr>
+                        	<Td align="right">Run CBC's</Td><td><input type="checkbox" name="runCBC" value=1/></td>
+                        </Tr>
+                        </cfif>
                 	</table>
+                    
+                   
                 </td>
                 <!--- Insert Left Menu --->
                 <td width="20%" align="right" valign="top" class="box">

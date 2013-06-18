@@ -17,8 +17,12 @@
 						<table border=0 cellpadding=3 cellspacing=0 align="left" width="100%">
 							<cfloop from="1" to="5" index="i">
 								<tr bgcolor="#iif(i MOD 2 ,DE("ffffff") ,DE("C2D1EF") )#">
-									<td class="label">Name: </td>
+									<td class="label">First Name: </td>
 									<td class="form_text"> <cfinput type="text" name="name#i#" size="20"> <cfinput type="radio" name="sex#i#" value="male">Male <cfinput type="radio" name="sex#i#" value="female">Female</td>
+								</tr>
+                                <tr bgcolor="#iif(i MOD 2 ,DE("ffffff") ,DE("C2D1EF") )#">
+									<td class="label">Last Name: </td>
+									<td class="form_text"> <cfinput type="text" name="lastname#i#" size="20"> </td>
 								</tr>
 								<tr bgcolor="#iif(i MOD 2 ,DE("ffffff") ,DE("C2D1EF") )#">
 									<td class="label">Date of Birth: </td>
@@ -26,7 +30,7 @@
 								</tr>
                                 <tr bgcolor="#iif(i MOD 2 ,DE("ffffff") ,DE("C2D1EF") )#">
                                     <td class="label">SSN: </td>
-                                    <td class="form_text"> <cfinput type="text" name="ssn#i#" size="20" maxlength="10" class="ssnField"></td>
+                                    <td class="form_text"> <cfinput type="text" name="ssn#i#" size="20" maxlength="10" class="ssnField"> No SSN:  <input type="checkbox" name="memberIsNoSSN#i#" value="1"></td>s
                                 </tr>
 								<tr bgcolor="#iif(i MOD 2 ,DE("ffffff") ,DE("C2D1EF") )#">
 									<td class="label">Relation: </td>
@@ -35,6 +39,10 @@
 								<tr bgcolor="#iif(i MOD 2 ,DE("ffffff") ,DE("C2D1EF") )#">
 									<td class="label">Living at Home: </td>
 									<td class="form_text"><cfinput type="radio" name="athome#i#" value="yes">Yes <cfinput type="radio" name="athome#i#" value="no">No </td>
+								</tr>	
+                                <tr bgcolor="#iif(i MOD 2 ,DE("ffffff") ,DE("C2D1EF") )#">
+									<td class="label">Run CBC </td>
+									<td class="form_text"><cfinput type="radio" name="runCBC#i#" value="1"> Yes  <cfinput type="radio" name="runCBC#i#" value=""> Yes </td>
 								</tr>	
 							</cfloop>
 						</table>

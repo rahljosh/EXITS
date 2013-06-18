@@ -31,12 +31,7 @@
             cbcType='father'
         );
         
-        // Get Family Member CBC
-        qGetHostMembers = APPLICATION.CFC.CBC.getCBCHostByID(
-            hostID=hostID,
-            cbcType='member',
-			sortBy='familyID'
-        );
+        
 </cfscript>
 
 
@@ -400,7 +395,18 @@
                     <cfloop query="qGetHostChildrenForCBC">
                     	<cfscript>
 							qGetCBC = APPLICATION.CFC.Host.getCBC(hostID = #family_info.hostID#, memberType = "member", childID = #qGetHostChildrenForCBC.childID#);
-						</cfscript>
+						
+							// Get Family Member CBC
+							
+							// Get Family Member CBC
+						qGetHostMembers = APPLICATION.CFC.CBC.getCBCHostByID(
+							hostID=hostID,
+							familyMemberID=qGetHostChildrenForCBC.childID,
+							cbcType='member',
+							sortBy='familyID'
+						);
+                        </cfscript>
+                        
                     	<tr>
                         	<td colspan="6" style="font-size:12px; font-weight:bold;">
                         		<cfif qGetHostChildrenForCBC.sex EQ "male">
@@ -427,7 +433,7 @@
                                     <td>#notes#</td>
                                      <td>
   
-                                      <a href="cbc/view_host_cbc.cfm?hostID=#qGetHostMembers.hostID#&CBCFamID=#qGetHostMembers.CBCFamID#&file=batch_#qGetHostMembers.batchid#_host_mother_#qGetHostMembers.hostid#_rec.xml" target="_blank">#requestid#</a></td>
+                                      <a href="cbc/view_host_cbc.cfm?hostID=#qGetHostMembers.hostID#&CBCFamID=#qGetHostMembers.CBCFamID#&file=batch_#qGetHostMembers.batchid#_host_member_#qGetHostMembers.hostid#_rec.xml" target="_blank">#requestid#</a></td>
                                 </tr>
                             </cfloop>
                         </cfif>

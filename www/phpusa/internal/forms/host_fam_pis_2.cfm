@@ -8,6 +8,8 @@ function areYouSure() {
    } 
 }
 	;
+	
+	
 </script>
 
 <cfinclude template="../querys/family_info.cfm">
@@ -48,7 +50,9 @@ function areYouSure() {
 									</tr>
                                     <tr bgcolor="#iif(i MOD 2 ,DE("ffffff") ,DE("C2D1EF") )#">
 										<td class="label">SSN: </td>
-										<td class="form_text"> <cfinput type="text" name="ssn#i#" size="20" maxlength="10" class="ssnField"></td>
+										<td class="form_text"> <cfinput type="text" name="ssn#i#" size="20" maxlength="10" class="ssnField"> No SSN 
+                                         <input type="checkbox" name="memberIsNoSSN#cbcFamID#" value="1" <cfif VAL(qGetCBCMember.isNoSSN)>checked="checked"</cfif>>
+                                        </td>
 									</tr>
 									<tr bgcolor="#iif(i MOD 2 ,DE("ffffff") ,DE("C2D1EF") )#">
 										<td class="label">Relation: </td>
@@ -58,6 +62,10 @@ function areYouSure() {
 										<td class="label">Living at Home: </td>
 										<td class="form_text"><cfinput type="radio" name="athome#i#" value="yes">Yes <cfinput type="radio" name="athome#i#" value="no">No </td>
 									</tr>	
+                                    <tr bgcolor="#iif(i MOD 2 ,DE("ffffff") ,DE("C2D1EF") )#">
+										<td class="label">Run CBC: </td>
+										<td class="form_text"><cfinput type="radio" name="runCBC#i#" value="1">Yes <cfinput type="radio" name="runCBC#i#" checked value="1"> No  </td>
+									</tr>
 								</cfloop>
 							</table>
 						</td>
@@ -96,7 +104,7 @@ function areYouSure() {
 											</cfif>
 										</td>
 									</tr>
-                                    <tr>
+                                    <tr  bgcolor="#iif(children.currentrow MOD 2 ,DE("ffffff") ,DE("C2D1EF") )#">
                                     <td class="label">Last Name:</td>
 										<td class="form_text"><cfinput type="text" name="lastname#children.currentrow#" size="20" value="#form.lastName#">
                                     </tr>
@@ -112,6 +120,8 @@ function areYouSure() {
 												thisSSN = APPLICATION.CFC.UDF.displaySSN(varString=children.ssn, displayType='user');
 											</cfscript>
                                         	<cfinput type="text" name="ssn#children.currentrow#" size="20" maxlength="10" class="ssnField" value="#thisSSN#">
+                                             No SSN 
+                                         <input type="checkbox" name="memberIsNoSSN#children.currentrow#" value="1" >
                                      	</td>
 									</tr>
 									<tr bgcolor="#iif(children.currentrow MOD 2 ,DE("ffffff") ,DE("C2D1EF") )#">
@@ -129,6 +139,10 @@ function areYouSure() {
 											 	<cfinput type="radio" name="athome#children.currentrow#" value="yes">Yes <cfinput type="radio" name="athome#children.currentrow#" value="no">No
 											</cfif>
 										</td>
+									</tr>
+                                    <tr bgcolor="#iif(children.currentrow MOD 2 ,DE("ffffff") ,DE("C2D1EF") )#">
+										<td class="label">Run CBC: </td>
+										<td class="form_text"> <cfinput type="radio" name="runCBC#children.currentrow#" value="1">Yes  <cfinput type="radio" name="runCBC#children.currentrow#" checked="true" value="0"> No</td>
 									</tr>
 									<tr bgcolor="#iif(children.currentrow MOD 2 ,DE("ffffff") ,DE("C2D1EF") )#">
 										<td class="label">Delete? </td>
