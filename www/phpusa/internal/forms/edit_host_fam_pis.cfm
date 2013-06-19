@@ -449,11 +449,11 @@
                         	<td class="label">Emergency Phone:</td>
                             <td colspan="3"><input type="text" class="largeField" name="emergency_phone" value="#FORM.emergency_phone#"></td>
                         </tr>
-                        <cfif client.userID eq 1>
+                       
                         <Tr>
                         	<Td align="right">Run CBC's</Td><td><input type="checkbox" name="runCBC" value=1/></td>
                         </Tr>
-                        </cfif>
+                    
                 	</table>
                     
                    
