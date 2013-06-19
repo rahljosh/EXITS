@@ -51,7 +51,7 @@ function areYouSure() {
                                     <tr bgcolor="#iif(i MOD 2 ,DE("ffffff") ,DE("C2D1EF") )#">
 										<td class="label">SSN: </td>
 										<td class="form_text"> <cfinput type="text" name="ssn#i#" size="20" maxlength="10" class="ssnField"> No SSN 
-                                         <input type="checkbox" name="memberIsNoSSN#cbcFamID#" value="1" <cfif VAL(qGetCBCMember.isNoSSN)>checked="checked"</cfif>>
+                                         <input type="checkbox" name="memberIsNoSSN#i#" value="1">
                                         </td>
 									</tr>
 									<tr bgcolor="#iif(i MOD 2 ,DE("ffffff") ,DE("C2D1EF") )#">
