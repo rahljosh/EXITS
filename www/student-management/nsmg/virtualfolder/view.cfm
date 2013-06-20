@@ -125,7 +125,7 @@
 	<cfdirectory directory="#flightInfoDirectory#" name="flightDocs" sort="datelastmodified DESC" filter="*.*">
     
     <cfquery name="qGetOtherFiles" datasource="#application.dsn#">
-    	SELECT vf.fileName, vf.dateAdded, vf.filePath, vfc.categoryName, vfd.documentType, u.firstname, u.lastname , u.userid, vf.generatedHow, vf.vfid,
+    	SELECT vf.fileName, vf.dateAdded, vf.filePath, vfc.categoryName, vfd.documentType, u.firstname, u.lastname , u.userid, vf.generatedHow, vf.uploadedBy, vf.vfid,
         h.familylastname, vf.fk_hostid, vfd.viewPermissions
         FROM virtualFolder vf
         LEFT JOIN virtualFolderDocuments vfd on vfd.id = vf.fk_documentType
@@ -254,7 +254,10 @@
         
    		<cfif listFind(viewPermissions, client.usertype)>
  		<Tr>
-        	<td>#documentType#</td><td><a href="#filePath##filename#" target="_blank">#filename# <cfif val(fk_hostID)> - #familyLastName#</cfif></td><td>#DateFormat(dateAdded, 'mmm d, yyyy')#</td><td>#firstname# #lastname#</td>
+        	<td>#documentType#</td>
+            <td><a href="#filePath##filename#" target="_blank">#filename# <cfif val(fk_hostID)> - #familyLastName#</cfif></td>
+            <td>#DateFormat(dateAdded, 'mmm d, yyyy')#</td>
+            <td><cfif NOT VAL(uploadedBy) AND generatedHow EQ "auto">System<cfelse>#firstname# #lastname#</cfif></td>
         	<Td>#generatedHow#</Td>
             <td>
             	<cfif ((userid eq client.userid) OR (client.usertype lte 4)) AND generatedHow is not 'auto'>
