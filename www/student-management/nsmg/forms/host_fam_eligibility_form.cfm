@@ -44,6 +44,9 @@
                 smg_hosts
             SET
                 isNotQualifiedToHost = <cfqueryparam cfsqltype="cf_sql_integer" value="#isNotQualifiedNum#">
+                <cfif isNotQualifiedNum EQ 1>
+                	,active = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                </cfif>
            	WHERE
             	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostID#">
         </cfquery>
@@ -114,6 +117,7 @@
                             <input type="checkbox" name="isNotQualified" id="isNotQualified" onclick="displayExplanation('<cfoutput>#qGetHostEligibilityReason.comments#</cfoutput>');"
 								<cfif qGetHostEligibility.isNotQualifiedToHost EQ 1>
                                 	checked="checked"
+                                    disabled="disabled"
 								</cfif> />
                         </td>
                         <td width="80%" style=" vertical-align:middle;">
