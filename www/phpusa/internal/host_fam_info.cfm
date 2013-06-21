@@ -14,9 +14,28 @@
 </script>
 
 <cfinclude template="querys/family_info.cfm">
+<!----- Students being Hosted----->
 
+<cfquery name="hostingAnyStudents" datasource="mysql">
+	SELECT s.studentid, s.familylastname, s.firstname, p.programname, c.countryname, php.assignedid, s.uniqueid
+	FROM smg_students s
+	INNER JOIN php_students_in_program php ON php.studentid = s.studentid
+    	AND 	
+        	php.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+	INNER JOIN smg_programs p ON php.programid = p.programid
+	LEFT JOIN smg_countrylist c ON s.countryresident = c.countryid
+	WHERE php.hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#family_info.hostid#">
+	ORDER BY s.familylastname
+    limit 1
+</cfquery>
+<Cfif client.userid eq 1>
+ <cfdump var="#hostingAnyStudents#">
+ <cfoutput>
+ #hostingAnyStudents.studentid#
+ </cfoutput>
+</Cfif>
 <cfscript>
-	 qGetHostChildrenForCBC = APPLICATION.CFC.host.getHostChildrenForCBC(hostID = #family_info.hostID#);
+	 qGetHostChildrenForCBC = APPLICATION.CFC.host.getHostChildrenForCBC(hostID = #family_info.hostID#,studentid=#hostingAnyStudents.studentid#);
 	 vCBCValid = APPLICATION.CFC.host.isCBCValid(hostID = #family_info.hostID#);
 	
 	 // Get Host Mother CBC
@@ -33,7 +52,17 @@
         
         
 </cfscript>
-
+<cfquery name="hosting_students" datasource="mysql">
+	SELECT s.studentid, s.familylastname, s.firstname, p.programname, c.countryname, php.assignedid, s.uniqueid
+	FROM smg_students s
+	INNER JOIN php_students_in_program php ON php.studentid = s.studentid
+    	AND 	
+        	php.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+	INNER JOIN smg_programs p ON php.programid = p.programid
+	LEFT JOIN smg_countrylist c ON s.countryresident = c.countryid
+	WHERE php.hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#family_info.hostid#">
+	ORDER BY s.familylastname
+</cfquery>
 
 <!-----Host Children----->
 <cfquery name="host_children" datasource="mysql">
@@ -397,7 +426,7 @@
 							qGetCBC = APPLICATION.CFC.Host.getCBC(hostID = #family_info.hostID#, memberType = "member", childID = #qGetHostChildrenForCBC.childID#);
 						
 							// Get Family Member CBC
-							
+		
 							// Get Family Member CBC
 						qGetHostMembers = APPLICATION.CFC.CBC.getCBCHostByID(
 							hostID=hostID,
