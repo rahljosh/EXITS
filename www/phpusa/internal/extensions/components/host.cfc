@@ -247,7 +247,12 @@
         <cfargument name="memberType" type="string" hint="memberType is required, valid values are: 'father','mother','member'">
         <cfargument name="childID" type="numeric" default="0" hint="childID is not required, though it is neccessary when the memberType is 'member'">
         <cfargument name="isNotExpired" type="boolean" default="false" hint="isNotExpired is not required (if set to true it will only return records that have not yet expired AND are approved)">
+        <cfargument name="studentID" default="0" hint="studentID is not required, pass to get only members that will not turn 18 during the program">
         
+        <cfscript>
+                // Get Student Program End Date - Remove 5 days from program end date to compensate for leap/bissextile year
+                qGetProgramInfo = APPLICATION.CFC.PROGRAM.getProgramByStudentID(studentID=ARGUMENTS.studentID);
+			</cfscript>
         <cfif memberType NEQ "member">
         	<cfquery name="qGetCBC" datasource="#APPLICATION.DSN#">
             	SELECT
@@ -284,6 +289,14 @@
                     AND cbc.familyid = c.childID
                	WHERE c.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
                 AND c.childid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.childID)#">
+                <cfif IsDate(qGetProgramInfo.endDate)> 
+                        <!--- Get only students that are turning 18 by the end of the program --->
+                        AND 
+                            FLOOR(DATEDIFF("#DateFormat( DateAdd("d", 0, qGetProgramInfo.endDate), 'yyyy-mm-dd')#", birthdate)/365.25) >= <cfqueryparam cfsqltype="cf_sql_integer" value="18">
+                    <cfelse>                    
+                        AND 
+                            FLOOR(DATEDIFF(CURRENT_DATE, birthdate)/365) >= <cfqueryparam cfsqltype="cf_sql_integer" value="17">
+                    </cfif>
                 <cfif ARGUMENTS.isNotExpired>
                 	AND cbc.date_expired > NOW()
                     AND cbc.date_approved IS NOT NULL

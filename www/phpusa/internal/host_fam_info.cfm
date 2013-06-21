@@ -28,15 +28,10 @@
 	ORDER BY s.familylastname
     limit 1
 </cfquery>
-<Cfif client.userid eq 1>
- <cfdump var="#hostingAnyStudents#">
- <cfoutput>
- #hostingAnyStudents.studentid#
- </cfoutput>
-</Cfif>
+
 <cfscript>
 	 qGetHostChildrenForCBC = APPLICATION.CFC.host.getHostChildrenForCBC(hostID = #family_info.hostID#,studentid=#hostingAnyStudents.studentid#);
-	 vCBCValid = APPLICATION.CFC.host.isCBCValid(hostID = #family_info.hostID#);
+	 vCBCValid = APPLICATION.CFC.host.isCBCValid(hostID = #family_info.hostID#,studentid=#hostingAnyStudents.studentid#);
 	
 	 // Get Host Mother CBC
         qGetCBCMother = APPLICATION.CFC.CBC.getCBCHostByID(
