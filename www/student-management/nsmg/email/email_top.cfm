@@ -1,6 +1,6 @@
 <cfswitch expression="#CLIENT.companyID#">
 	
-    <cfcase value="1,2,3,4,12,13">
+    <cfcase value="1,2,3,4,12">
     	<cfset vCompanyColor='0054A0'>
     </cfcase>
 
@@ -10,6 +10,9 @@
 
     <cfcase value="11">
     	<cfset vCompanyColor='00b3d9'>
+    </cfcase>
+    <cfcase value="13">
+    	<cfset vCompanyColor='900f1c'>
     </cfcase>
 
     <cfdefaultcase>
@@ -42,7 +45,7 @@
     <table background="#CLIENT.exits_url#/nsmg/pics/email_textured_background.png" width="90%">
         <tr>
             <td width="94"><img src="#CLIENT.exits_url#/nsmg/pics/logos/#CLIENT.companyid#_header_logo.png"></td>
-            <cfif ListFind("1,2,3,4,5,12,13", CLIENT.companyID)>
+            <cfif ListFind("1,2,3,4,5,12", CLIENT.companyID)>
                 <td><strong><font size=+2>INTERNATIONAL <span color="#vCompanyColor#">STUDENT EXCHANGE</span></font></strong></td>
             <cfelse>
                 <td><strong><font size=+2>#CLIENT.companyname#</font></strong></td>
