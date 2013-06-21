@@ -197,18 +197,49 @@
 	----- ------------------------------------------------------------------------- --->
     
     <cffunction name="getHostChildrenForCBC" access="public" returntype="query" output="no" hint="Gets the given host family's children">
-    	<cfargument name="hostID" type="numeric" hint="hostID is required">
-        
-        <cfquery name="qGetChildren" datasource="#APPLICATION.DSN#">
-        	SELECT *
-            FROM smg_host_children
-            WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
-            AND isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-            AND liveAtHome = "yes"
-			AND FLOOR(DATEDIFF(CURRENT_DATE, birthdate)/365) >= <cfqueryparam cfsqltype="cf_sql_integer" value="16">
-            ORDER BY name
-        </cfquery>
-        <cfreturn qGetChildren>
+    	<cfargument name="hostID" required="yes" hint="HostID is required">
+        <cfargument name="studentID" default="0" hint="studentID is not required, pass to get only members that will not turn 18 during the program">
+
+			<cfscript>
+                // Get Student Program End Date - Remove 5 days from program end date to compensate for leap/bissextile year
+                qGetProgramInfo = APPLICATION.CFC.PROGRAM.getProgramByStudentID(studentID=ARGUMENTS.studentID);
+			</cfscript>
+            
+            <cfquery 
+            	name="qGetEligibleHostMember" 
+            	datasource="#APPLICATION.dsn#">
+                    SELECT 
+                        childID, 
+                        hostID, 
+                        membertype, 
+                        name, 
+                        middlename, 
+                        lastName,
+                        sex, 
+                        ssn, 
+                        birthdate, 
+                        FLOOR(DATEDIFF(CURRENT_DATE,birthdate)/365) AS age
+                    FROM 
+                        smg_host_children 
+                    WHERE 
+                        hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
+                    AND
+                    	liveAtHome = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">                    
+                    AND
+                    	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+					<cfif IsDate(qGetProgramInfo.endDate)> 
+                        <!--- Get only students that are turning 18 by the end of the program --->
+                        AND 
+                            FLOOR(DATEDIFF("#DateFormat( DateAdd("d", 0, qGetProgramInfo.endDate), 'yyyy-mm-dd')#", birthdate)/365.25) >= <cfqueryparam cfsqltype="cf_sql_integer" value="18">
+                    <cfelse>                    
+                        AND 
+                            FLOOR(DATEDIFF(CURRENT_DATE, birthdate)/365) >= <cfqueryparam cfsqltype="cf_sql_integer" value="17">
+                    </cfif>
+                    
+                    ORDER BY 
+                        childID
+            </cfquery>
+        <cfreturn qGetEligibleHostMember>
     </cffunction>
     
     <cffunction name="getCBC" access="public" returntype="query" output="no" hint="Gets the cbc records associated with the given host and member">
@@ -233,13 +264,13 @@
                     cbc.*
           		FROM smg_hosts h
             	INNER JOIN php_hosts_cbc cbc ON cbc.hostID = h.hostID
-            		AND cbc.memberType = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.memberType#">
+            		AND cbc.cbc_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.memberType#">
              	WHERE h.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
                 <cfif ARGUMENTS.isNotExpired>
-                	AND cbc.date_expiration > NOW()
+                	AND cbc.date_expired > NOW()
                     AND cbc.date_approved IS NOT NULL
                 </cfif>
-                ORDER BY date_submitted DESC
+                ORDER BY date_sent DESC
             </cfquery>
             <cfreturn qGetCBC>
         <cfelse>
@@ -249,15 +280,15 @@
                     cbc.*
               	FROM smg_host_children c
                 INNER JOIN php_hosts_cbc cbc ON cbc.hostID = c.hostID
-                    AND cbc.memberType = "member"
-                    AND cbc.childID = c.childID
+                    AND cbc.cbc_type = "member"
+                    AND cbc.familyid = c.childID
                	WHERE c.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
-                AND c.childID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.childID)#">
+                AND c.childid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.childID)#">
                 <cfif ARGUMENTS.isNotExpired>
-                	AND cbc.date_expiration > NOW()
+                	AND cbc.date_expired > NOW()
                     AND cbc.date_approved IS NOT NULL
                 </cfif>
-                ORDER BY date_submitted DESC
+                ORDER BY date_sent DESC
             </cfquery>
             <cfreturn qGetChildCBC>
         </cfif>
@@ -279,35 +310,12 @@
                 	php_hosts_cbc
                 SET
                     notes = <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#ARGUMENTS.notes#">,
-                    date_authorization = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.date_authorization#" null="#NOT IsDate(ARGUMENTS.date_authorization)#">,
-                    date_submitted = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.date_submitted#" null="#NOT IsDate(ARGUMENTS.date_submitted)#">,
-                    date_expiration = <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('yyyy',+1,ARGUMENTS.date_submitted)#">,
+                   
                     date_approved = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.date_approved#" null="#NOT IsDate(ARGUMENTS.date_approved)#">
               	WHERE
-                	Id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.id)#">
+                	cbcfamid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.id)#">
             </cfquery>
-        <cfelse>
-        	<cfquery datasource="#APPLICATION.DSN#">
-            	INSERT INTO php_hosts_cbc (
-                	hostID,
-                    childID,
-                    memberType,
-                    notes,
-                    date_authorization,
-                    date_submitted,
-                    date_expiration,
-                    date_approved )
-               	VALUES (
-                	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">,
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.childID)#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.memberType#">,
-                    <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#ARGUMENTS.notes#">,
-                    <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.date_authorization#" null="#NOT IsDate(ARGUMENTS.date_authorization)#">,
-                    <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.date_submitted#" null="#NOT IsDate(ARGUMENTS.date_submitted)#">,
-                    <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('yyyy',+1,ARGUMENTS.date_submitted)#">,
-                    <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.date_approved#" null="#NOT IsDate(ARGUMENTS.date_approved)#"> )
-            </cfquery>
-        </cfif>
+         </cfif>
     </cffunction>
     
     <cffunction name="isCBCValid" access="public" returntype="boolean" output="no" hint="Checks if all family members who need a CBC have a valid CBC (returns true if they do, false otherwise)">
