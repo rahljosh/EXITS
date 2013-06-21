@@ -31,12 +31,7 @@
             cbcType='father'
         );
         
-        // Get Family Member CBC
-        qGetHostMembers = APPLICATION.CFC.CBC.getCBCHostByID(
-            hostID=hostID,
-            cbcType='member',
-			sortBy='familyID'
-        );
+       
     </cfscript>
     
     <!--- Form submitted --->
@@ -198,9 +193,17 @@
                             </cfif>
                         </cfif>
                         <!--- Loop through all children that need a cbc --->
-                        <cfloop query="qGetHostMembers">
+                        <cfloop query="qGetHostChildrenForCBC">
                             <cfscript>
                                 qGetCBC = APPLICATION.CFC.Host.getCBC(hostID = #family_info.hostID#, memberType = "member", childID = #qGetHostChildrenForCBC.childID#);
+								
+									// Get Family Member CBC
+						qGetHostMembers = APPLICATION.CFC.CBC.getCBCHostByID(
+							hostID=hostID,
+							familyMemberID=qGetHostChildrenForCBC.childID,
+							cbcType='member',
+							sortBy='familyID'
+						);
                             </cfscript>
                             <tr>
                                 <td colspan="6" style="font-size:12px; font-weight:bold;">
