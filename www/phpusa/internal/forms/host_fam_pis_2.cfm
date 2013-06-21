@@ -11,6 +11,8 @@ function areYouSure() {
 	
 	
 </script>
+<cfparam name="form.addNew" default="0">
+
 
 <cfinclude template="../querys/family_info.cfm">
 
@@ -30,7 +32,7 @@ function areYouSure() {
 <table width="92%"  border="1" align="center" cellpadding="8" cellspacing="8" bordercolor="##C7CFDC" bgcolor="##FFFFFF">
 	<tr>
 		<td class="box">
-			<cfif children.recordcount EQ 0>
+			<cfif children.recordcount EQ 0 or  val(form.addNew)>
 				<table width="100%" border=0 cellpadding=4 cellspacing=0 class="section">
 					<tr>
 						<td width="80%">
@@ -169,8 +171,10 @@ function areYouSure() {
 		</cfform>
 		<td align="center" valign="top">
 		<cfif children.recordcount NEQ 0>
-			<cfform action="?curdoc=forms/host_fam_pis_2_new" method="post">
+			<cfform action="?curdoc=forms/host_fam_pis_2" method="post">
+           
 				<cfinput type="hidden" name="hostid" value="#family_info.hostid#">
+                <cfinput type="hidden" name="addNew" value="1">
 				<cfinput type="image" name="submit" src="pics/add-siblings.gif">
 			</cfform>
 		</cfif>	
