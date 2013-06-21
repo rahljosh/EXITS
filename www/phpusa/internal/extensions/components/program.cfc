@@ -112,5 +112,50 @@
 		<cfreturn qGetPrograms>
 	</cffunction>
 
+<cffunction name="getProgramByStudentID" access="public" returntype="query" output="false" hint="Gets a list of programs, if programID is passed gets a program by ID">
+    	<cfargument name="studentID" hint="studentID is required">
+              
+        <cfquery 
+			name="qGetProgramByStudentID" 
+			datasource="#APPLICATION.dsn#">
+                SELECT
+					p.programID,
+                    p.programName,
+                    p.type,
+                    p.startDate,
+                    p.endDate,
+                    p.insurance_startDate,
+                    p.insurance_endDate,
+                    p.sevis_startDate,
+                    p.sevis_endDate,
+                    p.preAyp_date,
+                    p.companyID,
+                    p.programFee,
+                    p.application_fee,
+                    p.insurance_w_deduct,
+                    p.insurance_wo_deduct,
+                    p.blank,
+                    p.hold,
+                    p.progress_reports_active,
+                    p.seasonID,
+                    p.smgSeasonID,
+                    p.tripID,
+                    p.active,
+                    p.fieldViewable,
+                    p.insurance_batch,
+                    c.companyName,
+                    c.companyShort
+                FROM 
+                    smg_programs p
+				INNER JOIN
+                	smg_students s ON s.programID = p.programID
+                LEFT OUTER JOIN
+                	smg_companies c ON c.companyID = p.companyID                    
+                WHERE
+                	s.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
+		</cfquery>
+		   
+		<cfreturn qGetProgramByStudentID>
+	</cffunction>
 
 </cfcomponent>
