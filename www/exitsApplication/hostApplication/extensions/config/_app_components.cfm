@@ -33,4 +33,7 @@
 
 	// Store the initialized session Library object in the Application scope
 	APPLICATION.CFC.SESSION = CreateCFC("session").Init();
+	
+	// Store the initialized CBC Library object in the Application scope
+	APPLICATION.CFC.CBC = CreateCFC("cbc").Init();
 </cfscript>

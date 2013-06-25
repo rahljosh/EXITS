@@ -208,6 +208,19 @@
 					if ( stResult.isSuccess ) {
 						// Send Out Email
 						vSendOutEmail = true;
+						
+						// Insert CBC
+						vIsNoSSN = 0;
+						if (NOT LEN(qGetHostFamilyInfo.fatherSSN)) {
+							vIsNoSSN = 1;
+						}
+						APPLICATION.CFC.CBC.insertHostCBC(
+							hostID=qGetHostFamilyInfo.hostID,
+							cbcType="father",
+							seasonID=10, // Hard coded to AYP 13/14 - Needs to be changed
+							companyID=qGetHostFamilyInfo.companyID,
+							isNoSSN=vIsNoSSN,
+							dateAuthorized=NOW());
 					} else {
 						// Set Error Message
 						SESSION.formErrors.Add(stResult.message);
@@ -236,6 +249,19 @@
 					if ( stResult.isSuccess ) {
 						// Send Out Email
 						vSendOutEmail = true;
+						
+						// Insert CBC
+						vIsNoSSN = 0;
+						if (NOT LEN(qGetHostFamilyInfo.motherSSN)) {
+							vIsNoSSN = 1;
+						}
+						APPLICATION.CFC.CBC.insertHostCBC(
+							hostID=qGetHostFamilyInfo.hostID,
+							cbcType="mother",
+							seasonID=10, // Hard coded to AYP 13/14 - Needs to be changed
+							companyID=qGetHostFamilyInfo.companyID,
+							isNoSSN=vIsNoSSN,
+							dateAuthorized=NOW());
 					} else {
 						// Set Error Message
 						SESSION.formErrors.Add(stResult.message);
@@ -266,6 +292,20 @@
 						if ( stResult.isSuccess ) {
 							// Send Out Email
 							vSendOutEmail = true;
+							
+							// Insert CBC
+							vIsNoSSN = 0;
+							if (NOT LEN(qGetCBCQualifiedMembers.SSN[i])) {
+								vIsNoSSN = 1;
+							}
+							APPLICATION.CFC.CBC.insertHostCBC(
+								hostID=qGetHostFamilyInfo.hostID,
+								cbcType="member",
+								familyMemberID=qGetCBCQualifiedMembers.childID[i],
+								seasonID=10, // Hard coded to AYP 13/14 - Needs to be changed
+								companyID=qGetHostFamilyInfo.companyID,
+								isNoSSN=vIsNoSSN,
+								dateAuthorized=NOW());
 						} else {
 							// Set Error Message
 							SESSION.formErrors.Add(stResult.message);
