@@ -50,7 +50,7 @@
     	<cfargument name="userID" type="numeric" required="yes" />
         <cfargument name="cbcID" type="numeric" required="yes" />
         
-        <cfquery name="qGetCBC" datasource="MySql">
+        <cfquery name="qGetCBC" datasource="#APPLICATION.DSN#">
         	SELECT
             	*
           	FROM
@@ -63,7 +63,7 @@
         
         <cfif VAL(qGetCBC.recordCount)>
         	
-            <cfquery datasource="MySql">
+            <cfquery datasource="#APPLICATION.DSN#">
             	INSERT INTO
                     smg_users_cbc (
                         userID,
@@ -111,7 +111,7 @@
         <cfargument name="cbcID" type="numeric" required="yes" />
         <cfargument name="memberType" type="string" required="yes" hint="mother or father" />
       	
-        <cfquery name="qGetCBC" datasource="MySql">
+        <cfquery name="qGetCBC" datasource="#APPLICATION.DSN#">
         	SELECT
             	*
            	FROM
@@ -124,7 +124,7 @@
        	
         <cfif VAL(qGetCBC.recordCount)>
         	
-            <cfquery datasource="MySql">
+            <cfquery datasource="#APPLICATION.DSN#">
             	INSERT INTO
                     smg_hosts_cbc (
                         hostID,
@@ -231,7 +231,8 @@
                         h.requestID, 
                         h.isNoSSN,
                         h.flagcbc,
-                        h.seasonID, 
+                        h.seasonID,
+                        h.denied,
                         s.season,
                         c.companyID,
                         c.companyshort
@@ -514,6 +515,7 @@
 		<cfargument name="flagCBC" default="0" hint="flagCBC is not required. Values 0 or 1">
         <cfargument name="notes" default="" hint="any notes on the CBC">
         <cfargument name="date_approved" default="" hint="date the cbc was approved">
+        <cfargument name="denied" default="" hint="date of denial">
         
         <cfquery 
 			datasource="#APPLICATION.DSN#">
@@ -523,7 +525,8 @@
                     isNoSSN = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.isNoSSN#">,
                     flagcbc = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.flagCBC#">,
                     notes  = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.notes#">,
-                    date_approved = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.date_approved#" null="#NOT isDate(ARGUMENTS.date_approved)#">
+                    date_approved = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.date_approved#" null="#NOT isDate(ARGUMENTS.date_approved)#">,
+                    denied = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.denied#" null="#NOT isDate(ARGUMENTS.denied)#">
                 WHERE 
                     cbcFamID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.cbcFamID#">
         </cfquery>	
@@ -534,9 +537,12 @@
 	<cffunction name="getPendingCBCHost" access="public" returntype="query" output="false" hint="Returns CBC records that need to be run for a host">
         <cfargument name="companyID" type="numeric" default="0" hint="CompanyID is not required">
         <cfargument name="seasonID" type="numeric" default="0" hint="SeasonID is not required">
+        <cfargument name="activeSeason" type="numeric" default="0" hint="Optional - Set to 1 to only get active seasons">
         <cfargument name="userType" type="string" default="" hint="UserType is not required. List of values such as mother,father">
         <cfargument name="hostID" type="numeric" default="0" hint="HostID is not required">
         <cfargument name="noSSN" type="numeric" default="0" hint="Optional - Set to 1 to send batch with no SSN">
+        <cfargument name="hosting" type="numeric" default="0" hint="Optional - Set to 1 to only get hosts that are hosting">
+        <cfargument name="batch" type="numeric" default="1" hint="Optional - Set to 0 if not running a batch, this limits the results">
         
         <cfquery 
         	name="qGetCBCHost" 	
@@ -565,19 +571,29 @@
                     c.companyShort,
                     c.gis_username,
                     c.gis_password,
-                    c.gis_account                                           
+                    c.gis_account,
+                    child.lastName AS memberLastName,
+                    child.name AS memberFirstName,
+                    child.middleName AS memberMiddleName,
+                    child.ssn AS memberSSN,
+                    child.birthDate AS memberDOB,
+                    child.memberType                                      
                 FROM 
                     smg_hosts_cbc cbc
                 INNER JOIN 
                     smg_hosts h ON h.hostID = cbc.hostID
                 LEFT OUTER JOIN
                 	smg_companies c ON c.companyID = h.companyID
+              	LEFT OUTER JOIN
+                	smg_host_children child ON child.childID = cbc.familyID
                 WHERE 
                     cbc.date_authorized IS NOT NULL                
 				AND
                 	cbc.date_sent IS NULL 	
                 AND 
                     cbc.requestID = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+             	AND 
+                	CASE cbc.cbc_type WHEN "member" THEN child.isDeleted = 0 ELSE 1 = 1 END
                 
                 <!--- Check if we are running ISE's CBC --->
                 <cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, ARGUMENTS.companyID)>
@@ -609,6 +625,25 @@
                     </cfif>
                 
                 </cfif>
+                
+                <!--- Check if the host family is hosting --->
+                <cfif VAL(ARGUMENTS.hosting)>
+                    AND cbc.hostID IN (
+                        SELECT hostID 
+                        FROM smg_students 
+                        WHERE active = 1
+                        AND host_fam_approved = 4
+                    )
+                </cfif>
+                
+                <!--- Check if the season is active --->
+                <cfif VAL(ARGUMENTS.activeSeason)>
+                	AND cbc.seasonID IN (
+                    	SELECT seasonID
+                        FROM smg_seasons
+                        WHERE active = 1
+                  	)
+                </cfif>
 				
             	<!--- Check if we have a valid hostID --->
 				<cfif VAL(ARGUMENTS.hostID)>
@@ -617,10 +652,13 @@
 				</cfif>
                 
                 ORDER BY	
-                	c.companyID
+                	c.companyID,
+                    cbc.hostID
                 
                 <!--- If running batch, limit to 20 so we don't get time outs --->
-                LIMIT 20
+                <cfif VAL(ARGUMENTS.batch)>
+                	LIMIT 20
+              	</cfif>
         </cfquery>
    
         <cfreturn qGetCBCHost>
@@ -719,7 +757,7 @@
         <cfargument name="xmlReceived" type="string" default="">
         
         <cfquery 
-        	datasource="MySql">
+        	datasource="#APPLICATION.DSN#">
             UPDATE 
             	smg_hosts_cbc  
             SET 
@@ -739,7 +777,7 @@
         <cfargument name="xmlReceived" type="string" default="">
         
         <cfquery 
-        	datasource="MySql">
+        	datasource="#APPLICATION.DSN#">
             UPDATE 
             	smg_hosts_cbc  
             SET 
@@ -1110,7 +1148,7 @@
         <cfargument name="xmlReceived" type="string" default=""> 
         
         <cfquery 
-        	datasource="MySql">
+        	datasource="#APPLICATION.DSN#">
             UPDATE 
             	smg_users_cbc  
             SET 
@@ -1130,7 +1168,7 @@
         <cfargument name="xmlReceived" type="string" default="">
         
         <cfquery 
-        	datasource="MySql">
+        	datasource="#APPLICATION.DSN#">
             UPDATE 
             	smg_users_cbc  
             SET 
@@ -1913,6 +1951,76 @@
 	</cffunction>
     <!--- End of CBC Batch Functions --->
 
+
+	<!--- Email host cbcs that are still in processing --->
+    <cffunction name="sendProcessingHostsEmail" access="public" returntype="void" output="yes" hint="Function to send email of host cbcs that are in processing">
+		
+		<cfscript>
+            qGetProcessingCBCs = getPendingCBCHost(activeSeason=1,hosting=1,batch=0);   
+        </cfscript>
+        
+        <cfoutput query="qGetProcessingCBCs" group="companyID">
+        	<cfquery name="qGetProcessingCBCsInCompany" dbtype="query">
+            	SELECT *
+                FROM qGetProcessingCBCs
+                WHERE companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#companyID#">
+            </cfquery>
+            
+            <cfquery name="qGetCompany" datasource="#APPLICATION.DSN#">
+            	SELECT *
+                FROM smg_companies
+                WHERE companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#companyID#">
+            </cfquery>
+            
+            <cfscript>
+				// Set Email To
+				if ( APPLICATION.isServerLocal ) {
+					emailTo = 'james@iseusa.com';
+				} else {
+					emailTo = qGetCompany.gis_email;
+				}
+			</cfscript>
+            
+            <cfsavecontent variable="emailContent">
+            	<table width="670" align="center">
+                	<tr bgcolor="##CCCCCC"><th colspan="2"><b>Host CBCs in Processing for #qGetCompany.companyshort#</b></th></tr>
+                    <tr>
+                    	<th align="left"><b>Name (Host ID)</b></th>
+                        <th align="left"><b>User Type</b></th>
+                  	</tr>
+                    	<cfloop query="qGetProcessingCBCsInCompany">
+                        	<tr>
+                            	<td>
+                                	<cfif cbc_type EQ "father">
+                                    	#fatherFirstName# #fatherLastName# (###hostID#)
+									<cfelseif cbc_type EQ "mother">
+                                    	#motherFirstName# #motherLastName# (###hostID#)
+                                  	<cfelse>
+                                    	#memberFirstName# #memberLastName# (###hostID#)
+                                    </cfif>
+                                </td>
+                                <td>
+                                	#cbc_type#
+                                </td>
+                            </tr>
+                        </cfloop>
+                    <tr><td colspan="2">&nbsp;</td></tr>
+                </table>
+            </cfsavecontent>
+            
+            <cfmail 
+            	from="#qGetCompany.support_email#" 
+                to="#emailTo#"
+                bcc="james@iseusa.com"
+                subject="Host CBCs in Processing for #qGetCompany.companyshort#" 
+                failto="#qGetCompany.support_email#"
+                type="html">
+                #emailContent#
+        	</cfmail>
+                
+        </cfoutput>
+              
+  	</cffunction>
 	
     
     <!--- CBC In Compliance --->
@@ -2601,6 +2709,137 @@
     	<cfreturn qGetExpiredHostCBC>
     </cffunction>--->       
     <!--- CBC Re-Run Functions --->
+    
+    <!--- Returns the result status of a CBC report --->
+    <cffunction name="getCBCResultStatus" access="public" returntype="void" hint="Outputs Status message. (representations: 1 for clean, 2 for hits, 3 for denied, 4 for approved, and 0 for problem with XML)">
+    	<cfargument name="cbcID" type="numeric" required="yes">
+        <cfargument name="cbcType" type="string" default="host" required="no" hint="host or user">
+        
+        <!--- Get the appropriate CBC record --->
+        <cfquery name="qGetCBCRecord" datasource="#APPLICATION.DSN#">
+        	SELECT *
+            <cfif ARGUMENTS.cbcType EQ "host">
+            	FROM smg_hosts_cbc
+                WHERE cbcFamID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.cbcID#">
+           	<cfelse>
+            	FROM smg_users_cbc
+                WHERE cbcID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.cbcID#">
+            </cfif>
+        </cfquery>
+        
+        <!-- Get the XML Results --->
+        <cfscript>
+			vStatus = 1;
+			try {
+				// Parse XML
+				var readXML = XmlParse(qGetCBCRecord.xml_received);
+
+				// Get Total of Products
+				vTotalProducts = ArrayLen(readXML.bgc.product);
+				
+				// Set USOneSearchID, if there is a social is product 2 if there is no social is product 1
+				if ( vTotalProducts GT 1 ) {
+					usOneSearchID = 2;					
+				} else {
+					usOneSearchID = 1;					
+				}
+				
+				// Get Report ID
+				try { 
+					// Try to get from US One Search (if there is an error, get it from BCG order number)
+					ReportID = readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender.record.key.secureKey.XmlText;
+				} catch (Any e) {
+					// Error
+					ReportID = '#readXML.bgc.XmlAttributes.orderId#';
+				}					
+
+				// Get Total Offenses
+				try { 
+					// Get total of items - USOneSearch
+					vTotalOffenses = readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.XmlAttributes.qtyFound;
+				} catch (Any e) {
+					// Get total of items - USOneSearch
+					vTotalOffenses = 0;
+				}
+				
+				if (vTotalOffenses == 0) {
+					vStatus = 1;	
+				} else {
+					vStatus = 2;	
+				}
+			} catch (Any e) {
+				vStatus = 0;	
+			}
+			
+			// Approved or denied
+			if (LEN(qGetCBCRecord.date_approved)) {
+				vStatus = 4;	
+			} else if (LEN(qGetCBCRecord.denied)) {
+				vStatus = 3;	
+			}
+			
+			// Only show pending in yellow if it is not an office user viewing the page.
+			vPendingCleanColor = "yellow";
+			vPendingCleanColorText = "black";
+			if (APPLICATION.CFC.USER.isOfficeUser()) {
+				vPendingCleanColor = "green";
+				vPendingCleanColorText = "white";
+			}
+		</cfscript>
+        
+        <cfoutput>
+			<cfif vStatus EQ 0>
+                <div style="display:inline-block; background-color:yellow; color:black; padding:2px; font-weight:bold;">Notify Compliance</div>
+            <cfelseif vStatus EQ 1>
+                <div style="display:inline-block; background-color:#vPendingCleanColor#; color:#vPendingCleanColorText#; padding:2px; font-weight:bold;">Pending</div>
+            <cfelseif vStatus EQ 2>
+                <div style="display:inline-block; background-color:yellow; color:black; padding:2px; font-weight:bold;">Pending</div>
+            <cfelseif vStatus EQ 3>
+                <div style="display:inline-block; background-color:red; color:black; padding:2px; font-weight:bold;">Denied</div>
+            <cfelseif vStatus EQ 4>
+                <div style="display:inline-block; background-color:green; color:white; padding:2px; font-weight:bold;">Approved</div>
+            </cfif>
+      	</cfoutput>
+        
+    </cffunction>
+    
+    <!--- 
+		James Griffiths - 6/11/2013
+		This function gets the total number of denied CBCs for a given host or all hosts.
+	--->
+    <cffunction name="getNumberDeniedCBCs" access="public" returntype="numeric" hint="Gets the total number of denied CBCs for a given host">
+    	<cfargument name="hostID" default="0" type="numeric" hint="Not required">
+        
+        <cfquery name="qGetDeniedCBCs" datasource="#APPLICATION.DSN#">
+        	SELECT denied
+            FROM smg_hosts_cbc
+            WHERE denied != ""
+            <cfif VAL(ARGUMENTS.hostID)>
+            	AND hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#">
+            </cfif>
+        </cfquery>
+        
+        <cfscript>
+			return qGetDeniedCBCs.recordCount;
+		</cfscript>
+        
+    </cffunction>
+    
+    <!--- 
+		James Griffiths - 6/12/2013
+		This function sets the value of the isNotQualifiedToHost field in the smg_hosts table to the input value.
+	--->
+    <cffunction name="setIsNotQualifiedToHost" access="public" returntype="void" hint="Sets the isNotQualifiedToHost field in the smg hosts table">
+    	<cfargument name="hostID" type="numeric" required="yes">
+        <cfargument name="isNotQualifiedToHost" type="numeric" required="yes">
+        
+        <cfquery datasource="#APPLICATION.DSN#">
+        	UPDATE smg_hosts
+            SET isNotQualifiedToHost = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.isNotQualifiedToHost#">
+            WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#">
+        </cfquery>
+    
+    </cffunction>
 
                     
 </cfcomponent>    

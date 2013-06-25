@@ -13,6 +13,8 @@
 <!--- Kill extra output --->
 <cfsilent>
 
+	<cfsetting requesttimeout="300">
+
 	<cfparam name="userType" default="father">
     
 	<cfscript>	
@@ -183,7 +185,7 @@
                     </td>
                 </tr>
             </cfloop>
-    
+            
         </cfif> <!--- Check if there are records ---> 
     
     <!--- 

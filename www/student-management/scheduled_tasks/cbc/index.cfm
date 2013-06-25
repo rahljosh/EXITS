@@ -89,6 +89,10 @@
 	userType = 'member';
 	include "runHosts.cfm";
 	include "runHostsCase.cfm";
+	
+	//Send Email listing Hosts that are still in processing
+    APPLICATION.CFC.CBC.sendProcessingHostsEmail();
+
 </cfscript>
 
 <!---
