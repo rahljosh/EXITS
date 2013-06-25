@@ -66,7 +66,7 @@
                 <!--- SHOW ONLY APPS APPROVED --->
                 <cfif VAL(ARGUMENTS.onlyApprovedApps)>
 					AND                    					
-                    	app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">                
+                    	app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">              
                 </cfif>
                 
             LIMIT 1                

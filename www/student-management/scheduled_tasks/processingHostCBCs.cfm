@@ -1,0 +1,57 @@
+<!--- Request a longer time out period --->
+<cfsetting requesttimeout="600">
+
+<!--- Get all host CBCs that are in processing and run them --->
+<cfscript>
+	// Get pending host CBCs
+	qGetPendingHostCBCs = APPLICATION.CFC.CBC.getPendingCBCHost();
+	
+	// Loop through all pending host CBCs
+	for (i = 1; i LTE qGetPendingHostCBCs.recordCount; i = i+1) {
+		// Set variables
+		vSSN = "";
+		vLastName = "";
+		vFirstName = "";
+		vMiddleName = "";
+		vDOB = 0;
+		
+		if (qGetPendingHostCBCs.cbc_type[i] EQ "father") {
+			vSSN = 	qGetPendingHostCBCs.fatherSSN[i];
+			vLastName = qGetPendingHostCBCs.fatherLastName[i];
+			vFirstName = qGetPendingHostCBCs.fatherFirstName[i];
+			vMiddleName = qGetPendingHostCBCs.fatherMiddleName[i];
+			vDOB = qGetPendingHostCBCs.fatherDOB[i];
+		} else if (qGetPendingHostCBCs.cbc_type[i] EQ "mother") {
+			vSSN = 	qGetPendingHostCBCs.motherSSN[i];
+			vLastName = qGetPendingHostCBCs.motherLastName[i];
+			vFirstName = qGetPendingHostCBCs.motherFirstName[i];
+			vMiddleName = qGetPendingHostCBCs.motherMiddleName[i];
+			vDOB = qGetPendingHostCBCs.motherDOB[i];
+		} else {
+			vSSN = 	qGetPendingHostCBCs.memberSSN[i];
+			vLastName = qGetPendingHostCBCs.memberLastName[i];
+			vFirstName = qGetPendingHostCBCs.memberFirstName[i];
+			vMiddleName = qGetPendingHostCBCs.memberMiddleName[i];
+			vDOB = qGetPendingHostCBCs.memberDOB[i];
+		}
+		
+		APPLICATION.CFC.CBC.processBatch(
+			companyID=VAL(qGetPendingHostCBCs.companyID[i]),
+			userType=qGetPendingHostCBCs.cbc_type[i],
+			hostID=qGetPendingHostCBCs.hostID[i],
+			cbcID=qGetPendingHostCBCs.CBCFamID[i],
+			// XML variables
+			username=qGetPendingHostCBCs.gis_username[i],
+			password=qGetPendingHostCBCs.gis_password[i],
+			account=qGetPendingHostCBCs.gis_account[i],
+			SSN=vSSN,
+			lastName=vLastName,
+			firstName=vFirstName,
+			middleName=vMiddleName,
+			DOBYear=VAL(DateFormat(vDOB, 'yyyy')),
+			DOBMonth=VAL(DateFormat(vDOB, 'mm')),
+			DOBDay=VAL(DateFormat(vDOB, 'dd')),
+			isReRun=1							 
+		);
+	}
+</cfscript>
