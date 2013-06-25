@@ -851,6 +851,7 @@
                         <td align="center" valign="top"><b>Date Submitted</b> <br><font size="-2">mm/dd/yyyy</font></td>
                         <td align="center" valign="top"><b>Expiration Date</b> <br><font size="-2">mm/dd/yyyy</font></td>		
                         <td align="center" valign="top"><b>View</b></td>
+                        <td align="left" valign="top"><b>Status</b></td>
                         <td align="left" valign="top" colspan="2"><b>Notes</b></td>
                         <cfif APPLICATION.CFC.USER.isOfficeUser() and CLIENT.companyid eq 10><td align="center" valign="top"><strong>Delete</strong></td></cfif>
                     </tr>				
@@ -862,7 +863,26 @@
                             <td align="center" style="line-height:20px;"><b>#season#</b></td>
                             <td align="center" style="line-height:20px;"><cfif NOT isDate(date_sent)>processing<cfelse>#DateFormat(date_sent, 'mm/dd/yyyy')#</cfif></td>
                             <td align="center" style="line-height:20px;"><cfif NOT isDate(date_expired)>processing<cfelse>#DateFormat(date_expired, 'mm/dd/yyyy')#</cfif></td>
-                            <td align="center" style="line-height:20px;"><cfif NOT LEN(requestID)>processing<cfelseif flagcbc EQ 1>On Hold Contact Compliance<cfelse><cfif APPLICATION.CFC.USER.isOfficeUser()><a href="cbc/view_user_cbc.cfm?userID=#get_cbc_user.userID#&cbcID=#get_cbc_user.cbcID#&file=batch_#get_cbc_user.batchid#_user_#get_cbc_user.userID#_rec.xml" target="_blank"><!----#requestid#---->View </a></cfif></cfif></td>
+                            <td align="center" style="line-height:20px;">
+								<cfif NOT LEN(requestID)>
+                                	processing
+								<cfelseif flagcbc EQ 1>
+                                	On Hold Contact Compliance
+                             	<cfelse>
+									<cfif APPLICATION.CFC.USER.isOfficeUser()>
+                                    	<a 
+                                        	href="cbc/view_user_cbc.cfm?userID=#get_cbc_user.userID#&cbcID=#get_cbc_user.cbcID#&file=batch_#get_cbc_user.batchid#_user_#get_cbc_user.userID#_rec.xml" 
+                                            target="_blank">
+											<!----#requestid#---->View
+                                     	</a>
+                                 	</cfif>
+                          		</cfif>
+                        	</td>
+                            <td align="left" style="line-height:20px;">
+                            	<cfscript>
+									APPLICATION.CFC.CBC.getCBCResultStatus(cbcID=get_cbc_user.cbcID,cbcType="user");
+								</cfscript>
+                            </td>
                             <td colspan="2">
 								<cfif APPLICATION.CFC.USER.isOfficeUser()>
                                 	#notes#

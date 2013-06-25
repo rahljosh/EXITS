@@ -6,7 +6,8 @@
 	Desc:		Host CBC Management
 
 	Updated:  	12/09/09 - Combined qr_users_cbc.cfm to this file.
-				12/09/09 - Running CBCs on this page					
+				12/09/09 - Running CBCs on this page
+				6/12/13 - Added Deny functionality.					
 
 ----- ------------------------------------------------------------------------- --->
 
@@ -96,6 +97,7 @@
 					flagCBC=flagValue,
 					dateAuthorized=FORM["date_authorized" & i],
 					dateApproved = FORM["date_approved" & i],
+					denied = FORM["denied" & i],
 					notes = FORM["notes" & i]
 				);
 				
@@ -142,6 +144,7 @@
                         flagCBC=flagValue,
 						dateAuthorized=FORM[ID & "date_authorized" & x],
 						dateApproved = FORM[ID & "date_approved" & x],
+						denied = FORM[ID & "denied" & x],
 						notes=FORM[ID & "notes" & x]
                     );
                     
@@ -309,6 +312,25 @@
 		format=format.replace(/YY/,YY);
 		t.value=format;
 		}
+		
+			function insertDateByID(ID,format,boxToDisable) {
+				if ($("##"+ID+"CheckBox").is(':checked')) {
+					var now=new Date();
+					var DD=zp(now.getDate());
+					var MM=zp(now.getMonth()+1);
+					var YYYY=now.getFullYear();
+					var YY=zp(now.getFullYear()%100);
+					format=format.replace(/DD/,DD);
+					format=format.replace(/MM/,MM);
+					format=format.replace(/YYYY/,YYYY);
+					format=format.replace(/YY/,YY);
+					$("##"+ID).attr("value",format);
+					$("##"+boxToDisable).attr("disabled", true);
+				} else {
+					$("##"+ID).attr("value","");
+					$("##"+boxToDisable).removeAttr("disabled");
+				}
+			}
 		</script>
 </head>	
 
@@ -360,7 +382,8 @@
                 <td valign="top">Expiration Date<br><font size="-2">mm/dd/yyyy</font></td>		
                 <td valign="top">Request ID</td>
                 <td valign="top">Flag CBC</td>
-                <td valign="top">Date Approved<br><font size="-2">mm/dd/yyyy</font></td>
+                <td valign="top">Approved</td>
+                <td valign="top">Denied</td>
                 <td valign="top">Notes</td>
             </tr>
             
@@ -395,9 +418,20 @@
                     <td><cfif isDate(date_expired)>#DateFormat(date_expired, 'mm/dd/yyyy')#<cfelse>n/a</cfif></td>
                     <td><a href="cbc/view_user_cbc.cfm?userID=#qGetCBCUser.userID#&cbcID=#qGetCBCUser.cbcID#&file=batch_#qGetCBCUser.batchID#_user_#qGetCBCUser.userID#_rec.xml" target="_blank">#requestid#</a></td>
                     <td><input type="checkbox" name="flagCBC_#currentrow#" <cfif VAL(flagCBC)>checked="checked"</cfif>></td>
-                    <td> 
-                        <input type="text" name="date_approved#currentrow#" message="Please input a valid date." <cfif NOT IsDate(date_approved) is ''>onfocus="insertDate(this,'MM/DD/YYYY')"</cfif> value="#DateFormat(date_approved, 'mm/dd/yyyy')#" size="8" maxlength="10">	
-                        <cfif NOT IsDate(date_approved)><br /><em><font size=-2>click in box for date</font></em></cfif>
+                    <td>
+                    	<input type="hidden" name="date_approved#currentrow#" id="date_approved#currentrow#" value="#DateFormat(date_approved,'mm/dd/yyyy')#"/>
+                        <input type="checkbox" id="date_approved#currentrow#CheckBox" onclick="insertDateByID('date_approved#currentrow#','MM/DD/YYYY','denied#currentrow#CheckBox')"
+                            	<cfif date_approved IS NOT ''>checked="checked"</cfif>
+                                <cfif denied IS NOT ''>disabled="disabled"</cfif> />
+                    </td>
+                    <td>
+                    	<input type="hidden" name="denied#currentrow#" id="denied#currentrow#" value="#DateFormat(denied,'mm/dd/yyyy')#"/>
+                        <cfif denied IS ''>
+                            <input type="checkbox" id="denied#currentrow#CheckBox" onclick="insertDateByID('denied#currentrow#','MM/DD/YYYY','date_approved#currentrow#CheckBox')"
+                            <cfif date_approved IS NOT ''>disabled="disabled"</cfif> />
+                        <cfelse>
+                            <input type="checkbox" checked="checked" disabled="disabled" />
+                        </cfif>
                     </td>
                     <td><textarea rows="4" cols="25" name="notes#currentrow#">#notes#</textarea></td>
                 </tr>
@@ -480,8 +514,9 @@
                     <td valign="top"><b>CBC Submitted</b> <br><font size="-2">mm/dd/yyyy</font></td>
                     <td valign="top"><b>Expiration Date</b> <br><font size="-2">mm/dd/yyyy</font></td>		
                     <td valign="top"><b>Request ID</b></td>
-                    <th valign="top">Flag CBC</th>
-                    <td valign="top">Date Approved<br><font size="-2">mm/dd/yyyy</font></td>
+                    <th valign="top" align="left">Flag CBC</th>
+                    <td valign="top">Approved</td>
+                    <td valign="top">Denied</td>
                     <td valign="top">Notes</td>
                 </tr>
                 
@@ -515,9 +550,26 @@
                             <td><cfif isDate(date_expired)>#DateFormat(date_expired, 'mm/dd/yyyy')#<cfelse>n/a</cfif></td>
                             <td><a href="cbc/view_user_cbc.cfm?userID=#qGetCBCMember.userID#&cbcID=#qGetCBCMember.cbcID#&file=batch_#qGetCBCMember.batchID#_user_#qGetCBCMember.userID#_rec.xml" target="_blank">#requestid#</a></td>
                             <td><input type="checkbox" name="#familyID#flagCBC#currentrow#" <cfif VAL(flagCBC)>checked="checked"</cfif>></td>
-                            <td> 
-                                <input type="text" name="#familyID#date_approved#currentrow#" message="Please input a valid date." <cfif NOT IsDate(date_approved) is ''>onfocus="insertDate(this,'MM/DD/YYYY')"</cfif> value="#DateFormat(date_approved, 'mm/dd/yyyy')#" size="8" maxlength="10">	
-                                <cfif NOT IsDate(date_approved)><br /><em><font size=-2>click in box for date</font></em></cfif>
+                            <td>
+                                <input type="hidden" name="#familyID#date_approved#currentrow#" id="#familyID#date_approved#currentrow#" value="#DateFormat(date_approved,'mm/dd/yyyy')#"/>
+                                <input 
+                                	type="checkbox" 
+                                    id="#familyID#date_approved#currentrow#CheckBox" 
+                                    onclick="insertDateByID('#familyID#date_approved#currentrow#','MM/DD/YYYY','#familyID#denied#currentrow#CheckBox')"
+                                        <cfif date_approved IS NOT ''>checked="checked"</cfif>
+                                        <cfif denied IS NOT ''>disabled="disabled"</cfif> />
+                            </td>
+                            <td>
+                                <input type="hidden" name="#familyID#denied#currentrow#" id="#familyID#denied#currentrow#" value="#DateFormat(denied,'mm/dd/yyyy')#"/>
+                                <cfif denied IS ''>
+                                    <input 
+                                    	type="checkbox" 
+                                        id="#familyID#denied#currentrow#CheckBox" 
+                                        onclick="insertDateByID('#familyID#denied#currentrow#','MM/DD/YYYY','#familyID#date_approved#currentrow#CheckBox')"
+                                    <cfif date_approved IS NOT ''>disabled="disabled"</cfif> />
+                                <cfelse>
+                                    <input type="checkbox" checked="checked" disabled="disabled" />
+                                </cfif>
                             </td>
                             <td><textarea rows="4" cols="25" name="#familyID#notes#currentrow#">#notes#</textarea></td>
                         </tr>
