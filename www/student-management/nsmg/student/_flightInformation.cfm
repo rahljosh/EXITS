@@ -484,16 +484,33 @@
 			
 			// This function gets the type of flight from a given string
 			function getFlightType(inputString) {
-				var type = inputString.substring(0,8);
-				if (inputString.substring(8,11) == 'New') {
-					type = type + 'New';
-					if (inputString.substring(11,18) == 'PreAYP') {
-						type = type + 'PreAYP';
+				var type = "";
+				
+				// Incoming Flight
+				if (inputString.indexOf("incoming") !== -1) {
+					if (inputString.indexOf("New") !== -1) {
+						if (inputString.indexOf("PreAYP") !== -1) {
+							type = "incomingNewPreAYP";
+						} else {
+							type = "incomingNew";
+						}
+					} else {
+						if (inputString.indexOf("PreAYP") !== -1) {
+							type = "incomingPreAYP";
+						} else {
+							type = "incoming";
+						}
 					}
 				}
-				if (inputString.substring(8,15) == 'PreAYP') {
-					type = type + 'PreAYP';
+				// Outgoing Flight
+				else if (inputString.indexOf("outgoing") !== -1) {
+					if (inputString.indexOf("New") !== -1) {
+						type = "outgoingNew";	
+					} else {
+						type = "outgoing";	
+					}
 				}
+				
 				return type;
 			}
 			
