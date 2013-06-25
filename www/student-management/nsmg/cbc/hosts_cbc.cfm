@@ -35,10 +35,12 @@
         <cfparam name="FORM.mothercompanyID" default="0">
         <cfparam name="FORM.motherSeasonID" default="0">
         <cfparam name="FORM.motherdate_authorized" default="">
+        <cfparam name="FORM.motherDenied" default="">
         <cfparam name="FORM.motherIsNoSSN" default="0">
         <cfparam name="FORM.fathercompanyID" default="0">
         <cfparam name="FORM.fatherSeasonID" default="0">
         <cfparam name="FORM.fatherdate_authorized" default="">
+        <cfparam name="FORM.fatherDenied" default="">
         <cfparam name="FORM.fatherIsNoSSN" default="0">
         
 	    <cfcatch type="any">
@@ -84,12 +86,15 @@
 		motherIDs = ValueList(qGetCBCMother.cbcfamID);
 		fatherIDs = ValueList(qGetCBCFather.cbcfamID);
 		memberIDs = ValueList(qGetHostMembers.childID);
+		
+		// Get number of denied CBCs for this host family
+		vNumberDeniedCBCs = APPLICATION.CFC.CBC.getNumberDeniedCBCs(hostID=hostID);
 	</cfscript>
     
     <!--- Form Submitted --->
 	<cfif VAL(FORM.submitted)>
-
-		<cfscript>
+    	
+		<cfscript>		
             // Check if we have valid data for host mother
             if ( VAL(FORM.motherSeasonID) AND LEN(FORM.motherdate_authorized) ) {
 				// Insert Host Mother CBC
@@ -128,6 +133,7 @@
                 <cfparam name="FORM.#id#companyID" default="0">
                 <cfparam name="FORM.#id#seasonID" default="0">
                 <cfparam name="FORM.#id#date_authorized" default="">
+                <cfparam name="FORM.#id#memberDenied" default="">
                 <cfparam name="FORM.#id#IsNoSSN" default="0">
                 
                 <cfscript>
@@ -157,6 +163,7 @@
             <cfparam name="FORM.#cbcID#motherIsNoSSN" default="0">
             <cfparam name="FORM.#cbcID#notesmother" default="0">
             <cfparam name="FORM.#cbcID#date_Approvedmother" default="0">
+            <cfparam name="FORM.#cbcID#motherDenied" default="0">
             <cfparam name="FORM.#cbcID#motherflagCBC" default="0">
             <cfscript>
 				// update Host Mother CBC Flag & SSN options
@@ -165,7 +172,8 @@
 					isNoSSN=FORM[cbcID & "motherIsNoSSN"],
 					notes=FORM[cbcID & "notesmother"],
 					date_approved=FORM[cbcID & "date_Approvedmother"],
-					flagCBC=FORM[cbcID & "motherflagCBC"]
+					flagCBC=FORM[cbcID & "motherflagCBC"],
+					denied=FORM[cbcID & "motherDenied"]
 				);			
 			</cfscript>
 
@@ -178,6 +186,7 @@
             <cfparam name="FORM.#cbcID#fatherIsNoSSN" default="0">
             <cfparam name="FORM.#cbcID#notesfather" default="0">
             <cfparam name="FORM.#cbcID#date_Approvedfather" default="0">
+            <cfparam name="FORM.#cbcID#fatherDenied" default="0">
             <cfparam name="FORM.#cbcID#fatherflagCBC" default="0">
             <cfscript>
 				// update Host Father CBC Flag & SSN options
@@ -186,7 +195,8 @@
 					isNoSSN=FORM[cbcID & "fatherIsNoSSN"],
 					notes=FORM[cbcID & "notesfather"],
 					date_approved=FORM[cbcID & "date_Approvedfather"],
-					flagCBC=FORM[cbcID & "fatherflagCBC"]
+					flagCBC=FORM[cbcID & "fatherflagCBC"],
+					denied=FORM[cbcID & "fatherDenied"]
 				);			
 			</cfscript>
 
@@ -214,6 +224,7 @@
                 <cfparam name="FORM.#cbcFamID#memberIsNoSSN" default="0">
                 <cfparam name="FORM.#cbcFamID#notesmember" default="0">
                 <cfparam name="FORM.#cbcFamID#date_Approvedmember" default="0">
+                <cfparam name="FORM.#cbcFamID#memberDenied" default="">
                 <cfparam name="FORM.#cbcFamID#memberflagCBC" default="0">
                 <cfscript>
                     // update Host Member CBC Flag & SSN options
@@ -222,7 +233,8 @@
                         isNoSSN=FORM[cbcFamID & "memberIsNoSSN"],
                         notes=FORM[cbcFamID & "notesmember"],
                         date_approved=FORM[cbcFamID & "date_Approvedmember"],
-                        flagCBC=FORM[cbcFamID & "memberflagCBC"]
+                        flagCBC=FORM[cbcFamID & "memberflagCBC"],
+						denied=FORM[cbcFamID & "memberDenied"]
                     );			
                 </cfscript>
                 
@@ -323,7 +335,7 @@
 				if ( NOT VAL(qGetCBCMember.isNoSSN) AND NOT LEN(qGetCBCMember.ssn) )  {
 					SESSION.formErrors.Add("Missing SSN for #qGetCBCMember.name# #qGetCBCMember.lastname# member of (###qGetCBCMember.hostid#).");
 				}
-			
+				
 				// Check if there are no errors 
 				if ( NOT SESSION.formErrors.length() ) {
 
@@ -391,6 +403,11 @@
                 SESSION.pageMessages.Add("Form successfully submitted.");
 			}
 			
+			// Determines if the host is qualified based on the CBC
+			if (vNumberDeniedCBCs LT APPLICATION.CFC.CBC.getNumberDeniedCBCs(hostID=hostID)) {
+				APPLICATION.CFC.CBC.setIsNotQualifiedToHost(hostID=hostID,isNotQualifiedToHost=1);	
+			}
+			
 			Location(CGI.SCRIPT_NAME & "?" & CGI.QUERY_STRING, "no");
 		</cfscript>
         
@@ -414,7 +431,26 @@
 		format=format.replace(/YY/,YY);
 		t.value=format;
 		}
-		</script>
+		
+		function insertDateByID(ID,format,boxToDisable) {
+			if ($("#"+ID+"CheckBox").is(':checked')) {
+				var now=new Date();
+				var DD=zp(now.getDate());
+				var MM=zp(now.getMonth()+1);
+				var YYYY=now.getFullYear();
+				var YY=zp(now.getFullYear()%100);
+				format=format.replace(/DD/,DD);
+				format=format.replace(/MM/,MM);
+				format=format.replace(/YYYY/,YYYY);
+				format=format.replace(/YY/,YY);
+				$("#"+ID).attr("value",format);
+				$("#"+boxToDisable).attr("disabled", true);
+			} else {
+				$("#"+ID).attr("value","");
+				$("#"+boxToDisable).removeAttr("disabled");
+			}
+		}
+</script>
 <style>
 	.columnHeader {
 		font-weight:bold;
@@ -483,14 +519,14 @@
     
         <table border="0" cellpadding="4" cellspacing="2" width="100%" class="section">
             <tr>
-                <th colspan="9" bgcolor="##e2efc7">H O S T &nbsp; P A R E N T S</th>
+                <th colspan="10" bgcolor="##e2efc7">H O S T &nbsp; P A R E N T S</th>
                 <th bgcolor="##e2efc7"><a href="cbc/hostParentsInfo.cfm?hostID=#qGetHost.hostID#" class="jQueryModal">Edit Host Parents Info</a></th>
             </tr>
             <tr><td colspan="9">&nbsp;</td></tr>
             
             <!--- HOST MOTHER --->
             <cfif LEN(qGetHost.motherfirstname) AND LEN(qGetHost.motherlastname)>
-                <tr><td colspan="10" bgcolor="##e2efc7"><b>Host Mother - #qGetHost.motherfirstname# #qGetHost.motherlastname#</b></td></tr>
+                <tr><td colspan="11" bgcolor="##e2efc7"><b>Host Mother - #qGetHost.motherfirstname# #qGetHost.motherlastname#</b></td></tr>
                 <tr>
                     <td class="columnHeader">Company</td>
                     <td class="columnHeader">Season</td>		
@@ -502,6 +538,7 @@
                     <td class="columnHeader">Submit with<br> no SSN</td>
                     <td class="columnHeader">Notes</td>
                     <td class="columnHeader">Approved</td>
+                    <td class="columnHeader">Denied</td>
                 </tr>
                 <cfloop query="qGetCBCMother">
                     <tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
@@ -522,9 +559,20 @@
                          <td>
                          	<textarea rows="3" cols=15 name="#cbcfamID#notesmother" onkeypress="updateCounter(this);"><cfif isDefined('notes')>#notes#</cfif></textarea>
                          </td>
-                          <td> 
-                        <input type="text" name="#cbcfamID#date_approvedMother" message="Please input a valid date."  <cfif date_approved is ''>onfocus="insertDate(this,'MM/DD/YYYY')"</cfif> value="#DateFormat(date_approved, 'mm/dd/yyyy')#" size="8" maxlength="10" >	
-                       <Cfif date_approved is ''><br /><em><font size=-2>click in box for date</font></em></Cfif>
+                        <td>
+                        	<input type="hidden" name="#cbcfamID#date_approvedMother" id="#cbcfamID#date_approvedMother" value="#DateFormat(date_approved,'mm/dd/yyyy')#"/>
+                        	<input type="checkbox" id="#cbcfamID#date_approvedMotherCheckBox" onclick="insertDateByID('#cbcfamID#date_approvedMother','MM/DD/YYYY','#cbcfamID#motherDeniedCheckBox')"
+                            	<cfif date_approved IS NOT ''>checked="checked"</cfif>
+                                <cfif denied IS NOT ''>disabled="disabled"</cfif> />
+                        </td>
+                  		<td>
+                        	<input type="hidden" name="#cbcfamID#motherDenied" id="#cbcfamID#motherDenied" value="#DateFormat(denied,'mm/dd/yyyy')#"/>
+                        	<cfif denied IS ''>
+                            	<input type="checkbox" id="#cbcfamID#motherDeniedCheckBox" onclick="insertDateByID('#cbcfamID#motherDenied','MM/DD/YYYY','#cbcfamID#date_approvedMotherCheckBox')"
+                                <cfif date_approved IS NOT ''>disabled="disabled"</cfif> />
+                            <cfelse>
+                            	<input type="checkbox" checked="checked" disabled="disabled" />
+                            </cfif>
                         </td>
                     </tr>
                 </cfloop>
@@ -561,7 +609,7 @@
             
             <!--- HOST FATHER --->
             <cfif LEN(qGetHost.fatherfirstname) AND LEN(qGetHost.fatherlastname)>
-                <tr><td colspan="10" bgcolor="##e2efc7"><b>Host Father - #qGetHost.fatherfirstname# #qGetHost.fatherlastname#</b></td></tr>
+                <tr><td colspan="11" bgcolor="##e2efc7"><b>Host Father - #qGetHost.fatherfirstname# #qGetHost.fatherlastname#</b></td></tr>
                 <tr>
                     <td class="columnHeader">Company</td>
                     <td class="columnHeader">Season</td>		
@@ -573,6 +621,7 @@
                     <td class="columnHeader">Submit with<br> no SSN</td>
                     <td class="columnHeader">Notes</td>
                     <td class="columnHeader">Approved</td>
+                    <td class="columnHeader">Denied</td>
                 </tr>
                 <cfloop query="qGetCBCFather">
                     <tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
@@ -591,9 +640,20 @@
                             </cfif>
                         </td>
                          <td><textarea rows="3" cols=15 name="#cbcfamID#notesfather" onkeypress="updateCounter(this);"><cfif isDefined('notes')>#notes#</cfif></textarea></td>
-                          <td> 
-                        <input type="text" name="#cbcfamID#date_approvedFather" message="Please input a valid date."  <cfif date_approved is ''>onfocus="insertDate(this,'MM/DD/YYYY')"</cfif> value="#DateFormat(date_approved, 'mm/dd/yyyy')#" size="8" maxlength="10" >	
-                       <Cfif date_approved is ''><br /><em><font size=-2>click in box for date</font></em></Cfif>
+                     	<td>
+                        	<input type="hidden" name="#cbcfamID#date_approvedFather" id="#cbcfamID#date_approvedFather" value="#DateFormat(date_approved,'mm/dd/yyyy')#"/>
+                        	<input type="checkbox" id="#cbcfamID#date_approvedFatherCheckBox" onclick="insertDateByID('#cbcfamID#date_approvedFather','MM/DD/YYYY','#cbcfamID#fatherDeniedCheckBox')"
+                            	<cfif date_approved IS NOT ''>checked="checked"</cfif>
+                                <cfif denied IS NOT ''>disabled="disabled"</cfif> />
+                        </td>
+                  		<td>
+                        	<input type="hidden" name="#cbcfamID#fatherDenied" id="#cbcfamID#fatherDenied" value="#DateFormat(denied,'mm/dd/yyyy')#"/>
+                        	<cfif denied IS ''>
+                            	<input type="checkbox" id="#cbcfamID#fatherDeniedCheckBox" onclick="insertDateByID('#cbcfamID#fatherDenied','MM/DD/YYYY','#cbcfamID#date_approvedFatherCheckBox')"
+                                <cfif date_approved IS NOT ''>disabled="disabled"</cfif> />
+                            <cfelse>
+                            	<input type="checkbox" checked="checked" disabled="disabled" />
+                            </cfif>
                         </td>
                     </tr>
                 </cfloop>
@@ -630,7 +690,7 @@
             
             <!--- OTHER FAMILY MEMBERS ---> 	
             <tr>
-                <th colspan="9" bgcolor="##e2efc7">O T H E R &nbsp; F A M I L Y &nbsp; M E M B E R S &nbsp; O V E R &nbsp; 16 &nbsp; Y E A R S &nbsp; O L D &nbsp; (Living at Home)</th>
+                <th colspan="10" bgcolor="##e2efc7">O T H E R &nbsp; F A M I L Y &nbsp; M E M B E R S &nbsp; O V E R &nbsp; 16 &nbsp; Y E A R S &nbsp; O L D &nbsp; (Living at Home)</th>
                 <th bgcolor="##e2efc7"><a href="cbc/hostMemberInfo.cfm?hostID=#qGetHost.hostID#" class="jQueryModal">Edit Family Members Info</a></th>
             </tr>
             <tr><td colspan="7">&nbsp;</td></tr>
@@ -657,7 +717,7 @@
                     
                     <cfinput type="hidden" name="#familyID#count" value="#qGetCBCMember.recordcount#">
        
-                    <tr><td colspan="10" bgcolor="##e2efc7"><b>#name# #lastname#</b></td></tr>
+                    <tr><td colspan="11" bgcolor="##e2efc7"><b>#name# #lastname#</b></td></tr>
                     <tr>
                         <td class="columnHeader">Company</td>
                         <td class="columnHeader">Season</td>		
@@ -669,6 +729,7 @@
                         <td class="columnHeader">Submit with<br> no SSN</td>
                         <td class="columnHeader">Notes</td>
                         <td class="columnHeader">Approved</td>
+                        <td class="columnHeader">Denied</td>
                     </tr>
                     
                     <input type="hidden" name="#familyID#memberCBCFamID" value="#qGetCBCMember.cbcFamID#">
@@ -690,10 +751,21 @@
                                 </cfif>
                             </td>
                              <td><textarea rows="3" cols=15 name="#cbcFamID#notesmember" onkeypress="updateCounter(this);"><cfif isDefined('notes')>#notes#</cfif></textarea></td>
-                             <td> 
-                        <input type="text" name="#cbcFamID#date_approvedMember" message="Please input a valid date."  <cfif date_approved is ''>onfocus="insertDate(this,'MM/DD/YYYY')"</cfif> value="#DateFormat(date_approved, 'mm/dd/yyyy')#" size="8" maxlength="10" >	
-                       <Cfif date_approved is ''><br /><em><font size=-2>click in box for date</font></em></Cfif>
-                        </td>
+                             <td>
+                                <input type="hidden" name="#cbcfamID#date_approvedMember" id="#cbcfamID#date_approvedMember" value="#DateFormat(date_approved,'mm/dd/yyyy')#"/>
+                                <input type="checkbox" id="#cbcfamID#date_approvedMemberCheckBox" onclick="insertDateByID('#cbcfamID#date_approvedMember','MM/DD/YYYY','#cbcfamID#memberDeniedCheckBox')"
+                                    <cfif date_approved IS NOT ''>checked="checked"</cfif>
+                                    <cfif denied IS NOT ''>disabled="disabled"</cfif> />
+                            </td>
+                            <td>
+                                <input type="hidden" name="#cbcfamID#memberDenied" id="#cbcfamID#memberDenied" value="#DateFormat(denied,'mm/dd/yyyy')#"/>
+                                <cfif denied IS ''>
+                                    <input type="checkbox" id="#cbcfamID#memberDeniedCheckBox" onclick="insertDateByID('#cbcfamID#memberDenied','MM/DD/YYYY','#cbcfamID#date_approvedMemberCheckBox')"
+                                    <cfif date_approved IS NOT ''>disabled="disabled"</cfif> />
+                                <cfelse>
+                                    <input type="checkbox" checked="checked" disabled="disabled" />
+                                </cfif>
+                            </td>
                         </tr>
                     </cfloop>
     

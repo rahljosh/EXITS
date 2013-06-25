@@ -9,6 +9,7 @@
 
 ----- ------------------------------------------------------------------------- --->
 <link rel="stylesheet" href="linked/css/buttons.css" type="text/css">
+<link rel="stylesheet" href="linked/css/statusIcons.css" type="text/css" />
 <!--- Kill extra output --->
 <cfsilent>
 
@@ -520,6 +521,7 @@ div.scroll2 {
                     <td align="center" valign="top"><b>Date Submitted</b> <br><font size="-2">mm/dd/yyyy</font></td>
                     <td align="center" valign="top"><b>Expiration Date</b> <br><font size="-2">mm/dd/yyyy</font></td>		
                     <td align="center" valign="top"><b>View</b></td>
+                    <td align="left" valign="top"><b>Status</b></td>
                      <cfif client.usertype lte 4> <td align="left" valign="top" colspan="2"><b>Notes</b></td></cfif>
                     <cfif client.usertype lte 4 and client.companyid eq 10><td align="center" valign="top"><b>Delete</b></td></cfif>
                 </tr>				
@@ -537,15 +539,21 @@ div.scroll2 {
                             <cfif NOT LEN(requestid)>
                                 processing
                             <cfelseif flagcbc EQ 1 AND client.usertype LTE 4>
-                                
                                     <a href="cbc/view_host_cbc.cfm?hostID=#qGetCBCMother.hostID#&CBCFamID=#qGetCBCMother.CBCFamID#&file=batch_#qGetCBCMother.batchid#_host_mother_#qGetCBCMother.hostID#_rec.xml" target="_blank">On Hold Contact Your PM</a>
                             <cfelse>
-                                <cfif client.usertype lte 4>
+                        		<cfif client.usertype lte 4>
                                     <a href="cbc/view_host_cbc.cfm?hostID=#qGetCBCMother.hostID#&CBCFamID=#qGetCBCMother.CBCFamID#&file=batch_#qGetCBCMother.batchid#_host_mother_#qGetCBCMother.hostID#_rec.xml" target="_blank">#requestid#</a>
                                 <cfelse>
                                     #requestid#
-                              </cfif>
+                              	</cfif>
                             </cfif>
+                        </td>
+                        <td align="left">
+                        	<cfif LEN(requestid)>
+								<cfscript>
+                                    APPLICATION.CFC.CBC.getCBCResultStatus(cbcID=cbcFamID,cbcType="host");
+                                </cfscript>
+                         	</cfif>
                         </td>
                         <cfif client.usertype lte 4><td align="left" valign="top" colspan="2"><cfif isDefined('notes')>#notes#</cfif></td></cfif>
                         <cfif client.usertype lte 4 and client.companyid eq 10>
@@ -583,10 +591,12 @@ div.scroll2 {
                                     <input type="button" onclick="getCBCFromUser(#family_info.hostID#, #cbcid#,'mother')" value="Transfer CBC" style="font-size:10px" />
                                 </cfif>
                             </td>
+                            <td align="left">
+                            </td>
                         </tr>
                     </cfloop>
                     
-                    <tr bgcolor="e2efc7"><td colspan="6"><strong>Host Father:</strong></td></tr>
+                    <tr bgcolor="e2efc7"><td colspan="7"><strong>Host Father:</strong></td></tr>
                     <cfloop query="qGetCBCFather">
                     <tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
                         <td style="padding-left:20px;">#family_info.fatherfirstname# #family_info.fatherlastname#</td>
@@ -606,6 +616,13 @@ div.scroll2 {
                                     #requestid#
                               </cfif>
                             </cfif>
+                        </td>
+                        <td align="left">
+                        	<cfif LEN(requestid)>
+								<cfscript>
+                                    APPLICATION.CFC.CBC.getCBCResultStatus(cbcID=cbcFamID,cbcType="host");
+                                </cfscript>
+                         	</cfif>
                         </td>
                         <cfif client.usertype lte 4><td align="left" valign="top"><cfif isDefined('notes')>#notes#</cfif></td></cfif>
                         <cfif client.usertype lte 4 and client.companyid eq 10>
@@ -635,6 +652,8 @@ div.scroll2 {
                                     #requestid#
                               </cfif>
                             </td>
+                            <td align="left">
+                            </td>
                             <cfif client.usertype lte 4 and client.companyid eq 10>
                                 <td align="center" valign="top"><a href="delete_cbc.cfm?type=host&id=#requestid#&userid=#url.hostid#"><img src="pics/deletex.gif" border=0/></td>
                             </cfif>
@@ -647,7 +666,7 @@ div.scroll2 {
                     </cfloop>				
                 </cfif>
                 
-                <tr bgcolor="e2efc7"><td colspan="6"><strong>Other Family Members</strong></td></tr>
+                <tr bgcolor="e2efc7"><td colspan="7"><strong>Other Family Members</strong></td></tr>
                 <cfif qGetHostMembers.recordcount EQ '0'>
                     <tr><td align="center" colspan="6">No CBC has been submitted.</td></tr>
                 <cfelse>
@@ -669,6 +688,13 @@ div.scroll2 {
                             <cfelse>
                                 <cfif client.usertype lte 4><a href="cbc/view_host_cbc.cfm?hostID=#qGetHostMembers.hostID#&CBCFamID=#qGetHostMembers.CBCFamID#&file=batch_#qGetHostMembers.batchid#_hostm_#qGetMemberDetail.name#_#qGetHostMembers.hostID#_rec.xml" target="_blank">#requestid#</a></cfif>
                             </cfif>
+                        </td>
+                        <td align="left">
+                        	<cfif LEN(requestid)>
+								<cfscript>
+                                    APPLICATION.CFC.CBC.getCBCResultStatus(cbcID=cbcFamID,cbcType="host");
+                                </cfscript>
+                         	</cfif>
                         </td>
                         <cfif client.usertype lte 4><td align="left" valign="top"><cfif isDefined('notes')>#notes#</cfif></td></cfif>
                         <cfif client.usertype lte 4 and client.companyid eq 10><td align="center" valign="top"><a href="delete_cbc.cfm?type=host&id=#requestid#&userid=#url.hostid#"><img src="pics/deletex.gif" border=0/></td></cfif>
@@ -699,7 +725,8 @@ div.scroll2 {
                     <td background="pics/header_background.gif" width=16>
                     	<span class="buttonBlue smallerButton" onclick="window.location.href='index.cfm?curdoc=forms/host_fam_mem_form&hostID=#family_info.hostID#'">Add</span>
               		</td>
-                    <td width=17 background="pics/header_rightcap.gif">&nbsp;</td></tr>
+                    <td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
+            	</tr>
             </table>
             <div class="scroll">
             <table width=100% align="left" border=0 cellpadding=2 cellspacing=0>
