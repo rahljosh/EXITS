@@ -15,7 +15,10 @@
     <cfinclude template="_breadCrumb.cfm">
 
     <h1>Student Trips</h1>
-    
+    <div style="background-color: ##fefe99; width: 500px; padding: 20px; font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size: 14px; margin-left: auto; margin-right: auto;">
+  <p>This website is currently undergoing maintenance as we update information for 2013-2014 trips.    <strong>Please check back on Sept. 15, 2013 </strong>to sign up for upcoming  MPD tours and excursions.</p>
+</div>
+<!----
     <table width="600" height="333" border="0" align="center">
         <tr>
             <td colspan="4"> 
@@ -88,5 +91,7 @@
             </cfif>
         </cfloop>    
     </table>
-                        
+               
+---->
+    
 </cfoutput>
