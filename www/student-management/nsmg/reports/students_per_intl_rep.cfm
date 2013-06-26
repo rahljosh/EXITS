@@ -4,7 +4,7 @@
 	<cfsetting requestTimeOut="9999">
 
     <!--- Get Program --->
-    <cfquery name="qGetProgram" datasource="MYSQL">
+    <cfquery name="qGetProgram" datasource="#APPLICATION.DSN#">
         SELECT DISTINCT 
             p.programid, 
             p.programname, 
@@ -18,7 +18,7 @@
     </cfquery>
     
     <!--- get Students  --->
-    <Cfquery name="qGetStudentList" datasource="MySQL">
+    <Cfquery name="qGetStudentList" datasource="#APPLICATION.DSN#">
         SELECT 
             s.studentid, 
             s.flsID,
@@ -38,6 +38,7 @@
             p.programname,
             r.regionname, 
             r.regionid,
+            comp.projectManagerName,
             countryname,
             h.familylastname as hostfamily,
             english.name as englishcamp, 
@@ -73,6 +74,8 @@
             smg_aypcamps english ON s.aypenglish = english.campid
         LEFT OUTER JOIN
             smg_users fac ON fac.userID = r.regionFacilitator
+        LEFT OUTER JOIN
+        	smg_companies comp on comp.companyid = s.companyid
         LEFT OUTER JOIN
             smg_school_dates ssd ON ssd.schoolID = s.schoolID
             AND	
@@ -211,6 +214,7 @@
 	                <td width="12%"><strong>Region</strong></td>
                 </cfif>			
                 <td width="16%"><strong>Facilitator</strong></td>
+                <td width="16%"><strong>Project Manager</strong></td>
                 <td width="12%"><strong>School Start Date</strong></td>
                 <td width="8%"><strong>Entry Date</strong></td>
             </tr>
@@ -227,7 +231,8 @@
                     <cfelse>
                         <td>#qGetStudentList.regionname#</td>	
                     </cfif>		
-                    <td>#qGetStudentList.facFirstName# #qGetStudentList.facLastName#</td>			
+                    <td>#qGetStudentList.facFirstName# #qGetStudentList.facLastName#</td>	
+                    <td>#qGetStudentList.projectManagerName#</td>			
                     <td>#DateFormat(qGetStudentList.schoolStartDate, 'mm/dd/yy')#</td>
                     <td>#DateFormat(dateapplication, 'mm/dd/yy')#</td>
 				</tr>							
@@ -258,6 +263,7 @@
                 </cfif>	
                 <td style="border-bottom:1px solid #999; font-weight:bold;">Intl. Rep.</td>		
                 <td style="border-bottom:1px solid #999; font-weight:bold;">Facilitator</td>
+                <td style="border-bottom:1px solid #999; font-weight:bold;">Project Manager</td>
                 <td style="border-bottom:1px solid #999; font-weight:bold;">Arrival to Camp</td>
                 <td style="border-bottom:1px solid #999; font-weight:bold;">Time</td>
                 <td style="border-bottom:1px solid #999; font-weight:bold;">Flight Info</td>    
@@ -294,7 +300,8 @@
                             <td style="border-bottom:1px solid ##999; vertical-align:top;">#qGetStudentList.regionname#</td>	
                         </cfif>	
                         <td style="border-bottom:1px solid ##999; vertical-align:top;">#qGetStudentList.businessname#</td>	
-                        <td style="border-bottom:1px solid ##999; vertical-align:top;">#qGetStudentList.facFirstName# #qGetStudentList.facLastName#</td>					
+                        <td style="border-bottom:1px solid ##999; vertical-align:top;">#qGetStudentList.facFirstName# #qGetStudentList.facLastName#</td>		
+                         <td style="border-bottom:1px solid ##999; vertical-align:top;">#qGetStudentList.projectManagerName#</td>			
                         <!--- Arrival to Pre-AYP --->
                         <td style="border-bottom:1px solid ##999; vertical-align:top;">
                             <cfif qGetPreAypArrival.overnight EQ 1>
