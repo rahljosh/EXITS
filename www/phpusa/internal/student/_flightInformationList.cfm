@@ -49,7 +49,7 @@
             p.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
         AND
             p.enddate > now()
-         
+        AND php.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
 		<cfif CLIENT.userType EQ 8>
             <!--- Intl Rep --->
             AND
@@ -114,7 +114,7 @@
             p.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
         AND
             p.enddate > now()
-			
+		 AND php.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
 		<cfif CLIENT.userType EQ 8>
             <!--- Intl Rep --->
             AND
@@ -149,6 +149,8 @@
 	</cfquery>
 
 </cfsilent>
+
+
 
 <script language="javascript">	
     // Document Ready!
@@ -215,7 +217,7 @@
                                             	n/a
 											</cfif>
                                         </td>
-                                        <td>#qPHPStudentsMissingDeparture.schoolName#</td>
+                                        <td>#qPHPStudentsMissingArrival.schoolName#</td>
                                         <td>n/a</td>
                                         <td style="font-weight:bold;">
                                             <a href="student/index.cfm?action=flightInformation&uniqueID=#qPHPStudentsMissingArrival.uniqueID#&programID=#qPHPStudentsMissingArrival.programID#" class="jQueryModal">
