@@ -13,8 +13,10 @@
 		vLastName = "";
 		vFirstName = "";
 		vMiddleName = "";
+		vRunCBC = 0;
 		vDOB = 0;
 		
+		// Set the variables appropriately
 		if (qGetPendingHostCBCs.cbc_type[i] EQ "father") {
 			vSSN = 	qGetPendingHostCBCs.fatherSSN[i];
 			vLastName = qGetPendingHostCBCs.fatherLastName[i];
@@ -35,23 +37,31 @@
 			vDOB = qGetPendingHostCBCs.memberDOB[i];
 		}
 		
-		APPLICATION.CFC.CBC.processBatch(
-			companyID=VAL(qGetPendingHostCBCs.companyID[i]),
-			userType=qGetPendingHostCBCs.cbc_type[i],
-			hostID=qGetPendingHostCBCs.hostID[i],
-			cbcID=qGetPendingHostCBCs.CBCFamID[i],
-			// XML variables
-			username=qGetPendingHostCBCs.gis_username[i],
-			password=qGetPendingHostCBCs.gis_password[i],
-			account=qGetPendingHostCBCs.gis_account[i],
-			SSN=vSSN,
-			lastName=vLastName,
-			firstName=vFirstName,
-			middleName=vMiddleName,
-			DOBYear=VAL(DateFormat(vDOB, 'yyyy')),
-			DOBMonth=VAL(DateFormat(vDOB, 'mm')),
-			DOBDay=VAL(DateFormat(vDOB, 'dd')),
-			isReRun=1							 
-		);
+		// Make sure there is enough data to run the CBC
+		if (vLastName NEQ "" AND vFirstName NEQ "" AND vSSN NEQ "") {
+			vRunCBC = 1;	
+		}
+		
+		// If there is enough data to run the CBC, run it.
+		if (VAL(vRunCBC)) {
+			APPLICATION.CFC.CBC.processBatch(
+				companyID=VAL(qGetPendingHostCBCs.companyID[i]),
+				userType=qGetPendingHostCBCs.cbc_type[i],
+				hostID=qGetPendingHostCBCs.hostID[i],
+				cbcID=qGetPendingHostCBCs.CBCFamID[i],
+				// XML variables
+				username=qGetPendingHostCBCs.gis_username[i],
+				password=qGetPendingHostCBCs.gis_password[i],
+				account=qGetPendingHostCBCs.gis_account[i],
+				SSN=vSSN,
+				lastName=vLastName,
+				firstName=vFirstName,
+				middleName=vMiddleName,
+				DOBYear=VAL(DateFormat(vDOB, 'yyyy')),
+				DOBMonth=VAL(DateFormat(vDOB, 'mm')),
+				DOBDay=VAL(DateFormat(vDOB, 'dd')),
+				isReRun=1							 
+			);	
+		}
 	}
 </cfscript>
