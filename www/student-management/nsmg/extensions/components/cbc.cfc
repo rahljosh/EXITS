@@ -1977,7 +1977,7 @@
 				if ( APPLICATION.isServerLocal ) {
 					emailTo = 'james@iseusa.com';
 				} else {
-					emailTo = qGetCompany.gis_email, qGetCompany.pm_email;
+					emailTo = qGetCompany.gis_email + "," + qGetCompany.pm_email;
 				}
 			</cfscript>
             
