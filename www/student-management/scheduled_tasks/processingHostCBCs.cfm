@@ -4,7 +4,7 @@
 <!--- Get all host CBCs that are in processing and run them --->
 <cfscript>
 	// Get pending host CBCs
-	qGetPendingHostCBCs = APPLICATION.CFC.CBC.getPendingCBCHost();
+	qGetPendingHostCBCs = APPLICATION.CFC.CBC.getPendingCBCHost(batch=0);
 	
 	// Loop through all pending host CBCs
 	for (i = 1; i LTE qGetPendingHostCBCs.recordCount; i = i+1) {
@@ -14,7 +14,7 @@
 		vFirstName = "";
 		vMiddleName = "";
 		vRunCBC = 0;
-		vDOB = 0;
+		vDOB = 0;	
 		
 		// Set the variables appropriately
 		if (qGetPendingHostCBCs.cbc_type[i] EQ "father") {
@@ -39,7 +39,7 @@
 		
 		// Make sure there is enough data to run the CBC
 		if (vLastName NEQ "" AND vFirstName NEQ "" AND vSSN NEQ "") {
-			vRunCBC = 1;	
+			vRunCBC = 1;
 		}
 		
 		// If there is enough data to run the CBC, run it.
@@ -65,3 +65,21 @@
 		}
 	}
 </cfscript>
+
+<!--- This is for testing purposes, can be removed later --->
+<cfsavecontent variable="emailBody">
+	<cfoutput>
+		Pending CBCs Before: (#qGetPendingHostCBCs.recordCount#)<br/>
+		<cfloop query="qGetPendingHostCBCs">
+			#cbcFamID# #hostID# #cbc_type#<br/>
+		</cfloop>
+	</cfoutput>
+</cfsavecontent>
+
+<cfmail 
+    from="support@iseusa.com" 
+    to="james@iseusa.com"
+    subject="Attempted Processing"
+    type="html">
+    <cfoutput>#emailBody#</cfoutput>
+</cfmail>
