@@ -4,7 +4,7 @@
 <!--- Get all host CBCs that are in processing and run them --->
 <cfscript>
 	// Get pending host CBCs
-	qGetPendingHostCBCs = APPLICATION.CFC.CBC.getPendingCBCHost(batch=0);
+	qGetPendingHostCBCs = APPLICATION.CFC.CBC.getPendingCBCHost(activeSeason=1,batch=0);
 	
 	// Loop through all pending host CBCs
 	for (i = 1; i LTE qGetPendingHostCBCs.recordCount; i = i+1) {
