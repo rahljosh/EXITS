@@ -1993,10 +1993,19 @@
                             	<td>
                                 	<cfif cbc_type EQ "father">
                                     	#fatherFirstName# #fatherLastName# (###hostID#)
+                                        <font color="red">
+											<cfif NOT LEN(fatherSSN)>Missing SSN</cfif>&nbsp;&nbsp;&nbsp;<cfif NOT LEN(fatherDOB)>Missing DOB</cfif>
+                                      	</font>
 									<cfelseif cbc_type EQ "mother">
                                     	#motherFirstName# #motherLastName# (###hostID#)
+                                        <font color="red">
+											<cfif NOT LEN(motherSSN)>Missing SSN</cfif>&nbsp;&nbsp;&nbsp;<cfif NOT LEN(motherDOB)>Missing DOB</cfif>
+                                      	</font>
                                   	<cfelse>
                                     	#memberFirstName# #memberLastName# (###hostID#)
+                                        <font color="red">
+											<cfif NOT LEN(memberSSN)>Missing SSN</cfif>&nbsp;&nbsp;&nbsp;<cfif NOT LEN(memberDOB)>Missing DOB</cfif>
+                                      	</font>
                                     </cfif>
                                 </td>
                                 <td>
