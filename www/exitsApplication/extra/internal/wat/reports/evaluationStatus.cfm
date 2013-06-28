@@ -17,6 +17,7 @@
     <cfparam name="FORM.programID" default="0">
     <cfparam name="FORM.intlRepID" default="0"> <!--- 0 for all reps --->
     <cfparam name="FORM.evaluationStatus" default="all"> <!--- all, complete, missing, (1-4 -> missing specific evaluation) --->
+    <cfparam name="FORM.studentStatus" default="all">
     
     <!--- Get the list of programs --->
     <cfscript>
@@ -128,6 +129,16 @@
                 </td>
             </tr>
             <tr>
+                <td valign="middle" align="right" class="style1"><b>Student Status:</b><br/><span style="font-size:8.5px;"></span></td>
+                <td> 
+                    <select name="studentStatus" class="style1">
+                        <option value="all" <cfif "all" EQ FORM.studentStatus> selected</cfif>>All</option>
+                        <option value="active" <cfif "active" EQ FORM.studentStatus> selected</cfif>>Active</option>
+                        <option value="inactive" <cfif "inactive" EQ FORM.studentStatus> selected</cfif>>Inactive</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
                 <td align="right" class="style1"><b>Format: </b></td>
                 <td  class="style1"> 
                     <input type="radio" name="printOption" id="printOption1" value="1" <cfif FORM.printOption EQ 1> checked </cfif> > <label for="printOption1">Onscreen (View Only)</label>
@@ -172,14 +183,20 @@
                     LEFT JOIN extra_hostcompany eh on eh.hostcompanyid = ec.hostcompanyid
                     WHERE ec.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(userID)#">
                     AND ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.programID)#">
-                    AND ec.status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                    <cfif FORM.studentStatus EQ "active">
+                    	AND ec.status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                    </cfif>
+                    <cfif FORM.studentStatus EQ "inactive">
+                    	AND ec.status = 0
+                        AND ec.status != 'canceled'
+                    </cfif>
                     <cfif FORM.evaluationStatus EQ "missing">
                     	AND DATEDIFF(NOW(),watDateCheckedIn) > 30
                         AND watDateEvaluation1 IS NULL
                         AND watDateEvaluation2 IS NULL
                         AND watDateEvaluation3 IS NULL
                         AND watDateEvaluation4 IS NULL
-                   	<cfelseif FORM.evaluationStatus EQ "complete">
+					<cfelseif FORM.evaluationStatus EQ "complete">
                     	AND ((
                         	DATEDIFF(NOW(),watDateCheckedIn) > 90
                             AND watDateEvaluation1 IS NOT NULL
