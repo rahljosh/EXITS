@@ -394,7 +394,6 @@
                 <td>Host State</td>
                 <td>School</td>
                 <td>Date Placed</td>
-                <td>Total Placements</td>
             </tr>      
             
             <cfoutput query="qGetResults">
@@ -468,7 +467,6 @@
                         <cfelse>
                             n/a
                         </cfif>
-                     <td #vRowColor#>#qGetResults.recordCount#</td>
                     </td>
                 </tr>
             </cfoutput>
@@ -561,16 +559,30 @@
                 <cfif FORM.summary NEQ '1'>
                 
                     <cfoutput query="qGetStudentsInRegion" group="#FORM.reportBy#">
+                    
+                    	<cfquery name="qGetStudentsUnderGroup" dbtype="query">
+                        	SELECT *
+                            FROM qGetStudentsInRegion
+                            WHERE	
+								<cfif FORM.reportBy EQ "placeRepID">
+                                	placeRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentsInRegion.placeRepID)#">
+                                <cfelse>
+									areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentsInRegion.areaRepID)#">
+								</cfif>
+                        </cfquery>
             
                         <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
                             <tr>
-                                <th class="left" colspan="9">
+                                <th class="left" colspan="7">
                                     <cfif FORM.reportBy EQ 'placeRepID'>
                                         Placing
                                     <cfelseif FORM.reportBy EQ 'areaRepID'>
                                         Supervising
                                     </cfif>
                                     Representative #qGetStudentsInRegion.repName#
+                                </th>
+                                <th class="right" colspan="2">
+                                	Total placements for #qGetStudentsInRegion.repName#: #qGetStudentsUnderGroup.recordCount# 
                                 </th>
                             </tr>      
                             <tr class="on">
