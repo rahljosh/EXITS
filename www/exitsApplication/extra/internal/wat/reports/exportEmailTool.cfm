@@ -20,6 +20,7 @@
     <cfparam name="FORM.hostCompanyID" default="0">
     <cfparam name="FORM.candidateStatus" default="1">
     <cfparam name="FORM.action" default="candidate">
+    <cfparam name="FORM.placementType" default="all">
 
 	<cfscript>
         qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(companyID=CLIENT.companyID);
@@ -77,7 +78,7 @@
             <cfcase value="hostCompany">
 
                 <cfquery name="qGetResults" datasource="#APPLICATION.DSN.Source#">
-                    SELECT DISTINCT
+                    SELECT
                         eh.hostCompanyID,
                         eh.name,
                         eh.email
@@ -89,6 +90,18 @@
                         ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">    
                     AND 
                         ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
+                  	<cfif LEN(FORM.candidateStatus)>
+                    	AND ec.status = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.candidateStatus#">
+                    </cfif>
+                    <cfif FORM.placementType EQ "primary">
+                    	AND eh.hostCompanyID IN (SELECT hostCompanyID FROM extra_candidate_place_company WHERE candidateID = ec.candidateID AND isSecondary = 0)
+                  	<cfelseif FORM.placementType EQ "secondary">
+                    	AND eh.hostCompanyID IN (SELECT hostCompanyID FROM extra_candidate_place_company WHERE candidateID = ec.candidateID AND isSecondary = 1)
+                    </cfif>
+                  	AND
+                    	eh.active = 1
+                  	GROUP BY
+                    	eh.hostCompanyID
                     ORDER BY
                         eh.name
                 </cfquery>
@@ -216,6 +229,27 @@
                                 <cfloop query="qGetProgramList">
                                     <option value="#qGetProgramList.programID#" <cfif qGetProgramList.programid EQ FORM.programID> selected</cfif>>#qGetProgramList.programname#</option>
                                 </cfloop>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" class="style1"><b>Placement Type: </b></td>
+                        <td> 
+                            <select name="placementType" class="style1">
+                            	<option value="" <cfif NOT LEN(FORM.placementType)>selected="selected"</cfif>>All</option>
+                                <option value="primary" <cfif FORM.placementType EQ "primary">selected="selected"</cfif>>Primary</option>
+                                <option value="secondary" <cfif FORM.placementType EQ "secondary">selected="selected"</cfif>>Secondary</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td align="right" class="style1"><b>Candidate Status: </b></td>
+                        <td> 
+                            <select id="candidateStatus" name="candidateStatus" class="style1">
+                            	<option value="" <cfif NOT LEN(FORM.candidateStatus)>selected="selected"</cfif>>All</option>
+                                <option value="1" <cfif FORM.candidateStatus EQ 1>selected="selected"</cfif>>Active</option>
+                                <option value="0" <cfif FORM.candidateStatus EQ 0>selected="selected"</cfif>>Inactive</option>
+                                <option value="canceled" <cfif FORM.candidateStatus EQ 'canceled'>selected="selected"</cfif>>Canceled</option>
                             </select>
                         </td>
                     </tr>
