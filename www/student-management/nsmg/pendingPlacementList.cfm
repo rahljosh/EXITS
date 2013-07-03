@@ -118,9 +118,11 @@
     
 	<cfquery name="qGetPendingHosts" datasource="#APPLICATION.DSN#">
 		SELECT 
+        	DISTINCT
+             s.hostid, 
             s.studentid, 
             s.uniqueID,
-            s.hostid, 
+           
             s.firstname AS studentFirstName, 
             s.familylastname AS studentLastName, 
             s.regionAssigned, 
