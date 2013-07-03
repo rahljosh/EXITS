@@ -272,6 +272,9 @@
             </cfcase>
         
         </cfswitch>
+        
+        GROUP BY
+        	s.studentID
 		
         ORDER BY
         
@@ -335,7 +338,7 @@
             </cfdefaultcase>
 
         </cfswitch>
-		
+        
 	</cfquery>
     
 </cfsilent>   
