@@ -394,6 +394,7 @@
                 <td>Host State</td>
                 <td>School</td>
                 <td>Date Placed</td>
+                <td>Total Placements</td>
             </tr>      
             
             <cfoutput query="qGetResults">
@@ -408,8 +409,8 @@
                 </cfscript>
             
                 <tr>
-                    <td #vRowColor#>#qGetResults.regionName#</td>
-                    <td #vRowColor#>#qGetResults.facilitatorName#</td>
+                    <td height="1766" #vRowColor#>#qGetResults.regionName#</td>
+                <td #vRowColor#>#qGetResults.facilitatorName#</td>
                     <td #vRowColor#>#qGetResults.repName#</td>
                     <td #vRowColor#>#qGetResults.studentID#</td>
                     <td #vRowColor#>#qGetResults.firstName#</td>
@@ -430,7 +431,7 @@
                         <cfif VAL(qGetResults.hostID)>
                             #qGetResults.hostFamilyLastName#
         
-                            <span class="note">
+                    <span class="note">
                                 (
                                     <cfif VAL(qGetResults.isWelcomeFamily)>
                                         Welcome
@@ -457,16 +458,17 @@
                     <td #vRowColor#>
                         <cfif VAL(qGetResults.schoolID)>
                             #qGetResults.schoolName# ###qGetResults.schoolID#
-                        </cfif>
+                      </cfif>
                     </td>
                     <td #vRowColor#>
                         <cfif listFind("1,2,3,4", qGetResults.host_fam_approved)>
                             #DateFormat(qGetResults.datePlaced, 'mm/dd/yy')#
-                        <cfelseif VAL(qGetResults.hostID) AND listFind("5,6,7", qGetResults.host_fam_approved) >
+                      <cfelseif VAL(qGetResults.hostID) AND listFind("5,6,7", qGetResults.host_fam_approved) >
                             Pending
                         <cfelse>
                             n/a
                         </cfif>
+                     <td #vRowColor#>#qGetResults.recordCount#</td>
                     </td>
                 </tr>
             </cfoutput>
