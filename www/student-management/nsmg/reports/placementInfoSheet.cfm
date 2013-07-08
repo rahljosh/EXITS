@@ -802,7 +802,8 @@
             
             <cfsavecontent variable="emailMessage">
                 <p>We are pleased to give you the placement information and ID Card for  #qGetStudentInfo.firstName# #qGetStudentInfo.familylastName# (###qGetStudentInfo.studentid#).  Both files are attached. </p>
-                <p>If, for any reason, you are unable to view the files, you can reprint them by logging into EXITS, navigate to the Students Profile and look under the section "Letters".   </p>
+                <p>Please also note that the host family application will be saved to the student’s virtual folder. To access this document, log into EXITS, navigate to the student’s profile and look under the section "Virtual Folder". Note that it may take up to 15 minutes from the time this email was sent before the application is visible in the folder. </p>
+                <p>If, for any reason, you are unable to view the files, you can reprint them by logging into EXITS, navigate to the student's profile and look under the section "Letters".   </p>
                  
                 <Cfif LEN(FORM.addInfo)>
                 	<p>Additional Info: #FORM.addInfo#</p>
