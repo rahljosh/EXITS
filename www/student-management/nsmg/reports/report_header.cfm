@@ -1,15 +1,15 @@
 <!-----Company Information----->
-<Cfquery name="companyshort" datasource="MySQL">
+<Cfquery name="companyshort" datasource="#APPLICATION.DSN#">
 SELECT *
 FROM smg_companies
-WHERE companyid = #client.companyid#
+WHERE companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyid)#">
 </Cfquery>
 
 <!-----Intl. Agent----->
-<cfquery name="int_Agent" datasource="MySQL">
+<cfquery name="int_Agent" datasource="#APPLICATION.DSN#">
 SELECT companyid, businessname, fax, email
 FROM smg_users 
-WHERE userid = #get_student_info.intrep#
+WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_student_info.intrep)#">
 </cfquery>
 
 <cfoutput>
