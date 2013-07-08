@@ -5,7 +5,7 @@
     FROM smg_students
     WHERE active = 1
     AND hostID != 0
-    AND host_fam_approved IN (1,2,3,4)
+    AND ( host_fam_approved IN (1,2,3,4) OR datePISEmailed IS NOT NULL )
     AND hostID IN (SELECT hostID FROM smg_hosts WHERE hostAppStatus IN (1,2,3,4) AND active = 1)
     AND studentID NOT IN (SELECT DISTINCT fk_studentID FROM virtualFolder WHERE fk_hostID = hostID AND fk_documentType = 28 AND isDeleted = 0)
 </cfquery>
@@ -69,7 +69,7 @@
     FROM smg_students
     WHERE active = 1
     AND hostID != 0
-    AND host_fam_approved IN (1,2,3,4)
+    AND ( host_fam_approved IN (1,2,3,4) OR datePISEmailed IS NOT NULL )
     AND hostID IN (SELECT hostID FROM smg_hosts WHERE hostAppStatus IN (1,2,3,4) AND active = 1)
     AND studentID NOT IN (SELECT DISTINCT fk_studentID FROM virtualFolder WHERE fk_hostID = hostID AND fk_documentType = 29 AND isDeleted = 0)
 </cfquery>
