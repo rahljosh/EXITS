@@ -66,7 +66,7 @@
 	}
 </cfscript>
 
-<!--- This is for testing purposes
+<!--- This is for testing purposes--->
 <cfsavecontent variable="emailBody">
 	<cfoutput>
 		Pending CBCs Before: (#qGetPendingHostCBCs.recordCount#)<br/>
@@ -82,4 +82,4 @@
     subject="Attempted Processing"
     type="html">
     <cfoutput>#emailBody#</cfoutput>
-</cfmail>--->
+</cfmail>
