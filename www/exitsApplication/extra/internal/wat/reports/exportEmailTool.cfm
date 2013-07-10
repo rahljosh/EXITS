@@ -78,32 +78,26 @@
             <cfcase value="hostCompany">
 
                 <cfquery name="qGetResults" datasource="#APPLICATION.DSN.Source#">
-                    SELECT
-                        eh.hostCompanyID,
-                        eh.name,
-                        eh.email
-                    FROM   
-                        extra_hostCompany eh
-                    INNER JOIN                    	    
-                        extra_candidates ec ON ec.hostCompanyID = eh.hostCompanyID
-                    WHERE 
-                        ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">    
-                    AND 
-                        ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
-                  	<cfif LEN(FORM.candidateStatus)>
-                    	AND ec.status = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.candidateStatus#">
+        			SELECT
+             			extra_candidate_place_company.hostCompanyID,      
+                      	extra_hostcompany.name,      
+                      	extra_hostcompany.email      
+                    FROM extra_candidate_place_company
+                    INNER JOIN extra_hostcompany ON extra_hostcompany.hostcompanyid = extra_candidate_place_company.hostCompanyID
+                    INNER JOIN extra_candidates ON extra_candidates.candidateID = extra_candidate_place_company.candidateID
+                    WHERE extra_candidates.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+                    AND extra_candidates.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
+                    <cfif LEN(FORM.candidateStatus)>
+                    	AND extra_candidates.status = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.candidateStatus#">
                     </cfif>
                     <cfif FORM.placementType EQ "primary">
-                    	AND eh.hostCompanyID IN (SELECT hostCompanyID FROM extra_candidate_place_company WHERE candidateID = ec.candidateID AND isSecondary = 0)
+                    	AND extra_candidate_place_company.isSecondary = 0
                   	<cfelseif FORM.placementType EQ "secondary">
-                    	AND eh.hostCompanyID IN (SELECT hostCompanyID FROM extra_candidate_place_company WHERE candidateID = ec.candidateID AND isSecondary = 1)
+                    	AND extra_candidate_place_company.isSecondary = 1
                     </cfif>
-                  	AND
-                    	eh.active = 1
-                  	GROUP BY
-                    	eh.hostCompanyID
-                    ORDER BY
-                        eh.name
+                    AND extra_hostcompany.active = 1
+                    GROUP BY extra_hostcompany.hostCompanyID
+                    ORDER BY extra_hostcompany.name
                 </cfquery>
                 
             </cfcase>
