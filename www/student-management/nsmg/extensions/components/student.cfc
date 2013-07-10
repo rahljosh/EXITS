@@ -1833,7 +1833,8 @@
 					UPDATE
                     	smg_hostHistory
                     SET
-                    	stu_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" value="#qGetPreviousPlacementHistory.stu_arrival_orientation#" null="#NOT IsDate(qGetPreviousPlacementHistory.stu_arrival_orientation)#">, 
+                    	stu_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" value="#qGetPreviousPlacementHistory.stu_arrival_orientation#" null="#NOT IsDate(qGetPreviousPlacementHistory.stu_arrival_orientation)#">,
+                        host_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" value="#qGetPreviousPlacementHistory.host_arrival_orientation#" null="#NOT IsDate(qGetPreviousPlacementHistory.host_arrival_orientation)#">, 
                         doc_school_accept_date = <cfqueryparam cfsqltype="cf_sql_date" value="#qGetPreviousPlacementHistory.doc_school_accept_date#" null="#NOT IsDate(qGetPreviousPlacementHistory.doc_school_accept_date)#">,
                         doc_school_sign_date = <cfqueryparam cfsqltype="cf_sql_date" value="#qGetPreviousPlacementHistory.doc_school_sign_date#" null="#NOT IsDate(qGetPreviousPlacementHistory.doc_school_sign_date)#">,
                         doc_class_schedule = <cfqueryparam cfsqltype="cf_sql_date" value="#qGetPreviousPlacementHistory.doc_class_schedule#" null="#NOT IsDate(qGetPreviousPlacementHistory.doc_class_schedule)#">
