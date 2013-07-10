@@ -482,6 +482,9 @@
 			<cfscript>
 				// Set Default Value
 				vTimeOnPending = 'n/a';
+				
+				// Set Default Value
+				vNumberWaiting = 'n/a';
 
 				// Reset Class Notification
 				vSetClassNotification = "attention";
@@ -531,7 +534,7 @@
 				
 				// If selecting Pre-AYP display only students that are pending documents
 				if ( LEN(URL.preAypCamp) AND vSetClassNotification EQ 'attentionGreen' ) {
-					vDisplayStudent = false;
+					vDisplayStudent = true;
 				}
             </cfscript>
         	
