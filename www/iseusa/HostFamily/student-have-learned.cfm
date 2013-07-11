@@ -78,7 +78,7 @@
 <div class="faqInfo">
 <h1>What International Exchange Students Say They Have Learned From Their Host Family</h1>
 
-
+<br />
 
 <ul>
 	<li><strong>"The way of life in America"</strong> &#8211; Sarah</li>

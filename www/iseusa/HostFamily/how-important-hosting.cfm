@@ -4,7 +4,7 @@
      
       <div class="HFsidebarRW"><img src="images/hostFamily/important_pic.png" width="200" />
         <div class="HF_boxW"></div>
-<div class="HF_boxOrg"><h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />The Hosting Experience</h1>
+<div class="HF_boxOrg"><h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />The Hosting Experience</h1><br /><br />
     <p>Hosting a foreign exchange student means opening your home and your heart to a teen from another country while they attend school at your local public high school. </p>
     <p>ISE has many different hosting programs available. Student hosting opportunities are available for periods of 5 months, 10 months or the full 12 month program, with the most common being the 10 month academic year program. </p>
     <p>Exchange Students who participate in the program have been carefully screened before their acceptance. Participants are selected based on their academic achievements and their extracurricular interests. Interviewers identify individuals who demonstrate a curious, optimistic view on the challenges and adventures lying before them, responsible, outgoing and of adaptable nature. ISE partners  are looking for &quot;great kids&quot; with positive attitudes and interests which have something special to offer a <a href="become-a-host-family.cfm" target="_self" ><font color="#000000">Host Family</font></a> during their hosting experience. </p>   
@@ -24,7 +24,7 @@
       <div class="HFpicR"></div>  
 
   <h1 class="HFheader"><br />
-  <img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />Students Come Prepared to Support Themselves</h1>
+  <img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />Students Come Prepared to Support Themselves</h1><br /><br />
   <div class="HFpicR"><img src="images/hostFamily/important2_pic.png" width="175"/></div>
           <p>The International Student Exchange Program provides full medical and accident insurance coverage for the students as well as a local representative to assist families and students during the hosting period. The foreign exchange students provide their own pocket money, host families are asked only to cover the cost of room and board. While no compensation is paid to those volunteer host families experiencing the Foreign Exchange Hosting Experience the Internal Revenue Service has authorized families hosting for government-designated, NON-PROFIT exchange programs, like the ISE Program Members, to claim a $ 50.00 per month charitable contribution deduction on their itemized tax returns.<br />
             </p>
