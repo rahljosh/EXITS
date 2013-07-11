@@ -591,6 +591,10 @@ body {
 .clear {
 	height: 15px;
 }
+#clearMenu {
+	height: 15px;
+	Width: 100%;
+}
 #wrap {height:100%;
 }
 #main {padding-bottom: 30px;
@@ -818,7 +822,7 @@ body {
 	float: left;
 	width: 113px;
 	text-align: center;
-	background-image: url(/images/TopBarLinks/liveTopBarLinks4.png);
+	background-image: url(/images/TopBarLinks/topBarLinks4.png);
 	background-repeat: no-repeat;
 	z-index: 2;
 	height: 19px;
