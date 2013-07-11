@@ -931,7 +931,7 @@
                                         officeUser = APPLICATION.CFC.USER.isOfficeUser(CLIENT.usertype);
                                     </cfscript>
                             
-                                    <cfif NOW() LT DateAdd('m',-5,qGetStudentInfo.endDate) AND NOT officeUser AND NOT qGetStudentInfo.unblockFlight>
+                                    <cfif NOW() LT DateAdd('m',-5,qGetStudentInfo.endDate) AND NOT officeUser AND NOT VAL(qGetStudentInfo.unblockFlight)>
                                         <tr bgcolor="##FEE6D3" align="center">
                                             <td colspan="12" align="center">
                                                 You can only enter departure flight information within 5 months of the end of the program.<br />
