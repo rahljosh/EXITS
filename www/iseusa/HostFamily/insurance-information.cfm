@@ -77,7 +77,7 @@
 <div id="top"></div>
 <div class="HFsidebarL">
 <div class="HFgradient">
-<h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />STUDENT HEALTH INSURANCE INFORMATION 2011-2012</h1>
+<h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />STUDENT HEALTH INSURANCE INFORMATION 2011-2012</h1><br /><br />
 <p>Dear Student and Host Family,<br /><br />
 Below you will find information regarding student insurance. Important phone numbers, addresses and web sites for
 information and claims are included below. The student will be covered under one of the following policies: Elite L -
@@ -91,7 +91,7 @@ sent to all students.</p>
   </p></div><br /><br />
   <img src="../images/hostFamily/insurance_pic.png" width="300" height="200" align="center" /></div>
 <div class="HFsidebarR">
-<h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />Global Secutive ALL CLAIMS MUST BE FILED WITHIN 90 DAYS OF TREATMENT</h1>
+<h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />Global Secutive ALL CLAIMS MUST BE FILED WITHIN 90 DAYS OF TREATMENT</h1><br /><br />
 <P>Global Secutive is the ISE Insurance Agent, and the insurance coverage is provided by the IMG / First Health Network
 in the U.S. Please refer to the Student Insurance ID Card and Insurance Brochure for specific details of your plan
 coverage.</P>

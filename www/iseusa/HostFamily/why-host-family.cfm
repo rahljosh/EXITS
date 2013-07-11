@@ -13,8 +13,14 @@
 	font-weight: bold;
 	margin-top: 2px;
 	padding: 20px;
-	margin-bottom: 15px;
+	margin-bottom: 5px;
+	display: block;
 }
+.clearfix {
+	display: block;
+	height: 5px;
+}
+
 </style>
   
  <div class="HFtopPic"><img src="images/hostFamily/why_Header.png" width="700" height="220" Border="0" /><img src="images/hostFamily/HF_bar.jpg" width="700" height="13" />
@@ -24,23 +30,27 @@
       <div class="HFsidebarRW"><img src="images/hostFamily/why_pic.png" width="200" height="270" />
         <div class="HF_boxW"></div>
 <div class="HF_boxOrg">
-    <h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />Hosting an Exchange Student</h1>
+    <h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />Hosting an Exchange Student</h1><br />
     <p><strong>Hosting a foreign exchange student:</strong><br />
 	&#187; Builds lasting relationships<br />
 	&#187; Enhances family time<br />
 	&#187; Opens doors to opportunities<br />
 	&#187; Spreads world peace<br />
 	&#187; PLUS so much more...</p><br />
-    
-    <div class="remarks">Hosting a Foreign Exchanges Students. Creates a friendship that will last a lifetime</div>
- 
-     <h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />ISE Students</h1>
-<p>&#187; Are 15-18 years old<br />
+      <h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />ISE Students</h1>
+
+<p style="margin-top: 10px;">&#187; Are 15-18 years old<br />
 &#187; Bring spending money<br />
 &#187; Want to share cultures<br />
 &#187; Speak English<br />
 &#187; Have full insurance </p>
 <p><a href="become-a-host-family.cfm?page=/HostFamily/about-our-students" target="_self"><img src="images/hostFamily/learnMore.png" width="80" height="10" border="0" /></a></p>
+    
+    <div class="remarks">Hosting a Foreign Exchanges Students. Creates a friendship that will last a lifetime</div>
+ 
+
+     <div class="clearfix"></div>
+
 
       <!--HF_boxOrg--><!--end HFsidebarR--></div><br />
       </div>
@@ -60,7 +70,7 @@
        
 <div class="HFgradient">
   <h1 class="HFheader"><br />
-  <img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />Why You Should Host an International Exchange Student</h1>
+  <img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />Why You Should Host an International Exchange Student</h1><br /><br />
   <p><strong>From 2007 INTERNATIONAL EXCHANGE STUDENTS<br />
 Attending the H.E.L.P. Community Service Project in MS!</strong></p>
     <ul>

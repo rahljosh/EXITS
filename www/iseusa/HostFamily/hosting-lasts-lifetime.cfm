@@ -5,7 +5,7 @@
       <div class="HFsidebarR"><img src="images/hostFamily/life_pic2.png" width="300"/>
        
 <div class="HFgradient">
-<h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />Student Exchange Helps Individual Participants to:</h1>
+<h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />Student Exchange Helps Individual Participants to:</h1><br /><br />
 <ul><li>Realize an enhanced international perspective</li>
 <li>Gain greater knowledge of the world we live in</li>
 <li>Increase personal maturity</li>
@@ -16,7 +16,7 @@
    
 <br />
 
-<h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />Student Exchange gives a Practical Approach to Peace:</h1>
+<h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />Student Exchange gives a Practical Approach to Peace:</h1><br /><br />
 <ul><li>Promotes Positive Cross-Cultural Contact</li>
 	<li>Improves Cross-Cultural Attitudes, Reduces Prejudice, Corrects Stereotypes</li>
 	<li>Develops Personal Traits Which Enhance Liking and Respect for Other Cultures</li>
@@ -29,7 +29,7 @@
         <div class="HFsidebarL">
   
      <br />   <br />
- <h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />For Societies and Nations, Student Exchange has also been credited with contributing to:</h1>
+ <h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />For Societies and Nations, Student Exchange has also been credited with contributing to:</h1><br /><br />
 <ul><li>Political and economic development</li>
 <li>Foreign policy goal formulation</li>
 <li>Greater governmental sensitivity to other nations' interests</li></ul>
@@ -38,7 +38,7 @@
 
        
 <div class="HFgradient">
-  <h1 class="HFheader"><br /><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />Make a Difference in your School, Community and Family</h1>
+  <h1 class="HFheader"><br /><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />Make a Difference in your School, Community and Family</h1><br /><br />
           <ul>
             <li><strong>In schools</strong> the world stage will grow in tolerance, understanding and appreciation for diversity when students befriend EXCHANGE STUDENTS whose backgrounds are very different from their own.</li>
 <li><strong>In your community,</strong> worldwide events will take on a new significance when EXCHANGE STUDENTS from countries in the news are in your community and ready to share their perspectives and experiences.</li>

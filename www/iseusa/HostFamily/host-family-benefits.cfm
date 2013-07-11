@@ -29,7 +29,7 @@
       
         <div class="HF_boxW"></div>
 <div class="HF_boxOrg">
-    <h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />From the CSIET 2007 survey of host families</h1>
+    <h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />From the CSIET 2007 survey of host families</h1><br /><br />
 
 &#187; Host family learning experience provided benefits not only culturally but also socially.<br /><br />
 &#187; Host families gained a new perspective on its own country and culture from their students.<br /><br />

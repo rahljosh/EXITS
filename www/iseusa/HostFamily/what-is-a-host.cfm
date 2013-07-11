@@ -5,7 +5,7 @@
 <div class="HFsidebarR">
      <div class="HFgradient">
   <h1 class="HFheader"><br />
-  <img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />What it Takes to Host:</h1>
+  <img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />What it Takes to Host:</h1><br />
     <p>Hosting a student can be an extremely rewarding experience for everyone
 in the family, yet it is a role that requires a lot of responsibility. Host families
 are to meet the following expectations:<br />
@@ -51,10 +51,10 @@ culture.</li>
       
 <div class="HFsidebarL">
 <img src="images/hostFamily/what_pic.png" width="350"/>
-
-<div class="HFgradient">       
-<h1 class="HFheaderSub">The "hosting experience" strengthens the family through increased interaction among family members. The addition of the new extended family member enhances the family setting and improves mutual respect as a family.</div><br />
-
+<div class="HFgradient">
+<div class="HFheaderSub" style="display: block: margin-bottom: 10px;">The "hosting experience" strengthens the family through increased interaction among family members. The addition of the new extended family member enhances the family setting and improves mutual respect as a family.</div> 
+</div><br />
+      
 <h1 class="HFheader"><img src="images/hostFamily/HF_arrow.png" width="18" height="15" alt="arrow" />What is a Host Family:</h1>
 <p>A host family is a vital part of the cultural exchange, immersing the student
 in a variety of activities while in the host country. The host family plays a
@@ -65,6 +65,8 @@ person's hopes and dreams and develop a lifelong connection with a
 student and family from another country. It can be challenge to help a
 young person transition to a new culture and ease into their surroundings
 but the rewards are immeasurable.</p>
+
+
 
    
 <br />
