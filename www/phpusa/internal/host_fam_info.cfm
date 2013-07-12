@@ -391,6 +391,7 @@
                                 </tr>
                             </cfloop>
                         </cfif>
+                        	
                    	</cfif>
                     <!--- Host Mother (only display if there is one) --->
                     <cfif LEN(family_info.motherFirstName) OR LEN(family_info.motherLastName) OR LEN(family_info.motherSSN)>
