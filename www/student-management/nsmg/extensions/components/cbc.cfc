@@ -2317,11 +2317,7 @@
                 	AND
                     	cbc.familyID != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
                 </cfif>
-                
-                <!--- Copied CBCs have a comment on notes field --->
-                AND 
-                    cbc.notes = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
-                    
+              
                 GROUP BY         
                     cbc.userID                
                 
@@ -2388,10 +2384,6 @@
                 	AND
                     	cbc.familyID != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
                 </cfif>
-                
-                <!--- Copied CBCs have a comment on notes field --->
-                AND 
-                    cbc.notes = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
                     
                 GROUP BY         
                     cbc.userID                
@@ -2465,10 +2457,6 @@
                 	AND
                     	cbc.familyID != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
                 </cfif>
-                
-                <!--- Copied CBCs have a comment on notes field --->
-                AND 
-                    cbc.notes = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
                     
                 GROUP BY         
                     cbc.userID                
