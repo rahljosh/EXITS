@@ -1354,6 +1354,7 @@
                     stFieldSet.statusFieldName = "areaRepStatus";
                     stFieldSet.dateFieldName = "areaRepDateStatus";
                     stFieldSet.notesFieldName = "areaRepNotes";
+					stFieldSet.idName = "areaRepID";
 					// Used for Initial Host Family Visit
 					stFieldSet.prUserFieldName = "fk_sr_user";
                     stFieldSet.prApproveFieldName = "pr_sr_approved_date";
@@ -1364,6 +1365,7 @@
                     stFieldSet.statusFieldName = "regionalAdvisorStatus";
                     stFieldSet.dateFieldName = "regionalAdvisorDateStatus";
                     stFieldSet.notesFieldName = "regionalAdvisorNotes";
+					stFieldSet.idName = "regionalAdvisorID";
 					// Used for Initial Host Family Visit
 					stFieldSet.prUserFieldName = "fk_ra_user";
                     stFieldSet.prApproveFieldName = "pr_ra_approved_date";
@@ -1374,6 +1376,7 @@
                     stFieldSet.statusFieldName = "regionalManagerStatus";
                     stFieldSet.dateFieldName = "regionalManagerDateStatus";
                     stFieldSet.notesFieldName = "regionalManagerNotes";
+					stFieldSet.idName = "regionalManagerID";
 					// Used for Initial Host Family Visit
 					stFieldSet.prUserFieldName = "fk_rd_user";
                     stFieldSet.prApproveFieldName = "pr_rd_approved_date";
@@ -1387,6 +1390,7 @@
                     stFieldSet.statusFieldName = "facilitatorStatus";
                     stFieldSet.dateFieldName = "facilitatorDateStatus";
                     stFieldSet.notesFieldName = "facilitatorNotes";
+					stFieldSet.idName = "facilitatorID";
 					// Used for Initial Host Family Visit
 					stFieldSet.prUserFieldName = "fk_ny_user";
                     stFieldSet.prApproveFieldName = "pr_ny_approved_date";
@@ -1397,6 +1401,7 @@
                     stFieldSet.statusFieldName = "areaRepStatus";
                     stFieldSet.dateFieldName = "areaRepDateStatus";
                     stFieldSet.notesFieldName = "areaRepNotes";
+					stFieldSet.idName = "areaRepID";
 					// Used for Initial Host Family Visit
 					stFieldSet.prUserFieldName = "fk_sr_user";
                     stFieldSet.prApproveFieldName = "pr_sr_approved_date";
@@ -1451,7 +1456,8 @@
                         SET
                             #stFieldSet.statusFieldName# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.action#">,
                             #stFieldSet.dateFieldName# = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
-                            #stFieldSet.notesFieldName# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.notes#" null="#yesNoFormat(NOT LEN(ARGUMENTS.notes))#">
+                            #stFieldSet.notesFieldName# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.notes#" null="#yesNoFormat(NOT LEN(ARGUMENTS.notes))#">,
+                            #stFieldSet.idName# = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
                         WHERE
                             ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qCheckRecord.ID)#">
                 </cfquery>	
@@ -2175,15 +2181,13 @@
                         <p>Dear #ARGUMENTS.hostFamilyLastName# Family,</p>
                         
                         <p>
-                        	We would like to let you know that your Host Family Application has been approved by our compliance department, here at headquarters. 
+                        	We would like to let you know that your Host Family Application has been approved by our Compliance Department, here at headquarters. 
                         	We thank you for your hard work and dedication to this process. 
                         </p>
                         
                         <p>Everyone here is excited about your decision to host next season and looks forward to sharing the experience with you.</p>
                         
                         <p>If you have any questions, you should always contact your Area Rep first. In an emergency, you can contact us, here at the headquarters.</p>
-                    	
-                        <p>Your host family application has been approved by headquarters.</p>
                         
                         <p>
                         	Best Regards, <br />
