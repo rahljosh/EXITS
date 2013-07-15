@@ -114,6 +114,22 @@
 		   
 		<cfreturn qGetRegionFacilitatorByRegionID>
 	</cffunction>
+    
+    <cffunction name="getRegionManagerByRegionID" access="public" returntype="query" output="false" hint="Returns the manager information for a region">
+		<cfargument name="regionID" type="numeric" required="yes" hint="regionID is required">
+        
+        <cfquery name="qGetRegionManagerByRegion" datasource="#APPLICATION.DSN#">
+        	SELECT smg_users.*
+         	FROM smg_users
+            INNER JOIN user_access_rights ON user_access_rights.userID = smg_users.userID
+            	AND user_access_rights.userType = 5
+                AND user_access_rights.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.regionID)#">
+          	WHERE smg_users.active = 1
+        </cfquery>
+        
+        <cfreturn qGetRegionManagerByRegion>
+    
+    </cffunction>
 
 
 	<cffunction name="getRegionsByList" access="public" returntype="query" output="false" hint="Gets a list of regions by a list of region IDs">
