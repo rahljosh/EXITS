@@ -489,7 +489,7 @@
                         <td width="14%"><h2 style="color:##FFFFFF;">Area Representative</h2></td>
                         <td width="14%"><h2 style="color:##FFFFFF;">Regional Advisor</h2></td>
                         <td width="14%"><h2 style="color:##FFFFFF;">Regional Manager</h2></td>
-                        <td width="14%"><h2 style="color:##FFFFFF;">Facilitator</h2></td>
+                        <td width="14%"><h2 style="color:##FFFFFF;">Compliance</h2></td>
                         <td></td>
                     </tr>
                                        
