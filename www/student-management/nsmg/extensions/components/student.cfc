@@ -1045,6 +1045,36 @@
 			);
         </cfscript>
         
+        <!--- Email host family that the placement is approved --->
+        <cfscript>
+			qGetHostFamily = APPLICATION.CFC.HOST.getHosts(hostID = qGetStudentInfo.hostID);
+			qGetManager = APPLICATION.CFC.Region.getRegionManagerByRegionID(regionID = qGetStudentInfo.regionAssigned);
+		</cfscript>
+        
+        <cfsavecontent variable="vEmailContent">
+        	<cfoutput>
+                <p>Dear #qGetHostFamily.familyLastName# family:</p>
+                <p>
+                    Congratulations!  The placement of #qGetStudentInfo.firstName# #qGetStudentInfo.familyLastName# with your family has been fully approved.  
+                    Your exchange student will be contacting you soon, and if you want to reach out to him/her it is now permissible to do so. 
+                    For any questions, please contact your local area rep – #qGetStudentInfo.areaRepFirstName# #qGetStudentInfo.areaRepLastName#. 
+                    ISE thanks you for sharing in our mission of making the world a little smaller, one student at a time.
+                </p>
+                <p>
+                    Sincerely,<br/>
+                    International Student Exchange
+                </p>
+         	</cfoutput>
+        </cfsavecontent>
+        
+        <cfinvoke component="nsmg.cfc.email" method="send_mail">
+            <cfinvokeargument name="email_to" value="#qGetHostFamily.email#">
+            <cfinvokeargument name="email_cc" value="#qGetStudentInfo.areaRepEmail#,#qGetManager.email#">
+            <cfinvokeargument name="email_subject" value="ISE Placement Approved">
+            <cfinvokeargument name="email_message" value="#vEmailContent#">
+            <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
+        </cfinvoke>
+        
 	</cffunction>
 
 	
