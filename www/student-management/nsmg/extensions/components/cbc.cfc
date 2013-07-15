@@ -2020,7 +2020,6 @@
             <cfmail 
             	from="#qGetCompany.support_email#" 
                 to="#emailTo#"
-                bcc="james@iseusa.com"
                 subject="Host CBCs in Processing for #qGetCompany.companyshort#" 
                 failto="#qGetCompany.support_email#"
                 type="html">
