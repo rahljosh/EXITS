@@ -241,37 +241,105 @@
             <!--- Update --->
             <cfif VAL(FORM.pr_ID)>
             
-                <cfquery datasource="#APPLICATION.DSN#">
-                    UPDATE 
-                        secondVisitAnswers 
-                    SET
-                        dateOfVisit = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.dateOfVisit#">,
-                        neighborhoodAppearance= <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.neighborhoodAppearance#">,
-                        avoid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.avoid#">,
-                        homeAppearance = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homeAppearance#">,
-                        typeOfHome = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.typeOfHome#">,
-                        numberBedRooms = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.numberBedRooms)#">,
-                        numberBathRooms = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.numberBathRooms)#">,
-                        livingRoom = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.livingRoom#">,
-                        diningRoom = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.diningRoom#">,
-                        kitchen = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.kitchen#">,
-                        homeDetailsOther = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homeDetailsOther#">,
-                        famImpression = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.famImpression#">,
-                        famInterested = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.famInterested#">,
-                        famReservations = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.famReservations#">,
-                        exchangeInterest =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.exchangeInterest#">,
-                        livingYear = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.livingYear#">,
-                        ownBed = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.ownBed#">,
-                        bathRoom =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.bathRoom#">,
-                        outdoorsFromBedroom = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.outdoorsFromBedroom#">,
-                        storageSpace = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.storageSpace#">,
-                        studySpace = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.studySpace#">,
-                        privacy = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.privacy#">,
-                        pets = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pets#">,
-                        other =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.other#">
-                    WHERE 
-                        fk_reportID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.pr_ID)#">                  
-                </cfquery>   
+            	<!--- Check if secondVisitAnswers record exists --->
+                <cfquery name="qGetSecondVisitAnswersRecord" datasource="#APPLICATION.DSN#">
+                	SELECT *
+                    FROM secondVisitAnswers
+                    WHERE fk_reportID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.pr_ID)#">
+                </cfquery>
+            
+            	<cfif VAL(qGetSecondVisitAnswersRecord.recordCount)>
+                    <cfquery datasource="#APPLICATION.DSN#">
+                        UPDATE 
+                            secondVisitAnswers 
+                        SET
+                            dateOfVisit = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.dateOfVisit#">,
+                            neighborhoodAppearance= <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.neighborhoodAppearance#">,
+                            avoid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.avoid#">,
+                            homeAppearance = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homeAppearance#">,
+                            typeOfHome = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.typeOfHome#">,
+                            numberBedRooms = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.numberBedRooms)#">,
+                            numberBathRooms = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.numberBathRooms)#">,
+                            livingRoom = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.livingRoom#">,
+                            diningRoom = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.diningRoom#">,
+                            kitchen = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.kitchen#">,
+                            homeDetailsOther = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homeDetailsOther#">,
+                            famImpression = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.famImpression#">,
+                            famInterested = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.famInterested#">,
+                            famReservations = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.famReservations#">,
+                            exchangeInterest =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.exchangeInterest#">,
+                            livingYear = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.livingYear#">,
+                            ownBed = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.ownBed#">,
+                            bathRoom =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.bathRoom#">,
+                            outdoorsFromBedroom = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.outdoorsFromBedroom#">,
+                            storageSpace = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.storageSpace#">,
+                            studySpace = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.studySpace#">,
+                            privacy = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.privacy#">,
+                            pets = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pets#">,
+                            other =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.other#">
+                        WHERE 
+                            fk_reportID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.pr_ID)#">                  
+                    </cfquery>
+            	<cfelse>
+                	<cfquery datasource="#APPLICATION.DSN#">
+                        INSERT INTO secondVisitAnswers
+                        (
+                            fk_reportID,
+                            dateOfVisit,
+                            neighborhoodAppearance,
+                            avoid,
+                            homeAppearance,
+                            typeOfHome,
+                            numberBedRooms,
+                            numberBathRooms,
+                            livingRoom,
+                            diningRoom,
+                            kitchen,
+                            homeDetailsOther,
+                            famImpression,
+                            famInterested,
+                            famReservations,
+                            exchangeInterest,
+                            livingYear,
+                            ownBed,
+                            bathRoom,
+                            outdoorsFromBedroom,
+                            storageSpace,
+                            studySpace,
+                            privacy,
+                            pets,
+                            other
+                        )
+                        VALUES
+                        (
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_ID#">,
+                            <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.dateOfVisit#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.neighborhoodAppearance#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.avoid#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homeAppearance#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.typeOfHome#">,
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.numberBedRooms)#">,
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.numberBathRooms)#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.livingRoom#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.diningRoom#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.kitchen#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homeDetailsOther#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.famImpression#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.famInterested#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.famReservations#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.exchangeInterest#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.livingYear#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.ownBed#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.bathRoom#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.outdoorsFromBedroom#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.storageSpace#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.studySpace#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.privacy#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pets#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.other#">
+                        )
+                    </cfquery>
+                </cfif> 
             
             <!--- Insert --->
             <cfelse>
