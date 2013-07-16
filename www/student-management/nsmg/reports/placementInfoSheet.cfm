@@ -806,7 +806,7 @@
                 <p>If, for any reason, you are unable to view the files, you can reprint them by logging into EXITS, navigate to the student's profile and look under the section "Letters".   </p>
                  
                 <Cfif LEN(FORM.addInfo)>
-                	<p>Additional Info: #FORM.addInfo#</p>
+                	<p><span style="background-color:yellow;">Additional Info:</span> <b>#FORM.addInfo#</b></p>
                 </Cfif>
                 
                 <p>
