@@ -1684,7 +1684,7 @@
                     <tr>
                         <td style="line-height:20px;" valign="top">
                         <Cfquery name="family_members" datasource="#APPLICATION.DSN#">
-                            select firstname, lastname, dob, relationship, no_members, auth_received, auth_received_type
+                            select id, firstname, lastname, dob, relationship, no_members, auth_received, auth_received_type
                             from smg_user_family
                             where userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#rep_info.userID#">
                         </Cfquery>
@@ -1710,9 +1710,9 @@
                                         <cfelse>
                                             <cfif auth_received eq 0>
                                                 <a href="forms/cbc_auth_fam.cfm?id=#rep_info.uniqueid#&userID=#rep_info.userID#">Get</a>
-                                                <a href="index.cfm?curdoc=forms/upload_cbc_fam&id=#rep_info.uniqueid#&userID=#rep_info.userID#">Upload</a>
+                                                <a href="index.cfm?curdoc=forms/upload_cbc_fam&userID=#rep_info.userID#&familyID=#family_members.id#">Upload</a>
                                             <cfelse>
-                                                <a href="uploadedfiles/cbc_auth/household/#rep_info.uniqueid#_#rep_info.userID#.#auth_received_type#">Received</a>
+                                                <a href="uploadedFiles/xml_files/gis/#rep_info.userID#_#family_members.id#.#family_members.auth_received_type#">Received</a>
                                             </cfif>
                                         </cfif>
                                     </td>
