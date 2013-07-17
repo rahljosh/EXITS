@@ -2376,9 +2376,13 @@
 
 			// Get Host Family Headquarters Most Recent Approval Date
 			if ( NOT isDate(vDateOfficeApproved) ) {
-				// Get Application Approval History
-				qGetApprovalHistory = APPLICATION.CFC.HOST.getApplicationApprovalHistory(hostID=ARGUMENTS.hostID, whoViews=CLIENT.userType, sortBy="facilitatorDateStatus", sortOrder="DESC");
-				vDateOfficeApproved = qGetApprovalHistory.facilitatorDateStatus;
+				// Make sure nothing has been denied by the facilitator
+				qGetDeniedHistory = APPLICATION.CFC.HOST.getApplicationApprovalHistory(hostID=ARGUMENTS.hostID, whoViews=CLIENT.userType, facilitatorStatus="denied");
+				if (qGetDeniedHistory.recordCount EQ 0) {
+					// Get Application Approval History
+					qGetApprovalHistory = APPLICATION.CFC.HOST.getApplicationApprovalHistory(hostID=ARGUMENTS.hostID, whoViews=CLIENT.userType, sortBy="facilitatorDateStatus", sortOrder="DESC");
+					vDateOfficeApproved = qGetApprovalHistory.facilitatorDateStatus;
+				}
 			}				
 			
 			// Check if there is a student assigned to this host family (same season)
