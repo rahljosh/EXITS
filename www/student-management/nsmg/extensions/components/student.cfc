@@ -1049,6 +1049,7 @@
         <cfscript>
 			qGetHostFamily = APPLICATION.CFC.HOST.getHosts(hostID = qGetStudentInfo.hostID);
 			qGetManager = APPLICATION.CFC.Region.getRegionManagerByRegionID(regionID = qGetStudentInfo.regionAssigned);
+			qGetCompany = APPLICATION.CFC.Company.getCompanies(companyID = qGetHostFamily.companyID);
 		</cfscript>
         
         <cfsavecontent variable="vEmailContent">
@@ -1058,11 +1059,11 @@
                     Congratulations!  The placement of #qGetStudentInfo.firstName# #qGetStudentInfo.familyLastName# with your family has been fully approved.  
                     Your exchange student will be contacting you soon, and if you want to reach out to him/her it is now permissible to do so. 
                     For any questions, please contact your local area rep – #qGetStudentInfo.areaRepFirstName# #qGetStudentInfo.areaRepLastName#. 
-                    ISE thanks you for sharing in our mission of making the world a little smaller, one student at a time.
+                    #qGetCompany.companyshort_nocolor# thanks you for sharing in our mission of making the world a little smaller, one student at a time.
                 </p>
                 <p>
                     Sincerely,<br/>
-                    International Student Exchange
+                    #qGetCompany.companyname#
                 </p>
          	</cfoutput>
         </cfsavecontent>
