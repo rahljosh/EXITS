@@ -841,7 +841,8 @@
                         <cfif qGetStudentInfo.doublePlace NEQ ARGUMENTS.doublePlace>
 	                        hasDoublePlacementIDChanged = <cfqueryparam cfsqltype="cf_sql_bit" value="1">,
                         </cfif>                        
-                        doublePlacementID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.doublePlace)#">
+                        doublePlacementID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.doublePlace)#">,
+                        updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
                     WHERE
                         historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(vHostHistoryID)#">
             </cfquery>
@@ -1026,7 +1027,8 @@
                     <cfif VAL(vUpdateDatePlaced)>
                         dateplaced = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
                     </cfif>
-                    dateRelocated = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateRelocated#" null="#NOT IsDate(ARGUMENTS.dateRelocated)#">
+                    dateRelocated = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateRelocated#" null="#NOT IsDate(ARGUMENTS.dateRelocated)#">,
+                    updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
                 WHERE
                     historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(vHostHistoryID)#">
         </cfquery>
@@ -1229,7 +1231,8 @@
                     smg_hosthistory	
                 SET
                 	isWelcomeFamily = <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
-                    dateSetHostPermanent = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateSetHostPermanent#">
+                    dateSetHostPermanent = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateSetHostPermanent#">,
+                    updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
                 WHERE
                     historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(vHostHistoryID)#">
         </cfquery>
@@ -1748,7 +1751,9 @@
                         dateOfChange, 
                         reason,
                         isActive,
-                        dateCreated
+                        dateCreated,
+                        createdBy,
+                        updatedBy
                     )
                     VALUES
                     (
@@ -1774,7 +1779,9 @@
                         <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#vActions#">,
                         <cfqueryparam cfsqltype="cf_sql_bit" value="1">,
-                        <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+                        <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
+                       	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
                     )
             </cfquery>
             
@@ -1867,7 +1874,8 @@
                     	stu_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" value="#qGetPreviousPlacementHistory.stu_arrival_orientation#" null="#NOT IsDate(qGetPreviousPlacementHistory.stu_arrival_orientation)#">,
                         doc_school_accept_date = <cfqueryparam cfsqltype="cf_sql_date" value="#qGetPreviousPlacementHistory.doc_school_accept_date#" null="#NOT IsDate(qGetPreviousPlacementHistory.doc_school_accept_date)#">,
                         doc_school_sign_date = <cfqueryparam cfsqltype="cf_sql_date" value="#qGetPreviousPlacementHistory.doc_school_sign_date#" null="#NOT IsDate(qGetPreviousPlacementHistory.doc_school_sign_date)#">,
-                        doc_class_schedule = <cfqueryparam cfsqltype="cf_sql_date" value="#qGetPreviousPlacementHistory.doc_class_schedule#" null="#NOT IsDate(qGetPreviousPlacementHistory.doc_class_schedule)#">
+                        doc_class_schedule = <cfqueryparam cfsqltype="cf_sql_date" value="#qGetPreviousPlacementHistory.doc_class_schedule#" null="#NOT IsDate(qGetPreviousPlacementHistory.doc_class_schedule)#">,
+                        updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
                     WHERE
                     	historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(vHostHistoryID)#">                     
                 </cfquery>
@@ -1878,7 +1886,8 @@
 					UPDATE
                     	smg_hostHistory
                     SET
-                    	stu_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" value="#qGetPreviousPlacementHistory.stu_arrival_orientation#" null="#NOT IsDate(qGetPreviousPlacementHistory.stu_arrival_orientation)#">
+                    	stu_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" value="#qGetPreviousPlacementHistory.stu_arrival_orientation#" null="#NOT IsDate(qGetPreviousPlacementHistory.stu_arrival_orientation)#">,
+                        updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
                  	WHERE
                     	historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(vHostHistoryID)#">                     
                 </cfquery>
@@ -2043,7 +2052,8 @@
                         placeRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.placeRepID)#">,
                         areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.areaRepID)#">,
                         secondVisitRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.secondVisitRepID)#">,
-                        doublePlacementID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.doublePlace)#">
+                        doublePlacementID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.doublePlace)#">,
+                        updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
                     WHERE
                         historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(vHostHistoryID)#">
             </cfquery>
@@ -2144,7 +2154,8 @@
                 UPDATE
                     smg_hostHistory
                 SET
-                    isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                    isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
+                    updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
                 WHERE
                     studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
                 AND	
@@ -2175,7 +2186,8 @@
                     UPDATE
                         smg_hostHistory
                     SET
-                        datePlacedEnded = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.datePlacedEnded#">
+                        datePlacedEnded = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.datePlacedEnded#">,
+                        updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
                     WHERE
                         historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#vHistoryID#">
             </cfquery> 
@@ -2195,7 +2207,8 @@
                 UPDATE
                     smg_hostHistory
                 SET
-                    hfSupervisingDistance = <cfqueryparam cfsqltype="cf_sql_float" value="#ARGUMENTS.distanceInMiles#">
+                    hfSupervisingDistance = <cfqueryparam cfsqltype="cf_sql_float" value="#ARGUMENTS.distanceInMiles#">,
+                    updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
                 WHERE
                     historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.historyID)#">	
         </cfquery>
@@ -2220,7 +2233,8 @@
             UPDATE
                 smg_hostHistory
             SET
-                datePISEmailed = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+                datePISEmailed = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
+                updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
             WHERE
                 studentID = <cfqueryparam cfsqltype="integer" value="#VAL(ARGUMENTS.studentID)#">      
             AND
@@ -2283,7 +2297,8 @@
         	UPDATE 
 				smg_hostHistory
         	SET
-				datePlaced = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#vSetNewDate#">
+				datePlaced = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#vSetNewDate#">,
+                updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
         	WHERE
 				historyID = <cfqueryparam cfsqltype="integer" value="#VAL(qGetHistoryID.historyID)#">
         </cfquery>
@@ -2844,7 +2859,8 @@
                     host_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.host_arrival_orientation#" null="#NOT IsDate(ARGUMENTS.host_arrival_orientation)#">,
                     compliance_host_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_host_arrival_orientation#" null="#NOT IsDate(ARGUMENTS.compliance_host_arrival_orientation)#">,
                     doc_class_schedule = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_class_schedule#" null="#NOT IsDate(ARGUMENTS.doc_class_schedule)#">,
-                    compliance_class_schedule = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_class_schedule#" null="#NOT IsDate(ARGUMENTS.compliance_class_schedule)#">
+                    compliance_class_schedule = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_class_schedule#" null="#NOT IsDate(ARGUMENTS.compliance_class_schedule)#">,
+                    updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
                 WHERE 
                     historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.historyID)#"> 
                 AND
@@ -2925,7 +2941,8 @@
                     doc_ref_check1 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_ref_check1#" null="#NOT IsDate(ARGUMENTS.doc_ref_check1)#">,
                     <!--- Page 12 - Reference 2 ---> 
                     doc_ref_form_2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_ref_form_2#" null="#NOT IsDate(ARGUMENTS.doc_ref_form_2)#">,
-                    doc_ref_check2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_ref_check2#" null="#NOT IsDate(ARGUMENTS.doc_ref_check2)#">
+                    doc_ref_check2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_ref_check2#" null="#NOT IsDate(ARGUMENTS.doc_ref_check2)#">,
+                    updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
                 WHERE 
                     historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.historyID)#">                                	
 		</cfquery>

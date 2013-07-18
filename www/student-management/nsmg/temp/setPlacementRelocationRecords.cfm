@@ -101,18 +101,6 @@
                     <td>#DateFormat(qGetPlacedStudents.dateRelocated,'mm/dd/yy')#</td>
                 </tr>            
     
-                <!---
-                <cfquery datasource="#APPLICATION.DSN#">
-                    UPDATE
-                        smg_hostHistory
-                    SET
-                        isRelocation = <cfqueryparam cfsqltype="cf_sql_integer" value="1">,
-                        dateRelocated = <cfqueryparam cfsqltype="cf_sql_date" value="#qGetPlacedStudents.datePlaced#">
-                    WHERE	
-                        historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetPlacedStudents.historyID#">
-                </cfquery>
-                --->
-    
             </cfif>
         
         </cfloop>

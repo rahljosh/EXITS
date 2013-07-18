@@ -46,7 +46,8 @@
         UPDATE
             smg_hostHistory
         SET
-            dateRelocated = <cfqueryparam cfsqltype="cf_sql_date" value="#qGetRelocations.datePlaced#">
+            dateRelocated = <cfqueryparam cfsqltype="cf_sql_date" value="#qGetRelocations.datePlaced#">,
+            updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
         WHERE	
             historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRelocations.historyID#">
     </cfquery>
