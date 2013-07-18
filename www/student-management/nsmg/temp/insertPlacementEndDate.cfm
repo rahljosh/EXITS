@@ -74,7 +74,8 @@
                 	UPDATE
                     	smg_hostHistory
                     SET
-                    	datePlacedEnded = <cfqueryparam cfsqltype="cf_sql_date" value="#vPreviousDatePlaced#">
+                    	datePlacedEnded = <cfqueryparam cfsqltype="cf_sql_date" value="#vPreviousDatePlaced#">,
+                        updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
                     WHERE	
                     	historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qSearchHistory.historyID#">
                 </cfquery>
@@ -125,7 +126,8 @@
         UPDATE
             smg_hostHistory
         SET
-            dateRelocated = <cfqueryparam cfsqltype="cf_sql_date" value="#datePlaced#">
+            dateRelocated = <cfqueryparam cfsqltype="cf_sql_date" value="#datePlaced#">,
+            updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
         WHERE	
             historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRelocations.historyID#">
     </cfquery>

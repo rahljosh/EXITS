@@ -11,17 +11,14 @@ where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#">
     <cfoutput>
     <cfif hostid gt 0>
 		<Cfif isDate('#Evaluate("FORM." & i & "_" & hostStuCombo.hostid)#')>
-            <Cfquery name="updateDateReceived" datasource="#application.dsn#">
-            update smg_hostHistory set dateReceived = <cfqueryparam cfsqltype="cf_sql_date" value="#Evaluate("FORM." & i & "_" & hostStuCombo.hostid)#">
-            where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#"> 
-            AND hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#hostStuCombo.hostid#"> 
-            </Cfquery>
-           <!---
-				<cfscript>
-                // Get Family Member CBC
-                 APPLICATION.CFC.STUDENT.insertPlacementActionHistory(studentid=i,changedby=client.userid,usertype=client.usertype,placementAction=Received);
-                </cfscript>
-			---->
+            <cfquery name="updateDateReceived" datasource="#APPLICATION.DSN#">
+            	UPDATE smg_hostHistory 
+                SET 
+                	dateReceived = <cfqueryparam cfsqltype="cf_sql_date" value="#Evaluate("FORM." & i & "_" & hostStuCombo.hostid)#">,
+                    updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
+            	WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#"> 
+            	AND hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#hostStuCombo.hostid#"> 
+            </cfquery>
         </Cfif>
     </cfif>
     </cfoutput>

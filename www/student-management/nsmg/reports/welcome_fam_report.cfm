@@ -118,22 +118,6 @@
 				<td>#DateFormat(datePlaced, 'mm/dd/yyyy')#</td>
 				<td align="left">#placement_notes#</td>		
 			</tr>
-			<!---
-			<cfif client.userid eq 510>
-				<cfquery name="get" datasource="MySql">
-					SELECT historyid, hostid, studentid
-					FROM smg_hosthistory
-					WHERE studentid = #studentid# AND hostid = #hostid#
-					ORDER BY historyid DESC
-				</cfquery>
-				<cfquery name="update" datasource="MySql">
-					UPDATE	smg_hosthistory			
-					SET isWelcomeFamily = '1'
-					WHERE historyid = '#get.historyid#' 
-					LIMIT 1
-				</cfquery>
-			</cfif>
-			--->
 		</cfloop>	
 		</table>					
 	</cfif>  <!--- get_students_region.recordcount is not 0 ---> 
