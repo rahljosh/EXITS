@@ -7,10 +7,10 @@
 
 <body>
 
-<cfquery name="check_rights" datasource="MySql">
+<cfquery name="check_rights" datasource="#APPLICATION.DSN#">
 	SELECT invoice_access
 	FROM smg_users
-	WHERE userid = '#client.userid#'
+	WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
 </cfquery>
 
 <cfif client.usertype GTE 4 OR check_rights.invoice_access EQ 0>

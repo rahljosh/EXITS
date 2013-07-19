@@ -1,3 +1,6 @@
+<!--- Request a longer timeout --->
+<cfsetting requesttimeout="300">
+
 <!--- CHECK INVOICE RIGHTS ---->
 <cfinclude template="check_rights.cfm">
 
@@ -277,54 +280,6 @@ Click on Business Name or enter Agent ID to add charges, see current charges, cr
                 </cfif>
                 AND smg_invoice_refunds.refund_receipt_id <> 0
             </cfquery>
-		
-		
-<!----Old Balance Querys---->		
-<!----
-		
-		<!----get sum of total due---->
-			<Cfquery name="total_Due" datasource="MySQL">
-			select sum(amount_due) as amount_due
-			from smg_charges
-			where agentid = #userid#
-			<cfif form.view is not 'all'>
-			and companyid = #client.companyid#
-			</cfif>
-			</Cfquery>
-	
-
-			<!----sum of received payments---->
-			<!----
-<cfquery name="received_payments" datasource="MySQL">
-SELECT smg_charges.agentid, sum( smg_payment_received.totalreceived ) AS amount_paid
-FROM smg_payment_received INNER JOIN ((smg_invoice INNER JOIN smg_charges ON smg_invoice.invoiceid = smg_charges.invoiceid) INNER JOIN smg_payment_charges ON smg_charges.chargeid = smg_payment_charges.chargeid) ON smg_payment_received.paymentid = smg_payment_charges.paymentid
-GROUP BY smg_charges.agentid
-HAVING (((smg_charges.agentid)=#userid#))
-</cfquery>
----->
-
-			<cfquery name="received_payments" datasource="mysql">
-			select sum(totalreceived) as amount_paid
-			from smg_payment_received
-			where agentid = #userid#
-			<cfif form.view is not 'all'>
-			and companyid = #client.companyid#
-			</cfif>
-			
-			</cfquery>
-			<!----Sum of credits---->
-			<cfquery name="sum_credits" datasource="MySQL">
-			select sum(amount) as credit_Amount
-			from smg_credit
-			where agentid = #userid# and active =  1
-			<cfif form.view is not 'all'>
-			and companyid = #client.companyid#
-			</cfif>
-			</cfquery>
-			
-			---->
-			
-			
 			
             <cfquery name="agents_Students" datasource="#APPLICATION.DSN#">
                 SELECT studentid
