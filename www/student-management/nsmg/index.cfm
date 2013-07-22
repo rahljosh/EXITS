@@ -18,9 +18,12 @@
     
     <cfscript>
 		pageNotAvailable = 0;
+		// Redirect to initial_welcome of URL.curdoc isn't present.
 		if ( NOT LEN(URL.curdoc) ) {
 			URL.curdoc = "initial_welcome";
-		} else if ( NOT FileExists(ExpandPath("#URL.curdoc#")) AND NOT FileExists(ExpandPath("#URL.curdoc#.cfm")) ){
+		}
+		// If the requested file does not exist or it does exist but is not a .cfm file, redirect to initial_welcome and let the user know.
+		else if ( (NOT FileExists(ExpandPath("#URL.curdoc#")) AND NOT FileExists(ExpandPath("#URL.curdoc#.cfm"))) OR (FileExists(ExpandPath("#URL.curdoc#")) AND RIGHT(URL.curdoc,4) NEQ ".cfm") ) {
 			URL.curdoc = "initial_welcome";
 			pageNotAvailable = 1;
 		}
