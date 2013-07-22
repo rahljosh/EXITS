@@ -223,6 +223,8 @@
               		<cfelse>
                 		hist.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
              		</cfif>
+             	AND
+                	hist.dateRelocated IS NOT NULL
                            
                 GROUP BY
                 	hist.studentID,
@@ -396,11 +398,11 @@
 
 				if ( vPreviousStudentID NEQ qGetResults.studentID ) {
 					// Reset Variables for each student
-					vHostCount = 0;
+					vHostCount = 1;
 					vHostNumber = "";
 					vPreviousHostID = "";
 					
-					vSchoolCount = 0;
+					vSchoolCount = 1;
 					vSchoolNumber = "";
 					vPreviousSchoolID = "";
 				}
