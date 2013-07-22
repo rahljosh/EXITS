@@ -369,7 +369,7 @@
             <td>Local Coordinator Last Name</td>
             <td>Local Coordinator Zip</td>
             <td>Change of Home Code</td>
-            <td>Brief Narrative Descriptikon Explaining Reason for Change in Home or School or Where Student was Between Entry and and Placement in First Home</td>
+            <td>Brief Narrative Description Explaining Reason for Change in Home or School or Where Student was Between Entry and Placement in First Home</td>
         </tr>
 
         <cfscript>
@@ -485,6 +485,7 @@
                 <td #vRowColor#>#qGetResults.supervisingZipCode#</td>
                 <td #vRowColor#>#qGetResults.changeOfHomeCode#</td>
                 <td #vRowColor#>
+                	<b>#qGetResults.changePlacementReason#</b> <cfif LEN(qGetResults.changePlacementReason) AND LEN(qGetResults.changePlacementExplanation)>-</cfif> 
                     #qGetResults.changePlacementExplanation#
                     <cfif VAL(qGetResults.aypEnglish) AND NOT isDate(qGetResults.dateRelocated)>
                         Student was attending an English/Orientation camp approved by ISE
