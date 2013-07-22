@@ -223,8 +223,6 @@
               		<cfelse>
                 		hist.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
              		</cfif>
-             	AND
-                	hist.dateRelocated IS NOT NULL
                            
                 GROUP BY
                 	hist.studentID,
@@ -376,6 +374,7 @@
 
         <cfscript>
 			vPreviousStudentID = 0;
+			vRowNumber = 1;
 			// Set local variables
 			vHostCount = 0;
 			vHostNumber = "";
@@ -384,13 +383,15 @@
 			vSchoolCount = 0;
 			vSchoolNumber = "";
 			vPreviousSchoolID = "";
+			
+			vRecordNumber = 0;
         </cfscript>
         
         <!--- Loop Results ---> 
         <cfoutput query="qGetResults">
 
             <cfscript>
-                if ( qGetResults.currentRow MOD 2 ) {
+                if ( vRowNumber MOD 2 ) {
                     vRowColor = 'bgcolor="##E6E6E6"';
                 } else {
                     vRowColor = 'bgcolor="##FFFFFF"';
@@ -398,13 +399,15 @@
 
 				if ( vPreviousStudentID NEQ qGetResults.studentID ) {
 					// Reset Variables for each student
-					vHostCount = 1;
+					vHostCount = 0;
 					vHostNumber = "";
 					vPreviousHostID = "";
 					
-					vSchoolCount = 1;
+					vSchoolCount = 0;
 					vSchoolNumber = "";
 					vPreviousSchoolID = "";
+					
+					vRecordNumber = 0;
 				}
                 
                 // Pre-AYP Student
@@ -435,6 +438,11 @@
                 if ( vPreviousSchoolID NEQ qGetResults.schoolID ) {
                     vSchoolCount ++;
                 }
+				
+				// We are not displaying the original placement, so only change the row number if this is not the original placement.
+				if (vRecordNumber NEQ 0) {
+					vRowNumber ++;
+				}
                 
 				// Set Previous Data
 				vPreviousStudentID = qGetResults.studentID;
@@ -442,58 +450,65 @@
                 vPreviousSchoolID = qGetResults.schoolID;
             </cfscript>
             
-            <tr>
-                <td #vRowColor#>#qGetResults.iap_auth#</td>
-                <td #vRowColor#>#qGetResults.companyName#</td>
-                <td #vRowColor#>#qGetResults.regionName#</td>
-                <td #vRowColor#>#qGetResults.studentLastName#</td>
-                <td #vRowColor#>#qGetResults.studentFirstName#</td>
-                <td #vRowColor#>#qGetResults.countryName#</td>
-                <td #vRowColor#>#qGetResults.ds2019_no#</td>
-                <td #vRowColor#>Active</td>
-                <td #vRowColor#>#vHostNumber#</td>
-                <td #vRowColor#>
-                    <!--- Date Relocation --->
-                    <cfif isDate(qGetResults.dateRelocated)>
-                        #DateFormat(qGetResults.dateRelocated, 'mm/dd/yyyy')#
-                    <!--- Arrival to HF --->
-                    <cfelse>
-                        #DateFormat(qGetResults.dateArrived, 'mm/dd/yyyy')#
-                    </cfif>
-                </td>
-                <td #vRowColor#>#qGetResults.fatherLastName#</td>
-                <td #vRowColor#>#qGetResults.fatherFirstName#</td>
-                <td #vRowColor#>#qGetResults.motherLastName#</td>
-                <td #vRowColor#>#qGetResults.motherFirstName#</td>            
-                <td #vRowColor#>
-                    <cfif VAL(qGetResults.isWelcomeFamily)>
-                        Welcome
-                    <cfelse>
-                        Permanent
-                    </cfif>
-                </td>
-                <td #vRowColor#>#qGetResults.hostAddress#</td>
-                <td #vRowColor#>#qGetResults.hostCity#</td>
-                <td #vRowColor#>#qGetResults.hostState#</td>
-                <td #vRowColor#>#qGetResults.hostZipCode#</td>
-                <td #vRowColor#>#vSchoolCount#</td>
-                <td #vRowColor#>#qGetResults.schoolName#</td>
-                <td #vRowColor#>#qGetResults.schoolAddress#</td>
-                <td #vRowColor#>#qGetResults.schoolCity#</td>
-                <td #vRowColor#>#qGetResults.schoolState#</td>
-                <td #vRowColor#>#qGetResults.schoolZipCode#</td>
-                <td #vRowColor#>#qGetResults.supervisingLastName#</td>
-                <td #vRowColor#>#qGetResults.supervisingFirstName#</td>
-                <td #vRowColor#>#qGetResults.supervisingZipCode#</td>
-                <td #vRowColor#>#qGetResults.changeOfHomeCode#</td>
-                <td #vRowColor#>
-                	<b>#qGetResults.changePlacementReason#</b> <cfif LEN(qGetResults.changePlacementReason) AND LEN(qGetResults.changePlacementExplanation)>-</cfif> 
-                    #qGetResults.changePlacementExplanation#
-                    <cfif VAL(qGetResults.aypEnglish) AND NOT isDate(qGetResults.dateRelocated)>
-                        Student was attending an English/Orientation camp approved by ISE
-                    </cfif>
-                </td>
-            </tr>
+            <!--- Display all except the original placement. --->
+            <cfif VAL(vRecordNumber)>
+                <tr>
+                    <td #vRowColor#>#qGetResults.iap_auth#</td>
+                    <td #vRowColor#>#qGetResults.companyName#</td>
+                    <td #vRowColor#>#qGetResults.regionName#</td>
+                    <td #vRowColor#>#qGetResults.studentLastName#</td>
+                    <td #vRowColor#>#qGetResults.studentFirstName#</td>
+                    <td #vRowColor#>#qGetResults.countryName#</td>
+                    <td #vRowColor#>#qGetResults.ds2019_no#</td>
+                    <td #vRowColor#>Active</td>
+                    <td #vRowColor#>#vHostNumber#</td>
+                    <td #vRowColor#>
+                        <!--- Date Relocation --->
+                        <cfif isDate(qGetResults.dateRelocated)>
+                            #DateFormat(qGetResults.dateRelocated, 'mm/dd/yyyy')#
+                        <!--- Arrival to HF --->
+                        <cfelse>
+                            #DateFormat(qGetResults.dateArrived, 'mm/dd/yyyy')#
+                        </cfif>
+                    </td>
+                    <td #vRowColor#>#qGetResults.fatherLastName#</td>
+                    <td #vRowColor#>#qGetResults.fatherFirstName#</td>
+                    <td #vRowColor#>#qGetResults.motherLastName#</td>
+                    <td #vRowColor#>#qGetResults.motherFirstName#</td>            
+                    <td #vRowColor#>
+                        <cfif VAL(qGetResults.isWelcomeFamily)>
+                            Welcome
+                        <cfelse>
+                            Permanent
+                        </cfif>
+                    </td>
+                    <td #vRowColor#>#qGetResults.hostAddress#</td>
+                    <td #vRowColor#>#qGetResults.hostCity#</td>
+                    <td #vRowColor#>#qGetResults.hostState#</td>
+                    <td #vRowColor#>#qGetResults.hostZipCode#</td>
+                    <td #vRowColor#>#vSchoolCount#</td>
+                    <td #vRowColor#>#qGetResults.schoolName#</td>
+                    <td #vRowColor#>#qGetResults.schoolAddress#</td>
+                    <td #vRowColor#>#qGetResults.schoolCity#</td>
+                    <td #vRowColor#>#qGetResults.schoolState#</td>
+                    <td #vRowColor#>#qGetResults.schoolZipCode#</td>
+                    <td #vRowColor#>#qGetResults.supervisingLastName#</td>
+                    <td #vRowColor#>#qGetResults.supervisingFirstName#</td>
+                    <td #vRowColor#>#qGetResults.supervisingZipCode#</td>
+                    <td #vRowColor#>#qGetResults.changeOfHomeCode#</td>
+                    <td #vRowColor#>
+                        <b>#qGetResults.changePlacementReason#</b> <cfif LEN(qGetResults.changePlacementReason) AND LEN(qGetResults.changePlacementExplanation)>-</cfif> 
+                        #qGetResults.changePlacementExplanation#
+                        <cfif VAL(qGetResults.aypEnglish) AND NOT isDate(qGetResults.dateRelocated)>
+                            Student was attending an English/Orientation camp approved by ISE
+                        </cfif>
+                    </td>
+                </tr>
+          	</cfif>
+            
+            <cfscript>
+				vRecordNumber++;
+			</cfscript>
 
         </cfoutput>                
         
