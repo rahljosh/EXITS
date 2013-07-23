@@ -1073,7 +1073,7 @@
         <cfinvoke component="nsmg.cfc.email" method="send_mail">
             <cfinvokeargument name="email_to" value="#qGetHostFamily.email#">
             <cfinvokeargument name="email_cc" value="#qGetStudentInfo.areaRepEmail#,#qGetManager.email#">
-            <cfinvokeargument name="email_subject" value="ISE Placement Approved">
+            <cfinvokeargument name="email_subject" value="#qGetCompany.companyshort_nocolor# Placement Approved">
             <cfinvokeargument name="email_message" value="#vEmailContent#">
             <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
         </cfinvoke>
