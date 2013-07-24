@@ -54,7 +54,7 @@
 <table align="center" width="98%" cellpadding="0" cellspacing="0"  border="0"> 
 	<tr>
 		<td>
-			<cfif right(URL.curdoc,4) EQ '.cfm'>
+			<cfif right(URL.curdoc,4) EQ '.cfr'>
                 <cfinclude template="#URL.curdoc#">
             <cfelse>
                 <cfinclude template="#URL.curdoc#.cfm">
