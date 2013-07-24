@@ -201,12 +201,12 @@ Become a world leader of tomorrow by expanding your horizons, learning new langu
 <div id="bottomInfoRight"><a href="host-a-foreign-exchange-student.cfm"><img src="images/hostAstudent.png" width="233" height="170" alt="host Student" border="0" /></a><a href="project-help.cfm"><img src="images/HELP.png" width="233" height="176" alt="HELP" border="0" /></a>
 <table width="210" border="0" style="margin-left:0px;">
   <tr>
-    <th scope="row" align="left">
+    <th height="63" align="left" scope="row">
     	<a href="https://www.esecutive.com/ise/" target="_blank"><img src="images/BaggageInsurance.png" width="91" height="40" border="0" title="Global Secutive Insurance" /></a>
     </th>
     <th scope="row" align="right"><a href="http://www.esecutive.com/index.php"><img src="images/GSlogo.png" width="79" height="34" /></a></th>
     <th scope="row" align="right">
-    	<a href="pdfs/CSIET-certificate-10-11.pdf" target="_blank"><img src="images/csiet-10-11.png" width="64" height="43" border="0" title="CSIET 2010-2011 Certificate of Acceptance" /></a>
+    	<a href="pdfs/CSIET_CERTIFICATE_2013-14.pdf" target="_blank"><img src="images/csiet-13-14.png" width="64" height="43" border="0" title="CSIET 2010-2011 Certificate of Acceptance" /></a>
     </th>
   </tr>
 </table>
