@@ -1,0 +1,401 @@
+body {
+	background-attachment: fixed;
+	background-image: url(../images/background2.jpg);
+	background-repeat: repeat-x;
+	background-position: center bottom;
+	background-color: #FFF;
+}
+#wrapper {
+	margin-right: auto;
+	margin-left: auto;
+	width: 840px;
+}
+.box {
+	width: 840px;
+	margin-top: 0px;
+	margin-right: auto;
+	margin-bottom: 5px;
+	margin-left: auto;
+}
+.box div.topleft {
+	display: block;
+	background: url("../images/box-bg.png") top left no-repeat white;
+	padding: 2.0em 0em 0em 2.0em;
+}
+
+.box div.topright {
+	display: block;
+	background: url("../images/box-bg.png") top right no-repeat white;
+	margin-top: -2em;
+	margin-right: 0;
+	margin-bottom: 0;
+	margin-left: 2em;
+	padding-top: 3em;
+	padding-right: 2em;
+	padding-bottom: 2em;
+	padding-left: 0em;
+}
+
+.box div.bottomleft {
+	display: block;
+	height: 40px;
+	margin-top: -2em;
+	background: url("../images/box-bg.png") bottom left no-repeat white;
+}
+
+.box div.bottomright {
+	display: block;
+	background: url("../images/box-bg.png") bottom right no-repeat white;
+	height: 40px;
+	margin-left: 3em;
+}
+.logo {
+	height: 75px;
+	width: 200px;
+}
+.address {
+	float: right;
+	height: 75px;
+	width: 250px;
+	margin-top: 50px;
+	margin-right: 55px;
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 12px;
+	text-align: right;
+}
+.clearfix {
+	display: block;
+	clear: both;
+	height: 10px;
+}
+.footer {
+	width: 825px;
+	margin-right: auto;
+	margin-left: auto;
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 10px;
+	color: #FFF;
+	text-align: center;
+	background-image: url(../images/footer_03.png);
+	background-repeat: no-repeat;
+	height: 40px;
+	padding-top: 17px;
+}
+#mainBody {
+	padding: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 25px;
+	width: 820px;
+}
+.banner {
+	background-image: url(../images/mainBar_12A.gif);
+	background-repeat: no-repeat;
+	float: left;
+	width: 586px;
+	height: 330px;
+}
+.contactbanner {
+	background-image: url(../images/mainBar_03.png);
+	background-repeat: no-repeat;
+	float: left;
+	height: 356px;
+	width: 586px;
+}
+.menu {
+	background-image: url(../images/mainBar_04.png);
+	float: right;
+	height: 356px;
+	width: 234px;
+}
+.menuLinkBox {
+	padding: 0px;
+	width: 210px;
+	margin-top: 30px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+}
+.menulinks1 {
+	text-align: right;
+	display: block;
+	float: right;
+	width: 213px;
+	text-align: center;
+	background-image: url(../images/menu/menu_03.png);
+	background-repeat: no-repeat;
+	z-index: 2;
+	height: 42px;
+	padding: 0px;
+	margin: 0px;
+}
+.menulinks1:hover{
+	background-image: url(../images/menu/MOmenu_03.png);
+}
+.menulinks1:active{
+	background-image: url(../images/menu/LVmenu_03.png);
+}
+.menulinks2 {
+	text-align: right;
+	display: block;
+	float: right;
+	width: 213px;
+	text-align: center;
+	background-image: url(../images/menu/menu_05.png);
+	background-repeat: no-repeat;
+	z-index: 2;
+	height: 41px;
+	padding: 0px;
+	margin: 0px;
+}
+.menulinks2:hover{
+	background-image: url(../images/menu/MOmenu_05.png);
+}
+.menulinks2:active{
+	background-image: url(../images/menu/LVmenu_05.png);
+}
+.menulinks3 {
+	text-align: right;
+	display: block;
+	float: right;
+	width: 213px;
+	text-align: center;
+	background-image: url(../images/menu/menu_06.png);
+	background-repeat: no-repeat;
+	z-index: 2;
+	height: 40px;
+	padding: 0px;
+	margin: 0px;
+}
+.menulinks3:hover{
+	background-image: url(../images/menu/MOmenu_06.png);
+}
+.menulinks3:active{
+	background-image: url(../images/menu/LVmenu_06.png);
+}
+.menulinks4 {
+	text-align: right;
+	display: block;
+	float: right;
+	width: 213px;
+	text-align: center;
+	background-image: url(../images/menu/menu_07.png);
+	background-repeat: no-repeat;
+	z-index: 2;
+	height: 41px;
+	padding: 0px;
+	margin: 0px;
+}
+.menulinks4:hover{
+	background-image: url(../images/menu/MOmenu_07.png);
+}
+.menulinks4:active{
+	background-image: url(../images/menu/LVmenu_07.png);
+}
+.menulinks5 {
+	text-align: right;
+	display: block;
+	float: right;
+	width: 213px;
+	text-align: center;
+	background-image: url(../images/menu/menu_08.png);
+	background-repeat: no-repeat;
+	z-index: 2;
+	height: 41px;
+	padding: 0px;
+	margin: 0px;
+}
+.menulinks5:hover{
+	background-image: url(../images/menu/MOmenu_08.png);
+}
+.menulinks5:active{
+	background-image: url(../images/menu/LVmenu_08.png);
+}
+.menulinks6 {
+	text-align: right;
+	display: block;
+	float: right;
+	width: 213px;
+	text-align: center;
+	background-image: url(../images/menu/menu_09.png);
+	background-repeat: no-repeat;
+	z-index: 2;
+	height: 42px;
+	padding: 0px;
+	margin: 0px;
+}
+.menulinks6:hover{
+	background-image: url(../images/menu/MOmenu_09.png);
+}
+.menulinks6:active{
+	background-image: url(../images/menu/LVmenu_09.png);
+}#textArea {
+	width: 530px;
+	padding-right: 20px;
+	padding-left: 20px;
+	margin-left: 7px;
+	background-repeat: repeat-y;
+	background-position: right;
+	background-color: #FFF;
+	border: thin solid #CCC;
+	margin-top: 0px;
+}
+#mainText {
+	width: 579px;
+	margin-left: 7px;
+	background-repeat: repeat-y;
+	background-position: right;
+	background-color: #FFF;
+	background-image: url(../images/gradient.jpg);
+	border-bottom-width: thin;
+	border-bottom-style: solid;
+	border-bottom-color: #CCC;
+}
+.innerText {
+	padding-top: 0px;
+	padding-right: 30px;
+	padding-bottom: 20px;
+	padding-left: 30px;
+}
+.innerText ul, li {
+	list-style-position: outside;
+	list-style-type: none;
+}
+#sideArea {
+	width: 100px;
+	padding-right: 50px;
+	padding-left: 50px;
+	margin-left: 7px;
+	background-color: #CCC;
+	float: right;
+}
+.shadow {
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	border-top-width: 1px;
+	border-right-width: 1px;
+	border-bottom-width: 2px;
+	border-left-width: 1px;
+	border-top-style: solid;
+	border-right-style: solid;
+	border-bottom-style: solid;
+	border-left-style: solid;
+	border-top-color: #FFF;
+	border-right-color: #f0f0f0;
+	border-bottom-color: #ccc;
+	border-left-color: #f0f0f0;
+}
+p, ul, li {
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	font-size: 13px;
+	color: #000;
+}
+ul, li {
+	list-style-position: outside;
+	list-style-type: circle;	
+}
+.bannerIndex {
+	float: left;
+	height: 55px;
+	width: 527px;
+	margin-top: 265px;
+	margin-left: 5px;
+	background-repeat: no-repeat;
+}
+.blueBoxR {
+	background-color: #D5E2F3;
+	float: right;
+	width: 250px;
+	margin-top: 0px;
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	font-size: 13px;
+	color: #000;
+	padding: 20px;
+	font-style: italic;
+	text-align: justify;
+}
+.animation {
+	background-repeat: no-repeat;
+	float: left;
+	width: 586px;
+	height: 170px;
+	display: block;
+}
+.blkClear {
+	background-color: #000;
+	display: block;
+	clear: both;
+	height: 10px;
+}
+.headerPic {
+	background-color: #000;
+	margin: 0px;
+	padding-top: 0px;
+	padding-right: 0px;
+	padding-bottom: 10px;
+	padding-left: 0px;
+}
+.contactButton {
+	margin-right: auto;
+	margin-left: auto;
+	background-color: #1B7FE1;
+	text-align: center;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	width: 400px;
+}
+#mainBody #mainText .innerText .formText {
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	font-size: 12px;
+	padding-top: 10px;
+}
+.schoolText {
+	font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+	font-size: 12px;
+	padding-top: 10px;
+	padding-left: 15px;
+	margin: 0px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+}
+.HSsubmenu {
+	background-color: #666;
+	width: 178px;
+	padding-left: 28px;
+	float: right;
+	padding-top: 0px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	display: inline-block;
+	clear: none;
+	z-index: 25;
+	right: 25px;
+	margin-top: 0px;
+	margin-right: 30px;
+	margin-bottom: 0px;
+	margin-left: 0px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	color: #CCC;
+	font-weight: bold;
+	line-height: 28px;
+}
+.wLink {
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	color: #CCC;
+	text-decoration: none;
+}
+.wLink:link {
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	color: #CCC;
+	text-decoration: none
+}
+.wLink:hover {
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	color: #FFF;
+}
