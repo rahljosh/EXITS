@@ -66,7 +66,7 @@
            
             <cfscript>
                 // Get Student Information
-                qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(soID=FlightXMLFile.flightinfocollection.flightinfo[i].XmlAttributes.studentID);
+                qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentFullInformationByID(soID=FlightXMLFile.flightinfocollection.flightinfo[i].XmlAttributes.studentID);
                 
                 // Check if it's an Active PHP Student
                 qGetPHPStudentInfo = APPLICATION.CFC.STUDENT.getPHPStudent(studentID=qGetStudentInfo.studentID);
@@ -166,7 +166,7 @@
                 </cfif>
                    
                 <!---- FLIGHT DEPARTURE ---->
-                <cfif NOT ArrayIsEmpty( XMLSearch(FlightXMLFile.flightinfocollection.flightinfo[i].departure, 'flight') )>
+                <cfif NOW() LT DateAdd('m',-5,qGetStudentInfo.endDate) AND NOT ArrayIsEmpty( XMLSearch(FlightXMLFile.flightinfocollection.flightinfo[i].departure, 'flight') )>
                 
                     <cfscript>
                         // set number of segments of departures
