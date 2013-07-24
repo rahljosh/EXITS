@@ -61,7 +61,7 @@
                 <cfinvoke component="extensions.components.email" method="sendEmail">
                     <cfinvokeargument name="emailFrom" value="#SESSION.COMPANY.EMAIL.support#">
                     <cfinvokeargument name="emailTo" value="#FORM.username#">
-                    <cfinvokeargument name="emailSubject" value="ISE - Login Information">
+                    <cfinvokeargument name="emailSubject" value="Login Information">
                     <cfinvokeargument name="emailMessage" value="#emailContent#">
                 </cfinvoke>
                 <cfscript>
