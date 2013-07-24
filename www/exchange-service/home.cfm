@@ -1,0 +1,4 @@
+ <h1>Exchange Service International</h1>
+<p>At ESI, we strive to increase cultural awareness by immersing our students in vibrant American communities with the freedom to choose the school in which they want to study. This attractive program allows students to share their lives with an American family and find the school that will best fit their needs academically, socially and geographically.</p>
+<p><strong><em>Thank you for browsing our website to learn more about the ESI program and our public high schools</em></strong></p>
+<div align="right"><img src="images/ESIa-sig.png" width="260" height="45" alt="ESI" /></div>

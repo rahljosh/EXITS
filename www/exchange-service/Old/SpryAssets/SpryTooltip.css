@@ -1,0 +1,46 @@
+@charset "UTF-8";
+
+/* SpryTooltip.css - version 0.2 - Spry Pre-Release 1.6.1 */
+
+/* Copyright (c) 2006. Adobe Systems Incorporated. All rights reserved. */
+
+/* HACK FOR IE: to make sure the tooltips show above form controls, we underlay each tooltip with an iframe */
+.iframeTooltip
+{
+	position: absolute;
+	z-index: 1010;
+	filter:alpha(opacity:0.1);
+}
+
+.tooltipContent
+{
+	background-image: url(../images/toolTip.png);
+	background-repeat: no-repeat;
+	padding-top: 8px;
+	padding-right: 20px;
+	padding-bottom: 10px;
+	padding-left: 30px;
+	width: 235px;
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 10px;
+	color: #000;
+	height: 140px;
+}
+.tooltipContent .dist {
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 12px;
+	font-weight: bold;
+	text-align: center;
+}
+.tooltipContent .bold {
+	font-weight: bold;
+}
+.tooltipContent .moreInfo {
+	font-family: Georgia, "Times New Roman", Times, serif;
+	font-size: 9px;
+	font-weight: bold;
+	font-style: normal;
+	color: #F00;
+	text-align: center;
+	font-variant: small-caps;
+}
