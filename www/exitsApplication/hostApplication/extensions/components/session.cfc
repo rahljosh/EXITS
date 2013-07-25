@@ -249,9 +249,9 @@
 				SESSION.COMPANY.submitImage = "submit.png";
 			
 			} else if ( 
-				ListFindNoCase(CGI.SERVER_NAME, "exchange-service.org") 
-				OR FindNoCase("es.exitsapplication.com", CGI.HTTP_REFERER) 
-				OR ListFindNoCase(CGI.SERVER_NAME, "esi.local") ) {
+				FindNoCase(CGI.SERVER_NAME, "exchange-service") 
+				OR FindNoCase(CGI.SERVER_NAME, "es.exitsapplication") 
+				OR FindNoCase(CGI.SERVER_NAME, "esi.local") ) {
 				
 				// ESI
 				SESSION.COMPANY.ID = 14;
