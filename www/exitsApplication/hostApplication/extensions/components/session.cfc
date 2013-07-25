@@ -236,7 +236,10 @@
 	<cffunction name="setCompanySession" access="public" returntype="void" output="false" hint="Set Host Session Variables">
         
         <cfscript>
-			if ( ListFindNoCase(CGI.SERVER_NAME, "case-usa", ".") OR FindNoCase("case.exitsapplication.com", CGI.HTTP_REFERER) ) {
+			if ( 
+				ListFindNoCase(CGI.SERVER_NAME, "case-usa", ".") 
+				OR FindNoCase("case.exitsapplication.com", CGI.HTTP_REFERER)
+				OR ListFindNoCase(CGI.SERVER_NAME, "case.local")) {
 				
 				// CASE
 				SESSION.COMPANY.ID = 10;
@@ -245,6 +248,18 @@
 				SESSION.COMPANY.submitGreyImage = "submitGrey.png";
 				SESSION.COMPANY.submitImage = "submit.png";
 			
+			} else if ( 
+				ListFindNoCase(CGI.SERVER_NAME, "exchange-service.org") 
+				OR FindNoCase("es.exitsapplication.com", CGI.HTTP_REFERER) 
+				OR ListFindNoCase(CGI.SERVER_NAME, "esi.local") ) {
+				
+				// ESI
+				SESSION.COMPANY.ID = 14;
+				SESSION.COMPANY.exitsURL = "https://es.exitsapplication.com/";
+				SESSION.COMPANY.logoImage = "logoESI.png";
+				SESSION.COMPANY.submitGreyImage = "submitGrey.png";
+				SESSION.COMPANY.submitImage = "submit.png";
+				
 			} else {
 				
 				// ISE
