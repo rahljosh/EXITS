@@ -678,7 +678,7 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                         
 					<!--- Bonuses for the Field --->    
                     <cfelse>
-                   <cfif #now()# lt #DateAdd('m','-1','#APPLICATION.CFC.USER.getUserSessionPaperwork().dateDOSTestExpired#')#>
+                   <cfif #now()# gt #DateAdd('m','-1','#APPLICATION.CFC.USER.getUserSessionPaperwork().dateDOSTestExpired#')#>
 					<cfset daysToExpire = #dateDiff('d','#now()#','#APPLICATION.CFC.USER.getUserSessionPaperwork().dateDOSTestExpired#')#>
                      <div class="rdtop"> 
                             <span class="rdtitle">DOS Certification Expiring</span> 
