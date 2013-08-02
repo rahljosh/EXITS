@@ -16,7 +16,6 @@ function displayHosts() {
 </head>
 <cfparam name="emailRecipient" default="#APPLICATION.EMAIL.support#">
 
-
 <!--- Import CustomTag Used for Page Messages and Form Errors --->
 <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
 
@@ -32,30 +31,28 @@ function displayHosts() {
     <cfabort>
 </cfif>
 
-
 <cfscript>
-
-        // Make sure there is a unqID
-		if ( NOT LEN(URL.unqID) ) { 
-			include "error_message.cfm";
-			abort;
-		}
-		
-		// Get Student Info
-        qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(uniqueID=URL.unqID);
-		
-		// Get Student Placements
-		qGetStudentPlacements = APPLICATION.CFC.STUDENT.getPlacementHistory(studentID=qGetStudentInfo.studentID);
-		
-		studentProfileLink = '#CLIENT.exits_url#/nsmg/index.cfm?curdoc=student_info&studentID=#qGetStudentInfo.studentID#';		
-		//studentProfileLink = '#CLIENT.exits_url#/nsmg/virtualfolder/#qGetStudentInfo.uniqueID#';
-		
-		studentProfileIntLink = '#client.exits_url#/nsmg/index.cfm?curdoc=intrep/int_student_info&unqid=#qGetStudentInfo.uniqueID#';
+	// Make sure there is a unqID
+	if ( NOT LEN(URL.unqID) ) { 
+		include "error_message.cfm";
+		abort;
+	}
+	
+	// Get Student Info
+	qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(uniqueID=URL.unqID);
+	
+	// Get Student Placements
+	qGetStudentPlacements = APPLICATION.CFC.STUDENT.getPlacementHistory(studentID=qGetStudentInfo.studentID);
+	
+	studentProfileLink = '#CLIENT.exits_url#/nsmg/index.cfm?curdoc=student_info&studentID=#qGetStudentInfo.studentID#';		
+	//studentProfileLink = '#CLIENT.exits_url#/nsmg/virtualfolder/#qGetStudentInfo.uniqueID#';
+	
+	studentProfileIntLink = '#client.exits_url#/nsmg/index.cfm?curdoc=intrep/int_student_info&unqid=#qGetStudentInfo.uniqueID#';
 </cfscript>
-<Cfif val(url.docID)>
-	<cfset form.docExists = "#url.docID#">
-</Cfif>
 
+<cfif val(url.docID)>
+	<cfset form.docExists = "#url.docID#">
+</cfif>
 
 <!----Catagories that are available for documents---->
 <cfquery name="qDocuments" datasource="#application.dsn#">
@@ -65,130 +62,141 @@ function displayHosts() {
 	where isActive = <Cfqueryparam cfsqltype="cf_sql_integer" value=1>
 </cfquery>
 
-
 <!----List of UsersTypes---->
 <cfquery name="userTypes" datasource="#application.dsn#">
-select *
-from smg_userType
-where usertypeid <= <cfqueryparam cfsqltype="cf_sql_integer" value="8">
-or usertypeid = <cfqueryparam cfsqltype="cf_sql_integer" value="14">
+    select *
+    from smg_userType
+    where usertypeid <= <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+    or usertypeid = <cfqueryparam cfsqltype="cf_sql_integer" value="14">
 </cfquery>
 
 <!---Check if able to delete---->
 <cfquery name="checkDocCount" datasource="#application.dsn#">
-SELECT count(vfid) as docCount 
-FROM virtualFolder
-where fk_documentType = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(FORM.docExists)#">
+    SELECT count(vfid) as docCount 
+    FROM virtualFolder
+    where fk_documentType = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(FORM.docExists)#">
 </cfquery>
 
-<Cfquery name="HostFamDocs" datasource="#application.dsn#">
-select id
-from virtualFolderDocuments
-where fk_category = <cfqueryparam cfsqltype="cf_sql_integer" value="2">
-</Cfquery>
+<cfquery name="HostFamDocs" datasource="#application.dsn#">
+    select id
+    from virtualFolderDocuments
+    where fk_category = <cfqueryparam cfsqltype="cf_sql_integer" value="2">
+</cfquery>
+
 <cfset hostFamDocID = ''>
-<Cfloop query="hostFamDocs">
+
+<cfloop query="hostFamDocs">
 	<cfset hostFamDocID = "#ListAppend(hostFamDocID, id)#">
-</Cfloop>
+</cfloop>
 
+<cfif len(form.subAction) and form.subAction is not 'Cancel'>
+    <cfquery name="catCheck" datasource="#application.dsn#">
+        select fk_category
+        from virtualFolderDocuments
+        where id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.docType#">
+    </cfquery>
 
-
-<Cfif len(form.subAction) and form.subAction is not 'Cancel'>
-<cfquery name="catCheck" datasource="#application.dsn#">
-select fk_category
-from virtualFolderDocuments
-where id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.docType#">
-</cfquery>
-
-<!---Error Checking---->
-         <cfscript>
-            // Data Validation
-			// Family Last Name
-            if ( NOT val(FORM.docType) ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please select which type of document this is. ");
-            }		
-			if ( NOT len(FORM.fileToUpload) ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please select a file to upload. ");
-            }	
-			 if (val(catCheck.fk_category) eq 2 and NOT val(form.hostFamily)){
-				SESSION.formErrors.Add("You indicated this is a Host Family document, but did not choose a host family.");
-			 }
-        	</cfscript>
-<cfif NOT SESSION.formErrors.length()>
+	<!---Error Checking---->
 	<cfscript>
-        // Get Folder Path and make sure it exists
-        currentDirectory = "#APPLICATION.PATH.onlineApp.virtualFolder##qGetStudentInfo.studentID#";
-        AppCFC.UDF.createFolder(currentDirectory);
+		// Data Validation
+		// Family Last Name
+		if ( NOT val(FORM.docType) ) {
+			// Get all the missing items in a list
+			SESSION.formErrors.Add("Please select which type of document this is. ");
+		}		
+		if ( NOT len(FORM.fileToUpload) ) {
+			// Get all the missing items in a list
+			SESSION.formErrors.Add("Please select a file to upload. ");
+		}	
+		 if (val(catCheck.fk_category) eq 2 and NOT val(form.hostFamily)){
+			SESSION.formErrors.Add("You indicated this is a Host Family document, but did not choose a host family.");
+		 }
 	</cfscript>
 	
-    <cffile action="upload" filefield="fileToUpload" destination="#currentDirectory#" nameconflict="makeunique" mode="777">
-
-	<!----Check if Already  Doc Type---->
-    <cfquery name="qCheckExists" datasource="#application.dsn#">
-        select documentType, id
-        from virtualFolderDocuments
-        where documentType = <Cfqueryparam cfsqltype="cf_sql_varchar" value="#form.fileToUpload#">
-    </cfquery>
+	<cfif NOT SESSION.formErrors.length()>
+		<cfscript>
+            // Get Folder Path and make sure it exists
+            currentDirectory = "#APPLICATION.PATH.onlineApp.virtualFolder##qGetStudentInfo.studentID#";
+            AppCFC.UDF.createFolder(currentDirectory);
+        </cfscript>
 	
+    	<cffile action="upload" filefield="fileToUpload" destination="#currentDirectory#" nameconflict="makeunique" mode="777">
 
+		<!----Check if Already  Doc Type---->
+        <cfquery name="qCheckExists" datasource="#application.dsn#">
+            select documentType, id
+            from virtualFolderDocuments
+            where documentType = <Cfqueryparam cfsqltype="cf_sql_varchar" value="#form.fileToUpload#">
+        </cfquery>
 	
 		<cfif val(form.docExists)>
-                <cfquery datasource="#application.dsn#">
-                UPDATE virtualfolder
-                    set documentType = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.docName#"> , 
-                       
-                        viewPermissions = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.whoCanView#">, 
-                        uploadPermissions = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.whoCanUpload#">
-                    WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.docExists#">
+   			<cfquery datasource="#application.dsn#">
+       			UPDATE virtualfolder
+           		SET documentType = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.docName#"> , 
+              		viewPermissions = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.whoCanView#">, 
+                 	uploadPermissions = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.whoCanUpload#">
+           		WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.docExists#">
+    		</cfquery>
+		<cfelse>
+        
+        	<!--- Change the name of the file if it has invalid characters --->
+            <cfscript>
+				vFileName = REReplace(file.ServerFile,"[^0-9A-Za-z ]","","all");
+			</cfscript>
+            <cffile action="rename" source="#file.ServerDirectory#\#file.ServerFile#" destination="#file.ServerDirectory#\#vFileName#">
+        	
+            <!--- Insert new file --->
+			<cfquery datasource="#application.dsn#">
+            	INSERT INTO virtualfolder (
+                	fk_documentType,
+                    fileName,
+                    filePath,
+                    fk_hostID,
+                    fk_studentID,
+                    generatedHow,
+                    uploadedBy,
+                    dateAdded
+             	)
+                VALUES (
+                	<cfqueryparam cfsqltype="cf_sql_integer" value="#form.docType#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#vFileName#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="uploadedFiles/virtualfolder/#qGetStudentInfo.studentid#/">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#val(form.hostfamily)#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetStudentInfo.studentid#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="manual">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userID#">,
+                    <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
+             	)
+			</cfquery>
                 
-                </cfquery>
-            <cfelse>
+	 		<!--- Email Local Person --->
+       		<!--- EMAIL FACILITATORS TO LET THEM KNOW THERE IS A DOCUMENT ---->
+       		<cfquery name="qGetCategory" datasource="#application.dsn#">
+         		select documenttype, viewPermissions
+               	from virtualfolderdocuments
+               	where id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.docType#">
+       		</cfquery>
+        	<cfquery name="qGetUser" datasource="#application.dsn#">
+                SELECT 
+                    userid, 
+                    firstname, 
+                    lastname, 
+                    businessname, 
+                    email
+                FROM 
+                    smg_users
+                WHERE 
+                    userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
+    		</cfquery>
 
-            
-                <cfquery datasource="#application.dsn#">
-               insert into virtualfolder (fk_documentType,fileName,filePath,fk_hostID,fk_studentID,generatedHow,  uploadedBy, dateAdded)
-                            values (<cfqueryparam cfsqltype="cf_sql_integer" value="#form.docType#">,
-                            		<cfqueryparam cfsqltype="cf_sql_varchar" value="#file.serverfile#">,
-                            		<cfqueryparam cfsqltype="cf_sql_varchar" value="uploadedFiles/virtualfolder/#qGetStudentInfo.studentid#/">,
-                                    <cfqueryparam cfsqltype="cf_sql_integer" value="#val(form.hostfamily)#">,
-                                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetStudentInfo.studentid#">,
-                                    <cfqueryparam cfsqltype="cf_sql_varchar" value="manual">,
-                                    <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userID#">,
-                                    <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">)
-                
-                </cfquery>
-                
-	 <!--- Email Local Person --->
-       <!--- EMAIL FACILITATORS TO LET THEM KNOW THERE IS A DOCUMENT ---->
-       
-       <cfquery name="qGetCategory" datasource="#application.dsn#">
-       select documenttype, viewPermissions
-       from virtualfolderdocuments
-       where id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.docType#">
-       </cfquery>
-        <cfquery name="qGetUser" datasource="#application.dsn#">
-        SELECT 
-            userid, 
-            firstname, 
-            lastname, 
-            businessname, 
-            email
-        FROM 
-            smg_users
-        WHERE 
-            userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
-    </cfquery>
-
-    <cfquery name="qIntlRep" datasource="#application.dsn#">
-        SELECT 
-        	email
-        FROM 
-        	smg_users 
-        WHERE 
-        	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.intrep#">
-    </cfquery>
+            <cfquery name="qIntlRep" datasource="#application.dsn#">
+                SELECT 
+                    email
+                FROM 
+                    smg_users 
+                WHERE 
+                    userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.intrep#">
+            </cfquery>
     
     <cfquery name="qGetRegionInfo" datasource="#application.dsn#">
         SELECT 
@@ -223,7 +231,7 @@ where id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.docType#">
         }
 	</cfscript>	
     
-    <Cfoutput>
+    <cfoutput>
         <cfsavecontent variable="email_message">
             Dear #qGetRegionInfo.firstname# #qGetRegionInfo.lastname#,<br><br>This e-mail is just to let you know a new document has been uploaded into #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname#'s (###qGetStudentInfo.studentid#) virtual folder by #qGetUser.businessname# #qGetUser.firstname# #qGetUser.lastname#.
             The document has been recorded in the category #qGetCategory.documenttype#.<br><br>
