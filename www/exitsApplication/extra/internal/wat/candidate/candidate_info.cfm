@@ -154,7 +154,7 @@
     </cfquery>
 
     <!--- Intl Rep. --->
-    <cfquery name="qGetIntlRepInfo" datasource="MySQL">
+    <cfquery name="qGetIntlRepInfo" datasource="#APPLICATION.DSN.Source#">
         SELECT 
             u.userid, 
             u.businessname, 
@@ -169,7 +169,7 @@
             u.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidate.intrep#">
     </cfquery>
         
-    <cfquery name="qHostCompanyList" datasource="MySQL">
+    <cfquery name="qHostCompanyList" datasource="#APPLICATION.DSN.Source#">
         SELECT 
         	hostCompanyID,
             name 
@@ -1559,6 +1559,27 @@
                                                     bindonload="true" /> 
                                             </td>
                                         </tr>
+                                        <!--- Housing --->
+                                        <tr>
+                                        	<td class="style1" align="right" width="30%"><strong>Housing Arrangements:</strong></td>
+                                            <td class="style1" align="left" width="70%">
+                                            	<cfif qCandidatePlaceCompany.isHousingProvided EQ 1>
+                                                	Employer Provides Housing
+                                             	<cfelse>
+                                                	<span class="readOnly">
+                                                    	<cfif VAL(qGetCandidate.housingArrangedPrivately)>
+                                                        	Yes
+                                                        <cfelse>
+                                                        	No
+                                                        </cfif>
+                                                	</span>
+                                                    <select class="style1 editPage" name="housingArrangedPrivately">
+                                                    	<option value="0"<cfif NOT VAL(qGetCandidate.housingArrangedPrivately)>selected="selected"</cfif>>No</option>
+                                                        <option value="1"<cfif VAL(qGetCandidate.housingArrangedPrivately)>selected="selected"</cfif>>Yes</option>
+                                                 	</select>
+                                                </cfif>
+                                            </td>
+                                        </tr>
                                         <tr class="notReplacement">
                                         	<td class="style1" align="right" width="30%">
                                             	<label for="wat_doc_job_offer_employer"><strong>Job Offer Agreement Employer:</strong></label>
@@ -2550,6 +2571,13 @@
                                         <tr>	
                                         	<td class="style1" align="right"><strong>Accepts SEVIS Fee:</strong></td>
                                             <td class="style1">#YesNoFormat(VAL(qGetIntlRepInfo.extra_accepts_sevis_fee))#</td>
+                                        </tr>
+                                        <tr>
+                                        	<td class="style1" align="right"><strong>Visa Interview</strong></td>
+                                            <td class="style1">
+                                            	<span class="readOnly">#DateFormat(qGetCandidate.visaInterview,'mm/dd/yyyy')#</span>
+                                                <input type="text" name="visaInterview" class="editPage datePicker" value="#DateFormat(qGetCandidate.visaInterview,'mm/dd/yyyy')#">
+                                            </td>
                                         </tr>
                                     </table>
                         

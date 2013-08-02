@@ -29,6 +29,8 @@
                             <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/missingIntlRepDocuments" class="style4">- Missing Intl. Rep. Documents</a></p>
                             
                             <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/all_students_wt_country" class="style4">- Candidate by Citizenship and Residence</a></p>
+                            
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/candidatesHousingPerRep" class="style4">- Candidate Housing</a></p>
                       	<cfelseif CLIENT.userType EQ 8>
                         	<span class="style1"><strong>Available Reports</strong></span><br />
                         
@@ -70,6 +72,8 @@
                             <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/flighInfoByHC" class="style4">- Flight Information</a></p>
                             
                             <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/hostCompanySelfPlacementConfirmation" class="style4">- Self Placement Vetting</a></p>
+                            
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/candidatesHousingPerHost" class="style4">- Candidate Housing</a></p>
                        </td>
                     </tr>
                 </table>

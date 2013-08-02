@@ -66,6 +66,7 @@
             SELECT 
                 c.candidateID,
                 c.uniqueID,
+                c.visaInterview,
                 ecpc.hostCompanyID,
                 ecpc.isSecondary,
                 c.firstname,             
@@ -290,7 +291,7 @@
 
                 <table width="98%" cellpadding="4" cellspacing="0" align="center" style="margin-top:10px; margin-bottom:20px; border:1px solid ##4F8EA4; line-height:15px;"> 
                     <tr>
-                        <td colspan="14">
+                        <td colspan="17">
                                 <strong>#qGetHostCompany.name# - Total candidates: #qTotalPerHostCompany.recordCount#</strong> 
                                 (
                                     #totalPerHostCompanyCSBPlacements# CSB; &nbsp; 
@@ -302,12 +303,12 @@
                     </tr>
                     <tr style="background-color:##4F8EA4; color:##FFF; padding:5px; font-weight:bold; font-size: 11px; vertical-align:top;">
                         <td width="4%">ID</td>
-                        <td width="11%">Last Name</td>
+                        <td width="10%">Last Name</td>
                         <td width="8%">First Name</td>
                         <td width="3%">Sex</td>
                         <td width="5%">DOB</td>
-                        <td width="6%">Country</td>
-                        <td width="11%">Email</td>
+                        <td width="5%">Country</td>
+                        <td width="10%">Email</td>
                         <td width="7%">Job Title</td>
                         <td width="5%">DS-2019</td>
                         <td width="5%">SSN</td>
@@ -316,7 +317,8 @@
                         <td width="10%">Intl. Rep.</td>
                         <td width="7%">Option</td>
                         <td width="5%">Placement Type</td>
-                        <td width="10%">English Assessment CSB</td>
+                        <td width="8%">English Assessment CSB</td>
+                        <td width="5%">Visa Interview</td>
                     </tr>
                     <cfloop query="qTotalPerHostCompany">
                         <tr bgcolor="###IIf(qTotalPerHostCompany.currentRow MOD 2 ,DE("FFFFFF") ,DE("E4E4E4") )#">
@@ -351,6 +353,7 @@
                             <td><span class="style1">#qTotalPerHostCompany.wat_placement#</span></td>
                             <td><span class="style1"><cfif VAL(qTotalPerHostCompany.isSecondary)>Secondary<cfelse>Primary</cfif></span></td>
                             <td><span class="style1">#qTotalPerHostCompany.englishAssessment#</span></td>
+                            <td><span class="style1">#DateFormat(qTotalPerHostCompany.visaInterview,'mm/dd/yyyy')#</span></td>
                         </tr>
                         
                         <!--- Seeking Employment - Display Reason --->
