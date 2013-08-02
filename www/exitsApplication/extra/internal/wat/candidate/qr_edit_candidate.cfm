@@ -13,6 +13,7 @@
 <cfparam name="FORM.wat_doc_other_received" default="">
 <cfparam name="FORM.verification_address" default="0">
 <cfparam name="FORM.verification_sevis" default="0">
+<cfparam name="FORM.visaInterview" default="">
 <cfparam name="FORM.watDateCheckedIn" default="">
 <cfparam name="FORM.usPhone" default="">
 <cfparam name="FORM.arrival_address" default="">
@@ -23,6 +24,7 @@
 <cfparam name="FORM.watDateEvaluation2" default="">
 <cfparam name="FORM.watDateEvaluation3" default="">
 <cfparam name="FORM.watDateEvaluation4" default="">
+<cfparam name="FORM.housingArrangedPrivately" default="0">
 <!--- Placement Information --->
 <cfparam name="FORM.jobID" default="0">
 <cfparam name="FORM.selfJobOfferStatus" default="Pending">
@@ -876,6 +878,7 @@
         <!---  Arrival Verification  --->
         verification_address = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.verification_address#">,
         verification_sevis = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.verification_sevis#">,
+        visaInterview = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.visaInterview#" null="#NOT isDate(FORM.visaInterview)#">,
         watDateCheckedIn = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDateCheckedIn#" null="#NOT IsDate(FORM.watDateCheckedIn)#">,
         us_phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.usPhone#">,
         arrival_address = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.arrival_address#">,
@@ -886,7 +889,8 @@
         watDateEvaluation1 = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDateEvaluation1#" null="#NOT IsDate(FORM.watDateEvaluation1)#">,
         watDateEvaluation2 = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDateEvaluation2#" null="#NOT IsDate(FORM.watDateEvaluation2)#">,
         watDateEvaluation3 = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDateEvaluation3#" null="#NOT IsDate(FORM.watDateEvaluation3)#">,
-        watDateEvaluation4 = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDateEvaluation4#" null="#NOT IsDate(FORM.watDateEvaluation4)#">
+        watDateEvaluation4 = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDateEvaluation4#" null="#NOT IsDate(FORM.watDateEvaluation4)#">,
+        housingArrangedPrivately = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.housingArrangedPrivately#">
     WHERE 
     	candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.candidateID#">
 </cfquery>
@@ -957,6 +961,7 @@
         enddate,
         verification_address,
         verification_sevis,
+        visaInterview,
         watDateCheckedIn,
         us_phone,
         arrival_address,
@@ -1030,6 +1035,7 @@
         <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.enddate#" null="#NOT IsDate(qGetCandidateInfo.enddate)#">,
         <cfqueryparam cfsqltype="cf_sql_bit" value="#qGetCandidateInfo.verification_address#">,
         <cfqueryparam cfsqltype="cf_sql_bit" value="#qGetCandidateInfo.verification_sevis#">,
+        <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.visaInterview#" null="#NOT IsDate(qGetCandidateInfo.visaInterview)#">,
         <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.watDateCheckedIn#" null="#NOT IsDate(qGetCandidateInfo.watDateCheckedIn)#">,
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.us_phone#">,
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.arrival_address#">,

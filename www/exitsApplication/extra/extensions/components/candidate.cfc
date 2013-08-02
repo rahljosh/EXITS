@@ -337,6 +337,164 @@
 		</cfquery>
 		
 	</cffunction>
+    
+    <!--- Insert candidate history record --->
+    <cffunction name="addCandidateHistoryRecord" access="public" returntype="void" output="no" hint="Inserts a new candidate history record based on the candidateID">
+   		<cfargument name="candidateID" required="yes" hint="candidateID is required">
+       	
+        <cfquery name="qGetCandidateInfo" datasource="#APPLICATION.DSN.Source#">
+            SELECT *
+            FROM extra_candidates
+            WHERE candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.candidateID#">
+        </cfquery>
+
+		<!--- History Record --->
+        <cfquery datasource="#APPLICATION.DSN.Source#">
+    		INSERT INTO extra_candidates_history (
+                candidateID,
+                changedBy,
+                dateChanged,
+                hostCompanyID,
+                firstname, 
+                lastname, 
+                middlename,
+                dob,
+                sex, 
+                intrep,
+                birth_city, 
+                birth_country,
+                citizen_country,
+                residence_country,
+                home_address,
+                home_city,
+                home_zip,
+                home_country,
+                home_phone,
+                email,
+                englishAssessment,
+                englishAssessmentDate,
+                englishAssessmentComment,
+                emergency_name,
+                emergency_phone,
+                emergency_email,
+                passport_number,
+                programID,        
+                ssn,      
+                wat_participation,
+                wat_participation_info,
+                wat_placement,
+                wat_vacation_start,
+                wat_vacation_end,
+                wat_doc_agreement,
+                wat_doc_walk_in_agreement,
+                wat_doc_cv,
+                wat_doc_passport_copy,
+                wat_doc_orientation,
+                wat_doc_signed_assessment,
+                wat_doc_college_letter,
+                wat_doc_college_letter_translation,
+                wat_doc_job_offer_applicant,
+                wat_doc_job_offer_employer,
+                wat_doc_other,
+                wat_doc_other_received,
+                verification_received,
+                ds2019,
+                requested_placement,
+                change_requested_comment,
+                status,
+                cancel_date,
+                cancel_reason,
+                startdate,
+                enddate,
+                verification_address,
+                verification_sevis,
+                watDateCheckedIn,
+                us_phone,
+                arrival_address,
+                arrival_city,
+                arrival_state,
+                arrival_zip,
+                watDateEvaluation1,
+                watDateEvaluation2,
+                watDateEvaluation3,
+                watDateEvaluation4,
+                visaInterview )
+  			VALUES (
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.candidateID#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
+                <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.hostcompanyID#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.firstname#">, 
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.lastname#">, 
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.middlename#">,
+                <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.dob#" null="#NOT IsDate(qGetCandidateInfo.dob)#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.sex#">, 
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.intrep#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.birth_city#">, 
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.birth_country#">, 
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.citizen_country#">, 
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.residence_country#">, 
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.home_address#">, 
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.home_city#">, 
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.home_zip#">,	
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.home_country#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.home_phone#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.email#">, 
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.englishAssessment#">,
+                <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.englishAssessmentDate#" null="#NOT IsDate(qGetCandidateInfo.englishAssessmentDate)#">, 
+                <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#qGetCandidateInfo.englishAssessmentComment#">, 
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.emergency_name#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.emergency_phone#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.emergency_email#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.passport_number#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.programID#">,         
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.SSN#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCandidateInfo.wat_participation)#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.wat_participation_info#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.wat_placement#">,
+                <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.wat_vacation_start#" null="#NOT IsDate(qGetCandidateInfo.wat_vacation_start)#">,
+                <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.wat_vacation_end#" null="#NOT IsDate(qGetCandidateInfo.wat_vacation_end)#">,
+                <cfqueryparam cfsqltype="cf_sql_bit" value="#qGetCandidateInfo.wat_doc_agreement#">,
+                <cfqueryparam cfsqltype="cf_sql_bit" value="#qGetCandidateInfo.wat_doc_walk_in_agreement#">,
+                <cfqueryparam cfsqltype="cf_sql_bit" value="#qGetCandidateInfo.wat_doc_cv#">,
+                <cfqueryparam cfsqltype="cf_sql_bit" value="#qGetCandidateInfo.wat_doc_passport_copy#">,
+                <cfqueryparam cfsqltype="cf_sql_bit" value="#qGetCandidateInfo.wat_doc_orientation#">,
+                <cfqueryparam cfsqltype="cf_sql_bit" value="#qGetCandidateInfo.wat_doc_signed_assessment#">,
+                <cfqueryparam cfsqltype="cf_sql_bit" value="#qGetCandidateInfo.wat_doc_college_letter#">,
+                <cfqueryparam cfsqltype="cf_sql_bit" value="#qGetCandidateInfo.wat_doc_college_letter_translation#">,
+                <cfqueryparam cfsqltype="cf_sql_bit" value="#qGetCandidateInfo.wat_doc_job_offer_applicant#">,
+                <cfqueryparam cfsqltype="cf_sql_bit" value="#qGetCandidateInfo.wat_doc_job_offer_employer#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.wat_doc_other#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.wat_doc_other_received#">,
+                <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.verification_received#" null="#NOT IsDate(qGetCandidateInfo.verification_received)#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.ds2019#">, 
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.requested_placement#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.change_requested_comment#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.status#">, 
+                <cfif isDate(qGetCandidateInfo.cancel_date) AND qGetCandidateInfo.status EQ 'canceled'>
+                    <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.cancel_date#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.cancel_reason#">,
+                <cfelse>
+                    <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="">,
+                </cfif>
+                <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.startdate#" null="#NOT IsDate(qGetCandidateInfo.startdate)#">,
+                <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.enddate#" null="#NOT IsDate(qGetCandidateInfo.enddate)#">,
+                <cfqueryparam cfsqltype="cf_sql_bit" value="#qGetCandidateInfo.verification_address#">,
+                <cfqueryparam cfsqltype="cf_sql_bit" value="#qGetCandidateInfo.verification_sevis#">,
+                <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.watDateCheckedIn#" null="#NOT IsDate(qGetCandidateInfo.watDateCheckedIn)#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.us_phone#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.arrival_address#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.arrival_city#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.arrival_state#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.arrival_zip#">,
+                <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.watDateEvaluation1#" null="#NOT IsDate(qGetCandidateInfo.watDateEvaluation1)#">,
+                <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.watDateEvaluation2#" null="#NOT IsDate(qGetCandidateInfo.watDateEvaluation2)#">,
+                <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.watDateEvaluation3#" null="#NOT IsDate(qGetCandidateInfo.watDateEvaluation3)#">,
+                <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.watDateEvaluation4#" null="#NOT IsDate(qGetCandidateInfo.watDateEvaluation4)#">,
+                <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.visaInterview#" null="#NOT IsDate(qGetCandidateInfo.visaInterview)#"> )
+    	</cfquery>
+    </cffunction>
 
 
 	<!--- Update Application Status --->
@@ -973,6 +1131,7 @@
                 eh.authentication_certificateOfExistenceExpiration,
                 eh.authentication_certificateOfReinstatementExpiration,
                 eh.authentication_departmentOfStateExpiration,
+                eh.isHousingProvided,
                 eh.EIN,
                 eh.workmensCompensation,
                 eh.WC_carrierName,
@@ -1132,6 +1291,9 @@
 				// Add User Time Stamp to notes
 				ARGUMENTS.notes = qGetPreviousNotes.notes & Chr(13) & "<p><strong>" & ARGUMENTS.notes & "</strong> <br / > Added by #qGetUserInfo.firstName# #qGetUserInfo.lastName# on #DateFormat(now(), 'mm/dd/yyyy')# at #TimeFormat(now(), 'hh:mm tt')# EST </p>";
 			}
+			
+			//ARGUMENTS.notes = "<p><strong>" & ARGUMENTS.notes & "</strong> <br / > Updated by #qGetUserInfo.firstName# #qGetUserInfo.lastName# on #DateFormat(now(), 'mm/dd/yyyy')# at #TimeFormat(now(), 'hh:mm tt')# EST </p>";
+			
         </cfscript>
         
         <!--- Update --->
@@ -1311,7 +1473,69 @@
 	<!------------------------------------------------------------ 
 		End of Candidate Cultural Activity Report 
 	------------------------------------------------------------->
+    
+    
+    <!------------------------------------------------------------ 
+		Visa Interview Update Tool
+	------------------------------------------------------------->
+	<cffunction name="getMissingVisaInterviewStudentList" access="remote" returnFormat="json" output="false" hint="Returns students missing visa interview list in Json format">
+    	<cfargument name="intRep" default="0" hint="intRep is not required">
+        <cfargument name="programID" default="0" hint="programID is not required">
+        
+        <cfquery name="qGetMissingVisaInterviewStudentList" datasource="#APPLICATION.DSN.Source#">
+        	SELECT
+            	candidate.uniqueID,
+                candidate.candidateID,
+                candidate.lastName,
+                candidate.firstname,
+                candidate.email,
+                candidate.sex,
+                candidate.ds2019,
+                rep.businessName,
+                program.programName,
+                DATE_FORMAT(program.startDate,'%m/%d/%Y') AS startDate,
+                DATE_FORMAT(program.endDate,'%m/%d/%Y') AS endDate,
+                country.countryName
+            FROM extra_candidates candidate
+            INNER JOIN smg_users rep ON rep.userID = candidate.intRep
+            INNER JOIN smg_programs program ON program.programID = candidate.programID
+            INNER JOIN smg_countrylist country ON country.countryID = candidate.citizen_country
+            WHERE candidate.status = 1
+            AND candidate.isDeleted = 0
+            AND candidate.applicationStatusID IN (0,11)
+            AND candidate.visaInterview IS NULL
+            AND candidate.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyID)#">
+            <cfif VAL(ARGUMENTS.intRep)>
+            	AND candidate.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.intRep)#">
+            </cfif>
+            <cfif VAL(ARGUMENTS.programID)>
+            	AND candidate.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.programID)#">
+            </cfif>
+            ORDER BY candidate.lastName, candidate.firstName
+		</cfquery>
+		   
+		<cfreturn qGetMissingVisaInterviewStudentList>
+  	</cffunction>
+    
+    
+    <cffunction name="setVisaInterviewDateToday" access="remote" returntype="void" hint="Updates a candidate visa interview date to today.">
+        <cfargument name="candidateID" required="yes" hint="candidateID is required">
 
+        <cfquery datasource="#APPLICATION.DSN.Source#">
+                UPDATE extra_candidates
+				SET visaInterview = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
+                WHERE candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.candidateID#">
+		</cfquery>
+        
+        <cfscript>
+			addCandidateHistoryRecord(candidateID=ARGUMENTS.candidateID);
+		</cfscript>
+		   
+	</cffunction>
+  	<!------------------------------------------------------------ 
+		End of Visa Interview Update Tool
+	------------------------------------------------------------->
+      
 
 	<!------------------------------------------------------------ 
 		Check-In Update Tool
@@ -1422,156 +1646,9 @@
                     candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.candidateID#">
 		</cfquery>
         
-        <cfquery name="qGetCandidateInfo" datasource="#APPLICATION.DSN.Source#">
-            SELECT *
-            FROM extra_candidates
-            WHERE candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.candidateID#">
-        </cfquery>
-
-		<!--- History Record --->
-        <cfquery datasource="#APPLICATION.DSN.Source#">
-    		INSERT INTO extra_candidates_history (
-                candidateID,
-                changedBy,
-                dateChanged,
-                hostCompanyID,
-                firstname, 
-                lastname, 
-                middlename,
-                dob,
-                sex, 
-                intrep,
-                birth_city, 
-                birth_country,
-                citizen_country,
-                residence_country,
-                home_address,
-                home_city,
-                home_zip,
-                home_country,
-                home_phone,
-                email,
-                englishAssessment,
-                englishAssessmentDate,
-                englishAssessmentComment,
-                emergency_name,
-                emergency_phone,
-                emergency_email,
-                passport_number,
-                programID,        
-                ssn,      
-                wat_participation,
-                wat_participation_info,
-                wat_placement,
-                wat_vacation_start,
-                wat_vacation_end,
-                wat_doc_agreement,
-                wat_doc_walk_in_agreement,
-                wat_doc_cv,
-                wat_doc_passport_copy,
-                wat_doc_orientation,
-                wat_doc_signed_assessment,
-                wat_doc_college_letter,
-                wat_doc_college_letter_translation,
-                wat_doc_job_offer_applicant,
-                wat_doc_job_offer_employer,
-                wat_doc_other,
-                wat_doc_other_received,
-                verification_received,
-                ds2019,
-                requested_placement,
-                change_requested_comment,
-                status,
-                cancel_date,
-                cancel_reason,
-                startdate,
-                enddate,
-                verification_address,
-                verification_sevis,
-                watDateCheckedIn,
-                us_phone,
-                arrival_address,
-                arrival_city,
-                arrival_state,
-                arrival_zip,
-                watDateEvaluation1,
-                watDateEvaluation2,
-                watDateEvaluation3,
-                watDateEvaluation4 )
-  			VALUES (
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.candidateID#">,
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
-                <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.hostcompanyID#">,
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.firstname#">, 
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.lastname#">, 
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.middlename#">,
-                <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.dob#" null="#NOT IsDate(qGetCandidateInfo.dob)#">,
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.sex#">, 
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.intrep#">,
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.birth_city#">, 
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.birth_country#">, 
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.citizen_country#">, 
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.residence_country#">, 
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.home_address#">, 
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.home_city#">, 
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.home_zip#">,	
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.home_country#">,
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.home_phone#">,
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.email#">, 
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.englishAssessment#">,
-                <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.englishAssessmentDate#" null="#NOT IsDate(qGetCandidateInfo.englishAssessmentDate)#">, 
-                <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#qGetCandidateInfo.englishAssessmentComment#">, 
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.emergency_name#">,
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.emergency_phone#">,
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.emergency_email#">,
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.passport_number#">,
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.programID#">,         
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.SSN#">,
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCandidateInfo.wat_participation)#">,
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.wat_participation_info#">,
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.wat_placement#">,
-                <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.wat_vacation_start#" null="#NOT IsDate(qGetCandidateInfo.wat_vacation_start)#">,
-                <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.wat_vacation_end#" null="#NOT IsDate(qGetCandidateInfo.wat_vacation_end)#">,
-                <cfqueryparam cfsqltype="cf_sql_bit" value="#qGetCandidateInfo.wat_doc_agreement#">,
-                <cfqueryparam cfsqltype="cf_sql_bit" value="#qGetCandidateInfo.wat_doc_walk_in_agreement#">,
-                <cfqueryparam cfsqltype="cf_sql_bit" value="#qGetCandidateInfo.wat_doc_cv#">,
-                <cfqueryparam cfsqltype="cf_sql_bit" value="#qGetCandidateInfo.wat_doc_passport_copy#">,
-                <cfqueryparam cfsqltype="cf_sql_bit" value="#qGetCandidateInfo.wat_doc_orientation#">,
-                <cfqueryparam cfsqltype="cf_sql_bit" value="#qGetCandidateInfo.wat_doc_signed_assessment#">,
-                <cfqueryparam cfsqltype="cf_sql_bit" value="#qGetCandidateInfo.wat_doc_college_letter#">,
-                <cfqueryparam cfsqltype="cf_sql_bit" value="#qGetCandidateInfo.wat_doc_college_letter_translation#">,
-                <cfqueryparam cfsqltype="cf_sql_bit" value="#qGetCandidateInfo.wat_doc_job_offer_applicant#">,
-                <cfqueryparam cfsqltype="cf_sql_bit" value="#qGetCandidateInfo.wat_doc_job_offer_employer#">,
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.wat_doc_other#">,
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.wat_doc_other_received#">,
-                <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.verification_received#" null="#NOT IsDate(qGetCandidateInfo.verification_received)#">,
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.ds2019#">, 
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.requested_placement#">,
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.change_requested_comment#">,
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.status#">, 
-                <cfif isDate(qGetCandidateInfo.cancel_date) AND qGetCandidateInfo.status EQ 'canceled'>
-                    <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.cancel_date#">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.cancel_reason#">,
-                <cfelse>
-                    <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="">,
-                </cfif>
-                <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.startdate#" null="#NOT IsDate(qGetCandidateInfo.startdate)#">,
-                <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.enddate#" null="#NOT IsDate(qGetCandidateInfo.enddate)#">,
-                <cfqueryparam cfsqltype="cf_sql_bit" value="#qGetCandidateInfo.verification_address#">,
-                <cfqueryparam cfsqltype="cf_sql_bit" value="#qGetCandidateInfo.verification_sevis#">,
-                <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.watDateCheckedIn#" null="#NOT IsDate(qGetCandidateInfo.watDateCheckedIn)#">,
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.us_phone#">,
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.arrival_address#">,
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.arrival_city#">,
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.arrival_state#">,
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.arrival_zip#">,
-                <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.watDateEvaluation1#" null="#NOT IsDate(qGetCandidateInfo.watDateEvaluation1)#">,
-                <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.watDateEvaluation2#" null="#NOT IsDate(qGetCandidateInfo.watDateEvaluation2)#">,
-                <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.watDateEvaluation3#" null="#NOT IsDate(qGetCandidateInfo.watDateEvaluation3)#">,
-                <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.watDateEvaluation4#" null="#NOT IsDate(qGetCandidateInfo.watDateEvaluation4)#"> )
-		</cfquery>
+        <cfscript>
+			addCandidateHistoryRecord(candidateID=ARGUMENTS.candidateID);
+		</cfscript>
 		   
 	</cffunction>
 	<!------------------------------------------------------------ 

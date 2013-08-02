@@ -298,15 +298,16 @@
                         <th align="left" class="#tableTitleClass#" width="8%">Last Name</Th>
                         <th align="left" class="#tableTitleClass#" width="8%">First Name</Th>
                         <th align="left" class="#tableTitleClass#" width="3%">Sex</th>
-                        <th align="left" class="#tableTitleClass#" width="7%">E-mail</th>
+                        <th align="left" class="#tableTitleClass#" width="8%">E-mail</th>
                         <th align="left" class="#tableTitleClass#" width="5%">Start Date</th>
                         <th align="left" class="#tableTitleClass#" width="5%">End Date</th>
-                        <th align="left" class="#tableTitleClass#" width="20%">Placement Information</th>
+                        <th align="left" class="#tableTitleClass#" width="18%">Placement Information</th>
                         <th align="left" class="#tableTitleClass#" width="8%">Job Title</th>
                         <th align="left" class="#tableTitleClass#" width="6%">City</th>
                         <th align="left" class="#tableTitleClass#" width="6%">State</th>
-                        <th align="left" class="#tableTitleClass#" width="10%">DS-2019</th>
-                        <th align="left" class="#tableTitleClass#" width="10%">Option</th>
+                        <th align="left" class="#tableTitleClass#" width="8%">DS-2019</th>
+                        <th align="left" class="#tableTitleClass#" width="8%">Option</th>
+                        <th align="left" class="#tableTitleClass#" width="5%">Visa Interview</th>
                     </tr>
                     <cfif ListFind("2,3", FORM.printOption)>
                         <tr>
@@ -418,6 +419,7 @@
                             </td>
                             <td class="style1">#qTotalPerAgent.ds2019#</td>
                             <td class="style1">#qTotalPerAgent.wat_placement#</td>
+                            <td class="style1">#DateFormat(qTotalPerAgent.visaInterview,'mm/dd/yyyy')#</td>
                         </tr>
                     </cfloop>        
                 </table>
