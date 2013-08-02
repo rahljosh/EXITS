@@ -56,7 +56,8 @@
                 <div class="section">
                     <a class="item2" href="?curdoc=candidate/candidate_profile_batch">Batch Candidate Profile</a>
                     <a class="item2" href="?curdoc=candidate/batchSupportLetter">Batch Support Letter</a>   
-                    <a class="item2" href="?curdoc=tools/checkInList">Check-In List</a>              
+                    <a class="item2" href="?curdoc=tools/checkInList">Check-In List</a>
+                    <a class="item2" href="?curdoc=tools/visaInterview">Visa Interview</a>            
                     <a class="item2" href="?curdoc=tools/ds2019Verification">DS-2019 Verification</a>
                     <a class="item2" href="?curdoc=tools/englishAssessment">English Assessment</a>
                     <a class="item2" href="?curdoc=reports/idcards_menu">ID Cards</a>
