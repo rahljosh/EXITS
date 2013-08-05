@@ -141,7 +141,7 @@ function displayHosts() {
         
         	<!--- Change the name of the file if it has invalid characters --->
             <cfscript>
-				vFileName = REReplace(file.ServerFile,"[^0-9A-Za-z .]","","all");
+				vFileName = REReplace(file.ServerFile,"[^0-9A-Za-z .-_()!$&=+']","","all");
 			</cfscript>
             <cffile action="rename" source="#file.ServerDirectory#\#file.ServerFile#" destination="#file.ServerDirectory#\#vFileName#">
         	
