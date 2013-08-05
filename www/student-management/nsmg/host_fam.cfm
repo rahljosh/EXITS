@@ -21,6 +21,11 @@
     <cfparam name="active" default="">
     <cfparam name="orderby" default="familylastname">
     <cfparam name="recordsToShow" default="25">
+    
+    <cfparam name="URL.regionID" default="0">
+    <cfif VAL(URL.regionID)>
+    	<cfset FORM.regionID = URL.regionID>
+    </cfif>
 
 	<cfscript>
 		// Get User Regions
@@ -36,16 +41,6 @@
 	</cfscript>
 
 </cfsilent>
-
-<cfif NOT VAL(FORM.regionID)>
-
-	<script type="text/javascript">	
-		$(document).ready(function() {
-			$("#regionID").val("0").attr("selected",true);							 
-		});
-	</script>
-
-</cfif>
 
 <cfoutput>
 
@@ -64,9 +59,12 @@
 				<cfif APPLICATION.CFC.USER.isOfficeUser()>
                     <td>
                         Region<br />
-                        <cfselect id="regionID" NAME="regionid" query="qGetRegionList" value="regionid" display="regionName" selected="#regionid#" queryPosition="below">
-                        	<option value="0">All</option>
-                        </cfselect>
+                        <select name="regionID" id="regionID">
+                        	<option value="0" <cfif NOT VAL(FORM.regionID)>selected="selected"</cfif>>All</option>
+                            <cfloop query="qGetRegionList">
+                            	<option value="#regionID#" <cfif regionID EQ FORM.regionID>selected="selected"</cfif>>#regionName#</option>
+                            </cfloop>
+                        </select>
                     </td>
 				</cfif>
                 <td>
@@ -322,7 +320,7 @@
 			<cfset isNextPage = 0>
 			<cfset endrow = qGetResults.recordCount>
 		</cfif>
-		<cfset urlVariables = "submitted=1&regionid=#regionid#&keyword=#urlEncodedFormat(keyword)#&hosting=#hosting#&active=#active#&orderby=#orderby#&recordsToShow=#recordsToShow#">
+		<cfset urlVariables = "submitted=1&regionid=#FORM.regionid#&keyword=#urlEncodedFormat(keyword)#&hosting=#hosting#&active=#active#&orderby=#orderby#&recordsToShow=#recordsToShow#">
   
         <cfoutput>
 
