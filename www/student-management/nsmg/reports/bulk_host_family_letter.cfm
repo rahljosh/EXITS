@@ -25,8 +25,12 @@
 	INNER JOIN smg_users u ON u.userid = s.intrep
 	WHERE 	
 	    s.active = '1'
-    AND 
-    	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+ 	AND
+        <cfif CLIENT.companyID EQ 5>
+        	s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,12" list="yes"> )
+      	<cfelse>
+        	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        </cfif>
 		AND s.hostid != '0'
 		AND s.host_fam_approved <= '4'
 		<cfif form.date1 NEQ '' AND form.date2 NEQ ''>
