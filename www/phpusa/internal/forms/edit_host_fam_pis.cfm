@@ -17,9 +17,9 @@
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.hostID" default="0">
     <cfparam name="FORM.familyLastName" default="">
-    <cfparam name="FORM.fatherLastName" default="">
+    <cfparam name="FORM.fatherLastName" default="null" >
     <cfparam name="FORM.fatherMiddleName" default="">
-    <cfparam name="FORM.fatherFirstName" default="">
+    <cfparam name="FORM.fatherFirstName" default="null">
     <cfparam name="FORM.fatherdob" default="">
     <cfparam name="FORM.fatherWorkType" default="">
     <cfparam name="FORM.father_cell" default="">
@@ -42,7 +42,8 @@
     <cfparam name="FORM.email" default="">
     <cfparam name="FORM.emergency_contact_name" default="">
     <cfparam name="FORM.emergency_phone" default="">
-    <cfparam name="FORM.runCBC" default="0">
+    <cfparam name="FORM.fatherrunCBC" default="0">
+    <cfparam name="FORM.motherrunCBC" default="0">
 
 	<cfscript>
     	if ( VAL(URL.hostID) ) {
@@ -147,7 +148,8 @@
             </Cfquery>
           
         <!--- Encrypt SSNs --->
-        <cfif (len(trim(form.fatherssn)) or form.fatherIsNoSSN eq 1) and val(form.runCBC)>
+        <cfif val(form.fatherrunCBC)>
+       
 			<cfquery name="insertHostFather" datasource="#application.dsn#">
             	insert into php_hosts_cbc (companyid, cbc_type, hostid, date_authorized,isNoSSN)
             	values (<cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">,
@@ -197,7 +199,7 @@
         <!----
         <cfif len(trim(form.motherssn)) and left(form.motherSSN,3) neq 'XXX'>
           ---->
-         <cfif (len(trim(form.motherssn)) or FORM.motherIsNoSSN eq 1) and val(form.runCBC)> 
+         <cfif val(form.motherrunCBC)> 
           
         <cfquery name="insertHostMother" datasource="#application.dsn#">
             	insert into php_hosts_cbc (companyid, cbc_type, hostid, date_authorized,isNoSSN)
@@ -249,23 +251,23 @@
             UPDATE 
                 smg_hosts
             SET familylastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.familylastname#">,
-                fatherlastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherlastname#">,
-                fatherfirstname= <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherfirstname#">,
-				fatherdob = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.fatherdob#">,
+                fatherlastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherlastname#" null="#IIF(FORM.fatherlastname EQ "", true, false)#">,
+                fatherfirstname= <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherfirstname#" null="#IIF(FORM.fatherfirstname EQ "", true, false)#">,
+				fatherdob = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.fatherdob#" null="#IIF(FORM.fatherdob EQ "", true, false)#">,
                 fatherworktype = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherworktype#">,
                 father_cell = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.father_cell#">,
                 <cfif left(form.fatherSSN,3) neq 'XXX'>
-                	fatherSSN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherSSN#">,
+                	fatherSSN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherSSN#" null="#IIF(FORM.fatherSSN EQ "", true, false)#">,
                 </cfif>
-                motherfirstname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherfirstname#">,
-                motherlastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherlastname#">, 		
+                motherfirstname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherfirstname#" null="#IIF(FORM.motherfirstname EQ "", true, false)#">,
+                motherlastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherlastname#" null="#IIF(FORM.motherlastname EQ "", true, false)#">, 		
                 emergency_contact_name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.emergency_contact_name#">,
                 emergency_phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.emergency_phone#">,
-                motherdob = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.motherdob#">,
+                motherdob = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.motherdob#" null="#IIF(FORM.motherdob EQ "", true, false)#">,
                 motherworktype = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherworktype#">,
                 mother_cell = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.mother_cell#">,
                 <cfif left(form.motherSSN,3) neq 'XXX'>
-                	motherSSN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherSSN#">,
+                	motherSSN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherSSN#" null="#IIF(FORM.motherSSN EQ "", true, false)#">,
                 </cfif>
                 address = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address#">,
                 address2 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address2#">,
@@ -400,6 +402,9 @@
                        
                              </td>
                         </tr>
+                        <Tr bgcolor="##C2D1EF">
+                        	<Td align="right">Run Father's CBC</Td><td colspan=3><input type="checkbox" name="fatherrunCBC" value="1"/></td>
+                        </Tr>
                         
                         <tr bgcolor="##C2D1EF">
                         	<td class="label">Occupation:</td>
@@ -429,14 +434,16 @@
                           
                               No SSN:  
                       
-                                	<input type="checkbox" name="fatherIsNoSSN" value="1" <cfif VAL(qGetCBCFather.isNoSSN)>checked="checked"</cfif>>
+                                	<input type="checkbox" name="motherIsNoSSN" value="1" <cfif VAL(qGetCBCFather.isNoSSN)>checked="checked"</cfif>>
                                
                               
                       
                             
                               </td>
                         </tr>
-					
+					 <Tr>
+                        	<Td align="right">Run Mother's CBC</Td><td><input type="checkbox" name="motherrunCBC" value="1"/></td>
+                        </Tr>
                         <tr>
                         	<td class="label">Occupation:</td>
                             <td colspan="3"><input type="text" class="largeField" name="motherWorkType" value="#FORM.motherworktype#"></td>
@@ -450,9 +457,7 @@
                             <td colspan="3"><input type="text" class="largeField" name="emergency_phone" value="#FORM.emergency_phone#"></td>
                         </tr>
                        
-                        <Tr>
-                        	<Td align="right">Run CBC's</Td><td><input type="checkbox" name="runCBC" value=1/></td>
-                        </Tr>
+                       
                     
                 	</table>
                     
