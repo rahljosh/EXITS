@@ -45,6 +45,8 @@
                         <td colspan="3">
                         	<cfif qGetHostInfo.companyID EQ 10>
                             	<img src="#relative#pics/10_short_profile_header.jpg">
+                           	<cfelseif qGetHostInfo.companyID EQ 14>
+                            	<img src="#relative#pics/14_short_profile_header.jpg">
                            	<cfelse>
                             	<img src="#relative#pics/hostAppBanners/Pdf_Headers_02.jpg">
                           	</cfif>
