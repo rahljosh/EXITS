@@ -55,6 +55,22 @@
 	.answer {
     	font-weight: bold;
     }
+	
+	.heading {
+		width:100%;
+		height:20px;
+		font-weight:bold;
+		font-size:14px;
+		line-height:20px;
+		color: white;
+		<cfif qGetHostInfo.companyID EQ 10>
+			background-color: rgb(0,35,93);
+		<cfelseif qGetHostInfo.companyID EQ 14>
+			background-color: rgb(40,56,144);
+		<cfelse>
+			background-color: rgb(12,85,162);
+		</cfif>
+	}
 </style>
 
 	<!--- Check to see which action we are taking. --->

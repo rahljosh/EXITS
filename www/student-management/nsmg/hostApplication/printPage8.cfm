@@ -52,11 +52,11 @@
                             <tr>
                                 <td colspan="3">
                                     <cfif qGetHostInfo.companyID EQ 10>
-                                        <img src="#relative#pics/10_short_profile_header.jpg">
+                                        <img src="#relative#pics/10_short_profile_headerDouble.jpg" width="800px">
                                     <cfelseif qGetHostInfo.companyID EQ 14>
-                                        <img src="#relative#pics/14_short_profile_header.jpg">
+                                        <img src="#relative#pics/14_short_profile_headerDouble.jpg" width="800px">
                                     <cfelse>
-                                        <img src="#relative#pics/hostAppBanners/Pdf_Headers_02.jpg">
+                                        <img src="#relative#pics/hostAppBanners/Pdf_Headers_02Double.jpg" width="100%">
                                     </cfif>
                                 </td>
                             </tr>
@@ -70,7 +70,7 @@
                                 </td>
                                 <td align="right" valign="top">
                                     <span class="title">Started:</span> #DateFormat(qGetHostInfo.applicationStarted, 'mmm, d, yyyy')#<br />
-                                    <span class="title">Page 8<cfif qGetUploadedImages.currentRow GT 1>.#qGetUploadedImages.currentRow-1#</cfif></span>
+                                    <span class="title">Section <cfif URL.reportType EQ "office">8<cfelse>7</cfif></span>
                                 </td>
                             </tr>
                         </table>
@@ -166,7 +166,7 @@
                     <cfif noImages>
                     	<table align="center" border="0" cellpadding="4" cellspacing="0" width="800"> 
                             <tr>           
-                                <td colspan="2" align="center"><img src="#relative#pics/hostAppBanners/HPpdf_20.jpg"/></td>
+                                <td colspan="2" align="center"><div class="heading">FAMILY ALBUM</div></td>
                             </tr>
                             <tr>
                             	<td colspan="2" align="center">No images could be found for this family.</td>
@@ -178,7 +178,7 @@
                     <cfif showAnything>
                         <table align="center" border="0" cellpadding="4" cellspacing="0" width="800"> 
                             <tr>           
-                                <td colspan="2" align="center"><img src="#relative#pics/hostAppBanners/HPpdf_20.jpg"/></td>
+                                <td colspan="2" align="center"><div class="heading">FAMILY ALBUM</div></td>
                             </tr>
                             
                             <tr>
@@ -248,5 +248,43 @@
         </cfif>
     
     </cfloop>
+    
+    <!--- There were no images --->
+    <cfif NOT VAL(qGetUploadedImages.recordCount)>
+    	<table align="center" border="0" cellpadding="4" cellspacing="0" width="800">
+            <tr>
+                <td colspan="3">
+                    <cfif qGetHostInfo.companyID EQ 10>
+                        <img src="#relative#pics/10_short_profile_headerDouble.jpg" width="800px">
+                    <cfelseif qGetHostInfo.companyID EQ 14>
+                        <img src="#relative#pics/14_short_profile_headerDouble.jpg" width="800px">
+                    <cfelse>
+                        <img src="#relative#pics/hostAppBanners/Pdf_Headers_02Double.jpg" width="100%">
+                    </cfif>
+                </td>
+            </tr>
+            <tr>
+                <td valign="top">
+                    <span class="title">Region:</span> #qGetHostInfo.regionName#<br />
+                    <span class="title">Area Representative:</span> #qGetHostInfo.areaRepresentative#
+                </td>
+                <td align="center" valign="top">
+                    <span class="title" style="font-size:18px;">#qGetHostInfo.familyLastName# (###qGetHostInfo.hostid#) <br /> Host Family Application</span>
+                </td>
+                <td align="right" valign="top">
+                    <span class="title">Started:</span> #DateFormat(qGetHostInfo.applicationStarted, 'mmm, d, yyyy')#<br />
+                    <span class="title">Section <cfif URL.reportType EQ "office">8<cfelse>7</cfif></span>
+                </td>
+            </tr>
+        </table>
+        <table align="center" border="0" cellpadding="4" cellspacing="0" width="800"> 
+            <tr>           
+                <td colspan="2" align="center"><div class="heading">FAMILY ALBUM</div></td>
+            </tr>
+            <tr>
+                <td colspan="2" align="center">No images could be found for this family.</td>
+            </tr>
+        </table>
+    </cfif>
 
 </cfoutput>

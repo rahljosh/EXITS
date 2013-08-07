@@ -34,11 +34,11 @@
                     <tr>
                         <td colspan="3">
                         	<cfif qGetHostInfo.companyID EQ 10>
-                            	<img src="#relative#pics/10_short_profile_header.jpg">
+                            	<img src="#relative#pics/10_short_profile_headerDouble.jpg" width="800px">
                            	<cfelseif qGetHostInfo.companyID EQ 14>
-                            	<img src="#relative#pics/14_short_profile_header.jpg">
+                            	<img src="#relative#pics/14_short_profile_headerDouble.jpg" width="800px">
                            	<cfelse>
-                            	<img src="#relative#pics/hostAppBanners/Pdf_Headers_02.jpg">
+                            	<img src="#relative#pics/hostAppBanners/Pdf_Headers_02Double.jpg" width="800px">
                           	</cfif>
                       	</td>
                     </tr>
@@ -52,7 +52,7 @@
                         </td>
                         <td align="right" valign="top">
                             <span class="title">Started:</span> #DateFormat(qGetHostInfo.applicationStarted, 'mmm, d, yyyy')#<br />
-                            <span class="title">Page 1</span>
+                            <span class="title">Section 1</span>
                         </td>
                     </tr>
                 </table>
@@ -60,7 +60,7 @@
 
                 <table align="center" border="0" cellpadding="4" cellspacing="0" width="800"> 
                     <tr>           
-                        <td colspan="2" align="center"><img src="#relative#pics/hostAppBanners/HPpdf_04.jpg"/></td>
+                        <td colspan="2" align="center"><div class="heading">HOST FAMILY</div></td>
                 	</tr>
                     <tr>
                     	<td colspan="2">
@@ -119,7 +119,7 @@
                 <!--- Ethnicity --->
                 <table align="center" border="0" cellpadding="4" cellspacing="0" width="800"> 
                     <tr>           
-                        <td colspan="2" align="center"><img src="#relative#pics/hostAppBanners/HPpdf_ethnicity.jpg"/></td>
+                        <td colspan="2" align="center"><div class="heading">ETHNICITY</div></td>
                 	</tr>
                     <tr>
                     	<td width="350" valign="top">
@@ -145,8 +145,7 @@
                 <table align="center" border="0" cellpadding="4" cellspacing="0" width="800"> 
                     <tr>           
                         <td colspan="2" align="center">
-                        	<!--- Using this instead of an image --->
-                        	<div style="width:100%; height:20px; font-weight:bold; font-size:14px; background-color: ##0166b8; color: white;">HOSTED BEFORE</div>
+                        	<div class="heading">HOSTED BEFORE</div>
                     	</td>
                 	</tr>
                     <tr>
@@ -167,7 +166,7 @@
                 <!--- Home Based Business --->
                 <table align="center" border="0" cellpadding="4" cellspacing="0" width="800"> 
                     <tr>           
-                        <td colspan="2" align="center"><img src="#relative#pics/hostAppBanners/HPpdf_homebased.jpg"/></td>
+                        <td colspan="2" align="center"><div class="heading">HOME BASED BUSINESS</div></td>
                 	</tr>
                     <tr>
                     	<td width="350" valign="top">
@@ -188,7 +187,7 @@
                 <cfif LEN(qGetHostInfo.fatherfirstname)>
                     <table align="center" border="0" cellpadding="4" cellspacing="0" width="800"> 
                         <tr>           
-                            <td colspan="2" align="center"><img src="#relative#pics/hostAppBanners/HPpdf_father.jpg"/></td>
+                            <td colspan="2" align="center"><div class="heading">FATHER'S INFORMATION</div></td>
                         </tr>
                         <tr>
                             <td valign="top" width="50%">
@@ -248,7 +247,7 @@
                 <cfif LEN(qGetHostInfo.motherfirstname)>
                     <table align="center" border="0" cellpadding="4" cellspacing="0" width="800"> 
                         <tr>           
-                            <td colspan="2" align="center"><img src="#relative#pics/hostAppBanners/HPpdf_mother.jpg"/></td>
+                            <td colspan="2" align="center"><div class="heading">MOTHER'S INFORMATION</div></td>
                         </tr>
                         <tr>
                             <td valign="top" width="50%">
