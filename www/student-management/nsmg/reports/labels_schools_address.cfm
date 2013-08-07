@@ -59,7 +59,11 @@
         WHERE 
             s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
         AND
-            s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+			<cfif CLIENT.companyID EQ 5>
+                s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,12" list="yes"> )
+            <cfelse>
+                s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+            </cfif>
         AND 
             s.hostid != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
         AND 
