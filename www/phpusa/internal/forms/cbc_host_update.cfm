@@ -34,9 +34,12 @@
        
     </cfscript>
     
+
+    
     <!--- Form submitted --->
     <cfif VAL(FORM.submitted)>
-    
+   
+        
     	<!--- Update all of the father's records --->
         <cfloop query="qGetCBCFather">
         	<cfscript>
@@ -72,14 +75,127 @@
 				</cfscript>
             </cfloop>
         </cfloop>
+         	<cfif isDate(FORM.offLineFatherdateAuthorized)>
+            <Cfquery name="insertOffLineCBC" datasource="#application.dsn#">
+            insert into php_hosts_cbc (date_approved,date_authorized,date_expired,date_sent, notes, hostid,cbc_type, requestid)
+                                values(<cfqueryparam cfsqltype="cf_sql_date" value="#FORM.offLineFatherdateApproved#">,
+                                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.offLineFatherdateAuthorized#">,
+                                        <cfqueryparam cfsqltype="cf_sql_date" value="#dateADd('yyyy','1','#FORM.offLineFatherdateAuthorized#')#">,
+                                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.offLineFatherdateSubmitted#">,
+                                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.offLineFatherNotes#">,
+                                        <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.hostid#">,
+                                        <cfqueryparam cfsqltype="cf_sql_varchar" value="father">,
+                                        <cfqueryparam cfsqltype="cf_sql_varchar" value="Offline CBC">)
+            </Cfquery>
         
+        </cfif>
+        <cfif isDate(FORM.offLineMotherdateAuthorized)>
+            <Cfquery name="insertOffLineCBC" datasource="#application.dsn#">
+            insert into php_hosts_cbc (date_approved,date_authorized,date_expired,date_sent, notes, hostid,cbc_type, requestid)
+                                values(<cfqueryparam cfsqltype="cf_sql_date" value="#FORM.offLineMotherdateApproved#">,
+                                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.offLineMotherdateAuthorized#">,
+                                        <cfqueryparam cfsqltype="cf_sql_date" value="#dateADD('yyyy','1','#FORM.offLineMotherdateAuthorized#')#">,
+                                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.offLineMotherdateSubmitted#">,
+                                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.offLineMotherNotes#">,
+                                        <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.hostid#">,
+                                        <cfqueryparam cfsqltype="cf_sql_varchar" value="Mother">,
+                                        <cfqueryparam cfsqltype="cf_sql_varchar" value="Offline CBC">)
+            </Cfquery>
+        </cfif>
+
+<cfloop query="qGetHostChildrenForCBC">
+  	 <cfif isDate(#FORM["offLineMemberDateAuthorized_#childid#"]#)>
+            <Cfquery name="insertOffLineCBC" datasource="#application.dsn#">
+            insert into php_hosts_cbc (date_approved,date_authorized,date_expired,date_sent, notes, hostid,cbc_type, requestid, familyid)
+                                values(<cfqueryparam cfsqltype="cf_sql_date" value="#FORM["offLineMemberdateApproved_#childid#"]#">,
+                                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM["offLineMemberdateAuthorized_#childid#"]#">,
+                                        <cfqueryparam cfsqltype="cf_sql_date" value="#dateADD('yyyy','1','#FORM["offLineMemberdateAuthorized_#childid#"]#')#" >,
+                                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM["offLineMemberdateSubmitted_#childid#"]#">,
+                                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM["offLineMemberNotes_#childid#"]#">,
+                                        <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.hostid#">,
+                                        <cfqueryparam cfsqltype="cf_sql_varchar" value="member">,
+                                        <cfqueryparam cfsqltype="cf_sql_varchar" value="Offline CBC">,
+                                        <cfqueryparam cfsqltype="cf_sql_integer" value="#childid#">)
+            </Cfquery>
+        </cfif>
+</cfloop>
         <!--- redirect back to the overview page --->
         <cflocation url="/internal/index.cfm?curdoc=host_fam_info&hostID=#family_info.hostID#" addtoken="no">
     </cfif>
     
 </cfsilent>
-
 <script type="text/javascript">
+function showCBCInfo() {
+		// Check if current state is visible
+		var isVisible = $('#newCBCDiv').is(':visible');
+			
+		if ( isVisible ) {
+			// handle visible state
+			$("#newCBC").val(0);
+			$("#newCBCDiv").fadeOut("slow");
+		} else {
+			// handle non visible state
+			$("#newCBC").val(1);
+			$("#newCBCDiv").fadeIn("slow");
+		}
+
+	}
+	
+	function showCBCInfoMother() {
+		// Check if current state is visible
+		var isVisible = $('#newCBCDivMother').is(':visible');
+			
+		if ( isVisible ) {
+			// handle visible state
+			$("#newCBCMother").val(0);
+			$("#newCBCDivMother").fadeOut("slow");
+		} else {
+			// handle non visible state
+			$("#newCBCMOther").val(1);
+			$("#newCBCDivMother").fadeIn("slow");
+		}
+
+	}
+</script>
+
+<cfoutput>
+<cfloop query="qGetHostChildrenForCBC">
+
+	<script type="text/javascript">
+        function showCBCInfoMember_#childid#() {
+            // Check if current state is visible
+            var isVisible = $('##newCBCDivMember_#childid#').is(':visible');
+                
+            if ( isVisible ) {
+                // handle visible state
+                $("##newCBCMember_#childid#").val(0);
+                $("##newCBCDivMember_#childid#").fadeOut("slow");
+            } else {
+                // handle non visible state
+                $("##newCBCMember_#childid#").val(1);
+                $("##newCBCDivMember_#childid#").fadeIn("slow");
+            }
+    
+        }
+    </script>
+</cfloop>
+</cfoutput>
+<script type="text/javascript">
+    // Document Ready!
+    $(document).ready(function() {
+				
+		// JQuery Modal
+		$(".jQueryModal").colorbox( {
+			width:"60%", 
+			height:"90%", 
+			iframe:true,
+			overlayClose:false,
+			escKey:false 
+		});		
+
+	});
+
+
 	var showRow = function(row) {
 		if ($("#" + row).attr('style') == undefined) {
 			$("#" + row).attr("style", "display:none;");
@@ -116,6 +232,10 @@
 		else
 			return true;
 	}
+	
+	
+	
+
 </script>
 
 <cfoutput>
@@ -166,6 +286,20 @@
                                     </tr>
                                 </cfloop>
                             </cfif>
+                           
+                            <tr  id="newCBCDiv" class="displayNone" >
+                                   <td><input type="text" class="datePicker" value="" name="offLineFatherdateAuthorized" /></td>
+                                    <td><input type="text" class="datePicker" value="" name="offLineFatherdateSubmitted" /></td>
+                                    <td><input type="text" class="datePicker" value="Calculated" name="offLineFatherdateExpires" disabled/></td>
+                                    <td><input type="text" class="datePicker" value="" name="offLineFatherdateApproved" /></td>
+                                    <td><textarea name="offLineFathernotes"></textarea></td>
+                                   
+                                </tr>
+                        		<tr>
+                                	<td colspan=5 align="center"><a onclick="showCBCInfo();" href="##">Record Offline CBC</a></td>
+                                </tr>
+                                
+                           
                         </cfif>
                         <!--- Host Mother (only display if there is one) --->
                         <cfif LEN(family_info.motherFirstName) OR LEN(family_info.motherLastName) OR LEN(family_info.motherSSN)>
@@ -191,6 +325,20 @@
                                     </tr>
                                 </cfloop>
                             </cfif>
+                             
+                            <tr  id="newCBCDivMother" class="displayNone" >
+                                   <td><input type="text" class="datePicker" value="" name="offLineMotherdateAuthorized" /></td>
+                                    <td><input type="text" class="datePicker" value="" name="offLineMotherdateSubmitted" /></td>
+                                    <td><input type="text" class="datePicker" value="Calculated" name="offLineMotherdateExpires" disabled="disabled" /></td>
+                                    <td><input type="text" class="datePicker" value="" name="offLineMotherdateApproved" /></td>
+                                    <td><textarea name="offLineMothernotes"></textarea></td>
+                                   
+                                </tr>
+                        		<tr>
+                                	<td colspan=5 align="center"><a onclick="showCBCInfoMother();" href="##">Record Offline CBC</a></td>
+                                </tr>
+                                
+                            
                         </cfif>
                         <!--- Loop through all children that need a cbc --->
                         <cfloop query="qGetHostChildrenForCBC">
@@ -234,6 +382,21 @@
                                     </tr>
                                 </cfloop>
                             </cfif>
+                             
+                            <tr  id="newCBCDivMember_#childid#" class="displayNone" >
+                                   <td><input type="text" class="datePicker" value="" name="offLineMemberdateAuthorized_#childid#" /></td>
+                                    <td><input type="text" class="datePicker" value="" name="offLineMemberdateSubmitted_#childid#" /></td>
+                                    <td><input type="text" class="datePicker" value="Calculated" name="offLineMemberdateExpires_#childid#" disabled /></td>
+                                    <td><input type="text" class="datePicker" value="" name="offLineMemberdateApproved_#childid#" /></td>
+                                    
+                                    <td><textarea name="offLineMembernotes_#childid#"></textarea></td>
+                                   
+                                </tr>
+                        		<tr>
+                                	<td colspan=5 align="center"><a onclick="showCBCInfoMember_#childid#();" href="##">Record Offline CBC</a></td>
+                                </tr>
+                                
+                           
                         </cfloop>
                         <tr>
                             <td colspan="5" align="center">
