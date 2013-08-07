@@ -34,11 +34,11 @@
                     <tr>
                         <td colspan="3">
                         	<cfif qGetHostInfo.companyID EQ 10>
-                            	<img src="#relative#pics/10_short_profile_header.jpg">
+                            	<img src="#relative#pics/10_short_profile_headerDouble.jpg" width="800px">
                            	<cfelseif qGetHostInfo.companyID EQ 14>
-                            	<img src="#relative#pics/14_short_profile_header.jpg">
+                            	<img src="#relative#pics/14_short_profile_headerDouble.jpg" width="800px">
                            	<cfelse>
-                            	<img src="#relative#pics/hostAppBanners/Pdf_Headers_02.jpg">
+                            	<img src="#relative#pics/hostAppBanners/Pdf_Headers_02Double.jpg" width="100%">
                           	</cfif>
                       	</td>
                     </tr>
@@ -52,7 +52,7 @@
                         </td>
                         <td align="right" valign="top">
                             <span class="title">Started:</span> #DateFormat(qGetHostInfo.applicationStarted, 'mmm, d, yyyy')#<br />
-                            <span class="title">Page 4</span>
+                            <span class="title">Section <cfif URL.reportType EQ "office">4<cfelse>3</cfif></span>
                         </td>
                     </tr>
                 </table>
@@ -60,7 +60,7 @@
 
                 <table align="center" border="0" cellpadding="4" cellspacing="0" width="800"> 
                     <tr>           
-                        <td colspan="2" align="center"><img src="#relative#pics/hostAppBanners/HPpdf_15.jpg"/></td>
+                        <td colspan="2" align="center"><div class="heading">PERSONAL DESCRIPTION</div></td>
                 	</tr>
                     <tr>
                     	<td style="font-size:16px; line-height:20px;">

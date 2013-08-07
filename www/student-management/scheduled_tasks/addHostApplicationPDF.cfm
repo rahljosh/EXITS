@@ -32,6 +32,21 @@
             <cfdocument format="pdf" filename="#fileName#.pdf" overwrite="yes" orientation="portrait" name="uploadFile">
                 #hostFamilyApplication#
             </cfdocument>
+            <!--- Optimize the PDF --->
+            <cfpdf
+                action="optimize"
+                source="#fileName#.pdf"
+                overwrite="yes"
+                algo="nearest_neighbour"
+                noattachments="yes"
+                nobookmarks="yes"
+                nocomments="yes"
+                nofonts="yes"
+                nojavascripts="yes"
+                nolinks="yes"
+                nometadata="yes"
+                nothumbnails="yes"
+                />
         </cfoutput>
         <cfscript>
             fullPath=GetDirectoryFromPath(GetCurrentTemplatePath()) & fileName & '.pdf';
@@ -96,6 +111,21 @@
             <cfdocument format="pdf" filename="#fileName#.pdf" overwrite="yes" orientation="portrait" name="uploadFile">
                 #hostFamilyApplication#
             </cfdocument>
+            <!--- Optimize the PDF --->
+            <cfpdf
+                action="optimize"
+                source="#fileName#.pdf"
+                overwrite="yes"
+                algo="nearest_neighbour"
+                noattachments="yes"
+                nobookmarks="yes"
+                nocomments="yes"
+                nofonts="yes"
+                nojavascripts="yes"
+                nolinks="yes"
+                nometadata="yes"
+                nothumbnails="yes"
+                />
         </cfoutput>
         <cfscript>
             fullPath=GetDirectoryFromPath(GetCurrentTemplatePath()) & fileName & '.pdf';

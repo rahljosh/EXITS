@@ -44,11 +44,11 @@
                     <tr>
                         <td colspan="3">
                         	<cfif qGetHostInfo.companyID EQ 10>
-                            	<img src="#relative#pics/10_short_profile_header.jpg">
+                            	<img src="#relative#pics/10_short_profile_headerDouble.jpg" width="800px">
                            	<cfelseif qGetHostInfo.companyID EQ 14>
-                            	<img src="#relative#pics/14_short_profile_header.jpg">
+                            	<img src="#relative#pics/14_short_profile_headerDouble.jpg" width="800px">
                            	<cfelse>
-                            	<img src="#relative#pics/hostAppBanners/Pdf_Headers_02.jpg">
+                            	<img src="#relative#pics/hostAppBanners/Pdf_Headers_02Double.jpg" width="100%">
                           	</cfif>
                       	</td>
                     </tr>
@@ -62,14 +62,14 @@
                         </td>
                         <td align="right" valign="top">
                             <span class="title">Started:</span> #DateFormat(qGetHostInfo.applicationStarted, 'mmm, d, yyyy')#<br />
-                            <span class="title">Page 6</span>
+                            <span class="title">Section <cfif URL.reportType EQ "office">6<cfelse>5</cfif></span>
                         </td>
                     </tr>
                 </table>
                 
                 <table align="center" border="0" cellpadding="4" cellspacing="0" width="100%"> 
                     <tr>           
-                        <td colspan="2" align="center"><img src="#relative#pics/hostAppBanners/HPpdf_religiouspreference.jpg"/></td>
+                        <td colspan="2" align="center"><div class="heading">RELIGIOUS PREFERENCE</div></td>
                 	</tr>
                     <cfif VAL(qGetHostInfo.informReligiousPref) OR URL.reportType EQ "office">
                         <tr>
@@ -93,7 +93,7 @@
                 
                 <table align="center" border="0" cellpadding="4" cellspacing="0" width="800"> 
                     <tr>           
-                        <td colspan="2" align="center"><img src="#relative#pics/hostAppBanners/HPpdf_religiousattendance.jpg"/></td>
+                        <td colspan="2" align="center"><div class="heading">RELIGIOUS ATTENDANCE</div></td>
                 	</tr>
                     <tr>
                         <td><span>How often do you go to your religious place of worship?</span></td>

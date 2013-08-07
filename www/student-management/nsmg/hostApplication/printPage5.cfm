@@ -54,11 +54,11 @@
                     <tr>
                         <td colspan="3">
                         	<cfif qGetHostInfo.companyID EQ 10>
-                            	<img src="#relative#pics/10_short_profile_header.jpg">
+                            	<img src="#relative#pics/10_short_profile_headerDouble.jpg" width="800px">
                            	<cfelseif qGetHostInfo.companyID EQ 14>
-                            	<img src="#relative#pics/14_short_profile_header.jpg">
+                            	<img src="#relative#pics/14_short_profile_headerDouble.jpg" width="800px">
                            	<cfelse>
-                            	<img src="#relative#pics/hostAppBanners/Pdf_Headers_02.jpg">
+                            	<img src="#relative#pics/hostAppBanners/Pdf_Headers_02Double.jpg" width="100%">
                           	</cfif>
                       	</td>
                     </tr>
@@ -72,14 +72,14 @@
                         </td>
                         <td align="right" valign="top">
                             <span class="title">Started:</span> #DateFormat(qGetHostInfo.applicationStarted, 'mmm, d, yyyy')#<br />
-                            <span class="title">Page 5</span>
+                            <span class="title">Section <cfif URL.reportType EQ "office">5<cfelse>4</cfif></span>
                         </td>
                     </tr>
                 </table>
                 
                 <table align="center" border="0" cellpadding="4" cellspacing="0" width="800"> 
                     <tr>           
-                        <td align="center"><img src="#relative#pics/hostAppBanners/HPpdf_pets.jpg"/></td>
+                        <td align="center"><div class="heading">PETS</div></td>
                 	</tr>
                     <tr>
                         <td>
@@ -109,7 +109,7 @@
                 
                 <table align="center" border="0" cellpadding="4" cellspacing="0" width="800"> 
                     <tr>           
-                        <td align="center"><img src="#relative#pics/hostAppBanners/HPpdf_allergies.jpg"/></td>
+                        <td align="center"><div class="heading">ALLERGIES</div></td>
                 	</tr>
                     <tr>
                     	<td>
@@ -128,7 +128,7 @@
 
                 <table align="center" border="0" cellpadding="4" cellspacing="0" width="800"> 
                     <tr>           
-                        <td align="center"><img src="#relative#pics/hostAppBanners/HPpdf_roomsharing.jpg"/></td>
+                        <td align="center"><div class="heading">ROOM SHARING</div></td>
                 	</tr>
                     <tr>
                     	<td>
@@ -161,7 +161,7 @@
                            
                 <table align="center" border="0" cellpadding="4" cellspacing="0" width="800"> 
                     <tr>           
-                        <td align="center"><img src="#relative#pics/hostAppBanners/HPpdf_smoking.jpg"/></td>
+                        <td align="center"><div class="heading">SMOKING</div></td>
                 	</tr>
                     <tr>
                         <td>
@@ -180,7 +180,7 @@
                 
                 <table align="center" border="0" cellpadding="4" cellspacing="0" width="800"> 
                     <tr>           
-                        <td align="center"><img src="#relative#pics/hostAppBanners/HPpdf_dietaryneeds.jpg"/></td>
+                        <td align="center"><div class="heading">DIETARY NEEDS</div></td>
                 	</tr>
                     <tr>
                         <td>
@@ -227,8 +227,7 @@
                 <table align="center" border="0" cellpadding="4" cellspacing="0" width="800"> 
                 	<tr>
                     	<td align="center">
-                        	<!--- Using this instead of an image --->
-                        	<div style="width:100%; height:20px; font-weight:bold; font-size:14px; background-color: ##0166b8; color: white;">INTERNET</div>
+                        	<div class="heading">INTERNET</div>
                      	</td>
                     </tr>
                     <tr>
