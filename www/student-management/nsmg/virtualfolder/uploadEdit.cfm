@@ -1,19 +1,32 @@
 <head>
-<script>
-function displayHosts() {
-		// Get canada list from the query
-		hostFamList = '#hostFamDocID#';
-		currentHost = $("##docType").val();
-
-		if ( $.ListFind(hostFamList, currentHost, ',') ) {
-			$(".hostFamAreaDiv").fadeIn("slow");															
-		} else {
-			$("##hostFamily").val(0);
-			$(".hostFamAreaDiv").fadeOut("slow");			
-		}
-	}
-</script>
+	<script>
+        function displayHosts() {
+            // Get canada list from the query
+            hostFamList = '#hostFamDocID#';
+            currentHost = $("##docType").val();
+    
+            if ( $.ListFind(hostFamList, currentHost, ',') ) {
+                $(".hostFamAreaDiv").fadeIn("slow");															
+            } else {
+                $("##hostFamily").val(0);
+                $(".hostFamAreaDiv").fadeOut("slow");			
+            }
+        }
+        
+        // Function to check if there are invalid characters in the file name.
+        // This function will only check for characters that will prevent uploading onto the server.
+        // Other invalid characters such as "#" are stripped after they are uploaded.
+        function checkFileName(input) {
+            var fileName = input.substring(input.lastIndexOf("\\")+1);
+            var pattern = /[?:*<>|"#]/g;
+            if (pattern.test(fileName)) {
+                $("#fileToUpload").attr("value","");
+                alert("The file name cannot contain the following characters: ? : * < > | \" ");	
+            }
+        }
+    </script>
 </head>
+
 <cfparam name="emailRecipient" default="#APPLICATION.EMAIL.support#">
 
 <!--- Import CustomTag Used for Page Messages and Form Errors --->
@@ -25,6 +38,7 @@ function displayHosts() {
 <cfparam name="FORM.docExists" default="0">
 <Cfparam name="FORM.docID" default="0">
 <Cfparam name="FORM.docType" default="0">
+
 <!---Close the window if its cancel---->
 <cfif FORM.subAction is 'Cancel'>
     <body onLoad="parent.$.fn.colorbox.close();">
@@ -59,7 +73,7 @@ function displayHosts() {
     select vfc.categoryName, vfd.documentType, vfd.id, vfc.categoryid, vfd.uploadPermissions
     from virtualfolderdocuments vfd
     left join virtualfoldercategory vfc on vfc.categoryid = vfd.fk_category
-	where isActive = <Cfqueryparam cfsqltype="cf_sql_integer" value=1>
+	where isActive = <Cfqueryparam cfsqltype="cf_sql_integer" value="1">
 </cfquery>
 
 <!----List of UsersTypes---->
@@ -198,201 +212,207 @@ function displayHosts() {
                     userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.intrep#">
             </cfquery>
     
-    <cfquery name="qGetRegionInfo" datasource="#application.dsn#">
-        SELECT 
-            s.regionassigned, 
-            r.regionname, 
-            r.regionfacilitator, 
-            r.regionid, 
-            r.company,
-            u.firstname, 
-            u.lastname, 
-            u.email 
-        FROM 
-            smg_students s 
-        INNER JOIN 
-            smg_regions r ON s.regionassigned = r.regionid
-        LEFT JOIN 
-            smg_users u ON r.regionfacilitator = u.userid
-        WHERE 
-            s.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.studentid#">
-    </cfquery>
-       <cfscript>
-		// Dev - Always Email Support
-        if ( APPLICATION.isServerLocal ) {
-			emailRecipient = APPLICATION.EMAIL.support; 	
-		// Check if is a PHP student - Email PHP
-		} else if ( qGetStudentInfo.companyid EQ 6 ) {
-            emailRecipient = APPLICATION.EMAIL.PHPContact; 	
-        }
-        // Check if there is a valid facilitator email address and only email the facilitator if they are not the ones uploading the file.
-		else if ( IsValid("email", qGetRegionInfo.email) AND qGetRegionInfo.regionfacilitator NEQ CLIENT.userID ) {
-            emailRecipient = qGetRegionInfo.email;
-        }
-	</cfscript>	
-    
-    <cfoutput>
-        <cfsavecontent variable="email_message">
-            Dear #qGetRegionInfo.firstname# #qGetRegionInfo.lastname#,<br><br>This e-mail is just to let you know a new document has been uploaded into #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname#'s (###qGetStudentInfo.studentid#) virtual folder by #qGetUser.businessname# #qGetUser.firstname# #qGetUser.lastname#.
-            The document has been recorded in the category #qGetCategory.documenttype#.<br><br>
-            Please click <a href="#studentProfileLink#">here</a> and click on "virtual folder" in the right menu. <br><br>
+        	<cfquery name="qGetRegionInfo" datasource="#application.dsn#">
+                SELECT 
+                    s.regionassigned, 
+                    r.regionname, 
+                    r.regionfacilitator, 
+                    r.regionid, 
+                    r.company,
+                    u.firstname, 
+                    u.lastname, 
+                    u.email 
+                FROM 
+                    smg_students s 
+                INNER JOIN 
+                    smg_regions r ON s.regionassigned = r.regionid
+                LEFT JOIN 
+                    smg_users u ON r.regionfacilitator = u.userid
+                WHERE 
+                    s.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.studentid#">
+        	</cfquery>
             
-            Sincerely,<br>
-            EXITS - #CLIENT.companyname#<br><br>
-        </cfsavecontent>
-        </Cfoutput>            
-        <!--- send email --->
-        <cfinvoke component="nsmg.cfc.email" method="send_mail">
-            <cfinvokeargument name="email_to" value="#emailRecipient#">
-            <cfinvokeargument name="email_subject" value="Virtual Folder - Upload Notification for #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentid#)">
-            <cfinvokeargument name="email_message" value="#email_message#">
-            <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
-        </cfinvoke>
-    <!----End of Email---->
+		   	<cfscript>
+				// Dev - Always Email Support
+				if ( APPLICATION.isServerLocal ) {
+					emailRecipient = APPLICATION.EMAIL.support; 	
+				// Check if is a PHP student - Email PHP
+				} else if ( qGetStudentInfo.companyid EQ 6 ) {
+					emailRecipient = APPLICATION.EMAIL.PHPContact; 	
+				}
+				// Check if there is a valid facilitator email address and only email the facilitator if they are not the ones uploading the file.
+				else if ( IsValid("email", qGetRegionInfo.email) AND qGetRegionInfo.regionfacilitator NEQ CLIENT.userID ) {
+					emailRecipient = qGetRegionInfo.email;
+				}
+        	</cfscript>	
+    
+    		<cfoutput>
+        		<cfsavecontent variable="email_message">
+            		Dear #qGetRegionInfo.firstname# #qGetRegionInfo.lastname#,<br><br>
+                    This e-mail is just to let you know a new document has been uploaded into 
+                    #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname#'s (###qGetStudentInfo.studentid#) 
+                    virtual folder by #qGetUser.businessname# #qGetUser.firstname# #qGetUser.lastname#.
+            		The document has been recorded in the category #qGetCategory.documenttype#.<br><br>
+            		Please click <a href="#studentProfileLink#">here</a> and click on "virtual folder" in the right menu. <br><br>
+            		Sincerely,<br>
+            		EXITS - #CLIENT.companyname#<br><br>
+        		</cfsavecontent>
+        	</cfoutput>            
+        
+			<!--- send email --->
+            <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                <cfinvokeargument name="email_to" value="#emailRecipient#">
+                <cfinvokeargument name="email_subject" value="Virtual Folder - Upload Notification for #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentid#)">
+                <cfinvokeargument name="email_message" value="#email_message#">
+                <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
+            </cfinvoke>
+    		<!----End of Email---->
     
     
-    <!--- Email International Representative if file has been upload by Office and in Production Environment and Int Rep is in view Permissions--->
-	<cfif ListFind("1,2,3,4,5,6,7", CLIENT.userType) AND NOT APPLICATION.isServerLocal AND listFind(qGetCategory.viewPermissions, 8)>>
-    <cfoutput>
-        <cfsavecontent variable="email_message">
-            This e-mail is just to let you know a new document has been uploaded into #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname#'s (###qGetStudentInfo.studentid#) virtual folder by #qGetUser.businessname# #qGetUser.firstname# #qGetUser.lastname#.
-            The document has been recorded in the category #qGetCategory.documenttype# .<br><br>
-            Please click <a href="#studentProfileIntLink#">here</a> to see the student's virtual folder.<br><br>
-            Sincerely,<br>
-            EXITS - #CLIENT.companyname#<br><br>
-        </cfsavecontent>
-        </cfoutput>
-        <!--- send email --->
-        <cfinvoke component="nsmg.cfc.email" method="send_mail">
-            <cfinvokeargument name="email_to" value="#qIntlRep.email#">
-            <cfinvokeargument name="email_subject" value="Virtual Folder - Upload Notification for #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentid#)">
-            <cfinvokeargument name="email_message" value="#email_message#">
-            <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
-        </cfinvoke>
+    		<!--- Email International Representative if file has been upload by Office and in Production Environment and Int Rep is in view Permissions--->
+			<cfif ListFind("1,2,3,4,5,6,7", CLIENT.userType) AND NOT APPLICATION.isServerLocal AND listFind(qGetCategory.viewPermissions, 8)>
+    			<cfoutput>
+        			<cfsavecontent variable="email_message">
+            			This e-mail is just to let you know a new document has been uploaded into #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname#'s (###qGetStudentInfo.studentid#) 
+                        virtual folder by #qGetUser.businessname# #qGetUser.firstname# #qGetUser.lastname#.
+            			The document has been recorded in the category #qGetCategory.documenttype# .<br><br>
+            			Please click <a href="#studentProfileIntLink#">here</a> to see the student's virtual folder.<br><br>
+                        Sincerely,<br>
+                        EXITS - #CLIENT.companyname#<br><br>
+        			</cfsavecontent>
+        		</cfoutput>
+        
+				<!--- send email --->
+                <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                    <cfinvokeargument name="email_to" value="#qIntlRep.email#">
+                    <cfinvokeargument name="email_subject" value="Virtual Folder - Upload Notification for #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentid#)">
+                    <cfinvokeargument name="email_message" value="#email_message#">
+                    <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
+                </cfinvoke>
+                <!----End of Email---->
       
-    </cfif> 
-    <!---- End of Email to Intl. Representative --->
+    		</cfif>
+            <!---- End of Email to Intl. Representative --->
+		
         </cfif>
+        <!--- END - Doc does not exist --->
        
 		<cfif FORM.subAction is 'Save and Close'>
-              <body onLoad="parent.$.fn.colorbox.close();">
-                        <cfabort>
+    		<body onLoad="parent.$.fn.colorbox.close();">
+       		<cfabort>
         </cfif>
+        
        	<cfif FORM.subAction is 'Save and New'>
-         <cfscript>
-        // Set Page Message
+			<cfscript>
+        		// Set Page Message
 				SESSION.pageMessages.Add("Document was successfully uploaded.");
-		</cfscript>
-    	  <cfscript>
-			FORM.docType = '';
-			FORM.docID = '';
-	
-	</cfscript>
-    </cfif>
-  </cfif>
-</Cfif>
+				FORM.docType = '';
+				FORM.docID = '';
+         	</cfscript>
+    	</cfif>
 
+	</cfif>
+
+</cfif>
 
 <cfif val(form.docExists)>
 	<cfquery name="qCurrentDoc" datasource="#application.dsn#">
-     select *
-     from virtualFolderDocuments
-     where id = <Cfqueryparam cfsqltype="cf_sql_integer" value = "#form.docExists#"> 
+		select *
+     	from virtualFolderDocuments
+     	where id = <Cfqueryparam cfsqltype="cf_sql_integer" value = "#form.docExists#"> 
     </cfquery>
     <cfscript>
-	FORM.documentType = qCurrentDoc.documentType;
-	FORM.fk_category = qCurrentDoc.fk_category;
-	FORM.viewPermissions = qCurrentDoc.viewPermissions;
-	FORM.uploadPermissions = qCurrentDoc.uploadPermissions;
+		FORM.documentType = qCurrentDoc.documentType;
+		FORM.fk_category = qCurrentDoc.fk_category;
+		FORM.viewPermissions = qCurrentDoc.viewPermissions;
+		FORM.uploadPermissions = qCurrentDoc.uploadPermissions;
 	</cfscript>
 </cfif>
- <cfoutput>
 
- <gui:pageHeader
+<cfoutput>
+	
+    <gui:pageHeader
         headerType="applicationNoHeader"
     />	
-<div class="rdholder" style="width:100%; float:right;"> 
-                
-    <div class="rdtop"> 
-        <span class="rdtitle">Upload/Edit Document</span> 
-        <em></em>
-    </div>
-    
-    <div class="rdbox">
-  <!--- Page Messages --->
-    <gui:displayPageMessages 
-        pageMessages="#SESSION.pageMessages.GetCollection()#"
-        messageType="divOnly"
-        width="98%"
-        />
-    
-    <!--- Form Errors --->
-    <gui:displayFormErrors 
-        formErrors="#SESSION.formErrors.GetCollection()#"
-        messageType="divOnly"
-        width="98%"
-        />
- <Cfset vCurrentDoc = ''>
-<form method="post" action="uploadEdit.cfm?unqid=#url.unqid#" name="Upload" enctype="multipart/form-data">
-<input type="hidden" name="docExists" value="#url.docID#">
+	
+    <div class="rdholder" style="width:100%; float:right;"> 
+		
+        <div class="rdtop"> 
+        	<span class="rdtitle">Upload/Edit Document</span> 
+        	<em></em>
+    	</div>
+        
+    	<div class="rdbox">
+        
+  			<!--- Page Messages --->
+    		<gui:displayPageMessages 
+                pageMessages="#SESSION.pageMessages.GetCollection()#"
+                messageType="divOnly"
+                width="98%"
+        	/>
+            
+			<!--- Form Errors --->
+    		<gui:displayFormErrors 
+                formErrors="#SESSION.formErrors.GetCollection()#"
+                messageType="divOnly"
+                width="98%"
+        	/>
+        
+			<cfset vCurrentDoc = ''>
+        
+            <form method="post" action="uploadEdit.cfm?unqid=#url.unqid#" name="Upload" enctype="multipart/form-data">
+                <input type="hidden" name="docExists" value="#url.docID#">
+                <table cellpadding=4 cellspacing="0" width=60% align=center>
+                    <tr>
+                        <th align="left">Select Document</th>
+                        <td><input name="fileToUpload" id="fileToUpload" type="file" size="35" onchange="checkFileName(this.value);"/></td>
+                    </tr>
+                    <tr>
+                        <th align="left">Document Type</th>
+                        <td>
+                            <select name="docType" id="docType" onCHange="displayHosts();">
+                                <option value=0  disabled selected><font color="##CCCCCC">Select a Document Type</font></option>
+                                <cfloop query="qDocuments">
+                                    <cfif vCurrentDoc neq "#categoryName#">
+                                        <option value="" disabled>#categoryName#</option>
+                                        <cfset vCurrentDoc = "#categoryName#">
+                                    </cfif>
+                                    <cfif listFind(#uploadPermissions#,#client.userType#)>
+                                        <option value="#id#" <cfif form.docID eq id>selected</cfif>> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#documentType#</option>
+                                    </cfif>
+                                </cfloop>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th align="left">Host Family</th>
+                        <td>
+                            <select name="hostFamily" id="hostFamily">
+                                <option value="">Not Applicable</option>
+                                <cfloop query="qGetStudentPlacements">
+                                    <option value="#hostid#">#familylastname# (#hostid#)</option>
+                                </cfloop>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+                <br><br>
+                <table align="center"width=60%>
+                    <tr>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <Td><input name="subAction" id="submitCancel" type="submit" alt="Cancel" border=0 value='Cancel' class="buttonRed"></Td>
+                        <td><input name="subAction" id="submitClose" type="submit" alt="Save and Close" border=0 value='Save and Close' class="buttonBlue"></td>
+                        <td><input name="subAction" id="submitNew" type="submit" alt="Save and Create New" border=0 value='Save and New' class="buttonGreen"></td>
+                    </tr>
+                </table>
+            </form>
+            
+    	</div>
 
-    <table cellpadding=4 cellspacing="0" width=60% align=center>
-    	<Tr>
-        	<th align="left">Select Document</th>
-         
-         	<Td><input name="fileToUpload" type="file" size=35/></Td>
-           
-		</tr>
-        <tr>
-        	<th align="left">Document Type</th>
-        	
-            <Td><select name="docType" id="docType" onCHange="displayHosts();">
-                <option value=0  disabled selected><font color="##CCCCCC">Select a Document Type</font></option>
-                <cfloop query="qDocuments">
-                <Cfif vCurrentDoc neq "#categoryName#">
-                <option value="" disabled>#categoryName#</option>
-                <Cfset vCurrentDoc = "#categoryName#">
-                </Cfif>
-               <cfif listFind(#uploadPermissions#,#client.userType#)>
-                <option value="#id#" <cfif form.docID eq id>selected</cfif>> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;#documentType#</option>
-                </cfif>
-                </cfloop>
-            </Td>
-        
-		</tr>
+		<div class="rdbottom"></div> <!-- end bottom --> 
     
-        <tr>
-        	<th align="left">Host Family</th>
-            <td><select name="hostFamily" id="hostFamily">
-            	<option value="">Not Applicable</option>
-                
-                <cfloop query="qGetStudentPlacements">
-                    <option value="#hostid#">#familylastname# (#hostid#)</option>
-                </cfloop>
-           	   </select>
-        </tr>
-        
-      </table>
-      
-      <br><br>
-      
-      <Table align="center"width=60%>
-        <tr>
-      		<Td></Td>
-        </tr>
-      	<tr>
-        	<Td><input name="subAction" id="submitCancel" type="submit" alt="Cancel" border=0 value='Cancel' class="buttonRed"></Td>
-            <td><input name="subAction" id="submitClose" type="submit" alt="Save and Close" border=0 value='Save and Close' class="buttonBlue"></td>
-            <td><input name="subAction" id="submitNew" type="submit" alt="Save and Create New" border=0 value='Save and New' class="buttonGreen"></td>
-          
-         </tr>
-        
-      </Table>
-      
-</cfoutput>
-</form>
     </div>
-    
-    <div class="rdbottom"></div> <!-- end bottom --> 
-    
-</div>
+ 
+</cfoutput>
