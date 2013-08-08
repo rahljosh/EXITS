@@ -1561,9 +1561,11 @@
                             uar.usertype IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7" list="yes"> )
                     </cfif>
                     
-                    <!--- Get Only Current Season Compliant Users --->
-                    AND
-                        sup.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(vCurrentSeasonID)#">
+                    <!--- Get Only Current Season Compliant Users, Canada does not require this. --->
+                    <cfif CLIENT.companyID NEQ 13>
+                        AND
+                            sup.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(vCurrentSeasonID)#">
+                 	</cfif>
                     <!---
                     AND
                         sup.dateAccessGranted IS NOT NULL
