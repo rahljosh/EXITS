@@ -725,7 +725,13 @@
 						
 					}
 			
-			} 
+			}
+			
+			// SMG Canada does not require this paperwork, so make them compliant if this is on canada's site.
+			if (CLIENT.companyID EQ 13) {
+				stUserPaperwork.isUserPaperworkCompleted = true;
+				stUserPaperwork.isAccountCompliant = true;
+			}
 			
 			return stUserPaperwork;
 		</cfscript>
