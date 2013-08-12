@@ -19,7 +19,7 @@
 			<p>Welcome to the United States!</p>
 			
 			As you know, your profile should be activated in SEVIS database so that you can officially start your Training Program and apply for your Social Security Card.  
-			In order to do that ISE needs your current US Address. Please email it to Sergei Chernyshov at <a href=""mailto:sergei@iseusa.com"">sergei@iseusa.com</a> <br /> <br />
+			In order to do that ISE needs your current US Address. Please email it to Ryan Schreiber at <a href=""mailto:ryan@iseusa.com"">ryan@iseusa.com</a> <br /> <br />
 			
 			Failure to do so within 30 days of the official program start date (as stated on your DS2019 form) could result in your SEVIS profile to become inactive and your termination from the program. 
 			So, please send it as soon as possible. <br /> <br />
@@ -28,13 +28,13 @@
 			
 			Best regards, <br /> <br />
 			
-			Sergei Chernyshov <br />
+			Ryan Schreiber <br />
 			Program Manager <br />
 			International Student Exchange <br />
 			119 Cooper St, Babylon, NY, 11702 <br />
 			Phone:(631) 893-4540 Ext.131 Fax:(631) 893-4550  <br />
 			Toll Free: 1-800-766-4656 <br />
-			Email: <a href=""mailto:sergei@iseusa.com"">sergei@iseusa.com</a> <br /> <br />");
+			Email: <a href=""mailto:ryan@iseusa.com"">ryan@iseusa.com</a> <br /> <br />");
 		}	
 	</cfscript>
 
@@ -79,11 +79,10 @@
 		For ( i=1;i LTE qGetCandidates.Recordcount; i=i+1 ) {
 			
 			// set email variables
-			vEmailFrom = 'sergei@iseusa.com (Sergei Chernyshov - Trainee Program)';
+			vEmailFrom = 'ryan@iseusa.com (Ryan Schreiber - Trainee Program)';
 			vEmailTo = '';
 	   	    vEmailCC = '';
 			vEmailBCC = '';
-			// vEmailBCC = 'sergei@iseusa.com';
 			
 			// check if we have a valid email for the candidate
 			if ( IsValid("email", qGetCandidates.email[i]) ) {

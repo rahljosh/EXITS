@@ -78,13 +78,13 @@
 				</p>	
 				
 				<p>	
-					Sergei Chernyshov  <br />
+					Ryan Schreiber  <br />
 					Program Manager  <br />
 					International Student Exchange  <br />
 					119 Cooper St, Babylon, NY, 11702  <br />
 					Phone:(631) 893-4540 Ext.131 Fax:(631) 893-4550  <br />
 					Toll Free: 1-800-766-4656  <br />
-					Email: <a href=""mailto:sergei@iseusa.com"">sergei@iseusa.com</a> <br /> <br />
+					Email: <a href=""mailto:ryan@iseusa.com"">ryan@iseusa.com</a> <br /> <br />
 				</p>	
 			");
 		}	
@@ -143,7 +143,7 @@
     
 	<cfscript>
 		// set email to
-		vEmailFrom = 'sergei@iseusa.com (Sergei Chernyshov - Trainee Program)';
+		vEmailFrom = 'ryan@iseusa.com (Ryan Schreiber - Trainee Program)';
 	
 		// Email Midterm - Loop Through Query
 		For ( i=1;i LTE qGetActiveCandidates.Recordcount; i=i+1 ) {

@@ -39,17 +39,17 @@
 			Attached to this email you will find the evaluation form {evaluationType}. 
 			The trainee’s supervisor should print the form, fill it in, date it and sign it together with the trainee. Then the form should be either: <br /> <br />
 			
-			1) scanned and emailed to <a href=""mailto:sergei@iseusa.com"">sergei@iseusa.com</a> (preferably) <br /> <br />
+			1) scanned and emailed to <a href=""mailto:ryan@iseusa.com"">ryan@iseusa.com</a> (preferably) <br /> <br />
 			
 			OR <br /> <br />
 			
-			2) faxed to 631.422.3708 attention to Sergei Chernyshov <br /> <br />   
+			2) faxed to 631.422.3708 attention to Ryan Schreiber <br /> <br />   
 			
 			OR <br /> <br />
 			
 			3) sent via regular mail to: <br /> <br />
 			
-			Sergei Chernyshov <br />
+			Ryan Schreiber <br />
 			119 Cooper Street <br />
 			Babylon, NY, 11702 <br /> <br />
 			
@@ -60,13 +60,13 @@
 			
 			Best regards, <br /> <br />
 			
-			Sergei Chernyshov <br />
+			Ryan Schreiber <br />
 			Program Manager <br />
 			International Student Exchange <br />
 			119 Cooper St, Babylon, NY, 11702 <br />
 			Phone:(631) 893-4540 Ext.131 Fax:(631) 893-4550  <br />
 			Toll Free: 1-800-766-4656 <br />
-			Email: <a href=""mailto:sergei@iseusa.com"">sergei@iseusa.com</a> <br /> <br />");
+			Email: <a href=""mailto:ryan@iseusa.com"">ryan@iseusa.com</a> <br /> <br />");
 		}	
 
 		// Change variable on evaluationEmailBody to display midterm
@@ -270,9 +270,7 @@
 
 	<cfscript>
 		// set email to
-		vEmailFrom = 'sergei@iseusa.com (Sergei Chernyshov - Trainee Program)';
-		//vEmailCC = 'marcus@iseusa.com';
-		//vEmailCC = 'sergei@iseusa.com';
+		vEmailFrom = 'ryan@iseusa.com (Ryan Schreiber - Trainee Program)';
 	
 		// Email Midterm - Loop Through Query
 		For ( i=1;i LTE qGetMidterm.Recordcount; i=i+1 ) {

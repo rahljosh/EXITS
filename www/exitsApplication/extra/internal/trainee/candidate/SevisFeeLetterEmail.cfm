@@ -116,14 +116,14 @@
         <br />
         <p class="style1">Please do not hesitate to contact  ISE Training Program staff should you have any questions.</p>
         <p class="style1">Sincerely,</p>
-        <p class="style1">Sergei Chernyshov (sergei@iseusa.com)</p>
+        <p class="style1">Ryan Schreiber (ryan@iseusa.com)</p>
     </cfsavecontent>
 
     <cfscript>
         APPLICATION.CFC.EMAIL.sendEmail(
-            emailFrom="sergei@iseusa.com (Sergei Chernyshov - Trainee Program)",
+            emailFrom="ryan@iseusa.com (Ryan Schreiber - Trainee Program)",
             emailTo=vEmailTo,
-            emailBcc="sergei@iseusa.com",
+            emailBcc="ryan@iseusa.com",
             emailMessage=vEmailBody,
             emailSubject='#firstname# #middlename# #lastname# form DS-2019 issued/sevis fee payment information',
             companyID=CLIENT.companyID,
