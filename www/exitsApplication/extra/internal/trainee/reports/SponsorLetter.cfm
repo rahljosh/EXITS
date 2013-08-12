@@ -108,7 +108,7 @@
         <br />
     	Sincerely Yours,
         <br />
-        <img src="../../pics/traineeSignature.jpg" width="200" height="116" />
+        <!---<img src="../../pics/traineeSignature.jpg" width="200" height="116" />--->
         <br />
         Ryan Schreiber, Program Manager<br />
         International Student Exchange<br />
