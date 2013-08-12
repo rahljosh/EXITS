@@ -611,6 +611,15 @@
 		}
 	}
 	
+	function checkHousingDetailsArea(value) {
+		if (value == 0) {
+			$("#housingDetailsArea").attr("style","display:none;");	
+		} else {
+			$("#housingDetailsArea").attr("style","");
+			$(".readOnly").fadeOut("fast");
+		}
+	}
+	
 //-->
 </script> 
 
@@ -1573,7 +1582,7 @@
                                                         	No
                                                         </cfif>
                                                 	</span>
-                                                    <select class="style1 editPage" name="housingArrangedPrivately">
+                                                    <select class="style1 editPage" name="housingArrangedPrivately" onChange="checkHousingDetailsArea(this.value);">
                                                     	<option value="0"<cfif NOT VAL(qGetCandidate.housingArrangedPrivately)>selected="selected"</cfif>>No</option>
                                                         <option value="1"<cfif VAL(qGetCandidate.housingArrangedPrivately)>selected="selected"</cfif>>Yes</option>
                                                  	</select>
@@ -1581,15 +1590,17 @@
                                             </td>
                                         </tr>
                                         <cfif qCandidatePlaceCompany.isHousingProvided NEQ 1>
-                                        	<td class="style1" align="right" width="30%"><strong>Housing Details:</strong></td>
-                                            <td class="style1" align="left" width="70%">
-                                            	<span class="readOnly">
-                                                	#qGetCandidate.housingDetails#
-                                                </span>
-                                                <span class="editPage">
-                                                	<textarea name="housingDetails" class="style1 editPage largeTextArea">#qGetCandidate.housingDetails#</textarea>
-                                                </span>
-                                            </td>
+                                        	<tr id="housingDetailsArea" <cfif NOT VAL(qGetCandidate.housingArrangedPrivately)>style="display:none;"</cfif>>
+                                                <td class="style1" align="right" width="30%"><strong>Housing Details:</strong></td>
+                                                <td class="style1" align="left" width="70%">
+                                                    <span class="readOnly">
+                                                        #qGetCandidate.housingDetails#
+                                                    </span>
+                                                    <span class="editPage">
+                                                        <textarea name="housingDetails" class="style1 editPage largeTextArea">#qGetCandidate.housingDetails#</textarea>
+                                                    </span>
+                                                </td>
+                                          	</tr>
                                         </cfif>
                                         <tr class="notReplacement">
                                         	<td class="style1" align="right" width="30%">
