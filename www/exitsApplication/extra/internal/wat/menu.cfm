@@ -97,15 +97,15 @@
             </td>
             <td bgcolor="##8FB6C9" width="15%"><a class="item1" href="?curdoc=user/user_info&uniqueid=#get_user_uniqueid.uniqueid#">My Info</a></td>
             <td bgcolor="##8FB6C9" width="15%"><a class="item1" href="?curdoc=reports/all_reports">Reports</a></td>
-            <!---
+
             <td bgcolor="##8FB6C9" width="15%">
             	<a class="item1" href="">Tools</a>
                 <div class="section">
-                    <a class="item2" href="?curdoc=tools/ds2019Verification">DS-2019 Verification</a>
+                    <a class="item2" href="?curdoc=tools/visaInterview">Visa Interview</a> 
                 </div>
             </td>
-			--->
-        	<td bgcolor="##8FB6C9" width="55%">&nbsp;</td>
+            
+        	<td bgcolor="##8FB6C9" width="40%">&nbsp;</td>
         </tr>
     </table>
 

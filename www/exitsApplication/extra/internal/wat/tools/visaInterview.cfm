@@ -252,14 +252,22 @@
     <table cellpadding="0" cellspacing="0" align="center" class="section listTable">
         <tr>
             <td class="formTitle">
-            	International Representative: 
-                &nbsp;
-                <select name="intRep" id="intRep" onchange="getVisaInterviewList();">
-                    <option value="0">All</option>
-                    <cfloop query="qIntlRep">
-                        <option value="#qIntlRep.userID#" <cfif CLIENT.userID EQ qIntlRep.UserID> selected </cfif> >#qIntlRep.businessName#</option>
+                <cfif ListFind("1,2,3,4", CLIENT.userType)>
+                	International Representative: 
+                	&nbsp;
+                    <select name="intRep" id="intRep" onchange="getVisaInterviewList();">
+                        <option value="0">All</option>
+                        <cfloop query="qIntlRep">
+                            <option value="#qIntlRep.userID#" <cfif CLIENT.userID EQ qIntlRep.UserID> selected </cfif> >#qIntlRep.businessName#</option>
+                        </cfloop>
+                    </select>
+              	<cfelse>
+                	<cfloop query="qIntlRep">
+                    	<cfif userID EQ VAL(CLIENT.userID)>
+                        	<input type="hidden" name="intRep" id="intRep" value="#userID#"/>
+                        </cfif>
                     </cfloop>
-                </select>
+                </cfif>
                 &nbsp;
 				&nbsp;	
                 Program:
