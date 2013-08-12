@@ -1580,6 +1580,17 @@
                                                 </cfif>
                                             </td>
                                         </tr>
+                                        <cfif qCandidatePlaceCompany.isHousingProvided NEQ 1>
+                                        	<td class="style1" align="right" width="30%"><strong>Housing Details:</strong></td>
+                                            <td class="style1" align="left" width="70%">
+                                            	<span class="readOnly">
+                                                	#qGetCandidate.housingDetails#
+                                                </span>
+                                                <span class="editPage">
+                                                	<textarea name="housingDetails" class="style1 editPage largeTextArea">#qGetCandidate.housingDetails#</textarea>
+                                                </span>
+                                            </td>
+                                        </cfif>
                                         <tr class="notReplacement">
                                         	<td class="style1" align="right" width="30%">
                                             	<label for="wat_doc_job_offer_employer"><strong>Job Offer Agreement Employer:</strong></label>
@@ -2573,7 +2584,7 @@
                                             <td class="style1">#YesNoFormat(VAL(qGetIntlRepInfo.extra_accepts_sevis_fee))#</td>
                                         </tr>
                                         <tr>
-                                        	<td class="style1" align="right"><strong>Visa Interview</strong></td>
+                                        	<td class="style1" align="right"><strong>Visa Interview:</strong></td>
                                             <td class="style1">
                                             	<span class="readOnly">#DateFormat(qGetCandidate.visaInterview,'mm/dd/yyyy')#</span>
                                                 <input type="text" name="visaInterview" class="editPage datePicker" value="#DateFormat(qGetCandidate.visaInterview,'mm/dd/yyyy')#">
