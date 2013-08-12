@@ -184,8 +184,8 @@
 	<tr><td class="style1"><b>#companyshort.verification_letter#</b></td></tr>
 	<tr>
 	  <td class="style1">
-      	<b>Sergei Chernyshov<br />
-	  	sergei@iseusa.com</b>
+      	<b>Ryan Schreiber<br />
+	  	ryan@iseusa.com</b>
       </td>
 	</tr>
 </table>

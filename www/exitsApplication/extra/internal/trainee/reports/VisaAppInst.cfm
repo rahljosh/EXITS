@@ -78,12 +78,12 @@ WHERE uniqueid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#url.uniqueid#"
     <br />
     <img src="../../pics/traineeSignature.jpg" width="200" height="116" />
     <br />
-    Sergei Chernyshov, Program Manager<br />
+    Ryan Schreiber, Program Manager<br />
     International Student Exchange<br />
     119 Cooper Street<br />
     Babylon, NY  11702<br />
     1-631-693-4540 ext. 131<br />
-    sergei@iseusa.com<br />
+    ryan@iseusa.com<br />
     <p align="center" class="style1">
         www.isetraining.org
     </p>
