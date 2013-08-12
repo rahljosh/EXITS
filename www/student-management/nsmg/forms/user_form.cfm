@@ -155,7 +155,7 @@
             </cfcase>
 
         	<cfcase value="7">
-            	<cfset vEmailToList = 'sergei@iseusa.com;eric@iseusa.com'>
+            	<cfset vEmailToList = 'ryan@iseusa.com;eric@iseusa.com'>
             </cfcase>
 
         	<cfcase value="8">
