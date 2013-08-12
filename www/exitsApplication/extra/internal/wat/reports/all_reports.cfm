@@ -41,6 +41,8 @@
                             <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/selfPlacementConfirmation" class="style4">- Self Placement Vetting</a></p>
                             
                             <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/unplaced_students_wt" class="style4">- Unplaced Candidates</a></p>
+                            
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/candidatesHousingPerRep" class="style4">- Candidate Housing</a></p>
                         </cfif>
                         
                     </td>
