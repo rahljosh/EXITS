@@ -165,7 +165,7 @@
             
             // Email CC List
             if ( ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID) ) {
-                emailCC = CLIENT.projectmanager_email & ';ellen@iseusa.com;ryan@iseusa.com;' & CLIENT.email;
+                emailCC = CLIENT.projectmanager_email & ';ellen@iseusa.com;' & CLIENT.email;
             } else { 
                 emailCC = CLIENT.projectmanager_email & ';' & CLIENT.email;
             }
@@ -431,7 +431,7 @@
             
             // Email CC List
             if ( ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID) ) {
-                emailCC = CLIENT.projectmanager_email & ';ellen@iseusa.com;ryan@iseusa.com;' & CLIENT.email;
+                emailCC = CLIENT.projectmanager_email & ';ellen@iseusa.com;' & CLIENT.email;
             } else { 
                 emailCC = CLIENT.projectmanager_email & ';' & CLIENT.email;
             }
