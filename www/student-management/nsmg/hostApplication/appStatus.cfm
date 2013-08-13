@@ -4,7 +4,7 @@
 <!--- Import CustomTag Used for Page Messages and Form Errors --->
 <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
 
-<Cfquery name="cl" datasource="mysql">
+<Cfquery name="cl" datasource="#APPLICATION.DSN#">
 SELECT * 
 FROM smg_hosts
 WHERE hostid = #hostid# 
@@ -182,7 +182,7 @@ WHERE hostid = #hostid#
 
 <!------------------------>
 <!----Family Members---->
-<Cfquery name="familyMembers" datasource="mysql">
+<Cfquery name="familyMembers" datasource="#APPLICATION.DSN#">
 	SELECT *
 	FROM smg_host_children
 	WHERE hostid = #cl.hostid#
@@ -234,13 +234,13 @@ WHERE hostid = #hostid#
 <!------------------------>
 <!----Family Interests---->
 		      
-        <cfquery name="host_interests" datasource="MySQL">
+        <cfquery name="host_interests" datasource="#APPLICATION.DSN#">
         select interests, interests_other, playBand, playOrchestra, playCompSports, orcInstrument, bandInstrument, sportDesc
         from smg_hosts
         where hostid=#hostid#
         </cfquery>
         
-        <cfquery name="get_interests" datasource="MySQL">
+        <cfquery name="get_interests" datasource="#APPLICATION.DSN#">
         select *
         from smg_interests
         order by interest
@@ -331,7 +331,7 @@ WHERE hostid = #hostid#
  
 <!------------------------>
 <!----Hosting Environment---->   
-     <cfquery name="get_kids" datasource="MySQL">
+     <cfquery name="get_kids" datasource="#APPLICATION.DSN#">
     select childid, name, shared
     from smg_host_children
     where hostid = #hostid#
@@ -566,7 +566,7 @@ WHERE hostid = #hostid#
 
 <!------------------------>
 <!----School Info----> 
-<cfquery name="schoolInfo" datasource="mySql">
+<cfquery name="schoolInfo" datasource="#APPLICATION.DSN#">
 select *
 from smg_schools
 where schoolid = #cl.schoolid#
@@ -696,19 +696,19 @@ where schoolid = #cl.schoolid#
             </cfif>
 <!------------------------>
 <!----References---->
-<Cfquery name="references" datasource="mysql">
+<Cfquery name="references" datasource="#APPLICATION.DSN#">
 	SELECT *
 	FROM smg_host_reference
 	WHERE referencefor = #cl.hostid#
 </cfquery>
 
     <!---number kids at home---->
-    <cfquery name="kidsAtHome" datasource="mysql">
+    <cfquery name="kidsAtHome" datasource="#APPLICATION.DSN#">
     select count(childid) as kidcount
     from smg_host_children
     where liveathome = 'yes' and hostid =#hostid#
     </cfquery>
- 	<Cfquery name="get_host_info" datasource="mysql">
+ 	<Cfquery name="get_host_info" datasource="#APPLICATION.DSN#">
     select fatherfirstname, motherfirstname
     from smg_hosts
     where hostid = #hostid#

@@ -9,28 +9,28 @@
 		
 
     </cfscript>
-   <cfquery name="qPets" datasource="mysql">
+   <cfquery name="qPets" datasource="#APPLICATION.DSN#">
     select *
     from smg_host_animals
     where hostid = <cfqueryparam cfsqltype="integer" value="#url.hostID#">
     </cfquery>
-<cfquery name="region" datasource="#application.dsn#">
+<cfquery name="region" datasource="#APPLICATION.DSN#">
 select r.regionname
 from smg_regions r
 where regionid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.regionid#">
 </cfquery>   
-<cfquery name="rep" datasource="#application.dsn#">
+<cfquery name="rep" datasource="#APPLICATION.DSN#">
 select u.firstname, u.lastname
 from smg_users u
 where userid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.arearepid#">
 </cfquery>        
-      <cfquery name="schoolInfo" datasource="#application.dsn#">
+      <cfquery name="schoolInfo" datasource="#APPLICATION.DSN#">
     select s.schoolname, s.principal, s.address, s.address2, s.city, s.state, s.zip, s.phone, s.phone_ext, s.schoolid
     from smg_schools s
     where s.schoolid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.schoolid#">
     </cfquery>
 
-    <cfquery name="religion" datasource="#application.dsn#">
+    <cfquery name="religion" datasource="#APPLICATION.DSN#">
     select religionname
     from smg_religions 
     where religionid = <cfqueryparam cfsqltype="integer" value="#qGetHostFamily.religion#">
@@ -819,7 +819,7 @@ if they are different from your own?</span></td><td>#CapFirst1(qGetHostFamily.ch
     </cfscript>
     
 
-<cfquery name="qreferences" datasource="MySQL">
+<cfquery name="qreferences" datasource="#APPLICATION.DSN#">
 select *
 from smg_host_reference
 where referencefor = <cfqueryparam cfsqltype="integer" value="#url.hostID#">

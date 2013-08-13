@@ -36,7 +36,7 @@
 
  <!----Email the Application---->
 <Cfif isDefined('form.emailTo')>
-<cfquery name="hostInfo" datasource="mysql">
+<cfquery name="hostInfo" datasource="#APPLICATION.DSN#">
 select familylastname
 from smg_hosts where hostid = #url.hostid#
 </Cfquery>
