@@ -443,7 +443,7 @@
                     // Send out Self Placement Confirmation Email
                     APPLICATION.CFC.EMAIL.sendEmail(
                         emailFrom="#APPLICATION.EMAIL.contactUs# (#CLIENT.firstName# #CLIENT.lastName# CSB-USA)",
-                        emailTo=qGetResults.hostCompanyEmail, // 'marcus@iseusa.com' | qGetResults.hostCompanyEmail
+                        emailTo=qGetResults.hostCompanyEmail,
 						emailReplyTo=CLIENT.email,
                         emailSubject='SWT/CSB - Summer Job Confirmation',
 						emailMessage=emailTemplate,

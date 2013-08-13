@@ -153,9 +153,9 @@
 		//APPLICATION.SITE.URL.activation = 'http://extra.local/accountActivation.cfm';
 		
 		// Email Settings
-		APPLICATION.EMAIL.contactUs = 'marcus@iseusa.com';
-		APPLICATION.EMAIL.support = 'marcus@iseusa.com';
-		APPLICATION.EMAIL.errors = 'marcus@iseusa.com';
+		APPLICATION.EMAIL.contactUs = 'james@iseusa.com';
+		APPLICATION.EMAIL.support = 'james@iseusa.com';
+		APPLICATION.EMAIL.errors = 'james@iseusa.com';
 
 		// APPLICATION.PATH.base = getDirectoryFromPath(getBaseTemplatePath());	'
 		APPLICATION.PATH.base = 'C:/websites/www/exitsApplication/extra/internal/';
