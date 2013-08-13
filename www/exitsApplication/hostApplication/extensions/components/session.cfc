@@ -238,8 +238,8 @@
         <cfscript>
 			if ( 
 				ListFindNoCase(CGI.SERVER_NAME, "case-usa", ".") 
-				OR FindNoCase("case.exitsapplication.com", CGI.HTTP_REFERER)
-				OR ListFindNoCase(CGI.SERVER_NAME, "case.local")) {
+				OR ListFindNoCase(CGI.SERVER_NAME, "case.exitsapplication.com")
+				OR ListFindNoCase(CGI.SERVER_NAME, "smg.case.local")) {
 				
 				// CASE
 				SESSION.COMPANY.ID = 10;
@@ -249,9 +249,9 @@
 				SESSION.COMPANY.submitImage = "submit.png";
 			
 			} else if ( 
-				FindNoCase(CGI.SERVER_NAME, "exchange-service") 
-				OR FindNoCase(CGI.SERVER_NAME, "es.exitsapplication") 
-				OR FindNoCase(CGI.SERVER_NAME, "esi.local")) {
+				ListFindNoCase(CGI.SERVER_NAME, "exchange-service", ".") 
+				OR ListFindNoCase(CGI.SERVER_NAME, "es.exitsapplication") 
+				OR ListFindNoCase(CGI.SERVER_NAME, "smg.esi.local")) {
 				
 				// ESI
 				SESSION.COMPANY.ID = 14;
