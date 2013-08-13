@@ -251,7 +251,7 @@
 			} else if ( 
 				FindNoCase(CGI.SERVER_NAME, "exchange-service") 
 				OR FindNoCase(CGI.SERVER_NAME, "es.exitsapplication") 
-				OR FindNoCase(CGI.SERVER_NAME, "esi.local") ) {
+				OR FindNoCase(CGI.SERVER_NAME, "esi.local")) {
 				
 				// ESI
 				SESSION.COMPANY.ID = 14;

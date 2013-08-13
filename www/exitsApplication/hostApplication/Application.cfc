@@ -96,7 +96,7 @@
 		</cfscript>
         
 		<!--- uniqueID Login | Make sure the link is coming from EXITS --->  
-        <cfif LEN(URL.uniqueID) AND FindNoCase("smg.local", CGI.HTTP_REFERER) OR FindNoCase("exitsapplication.com", CGI.HTTP_REFERER)>
+        <cfif LEN(URL.uniqueID) AND ( FindNoCase("smg.local", CGI.HTTP_REFERER) OR FindNoCase("esi.local",CGI.HTTP_REFERER) OR FindNoCase("exitsapplication.com", CGI.HTTP_REFERER) )>
     
             <!--- Check if we have a host account --->
             <cfquery name="qLoginHostFamily" datasource="#APPLICATION.DSN.Source#">
