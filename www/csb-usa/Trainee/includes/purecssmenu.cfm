@@ -187,7 +187,7 @@ ul.pureCssMenu table a:hover table span{background-image:url(images/arr_double_1
 	<ul class="pureCssMenum">
 		<li class="pureCssMenui"><a class="pureCssMenui" href="http://www.csb-usa.com/Trainee/intlPartners/pdfs/AgentManual2011.pdf" target="_blank">International Agent Manual</a></li>
 		<li class="pureCssMenui"><a class="pureCssMenui" href="http://www.csb-usa.com/Trainee/checkin.cfm">Online Application</a></li>
-		<li class="pureCssMenui"><a class="pureCssMenui" href="sergei@iseusa.com">Become a Partner</a></li>
+		<li class="pureCssMenui"><a class="pureCssMenui" href="ryan@iseusa.com">Become a Partner</a></li>
 	</ul>
 	<!--[if lte IE 6]></td></tr></table></a><![endif]--></li>
 	<li class="pureCssMenui"><a class="pureCssMenui" href="http://www.csb-usa.com/Trainee/hostComp.cfm"><span>Host Company</span><![if gt IE 6]></a><![endif]><!--[if lte IE 6]><table><tr><td><![endif]-->

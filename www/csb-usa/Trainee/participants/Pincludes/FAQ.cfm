@@ -202,7 +202,7 @@ seasonal jobs, internships and career training opportunities in the USA.
 <h5>How do I contact CSB?</h5>
 
 <p>If you would like to contact CSB regarding our J1 Visa Service, please call our office at 631-
-893-4540 or email sergei@iseusa.com<br /><br />
+893-4540 or email ryan@iseusa.com<br /><br />
 
 If you would like to reach our corporate headquarters in the USA, please call 631-893-4540.</p></div>
 

@@ -22,6 +22,6 @@
   <h1>Contact Us</h1>
   <ul>
 		<li><a href="http://www.esecutive.com/MyInsurance/" target="_blank" class="black">Student Form</a></li>
-        <li><a href="mailto:sergei@iseusa.com" class="black">Host Company Form</a></li>
-        <li><a href="mailto:sergei@iseusa.com" class="black">International Agent Form</a></li></ul>
+        <li><a href="mailto:ryan@iseusa.com" class="black">Host Company Form</a></li>
+        <li><a href="mailto:ryan@iseusa.com" class="black">International Agent Form</a></li></ul>
   </div>

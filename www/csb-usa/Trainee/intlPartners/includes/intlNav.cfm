@@ -23,5 +23,5 @@
   <ul>
 		<li><a href="intlPartners/pdfs/AgentManual2011.pdf" target="_blank" class="black">International Agent Manual</a></li>
         <li><a href="checkin.cfm" class="black">Online Application</a></li>
-		<li><a href="mailto:sergei@iseusa.com" class="black">Become a Partner</a></li></ul>
+		<li><a href="mailto:ryan@iseusa.com" class="black">Become a Partner</a></li></ul>
   </div>

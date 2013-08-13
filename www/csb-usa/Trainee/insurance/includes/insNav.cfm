@@ -22,5 +22,5 @@
   <h1>Insurance</h1>
   <ul>
 		<li><a href="http://www.esecutive.com/MyInsurance/" target="_blank" class="black">eSecutive Login</a></li>
-        <li><a href="mailto:sergei@iseusa.com" class="black">FAQ</a></li></ul>
+        <li><a href="mailto:ryan@iseusa.com" class="black">FAQ</a></li></ul>
   </div>
