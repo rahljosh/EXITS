@@ -21,7 +21,7 @@
 	<!--- Import CustomTag Used for Page Messages and Form Errors --->
     <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
     
-    <cfquery name="qPets" datasource="mySQL">
+    <cfquery name="qPets" datasource="#APPLICATION.DSN#">
         SELECT 
         	*
         FROM
@@ -30,7 +30,7 @@
         	hostid = <cfqueryparam cfsqltype="integer" value="#VAL(qGetHostInfo.hostID)#">
     </cfquery>
 
-    <cfquery name="qGetWhoIsSharingRoom" datasource="mySQL">
+    <cfquery name="qGetWhoIsSharingRoom" datasource="#APPLICATION.DSN#">
         SELECT 
         	*
         FROM 
