@@ -1,3 +1,5 @@
+<cfparam name="URL.hostID" default="0">
+
 <script>
 
 	$(document).ready(function() {
@@ -56,26 +58,26 @@
 	
 </script>
 
-<cfquery name="get_host_religion" datasource="MySQL">
+<cfquery name="get_host_religion" datasource="#APPLICATION.DSN#">
 	SELECT
     	religion, 
         religious_participation
 	FROM
     	smg_hosts
     WHERE
-        hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.hostid#">
+        hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.hostid)#">
 </cfquery>
 
-<cfquery name="get_pets" datasource="MySQL">
+<cfquery name="get_pets" datasource="#APPLICATION.DSN#">
 	SELECT
     	*
 	FROM
     	smg_host_animals 
 	WHERE
-    	hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.hostid#">
+    	hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.hostid)#">
 </cfquery>
 
-<cfquery name="qGetHostChildren" datasource="MySQL">
+<cfquery name="qGetHostChildren" datasource="#APPLICATION.DSN#">
 	SELECT
     	childid,
         name,
@@ -84,12 +86,12 @@
 	FROM
     	smg_host_children
 	WHERE
-    	hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.hostid#">
+    	hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.hostid)#">
   	AND
     	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
 </cfquery>
 
-<cfquery name="qGetPlacedStudents" datasource="MySQL">
+<cfquery name="qGetPlacedStudents" datasource="#APPLICATION.DSN#">
 	SELECT
     	studentID,
         firstName,
@@ -98,7 +100,7 @@
  	FROM
     	smg_students
   	WHERE
-    	hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.hostid#">
+    	hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.hostid)#">
   	AND
     	active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
 </cfquery>
@@ -113,7 +115,7 @@
 		<td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
 		<td width=26 background="pics/header_background.gif"><img src="pics/family.gif"></td>
 		<td background="pics/header_background.gif"><h2>Room, Smoking & Pets</h2></td>
-		<td align="right" background="pics/header_background.gif"><span class="edit_link">[ <a href="?curdoc=host_fam_info&hostid=#client.hostid#">overview</a> ]</span></td>
+		<td align="right" background="pics/header_background.gif"><span class="edit_link">[ <a href="?curdoc=host_fam_info&hostid=#URL.hostID#">overview</a> ]</span></td>
 		<td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
 	</tr>
 </table>
@@ -127,7 +129,7 @@
                     	<div class="get_Attention">
                         	<cfif qGetHostChildren.recordcount is 0>
                             	Since you don't have any kids or other family members living at home, it is assumend the student will not be sharing a room.  If this is wrong, you will need to go to 
-                    			<a href="index.cfm?curdoc=forms/host_fam_mem_form&hostid=#client.hostid#&add=1">add a family member</a>
+                    			<a href="index.cfm?curdoc=forms/host_fam_mem_form&hostid=#URL.hostID#&add=1">add a family member</a>
                             <cfelse>
                             	The student may share a bedroom with one of the same sex and within a reasonable age difference, but must have his/her own bed.
                             </cfif>
@@ -135,13 +137,13 @@
 					</td>
               	</tr>
                 
-                <cfquery name="check_share" datasource="MySQL">
+                <cfquery name="check_share" datasource="#APPLICATION.DSN#">
                     SELECT
                         *
                     FROM
                         smg_host_children
                     WHERE
-                        hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.hostid#">
+                        hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.hostid)#">
                     AND
                         shared = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">
                     AND 
@@ -180,13 +182,13 @@
                                     	<option value="sibling_#childID#" <cfif qGetHostChildren.roomsharewith EQ qGetPlacedStudents.studentid>selected="selected"</cfif>>Yes, with #name#</option> 
                                     </cfloop>
                                     
-                                    <cfquery name="qGetDoublePlacement" dbtype="query">
+                                    <cfquery name="qGetDoublePlacement" dbtype="#APPLICATION.DSN#">
                                     	SELECT 
                                         	*
                                         FROM
                                     		qGetPlacedStudents
                                         WHERE
-                                        	studentID != <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetPlacedStudents.studentID#">
+                                        	studentID != <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetPlacedStudents.studentID)#">
                                     </cfquery>
                                     
                                     <!--- List Host Students - Double Placements --->
