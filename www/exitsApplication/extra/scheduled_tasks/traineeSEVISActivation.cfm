@@ -100,7 +100,7 @@
 			}
 			
 			// Debug Settings
-			// vEmailTo = 'marcus@iseusa.com';
+			// vEmailTo = 'james@iseusa.com';
 			// vEmailCC = '';
 
 			// At least one of the emails (candidate/host company) is valid

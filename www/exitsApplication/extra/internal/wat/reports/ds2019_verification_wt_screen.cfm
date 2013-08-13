@@ -281,7 +281,7 @@
                 // Send out Missing Documents Email
                 
                 APPLICATION.CFC.EMAIL.sendEmail(
-                    emailTo=toLine, // 'marcus@iseusa.com' | toLine
+                    emailTo=toLine,
                     emailMessage=verificationReport & "<br />",
 					emailSubject='DS-2019 Verification Report',
                     companyID=CLIENT.companyID,
