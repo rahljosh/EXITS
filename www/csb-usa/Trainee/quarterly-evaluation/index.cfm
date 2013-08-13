@@ -275,7 +275,7 @@
             </cfsavecontent>
             
             <cfmail 
-            	to="sergei@iseusa.com" 
+            	to="ryan@iseusa.com" 
                 <!--- cc="#FORM.email#"  --->
                 from="info@csb-usa.com" 
                 subject="#FORM.lastName# #FORM.firstName# (###qLookUpCandidate.candidateID#) - ISE Trainee #MonthAsString(vMonthEvaluation)# Quarterly Questionnaire Submitted" type="html">
@@ -551,7 +551,7 @@
                 
                 &nbsp;&nbsp;|&nbsp;&nbsp;
                 
-                <a href="mailto:sergei@iseusa.com" shape="rect" target="_blank">sergei@iseusa.com</a>
+                <a href="mailto:ryan@iseusa.com" shape="rect" target="_blank">ryan@iseusa.com</a>
                 
                 &nbsp;&nbsp;|&nbsp;&nbsp;
                 

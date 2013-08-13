@@ -10,8 +10,8 @@ international trainee. Host companies will also have the benefit of bilingual or
 young professionals from different nations interacting with domestic employees and clients.</p>
 
 <p>CSB works with agent all over the world and can find a candidate that will perfectly fit all your
-company's needs! If you are interested or have any further questions, please contact <strong>Sergei
-Chernyshov</strong> at <a href="mailto:sergei@iseusa.com" class="black">sergei@iseusa.com</a></p>
+company's needs! If you are interested or have any further questions, please contact <strong>Ryan Schreiber</strong> 
+at <a href="mailto:ryan@iseusa.com" class="black">ryan@iseusa.com</a></p>
 <br />
 </div>
 

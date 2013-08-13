@@ -10,8 +10,7 @@ international trainee. Host companies will also have the benefit of bilingual or
 young professionals from different nations interacting with domestic employees and clients.
 
 ISE works with agent all over the world and can find a candidate that will perfectly fit all your
-company's needs! If you are interested or have any further questions, please contact Sergei
-Chernyshov at sergei@iseusa.com</p>
+company's needs! If you are interested or have any further questions, please contact Ryan Schreiber at ryan@iseusa.com</p>
 <br />
 </div>
 

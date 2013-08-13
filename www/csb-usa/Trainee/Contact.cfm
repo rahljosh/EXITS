@@ -145,7 +145,7 @@ function DisplayDIV(d) { document.getElementById(d).style.display = "block"; }
   <strong>Phone:</strong> 631 893 4540<br />
   <strong>Fax:</strong> 631 893 4550<br />
   <br />
-  <strong>e-mail:</strong> <a href="mailto:sergei@iseusa.com" class="black">sergei@iseusa.com</a></p>
+  <strong>e-mail:</strong> <a href="mailto:ryan@iseusa.com" class="black">ryan@iseusa.com</a></p>
 <p>&nbsp;</p>
 </div>
 <!---- End Becoming a Participant  ---->

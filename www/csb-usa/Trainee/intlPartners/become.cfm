@@ -12,7 +12,7 @@
     <cfparam name="email" default="">
     <cfparam name="info" default="Not filled in the request form">
 
-<cfmail to='sergei@iseusa.com' cc='jeimi@exitgroup.org' from='sergei@iseusa.com' subject='Become a Partner'>
+<cfmail to='ryan@iseusa.com' cc='jeimi@exitgroup.org' from='ryan@iseusa.com' subject='Become a Partner'>
      Information was submitted on the OUTBOUND web site on #dateformat(Now(), 'mm/dd/yyyy')#.
     
     Name: #form.fname#
