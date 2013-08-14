@@ -66,6 +66,10 @@
 		
 		// Get School Dates
 		qGetSchoolDates = APPLICATION.CFC.SCHOOL.getSchoolDates(schoolID=qGetStudentInfo.schoolID, programID=qGetStudentInfo.programID);
+		vSchoolEndDate = DateFormat(qGetSchoolDates.endDate,'mm/dd/yyyy');
+		
+		// Check if the user is an office user
+		vOfficeUser = APPLICATION.CFC.USER.isOfficeUser(CLIENT.usertype);
 	
 		// Could Not find Student
 		if ( NOT VAL(qGetStudentInfo.recordCount) ) {
@@ -393,6 +397,7 @@
 
 		// Get Departure
 		qGetDeparture = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=VAL(qGetStudentInfo.studentID), programID=qGetStudentInfo.programID, flightType="departure");
+		
 	</cfscript>
 
 </cfsilent>
@@ -406,6 +411,19 @@
 
 		<script type="text/javascript" language="javascript">
             <!--
+			
+			// Function to make sure the departure date is after the school end date.
+			function checkSchoolDate(enteredDate,schoolEndDate,fieldID) {
+				var jsEnteredDate = new Date(enteredDate.substring(6),enteredDate.substring(0,2),enteredDate.substring(3,5));
+				var jsSchoolDate = new Date(schoolEndDate.substring(6),schoolEndDate.substring(0,2),schoolEndDate.substring(3,5));
+				jsSchoolDate.setDate(jsSchoolDate.getDate()+1);
+				if (jsEnteredDate-jsSchoolDate < 0) {
+					var actualSchoolDate = jsSchoolDate.getDate() - 1;
+					alert("You must enter a date after the school end date: " + jsSchoolDate.getMonth() + "/" + actualSchoolDate + "/" + jsSchoolDate.getFullYear());
+					$("##"+fieldID).val("");
+				}
+			}
+			
             function areYouSure() { 
                if(confirm("You are about to delete this flight information. \n Click OK to continue")) { 
                     return true; 
@@ -902,7 +920,16 @@
                                             <a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#&flightID=#flightID#" onClick="return areYouSure(this);"><img src="../pics/deletex.gif" border="0"></img></a>
                                         </td>
                                     </cfif>
-                                    <td><input type="text" name="outgoingDepartureDate#qGetDeparture.currentrow#" value="#DateFormat(dep_date , 'mm/dd/yyyy')#" class="datePicker" maxlength="10"></td>
+                                    <td>
+                                    	<input 
+                                        	type="text"
+                                            name="outgoingDepartureDate#qGetDeparture.currentrow#"
+                                            id="outgoingDepartureDate#qGetDeparture.currentrow#"
+                                            value="#DateFormat(dep_date , 'mm/dd/yyyy')#" 
+                                            class="datePicker" 
+                                            maxlength="10" 
+                                            <cfif NOT qGetStudentInfo.unblockFlight AND NOT vOfficeUser>onchange="checkSchoolDate(this.value,'#vSchoolEndDate#','outgoingDepartureDate#qGetDeparture.currentrow#');"</cfif>>
+                                  	</td>
                                     <td><input type="text" name="outgoingDepartureCity#qGetDeparture.currentrow#" class="fieldSize100" maxlength="40" value="#dep_city#" onChange="javascript:this.value=this.value.toUpperCase();"></td>
                                     <td><input type="text" name="outgoingDepartureAirCode#qGetDeparture.currentrow#" class="fieldSize40" maxlength="3" value="#dep_aircode#" onChange="javascript:this.value=this.value.toUpperCase();"></td>
                                     <td><input type="text" name="outgoingArrivalCity#qGetDeparture.currentrow#" class="fieldSize100" maxlength="40" value="#arrival_city#" onChange="javascript:this.value=this.value.toUpperCase();"></td>
@@ -927,46 +954,42 @@
                             
                                 <cfif LEN(qGetStudentInfo.programName)>
                                 
-                                    <cfscript>
-                                        officeUser = APPLICATION.CFC.USER.isOfficeUser(CLIENT.usertype);
-                                    </cfscript>
-                            
-                                    <cfif NOW() LT DateAdd('m',-5,qGetStudentInfo.endDate) AND NOT officeUser AND NOT VAL(qGetStudentInfo.unblockFlight)>
-                                        <tr bgcolor="##FEE6D3" align="center">
-                                            <td colspan="12" align="center">
-                                                You can only enter departure flight information within 5 months of the end of the program.<br />
-                                                You will be able to enter departure flight information starting on: #DateFormat(DateAdd('m',-5,qGetStudentInfo.endDate),'mm/dd/yyyy')#
+                                    <cfloop from="1" to="4" index="i"> 
+                                        <tr bgcolor="##FEE6D3" align="center" class="trNewAYPDeparture <cfif qGetDeparture.recordCount> displayNone </cfif>">                        
+                                            <td>&nbsp;</td>
+                                            <td>
+                                                <input 
+                                                    type="text" 
+                                                    name="outgoingNewDepartureDate#i#" 
+                                                    id="outgoingNewDepartureDate#i#" 
+                                                    class="datePicker" 
+                                                    maxlength="10" 
+                                                    <cfif NOT qGetStudentInfo.unblockFlight AND NOT vOfficeUser>onchange="checkSchoolDate(this.value,'#vSchoolEndDate#','outgoingNewDepartureDate#i#');"</cfif> >
                                             </td>
+                                            <td><input type="text" name="outgoingNewDepartureCity#i#" class="fieldSize100" maxlength="40" onChange="javascript:this.value=this.value.toUpperCase();"></td>
+                                            <td><input type="text" name="outgoingNewDepartureAirCode#i#" class="fieldSize40" maxlength="3" onChange="javascript:this.value=this.value.toUpperCase();"></td>
+                                            <td><input type="text" name="outgoingNewArrivalCity#i#" class="fieldSize100" maxlength="40" onChange="javascript:this.value=this.value.toUpperCase();"></td>
+                                            <td><input type="text" name="outgoingNewArrivalAirCode#i#" class="fieldSize40" maxlength="3" onChange="javascript:this.value=this.value.toUpperCase();"></td>
+                                            <td><input type="text" name="outgoingNewFlightNumber#i#" class="fieldSize60" maxlength="8" onChange="javascript:this.value=this.value.toUpperCase();"></td>
+                                            <td><input type="text" name="outgoingNewDepartureTime#i#" class="fieldSize70 timePicker" maxlength="8"></td>
+                                            <td><input type="text" name="outgoingNewArrivalTime#i#" class="fieldSize70 timePicker" maxlength="8"></td>
+                                            <td align="center"><input type="checkbox" name="outgoingNewOvernight#i#" value="1"></td>
+                                            <td>&nbsp;</td> 
+                                            <td>&nbsp;</td>
                                         </tr>
-                                    <cfelse>
-                                        <cfloop from="1" to="4" index="i"> 
-                                            <tr bgcolor="##FEE6D3" align="center" class="trNewAYPDeparture <cfif qGetDeparture.recordCount> displayNone </cfif>">                        
-                                                <td>&nbsp;</td>
-                                                <td><input type="text" name="outgoingNewDepartureDate#i#" class="datePicker" maxlength="10"></td>
-                                                <td><input type="text" name="outgoingNewDepartureCity#i#" class="fieldSize100" maxlength="40" onChange="javascript:this.value=this.value.toUpperCase();"></td>
-                                                <td><input type="text" name="outgoingNewDepartureAirCode#i#" class="fieldSize40" maxlength="3" onChange="javascript:this.value=this.value.toUpperCase();"></td>
-                                                <td><input type="text" name="outgoingNewArrivalCity#i#" class="fieldSize100" maxlength="40" onChange="javascript:this.value=this.value.toUpperCase();"></td>
-                                                <td><input type="text" name="outgoingNewArrivalAirCode#i#" class="fieldSize40" maxlength="3" onChange="javascript:this.value=this.value.toUpperCase();"></td>
-                                                <td><input type="text" name="outgoingNewFlightNumber#i#" class="fieldSize60" maxlength="8" onChange="javascript:this.value=this.value.toUpperCase();"></td>
-                                                <td><input type="text" name="outgoingNewDepartureTime#i#" class="fieldSize70 timePicker" maxlength="8"></td>
-                                                <td><input type="text" name="outgoingNewArrivalTime#i#" class="fieldSize70 timePicker" maxlength="8"></td>
-                                                <td align="center"><input type="checkbox" name="outgoingNewOvernight#i#" value="1"></td>
-                                                <td>&nbsp;</td> 
-                                                <td>&nbsp;</td>
-                                            </tr>
-                                        </cfloop>
-                                        <cfif qGetDeparture.recordCount>
-                                            <tr bgcolor="##FEE6D3"><td colspan="12" align="center"><a href="javascript:displayClass('trNewAYPDeparture');">Click here to add more legs</a></td></tr>
-                                        </cfif>
+                                    </cfloop>
+                                    <cfif qGetDeparture.recordCount>
+                                        <tr bgcolor="##FEE6D3"><td colspan="12" align="center"><a href="javascript:displayClass('trNewAYPDeparture');">Click here to add more legs</a></td></tr>
                                     </cfif>
-                                    <!--- Unblock flights from area reps (even if the departure is more than 5 months away --->
-                                    <cfif officeUser>
+                                    
+                                    <!--- Unblock flights from reps to allow them to enter departure dates before the school end date --->
+                                    <cfif vOfficeUser>
                                     	<tr bgcolor="##FEE6D3">
                                         	<td colspan="12" align="center">
                                             	Unblock Departure Flights: 
                                                 <input type="checkbox" value="1" id="unblockFlight" onclick="changeBlockedFlight()" <cfif qGetStudentInfo.unblockFlight>checked="checked"</cfif> />
                                                 <br/>
-                                                <font size="-2">- allow reps to enter departure flight information even if the departure is more than 5 months away.</font>
+                                                <font size="-2">- allow reps to enter departure flight dates before the school end date.</font>
                                             </td>
                                         </tr>
                                     </cfif>
@@ -1019,13 +1042,13 @@
             <cfscript>
 				fullPath=GetDirectoryFromPath(GetCurrentTemplatePath()) & fileName & '.pdf';
 				APPLICATION.CFC.UDF.insertInternalFile(filePath=fullPath,fieldID=1,studentID=qGetStudentInfo.studentID);
+				APPLICATION.CFC.UDF.insertIntoVirtualFolder(
+					categoryID=1,
+					documentType=4,
+					studentID=qGetStudentInfo.studentID,
+					fileDescription="Flight Itinerary",
+					fileName=fileName & ".pdf" );
 			</cfscript>
-            
-             <cfquery name="insertFileDetails" datasource="#application.dsn#">
-            insert into  virtualFolder (fk_categoryID, fk_documentType, fileDescription,fileName, filePath, fk_studentID,dateAdded,generatedHow,uploadedBy)
-            				values(1,4,'Flight Itinerary','#fileName#.pdf', 'uploadedfiles/virtualFolder/#qGetStudentInfo.studentID#/', #qGetStudentInfo.studentID#,#now()#,'auto',#client.userid#)
-            </cfquery>
-          
         </cfif>
         
         <!--- Table Footer --->
