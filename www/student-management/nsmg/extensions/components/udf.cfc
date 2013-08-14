@@ -1025,6 +1025,49 @@
  	</cffunction>
     
     
+	<!--- Insert file information into the virtualfolder table. --->
+    <cffunction name="insertIntoVirtualFolder" access="public" returntype="void" output="no">
+    	<cfargument name="categoryID" type="numeric" required="yes">
+        <cfargument name="documentType" type="numeric" required="yes">
+        <cfargument name="studentID" type="numeric" required="yes">
+        <cfargument name="hostID" type="numeric" default="0">
+        <cfargument name="fileDescription" type="string" default="">
+        <cfargument name="fileName" type="string" default="">
+        <cfargument name="filePath" type="string" default="" hint="if left blank will set to the student's virtual folder">
+        <cfargument name="generatedHow" type="string" default="auto" hint="auto/manual">
+        
+        <cfif NOT LEN(ARGUMENTS.filePath)>
+        	<cfset vPath = "uploadedfiles/virtualFolder/" & ARGUMENTS.studentID & "/">
+        </cfif>
+        
+        <cfquery datasource="#APPLICATION.DSN#">
+        	INSERT INTO virtualFolder (
+            	fk_categoryID,
+                fk_documentType,
+                fk_studentID,
+                fk_hostID,
+                fileDescription,
+                fileName,
+                filePath,
+                generatedHow,
+                dateAdded,
+                uploadedBy )
+          	VALUES (
+           		<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.categoryID)#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.documentType)#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.fileDescription#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.fileName#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#vPath#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.generatedHow#">,
+                <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#"> )
+        </cfquery>
+        
+    </cffunction>
+    
+    
     <!--- Send Compliance Log Email --->
     <cffunction name="sendComplianceLog" access="public" returntype="string">
     	<cfargument name="email_to" type="string" required="yes" hint="pass in list of emails to sent to">
