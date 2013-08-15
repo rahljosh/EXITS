@@ -66,7 +66,10 @@
 		
 		// Get School Dates
 		qGetSchoolDates = APPLICATION.CFC.SCHOOL.getSchoolDates(schoolID=qGetStudentInfo.schoolID, programID=qGetStudentInfo.programID);
-		vSchoolEndDate = DateFormat(qGetSchoolDates.endDate,'mm/dd/yyyy');
+		vSchoolEndDate = qGetSchoolDates.endDate;
+		if (IsDate(qGetSchoolDates.endDate)) {
+			vSchoolEndDate = DateFormat(qGetSchoolDates.endDate,'mm/dd/yyyy');	
+		}
 		
 		// Check if the user is an office user
 		vOfficeUser = APPLICATION.CFC.USER.isOfficeUser(CLIENT.usertype);
@@ -414,13 +417,17 @@
 			
 			// Function to make sure the departure date is after the school end date.
 			function checkSchoolDate(enteredDate,schoolEndDate,fieldID) {
-				var jsEnteredDate = new Date(enteredDate.substring(6),enteredDate.substring(0,2),enteredDate.substring(3,5));
-				var jsSchoolDate = new Date(schoolEndDate.substring(6),schoolEndDate.substring(0,2),schoolEndDate.substring(3,5));
-				jsSchoolDate.setDate(jsSchoolDate.getDate()+1);
-				if (jsEnteredDate-jsSchoolDate < 0) {
-					var actualSchoolDate = jsSchoolDate.getDate() - 1;
-					alert("You must enter a date after the school end date: " + jsSchoolDate.getMonth() + "/" + actualSchoolDate + "/" + jsSchoolDate.getFullYear());
-					$("##"+fieldID).val("");
+				if (schoolEndDate != "n/a") {
+					var jsEnteredDate = new Date(enteredDate.substring(6),enteredDate.substring(0,2),enteredDate.substring(3,5));
+					var jsSchoolDate = new Date(schoolEndDate.substring(6),schoolEndDate.substring(0,2),schoolEndDate.substring(3,5));
+					jsSchoolDate.setDate(jsSchoolDate.getDate()+1);
+					if (jsEnteredDate-jsSchoolDate < 0) {
+						var actualSchoolDate = jsSchoolDate.getDate() - 1;
+						alert("You must enter a date after the school end date: " + jsSchoolDate.getMonth() + "/" + actualSchoolDate + "/" + jsSchoolDate.getFullYear());
+						$("##"+fieldID).val("");
+					}
+				} else {
+					alert("There must be a school end date before you can assign a departure date.");	
 				}
 			}
 			
