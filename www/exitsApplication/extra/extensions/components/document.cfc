@@ -164,7 +164,9 @@
 				<cfif VAL(ARGUMENTS.applicationID)>
 	                AND 
                         applicationID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.applicationID#">
-                </cfif>                        
+                </cfif>
+                ORDER BY
+                	name                        
         </cfquery> 
 
 		<cfreturn qGetDocumentType>
