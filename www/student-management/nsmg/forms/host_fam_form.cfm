@@ -345,7 +345,8 @@
                         </cfif>
                         arearepid,
                         dateCreated,
-                        createdBy
+                        createdBy,
+                        updatedBy
                     )
                     VALUES 
                     (
@@ -390,6 +391,7 @@
                         </cfif>
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
                         <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
                     )  
                 </cfquery>
