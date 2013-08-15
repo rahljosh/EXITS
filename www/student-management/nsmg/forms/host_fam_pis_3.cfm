@@ -182,7 +182,7 @@
                                     	<option value="sibling_#childID#" <cfif qGetHostChildren.roomsharewith EQ qGetPlacedStudents.studentid>selected="selected"</cfif>>Yes, with #name#</option> 
                                     </cfloop>
                                     
-                                    <cfquery name="qGetDoublePlacement" dbtype="#APPLICATION.DSN#">
+                                    <cfquery name="qGetDoublePlacement" dbtype="query">
                                     	SELECT 
                                         	*
                                         FROM
