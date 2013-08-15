@@ -10,7 +10,7 @@
 <cfelse>
 	<!--- ADD NEW SCHOOL --->
 	<cfif form.school EQ 0>  
-		<cfquery name="check_new_school" datasource="MySql">
+		<cfquery name="check_new_school" datasource="#APPLICATION.DSN#">
 			SELECT 
             	schoolid,
                 schoolname
@@ -35,7 +35,7 @@
 		</cfif>
 			
 		<cftransaction action="begin" isolation="SERIALIZABLE">
-			<cfquery name="insert_school" datasource="MySQL">
+			<cfquery name="insert_school" datasource="#APPLICATION.DSN#">
                     INSERT INTO 
                     	smg_schools 
                     (	
@@ -69,7 +69,7 @@
                     )  
 			</cfquery>
 		
-			<cfquery name="schoolid" datasource="MySQL"> <!--- get the newest school --->
+			<cfquery name="schoolid" datasource="#APPLICATION.DSN#"> <!--- get the newest school --->
 				SELECT MAX(schoolid) as newschoolid
 				FROM smg_schools
 			</cfquery>
@@ -79,7 +79,7 @@
 	<!--- UPDATE SCHOOL INFORMATION --->	
 	<cfelse>  
 		<cftransaction action="begin" isolation="SERIALIZABLE">	
-			<cfquery name="update_school" datasource="MySQL">
+			<cfquery name="update_school" datasource="#APPLICATION.DSN#">
 				UPDATE
                 	smg_schools
 				SET
@@ -105,7 +105,7 @@
 	<!--- SCHOOL DATES --->
 	<cfif form.count EQ '0' OR form.seasonid NEQ '0'>
 		<cftransaction action="begin" isolation="SERIALIZABLE">	
-			<cfquery name="insert_dates" datasource="MySQL">
+			<cfquery name="insert_dates" datasource="#APPLICATION.DSN#">
 				INSERT INTO smg_school_dates
 							(schoolid, seasonid, enrollment, year_begins, semester_ends, semester_begins, year_ends)
 				VALUES ('#client.schoolid#', '#form.seasonid#',
@@ -120,7 +120,7 @@
 	<cfelse>
 		<cftransaction action="begin" isolation="SERIALIZABLE">	
 			<cfloop From = "1" To = "#form.count#" Index = "x">
-				<cfquery name="update_school" datasource="MySQL">
+				<cfquery name="update_school" datasource="#APPLICATION.DSN#">
 					UPDATE smg_school_dates 
 					SET 	enrollment = <cfif form["enrollment" & x] EQ ''>NULL<cfelse>#CreateODBCDate(form["enrollment" & x])#</cfif>,
 							year_begins = <cfif form["year_begins" & x] EQ ''>NULL<cfelse>#CreateODBCDate(form["year_begins" & x])#</cfif>,
@@ -134,11 +134,13 @@
 		</cftransaction>
 	</cfif>
 
-	<cfquery name="add_School" datasource="MySQL">
+	<cfquery name="add_School" datasource="#APPLICATION.DSN#">
 		UPDATE
         	smg_hosts
        	SET
-        	schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.schoolID)#">
+        	schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.schoolID)#">,
+            dateUpdated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
+        	updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
       	WHERE
         	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.hostID)#">
        	LIMIT 1

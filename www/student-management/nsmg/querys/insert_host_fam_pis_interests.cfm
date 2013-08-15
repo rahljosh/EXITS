@@ -7,11 +7,13 @@
 </cfif>
 
 <cftransaction action="BEGIN" isolation="SERIALIZABLE">
-<cfquery name="insert_interests" datasource="MySQL">
-Update smg_hosts
-set interests = '#form.interest#',
-	interests_other = '#form.specific_interests#' 
-where hostid = #client.hostid#
+<cfquery name="insert_interests" datasource="#APPLICATION.DSN#">
+	UPDATE smg_hosts
+	SET	interests = '#form.interest#',
+		interests_other = '#form.specific_interests#',
+    	dateUpdated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
+		updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
+	WHERE hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.hostID)#">
 
 </cfquery>
 </cftransaction>

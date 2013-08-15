@@ -1,19 +1,19 @@
-<cfquery name="check_area_rep" datasource="MySQL">
+<cfquery name="check_area_rep" datasource="#APPLICATION.DSN#">
 select advisor_id 
 from smg_users 
-where userid = #client.userid#
+where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
 </cfquery>
-<cfquery name="get_supervisingrep_status" datasource="MySQL">
+<cfquery name="get_supervisingrep_status" datasource="#APPLICATION.DSN#">
 select usertype from smg_users 
-where userid = #form.supervising#
+where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(form.supervising)#">
 </cfquery>
 <cfset pis_report_Status = #get_supervisingrep_status.usertype# - 1>
 
 
-<cfquery name="school_info" datasource="MySQL">
+<cfquery name="school_info" datasource="#APPLICATION.DSN#">
 select schoolid
 from smg_hosts 
-where smg_hosts.hostid = #client.hostid#
+where smg_hosts.hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.hostID)#">
 </cfquery>
 <Cfif school_info.schoolid is 0>
 <cfinclude template = "../family_pis_menu.cfm">
@@ -23,7 +23,7 @@ Please indicate school information before placing student.  Click on School Info
 </Cfif>
 <cftransaction action="begin" isolation="SERIALIZABLE">
 <cfif isDefined('form.student')>
-<cfquery name="assign_folks_to_student" datasource="MySQL">
+<cfquery name="assign_folks_to_student" datasource="#APPLICATION.DSN#">
 update smg_students
 	set hostid = #client.hostid#,
 	<Cfif isDefined('form.placer')>
@@ -42,10 +42,12 @@ where studentid = #form.student#
 </cfquery>
 </cfif>
 <cfif isDefined('form.supervising')>
-<Cfquery name="assign_Rep_to_folks" datasource="MySQL">
-update smg_hosts
-	set arearepid = #form.supervising#
-where hostid = #client.hostid#
+<cfquery name="assign_Rep_to_folks" datasource="#APPLICATION.DSN#">
+	UPDATE smg_hosts
+	SET arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(form.supervising)#">,
+    	dateUpdated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
+        updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
+	WHERE hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.hostID)#">
 </Cfquery>
 <Cfset client.studentid = #form.student#>
 </cfif>
@@ -53,7 +55,7 @@ where hostid = #client.hostid#
 <!-----Doubleplacement Updates----->
 <Cfif isDefined('form.doubleplacement')>
 
-<cfquery name="assign_folks_to_student" datasource="MySQL">
+<cfquery name="assign_folks_to_student" datasource="#APPLICATION.DSN#">
 update smg_students
 	set hostid = #client.hostid#,
 	<Cfif isDefined('form.placer')>

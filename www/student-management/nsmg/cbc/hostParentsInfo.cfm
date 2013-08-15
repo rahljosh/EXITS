@@ -140,7 +140,9 @@
                     <cfif VAL(vUpdateMotherSSN)>
                         motherSSN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherSSN#">,
                     </cfif>
-                    motherDOB = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.motherDOB#" null="#NOT IsDate(FORM.motherDOB)#">
+                    motherDOB = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.motherDOB#" null="#NOT IsDate(FORM.motherDOB)#">,
+                    dateUpdated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
+            		updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
                 WHERE 
                     hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.hostID)#">
             </cfquery>			

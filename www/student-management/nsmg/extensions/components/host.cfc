@@ -1088,7 +1088,9 @@
                     UPDATE
                         smg_hosts
                     SET 
-                        hostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.statusID#">
+                        hostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.statusID#">,
+                        dateUpdated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
+            			updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
                     WHERE        	
                         hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#">
                 </cfquery>
@@ -2786,7 +2788,7 @@
         </cfquery>
         
         <cfloop query="qGetHostNoHashID">
-            <cfquery datasource="MySQL">
+            <cfquery datasource="#APPLICATION.DSN#">
                 UPDATE
                     smg_host_lead
                 SET

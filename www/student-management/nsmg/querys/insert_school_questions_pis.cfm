@@ -20,14 +20,16 @@
 	<cfset form.other_desc = ''>
 </cfif>
 <cftransaction action="BEGIN" isolation="SERIALIZABLE">
-    <cfquery name="insert_transportation" datasource="MySQL">
+    <cfquery name="insert_transportation" datasource="#APPLICATION.DSN#">
         UPDATE
             smg_hosts
         SET
             schoolTransportation = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.transportation#">,
             schooldistance = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.distance_school)#">,
             schoolcosts = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.school_costs#">,
-            other_trans = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.other_desc#">	
+            other_trans = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.other_desc#">,
+            dateUpdated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
+        	updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">	
         WHERE
             hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.hostID)#">
     </cfquery>

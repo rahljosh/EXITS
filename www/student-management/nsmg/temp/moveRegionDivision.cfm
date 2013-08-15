@@ -49,7 +49,7 @@
         <cfif NOT SESSION.formErrors.length()>
             
             <!--- Region --->
-            <cfquery datasource="mysql">
+            <cfquery datasource="#APPLICATION.DSN#">
                 UPDATE
                     smg_regions
                 SET
@@ -60,7 +60,7 @@
 			
             <!--- Region Guaranteed --->
             <!---
-            <cfquery datasource="mysql">
+            <cfquery datasource="#APPLICATION.DSN#">
                 UPDATE
                     smg_regions
                 SET
@@ -71,7 +71,7 @@
 			--->
 
 			<!--- Users ---->
-            <cfquery datasource="mysql">
+            <cfquery datasource="#APPLICATION.DSN#">
                 UPDATE
                     user_access_rights
                 SET
@@ -81,17 +81,19 @@
             </cfquery>
             
             <!--- Host Families --->
-            <cfquery datasource="mysql">
+            <cfquery datasource="#APPLICATION.DSN#">
                 UPDATE
                     smg_hosts
                 SET
-                    companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.divisionTo#">
+                    companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.divisionTo#">,
+                    dateUpdated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
+        			updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
                 WHERE
                     regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionFrom#">
             </cfquery>
             
             <!--- Students --->
-            <cfquery datasource="mysql">
+            <cfquery datasource="#APPLICATION.DSN#">
                 UPDATE
                     smg_students
                 SET
