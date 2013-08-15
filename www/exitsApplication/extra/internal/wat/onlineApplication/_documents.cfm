@@ -56,16 +56,18 @@
 				</p>
 
                 <p class="legend">
-                    1.	Agreement <br /> 
+                    1.	Signed Agreement <br /> 
                     2.	Signed English Assessment <br /> 
-                    3.	Walk-in agreement (only for the Walk-in participants- – i.e. Visa Waiver Program countries) <br /> 
-                    4.	Enrollment confirmation from the school (proof of student status) <br /> 
+                    3.	Signed Walk-in agreement (only for the Walk-in participants- – i.e. Visa Waiver Program countries) <br /> 
+                    4.	Enrollment confirmation from the school (proof of student status), including the official vacation dates (if applicable) <br /> 
                     5.	Translation after the enrollment confirmation from the school <br /> 
-                    6.	CSB Resume (only for the CSB-placement participants) <br /> 
+                    6.	Resume on CSB Template (only for the CSB-placement participants) <br /> 
                     7.	Passport copy <br /> 
-                    8.	Signed job offer agreement (only for the Self-placement participants) <br />  
-                    9.	Orientation Sign-Off (after the orientation has taken place) <br /> 
-                    10.	Other (if any) <br /> 
+                    8.	Signed job offer agreement on CSB Template (only for the Self-placement participants) <br />
+                    9.  No Housing Form (if housing is not offered on premises) <br />
+                    10. Housing Arrangements Form (if housing is not on premises, it must be submitted with 15 days before arrival) <br />  
+                    11.	Orientation Sign-Off on CSB Template (after the orientation has taken place) <br /> 
+                    12.	Other (if applicable) - e.g. Third Party Forms (if housing and/or pick-up is offered by a third party) <br /> 
                 </p>
                 
                 <!--- Upload Documents --->    
