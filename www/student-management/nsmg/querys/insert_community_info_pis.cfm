@@ -21,7 +21,7 @@
     
     <cftransaction action="BEGIN" isolation="SERIALIZABLE">
     
-        <cfquery name="insert_community_info" datasource="MySQL">
+        <cfquery name="insert_community_info" datasource="#APPLICATION.DSN#">
             UPDATE 
                 smg_hosts
             SET 
@@ -33,7 +33,9 @@
                 pert_info = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pert_info#">,
                 major_air_code = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.major_air_code#">,
                 airport_city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.airport_city#">,
-                airport_state= <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.airport_state#">           
+                airport_state= <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.airport_state#"> ,
+                dateUpdated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
+        		updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">          
             WHERE 
                 hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.hostID#">
         </cfquery>

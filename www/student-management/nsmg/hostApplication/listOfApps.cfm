@@ -38,7 +38,9 @@
             UPDATE
                 smg_hosts
             SET
-                uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#CreateUUID()#">
+                uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#CreateUUID()#">,
+                dateUpdated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
+   				updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
             WHERE
                 hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostsMissingUniqueID.hostID#">
         </cfquery>
@@ -68,7 +70,9 @@
     <cfif VAL(FORM.notHosting)>
     	<cfquery datasource="#APPLICATION.DSN#">
             UPDATE smg_hosts
-            SET isHosting = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+            SET isHosting = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
+            	dateUpdated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
+            	updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
             WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.notHosting#">
         </cfquery>
         <cflocation url="?#CGI.QUERY_STRING#"/>

@@ -112,10 +112,12 @@
     
     <!----Smoking & Allergy Preferences---->
     <cfquery name="smoking_pref" datasource="#APPLICATION.DSN#">
-    update smg_hosts
-        set acceptsmoking = '#form.stu_smoke#',
-            smokeconditions = '#form.smoke_conditions#'
-        where hostid = #client.hostid#
+    	UPDATE smg_hosts
+        SET acceptsmoking = '#form.stu_smoke#',
+            smokeconditions = '#form.smoke_conditions#',
+            dateUpdated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
+        	updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
+        WHERE hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.hostID)#">
     </cfquery>
 
 
@@ -162,12 +164,14 @@
  	</cfloop>
     
     <Cfquery name="church_info" datasource="#APPLICATION.DSN#">
-    Update smg_hosts
-        set attendchurch = '#form.attend_church#',
+    	UPDATE smg_hosts
+        SET attendchurch = '#form.attend_church#',
             religious_participation = '#form.religious_participation#',
             churchfam = '#form.churchfam#',
-            churchtrans = '#form.churchtrans#'
-        where hostid = #client.hostid#
+            churchtrans = '#form.churchtrans#',
+            dateUpdated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
+        	updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
+        WHERE hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.hostID)#">
     </cfquery>
     
 </cftransaction>

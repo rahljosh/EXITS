@@ -39,17 +39,9 @@
         
   	<cfelse>
     
-    	<cfquery datasource="#APPLICATION.DSN#">
-            UPDATE
-                smg_hosts
-            SET
-                isNotQualifiedToHost = <cfqueryparam cfsqltype="cf_sql_integer" value="#isNotQualifiedNum#">
-                <cfif isNotQualifiedNum EQ 1>
-                	,active = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-                </cfif>
-           	WHERE
-            	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostID#">
-        </cfquery>
+    	<cfscript>
+			APPLICATION.CFC.CBC.setIsNotQualifiedToHost(hostID=URL.hostID, isNotQualifiedToHost=isNotQualifiedNum);
+		</cfscript>
         
         <cfif isNotQualifiedNum EQ 1>
             

@@ -284,7 +284,9 @@
                             applicationSent = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
                         </cfif>
                         password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#strPassword#">,
-                        active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                        active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">,
+                        dateUpdated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
+            			updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
                     WHERE 
                         hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.hostID)#">
                 </cfquery>	
@@ -341,7 +343,9 @@
                             HostAppStatus,
                             applicationSent,
                         </cfif>
-                        arearepid
+                        arearepid,
+                        dateCreated,
+                        createdBy
                     )
                     VALUES 
                     (
@@ -384,7 +388,9 @@
                             <cfqueryparam cfsqltype="cf_sql_integer" value="9">,
                             <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
                         </cfif>
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
                     )  
                 </cfquery>
 

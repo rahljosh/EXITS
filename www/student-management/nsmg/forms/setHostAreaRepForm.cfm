@@ -30,7 +30,9 @@
     
     	<cfquery datasource="#APPLICATION.DSN#">
         	UPDATE smg_hosts
-            SET areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.areaRep)#">
+            SET areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.areaRep)#">,
+            	dateUpdated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
+            	updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
             WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.hostID)#">
         </cfquery>
     

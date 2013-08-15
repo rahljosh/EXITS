@@ -45,7 +45,7 @@
         <cfif NOT SESSION.formErrors.length()>
             
 			<!--- Reps ---->
-            <cfquery datasource="mysql">
+            <cfquery datasource="#APPLICATION.DSN#">
                 UPDATE
                     user_access_rights
                 SET
@@ -55,17 +55,19 @@
             </cfquery>
             
             <!--- Host Families --->
-            <cfquery datasource="mysql">
+            <cfquery datasource="#APPLICATION.DSN#">
                 UPDATE
                     smg_hosts
                 SET
-                    regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionTo#">
+                    regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionTo#">,
+                    dateUpdated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
+        			updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
                 WHERE
                     regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionFrom#">
             </cfquery>
             
             <!--- Students --->
-            <cfquery datasource="mysql">
+            <cfquery datasource="#APPLICATION.DSN#">
                 UPDATE
                     smg_students
                 SET
@@ -75,7 +77,7 @@
             </cfquery>
             
             <!--- Host Leads --->
-            <cfquery datasource="mysql">
+            <cfquery datasource="#APPLICATION.DSN#">
                 UPDATE
                     smg_host_lead
                 SET

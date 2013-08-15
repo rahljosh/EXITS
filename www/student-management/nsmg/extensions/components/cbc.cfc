@@ -2831,7 +2831,13 @@
         
         <cfquery datasource="#APPLICATION.DSN#">
         	UPDATE smg_hosts
-            SET isNotQualifiedToHost = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.isNotQualifiedToHost#">
+            SET 
+            	isNotQualifiedToHost = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.isNotQualifiedToHost#">,
+                <cfif ARGUMENTS.isNotQualifiedToHost EQ 1>
+                	active = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
+                </cfif>
+            	dateUpdated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
+            	updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
             WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#">
         </cfquery>
     

@@ -185,7 +185,8 @@
     <cfquery datasource="#APPLICATION.DSN#">
     	UPDATE smg_hosts
       	SET
-        	hostID = hostID
+        	dateUpdated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
+            updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
         	<cfif isDefined('sendAppEmail')>
             	<cfif FORM.sendAppEmail EQ "Convert to eHost">
         			,areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
@@ -238,7 +239,9 @@
 <cfif isDefined('decideToHost')>
 	<cfquery datasource="#APPLICATION.DSN#">
     	UPDATE smg_hosts
-        SET isHosting = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.decideToHost)#">
+        SET dateUpdated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
+            updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
+      		isHosting = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.decideToHost)#">
         WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#family_info.hostID#">
     </cfquery>
     <cflocation url="?#CGI.QUERY_STRING#"/>

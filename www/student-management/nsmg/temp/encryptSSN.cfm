@@ -108,7 +108,9 @@
 			UPDATE
             	smg_hosts
             SET
-            	fatherSSN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.encryptVariable(vSetFatherSSN)#">
+            	fatherSSN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.encryptVariable(vSetFatherSSN)#">,
+                dateUpdated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
+        		updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
             WHERE
             	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostFatherNotEncryptedSSN.hostID#">
 		</cfquery>
@@ -150,7 +152,9 @@
 			UPDATE
             	smg_hosts
             SET
-            	MotherSSN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.encryptVariable(vSetMotherSSN)#">
+            	MotherSSN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.encryptVariable(vSetMotherSSN)#">,
+                dateUpdated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
+        		updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
             WHERE
             	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostMotherNotEncryptedSSN.hostID#">
 		</cfquery>

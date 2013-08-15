@@ -3,7 +3,7 @@
 <cfif not IsDefined('url.hostid')>
 	<cfinclude template="../forms/error_message.cfm">
 <cfelse>
-	<cfquery name="check_students" datasource="MySql">
+	<cfquery name="check_students" datasource="#APPLICATION.DSN#">
 		SELECT studentid, firstname, familylastname, smg_students.companyid, companyshort
 		FROM smg_students
 		INNER JOIN smg_companies ON smg_students.companyid = smg_companies.companyid
@@ -11,13 +11,13 @@
 		ORDER BY companyshort, familylastname
 	</cfquery>
 	
-	<cfquery name="check_cbcs" datasource="MySql">
+	<cfquery name="check_cbcs" datasource="#APPLICATION.DSN#">
 		SELECT cbcfamid, hostid
 		FROM smg_hosts_cbc
 		WHERE hostid = <cfqueryparam value="#url.hostid#" cfsqltype="cf_sql_integer">
 	</cfquery>
 	
-	<cfquery name="get_host" datasource="MySql">
+	<cfquery name="get_host" datasource="#APPLICATION.DSN#">
 		SELECT familylastname, hostid
 		FROM smg_hosts
 		WHERE hostid = <cfqueryparam value="#url.hostid#" cfsqltype="cf_sql_integer">
@@ -59,19 +59,21 @@
 	</cfif>
 	
 <!--- none students are assigned to the HOST, - set host to inactive HOST --->
- 		<cfquery name="delete_host" datasource="MySql">
+ 		<cfquery name="delete_host" datasource="#APPLICATION.DSN#">
 			update smg_hosts
-            set active = 0
+            set active = 0,
+            	dateUpdated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
+        		updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
 			WHERE hostid = <cfqueryparam value="#url.hostid#" cfsqltype="cf_sql_integer">
 			LIMIT 1
 		</cfquery>
         <!----
-		<cfquery name="delete_host_children" datasource="MySql">
+		<cfquery name="delete_host_children" datasource="#APPLICATION.DSN#">
 			DELETE 
 			FROM smg_host_children
 			WHERE hostid = <cfqueryparam value="#url.hostid#" cfsqltype="cf_sql_integer">
 		</cfquery>
-		<cfquery name="delete_host_animals" datasource="MySql">
+		<cfquery name="delete_host_animals" datasource="#APPLICATION.DSN#">
 			DELETE 
 			FROM smg_host_animals
 			WHERE hostid = <cfqueryparam value="#url.hostid#" cfsqltype="cf_sql_integer">
