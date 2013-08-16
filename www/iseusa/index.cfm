@@ -3,7 +3,7 @@
 
 <cfinclude template="/extensions/includes/_pageHeader.cfm"> <!--- Include Page Header --->
 <script type="text/javascript" language="JavaScript">
-    var GB_ROOT_DIR = "http://www.iseusa.com/greybox/";
+    var GB_ROOT_DIR = "https://www.iseusa.com/greybox/";
 </script>
 <script type="text/javascript" src="greybox/AJS.js"></script>
 <script type="text/javascript" src="greybox/AJS_fx.js"></script>
@@ -94,6 +94,17 @@ a:hover {
 a:active {
 	color: #165EA9;
 	text-decoration: none;
+}
+.oneColFixCtr #container #mainContent #bottomInfoLeft .middle .youTube {
+	float: none;
+	height: 135px;
+	width: 190px;
+	position: absolute;
+	z-index: 250;
+	margin-top: 190px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 285px;
 }
 -->
 </style>
@@ -213,7 +224,11 @@ Become a world leader of tomorrow by expanding your horizons, learning new langu
 <!-- end bottomInfoRight --></div>
 <div id="bottomInfoLeft">
   <div class="top"><!-- end top --></div>
-  <div class="middle"><a href="about-our-students.cfm"><img src="images/aboutStudents.gif" width="229" height="172" alt="About Students" border="0"/></a><a href="international-student-success-stories.cfm"><img src="images/studentSuccess.gif" width="240" height="172" alt="student Success" border="0"/></a><a href="be_a_ise_host_video.cfm" class="white"  rel="gb_page_center[575,400]"><img src="images/Be_a_host_button.png"alt="be a host family" border="0"/></a><a href="Be_a_hero_ISE_video.cfm" class="white"  rel="gb_page_center[575,400]"><img src="images/be_a_hero_button.png" alt="be a ISE hero" width="236" height="171" border="0" /></a></div>
+  <div class="middle">
+ <!--- <div class="youTube"><object width="190" height="107"><param name="movie" value="//www.youtube-nocookie.com/v/U9D4yQms9Bs?version=3&amp;hl=en_US"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="//www.youtube-nocookie.com/v/U9D4yQms9Bs?version=3&amp;hl=en_US" type="application/x-shockwave-flash" width="190" height="107" allowscriptaccess="always" allowfullscreen="true"></embed></object></div>--->
+  <a href="about-our-students.cfm"><img src="images/aboutStudents.gif" width="229" height="172" alt="About Students" border="0"/></a><a href="international-student-success-stories.cfm"><img src="images/studentSuccess.gif" width="240" height="172" alt="student Success" border="0"/></a><a href="be_a_ise_host_video.cfm" class="white"  rel="gb_page_center[600,400]"><img src="images/Be_a_host_button.png"alt="be a host family" border="0"/></a>
+    
+    <a href="https://www.iseusa.com/Host_foreign_exchange_student_video.cfm"  rel="gb_page_center[600,400]"><img src="images/host_foreign_exchange_student.png" alt="be a ISE hero" width="236" height="171" border="0" /></a></div>
   <div class="bottom"></div>
 <!-- end bottomInfoLeft --></div>
 <h1>&nbsp;</h1>
