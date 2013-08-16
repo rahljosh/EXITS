@@ -206,7 +206,8 @@
                         phone, 
                         password,
                         applicationStarted, 
-                        lead
+                        lead,
+                        dateCreated
                     )
                     SELECT
                     	<cfqueryparam cfsqltype="cf_sql_varchar" value="#CreateUUID()#">,
@@ -223,7 +224,8 @@
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qLoginHostFamily.phone#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qLoginHostFamily.password#">, 
                         <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">, 
-                        <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="1">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
                     FROM 
                         DUAL
                     <!--- DO NOT INSERT IF ITS ALREADY EXISTS --->
