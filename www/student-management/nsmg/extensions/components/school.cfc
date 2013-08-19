@@ -167,7 +167,7 @@
                     sh.datePlaced,
                     p.programName,
                     c.companyShort,
-                    r.regionName                    
+                    r.regionName               
                 FROM
                     smg_students s
                 INNER JOIN
@@ -188,6 +188,7 @@
                     smg_schools sc ON sh.schoolID = sc.schoolID
                         AND
                             sc.schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.schoolID#">
+               
                 WHERE
                     s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
                 
@@ -236,7 +237,9 @@
                                 <style type="text/css">
                                     <cfinclude template="../../linked/css/baseStyle.css">
                                 </style>                    
-                                
+                                Please obtain a letter from this high school stating that they will accept more than 5 exchange students from #client.companyshort# for the upcoming school year. The letter should be on school letterhead, dated, and hand signed.  It is required by Dept. of State to have this letter on file in the Compliance Department. <br><br>
+                                Than you for your assistance.<br>
+                                #client.companyname# Compliance Dept.<br><br>
                                 <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
                                     <tr>
                                     	<th>School Compliance Notification</th>
