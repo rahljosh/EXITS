@@ -76,7 +76,7 @@ WHERE uniqueid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#url.uniqueid#"
     <br />
     Sincerely Yours,
     <br />
-    <!---<img src="../../pics/traineeSignature.jpg" width="200" height="116" />--->
+    <img src="../../pics/RyanSignature.jpg" width="200" height="116" />
     <br />
     Ryan Schreiber, Program Manager<br />
     International Student Exchange<br />
