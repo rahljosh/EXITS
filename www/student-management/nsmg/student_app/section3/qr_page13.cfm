@@ -4,11 +4,11 @@
 </cfif>
 
 <cftransaction action="begin" isolation="serializable">
-	
+	<cftry>
 
 	<!--- NEW DTaP-DT --->
 	<cfif IsDefined('form.new_dpt')>
-		<cfquery name="insert_dpt" datasource="MySql">
+		<cfquery name="insert_dpt" datasource="#APPLICATION.DSN#">
 			INSERT INTO smg_student_app_shots (studentid, vaccine, shot1, shot2, shot3, shot4, shot5, booster)
 				VALUES ('#form.studentid#', '#form.new_dpt#', 
 					<cfif form.dpt1 is ''>null,<cfelse>#CreateODBCDate(form.dpt1)#,</cfif>
@@ -21,7 +21,7 @@
 	</cfif>
 	<!--- UPDATE DTaP-DT --->
 	<cfif IsDefined('form.upd_dpt')>
-		<cfquery name="update_dpt" datasource="MySql">
+		<cfquery name="update_dpt" datasource="#APPLICATION.DSN#">
 			UPDATE smg_student_app_shots
 				SET shot1 = <cfif form.dpt1 is ''>null,<cfelse>#CreateODBCDate(form.dpt1)#,</cfif>
 					shot2 = <cfif form.dpt2 is ''>null,<cfelse>#CreateODBCDate(form.dpt2)#,</cfif>
@@ -35,7 +35,7 @@
 	
 	<!--- NEW TOPV --->
 	<cfif IsDefined('form.new_topv')>
-		<cfquery name="insert_topv" datasource="MySql">
+		<cfquery name="insert_topv" datasource="#APPLICATION.DSN#">
 			INSERT INTO smg_student_app_shots (studentid, vaccine, disease, shot1, shot2, shot3, booster)
 				VALUES ('#form.studentid#', '#form.new_topv#', 
 					<cfif form.topv_disease is ''>null,<cfelse>#CreateODBCDate(form.topv_disease)#,</cfif>
@@ -47,7 +47,7 @@
 	</cfif>
 	<!--- UPDATE TOPV --->
 	<cfif IsDefined('form.upd_topv')>
-		<cfquery name="update_topv" datasource="MySql">
+		<cfquery name="update_topv" datasource="#APPLICATION.DSN#">
 			UPDATE smg_student_app_shots
 				SET disease = <cfif form.topv_disease is ''>null,<cfelse>#CreateODBCDate(form.topv_disease)#,</cfif>
 					shot1 = <cfif form.topv1 is ''>null,<cfelse>#CreateODBCDate(form.topv1)#,</cfif>
@@ -60,7 +60,7 @@
 	
 	<!--- NEW MEASLES --->
 	<cfif IsDefined('form.new_measles')>
-		<cfquery name="insert_measles" datasource="MySql">
+		<cfquery name="insert_measles" datasource="#APPLICATION.DSN#">
 			INSERT INTO smg_student_app_shots (studentid, vaccine, disease, shot1, shot2, booster)
 				VALUES ('#form.studentid#', '#form.new_measles#', 
 					<cfif form.measles_disease is ''>null,<cfelse>#CreateODBCDate(form.measles_disease)#,</cfif>
@@ -71,7 +71,7 @@
 	</cfif>
 	<!--- UPDATE MEASLES --->
 	<cfif IsDefined('form.upd_measles')>
-		<cfquery name="update_measles" datasource="MySql">
+		<cfquery name="update_measles" datasource="#APPLICATION.DSN#">
 			UPDATE smg_student_app_shots
 				SET disease = <cfif form.measles_disease is ''>null,<cfelse>#CreateODBCDate(form.measles_disease)#,</cfif>
 					shot1 = <cfif form.measles1 is ''>null,<cfelse>#CreateODBCDate(form.measles1)#,</cfif>
@@ -83,7 +83,7 @@
 	
 	<!--- NEW MUMPS --->
 	<cfif IsDefined('form.new_mumps')>
-		<cfquery name="insert_mumps" datasource="MySql">
+		<cfquery name="insert_mumps" datasource="#APPLICATION.DSN#">
 			INSERT INTO smg_student_app_shots (studentid, vaccine, disease, shot1, shot2, booster)
 				VALUES ('#form.studentid#', '#form.new_mumps#', 
 					<cfif form.mumps_disease is ''>null,<cfelse>#CreateODBCDate(form.mumps_disease)#,</cfif>
@@ -94,7 +94,7 @@
 	</cfif>
 	<!--- UPDATE MUMPS --->
 	<cfif IsDefined('form.upd_mumps')>
-		<cfquery name="update_mumps" datasource="MySql">
+		<cfquery name="update_mumps" datasource="#APPLICATION.DSN#">
 			UPDATE smg_student_app_shots
 				SET disease = <cfif form.mumps_disease is ''>null,<cfelse>#CreateODBCDate(form.mumps_disease)#,</cfif>
 					shot1 = <cfif form.mumps1 is ''>null,<cfelse>#CreateODBCDate(form.mumps1)#,</cfif>
@@ -106,7 +106,7 @@
 
 	<!--- NEW RUBELLA --->
 	<cfif IsDefined('form.new_rubella')>
-		<cfquery name="insert_rubella" datasource="MySql">
+		<cfquery name="insert_rubella" datasource="#APPLICATION.DSN#">
 			INSERT INTO smg_student_app_shots (studentid, vaccine, disease, shot1, shot2, booster)
 				VALUES ('#form.studentid#', '#form.new_rubella#', 
 					<cfif form.rubella_disease is ''>null,<cfelse>#CreateODBCDate(form.rubella_disease)#,</cfif>
@@ -117,7 +117,7 @@
 	</cfif>
 	<!--- UPDATE RUBELLA --->
 	<cfif IsDefined('form.upd_rubella')>
-		<cfquery name="update_rubella" datasource="MySql">
+		<cfquery name="update_rubella" datasource="#APPLICATION.DSN#">
 			UPDATE smg_student_app_shots
 				SET disease = <cfif form.rubella_disease is ''>null,<cfelse>#CreateODBCDate(form.rubella_disease)#,</cfif>
 					shot1 = <cfif form.rubella1 is ''>null,<cfelse>#CreateODBCDate(form.rubella1)#,</cfif>
@@ -129,7 +129,7 @@
 
 	<!--- NEW VARICELLA --->
 	<cfif IsDefined('form.new_varicella')>
-		<cfquery name="insert_varicella" datasource="MySql">
+		<cfquery name="insert_varicella" datasource="#APPLICATION.DSN#">
 			INSERT INTO smg_student_app_shots (studentid, vaccine, disease, shot1, shot2, booster)
 				VALUES ('#form.studentid#', '#form.new_varicella#', 
 					<cfif form.varicella_disease is ''>null,<cfelse>#CreateODBCDate(form.varicella_disease)#,</cfif>
@@ -140,7 +140,7 @@
 	</cfif>
 	<!--- UPDATE VARICELLA --->
 	<cfif IsDefined('form.upd_varicella')>
-		<cfquery name="update_varicella" datasource="MySql">
+		<cfquery name="update_varicella" datasource="#APPLICATION.DSN#">
 			UPDATE smg_student_app_shots
 				SET disease = <cfif form.varicella_disease is ''>null,<cfelse>#CreateODBCDate(form.varicella_disease)#,</cfif>
 					shot1 = <cfif form.varicella1 is ''>null,<cfelse>#CreateODBCDate(form.varicella1)#,</cfif>
@@ -152,7 +152,7 @@
 
 	<!--- NEW HEPATITIS --->
 	<cfif IsDefined('form.new_hepatitis')>
-		<cfquery name="insert_hepatitis" datasource="MySql">
+		<cfquery name="insert_hepatitis" datasource="#APPLICATION.DSN#">
 			INSERT INTO smg_student_app_shots (studentid, vaccine, shot1, shot2, shot3)
 				VALUES ('#form.studentid#', '#form.new_hepatitis#', 
 					<cfif form.hepatitis1 is ''>null,<cfelse>#CreateODBCDate(form.hepatitis1)#,</cfif>
@@ -162,7 +162,7 @@
 	</cfif>
 	<!--- UPDATE HEPATITIS --->
 	<cfif IsDefined('form.upd_hepatitis')>
-		<cfquery name="update_hepatitis" datasource="MySql">
+		<cfquery name="update_hepatitis" datasource="#APPLICATION.DSN#">
 			UPDATE smg_student_app_shots
 				SET shot1 = <cfif form.hepatitis1 is ''>null,<cfelse>#CreateODBCDate(form.hepatitis1)#,</cfif>
 					shot2 = <cfif form.hepatitis2 is ''>null,<cfelse>#CreateODBCDate(form.hepatitis2)#,</cfif>
@@ -186,4 +186,8 @@
 	</head>
 	</html>
 
+	<cfcatch type="any">
+		<cfinclude template="../error_message.cfm">
+	</cfcatch>
+	</cftry>
 </cftransaction>
