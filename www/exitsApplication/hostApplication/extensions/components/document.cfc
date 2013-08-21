@@ -575,11 +575,19 @@
                 <cfoutput>
                     <img src="#APPLICATION.CFC.SESSION.getCompanySessionByKey(structKey='profileHeaderImage')#" border="0" />
                     
-                    <p>
-                        As mandated by the Department of State, a Criminal Background Check on all Office Staff, Regional Directors/
-                        Managers, Regional Advisors, Area Representatives and all members of the host family aged 18 and above is 
-                        required for involvement with the J-1 Secondary School Exchange Visitor Program.
-                    </p>
+                    <!--- ESI wanted a different opening paragraph --->
+                    <cfif SESSION.COMPANY.ID EQ 14>
+                        <p>
+                            As mandated, a Criminal Background Check on all Office Staff, Regional Directors/Managers, Regional Advisors, 
+                            Area Representatives and all members of the host family aged 18 and above is required for involvement with the program.
+                        </p>
+                    <cfelse>
+                        <p>
+                            As mandated by the Department of State, a Criminal Background Check on all Office Staff, Regional Directors/
+                            Managers, Regional Advisors, Area Representatives and all members of the host family aged 18 and above is 
+                            required for involvement with the J-1 Secondary School Exchange Visitor Program.
+                        </p>
+                  	</cfif>
                     
                     <p>
                         I do hereby authorize verification of all information in my application for involvement with the Exchange Program from all necessary sources and additionally 
