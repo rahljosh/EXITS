@@ -38,6 +38,11 @@
 				
 				ARGUMENTS.emailTo = SESSION.COMPANY.EMAIL.support;
 				
+				// To avoid sending test emails to ESI's support email (it is currently their main email) 8/21/2013
+				if ( SESSION.COMPANY.ID EQ 14 ) {
+					ARGUMENTS.emailTO = "support@iseusa.com";	
+				}
+				
 				if ( LEN(ARGUMENTS.emailCC) ) {
 					emailIntendedTo = emailIntendedTo & "<p>Email CC: #ARGUMENTS.emailCC#</p>";
 					ARGUMENTS.emailCC = '';
