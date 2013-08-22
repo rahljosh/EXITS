@@ -1278,6 +1278,7 @@
         <cfargument name="dateIncident" default="" hint="dateIncident">
         <cfargument name="subject" default="" hint="subject">
         <cfargument name="notes" default="" hint="notes">
+        <cfargument name="previousNotes" default="" hint="if nothing is passed in will use previous notes in the database.">
         <cfargument name="isSolved" default="" hint="Set to 0 or 1">
 		
         <cfscript>
@@ -1287,12 +1288,17 @@
 			// Get Current Notes
 			qGetPreviousNotes = getIncidentReport(incidentID=ARGUMENTS.incidentID, candidateID=ARGUMENTS.candidateID);
 			
-			if ( LEN(ARGUMENTS.notes) ) {
-				// Add User Time Stamp to notes
-				ARGUMENTS.notes = qGetPreviousNotes.notes & Chr(13) & "<p><strong>" & ARGUMENTS.notes & "</strong> <br / > Added by #qGetUserInfo.firstName# #qGetUserInfo.lastName# on #DateFormat(now(), 'mm/dd/yyyy')# at #TimeFormat(now(), 'hh:mm tt')# EST </p>";
+			if ( NOT LEN(ARGUMENTS.previousNotes) ) {
+				// Sets this to the previous notes in the database
+				ARGUMENTS.previousNotes = qGetPreviousNotes.notes;
 			}
 			
-			//ARGUMENTS.notes = "<p><strong>" & ARGUMENTS.notes & "</strong> <br / > Updated by #qGetUserInfo.firstName# #qGetUserInfo.lastName# on #DateFormat(now(), 'mm/dd/yyyy')# at #TimeFormat(now(), 'hh:mm tt')# EST </p>";
+			if ( LEN(ARGUMENTS.notes) ) {
+				// Add User Time Stamp to notes
+				ARGUMENTS.notes = ARGUMENTS.previousNotes & Chr(13) & "<p><strong>" & ARGUMENTS.notes & "</strong> <br / > Added by #qGetUserInfo.firstName# #qGetUserInfo.lastName# on #DateFormat(now(), 'mm/dd/yyyy')# at #TimeFormat(now(), 'hh:mm tt')# EST </p>";
+			} else {
+				ARGUMENTS.notes = ARGUMENTS.previousNotes;	
+			}
 			
         </cfscript>
         
@@ -1308,9 +1314,7 @@
                         userID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(ARGUMENTS.userID)#">,
                         dateIncident = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateIncident#" null="#NOT IsDate(ARGUMENTS.dateIncident)#">,
                         subject = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.subject#">,  
-                        <cfif LEN(ARGUMENTS.notes)>
-                            notes = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.notes#">,
-                        </cfif>
+                   		notes = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.notes#">,
                         isSolved = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isSolved)#">
                     WHERE
                         ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.incidentID#">
