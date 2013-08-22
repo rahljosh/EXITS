@@ -25,6 +25,7 @@
     <cfparam name="FORM.dateIncident" default="">
 	<cfparam name="FORM.subject" default="">
 	<cfparam name="FORM.notes" default="">
+    <cfparam name="FORM.previousNotes" default="">
     <cfparam name="FORM.isSolved" default="0">
 
     <cfscript>
@@ -76,6 +77,7 @@
 					dateIncident = FORM.dateIncident,
 					subject = FORM.subject,
 					notes = FORM.notes,
+					previousNotes = FORM.previousNotes,
 					isSolved = FORM.isSolved
 				);
 
@@ -95,7 +97,7 @@
 				FORM.notes = FORM.notes;
 			}
 			FORM.isSolved = qGetIncidentInfo.isSolved;
-			
+			FORM.previousNotes = qGetIncidentInfo.notes;
 		}
     </cfscript>
 
@@ -179,10 +181,40 @@
                                 </td>
                             </tr>
                             <cfif VAL(qGetIncidentInfo.recordCount)>
+                            	<script type="text/javascript">
+									var commentsArray = null;
+									$(document).ready(function() {
+										var incidentComments = $("##previousNotes").val();
+										var comments = incidentComments.split("<p>");
+										commentsArray = new Array((comments.length-1)*2);
+										for (var i=1; i<comments.length; i++) {
+											commentsArray[(i-1)*2] = comments[i].substring(8,comments[i].indexOf("</strong>"));
+											commentsArray[((i-1)*2)+1] = comments[i].substring(comments[i].indexOf("</strong>")+17,comments[i].indexOf("</p>"));
+										}
+										for (var j=0; j<commentsArray.length; j+=2) {
+											$("##previousNotesDiv").html(
+												$("##previousNotesDiv").html() + 
+												"<strong><div contenteditable='true' id='comment" + j + "'>" + commentsArray[j] + "</div></strong>" +
+												commentsArray[j+1] + "<br/><br/>");	
+										}
+									});
+									
+									function updatePreviousNotes() {
+										var newPreviousNotes = "";
+										for (var i=0; i<commentsArray.length; i+=2) {
+											// Do not include empty comments
+											if ($("##comment" + i).html() != "<br>" && $("##comment" + i).html() != "") {
+												newPreviousNotes = newPreviousNotes + "<p><strong>" + $("##comment" + i).html() + "</strong> <br / >" + commentsArray[i+1] + "</p>";
+											}
+										}
+										$("##previousNotes").val(newPreviousNotes);
+									}
+								</script>
+                            	<input type="hidden" name="previousNotes" id="previousNotes" value="#FORM.previousNotes#"/>
                                 <tr>
                                     <td class="style2" style="background-color:##8FB6C9; border-bottom:1px solid ##C7CFDC; text-align:right; padding-right:10px; vertical-align:top;">Previous Notes</td>
                                     <td style="border-bottom:1px solid ##C7CFDC;" valign="top">
-                                        #qGetIncidentInfo.notes#
+                                        <div id="previousNotesDiv"></div>
                                     </td>
                                 </tr>
                             </cfif>
@@ -203,7 +235,7 @@
                             </tr>
                             <tr>
                                 <td colspan="2" align="center">
-                                    <input type="image" name="submit" src="../../pics/update.gif" border="0" alt=" update ">
+                                    <input type="image" name="submit" src="../../pics/update.gif" border="0" alt=" update " onclick="updatePreviousNotes()">
                                 </td>
                             </tr>                            
                         </table>
