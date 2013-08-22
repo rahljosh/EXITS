@@ -250,7 +250,7 @@
 			
 			} else if ( 
 				ListFindNoCase(CGI.SERVER_NAME, "exchange-service", ".") 
-				OR ListFindNoCase(CGI.SERVER_NAME, "es.exitsapplication") 
+				OR ListFindNoCase(CGI.SERVER_NAME, "es.exitsapplication.com") 
 				OR ListFindNoCase(CGI.SERVER_NAME, "smg.esi.local")) {
 				
 				// ESI
