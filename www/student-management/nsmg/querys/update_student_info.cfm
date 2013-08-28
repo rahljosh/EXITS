@@ -430,18 +430,13 @@
             qGetProgramInfo = APPLICATION.CFC.PROGRAM.getPrograms(ProgramID=qStudentInfo.programID);		
             
             // Email CC List
+			vGetProjectManagerEmail = APPLICATION.CFC.COMPANY.getCompanies(companyID=qStudentInfo.companyID).pm_email;
+			vGetFacilitatorEmail = APPLICATION.CFC.USER.getRegionFacilitator(regionID=qStudentInfo.regionassigned).email;
             if ( ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID) ) {
-                emailCC = CLIENT.projectmanager_email & ';ellen@iseusa.com;' & CLIENT.email;
+                emailCC = "bhause@iseusa.com;ellen@iseusa.com;" & vGetProjectManagerEmail & ";" & vGetFacilitatorEmail & ";" & CLIENT.email;
             } else { 
                 emailCC = CLIENT.projectmanager_email & ';' & CLIENT.email;
             }
-			
-			// Get PM Email
-			vGetProjectManagerEmail = APPLICATION.CFC.COMPANY.getCompanies(companyID=qStudentInfo.companyID).pm_email;
-			
-			if ( isValid("email",vGetProjectManagerEmail) ) {
-				emailCC = 	emailCC  & ';' & vGetProjectManagerEmail;	 
-			}
                
             // Display All Emails Involved
             emailList = CLIENT.finance_email & ';' & emailCC;
