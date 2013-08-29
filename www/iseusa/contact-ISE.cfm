@@ -21,7 +21,7 @@
     <p class="p1"><strong>Questions? Comments? </strong>ISE is happy to respond to any inquiries you may have. You may email us at <a href="mailto:contact@iseusa.com">contact@iseusa.com</a>. If you have questions regarding hosting, working as an area representative, or anything related to student exchange, we would be more than happy to answer your question!</p>
 
       <p class="p1"><strong>You can contact ISE by any of the following methods:<br /></strong></p>
-            <div style="width: 300px; float: right; margin-right: 60px; margin-top: 20px; background-color: #efefef; padding-bottom: 20px;">
+       <div style="width: 300px; float: right; margin-right: 60px; margin-top: 20px; background-color: #efefef; padding-bottom: 20px;">
               <p class="p1" style="text-align: center;"> If you are interested in hosting a student please contact us at <br />
         <strong>1-877-850-3043</strong></p></div>
       <p class="p1"><strong>Mailing Address:<br /></strong>
