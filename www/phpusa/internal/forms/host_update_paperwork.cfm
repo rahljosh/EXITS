@@ -19,6 +19,7 @@
         <cfquery datasource="#APPLICATION.DSN#">
         	UPDATE smg_hosts
             SET php_orientationSignOff = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.orientationSignOff#">
+            where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostid#">
         </cfquery>
         
         <!--- redirect back to the overview page --->
@@ -30,6 +31,7 @@
 <cfoutput>
 	<form id="paperworkForm" action="#cgi.script_name#?#cgi.query_string#" method="post">
     	<input type="hidden" name="submitted" value="1"/>
+        <input type ="hidden" name="hostid" value="#family_info.hostid#" />
     	<h2>
         	&nbsp;&nbsp;&nbsp;&nbsp;P a p e r w o r k
             <font size=-2>[<a href="?curdoc=host_fam_info&hostid=#client.hostid#">overview</a>]</font>
