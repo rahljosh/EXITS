@@ -12,6 +12,8 @@
 	<cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.fatherInputUsed" default="0">
     <cfparam name="FORM.motherInputUsed" default="0">
+    <cfparam name="FORM.offLineMotherdateAuthorized" default="">
+    <cfparam name="FORM.offLineFatherdateAuthorized" default="">
     
     <cfinclude template="../querys/family_info.cfm">
 
