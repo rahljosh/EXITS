@@ -104,7 +104,7 @@
   <li><a href="Press-page.cfm?page=/pressKit/Press-contacts" target="_self" class="whiteLinks">Press Contacts</a></li>
 <!---<li><a href="Press-page.cfm?page=/pressKit/media-sites" target="_self" class="whiteLinks">Media Sites</a></li>---->
 <li><a href="Press-page.cfm?page=/pressKit/fact-sheet" target="_self" class="whiteLinks">Fact Sheet</a></li>
-<li><a href="https://www.iseusa.com/student-project-help.cfm" target="_self" class="whiteLinks">Project HELP</a></li>
+<!---<li><a href="https://www.iseusa.com/student-project-help.cfm" target="_self" class="whiteLinks">Project HELP</a></li>---->
 <li><a href="Press-page.cfm?page=/pressKit/ISE-News" target="_self" class="whiteLinks">ISE News</a></li>
 <li>&nbsp;</li>
 </ul>
