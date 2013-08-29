@@ -95,17 +95,6 @@ a:active {
 	color: #165EA9;
 	text-decoration: none;
 }
-.oneColFixCtr #container #mainContent #bottomInfoLeft .middle .youTube {
-	float: none;
-	height: 135px;
-	width: 190px;
-	position: absolute;
-	z-index: 250;
-	margin-top: 190px;
-	margin-right: 0px;
-	margin-bottom: 0px;
-	margin-left: 285px;
-}
 -->
 </style>
 
@@ -120,6 +109,8 @@ $("#slidingDiv").animate({"height": "toggle"}, { duration: 1000 });
 </head>
 
 <body class="oneColFixCtr">
+      <!-- *** facebook code *** -->
+
 
 <cfinclude template="slidingLogin.cfm">
 
@@ -174,7 +165,7 @@ American students are invited to go outbound to learn and study in different cou
 
 Become a world leader of tomorrow by expanding your horizons, learning new languages, and being an ambassador for your country!  
          
- <!--<br />American students are invited to go outbound to learn and study in different countries.  ISE offers many different types of individualized programs to fit your personal needs. <br /><Br />Become a world leader of tomorrow by expanding your horizons, learning new languages, and being an ambassador for your country!--><p align="center"><a href="mailto:john@iseusa.com"><img src="images/contactUsButton.png" width="75px" border="0"></a></p></span>
+ <!--<br />American students are invited to go outbound to learn and study in different countries.  ISE offers many different types of individualized programs to fit your personal needs. <br /><Br />Become a world leader of tomorrow by expanding your horizons, learning new languages, and being an ambassador for your country!--><p align="center"><a href="mailto:contact@iseusa.com"><img src="images/contactUsButton.png" width="75px" border="0"></a></p></span>
             <span class="bigImage"><img src="images/subPages/subTravel.gif" /></span>
       	</div>
         
@@ -208,8 +199,13 @@ Become a world leader of tomorrow by expanding your horizons, learning new langu
     <!-- end lead -->
     </div>
 
+
+
+
 <!----End of Area that Mouse Overs will effect---->
-<div id="bottomInfoRight"><a href="host-a-foreign-exchange-student.cfm"><img src="images/hostAstudent.png" width="233" height="170" alt="host Student" border="0" /></a><a href="project-help.cfm"><img src="images/HELP.png" width="233" height="176" alt="HELP" border="0" /></a>
+<div id="bottomInfoRight">
+<!--- The Latest News --->
+<cfinclude template="latest_news/index.cfm">
 <table width="210" border="0" style="margin-left:0px;">
   <tr>
     <th height="63" align="left" scope="row">
@@ -225,10 +221,13 @@ Become a world leader of tomorrow by expanding your horizons, learning new langu
 <div id="bottomInfoLeft">
   <div class="top"><!-- end top --></div>
   <div class="middle">
- <!--- <div class="youTube"><object width="190" height="107"><param name="movie" value="//www.youtube-nocookie.com/v/U9D4yQms9Bs?version=3&amp;hl=en_US"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="//www.youtube-nocookie.com/v/U9D4yQms9Bs?version=3&amp;hl=en_US" type="application/x-shockwave-flash" width="190" height="107" allowscriptaccess="always" allowfullscreen="true"></embed></object></div>--->
   <a href="about-our-students.cfm"><img src="images/aboutStudents.gif" width="229" height="172" alt="About Students" border="0"/></a><a href="international-student-success-stories.cfm"><img src="images/studentSuccess.gif" width="240" height="172" alt="student Success" border="0"/></a><a href="be_a_ise_host_video.cfm" class="white"  rel="gb_page_center[600,400]"><img src="images/Be_a_host_button.png"alt="be a host family" border="0"/></a>
     
-    <a href="https://www.iseusa.com/Host_foreign_exchange_student_video.cfm"  rel="gb_page_center[600,400]"><img src="images/host_foreign_exchange_student.png" alt="be a ISE hero" width="236" height="171" border="0" /></a></div>
+    <a href="https://www.iseusa.com/Host_foreign_exchange_student_video.cfm"  rel="gb_page_center[600,400]"><img src="images/host_foreign_exchange_student.png" alt="be a ISE hero" width="236" height="171" border="0" /></a>
+    
+  <a href="host-a-foreign-exchange-student.cfm"><img src="images/hostAstudent.png" width="233" height="170" alt="host Student" border="0" /></a><a href="project-help.cfm"><img src="images/HELP.png" width="233" height="176" alt="HELP" border="0" /></a>  
+    
+    </div>
   <div class="bottom"></div>
 <!-- end bottomInfoLeft --></div>
 <h1>&nbsp;</h1>
