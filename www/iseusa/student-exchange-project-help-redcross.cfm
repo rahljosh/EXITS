@@ -28,18 +28,38 @@
     <div style="font-size: 90%; text-align: center; padding-bottom: 10px;"> <a href="student-project-help.cfm">Project H.E.L.P.</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="student-exchange-project-help-redcross.cfm">Red Cross</a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="student-exchange-project-help-ronaldMcDonald.cfm">Ronald McDonald House</a><!---&nbsp;&nbsp;|&nbsp;&nbsp;<a href="#">Habitat for Humanity</a>---></div>
     <div class="column1">
          <div style="float: right; width:100px; margin-top: 10px;"><img src="images/projectHelp/RedCross_button.jpg" width="101" height="131" alt="Redcross and Student Exchange" /></div>
-    <h1>RED CROSS</h1>
+    <h1>Volunteer with the American Red Cross</h1>
    
     <p>We have partnered up with the Red Cross to provide you great oppertunities to help out your community. </p>
 
 </div>
-  <div class="blueLine">3 Ways to Help Out the Red Cross</div>
+  <div class="blueLine">Three ways to work with the Red Cross:</div>
     <div class="clearfix"></div>
      <div class="column1">
-<h3>1) Join or start a local Red Cross Club</h3>
-<p><a href="https://volunteerconnection.redcross.org/?nd=intake&entry_point_id=1328&unit_id=236&logout=1" class="myButton">click here</a></p>
-<h3 style="padding-top: 15px;">2) Create a prepareness Kit for your local community</h3>
-  <p><a href="student-exchange-project-help-RCprepare.cfm" class="myButton">click here</a></p>
+<h3>1. Become a Volunteer</h3>
+<p>When you're a Red Cross volunteer, you're part of the world's largest humanitarian organization. You can experience the personal and professional benefits of channeling your energy to help improve the lives of people in your community and around the world. We have multiple volunteer opportunities across the U.S. to engage a new generation of young humanitarians. There are many areas in which you can lend your time and skills to the Red Cross.</p>
+<p><a href="http://www.redcross.org/support/volunteer/opportunities#step1">Click here</a> to find volunteer opportunities in your local community. </p>
+<p><strong>Volunteers can:</strong></p>
+<ul>
+  <li>Get trained to become a community preparedness instructor and deliver presentations to younger students and your local community</li>
+  <li>Donate blood</li>
+  <li>Host a blood drive at your school or in your community</li>
+  <li>Volunteer to assist at a blood drive as a greeter or escort, or to serve refreshments</li>
+  <li>Get trained as a disaster responder and join a Disaster Action Team (DAT)</li>
+  <li>Help clean and maintain Emergency Response Vehicles (ERVs)</li>
+  <li>Offer translator services in the event of a disaster</li>
+  <li>Volunteer at a military or veteran&rsquo;s hospital—serve as a greeter, work in a clinic or assist parents getting to their appointments</li>
+  <li>Raise awareness about International Humanitarian Law</li>
+  <li>Raise funds for the Measles &amp; Rubella Initiative online or in your community </li>
+  <li>Promote Restoring Family Links (RFL) initiatives</li>
+  <li>And much more</li>
+</ul>
+<h3 style="padding-top: 15px;">2. Start or Join a Red Cross Club</h3>
+<p>Put your talent, skills and passion to work by participating in a Red Cross Club, or starting a club if there isn't one in your school or community. You will have scores of opportunities to serve your neighbors, connect with the largest humanitarian network in the world and build life-long friendships. </p>
+<ul type="disc">
+  <li><a href="https://volunteerconnection.redcross.org/?nd=club_listing">Find a Red Cross Club</a></li>
+  <li><a href="http://redcrossyouth.org/high-school/how-to-start-a-red-cross-club/)http:/redcrossyouth.org/high-school/how-to-start-a-red-cross-club/">Steps to starting a Red Cross Club</a></li>
+</ul>
  <!---  <table width="670" border="0" cellpadding="8">
   <tr align="center" valign="middle">
     <td width="220" height="66"><p style="text-align:center;">How to make a preparedness Kit</p>
@@ -50,39 +70,21 @@
     <p style="text-align:center;"><a href="?" class="myButton">click here</a></p></td>
   </tr>
 </table>--->
-<h3 style="padding-top: 15px;">3) Participate in local opportunities throughout the year</h3>
- </div>
+<h3 style="padding-top: 15px;">3. Activity Guides</h3>
+<p>The Red Cross has developed fun activity guides for youths to use to help spread the word about the Red Cross and its mission to prevent and alleviate human suffering in the face of emergencies by mobilizing the power of volunteers and the generosity of donors. Activity Guides can be used by Red Cross Clubs, youth groups or classes who want to organize Red Cross mission-related activities.</p>
+<p>These Activity Guides will help you lead and implement Red Cross projects. No matter what activity you choose, get in touch with your <a href="http://www.redcross.org/find-your-local-chapter">local Red Cross unit</a>. The Red Cross can provide you with helpful resources and guidelines to make your activity a success!</p>
+You can find more activities to help your community get prepared on <a href="http://redcrossyouth.org/">RedCrossYouth.org</a>.
+
+     </div>
   <div class="clearfixPH">&nbsp;</div>
-  <div class="blueLine">About the Red Cross</div>
+  <div class="blueLine">About the American Red Cross</div>
     <div class="clearfixPH"></div>
   
 <div class="column1">
-<h3>Mission Statement</h3>
-
-<p>The American Red Cross prevents and alleviates human suffering in the face of 
-emergencies by mobilizing the power of volunteers and the generosity of donors.</p>
-<div class="hrLine"></div>
-<h3>Brief History</h3>
-<ul>
-<li>Clara Barton and a circle of her acquaintances founded the American Red Cross in Washington, D.C. on May 21, 1881</li>
-<li>The Red Cross received our first congressional charter in 1900 and a second in 1905</li>
-<li>Prior to the First World War, the Red Cross introduced its first aid, water safety, and public health nursing programs.</li>
-<li>After World War II, the Red Cross introduced the first nationwide civilian blood program that now supplies more than 40 percent of the blood and blood products in this country.</li>
-</ul>
-<div class="hrLine"></div>
-<p>Today, the supporters, volunteers and employees of the American Red Cross provide compassionate care in five critical areas:</p>
-<table width="650" border="0">
-  <tr>
-    <td><ul>
-    <li>People affected by disasters in America</li>
-      <li>Support for members of the military and their families</li>
-      <li>Blood collection, processing and distribution</li>
-      <li>Health and safety education and training</li>
-      <li>International relief and development</li></ul></td>
-    <td><p style="text-align:center;"><img src="images/projectHelp/FULLHISTORY.jpg" width="150" height="98" /></p>
-      <p style="text-align:center;"><a href="http://www.redcross.org/about-us/history" class="myButton">click here</a></p></td>
-  </tr>
-</table>
+  <p>The humanitarian mission of the American Red Cross connects us to people and communities across the nation and around the world. The common bonds of humanity and compassion unite us together, not just in the face of emergencies and disasters, but in helping our neighbors every day.<strong> </strong></p>
+  <p>Since being founded by Clara Barton in 1881, the Red Cross has been a consistent lifeline for people when they need us the most. The depth and breadth of our services&#8212;whenever and wherever they're called for&#8212;is unmatched by any organization in the world.</p>
+  <p>These extraordinary efforts are made possible by our supporters, donors and volunteers who roll up their sleeves and open their hearts to help their neighbors&#8212;by giving time, money and blood, or by taking a course to learn CPR, first aid or other essential skills. Our volunteers and contributors make a difference in millions of lives each year.</p>
+  <p>Click here to read more about the <a href="http://www.redcross.org/about-us/history">history of the Red Cross</a>. </p>
 </div>
  <div class="clearfixPH"></div>
 
