@@ -28,6 +28,8 @@
 	<cfparam name="FORM.zipCode" default="">
 	<cfparam name="FORM.phone" default="">
 	<cfparam name="FORM.email" default="">
+    <cfparam name="FORM.contactWithRep" default="0">
+    <cfparam name="FORM.contactWithRepName" default="">
 	<cfparam name="FORM.hearAboutUs" default="">
 	<cfparam name="FORM.hearAboutUsDetail" default="">
     <cfparam name="FORM.isListSubscriber" default="0">
@@ -166,10 +168,10 @@
     
     <cfif FORM.type EQ 'newAccount'>
   
-	<cfquery name="checkEmail" datasource="MySQL">
-    select *
-    from smg_host_lead
-    where email = "#form.email#"
+	<cfquery name="checkEmail" datasource="#APPLICATION.DSN.Source#">
+        SELECT *
+        FROM smg_host_lead
+        WHERE email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.email#">
     </cfquery>
 
     <cfif checkEmail.recordcount gt 0>
@@ -297,6 +299,8 @@
                         phone,
                         email,
                         password,
+                        contactWithRep,
+                        contactWithRepName,
                         hearAboutUs,
                         hearAboutUsDetail,
                         isListSubscriber,
@@ -318,6 +322,8 @@
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#setPassword#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.contactWithRep)#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.contactWithRepName#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hearAboutUs#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hearAboutUsDetail#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.isListSubscriber#">,
@@ -382,20 +388,12 @@
 		// displayForgotPass();
 	});
 
-	// Display Extra Field if option selected is ISE Rep or Other
+	// Display Extra Field if option selected is Other
 	var displayExtraField = function() { 
 		
 		selectedOption = $("#hearAboutUs").val();
 		
-		// ISE Representative Option
-		if( selectedOption == 'ISE Representative' ) {
-			$("#labelHearAboutUs").html("ISE representative name <span class='requiredField'>*</span>");
-			$("#spanHearAboutUs").html("If you do not remember, please enter unknown");
-			$("#divExtraField").fadeIn("slow");
-			$("#hearAboutUsDetail").focus();
-		// Other Option			
-		} else if (selectedOption == 'Other') {
-
+		if (selectedOption == 'Other') {
 			$("#labelHearAboutUs").html("Please specify <span class='requiredField'>*</span>");
 			$("#spanHearAboutUs").html("");
 			$("#divExtraField").fadeIn("slow");
@@ -404,6 +402,20 @@
 			$("#divExtraField").fadeOut("slow");
 		}
 	
+	}
+	
+	// Display Extra Field if they are in contact with an ISE Rep
+	var displayRepField = function(selectedOption) {
+		// ISE Representative Option
+		if( selectedOption == 1 ) {
+			$("#labelContactWithRepName").html("ISE representative name <span class='requiredField'>*</span>");
+			$("#spanContactWithRepName").html("If you do not remember, please enter unknown");
+			$("#divContactWithRepNameField").fadeIn("slow");
+			$("#contactWithRepName").focus();
+		// Other Option			
+		} else {
+			$("#divContactWithRepNameField").fadeOut("slow");
+		}	
 	}
 
 	// Slide down form field div
@@ -473,20 +485,7 @@
                             	</em>
                             </p>
 
-                            
-
-                            
-                                 
-
-                            
-                          
-                       
-    
-                     
-                            
-                          
-                          
-                        
+                             
                     </div><!--end loginMid-->
         
                 <div class="loginBot"></div>
@@ -592,20 +591,32 @@
                                 <label for="email" class="HFform_text">Email <span class="requiredField">*</span></label>
                                 <cfinput type="text" name="email" id="email" value="#FORM.email#" maxlength="100" class="largeInput" required="yes" message="Please enter a valid email address." validateat="onSubmit" validate="email" />
                                 
-                                <label for="hearAboutUs" class="HFform_text">How did you hear about us <span class="requiredField">*</span></label>
+                                <label for="contactWithRep" class="HFform_text">Are you in contact with an<br/>ISE Representative? <span class="requiredField">*</span></label>
+                                <cfselect name="contactWithRep" id="contactWithRep" class="largeInput" required="yes" onChange="displayRepField(this.value);">
+                                    <option value="0" <cfif FORM.contactWithRep EQ 0>selected="selected"</cfif>>No</option>
+                                    <option value="1" <cfif FORM.contactWithRep EQ 1>selected="selected"</cfif>>Yes</option>
+                                </cfselect>
+                                
+                                <div id="divContactWithRepNameField" class="hiddenDiv">
+                                	<label for="contactWithRepName" id="labelContactWithRepName" class="inputLabel"></label>
+                                    <span id="spanContactWithRepName" class="HFform_text"></span>
+                                    <cfinput type="text" name="contactWithRepName" id="contactWithRepName" value="#FORM.contactWithRepName#" maxlength="100" class="largeInput" />
+                                </div>
+                                
+                                <label for="hearAboutUs" class="HFform_text">How did you hear about us? <span class="requiredField">*</span></label>
                                 <cfselect name="hearAboutUs" id="hearAboutUs" class="largeInput" required="yes" message="Please tell us how you hear about ISE." onChange="displayExtraField(this.value);"> 			
                                     <option value=""></option>
                                     <cfloop index="i" from="1" to="#ArrayLen(CONSTANTS.hearAboutUs)#" step="1">
                                         <option value="#CONSTANTS.hearAboutUs[i]#" <cfif CONSTANTS.hearAboutUs[i] EQ FORM.hearAboutUs> selected="selected" </cfif> >#CONSTANTS.hearAboutUs[i]#</option>
                                     </cfloop>
                                 </cfselect>
-                                        
+                                
                                 <div id="divExtraField" class="hiddenDiv">
                                     <label for="hearAboutUsDetail" id="labelHearAboutUs" class="inputLabel"></label>
                                     <span id="spanHearAboutUs" class="HFform_text"></span>
                                     <cfinput type="text" name="hearAboutUsDetail" id="hearAboutUsDetail" value="#FORM.hearAboutUsDetail#" maxlength="100" class="largeInput" />
                                 </div>
-                                                    
+                                          
                                 <div style="clear:both;">&nbsp;</div>
                                 
                                 <!--- Captcha --->

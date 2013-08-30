@@ -165,16 +165,15 @@
 		Constants = APPLICATION.Constants;
 		
 		// Set up constant for host lead application
-		Constants.hearAboutUs = ArrayNew(1);		
-		Constants.hearAboutUs[1] = "Google Search";
-		Constants.hearAboutUs[2] = "Printed Material";
-		Constants.hearAboutUs[3] = "Friend / Acquaintance";
-		Constants.hearAboutUs[4] = "ISE Representative";
-		Constants.hearAboutUs[5] = "Church Group";
-		Constants.hearAboutUs[6] = "Other";
-		Constants.hearAboutUs[7] = "Past Host Family";
-		Constants.hearAboutUs[8] = "Post Card";
-		// ArrayAppend(Constants.hearAboutUs, "Other");
+		Constants.hearAboutUs = ArrayNew(1);
+		Constants.hearAboutUs[1] = "Church Group";
+		Constants.hearAboutUs[2] = "Friend / Acquaintance";
+		Constants.hearAboutUs[3] = "Facebook";
+		Constants.hearAboutUs[4] = "Google Search";
+		Constants.hearAboutUs[5] = "Yahoo Search";
+		Constants.hearAboutUs[6] = "Past Host Family";
+		Constants.hearAboutUs[7] = "Printed Material";
+		Constants.hearAboutUs[8] = "Other";
 
 
 		/*******************************************
