@@ -1,4 +1,9 @@
 <cfoutput>
+<!----
+<Cfif cgi.REMOTE_ADDR is '184.155.135.147'>
+	<cfdump var="#qGetStudentWithMissingCompliance#">
+</Cfif>
+---->
 <cfif qGetStudentWithMissingCompliance.recordcount eq 0>
 	<em> There are no students with compliance issues.</em>
 <cfelse>
