@@ -1140,6 +1140,7 @@
                     hrqt.facilitatorStatus,
                     hrqt.facilitatorDateStatus,
                     hrqt.facilitatorNotes, 
+                    hrqt.interviewer,
                     hrqt.dateInterview, 
                     CAST(CONCAT(u.firstName, ' ', u.lastName,  ' (##', u.userID, ')' ) AS CHAR) AS submittedBy  
                 FROM 
@@ -1147,34 +1148,35 @@
                 LEFT OUTER JOIN
                 	smg_host_reference_tracking hrqt ON hrqt.fk_referencesID = sfr.refID
 
-					<!--- Get SeasonID --->
+					<!--- Get SeasonID
                     <cfif LEN(ARGUMENTS.seasonID)>
                         AND
                             hrqt.season = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
                     </cfif>
-                    
+                     --->
                 LEFT OUTER JOIN
                 	smg_users u ON u.userID = hrqt.interviewer
                 WHERE
+                
                 	sfr.referenceFor = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
 				
-                <!--- Get RefID --->
+                <!--- Get RefID--->
                 <cfif LEN(ARGUMENTS.refID)>
                 	AND
                     	sfr.refID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.refID)#">
                 </cfif>
-                
+                 
 				<!--- Get Approved References for current User --->
                 <cfswitch expression="#ARGUMENTS.getCurrentUserApprovedReferences#">
                 	
-                    <!--- Office --->
+                    <!--- Office  --->
                     <cfcase value="1,2,3,4">
                     	AND	
                         	hrqt.facilitatorStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="approved">
                         AND
                             hrqt.facilitatorDateStatus IS NOT NULL
                     </cfcase>
-                    
+                   
                     <!--- Regional Manager --->
                     <cfcase value="5">
                     	AND	
@@ -1300,8 +1302,8 @@
 					smg_host_app_history h ON h.itemID = ap.ID                  
                     AND
                         h.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
-                    AND
-                        h.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
+                   <!---AND
+                        h.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">---->
                 WHERE
                 	1 = 1
                       
