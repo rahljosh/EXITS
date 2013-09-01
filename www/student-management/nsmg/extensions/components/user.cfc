@@ -307,7 +307,7 @@
 			//SESSION.USER.defaultRegion = "";
 			//SESSION.USER.userType = "";
 			
-			SESSION.USER.paperworkSkipAllowed = false;
+			SESSION.USER.paperworkSkipAllowed = true;
 			
 			// Path Information - set up upload files path
 			SESSION.USER.myUploadFolder = APPLICATION.PATH.users & ARGUMENTS.userID & "/";
