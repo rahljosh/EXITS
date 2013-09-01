@@ -275,13 +275,15 @@
                         #qGetHostInfo.city#, #qGetHostInfo.state# #qGetHostInfo.zip# <br />
                         
 					<strong>Interviewer:</strong> 
-                    <cfif LEN(qGetReferenceInfo.submittedBy)>
+                 
+              
                     	#qGetReferenceInfo.submittedBy# <br />
+                        <cfif LEN(qGetReferenceInfo.submittedBy)>
                     <cfelse>
                         #qGetCurrentUserInfo.firstName# #qGetCurrentUserInfo.lastName# (###qGetCurrentUserInfo.userID#) <br />
                     </cfif>
               	</p>
-                
+               
                 <h1>Reference Information</h1>
 
                 <p>
