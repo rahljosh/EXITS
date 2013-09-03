@@ -440,6 +440,7 @@ ORDER BY businessname
                             <option value='cash'><font size=-1>Cash</font></option>
                             <option value='money order'><font size=-1>Money Order</font></option>
                             <option value='money order'><font size=-1>Chase QuickPay</font></option>
+                            <option value='account transfer'><font size=-1>account transfer</font></option>
                         </cfselect>
                     </td>
                 </tr>
