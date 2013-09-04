@@ -294,7 +294,7 @@
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Report By: <span class="required">*</span></td>
                     <td>
-                        <select name="reportByStudent" id="reportByStudent" class="xLargeField">
+                        <select name="reportBy" id="reportBy" class="xLargeField">
                             <option value="placeRepID">Placing Representative</option>
                             <option value="areaRepID">Supervising Representative</option>
                         </select>
@@ -483,7 +483,7 @@
                 <!--- Include Report Header --->   
                 <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
                     <tr>
-                        <th>#vReportTitle#</th>            
+                        <th>#vReportTitle# #FORM.reportBy#</th>            
                     </tr>
                     <tr>
                         <td class="center">
