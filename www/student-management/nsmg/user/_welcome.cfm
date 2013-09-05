@@ -438,7 +438,7 @@
                         </table>                                                
                         
                         <div align="center">
-                        	<p>Click Below to view trainigs available</p>
+                        	<p>Click Below to view trainings available</p>
                             
                             <a href="index.cfm?curdoc=calendar/index">
                                 <cfif NOT APPLICATION.CFC.USER.getUserSessionPaperwork().isTrainingCompleted>
