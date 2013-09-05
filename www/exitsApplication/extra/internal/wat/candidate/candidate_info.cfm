@@ -1227,7 +1227,7 @@
                                                 <table width="100%" cellpadding="4" cellspacing="0" border="0">
                                                 	<tr>
                                                 		<td width="35%" class="style1" align="right">
-                                                            <strong>Other Document Received:</strong>
+                                                            <strong>Other Documents Received:</strong>
                                             			</td>
                                                         <td width="65%" class="style1" align="left">
                                                         	<span class="readOnly">#qGetCandidate.wat_doc_other_received#</span>
@@ -1249,7 +1249,7 @@
                                                 <table width="100%" cellpadding="4" cellspacing="0" border="0">
                                                     <tr>
                                                         <td width="35%" class="style1" align="right">
-                                                            <strong>Other:</strong>
+                                                            <strong>Other Documents Missing:</strong>
                                             			</td>
                                                         <td width="65%" class="style1" align="left">
                                                         	<span class="readOnly">#qGetCandidate.wat_doc_other#</span> 
