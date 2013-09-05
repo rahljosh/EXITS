@@ -678,25 +678,38 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                         
 					<!--- Bonuses for the Field --->    
                     <cfelse>
-                   <cfif #now()# gt #DateAdd('m','-1','#APPLICATION.CFC.USER.getUserSessionPaperwork().dateDOSTestExpired#')#>
-					<cfset daysToExpire = #dateDiff('d','#now()#','#APPLICATION.CFC.USER.getUserSessionPaperwork().dateDOSTestExpired#')#>
-                     <div class="rdtop"> 
-                            <span class="rdtitle">DOS Certification Expiring</span> 
-                        </div> <!-- end top --> 
-                        
-                        <div class="rdbox" style="background-color: ##fef3b9;">
-                        <div align="center">
-                            Your DOS Certification expires in #daysToExpire# day<cfif daysToExpire gt 1>s</cfif>.  You can re-certify by clicking the link below.<br /><br />
-                           <a href="user/index.cfm?uniqueID=#CLIENT.uniqueID#&action=trainCasterLogin" target="_blank" title="Click Here to Take the DOS Test">
-                                 <!--- <img src="pics/buttons/needInformation.png" border="0" />  --->
-                               <img src="pics/buttons/DOScertification.png" border="0" title="Click Here to Take the DOS Certification Test" />
-                            </a>
-                           </div>
-                        </div>
-                        
-                        <div class="rdbottom" style="background-color: ##fef3b9;"></div> <!-- end bottom --> 
-                    <br /><br />
-                    </cfif>
+                    	<cfif isDate('#APPLICATION.CFC.USER.getUserSessionPaperwork().dateDOSTestExpired#')>
+                   			<cfif #now()# gt #DateAdd('m','-1','#APPLICATION.CFC.USER.getUserSessionPaperwork().dateDOSTestExpired#')#>
+								<cfset daysToExpire = #dateDiff('d','#now()#','#APPLICATION.CFC.USER.getUserSessionPaperwork().dateDOSTestExpired#')#>
+                     			<div class="rdtop"> 
+                            		<span class="rdtitle">DOS Certification Expiring</span> 
+                        		</div> <!-- end top --> 
+                        		<div class="rdbox" style="background-color: ##fef3b9;">
+                        			<div align="center">
+                            			Your DOS Certification expires in #daysToExpire# day<cfif daysToExpire gt 1>s</cfif>.  You can re-certify by clicking the link below.<br /><br />
+                           				<a href="user/index.cfm?uniqueID=#CLIENT.uniqueID#&action=trainCasterLogin" target="_blank" title="Click Here to Take the DOS Test">
+                                 			<img src="pics/buttons/DOScertification.png" border="0" title="Click Here to Take the DOS Certification Test" />
+                            			</a>
+                           			</div>
+                        		</div>
+                        		<div class="rdbottom" style="background-color: ##fef3b9;"></div> <!-- end bottom --> 
+                    			<br /><br />
+                    		</cfif>
+                      	<cfelse>
+                        	<div class="rdtop"> 
+                                <span class="rdtitle">DOS Certification Not Completed</span> 
+                            </div> <!-- end top --> 
+                            <div class="rdbox" style="background-color: ##fef3b9;">
+                                <div align="center">
+                                    Your DOS Certification has not been completed.<br /><br />
+                                    <a href="user/index.cfm?uniqueID=#CLIENT.uniqueID#&action=trainCasterLogin" target="_blank" title="Click Here to Take the DOS Test">
+                                        <img src="pics/buttons/DOScertification.png" border="0" title="Click Here to Take the DOS Certification Test" />
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="rdbottom" style="background-color: ##fef3b9;"></div> <!-- end bottom --> 
+                            <br /><br />
+                      	</cfif>
                     
                         <div class="rdtop"> 
                             <span class="rdtitle">Bonuses</span> 
