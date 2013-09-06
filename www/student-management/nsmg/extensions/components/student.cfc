@@ -3225,7 +3225,7 @@
 			var vReturnMessage = "";
 			
 			// Get Student Spoken Languages from Student Applicaton (page 3)
-			qGetStudentSpokenLanguages = getStudentSpokenLanguages(studentID=ARGUMENTS.studentID);
+			qGetStudentSpokenLanguages = getStudentSpokenLanguages(studentID=ARGUMENTS.studentID, isPrimary=1);
 			
 			// Query did not return results, Get Student Spoken Languages Based on Country
 			if ( NOT VAL(qGetStudentSpokenLanguages.recordCount) ) {
@@ -3238,47 +3238,12 @@
         
         <cfif LEN(vStudentPrimaryLanguageIDList)>
         
-            <cfquery 
-                name="qCheckDoublePlacementPrimaryLanguage"
-                datasource="#APPLICATION.DSN#">
-                    SELECT
-                    	languageID
-                        name
-                    FROM
-                    (
-                    	<!--- Language based on Country --->
-                        SELECT 
-                            clJN.languageID,
-                            alk.name
-                        FROM
-                            smg_countryLanguageJN clJN
-                        INNER JOIN
-                            applicationLookUp alk ON alk.fieldID = clJN.languageID
-                                AND
-                                    fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="language">
-                        INNER JOIN	
-                             smg_students s ON clJN.countryID = s.countryResident
-                             AND
-                                s.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.doublePlacementID)#">      
-                        
-                        UNION
-                        
-                        <!--- Language based on Student Application --->
-                        SELECT
-                            l.languageID,
-                            alk.name
-                        FROM
-                            smg_student_app_language l
-                        LEFT OUTER JOIN
-                            applicationLookUp alk ON alk.fieldID = l.languageID
-                            AND
-                                alk.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="language">
-                        WHERE
-                            l.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.doublePlacementID)#"> 
-                    ) AS T
-                    
-                    WHERE
-                        languageID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vStudentPrimaryLanguageIDList#" list="yes"> )                                 
+            <cfquery name="qCheckDoublePlacementPrimaryLanguage" datasource="#APPLICATION.DSN#">
+   				SELECT *
+				FROM smg_student_app_language
+				WHERE isPrimary = 1
+                AND studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.doublePlacementID)#">
+				AND languageID IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#vStudentPrimaryLanguageIDList#"> )                                
             </cfquery> 
 		
         	<cfscript>
