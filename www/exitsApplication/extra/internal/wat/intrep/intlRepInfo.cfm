@@ -59,16 +59,21 @@
 	<cfparam name="FORM.password" default="">
     <!--- Documents Control --->
 	<cfparam name="FORM.watDocBusinessLicense" default="0">
+    <cfparam name="FORM.watDocBusinessLicenseExpiration" default="">
 	<cfparam name="FORM.watDocEnglishBusinessLicense" default="0">
-    <cfparam name="FORM.watDocEnglishBusinessLicenseExpiration" default="0">
+    <cfparam name="FORM.watDocEnglishBusinessLicenseExpiration" default="">
     <cfparam name="FORM.watDocNotarizedFinancialStatementExpiration" default="">
     <cfparam name="FORM.watDocNotarizedFinancialStatementExpirationCB" default="FALSE">
     <cfparam name="FORM.watDocBankruptcyDisclosureExpiration" default="">
     <cfparam name="FORM.watDocBankruptcyDisclosureExpirationCB" default="FALSE">
 	<cfparam name="FORM.watDocWrittenReference1" default="0">
+    <cfparam name="FORM.watDocWrittenReference1Expiration" default="">
 	<cfparam name="FORM.watDocWrittenReference2" default="0">
+    <cfparam name="FORM.watDocWrittenReference2Expiration" default="">
 	<cfparam name="FORM.watDocWrittenReference3" default="0">
+	<cfparam name="FORM.watDocWrittenReference3Expiration" default="">
 	<cfparam name="FORM.watDocPreviousExperience" default="0">
+    <cfparam name="FORM.watDocPreviousExperienceExpiration" default="">
     <cfparam name="FORM.watDocOriginalCBC" default="0">
     <cfparam name="FORM.watDocEnglishCBC" default="0">
     <cfparam name="FORM.watDocOriginalAdvertisingMaterialExpiration" default="">
@@ -284,6 +289,7 @@
                         password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.password#">,
                         <!--- Documents Control --->
                         watDocBusinessLicense = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocBusinessLicense#">,
+                        watDocBusinessLicenseExpiration = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDocBusinessLicenseExpiration#">,
                         watDocEnglishBusinessLicense = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocEnglishBusinessLicense#">,
                         watDocEnglishBusinessLicenseExpiration = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDocEnglishBusinessLicenseExpiration#">,
                         watDocNotarizedFinancialStatementExpiration = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDocNotarizedFinancialStatementExpiration#">,
@@ -291,9 +297,13 @@
                         watDocOriginalCBCExpiration = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDocOriginalCBCExpiration#">,
                         watDocEnglishCBCExpiration = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDocEnglishCBCExpiration#">,
                         watDocWrittenReference1 = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocWrittenReference1#">,
+                        watDocWrittenReference1Expiration = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDocWrittenReference1Expiration#">,
                         watDocWrittenReference2 = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocWrittenReference2#">,
+                        watDocWrittenReference2Expiration = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDocWrittenReference2Expiration#">,
                         watDocWrittenReference3 = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocWrittenReference3#">,
+                        watDocWrittenReference3Expiration = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDocWrittenReference3Expiration#">,
                         watDocPreviousExperience = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocPreviousExperience#">,
+                        watDocPreviousExperienceExpiration = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDocPreviousExperienceExpiration#">,
                         watDocOriginalCBC = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocOriginalCBC#">,
                         watDocEnglishCBC = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocEnglishCBC#">,
                         watDocOriginalAdvertisingMaterialExpiration = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDocOriginalAdvertisingMaterialExpiration#">,
@@ -356,14 +366,19 @@
                         password,
                         <!--- Documents Control --->
                         watDocBusinessLicense,
+                        watDocBusinessLicenseExpiration,
                         watDocEnglishBusinessLicense,
                         watDocEnglishBusinessLicenseExpiration,
                         watDocNotarizedFinancialStatementExpiration,
                         watDocBankruptcyDisclosureExpiration,
                         watDocWrittenReference1,
+                        watDocWrittenReference1Expiration,
                         watDocWrittenReference2,
+                        watDocWrittenReference2Expiration,
                         watDocWrittenReference3,
+                        watDocWrittenReference3Expiration,
                         watDocPreviousExperience,
+                        watDocPreviousExperienceExpiration,
                         watDocOriginalCBC,
                         watDocEnglishCBC,
                         watDocOriginalCBCExpiration,
@@ -421,14 +436,19 @@
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.password#">,
                         <!--- Documents Control --->
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocBusinessLicense#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDocBusinessLicenseExpiration#">,
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocEnglishBusinessLicense#">,
                         <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDocEnglishBusinessLicenseExpiration#">,
                         <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDocNotarizedFinancialStatementExpiration#">,
                         <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDocBankruptcyDisclosureExpiration#">,
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocWrittenReference1#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDocWrittenReference1Expiration#">,
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocWrittenReference2#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDocWrittenReference2Expiration#">,
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocWrittenReference3#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDocWrittenReference3Expiration#">,
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocPreviousExperience#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDocPreviousExperienceExpiration#">,
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocOriginalCBC#">,
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocEnglishCBC#">,
                         <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDocOriginalCBCExpiration#">,
@@ -518,14 +538,19 @@
 				FORM.password = qGetIntlRepInfo.password;
 				// Documents Control
 				FORM.watDocBusinessLicense = qGetIntlRepInfo.watDocBusinessLicense;
+				FORM.watDocBusinessLicenseExpiration = qGetIntlRepInfo.watDocBusinessLicenseExpiration;
 				FORM.watDocEnglishBusinessLicense = qGetIntlRepInfo.watDocEnglishBusinessLicense;
 				FORM.watDocEnglishBusinessLicenseExpiration = qGetIntlRepInfo.watDocEnglishBusinessLicenseExpiration;
 				FORM.watDocNotarizedFinancialStatementExpiration = qGetIntlRepInfo.watDocNotarizedFinancialStatementExpiration;
 				FORM.watDocBankruptcyDisclosureExpiration = qGetIntlRepInfo.watDocBankruptcyDisclosureExpiration;
 				FORM.watDocWrittenReference1 = qGetIntlRepInfo.watDocWrittenReference1;
+				FORM.watDocWrittenReference1Expiration = qGetIntlRepInfo.watDocWrittenReference1Expiration;
 				FORM.watDocWrittenReference2 = qGetIntlRepInfo.watDocWrittenReference2;
+				FORM.watDocWrittenReference2Expiration = qGetIntlRepInfo.watDocWrittenReference2Expiration;
 				FORM.watDocWrittenReference3 = qGetIntlRepInfo.watDocWrittenReference3;
+				FORM.watDocWrittenReference3Expiration = qGetIntlRepInfo.watDocWrittenReference3Expiration;
 				FORM.watDocPreviousExperience = qGetIntlRepInfo.watDocPreviousExperience;
+				FORM.watDocPreviousExperienceExpiration = qGetIntlRepInfo.watDocPreviousExperienceExpiration;
 				FORM.watDocOriginalCBC = qGetIntlRepInfo.watDocOriginalCBC;
 				FORM.watDocEnglishCBC = qGetIntlRepInfo.watDocEnglishCBC;
 				FORM.watDocOriginalCBCExpiration = qGetIntlRepInfo.watDocOriginalCBCExpiration;
@@ -887,6 +912,17 @@
                                             </td>
                                             <td width="95%" class="style1">
                                                 <label for="watDocBusinessLicense">Original business license</label>
+                                                <br />&nbsp;&nbsp;Expiration Date: 
+                                                <span class="readOnly"
+                                                    <cfif isDate(FORM.watDocBusinessLicenseExpiration)>
+                                                        <cfif DateCompare(FORM.watDocBusinessLicenseExpiration, NOW(), "d") EQ -1> 
+                                                            style="color:red;"
+                                                        </cfif>
+                                                    </cfif>
+                                                >
+                                                    #DateFormat(FORM.watDocBusinessLicenseExpiration, "mm/dd/yyyy")#
+                                                </span>
+                                                <input type="text" name="watDocBusinessLicenseExpiration" id="watDocBusinessLicenseExpiration" value="#DateFormat(FORM.watDocBusinessLicenseExpiration, 'mm/dd/yyyy')#" class="datePicker style1 editPage" />
                                             </td>
                                         </tr>	
                                         <tr>
@@ -894,19 +930,19 @@
                                             	<input type="checkbox" name="watDocEnglishBusinessLicense" id="watDocEnglishBusinessLicense" value="1" class="formField" disabled onclick="changeEnglishBusinessLicenseExpirationDate()" <cfif VAL(FORM.watDocEnglishBusinessLicense)> checked </cfif> >
                                             </td>
                                             <td width="95%" class="style1">
-                                                <label for="watDocEnglishBusinessLicense">English business license </label><br />
-                                              		&nbsp;&nbsp;Expiration Date: 
-                                                    <span class="readOnly"
-                                                    	<cfif isDate(FORM.watDocEnglishBusinessLicenseExpiration)>
-															<cfif DateCompare(FORM.watDocEnglishBusinessLicenseExpiration, NOW(), "d") EQ -1> 
-                                                                style="color:red;"
-                                                            </cfif>
-                                                      	</cfif>
-                                                  	>
-                                                    	#DateFormat(FORM.watDocEnglishBusinessLicenseExpiration, "mm/dd/yyyy")#
-                                                 	</span>
-                                                    <input type="text" name="watDocEnglishBusinessLicenseExpiration" id="watDocEnglishBusinessLicenseExpiration" value="#DateFormat(FORM.watDocEnglishBusinessLicenseExpiration, 'mm/dd/yyyy')#" class="datePicker style1 editPage" />
-                                                    <input type="hidden" id="hiddenEnglishBusinessLicenseExpiration" />
+                                                <label for="watDocEnglishBusinessLicense">English business license </label>
+                                                <br />&nbsp;&nbsp;Expiration Date: 
+                                                <span class="readOnly"
+                                                    <cfif isDate(FORM.watDocEnglishBusinessLicenseExpiration)>
+                                                        <cfif DateCompare(FORM.watDocEnglishBusinessLicenseExpiration, NOW(), "d") EQ -1> 
+                                                            style="color:red;"
+                                                        </cfif>
+                                                    </cfif>
+                                                >
+                                                    #DateFormat(FORM.watDocEnglishBusinessLicenseExpiration, "mm/dd/yyyy")#
+                                                </span>
+                                                <input type="text" name="watDocEnglishBusinessLicenseExpiration" id="watDocEnglishBusinessLicenseExpiration" value="#DateFormat(FORM.watDocEnglishBusinessLicenseExpiration, 'mm/dd/yyyy')#" class="datePicker style1 editPage" />
+                                                <input type="hidden" id="hiddenEnglishBusinessLicenseExpiration" />
                                             </td>
                                         </tr>
                                         <tr>
@@ -983,6 +1019,17 @@
                                             </td>
                                             <td class="style1">
                                                 <label for="watDocWrittenReference1">Written references from current business associates or partner organizations</label>
+                                                <br />&nbsp;&nbsp;Expiration Date: 
+                                                <span class="readOnly"
+                                                    <cfif isDate(FORM.watDocWrittenReference1Expiration)>
+                                                        <cfif DateCompare(FORM.watDocWrittenReference1Expiration, NOW(), "d") EQ -1> 
+                                                            style="color:red;"
+                                                        </cfif>
+                                                    </cfif>
+                                                >
+                                                    #DateFormat(FORM.watDocWrittenReference1Expiration, "mm/dd/yyyy")#
+                                                </span>
+                                                <input type="text" name="watDocWrittenReference1Expiration" id="watDocWrittenReference1Expiration" value="#DateFormat(FORM.watDocWrittenReference1Expiration, 'mm/dd/yyyy')#" class="datePicker style1 editPage" />
                                             </td>
                                         </tr>	
                                         <tr>
@@ -991,6 +1038,17 @@
                                             </td>
                                             <td class="style1">
                                                 <label for="watDocWrittenReference2">Written references from current business associates or partner organizations</label>
+                                                <br />&nbsp;&nbsp;Expiration Date: 
+                                                <span class="readOnly"
+                                                    <cfif isDate(FORM.watDocWrittenReference2Expiration)>
+                                                        <cfif DateCompare(FORM.watDocWrittenReference2Expiration, NOW(), "d") EQ -1> 
+                                                            style="color:red;"
+                                                        </cfif>
+                                                    </cfif>
+                                                >
+                                                    #DateFormat(FORM.watDocWrittenReference2Expiration, "mm/dd/yyyy")#
+                                                </span>
+                                                <input type="text" name="watDocWrittenReference2Expiration" id="watDocWrittenReference2Expiration" value="#DateFormat(FORM.watDocWrittenReference2Expiration, 'mm/dd/yyyy')#" class="datePicker style1 editPage" />
                                             </td>
                                         </tr>	
                                         <tr>
@@ -999,6 +1057,17 @@
                                             </td>
                                             <td class="style1">
                                                 <label for="watDocWrittenReference3">Written references from current business associates or partner organizations</label>
+                                                <br />&nbsp;&nbsp;Expiration Date: 
+                                                <span class="readOnly"
+                                                    <cfif isDate(FORM.watDocWrittenReference3Expiration)>
+                                                        <cfif DateCompare(FORM.watDocWrittenReference3Expiration, NOW(), "d") EQ -1> 
+                                                            style="color:red;"
+                                                        </cfif>
+                                                    </cfif>
+                                                >
+                                                    #DateFormat(FORM.watDocWrittenReference3Expiration, "mm/dd/yyyy")#
+                                                </span>
+                                                <input type="text" name="watDocWrittenReference3Expiration" id="watDocWrittenReference3Expiration" value="#DateFormat(FORM.watDocWrittenReference3Expiration, 'mm/dd/yyyy')#" class="datePicker style1 editPage" />
                                             </td>
                                         </tr>	
                                         <tr>
@@ -1007,6 +1076,17 @@
                                             </td>
                                             <td class="style1">
                                                 <label for="watDocPreviousExperience">Summary of previous experience conducting J-1 exchange visitor program activities</label>
+                                                <br />&nbsp;&nbsp;Expiration Date: 
+                                                <span class="readOnly"
+                                                    <cfif isDate(FORM.watDocPreviousExperienceExpiration)>
+                                                        <cfif DateCompare(FORM.watDocPreviousExperienceExpiration, NOW(), "d") EQ -1> 
+                                                            style="color:red;"
+                                                        </cfif>
+                                                    </cfif>
+                                                >
+                                                    #DateFormat(FORM.watDocPreviousExperienceExpiration, "mm/dd/yyyy")#
+                                                </span>
+                                                <input type="text" name="watDocPreviousExperienceExpiration" id="watDocPreviousExperienceExpiration" value="#DateFormat(FORM.watDocPreviousExperienceExpiration, 'mm/dd/yyyy')#" class="datePicker style1 editPage" />
                                             </td>
                                         </tr>	
                                         <tr>
@@ -1142,14 +1222,9 @@
                                                     value="#DateFormat(FORM.watDocOriginalAdvertisingMaterialExpiration, 'mm/dd/yyyy')#" 
                                                     class="datePicker style1 editPage" />
                                             </td>
-                                        </tr>	
+                                        </tr>
                                         <tr>
-                                        	<td class="fieldTitle">
-                                            	<input type="checkbox" name="watDocLetterNotEngageThirdParties" id="watDocLetterNotEngageThirdParties" value="1" class="formField" disabled <cfif VAL(FORM.watDocLetterNotEngageThirdParties)> checked </cfif> >
-                                            </td>
-                                            <td class="style1">
-                                                <label for="watDocLetterNotEngageThirdParties">Letter confirming that the organization will not engage in cooperation with third parties</label>
-                                            </td>
+                                        	<td colspan="2" style="font-size:9px;"><i>These documents will expire at the end of the recruitment year. They must be renewed and maintained annually (IFR 2012).</i></td>
                                         </tr>	
                                     </table>
                                     
