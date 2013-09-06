@@ -26,13 +26,82 @@
 </cfquery>
 <cfset vChangedHosts = ValueList(qChangedHosts.hostCompanyID)>
 
-<!--- English Business License --->
-<cfquery datasource="MySql">
+<!--- Intl. Rep Documents --->
+<!---Dates and bit values --->
+<cfquery datasource="#APPLICATION.DSN.Source#">
+	UPDATE smg_users
+  	SET watDocBusinessLicense = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+   	WHERE userType = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+   	AND watDocBusinessLicenseExpiration < <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
+</cfquery>
+<cfquery datasource="#APPLICATION.DSN.Source#">
 	UPDATE smg_users
   	SET watDocEnglishBusinessLicense = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
    	WHERE userType = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
    	AND watDocEnglishBusinessLicenseExpiration < <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
 </cfquery>
+<cfquery datasource="#APPLICATION.DSN.Source#">
+	UPDATE smg_users
+  	SET watDocWrittenReference1 = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+   	WHERE userType = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+   	AND watDocWrittenReference1Expiration < <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
+</cfquery>
+<cfquery datasource="#APPLICATION.DSN.Source#">
+	UPDATE smg_users
+  	SET watDocWrittenReference2 = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+   	WHERE userType = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+   	AND watDocWrittenReference2Expiration < <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
+</cfquery>
+<cfquery datasource="#APPLICATION.DSN.Source#">
+	UPDATE smg_users
+  	SET watDocWrittenReference3 = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+   	WHERE userType = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+   	AND watDocWrittenReference3Expiration < <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
+</cfquery>
+<cfquery datasource="#APPLICATION.DSN.Source#">
+	UPDATE smg_users
+  	SET watDocOriginalCBC = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+   	WHERE userType = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+   	AND watDocOriginalCBCExpiration < <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
+</cfquery>
+<cfquery datasource="#APPLICATION.DSN.Source#">
+	UPDATE smg_users
+  	SET watDocEnglishCBC = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+   	WHERE userType = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+   	AND watDocEnglishCBCExpiration < <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
+</cfquery>
+<!--- Only Dates --->
+<cfquery datasource="#APPLICATION.DSN.Source#">
+	UPDATE smg_users
+  	SET watDocNotarizedFinancialStatementExpiration = NULL
+   	WHERE userType = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+   	AND watDocNotarizedFinancialStatementExpiration < <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
+</cfquery>
+<cfquery datasource="#APPLICATION.DSN.Source#">
+	UPDATE smg_users
+  	SET watDocBankruptcyDisclosureExpiration = NULL
+   	WHERE userType = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+   	AND watDocBankruptcyDisclosureExpiration < <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
+</cfquery>
+<cfquery datasource="#APPLICATION.DSN.Source#">
+	UPDATE smg_users
+  	SET watDocPreviousExperienceExpiration = NULL
+   	WHERE userType = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+   	AND watDocPreviousExperienceExpiration < <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
+</cfquery>
+<cfquery datasource="#APPLICATION.DSN.Source#">
+	UPDATE smg_users
+  	SET watDocOriginalAdvertisingMaterialExpiration = NULL
+   	WHERE userType = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+   	AND watDocOriginalAdvertisingMaterialExpiration < <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
+</cfquery>
+<cfquery datasource="#APPLICATION.DSN.Source#">
+	UPDATE smg_users
+  	SET watDocEnglishAdvertisingMaterialExpiration = NULL
+   	WHERE userType = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+   	AND watDocEnglishAdvertisingMaterialExpiration < <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
+</cfquery>
+
 
 <!--- Authentications --->
 
