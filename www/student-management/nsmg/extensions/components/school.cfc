@@ -238,7 +238,7 @@
                                     <cfinclude template="../../linked/css/baseStyle.css">
                                 </style>                    
                                 Please obtain a letter from this high school stating that they will accept more than 5 exchange students from #client.companyshort# for the upcoming school year. The letter should be on school letterhead, dated, and hand signed.  It is required by Dept. of State to have this letter on file in the Compliance Department. <br><br>
-                                Than you for your assistance.<br>
+                                Thank you for your assistance.<br>
                                 #client.companyname# Compliance Dept.<br><br>
                                 <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
                                     <tr>
