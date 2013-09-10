@@ -402,7 +402,7 @@
                                     <td class="style1">#DateFormat(startdate, 'mm/dd/yyyy')#</td>
                                     <td class="style1">#DateFormat(enddate, 'mm/dd/yyyy')#</td>
                                 </cfif>
-                                <td class="style1"><a href="index.cfm?curdoc=hostCompany/hostCompanyInfo&hostCompanyID=#hostCompanyID#">#hostCompanyName#</a></td>
+                                <td class="style1"><a href="index.cfm?curdoc=hostCompany/hostCompanyInfo&hostCompanyID=#hostCompanyID#" class="style4">#hostCompanyName#</a></td>
                                 <td class="style1">#city#</td>
                                 <td class="style1">#stateName#</td>
                                 <td class="style1">#wat_placement#</td>
