@@ -2026,7 +2026,7 @@
                                                     <cfif ListFind("0,1", FORM.isHousingProvided)>
                                                         #YesNoFormat(VAL(FORM.isHousingProvided))#
                                                     <cfelseif FORM.isHousingProvided EQ 2>
-                                                        Will assist in finding
+                                                        Other (third party)
                                                     </cfif>
                                                 </span>
                                                 <input 
@@ -2052,7 +2052,7 @@
                                                 value="2" 
                                                 class="style1 editPage" 
 												<cfif FORM.isHousingProvided EQ 2> checked="checked" </cfif> /> 
-                                                <label class="style1 editPage" for="isHousingProvidedWillAssist">Will assist in finding</label>
+                                                <label class="style1 editPage" for="isHousingProvidedWillAssist">Other (third party)</label>
                                             </td>
                                         </tr>
                                         <tr>
