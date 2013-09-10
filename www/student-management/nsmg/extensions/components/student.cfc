@@ -3241,6 +3241,8 @@
             <cfquery name="qCheckDoublePlacementPrimaryLanguage" datasource="#APPLICATION.DSN#">
    				SELECT *
 				FROM smg_student_app_language
+                INNER JOIN applicationlookup on applicationlookup.fieldID = smg_student_app_language.languageID
+                	AND fieldKey = "language"
 				WHERE isPrimary = 1
                 AND studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.doublePlacementID)#">
 				AND languageID IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#vStudentPrimaryLanguageIDList#"> )                                
