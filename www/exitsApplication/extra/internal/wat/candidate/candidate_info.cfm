@@ -1573,7 +1573,7 @@
                                         	<td class="style1" align="right" width="30%"><strong>Housing Arrangements:</strong></td>
                                             <td class="style1" align="left" width="70%">
                                             	<cfif qCandidatePlaceCompany.isHousingProvided EQ 1>
-                                                	Employer Provides Housing
+                                                	Housing on premises
                                              	<cfelse>
                                                 	<span class="readOnly">
                                                     	<cfif VAL(qGetCandidate.housingArrangedPrivately)>

@@ -194,7 +194,7 @@
 						<cfif ListFind("0,1", qGetHostCompany.isHousingProvided)>
                             #YesNoFormat(VAL(qGetHostCompany.isHousingProvided))#
                         <cfelseif qGetHostCompany.isHousingProvided EQ 2>
-                            Will assist in finding
+                            Other (third party)
                         </cfif>
                     </td>
                 </tr>

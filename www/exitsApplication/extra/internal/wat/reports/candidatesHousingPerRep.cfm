@@ -58,6 +58,88 @@
             ORDER BY u.businessname
 		</cfquery>
         
+        <cfquery name="qGetCandidates" datasource="#APPLICATION.DSN.Source#">
+            SELECT 
+                candidate.candidateID,
+                candidate.intRep,
+                candidate.uniqueID,
+                candidate.lastName, 
+                candidate.firstName, 
+                candidate.sex, 
+                candidate.email, 
+                candidate.wat_placement, 
+                candidate.housingArrangedPrivately,
+                candidate.ds2019,
+                host.isHousingProvided,
+                host.city,
+                host.name AS hostCompanyName,
+                host.hostCompanyID,
+                program.startDate,
+                program.endDate,
+                state.stateName,
+                CASE
+                    WHEN candidateID IN (SELECT candidateID FROM extra_incident_report WHERE isSolved = 0 AND subject = "Terminated") THEN "1"
+                    ELSE "0"
+                    END AS isTerminated
+            FROM extra_candidates candidate
+            INNER JOIN extra_hostCompany host ON candidate.hostCompanyID = host.hostCompanyID
+            INNER JOIN smg_programs program ON candidate.programID = program.programID
+                AND program.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.programID)#">
+            LEFT JOIN smg_states state ON host.state = state.ID
+            WHERE candidate.status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+            <cfif VAL(FORM.userID)>
+            	AND candidate.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">
+          	</cfif>
+            <cfif FORM.housingArrangements NEQ "All">
+                <cfif FORM.housingArrangements EQ "employerProvides">
+                    AND host.isHousingProvided = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                <cfelse>
+                    AND host.isHousingProvided != <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                    <cfif FORM.housingArrangements NEQ "All_notProvided">
+                        AND candidate.housingArrangedPrivately = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.housingArrangements)#">
+                    </cfif>
+                </cfif>
+            </cfif>
+        </cfquery>
+        
+        <cfquery name="placementCSBTotal" dbtype="query">
+            SELECT *
+            FROM qGetCandidates
+            WHERE wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="CSB-Placement">
+        </cfquery>
+        
+        <cfquery name="placementSelfTotal" dbtype="query">
+            SELECT *
+            FROM qGetCandidates
+            WHERE wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="Self-Placement">
+        </cfquery>
+        
+        <cfquery name="placementWalkInTotal" dbtype="query">
+            SELECT *
+            FROM qGetCandidates
+            WHERE wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="Walk-In">
+        </cfquery>
+        
+        <cfquery name="housingProvidedByHostTotal" dbtype="query">
+            SELECT *
+            FROM qGetCandidates
+            WHERE isHousingProvided = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+        </cfquery>
+        
+        <cfquery name="housingFoundTotal" dbtype="query">
+            SELECT *
+            FROM qGetCandidates
+            WHERE isHousingProvided != <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+            AND housingArrangedPrivately = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+        </cfquery>
+        
+        <cfquery name="housingNotFoundTotal" dbtype="query">
+            SELECT *
+            FROM qGetCandidates
+            WHERE isHousingProvided != <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+            AND housingArrangedPrivately = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+        </cfquery>
+        
  	</cfif>
 
 </cfsilent>
@@ -140,10 +222,10 @@
                 <td> 
                     <select name="housingArrangements" class="style1" onchange="checkToDisplayEmail(this.value);">
                     	<option value="All" <cfif FORM.housingArrangements EQ "All">selected="selected"</cfif>>All</option>
-                        <option value="employerProvides" <cfif FORM.housingArrangements EQ "employerProvides">selected="selected"</cfif>>Employer Provides Housing</option>
-                        <option value="All_notProvided" <cfif FORM.housingArrangements EQ "All_notProvided">selected="selected"</cfif>>All - not provided by employer</option>
-                        <option value="1" <cfif FORM.housingArrangements EQ "1">selected="selected"</cfif>>Housing Found - not provided by employer</option>
-                        <option value="0" <cfif FORM.housingArrangements EQ "0">selected="selected"</cfif>>Housing Not Found - not provided by employer</option>
+                        <option value="employerProvides" <cfif FORM.housingArrangements EQ "employerProvides">selected="selected"</cfif>>Housing on premises</option>
+                        <option value="All_notProvided" <cfif FORM.housingArrangements EQ "All_notProvided">selected="selected"</cfif>>Housing not on premises - all</option>
+                        <option value="1" <cfif FORM.housingArrangements EQ "1">selected="selected"</cfif>>Housing not on premises - housing found</option>
+                        <option value="0" <cfif FORM.housingArrangements EQ "0">selected="selected"</cfif>>Housing not on premises - housing not found</option>
                     </select>
                 </td>
             </tr>
@@ -172,6 +254,19 @@
 	</form>
     
 	<cfif FORM.submitted>
+    
+    	<br/>
+    	<div class="style1"><strong>&nbsp; &nbsp; CSB-Placement:</strong> #placementCSBTotal.recordCount#</div>	
+        <div class="style1"><strong>&nbsp; &nbsp; Self-Placement:</strong> #placementSelfTotal.recordCount#</div>
+        <div class="style1"><strong>&nbsp; &nbsp; Walk-In:</strong> #placementWalkInTotal.recordCount#</div>
+        <div class="style1"><strong>&nbsp; &nbsp; --------------------------------------</strong></div>
+        <div class="style1"><strong>&nbsp; &nbsp; Housing on premises:</strong> #housingProvidedByHostTotal.recordCount#</div>
+        <div class="style1"><strong>&nbsp; &nbsp; Yes:</strong> #housingFoundTotal.recordCount#</div>
+        <div class="style1"><strong>&nbsp; &nbsp; No:</strong> #housingNotFoundTotal.recordCount#</div> 
+        <div class="style1"><strong>&nbsp; &nbsp; --------------------------------------</strong></div>
+        <div class="style1"><strong>&nbsp; &nbsp; Total Number of Students:</strong> #qGetCandidates.recordCount#</div>
+        <div class="style1"><strong>&nbsp; &nbsp; --------------------------------------</strong></div>
+        <br/>	
     	
         <cfscript>
 			// On Screen
@@ -183,46 +278,13 @@
 		</cfscript>
     
         <cfsavecontent variable="reportContent">
-        	
+        
             <cfloop query="qGetIntlReps">
             	
-                <cfquery name="qGetCandidatesPerRep" datasource="#APPLICATION.DSN.Source#">
-                	SELECT 
-                    	candidate.candidateID,
-                        candidate.uniqueID,
-                        candidate.lastName, 
-                        candidate.firstName, 
-                        candidate.sex, 
-                        candidate.email, 
-                        candidate.wat_placement, 
-                        candidate.housingArrangedPrivately,
-                        candidate.ds2019,
-                    	host.isHousingProvided,
-                        host.city,
-                        program.startDate,
-                        program.endDate,
-                        state.stateName,
-                        CASE
-                        	WHEN candidateID IN (SELECT candidateID FROM extra_incident_report WHERE isSolved = 0 AND subject = "Terminated") THEN "1"
-                            ELSE "0"
-                     		END AS isTerminated
-                    FROM extra_candidates candidate
-                    INNER JOIN extra_hostCompany host ON candidate.hostCompanyID = host.hostCompanyID
-                    INNER JOIN smg_programs program ON candidate.programID = program.programID
-                    	AND program.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.programID)#">
-                    LEFT JOIN smg_states state ON host.state = state.ID
-                    WHERE candidate.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetIntlReps.userID#">
-                    AND candidate.status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-					<cfif FORM.housingArrangements NEQ "All">
-                        <cfif FORM.housingArrangements EQ "employerProvides">
-                            AND host.isHousingProvided = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-                        <cfelse>
-                            AND host.isHousingProvided != <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-                            <cfif FORM.housingArrangements NEQ "All_notProvided">
-                                AND candidate.housingArrangedPrivately = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.housingArrangements)#">
-                            </cfif>
-                        </cfif>
-                    </cfif>
+                <cfquery name="qGetCandidatesPerRep" dbtype="query">
+                	SELECT *
+                    FROM qGetCandidates
+                    WHERE intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetIntlReps.userID#">
                 </cfquery>
                 
                 <cfquery name="placementCSB" dbtype="query">
@@ -276,7 +338,7 @@
                                     )
                                     &nbsp; | &nbsp;
                                     Housing Arrangements: 
-                                    #housingProvidedByHost.recordCount# Provided By Employer; &nbsp;
+                                    #housingProvidedByHost.recordCount# Housing on premises; &nbsp;
                                     #housingFound.recordCount# Yes; &nbsp;
                                     #housingNotFound.recordCount# No; &nbsp;
                                 </small>
@@ -289,16 +351,17 @@
                         </cfif>
                         <tr>
                             <th align="left" class="#tableTitleClass#" width="5%">ID</Th>
-                            <th align="left" class="#tableTitleClass#" width="10%">Last Name</Th>
-                            <th align="left" class="#tableTitleClass#" width="10%">First Name</Th>
+                            <th align="left" class="#tableTitleClass#" width="8%">Last Name</Th>
+                            <th align="left" class="#tableTitleClass#" width="8%">First Name</Th>
                             <th align="left" class="#tableTitleClass#" width="8%">Sex</th>
-                            <th align="left" class="#tableTitleClass#" width="15%">E-mail</th>
+                            <th align="left" class="#tableTitleClass#" width="12%">E-mail</th>
                             <th align="left" class="#tableTitleClass#" width="8%">Start Date</th>
                             <th align="left" class="#tableTitleClass#" width="8%">End Date</th>
-                            <th align="left" class="#tableTitleClass#" width="10%">City</th>
+                            <th align="left" class="#tableTitleClass#" width="9%">Placement Information</th>
+                            <th align="left" class="#tableTitleClass#" width="9%">City</th>
                             <th align="left" class="#tableTitleClass#" width="8%">State</th>
                             <th align="left" class="#tableTitleClass#" width="8%">Option</th>
-                            <th align="left" class="#tableTitleClass#" width="10%">Housing Arrangements</th>
+                            <th align="left" class="#tableTitleClass#" width="9%">Housing Arrangements</th>
                         </tr>
                         <cfif ListFind("2,3", FORM.printOption)>
                             <tr>
@@ -339,12 +402,13 @@
                                     <td class="style1">#DateFormat(startdate, 'mm/dd/yyyy')#</td>
                                     <td class="style1">#DateFormat(enddate, 'mm/dd/yyyy')#</td>
                                 </cfif>
+                                <td class="style1"><a href="index.cfm?curdoc=hostCompany/hostCompanyInfo&hostCompanyID=#hostCompanyID#">#hostCompanyName#</a></td>
                                 <td class="style1">#city#</td>
                                 <td class="style1">#stateName#</td>
                                 <td class="style1">#wat_placement#</td>
                                 <td class="style1">
                                     <cfif isHousingProvided EQ 1>
-                                        Provided By Employer
+                                        Housing on premises
                                     <cfelse>
                                         <cfif VAL(housingArrangedPrivately)>
                                             Yes
