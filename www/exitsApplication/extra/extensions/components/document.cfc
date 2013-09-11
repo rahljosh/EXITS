@@ -462,6 +462,7 @@
 		<cfargument name="pageSize" required="yes">
 		<cfargument name="gridSortColumn" default="dateCreated" hint="By Default dataCreated">
 		<cfargument name="gridSortDirection" default="DESC" hint="By Default DESC">
+        <cfargument name="blockEditDelete" default="0" hint="Set to 1 to block editing and deleting">
 
         <cfquery 
 			name="qGetDocumentsRemote" 
@@ -474,7 +475,11 @@
                     d.dateCreated,
                     DATE_FORMAT(d.dateCreated, '%m/%d/%y') as displayDateCreated,
                     dt.name as documentType,
-					CONVERT(CONCAT('<a href=''publicDocument.cfm?ID=', d.ID, '&Key=', d.hashID, '''>[View]</a> ', ' - <a href=''javascript:displayFile(', d.ID, ');''>[Edit]</a> ', ' - <a href=''javascript:deleteFile(', d.ID, ');''>[Delete]</a> ') USING latin1) AS action
+                    <cfif VAL(ARGUMENTS.blockEditDelete)>
+                    	CONVERT(CONCAT('<a href=''publicDocument.cfm?ID=', d.ID, '&Key=', d.hashID, '''>[View]</a>') USING latin1) AS action
+                    <cfelse>
+						CONVERT(CONCAT('<a href=''publicDocument.cfm?ID=', d.ID, '&Key=', d.hashID, '''>[View]</a> ', ' - <a href=''javascript:displayFile(', d.ID, ');''>[Edit]</a> ', ' - <a href=''javascript:deleteFile(', d.ID, ');''>[Delete]</a> ') USING latin1) AS action
+               		</cfif>
                 FROM 
                     document d
 				LEFT OUTER JOIN                      
