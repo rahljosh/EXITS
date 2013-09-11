@@ -476,7 +476,7 @@
                     DATE_FORMAT(d.dateCreated, '%m/%d/%y') as displayDateCreated,
                     dt.name as documentType,
                     <cfif VAL(ARGUMENTS.blockEditDelete)>
-                    	CONVERT(CONCAT('<a href=''publicDocument.cfm?ID=', d.ID, '&Key=', d.hashID, '''>[View]</a>') USING latin1) AS action
+                    	CONVERT(CONCAT('<a href=''publicDocument.cfm?ID=', d.ID, '&Key=', d.hashID, '''>[View]</a> ', ' - <a href=''javascript:displayFile(', d.ID, ');''>[Edit]</a> ') USING latin1) AS action
                     <cfelse>
 						CONVERT(CONCAT('<a href=''publicDocument.cfm?ID=', d.ID, '&Key=', d.hashID, '''>[View]</a> ', ' - <a href=''javascript:displayFile(', d.ID, ');''>[Edit]</a> ', ' - <a href=''javascript:deleteFile(', d.ID, ');''>[Delete]</a> ') USING latin1) AS action
                		</cfif>
