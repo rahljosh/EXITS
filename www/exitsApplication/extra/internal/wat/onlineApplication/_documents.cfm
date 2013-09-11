@@ -16,6 +16,7 @@
     <!--- Candidate Details --->
     <cfparam name="FORM.candidateID" default="#APPLICATION.CFC.CANDIDATE.getcandidateID()#">
     <cfparam name="FORM.foreignTable" default="#APPLICATION.foreignTable#">
+    <cfparam name="FORM.blockEditDelete" default="0">
 
 	<cfajaxproxy cfc="extensions.components.document" jsclassname="proxyDocument">
     
@@ -27,6 +28,12 @@
 		
 		// Get a list of document types
 		qGetDocumentType = APPLICATION.CFC.DOCUMENT.getDocumentType(applicationID=APPLICATION.applicationID);
+		
+		// This variable will prevent non-office users from editing and deleting files after the application has been approved.
+		FORM.blockEditDelete = 0;
+		if (qGetCandidateInfo.applicationStatusID EQ 11 AND CLIENT.userType GT 3) {
+			FORM.blockEditDelete = 1;
+		}
 	</cfscript>
     
 </cfsilent>
@@ -144,11 +151,12 @@
                         <!--- These variables are used in the CFGrid --->
                         <input type="hidden" name="foreignTable" id="foreignTable" value="#FORM.foreignTable#" />
                         <input type="hidden" name="candidateID" id="candidateID" value="#FORM.candidateID#" />
+                        <input type="hidden" name="blockEditDelete" id="blockEditDelete" value="#FORM.blockEditDelete#" />
             
                         <cfgrid name="documentList" 
                             title="Click on Edit to update the category information"
                             format="html"
-                            bind="cfc:extensions.components.document.getDocumentsRemote({foreignTable},{candidateID},{cfgridPage},{cfgridPageSize},{cfgridSortColumn},{cfgridSortDirection})"                    
+                            bind="cfc:extensions.components.document.getDocumentsRemote({foreignTable},{candidateID},{cfgridPage},{cfgridPageSize},{cfgridSortColumn},{cfgridSortDirection},{blockEditDelete})"                    
                             width="650px"
                             pagesize="10"
                             bgcolor="##FFFFFF" 
