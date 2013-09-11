@@ -1047,36 +1047,38 @@
 			);
         </cfscript>
         
-        <!--- Email host family that the placement is approved --->
-        <cfscript>
-			qGetHostFamily = APPLICATION.CFC.HOST.getHosts(hostID = qGetStudentInfo.hostID);
-			qGetManager = APPLICATION.CFC.Region.getRegionManagerByRegionID(regionID = qGetStudentInfo.regionAssigned);
-			qGetCompany = APPLICATION.CFC.Company.getCompanies(companyID = qGetHostFamily.companyID);
-		</cfscript>
-        
-        <cfsavecontent variable="vEmailContent">
-        	<cfoutput>
-                <p>Dear #qGetHostFamily.familyLastName# family:</p>
-                <p>
-                    Congratulations!  The placement of #qGetStudentInfo.firstName# #qGetStudentInfo.familyLastName# with your family has been fully approved.  
-                    Your exchange student will be contacting you soon, and if you want to reach out to him/her it is now permissible to do so. 
-                    For any questions, please contact your local area rep – #qGetStudentInfo.areaRepFirstName# #qGetStudentInfo.areaRepLastName#. 
-                    #qGetCompany.companyshort_nocolor# thanks you for sharing in our mission of making the world a little smaller, one student at a time.
-                </p>
-                <p>
-                    Sincerely,<br/>
-                    #qGetCompany.companyname#
-                </p>
-         	</cfoutput>
-        </cfsavecontent>
-        
-        <cfinvoke component="nsmg.cfc.email" method="send_mail">
-            <cfinvokeargument name="email_to" value="#qGetHostFamily.email#">
-            <cfinvokeargument name="email_cc" value="#qGetStudentInfo.areaRepEmail#,#qGetManager.email#">
-            <cfinvokeargument name="email_subject" value="#qGetCompany.companyshort_nocolor# Placement Approved">
-            <cfinvokeargument name="email_message" value="#vEmailContent#">
-            <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
-        </cfinvoke>
+        <!--- Email host family that the placement is approved (only if there is no date for the PIS) --->
+        <cfif isDate(qGetStudentInfo.datePISEmailed)>
+			<cfscript>
+                qGetHostFamily = APPLICATION.CFC.HOST.getHosts(hostID = qGetStudentInfo.hostID);
+                qGetManager = APPLICATION.CFC.Region.getRegionManagerByRegionID(regionID = qGetStudentInfo.regionAssigned);
+                qGetCompany = APPLICATION.CFC.Company.getCompanies(companyID = qGetHostFamily.companyID);
+            </cfscript>
+            
+            <cfsavecontent variable="vEmailContent">
+                <cfoutput>
+                    <p>Dear #qGetHostFamily.familyLastName# family:</p>
+                    <p>
+                        Congratulations!  The placement of #qGetStudentInfo.firstName# #qGetStudentInfo.familyLastName# with your family has been fully approved.  
+                        Your exchange student will be contacting you soon, and if you want to reach out to him/her it is now permissible to do so. 
+                        For any questions, please contact your local area rep – #qGetStudentInfo.areaRepFirstName# #qGetStudentInfo.areaRepLastName#. 
+                        #qGetCompany.companyshort_nocolor# thanks you for sharing in our mission of making the world a little smaller, one student at a time.
+                    </p>
+                    <p>
+                        Sincerely,<br/>
+                        #qGetCompany.companyname#
+                    </p>
+                </cfoutput>
+            </cfsavecontent>
+            
+            <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                <cfinvokeargument name="email_to" value="#qGetHostFamily.email#">
+                <cfinvokeargument name="email_cc" value="#qGetStudentInfo.areaRepEmail#,#qGetManager.email#">
+                <cfinvokeargument name="email_subject" value="#qGetCompany.companyshort_nocolor# Placement Approved">
+                <cfinvokeargument name="email_message" value="#vEmailContent#">
+                <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
+            </cfinvoke>
+      	</cfif>
         
 	</cffunction>
 
