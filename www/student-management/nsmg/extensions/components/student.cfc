@@ -105,6 +105,7 @@
                     s.AYPOrientation,
                     s.AYPEnglish,
                     s.unblockFlight,
+                    s.datePISEmailed,
                     <!--- Intl Representative --->
                     intlRep.userID AS intlRepUserID,
                     intlRep.firstName AS intlRepFirstName,
@@ -1048,7 +1049,7 @@
         </cfscript>
         
         <!--- Email host family that the placement is approved (only if there is no date for the PIS) --->
-        <cfif isDate(qGetStudentInfo.datePISEmailed)>
+        <cfif NOT isDate(qGetStudentInfo.datePISEmailed)>
 			<cfscript>
                 qGetHostFamily = APPLICATION.CFC.HOST.getHosts(hostID = qGetStudentInfo.hostID);
                 qGetManager = APPLICATION.CFC.Region.getRegionManagerByRegionID(regionID = qGetStudentInfo.regionAssigned);
