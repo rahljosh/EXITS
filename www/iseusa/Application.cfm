@@ -119,7 +119,7 @@
 			// Production
 			APPLICATION.PATH.TEMP = 'C:/websites/student-management/nsmg/uploadedfiles/temp/';
 			APPLICATION.PATH.tour = 'C:/websites/student-management/nsmg/uploadedfiles/tours/';
-			APPLICATION.siteURL = 'https://' & CGI.HTTP_HOST & '/';
+			APPLICATION.siteURL = 'http://' & CGI.HTTP_HOST & '/';
 			// Trips URL
 			APPLICATION.tripsURL = 'https://trips.exitsapplication.com/';
 		}
