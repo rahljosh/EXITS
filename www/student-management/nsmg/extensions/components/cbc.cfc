@@ -2494,6 +2494,9 @@
             h.fatherfirstname, h.motherfirstname, h.familylastname, h.companyID
             FROM smg_hosts_cbc cbc
             INNER JOIN smg_hosts h ON h.hostID = cbc.hostID
+            	AND h.active = 1
+                AND h.isNotQualifiedToHost = 0
+                AND h.isHosting = 1
             	<cfif VAL(ARGUMENTS.hostID)>
                		AND h.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#">
                 </cfif>
