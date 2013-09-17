@@ -451,14 +451,45 @@
             </cfquery>          
         </cfcase>
         <cfcase value="Work Program">
+        
+        	<!--- check if agent is in the extra_wt_prices table, if not, do not join table to query--->
+            <cfquery name="checkAgent" datasource="MySQL">
+            SELECT *
+            FROM extra_wt_prices
+            WHERE userID = #url.userid#
+            </cfquery>
+
             <cfquery name="getChargesCancellations" datasource="MySQL">
-            SELECT s.chargeid, s.agentid, s.invoiceid, s.description, s.amount_due, s.stuid, s.companyid, s.programid, s.active, s.type AS charge_type, sp.type, sp.programname, e.firstname, e.lastname, e.status AS stud_active, sc.creditid AS creditid, sc.amount AS amount, sc.description AS credDescription, sc.type AS creditType, ewp.includeSevis, ewp.sevis
+            SELECT	s.chargeid, 
+            		s.agentid, 
+                    s.invoiceid, 
+                    s.description, 
+                    s.amount_due, 
+                    s.stuid, 
+                    s.companyid, 
+                    s.programid, 
+                    s.active, 
+                    s.type AS charge_type, 
+                    sp.type, sp.programname, 
+                    e.firstname, 
+                    e.lastname, 
+                    e.status AS stud_active, 
+                    sc.creditid AS creditid, 
+                    sc.amount AS amount, 
+                    sc.description AS credDescription, 
+                    sc.type AS creditType
+					<cfif checkAgent.recordCount GT 0>
+                    	, ewp.includeSevis, ewp.sevis
+                    </cfif>
+
             FROM  `smg_charges` s
             LEFT JOIN smg_credit sc ON s.chargeid = sc.chargeid
             INNER JOIN smg_programs sp ON sp.programid = s.programid
             INNER JOIN extra_candidates e ON e.candidateid = s.stuid
             INNER JOIN smg_users su ON su.userid = s.agentid
-            INNER JOIN extra_wt_prices ewp on ewp.userid = s.agentid
+			<cfif checkAgent.recordCount GT 0>
+            	INNER JOIN extra_wt_prices ewp on ewp.userid = s.agentid
+			</cfif>
             WHERE s.stuid =#student#
             AND s.agentid =#url.userid#
 <!---             AND s.companyid =#client.companyid# --->
@@ -469,7 +500,7 @@
                 OR sp.type =22
                 OR sp.type =23)
             </cfquery>
-            
+
             <cfquery name="getCreditsDiscounts" datasource="MySQL">
             SELECT sc.creditid, sc.stuid, sc.agentid, sc.companyid, sc.type, sc.amount, sc.description, sp.type AS programType
             FROM smg_credit sc
@@ -488,11 +519,25 @@
             </cfquery>          
     
             <cfquery name="getCurrStudInfo" datasource="MySQL">
-            SELECT e.candidateid AS stuid, e.firstname, e.lastname, e.status AS stud_active, e.intrep AS agentid, e.programid, e.companyid, e.cancel_date AS canceldate, e.cancel_reason AS cancelreason, sp.programname, sp.type AS progType, ewp.includeSevis
+            SELECT 	e.candidateid AS stuid, 
+            		e.firstname, e.lastname, 
+                    e.status AS stud_active, 
+                    e.intrep AS agentid, 
+                    e.programid, 
+                    e.companyid, 
+                    e.cancel_date AS canceldate, 
+                    e.cancel_reason AS cancelreason, 
+                    sp.programname, 
+                    sp.type AS progType 
+ 					<cfif checkAgent.recordCount GT 0>
+                    	, ewp.includeSevis
+					</cfif>
             FROM extra_candidates e
             LEFT JOIN smg_programs sp ON sp.programid = e.programid
             LEFT JOIN smg_users su ON su.userid = e.intrep
-            LEFT JOIN extra_wt_prices ewp on ewp.userid = e.intrep
+			<cfif checkAgent.recordCount GT 0>
+            	LEFT JOIN extra_wt_prices ewp on ewp.userid = e.intrep
+			</cfif>
             WHERE e.candidateid =#student#
             </cfquery>
         </cfcase>
@@ -880,8 +925,32 @@
                 <td class="right"></td>                    
             </tr>
             <cfif getChargesCancellations.recordCount NEQ 0>
-            	<cfset extraSevis = #getChargesCancellations.includeSevis#>
+            	
+				<cfif checkAgent.recordCount NEQ 0>
+                
+            		<cfset extraSevis = #getChargesCancellations.includeSevis#>
+                    <cfset sevisCharged = #getChargesCancellations.sevis#>
+                	
+                    <cfelse> <!--- if getChargesCancellations.recordCount = 0 and checkAgent.recordCount = 0, student must be a trainee --->
+                    
+                    	<cfquery name="checkTraineeSevis" datasource="MySQL">
+                        SELECT *
+                        FROM smg_charges
+                        WHERE stuid = #student#
+                        AND companyid = 7
+                        AND type = "Sevis fee"
+                        AND active = 1
+                        </cfquery>
+                        
+                        <cfif checkTraineeSevis.recordCount GT 0>
+                        	<cfset extraSevis = 1>
+                            <cfset sevisCharged = checkTraineeSevis.amount_due>
+                        </cfif>
+                    
+                 </cfif>
+                
                 <cfelse>
+                
                 	<cfset extraSevis = #getCurrStudInfo.includeSevis#>
             </cfif>
             
@@ -897,7 +966,7 @@
                     <td class="right">
                     <cfinput type="text" id="sevisType#student#" name="sevisType#student#" value="Sevis fee" size="8"></td>
                     <td class="right">
-                    <cfinput type="text" id="sevisAmount#student#" name="sevisAmount#student#" value="#getChargesCancellations.sevis#" size="4"></td>
+                    <cfinput type="text" id="sevisAmount#student#" name="sevisAmount#student#" value="#sevisCharged#" size="4"></td>
                     <td class="right"></td> 
                     <td class="right"></td>                        
                     <td class="right"></td>                        
