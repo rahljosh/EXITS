@@ -7,6 +7,8 @@
 
 <body>
 <cfoutput>
+<Cfparam name='form.supportDoc' default="">
+
 <!----Problem Summary---->
 <Cfquery name="qGetProblem" datasource="#application.dsn#">
 SELECT sp.studentID, 
@@ -21,11 +23,23 @@ LEFT JOIN smg_users u on u.userID = sp.userid
 WHERE idProblem = #url.id#
 
 </Cfquery>
+
+<cfif isDefined('form.insertDetails')>
+	
+    		
+            
+    <cfquery datasource="#application.dsn#">
+    insert into  servicesproject_details (fk_idProblem, fk_servicesprojecttype, notes, date)
+    				values  (#url.id#, 1, '#form.notes#', #now()#)
+
+    </cfquery>
+</cfif>
 <!----Details and File of Problem---->
 <Cfquery name="qProblemDetails" datasource="#application.dsn#">
 SELECT spd.notes,
 		spd.file,
         spd.date,
+        spd.fk_idproblem,
         spt.description
 FROM servicesproject_details spd
 LEFT JOIN servicesprojecttype spt on spt.idServicesProjectType = spd.fk_servicesprojecttype
@@ -36,35 +50,41 @@ WHERE spd.fk_idProblem = #url.id#
 select *
 from servicesprojecttype
 </cfquery>
+<!--- Display List of incidents--->
+<table width=95% align="center" cellpadding=4 cellspacing=0 >
 
-Date: #DateFormat(qGetProblem.date, 'mmmm d, yyyy')#<br />
-Submitted By: #qGetProblem.userFirst# #qGetProblem.userLast#<br /><br />
-Summary: #qGetProblem.summary#<br />
-File:
+	<Tr>
+    	<Th align="left">Probelm ID</Th><Th align="left">Date</Th><Th align="left">Notes</Th><th align="left">File</th>
+    </Tr>
+    <cfloop query="qProblemDetails">
+    <tr>
+    	<td>#fk_idproblem#</td>
+        <Td>#DateFormat(date, 'mmmm d, yyyy')#</td>
+        <td>#notes#</td>
+        <td><a href="../uploadedfiles/student-services/#qGetProblem.studentid#/#file#">#file#</a></td>
+    </tr>
+	</cfloop>
+</table>
+
 <hr width=75%/>
-<br />
-Current Info<Br />
-<cfloop query="qProblemDetails">
-#DateFormat(date, 'mmmm d, yyyy')#<br />
-#description#<Br />
-#notes#
-<br /><br />
-</cfloop>
-<hr width=75%/>
-<form method="post" action="viewIssue.cfm">
-New information:<Br />
+<form method="post" action="viewIssue.cfm?id=#url.id#">
+<input type="hidden" name="insertDetails" />
+
+New information:<Br /><br />
+<!---
 Type:
 <select name="type">
 <option value=0></option>
 <cfloop query="infoType">
 <option value="#idServicesProjectType#">#description#</option>
 </cfloop>
+---->
 More Info:<Br />
 <textarea cols=50 rows=10 name="notes"></textarea><br /><br />
-Attach any supporting documents:<br /> <input type="file" name="suportDoc" />
-       <br />
+
         <input type="image" src="../pics/next.gif" />
      </form>
+	
 </cfoutput>
 </body>
 </html>

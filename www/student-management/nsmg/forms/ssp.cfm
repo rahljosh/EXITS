@@ -47,11 +47,12 @@
             </cfif>	
             <cfif len(form.supportDoc)>
     			<Cffile action="upload" destination="#APPLICATION.PATH.studentServices##url.studentid#" filefield="supportDoc"  nameconflict="makeunique" >
+                <cffile action="move" source="#APPLICATION.PATH.studentServices##url.studentid#/#FILE.ClientFile#" destination="#APPLICATION.PATH.studentServices##url.studentid#/#Replace(FILE.ClientFile,'##','')#">
         	</cfif>
             
     <cfquery datasource="#application.dsn#">
     insert into  servicesproject_details (fk_idProblem, fk_servicesprojecttype, notes, file, date)
-    				values  (#client.studentproblem.idProblem#, 1, '#form.notes#','#file.clientfile#', #now()#)
+    				values  (#client.studentproblem.idProblem#, 1, '#form.notes#','#Replace(FILE.ClientFile,'##','')#', #now()#)
 
     </cfquery>
 </cfif>
