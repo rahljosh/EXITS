@@ -149,6 +149,7 @@
 					isWelcomeFamily = FORM.isWelcomeFamily,
 					isRelocation = FORM.isRelocation,
 					dateRelocated = FORM.dateRelocated,
+					datePlaced = FORM.dateRelocated,
 					changePlacementExplanation = FORM.changePlacementExplanation,
 					schoolID = FORM.schoolID,
 					schoolIDReason = FORM.schoolIDReason,
