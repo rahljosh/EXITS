@@ -82,7 +82,7 @@
                     <cfscript>
                         csbEmailSubject = APPLICATION.CSB.Trainee.programName;
                         
-                        accountCreatedMessage = 'An account has been successfully created at #APPLICATION.CSB.Trainee.name# - #APPLICATION.CSB.TraineeprogramName#. <br /><br />';
+                        accountCreatedMessage = 'An account has been successfully created for your organization at #APPLICATION.CSB.Trainee.name# - #APPLICATION.CSB.TraineeprogramName#. <br /><br />';
                     </cfscript>
                     
                 </cfcase>
@@ -93,7 +93,7 @@
                     <cfscript>
                         csbEmailSubject = APPLICATION.CSB.WAT.programName;
                         
-                        accountCreatedMessage = 'An account has been successfully created at #APPLICATION.CSB.WAT.name# - #APPLICATION.CSB.WAT.programName#. <br /><br />';
+                        accountCreatedMessage = 'An account has been successfully created for your organization at #APPLICATION.CSB.WAT.name# - #APPLICATION.CSB.WAT.programName#. The account will grant you access to the CSB Online Database, formally known as EXTRA.<br /><br />';
                     </cfscript>
                     
                 </cfcase>
@@ -104,7 +104,7 @@
                     <cfscript>
                         csbEmailSubject = 'EXTRA';
                         
-                        accountCreatedMessage = 'An account has been successfully created at #APPLICATION.CSB.name#. <br /><br />';
+                        accountCreatedMessage = 'An account has been successfully created for your organization at #APPLICATION.CSB.name#. The account will grant you access to the CSB Online Database, formally known as EXTRA.<br /><br />';
                     </cfscript>
                     
                 </cfdefaultcase>
@@ -129,7 +129,7 @@
                     <cfsavecontent variable="stEmailStructure.message">
                         <p>Dear #qGetUser.firstName# #qGetUser.lastName#-</p>
     
-                        Please see below your login information: <br /><br />
+                        Please find your login information below: <br /><br />
                         Username: #qGetUser.username# <br />
                         Password: #qGetUser.password# <br /><br />
     
@@ -153,7 +153,7 @@
                         
                         #accountCreatedMessage#                        
     
-                        Please see below your login information: <br /><br />
+                        Please find your login information below: <br /><br />
                         Username: #qGetUser.username# <br />
                         Password: #qGetUser.password# <br /><br />
     
@@ -203,7 +203,7 @@
                     <cfsavecontent variable="stEmailStructure.message">
                         <p>Dear #qGetCandidateInfo.firstName# #qGetCandidateInfo.lastName#-</p>
     
-                        Please see below your login information: <br /><br />
+                        Please find your login information below: <br /><br />
                         Username: #qGetCandidateInfo.email# <br />
                         Password: #qGetCandidateInfo.password# <br /><br />
     
@@ -254,7 +254,7 @@
                             #APPLICATION.SITE.URL.main#
                         </a> to log in into your account. <br /><br />
                         
-                        Your login information: <br /><br />
+                        Please find your login information below: <br /><br />
                         Username: #qGetCandidateInfo.email#<br />
                         Password: #qGetCandidateInfo.password# <br /><br />
                         

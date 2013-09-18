@@ -66,10 +66,11 @@
             <cfcase value="7">
             
                 <cfsavecontent variable="csbEmailFooter">
-                    If you have any questions about filling out the online application please contact us at 
+                	<b>Questions?</b>
+                    <br/>
+					For all new users, there is a brief tutorial available once EXTRA is accessed. If you have any questions about filling out the online application please contact us at
                     <a href="mailto:#APPLICATION.EMAIL.contactUs#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.contactUs#</a> <br /><br />
-                    
-                    For technical issues please email support at 
+                    For technical issues please email support at support@student-management.com
                     <a href="mailto:#APPLICATION.EMAIL.support#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.support#</a> <br /><br />
                 
                     #APPLICATION.CSB.Trainee.name# <br />
@@ -87,10 +88,11 @@
             <cfcase value="8">
         
                 <cfsavecontent variable="csbEmailFooter">
-                    if you have any questions about filling out the online application please contact us at 
+                    <b>Questions?</b>
+                    <br/>
+					For all new users, there is a brief tutorial available once EXTRA is accessed. If you have any questions about filling out the online application please contact us at
                     <a href="mailto:#APPLICATION.EMAIL.contactUs#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.contactUs#</a> <br /><br />
-                    
-                    For technical issues please email support at 
+                    For technical issues please email support at support@student-management.com
                     <a href="mailto:#APPLICATION.EMAIL.support#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.support#</a> <br /><br />
                 
                     #APPLICATION.CSB.WAT.name# <br />
@@ -108,12 +110,13 @@
             <cfdefaultcase>
             
                 <cfsavecontent variable="csbEmailFooter">
-                    If you have any questions about filling out the online application please contact us at 
+                    <b>Questions?</b>
+                    <br/>
+					For all new users, there is a brief tutorial available once EXTRA is accessed. If you have any questions about filling out the online application please contact us at
                     <a href="mailto:#APPLICATION.EMAIL.contactUs#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.contactUs#</a> <br /><br />
-                    
-                    For technical issues please email support at 
+                    For technical issues please email support at support@student-management.com
                     <a href="mailto:#APPLICATION.EMAIL.support#" style="text-decoration:none; color:##0069aa;">#APPLICATION.EMAIL.support#</a> <br /><br />
-                                
+
                     #APPLICATION.CSB.name# <br />
                     #APPLICATION.CSB.address# <br />
                     #APPLICATION.CSB.city#, #APPLICATION.CSB.state# #APPLICATION.CSB.zipCode# <br />
