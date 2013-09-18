@@ -379,6 +379,7 @@
         <cfargument name="isWelcomeFamily" default="0" hint="isWelcomeFamily is not required">
         <cfargument name="isRelocation" default="0" hint="isRelocation is not required">
         <cfargument name="dateRelocated" default="" hint="Date Relocated is not required">
+        <cfargument name="datePlaced" default="#NOW()#" hint="Date Placed is not required">
         <cfargument name="changePlacementExplanation" default="" hint="changePlacementExplanation is not required">
         <cfargument name="schoolID" hint="schoolID is required">   
         <cfargument name="schoolIDReason" default="" hint="schoolIDReason is not required">     
@@ -404,7 +405,8 @@
 				hostID = ARGUMENTS.hostID,
 				isWelcomeFamily = ARGUMENTS.isWelcomeFamily,
 				isRelocation = ARGUMENTS.isRelocation,
-				dateRelocated = ARGUMENTS.dateRelocated,				
+				dateRelocated = ARGUMENTS.dateRelocated,
+				datePlaced = ARGUMENTS.datePlaced,
 				changePlacementExplanation = ARGUMENTS.changePlacementExplanation,
 				schoolID = ARGUMENTS.schoolID,
 				schoolIDReason = ARGUMENTS.schoolIDReason,
@@ -868,6 +870,7 @@
         <cfargument name="isWelcomeFamily" default="0" hint="isWelcomeFamily is not required">
         <cfargument name="isRelocation" default="0" hint="isRelocation is not required">
         <cfargument name="dateRelocated" default="" hint="Date Relocated is not required">
+        <cfargument name="datePlaced" default="#NOW()#" hint="Date Placed is not required">
         <cfargument name="schoolID" default="0" hint="schoolID is not required">        
         <cfargument name="schoolIDReason" default="" hint="schoolIDReason is not required">     
         <cfargument name="placeRepID" default="0" hint="placeRepID is not required">
@@ -1310,7 +1313,7 @@
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isWelcomeFamily)#">,
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isRelocation)#">, 
                         <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateRelocated#" null="#NOT IsDate(ARGUMENTS.dateRelocated)#">,
-                    	<cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
+                    	<cfqueryparam cfsqltype="cf_sql_timestamp" value="#ARGUMENTS.datePlaced#" null="#NOT IsDate(ARGUMENTS.dateRelocated)#">,
                         <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#vActions#">,
                         <cfqueryparam cfsqltype="cf_sql_bit" value="1">,
