@@ -18,13 +18,15 @@
 			
 			<p>Welcome to the United States!</p>
 			
-			As you know, your profile should be activated in SEVIS database so that you can officially start your Training Program and apply for your Social Security Card.  
-			In order to do that ISE needs your current US Address. Please email it to Ryan Schreiber at <a href=""mailto:ryan@iseusa.com"">ryan@iseusa.com</a> <br /> <br />
+			<b>As a J-1 program participant, you must validate your program by Checking-in with ISE within 10 (ten) business days from arrival in the United States via ISE website</b> (please follow the flashing Check-in section): 
+			<a href='http://www.isetraining.org'>www.isetraining.org</a> <br /> <br />
 			
-			Failure to do so within 30 days of the official program start date (as stated on your DS2019 form) could result in your SEVIS profile to become inactive and your termination from the program. 
-			So, please send it as soon as possible. <br /> <br />
+			This is an important step to ensure that your current U.S. address is accurately reflected in the Student Exchange Visitor Information System (SEVIS). To be in a good standing, ISE recommends that you check-in the next 
+			day after arrival. Once you Check-in, the SEVIS system will show that your visa is current and that you are lawfully present in the United States and authorized to pursue program activities. <br />
+			<font color='red'>Note: Failure to Check-in on time will lead to a program termination.</font> <br /> <br />
 			
-			Should you have any questions, please feel free to contact me. <br /> <br />
+			If you should have any questions or you need assistance during your stay, please feel free to always contact us by emailing Ryan Schreiber at <a href=""mailto:ryan@iseusa.com"">ryan@iseusa.com</a>
+			or by calling our toll-free number 1-877-779-0717 (dial 0 for the operator). <br /> <br />
 			
 			Best regards, <br /> <br />
 			
@@ -118,7 +120,7 @@
 					emailCC=vEmailCC,
 					emailBCC=vEmailBCC,
 					emailReplyTo=vEmailFrom,
-					emailSubject=vCandidateName & " - SEVIS Activation Required",
+					emailSubject=vCandidateName & " - Check-in / SEVIS Record Validation Required",
 					emailMessage=vEditedEvaluationEmailBody,
 					emailPriority=1,
 					footerType="emailNoInfo",
