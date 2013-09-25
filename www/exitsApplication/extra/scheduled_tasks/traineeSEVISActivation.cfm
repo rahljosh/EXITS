@@ -64,7 +64,7 @@
 		AND
         	ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="7">
         AND
-            CURDATE() > DATE_ADD(ec.ds2019_startDate, INTERVAL 1 WEEK) 
+            CURDATE() > DATE_ADD(ec.ds2019_startDate, INTERVAL 1 DAY) 
         <!--- 45 Days before it was implemented - There is a 30 day window to activate records in SEVIS --->
         AND
         	ec.ds2019_startDate >= <cfqueryparam cfsqltype="cf_sql_date" value="2011-06-01">
