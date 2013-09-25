@@ -26,7 +26,7 @@
 		}
 	</cfscript>
 
-    <cfquery name="qNewsMessages" datasource="mysql">
+    <cfquery name="qNewsMessages" datasource="#APPLICATION.DSN.Source#">
         SELECT
         	*
         FROM
@@ -41,7 +41,7 @@
         	companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
     </cfquery>
 
-    <cfquery name="qNewCandidates" datasource="mysql">
+    <cfquery name="qNewCandidates" datasource="#APPLICATION.DSN.Source#">
         SELECT 
         	ec.firstname, 
             ec.lastname, 
@@ -52,23 +52,20 @@
         	extra_candidates ec
         LEFT JOIN 
         	smg_countrylist cl ON cl.countryid = ec.residence_country 
-        WHERE 
-        	ec.entrydate > <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CLIENT.lastlogin#">
-        AND  
-        	ec.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
+        WHERE ec.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
+       	<cfif IsDate(CLIENT.lastlogin)>
+        	AND ec.entrydate > <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CLIENT.lastlogin#">
+      	</cfif>        	
         <cfif VAL(CLIENT.usertype) LTE 4>
-            AND
-                ec.applicationStatusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,11" list="yes"> )
+            AND ec.applicationStatusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,11" list="yes"> )
         <cfelseif CLIENT.userType EQ 8>
-            AND
-                ec.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+            AND ec.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
         <cfelseif CLIENT.userType EQ 11>
-            AND
-                ec.branchID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+            AND ec.branchID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
 		</cfif>
     </cfquery>
    
-    <cfquery name="qNewHostCompanies" datasource="mysql">
+    <cfquery name="qNewHostCompanies" datasource="#APPLICATION.DSN.Source#">
         SELECT 
         	ehc.hostcompanyid, 
             ehc.name, 
@@ -79,9 +76,10 @@
         FROM 
         	extra_hostcompany ehc
         LEFT JOIN 
-        	smg_states s ON s.id = ehc.state 
-        WHERE 
-        	ehc.entrydate > <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CLIENT.lastlogin#">
+        	smg_states s ON s.id = ehc.state
+     	<cfif IsDate(CLIENT.lastlogin)> 
+        	WHERE ehc.entrydate > <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CLIENT.lastlogin#">
+       	</cfif>
     </cfquery>
     
 </cfsilent>
@@ -193,6 +191,17 @@
 						</td>
 					</tr>
 				</cfif>
+                
+                <!--- New Users --->
+	            <tr>
+                    <td colspan="2" style="font-weight:bold; text-decoration:underline;">New user in EXTRA?</td>
+                </tr>
+                <tr>
+                	<td colspan="2" valign="top" class="style1" style="padding:10px 15px 15px 15px;">
+                    	<a href="onlineApplication/tutorial.cfm" style="color:red;">Click here for a breif tutorial</a>
+                    </td>
+                </tr>
+                
         	</table>
 
         </td>
