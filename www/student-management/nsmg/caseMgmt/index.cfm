@@ -62,7 +62,7 @@
                     stResult = APPLICATION.CFC.DOCUMENT.uploadFile(
                         foreignTable="smg_caseMgmt",
                         foreignID=URL.caseID, 
-                        documentTypeID=28,
+                        documentTypeID=33,
                         uploadPath=vSetUploadPath,					
                         description="#form.fileDescription#",
                         allowedExt="jpg,jpeg,png,pdf,doc,docx,ppt,pps,pptx,ppsx,gif,pages,numbers,odt,xls,"
@@ -154,7 +154,7 @@
         messageType="divOnly"
         />
 </div>
-<cfif ListFind("1,2,3,4", CLIENT.userType)>
+<cfif ListFind("1,2,3,4,5,6,7", CLIENT.userType)>
 	
     <!--- Office Users --->
     
