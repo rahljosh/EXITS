@@ -216,17 +216,23 @@
                     d.isDeleted,
                     d.dateCreated,
                     d.dateUpdated,
+                    d.uploadedBy,
                     CONCAT(serverName, '.', serverExt) AS fileName,
                     CONCAT(location, serverName, '.', serverExt) AS filePath,
                     dt.ID AS documentTypeID,
                     dt.name AS documentType,
-                    s.season
+                    s.season,
+                    u.firstname,
+                    u.lastname
+                    
                 FROM 
                     document d
 				LEFT OUTER JOIN                      
                 	documentType dt ON dt.ID = d.documentTypeID
 				LEFT OUTER JOIN
                 	smg_seasons s ON s.seasonID = d.seasonID
+                LEFT OUTER JOIN
+                	smg_users u on u.userid = d.uploadedBy
                 WHERE 
                 	d.isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
 
@@ -364,7 +370,8 @@
                     fileSize,
                     location,
                     description,
-                    dateCreated
+                    dateCreated,
+                    uploadedBy
                 )
                 VALUES
                 (
@@ -379,7 +386,8 @@
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.fileSize#" />,
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.fileLocation#" />,
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.description#" />,
-                    <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+                    <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#client.userid#" />
                 )
         </cfquery>
 
