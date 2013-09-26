@@ -41,7 +41,7 @@
 
 <cfoutput>
 
-<cfmail to="#get_email.email#"  FROM="""SMG Support"" <support@student-management.com>" subject="SMG - Progress Report Rejected" >
+<cfmail to="#get_email.email#"  FROM="""ISE Support"" <support@student-management.com>" subject="SMG - Progress Report Rejected" >
 A report you submitted has been rejected.   
 
 To view the report and make necessary changes please visit #CLIENT.exits_url#/?link=#find_link.id#
@@ -76,7 +76,7 @@ support@student-management.com
 		AND smg_users.active = '1'
 </cfquery>
 
-<cfmail to="#rdemail.email#" failto="support@student-management.com" FROM="""SMG Support"" <support@student-management.com>" subject="SMG - Progress Report Rejected" >
+<cfmail to="#rdemail.email#" failto="support@student-management.com" FROM="""ISE Support"" <support@student-management.com>" subject="SMG - Progress Report Rejected" >
 A report you approved to headquarters has been rejected by the facilitator.  The report is waiting for the Area Rep to make corrections.
 
 To view the report and reason it was rejected please visit #CLIENT.exits_url#/?link=#find_link.id#

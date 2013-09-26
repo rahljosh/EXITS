@@ -30,7 +30,7 @@
 		<head>
 		<script language="JavaScript">
 		<!-- 
-		alert("You have successfully inactivate this student. If you wish to activate this student in the feature please contact SMG support@student-management.com");
+		alert("You have successfully inactivate this student. If you wish to activate this student in the feature please contact ISE support@student-management.com");
 			location.replace("?curdoc=student_app/student_app_list&status=#form.status#");
 		-->
 		</script>
