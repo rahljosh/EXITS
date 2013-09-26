@@ -79,4 +79,7 @@
 
 	// Store the initialized User object in the Application scope
 	APPLICATION.CFC.User = CreateCFC("user").Init();
+	
+	// Store the initialized CaseMgmt object in the Application scope
+	APPLICATION.CFC.caseMgmt = CreateCFC("caseMgmt").Init();
 </cfscript>
