@@ -15,7 +15,7 @@
     <cfsetting requesttimeout="200">
 
 	<!--- Old Initial Welcome for WEP and ESI --->
-    <cfif ListFind("11,14", CLIENT.companyID)>
+    <cfif ListFind("11", CLIENT.companyID)>
         <cflocation url="index.cfm?curdoc=old_initial_welcome" addtoken="no">
     </cfif>
 
