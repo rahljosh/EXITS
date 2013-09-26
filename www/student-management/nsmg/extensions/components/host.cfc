@@ -1148,12 +1148,12 @@
                 LEFT OUTER JOIN
                 	smg_host_reference_tracking hrqt ON hrqt.fk_referencesID = sfr.refID
 
-					<!--- Get SeasonID
+					<!--- Get SeasonID--->
                     <cfif LEN(ARGUMENTS.seasonID)>
                         AND
                             hrqt.season = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
                     </cfif>
-                     --->
+                     
                 LEFT OUTER JOIN
                 	smg_users u ON u.userID = hrqt.interviewer
                 WHERE
@@ -1302,8 +1302,8 @@
 					smg_host_app_history h ON h.itemID = ap.ID                  
                     AND
                         h.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
-                   <!---AND
-                        h.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">---->
+                   <!------->AND
+                        h.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
                 WHERE
                 	1 = 1
                       

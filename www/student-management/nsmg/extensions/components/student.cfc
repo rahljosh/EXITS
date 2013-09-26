@@ -120,6 +120,9 @@
                     <!--- Host Family --->
                     host.airport_city, 
                     host.major_air_code,
+                    host.familylastname as hostLastName, 
+                    host.fatherfirstname,
+                    host.motherfirstname,
                     <!--- Region --->
 					r.regionName,
                     <!--- Area Representative --->
@@ -145,7 +148,8 @@
 
 				<cfif LEN(ARGUMENTS.studentID)>
                     AND
-                        s.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
+                      
+                        s.studentID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#" list="yes"> )
                 </cfif>
                 
                 <cfif LEN(ARGUMENTS.uniqueID)>
@@ -1062,7 +1066,7 @@
                     <p>
                         Congratulations!  The placement of #qGetStudentInfo.firstName# #qGetStudentInfo.familyLastName# with your family has been fully approved.  
                         Your exchange student will be contacting you soon, and if you want to reach out to him/her it is now permissible to do so. 
-                        For any questions, please contact your local area rep – #qGetStudentInfo.areaRepFirstName# #qGetStudentInfo.areaRepLastName#. 
+                        For any questions, please contact your local area rep ï¾– #qGetStudentInfo.areaRepFirstName# #qGetStudentInfo.areaRepLastName#. 
                         #qGetCompany.companyshort_nocolor# thanks you for sharing in our mission of making the world a little smaller, one student at a time.
                     </p>
                     <p>
