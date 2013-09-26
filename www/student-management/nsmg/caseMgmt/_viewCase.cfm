@@ -88,6 +88,7 @@ window.onload = function additionalInfo() {
                 
     <div class="rdtop"> 
         <span class="rdtitle">View Case Details</span> 
+        <div style="float:right;"><img src="pics/betaTesting.png"></div>
         <em></em>
     </div>
     
