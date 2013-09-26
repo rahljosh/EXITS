@@ -451,10 +451,11 @@
 
 <div class="section"><br />
 
+
 <table width="770" border=0 cellpadding=0 cellspacing=0 align="center">	
 	<tr>
 		<td valign="top" width="590">
-			<cfif hostid is 0 and NOT LEN(cancelDate)>
+			<cfif hostid eq 0 and NOT LEN(cancelDate)>
 			<table background="pics/unplaced.jpg" cellpadding="2" width="100%"> 
 			<cfelseif LEN(canceldate)>
 			<table background="pics/canceled.jpg" cellpadding="2" width="100%"> 
@@ -652,6 +653,9 @@
 				<a href="" onClick="javascript: win=window.open('forms/received_progress_reports.cfm?stuid=#qGetStudentInfo.studentID#', 'Reports', 'height=450, width=700, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Progress Reports</A>  
                 <a href="student/index.cfm?action=flightInformation&uniqueID=#qGetStudentInfo.uniqueID#&programID=#qGetStudentInfo.programID#" class="jQueryModal">Flight Information</a>
                 <a href="" onClick="javascript: win=window.open('tours/trips.cfm', 'Settings', 'height=450, width=800, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Student Trips</a>
+                
+                <a href="index.cfm?curdoc=caseMgmt/index" >Case Management</a>
+				
                
 			</div>
 		</div>
