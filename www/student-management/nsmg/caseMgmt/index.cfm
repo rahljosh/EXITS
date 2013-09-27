@@ -126,20 +126,10 @@
     </cfif>
 </cfif>
 </cfsilent>
-<!----
-<cfdump var="#qBasicCaseDetails#">
 
-<cfdump var="#qUsersInvolved#">
-<Cfdump var="#stResult#">
+	 <script src="linked/chosen/chosen.jquery.js" type="text/javascript"></script>
+        <link rel="stylesheet" href="linked/css/chosen.css" />
 
-<cfdump var="#qFullCaseDetails#">
-<cfdump var="#qUsersInvolved#">
----->
-	    <script src="linked/chosen/chosen.jquery.js" type="text/javascript"></script>
-        <link rel="stylesheet" href="linked/chosen/chosen.css" />
-<!--- 
-	Check to see which action we are taking. 
---->
 
 <div align="center">
 <!--- Page Messages --->
