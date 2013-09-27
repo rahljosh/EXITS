@@ -751,7 +751,7 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                        <table width=90% align="center" cellpadding=4 cellspacing="0">
                         	
                             <tr bgcolor="##90b2d5">
-                            	<th align="left">Student</th>
+                            	<th align="left">Student</th> 
                                 <th align="left">Subject</th>
                                 <th align="left">Status</th>
                                 <th align="left">Date Opened</th>
