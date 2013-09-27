@@ -231,7 +231,7 @@
             	<option value="0&unqid=#url.unqid#">All</option>
                 
                 <cfloop query="qGetStudentPlacements">
-                    <option value="#hostid#&unqid=#url.unqid#" <cfif url.placement eq hostid>selected</cfif>>#familylastname# (#hostid#)</option>
+                    <option value="#historyID#&unqid=#url.unqid#" <cfif url.placement eq hostid>selected</cfif>>#familylastname# (#hostid#)</option>
                 </cfloop>
            	   </select>
                </td>
