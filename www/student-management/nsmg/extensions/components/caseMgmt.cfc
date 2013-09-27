@@ -196,11 +196,17 @@
             </cfquery>
             </Cfloop>
             
-            <cfloop list="#ARGUMENTS.studentList#" index="studentID">
+            <!----Insert Regional Manager of Case---->
+                <Cfquery  datasource="#APPLICATION.DSN#">
+                delete from smg_caseMgmt_users_involved
+                where fk_caseid = <cfqueryparam cfsqltype="cf_sql_integer" value="#vCaseID#"> 
+                </Cfquery>  
+            <cfloop list="#ARGUMENTS.studentList#" index="i">
             	<cfscript>
 				//Student, Rep and Host Info
-				qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentFullInformationByID(studentID=studentid);
+				qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentFullInformationByID(studentID=#i#);
 				</cfscript>
+                
             	<!---Get the regional Manager for this student---->
                 <cfquery name="regionalManager" datasource="#application.dsn#">
                 select u.userid
@@ -209,11 +215,7 @@
                 where uar.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.regionassigned#">
                 and uar.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="5">
                 </cfquery>
-    			<!----Insert Regional Manager of Case---->
-                <Cfquery  datasource="#APPLICATION.DSN#">
-                delete from smg_caseMgmt_users_involved
-                where fk_caseid = <cfqueryparam cfsqltype="cf_sql_integer" value="#vCaseID#"> 
-                </Cfquery>                
+    			              
                 <cfquery
                     name="assignStudentsToCase"
                     datasource="#APPLICATION.DSN#">
