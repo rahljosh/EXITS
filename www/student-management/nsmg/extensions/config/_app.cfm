@@ -177,6 +177,7 @@
 	APPLICATION.PATH.users = APPLICATION.PATH.uploadedFiles & "users/";
 	APPLICATION.PATH.hostApp = APPLICATION.PATH.uploadedFiles & "hostApp/";
 	APPLICATION.PATH.studentServices = APPLICATION.PATH.uploadedFiles & "student-services/";
+	APPLICATION.PATH.caseMgmt = APPLICATION.PATH.uploadedFiles & "caseMgmt/";
 
 	// These are used in the student online application
 	APPLICATION.PATH.onlineApp = StructNew();
