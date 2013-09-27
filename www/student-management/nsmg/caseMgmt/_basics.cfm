@@ -77,6 +77,18 @@ window.onload = function additionalInfo() {
 <Cfif not len(session.studentList)> 
   <cfset SESSION.studentList = ListAppend(session.studentList, url.studentid, ",")>
 </Cfif>
+<!---if case is open and adding more kids, we need to get kids already assigned to the case---->
+<Cfif val(url.caseid) and not len(session.studentlist)>		
+            <cfquery name="kidsInCase" datasource="#application.dsn#">
+            select fk_studentid
+            from smg_casemgmt_users_involved
+            where fk_caseid = <cfqueryparam cfsqltype="cf_sql_integer" value='#url.caseid#'>
+            </cfquery>
+            <cfloop query="kidsInCase">
+                <cfset session.studentList = ListAppend(studentList,#fk_studentid#)>
+            </cfloop>
+            
+</Cfif>
 <!---Add Student to List---->
 <cfif val(form.addNewStudent)>
 	<cfif not ListFind(SESSION.studentList, form.addNewStudent,",")>
@@ -85,6 +97,7 @@ window.onload = function additionalInfo() {
 </cfif>
 
 <cfif isDefined('form.opencase')>
+
 	<cfscript>    
             vCaseID = APPLICATION.CFC.CASEMGMT.openCase(studentList=SESSION.studentlist,
                                                         caseDateOfIncident=FORM.caseDateOfIncident,
@@ -96,6 +109,7 @@ window.onload = function additionalInfo() {
 														caseID=url.caseid,
 														caseOwner=form.caseOwner); 
     </cfscript>
+	<cfset session.studentlist = ''>
     <cflocation url="index.cfm?curdoc=caseMgmt/index&action=addDetails&caseID=#vCaseID#" addtoken="no">
     <cfabort>
 </cfif>
@@ -117,6 +131,7 @@ window.onload = function additionalInfo() {
 			FORM.caseDateOfIncident = caseDetails.caseDateOfIncident;
 			FORM.caseowner = caseDetails.fk_caseOwner;
         </cfscript>
+
 	<Cfif not len(SESSION.studentlist)>
 		
             <cfquery name="kidsInCase" datasource="#application.dsn#">
@@ -194,10 +209,12 @@ window.onload = function additionalInfo() {
     and uar.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="5">
     </cfquery>
  </cfif>
+
 <div class="rdholder" style="width:100%; float:right;"> 
                 
     <div class="rdtop"> 
         <span class="rdtitle">Case Management</span> 
+        <div style="float:right;"><img src="pics/betaTesting.png"></div> 
   </div>
     
     <div class="rdbox">
@@ -224,11 +241,11 @@ window.onload = function additionalInfo() {
         
         <table width=95% border=0 align="Center" cellpadding="5" cellspacing="0">
         	<Tr>
-            	<th colspan=3 align="left"></th>
-                <th align="left">Case Owner:
+            	<th colspan=4 align="left"></th>
+                <th align="left" colspan=2>Case Owner:
                   <select name="caseOwner" data-placeholder="Enter ID or Name of Student" class="chzn-select" tabindex="2" size=20>
                        <option value=""></option>
-                       <cfloop query="#qAvailableUsers#">
+                       <cfloop query="qAvailableUsers">
                        
                            <option value="#userid#" <Cfif form.caseOwner eq #userid#>selected</cfif>>#firstName# #lastname# (#userid#)</option>
                      
@@ -251,7 +268,7 @@ window.onload = function additionalInfo() {
             </tr>
             
        <cfif val(newCase)>
-        <Cfloop query="#qGetStudentInfo#">
+        <Cfloop query="qGetStudentInfo">
         	<Tr <cfif currentrow mod 2>bgcolor="##efefef"</cfif>>
             	<td>#qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (#qGetStudentInfo.studentid#)</td>
                 <td>#programname#</td>
@@ -302,7 +319,7 @@ window.onload = function additionalInfo() {
            <td align="Center">Another student involved? Add them here:
                    <select name="addNewStudent" data-placeholder="Enter ID or Name of Student" class="chzn-select" tabindex="2" onchange="this.FORM.submit(addStudent);" size=20>
                        <option value=""></option>
-                       <cfloop query="#qGetOtherStudentsInRegion#">
+                       <cfloop query="qGetOtherStudentsInRegion">
                        <cfif not ListFind(SESSION.studentList,studentid, ",")>
                            <option value="#studentID#">#firstName# #familylastname# - #studentID#</option>
                        </cfif>
@@ -370,7 +387,7 @@ window.onload = function additionalInfo() {
             	<td colspan=3><strong>Tags</strong>:
                  <div>
                 
-                      <cfloop query="#qGetTags#">
+                      <cfloop query="qGetTags">
                        
                <input type="checkbox" name='tags' value='#id#' class="check-with-label" <cfif listFind(#tagsInCase#, #id#)>checked</cfif> />
                            <label style="font-weight: normal;" class="label-for-check">#tagName#</label>

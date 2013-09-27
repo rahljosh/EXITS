@@ -8,7 +8,7 @@
         <!----Don't show the label for the list of cases---->
         <cfif url.action neq 'viewCaseList'>
         <tr>
-                <td colspan=4 align="left">
+                <td colspan=6 align="left">
                     <div class="dottedLineBelow" style="font-size:14px; font-weight:bold;">Basic Info</div>
                 </td>
         	</tr>
