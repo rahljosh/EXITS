@@ -264,6 +264,11 @@
         	active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
     </cfquery>
     
+    <cfscript>
+		//get all cases that your involved in
+		qYourCases = APPLICATION.CFC.CASEMGMT.yourCases(userid=client.userid); 
+		qYourLoopedCases = APPLICATION.CFC.CASEMGMT.yourLoopedCases(userid=client.userid); 
+	</cfscript>
 </cfsilent>    
 
 <script type="text/javascript">
@@ -284,7 +289,13 @@
 	}
 	// End -->
 </script>
-
+<script>
+jQuery(document).ready(function($) {
+      $(".clickableRow").click(function() {
+            window.document.location = $(this).attr("href");
+      });
+});
+</script>
 <script type="text/javascript" language="JavaScript">
 <!-- Script to Swap div area
 	function HideDIV(d) { document.getElementById(d).style.display = "none"; }
@@ -726,7 +737,65 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                 </div>
                 <!--- End of Student Applications / Field Bonuses --->
                       
-                                
+                <!--- Case Management---->
+                 <cfif client.usertype lte 4>
+                 <div class="rdholder" style="width:100%; float:right;"> 
+                
+                    <div class="rdtop"> 
+                        <span class="rdtitle">Case Management </span> 
+                        <em>Any cases you're involved with or looped in on. <div style="float:right;"><img src="pics/betaTesting.png"></div> </em>
+                    </div>
+                    
+                    <div class="rdbox" >
+                    
+                       <table width=90% align="center" cellpadding=4 cellspacing="0">
+                        	
+                            <tr bgcolor="##90b2d5">
+                            	<th align="left">Student</th>
+                                <th align="left">Subject</th>
+                                <th align="left">Status</th>
+                                <th align="left">Date Opened</th>
+                            </tr>
+                        <Cfif qYourCases.recordcount eq 0>
+                        	<tr>
+                            	<td colspan=4>You have no open cases.</td>
+                            </tr>
+                        <cfelse>    
+                            
+                            <cfloop query="qYourCases">
+                                <tr class='clickableRow' style="cursor: pointer;" href='index.cfm?curdoc=caseMgmt/index&action=viewCase&caseID=#caseID#'  <cfif currentrow mod 2>bgcolor="##ccc"</cfif> >
+                                    <td>#firstname# #familylastname# (#studentid#)</td>
+                                    <td>#caseSubject#</td>
+                                    <td>#caseStatus#</td>
+                                    <Td>#DateFormat(caseDateOpened, 'mmm. dd')# - #DateDiff('d', '#caseDateOpened#', '#now()#')#
+                                    <cfif #DateDiff('d', '#caseDateOpened#', '#now()#')# gt 1>s</cfif> day ago</Td>
+                                </tr>
+                            </cfloop>   
+                            <cfif qYourLoopedCases.recordcount>
+                            <tr bgcolor="##90b2d5">
+                            	<th align="left" colspan="4"><em>Looped In</em></th>
+                            </tr>
+                            </cfif>
+                            <cfloop query="qYourLoopedCases">
+                                <tr class='clickableRow' style="cursor: pointer;" href='index.cfm?curdoc=caseMgmt/index&caseID=#caseID#' <cfif currentrow mod 2>bgcolor="##ccc"</cfif>>
+                                    <td>#firstname# #familylastname# (#studentid#)</td>
+                                    <td>#caseSubject#</td>
+                                    <td>#caseStatus#</td>
+                                    <Td>#DateFormat(caseDateOpened, 'mmm. dd')# - #DateDiff('d', '#caseDateOpened#', '#now()#')#
+                                    <cfif #DateDiff('d', '#caseDateOpened#', '#now()#')# gt 1>s</cfif> day ago</Td>
+                                </tr>
+                            </cfloop> 
+						</Cfif>
+ 
+                        </table>
+                   
+                    </div>
+                    
+                    <div class="rdbottom"></div> <!-- end bottom --> 
+                    
+                </div>
+                <!--- End of Case Management --->      
+                </cfif>                
                 <!--- Marketing Material --->
                 <div class="rdholder" style="width:100%; float:right;"> 
                 
@@ -740,7 +809,7 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                         <table width=80% align="center">
                         
                             <!---_Available for All companies --->
-                            <cfif ListFind("1,2,3,4,5,10,12,14", CLIENT.companyID) >
+                            <cfif ListFind("1,2,3,4,5,10,12", CLIENT.companyID) >
                                 <tr>
                                     <td><img src="pics/icons/marketing.png" /></td><td><a href="marketing/difference.cfm" target="_blank">Make A Difference</a></td>
                                     <td><img src="pics/icons/marketing2.png" /></td><td><a href="marketing/HostFam2012/HostFamiles.cfm" target="_blank">Host Families</a></td>
