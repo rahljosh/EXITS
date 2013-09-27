@@ -10,7 +10,7 @@
     <cfparam name="CLIENT.company_submitting" default="0">
     
     <cfparam name="studentID" default="0">
-    
+    <cfset session.studentlist = ''>
     <cfscript>
 		if ( VAL(studentID) ) {
 			CLIENT.studentID = studentID;
@@ -653,9 +653,9 @@
 				<a href="" onClick="javascript: win=window.open('forms/received_progress_reports.cfm?stuid=#qGetStudentInfo.studentID#', 'Reports', 'height=450, width=700, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Progress Reports</A>  
                 <a href="student/index.cfm?action=flightInformation&uniqueID=#qGetStudentInfo.uniqueID#&programID=#qGetStudentInfo.programID#" class="jQueryModal">Flight Information</a>
                 <a href="" onClick="javascript: win=window.open('tours/trips.cfm', 'Settings', 'height=450, width=800, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Student Trips</a>
-                
-                <a href="index.cfm?curdoc=caseMgmt/index" >Case Management</a>
-				
+                <Cfif client.usertype lte 4>
+                <a href="index.cfm?curdoc=caseMgmt/index&studentid=#qGetStudentInfo.studentid#" >Case Management</a>
+				</Cfif>
                
 			</div>
 		</div>
