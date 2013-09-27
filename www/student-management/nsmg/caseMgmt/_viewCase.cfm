@@ -194,7 +194,7 @@ window.onload = function additionalInfo() {
                 	<input type="hidden" value=1 name="loopin"/>
                 	 <select name="loopInEmail" data-placeholder="Enter name or email" class="chzn-select" tabindex="2" size=20>
                        <option value=""></option>
-                       <cfloop query="#qAvailableUsers#">
+                       <cfloop query="qAvailableUsers">
                        
                            <option value="#userid#">#firstName# #lastname#</option>
                      

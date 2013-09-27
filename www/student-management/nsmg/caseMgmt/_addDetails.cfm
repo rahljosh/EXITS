@@ -18,7 +18,7 @@
                 
     <div class="rdtop"> 
         <span class="rdtitle">Add Details</span> 
-        
+        <div style="float:right;"><img src="pics/betaTesting.png"></div> 
     </div>
     
     <div class="rdbox">
@@ -52,7 +52,7 @@
        	</Tr>
        </cfif>
        	<tr>
-        	<td><textarea name="details" cols=120 rows=15 placeholder'Please enter as much information as possible.'>#form.details#</textarea> </td>
+        	<td><textarea name="details" cols=150 rows=15 placeholder'Please enter as much information as possible.'>#form.details#</textarea> </td>
         </tr>
         
            <tr>

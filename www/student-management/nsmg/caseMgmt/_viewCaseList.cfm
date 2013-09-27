@@ -55,6 +55,7 @@ padding-left: 10px;
                 
     <div class="rdtop"> 
         <span class="rdtitle">All Cases</span> 
+        <div style="float:right;"><img src="pics/betaTesting.png"></div> 
         <em></em>
     </div>
     <div class="rdbox">
