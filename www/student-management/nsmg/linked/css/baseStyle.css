@@ -1367,3 +1367,97 @@ input.projectHelpHours {
 /********************************************
 	END OF TWO COLUMN LAYOUT FOR INFO PAGES (user, host)
 ********************************************/
+
+/********************************************
+	CASE Management Styles 
+********************************************/
+.boxWithTitle {
+	font-family: Arial, Helvetica, sans-serif;
+	margin: 15px;
+	padding: 15px;
+	height: auto;
+	width: 70%;
+	border: medium solid #CCC;
+	Margin-right: auto;
+	Margin-left: auto;
+	min-width:600px;
+}
+
+#title {
+font-family: Arial, Helvetica, sans-serif;
+font-size: 16px;
+color: #999;
+background-color: #FFF;
+position: relative;
+z-index: 25;
+top: -25px;
+min-width:200px;
+width:15%;
+
+padding-right: 10px;
+padding-left: 10px;
+}
+.dottedLineAbove {
+	padding-top: 8px;
+	border-top-width: thin;
+	border-top-style: dashed;
+	border-top-color: #CCC;
+	width: 100%;
+}
+.dottedLineBelow {
+	padding-bottom: 8px;
+	border-bottom-width: thin;
+	border-bottom-style: dashed;
+	border-bottom-color: #CCC;
+	width: 100%;
+}
+
+.DotArrows {
+	border-bottom-width: thin;
+	border-bottom-style: dashed;
+	border-bottom-color: #ccc;
+	text-align: center;
+	vertical-align: baseline;	
+}
+.DotArrows #text {
+	font-family: Arial, Helvetica, sans-serif;
+	color: #666;
+	background-color: #FFF;
+	padding: 2px;
+	position: relative;
+	bottom: -10px;
+	vertical-align: bottom;
+	z-index: 25;
+	margin-right: auto;
+	margin-left: auto;
+	width: 200px;
+}
+
+.boxWithTitle .check-with-label:checked + .label-for-check {
+  font-weight: bold;
+  background-color:#FFe860;
+}
+
+table#clickableRow {
+    border-collapse: collapse;   
+}
+#clickableRow tr {
+    
+    border-top: 1px solid #fff;
+}
+#clickableRow tr:hover {
+    background-color: #ccc;
+}
+#clickableRow th {
+    background-color: #fff;
+}
+#clickableRow th, #example td {
+    padding: 3px 5px;
+}
+#clickableRow td:hover {
+    cursor: pointer;
+}
+
+/********************************************
+	END Case MGMT
+********************************************/
