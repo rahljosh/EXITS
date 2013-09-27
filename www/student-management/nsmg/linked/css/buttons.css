@@ -32,8 +32,8 @@
 .buttonGreen:active {
    border-top-color: #066e26;
    background: #066e26;
-   }
-   
+   }  
+
 /****Yellow Button******/
 .buttonYellow {
 	border-top: 1px solid #ffde3a;
@@ -136,7 +136,7 @@
 .buttonRed:active {
    border-top-color: #9c1a1d;
    background: #9c1a1d;
-   }
+   }     
    
 /*****Smaller Button*****/
 .smallerButton {
@@ -144,3 +144,4 @@
 	border-radius: 5px;
 	font-size:10px;
 }
+
