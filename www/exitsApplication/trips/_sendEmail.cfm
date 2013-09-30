@@ -37,7 +37,18 @@
         AND
         	uar.userType = <cfqueryparam cfsqltype="cf_sql_integer" value="5">
 	</cfquery>
-
+	<cfquery name="qGetAreaRep" datasource="#APPLICATION.DSN.Source#">
+    SELECT 
+        	u.userID,
+            u.firstName,
+            u.lastName,
+            u.email 
+        FROM 
+        	smg_users u 
+		WHERE
+        	u.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.areaRepUserID)#">
+        
+    </cfquery>
 </cfsilent>
 
 <cfoutput>	
