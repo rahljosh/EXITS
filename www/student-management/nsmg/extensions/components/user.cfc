@@ -12,7 +12,7 @@
 	output="false" 
 	hint="A collection of functions for the company">
 
-
+setUserSessionPaperwork
 	<!--- Return the initialized Company object --->
 	<cffunction name="Init" access="public" returntype="user" output="false" hint="Returns the initialized User object">
 		
@@ -307,7 +307,7 @@
 			//SESSION.USER.defaultRegion = "";
 			//SESSION.USER.userType = "";
 			
-			SESSION.USER.paperworkSkipAllowed = true;
+			SESSION.USER.paperworkSkipAllowed = false;
 			
 			// Path Information - set up upload files path
 			SESSION.USER.myUploadFolder = APPLICATION.PATH.users & ARGUMENTS.userID & "/";
@@ -1522,7 +1522,8 @@
         <cfscript>
 			// Get Current Paperwork Season ID
 			vCurrentSeasonID = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID;
-		</cfscript>
+			//vCurrentSeasonID = 10;
+        </cfscript>
         
         <!--- Office Users --->
         <cfif ListFind("1,2,3,4", ARGUMENTS.userType)>
