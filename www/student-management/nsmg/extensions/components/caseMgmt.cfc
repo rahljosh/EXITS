@@ -261,7 +261,7 @@
             <cfif val(ARGUMENTS.caseID)>
              cases.caseid = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.caseID#">
             <cfelseif val(ARGUMENTS.personid)>
-             cases.fk_caseowner = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.personid#">
+             cmui.fk_studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.personid#">
             </cfif>
           </cfquery>  
        
