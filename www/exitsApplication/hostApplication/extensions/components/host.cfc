@@ -1063,7 +1063,8 @@
 			var qUploadedPictureCategoryList = APPLICATION.CFC.DOCUMENT.getDocuments(
 				foreignTable="smg_hosts",	
 				foreignID=APPLICATION.CFC.SESSION.getHostSession().ID, 
-				documentGroup="familyAlbum"
+				documentGroup="familyAlbum",
+				seasonID=APPLICATION.CFC.SESSION.getHostSession().seasonID
 			);
 			
 			var vCategoryArray = ListToArray(ValueList(qCategoryList.ID));
