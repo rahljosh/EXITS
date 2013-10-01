@@ -414,7 +414,7 @@
         <cfargument name="description" type="string" required="no" default="" />
         <cfargument name="allowedExt" type="string" required="no" default="" />
 		<cfargument name="blockedExt" type="string" required="no" default="" />
-        <cfargument name="seasonID" type="numeric" required="no" default="" />
+        <cfargument name="seasonID" required="no" default="" />
         
         <cfscript>
 			// Set Result Message
