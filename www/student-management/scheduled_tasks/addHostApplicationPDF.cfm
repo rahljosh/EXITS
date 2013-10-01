@@ -1,12 +1,21 @@
 <cfsetting requesttimeout="400">
 
+<cfscript>
+	vCurrentSeason = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID;
+</cfscript>
+
 <cfquery name="qGetStudentsMissingHostAppOffice" datasource="#APPLICATION.DSN#">
     SELECT studentID, hostID
     FROM smg_students
     WHERE active = 1
     AND hostID != 0
     AND ( host_fam_approved IN (1,2,3,4) OR datePISEmailed IS NOT NULL )
-    AND hostID IN (SELECT hostID FROM smg_hosts WHERE hostAppStatus IN (1,2,3,4) AND active = 1)
+    AND hostID IN (
+    	SELECT hostID 
+       	FROM smg_hosts 
+        INNER JOIN smg_host_app_season ON smg_host_app_season.hostID = smg_hosts.hostID
+        	AND smg_host_app_season.seasonID = vCurrentSeason
+      	WHERE active = 1 )
     AND studentID NOT IN (SELECT DISTINCT fk_studentID FROM virtualFolder WHERE fk_hostID = hostID AND fk_documentType = 28 AND isDeleted = 0)
 </cfquery>
 
@@ -85,7 +94,12 @@
     WHERE active = 1
     AND hostID != 0
     AND ( host_fam_approved IN (1,2,3,4) OR datePISEmailed IS NOT NULL )
-    AND hostID IN (SELECT hostID FROM smg_hosts WHERE hostAppStatus IN (1,2,3,4) AND active = 1)
+        AND hostID IN (
+    	SELECT hostID 
+       	FROM smg_hosts 
+        INNER JOIN smg_host_app_season ON smg_host_app_season.hostID = smg_hosts.hostID
+        	AND smg_host_app_season.seasonID = vCurrentSeason
+      	WHERE active = 1 )
     AND studentID NOT IN (SELECT DISTINCT fk_studentID FROM virtualFolder WHERE fk_hostID = hostID AND fk_documentType = 29 AND isDeleted = 0)
 </cfquery>
 
