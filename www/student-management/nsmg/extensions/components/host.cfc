@@ -1151,7 +1151,7 @@
     
     
     <cffunction name="getSeasonsForHost" access="public" returntype="query" output="no" hint="Gets the seasons the host has paperwork for">
-    	<cfargument name="hostID" default="0" type="numeric" required="yes">
+    	<cfargument name="hostID" default="0" required="no">
         <cfargument name="includeCurrent" default="0" required="no">
         
         <cfscript>
