@@ -945,6 +945,9 @@
                         <cfif checkTraineeSevis.recordCount GT 0>
                         	<cfset extraSevis = 1>
                             <cfset sevisCharged = checkTraineeSevis.amount_due>
+                        <cfelse>
+                        	<cfset extraSevis = 0>
+                            <cfset sevisCharged = 0>
                         </cfif>
                     
                  </cfif>
