@@ -1036,7 +1036,8 @@ setUserSessionPaperwork
 			var vDefaultUserRegionID = getUserAccessRights(userID=ARGUMENTS.userID).regionID;
 			
 			// Email Variables
-			var vEmailTo = getRegionalManager(regionID=vDefaultUserRegionID).email;
+			var vEmailTo = getRegionalAdvisor(regionID=vDefaultUserRegionID).email;
+			var vEmailCC = getRegionalManager(regionID=vDefaultUserRegionID).email;
 			var vEmailSubject = "#stUserPaperwork.user.displayName# has submitted paperwork";
 			var vEmailMessage = '';	
         </cfscript>
@@ -1056,7 +1057,8 @@ setUserSessionPaperwork
             </cfsavecontent>
     
             <cfinvoke component="nsmg.cfc.email" method="send_mail">
-                <cfinvokeargument name="email_to" value="#vEmailTo#"> 
+                <cfinvokeargument name="email_to" value="#vEmailTo#">
+                <cfinvokeargument name="email_cc" value="#vEmailCC#">
                 <cfinvokeargument name="email_from" value="#CLIENT.emailfrom# (#CLIENT.companyshort# Support)">
                 <cfinvokeargument name="email_subject" value="#vEmailSubject#">
                 <cfinvokeargument name="email_message" value="#vEmailMessage#">
