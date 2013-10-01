@@ -96,13 +96,19 @@
 
 <cfif submitted>
 
+	<cfscript>
+		vCurrentSeason = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID;
+	</cfscript>
+
 	<!--- OFFICE PEOPLE AND ABOVE --->
     <cfif client.usertype LTE 4>
         
         <cfquery name="getResults" datasource="#application.dsn#">
-            SELECT h.hostid, h.familylastname, h.fatherfirstname, h.motherfirstname, h.city, h.state, h.HostAppStatus, smg_regions.regionname
+            SELECT h.hostid, h.familylastname, h.fatherfirstname, h.motherfirstname, h.city, h.state, smg_regions.regionname, smg_host_app_season.applicationStatusID
             FROM smg_hosts h
-            LEFT OUTER JOIN smg_regions on smg_regions.regionid = h.regionid 
+            LEFT OUTER JOIN smg_regions on smg_regions.regionid = h.regionid
+            LEFT OUTER JOIN smg_host_app_season ON smg_host_app_season.hostID = h.hostID
+            	AND smg_host_app_season = <cfqueryparam cfsqltype="cf_sql_integer" value="#vCurrentSeason#">
             WHERE h.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
            
             <cfif form.regionid NEQ '' and form.regionid is not ''>
@@ -120,9 +126,9 @@
                 )
             </cfif>
             <Cfif val(form.status)>
-               	AND h.HostAppStatus = #form.status#   
+               	AND smg_host_app_season.applicationStatusID = #form.status#   
             <cfelse>
-            	AND h.hostAppStatus > 4  
+            	AND smg_host_app_season.applicationStatusID > 4  
             </Cfif>
 			<cfif form.active NEQ ''>
                 AND h.active = <cfqueryparam cfsqltype="cf_sql_bit" value="#form.active#">
@@ -276,12 +282,12 @@
                     <td>#regionname#</td>
                     <td></td>
                     <td>
-                        <cfif hostAppStatus eq 8>Filling out</cfif>
-                        <cfif hostAppStatus eq 7>Waiting on Area Rep</cfif>
-                        <cfif hostAppStatus eq 6>Waiting on Regional Advisor</cfif>
-                        <cfif hostAppStatus eq 5>Waiting on Regional Manager</cfif>
-                        <cfif hostAppStatus eq 4>Waiting on Program Manager</cfif>
-                        <cfif hostAppStatus eq 3>Approved</cfif>
+                        <cfif applicationStatusID eq 8>Filling out</cfif>
+                        <cfif applicationStatusID eq 7>Waiting on Area Rep</cfif>
+                        <cfif applicationStatusID eq 6>Waiting on Regional Advisor</cfif>
+                        <cfif applicationStatusID eq 5>Waiting on Regional Manager</cfif>
+                        <cfif applicationStatusID eq 4>Waiting on Program Manager</cfif>
+                        <cfif applicationStatusID eq 3>Approved</cfif>
                     </td>
                     <td>
                     
@@ -290,7 +296,7 @@
                     <cfif barLength gte 99><cfset barLength = 99></cfif>
                     <img src="pics/gradient.png" alt="Percentage Complete" name="Percent Complete" width="#barLength#" height=10 />&nbsp;<em>#barLength#%</em></td>
                     <td>
-					<cfif hostAppStatus lte #client.usertype#>
+					<cfif VAL(applicationStatusID) lte #client.usertype#>
                   		Submitted
                   <cfelse>
 

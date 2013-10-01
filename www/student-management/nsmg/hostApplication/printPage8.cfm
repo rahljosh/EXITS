@@ -69,7 +69,7 @@
                                     <span class="title" style="font-size:18px;">#qGetHostInfo.familyLastName# (###qGetHostInfo.hostid#) <br /> Host Family Application</span>
                                 </td>
                                 <td align="right" valign="top">
-                                    <span class="title">Started:</span> #DateFormat(qGetHostInfo.applicationStarted, 'mmm, d, yyyy')#<br />
+                                    <span class="title">Started:</span> #DateFormat(qGetHostInfo.dateStarted, 'mmm, d, yyyy')#<br />
                                     <span class="title">Section <cfif URL.reportType EQ "office">8<cfelse>7</cfif></span>
                                 </td>
                             </tr>
@@ -272,7 +272,7 @@
                     <span class="title" style="font-size:18px;">#qGetHostInfo.familyLastName# (###qGetHostInfo.hostid#) <br /> Host Family Application</span>
                 </td>
                 <td align="right" valign="top">
-                    <span class="title">Started:</span> #DateFormat(qGetHostInfo.applicationStarted, 'mmm, d, yyyy')#<br />
+                    <span class="title">Started:</span> #DateFormat(qGetHostInfo.dateStarted, 'mmm, d, yyyy')#<br />
                     <span class="title">Section <cfif URL.reportType EQ "office">8<cfelse>7</cfif></span>
                 </td>
             </tr>

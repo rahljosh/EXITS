@@ -21,10 +21,12 @@
 	
     <!--- Param URL Variables --->
     <cfparam name="URL.hostID" default="0">
+    <cfparam name="URL.seasonID" default="0">
 
     <!--- Param FORM Variables --->
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.hostID" default="0">
+    
     <!----Delete the school acceptance letter---->
 	<cfif isDefined('url.deleteSchoolAccept')>
 	<cfquery name="deleteSchoolAccept" datasource="#application.dsn#">
@@ -42,25 +44,39 @@
 			FORM.hostID = URL.hostID;
 		}
 		
+		// Get seasons that this host has records for
+		qGetSeasonsForHost = APPLICATION.CFC.HOST.getSeasonsForHost(hostID=FORM.hostID);
+		
+		// Variable for the most recent season
+		vSelectedSeason = ListLast(ValueList(qGetSeasonsForHost.seasonID));
+		
+		// Check if a selected season has been passed in
+		if (VAL(URL.seasonID)) {
+			vSelectedSeason = URL.seasonID;	
+		}
+		
 		// Get Host Application Information
-		qGetHostInfo = APPLICATION.CFC.HOST.getApplicationList(hostID=FORM.hostID);	
+		qGetHostInfo = APPLICATION.CFC.HOST.getApplicationList(hostID=FORM.hostID,seasonID=vSelectedSeason);
+		
+		// Get all seasons that this host has records for
+		qGetAllSeasonsForHost = APPLICATION.CFC.HOST.getSeasonsForHost(hostID=FORM.hostID);
 		
 		// Get Application Approval History
-		qGetApprovalHistory = APPLICATION.CFC.HOST.getApplicationApprovalHistory(hostID=qGetHostInfo.hostID, whoViews=CLIENT.userType);
-
+		qGetApprovalHistory = APPLICATION.CFC.HOST.getApplicationApprovalHistory(hostID=qGetHostInfo.hostID, whoViews=CLIENT.userType,seasonID=vSelectedSeason);
+		
 		// Get Uploaded Images
 		qGetSchoolAcceptance = APPLICATION.CFC.DOCUMENT.getDocuments(
 			foreignTable="smg_hosts",	
 			foreignID=FORM.hostID, 			
 			documentGroup="schoolAcceptance",
-			seasonID=APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID			
+			seasonID=vSelectedSeason			
 		);
 		
 		// Get References
-		qGetReferences = APPLICATION.CFC.HOST.getReferences(hostID=qGetHostInfo.hostID);
+		qGetReferences = APPLICATION.CFC.HOST.getReferences(hostID=qGetHostInfo.hostID,seasonID=vSelectedSeason);
 
 		// Get Confidential Visit Form
-		qGetConfidentialVisitForm = APPLICATION.CFC.PROGRESSREPORT.getVisitInformation(hostID=FORM.hostID,reportType=5);
+		qGetConfidentialVisitForm = APPLICATION.CFC.PROGRESSREPORT.getVisitInformation(hostID=FORM.hostID,reportType=5,seasonID=vSelectedSeason);
 
 		// This returns the approval fields for the logged in user
 		stCurrentUserFieldSet = APPLICATION.CFC.HOST.getApprovalFieldNames();
@@ -75,7 +91,7 @@
 		vHasAppBeenDeniedByOneLevelUpUser = false;
 		
 		// This Returns who is the next user approving / denying the report
-		stUserOneLevelUpInfo = APPLICATION.CFC.USER.getUserOneLevelUpInfo(currentUserType=qGetHostInfo.hostAppStatus,regionalAdvisorID=qGetHostInfo.regionalAdvisorID);
+		stUserOneLevelUpInfo = APPLICATION.CFC.USER.getUserOneLevelUpInfo(currentUserType=qGetHostInfo.applicationStatusID,regionalAdvisorID=qGetHostInfo.regionalAdvisorID);
 		
 		// This returns the fields that need to be checked
 		stOneLevelUpFieldSet = APPLICATION.CFC.HOST.getApprovalFieldNames(userType=stUserOneLevelUpInfo.userType);
@@ -101,6 +117,9 @@
 		// FORM Submitted
 		if ( VAL(FORM.submitted) ) {
 			
+			// Variable to decide if the entire app is approved and should go to the next level
+			vAppFullyApproved = true;
+			
 			// Sections - Check for Errors
 			For ( i=1; i LTE qGetApprovalHistory.recordCount; i++ ) {
 
@@ -110,11 +129,13 @@
 				// Confidential Host Family Visit Form
 				if ( qGetApprovalHistory.ID[i] EQ 14 AND NOT qGetConfidentialVisitForm.recordCount ) {
 					vCheckIfMissing = false;
+					vAppFullyApproved = false;
 				}
 				
 				// School Acceptance
 				if ( qGetApprovalHistory.ID[i] EQ 15 AND NOT qGetSchoolAcceptance.recordCount ) {
 					vCheckIfMissing = false;
+					vAppFullyApproved = false;
 				}
 
 				// Confidential Host Visit - Require approval when there is a report | School Acceptance - Require approval if there is an uploaded file
@@ -122,12 +143,14 @@
 					
 					// Check if all sections have an approval/denial value
 					if ( NOT LEN(FORM["sectionStatus" & qGetApprovalHistory.ID[i]]) ) {
-						SESSION.formErrors.Add("#qGetApprovalHistory.description[i]# - Please approve or deny this section");
+						//SESSION.formErrors.Add("#qGetApprovalHistory.description[i]# - Please approve or deny this section");
+						vAppFullyApproved = false;
 					}
 					
 					// Check for reason if any section is denied
 					if ( FORM["sectionStatus" & qGetApprovalHistory.ID[i]] EQ 'denied' AND NOT LEN(FORM["sectionNotes" & qGetApprovalHistory.ID[i]]) ) {
 						SESSION.formErrors.Add("#qGetApprovalHistory.description[i]# - Please enter a reason for denying this section");
+						vAppFullyApproved = false;
 					}
 				
 				}
@@ -141,12 +164,14 @@
 
 					// Check if all sections have an approval/denial value
 					if ( NOT LEN(FORM["referenceStatus" & qGetReferences.ID[i]]) ) {
-						SESSION.formErrors.Add("Reference for #qGetReferences.firstname[i]# #qGetReferences.lastname[i]# - Please approve or deny this report");
+						//SESSION.formErrors.Add("Reference for #qGetReferences.firstname[i]# #qGetReferences.lastname[i]# - Please approve or deny this report");
+						vAppFullyApproved = false;
 					}
 					
 					// Check for reason if any section is denied
 					if ( FORM["referenceStatus" & qGetReferences.ID[i]] EQ 'denied' AND NOT LEN(FORM["referenceNotes" & qGetReferences.ID[i]]) ) {
 						SESSION.formErrors.Add("Reference for #qGetReferences.firstname[i]# #qGetReferences.lastname[i]# - Please enter a reason for denying this report");
+						vAppFullyApproved = false;
 					}
 
 				}				
@@ -166,6 +191,7 @@
 					APPLICATION.CFC.HOST.updateSectionStatus(
 						hostID=FORM.hostID,
 						itemID=qGetApprovalHistory.ID[i],
+						seasonID=vSelectedSeason,
                         action=FORM["sectionStatus" & qGetApprovalHistory.ID[i]],
                         notes=FORM["sectionNotes" & qGetApprovalHistory.ID[i]],
 						areaRepID=qGetHostInfo.areaRepresentativeID,
@@ -178,6 +204,7 @@
 						vAction = "denied";
 						// Store a list of issues
 						vIssueList = ListAppend(vIssueList, '<li>#qGetApprovalHistory.description[i]# Section - #FORM["sectionNotes" & qGetApprovalHistory.ID[i]]#</li>');
+						vAppFullyApproved = false;
 					}
 					
 				}
@@ -193,7 +220,8 @@
                         notes=FORM["referenceNotes" & qGetReferences.ID[i]],
 						areaRepID=qGetHostInfo.areaRepID,
 						regionalAdvisorID=qGetHostInfo.regionalAdvisorID,
-						regionalManagerID=qGetHostInfo.regionalManagerID
+						regionalManagerID=qGetHostInfo.regionalManagerID,
+						seasonID=vSelectedSeason
 					);
 					
 					// If at least one section is denied we must send the application back one level
@@ -201,13 +229,15 @@
 						vAction = "denied";
 						// Store a list of issues
 						vIssueList = ListAppend(vIssueList, '<li>Reference for #qGetReferences.firstname[i]# #qGetReferences.lastname[i]# - #FORM["referenceNotes" & qGetReferences.ID[i]]#</li>');
+						vAppFullyApproved = false;
 					}
 
 				}
 				
 				// Check if Confidential Host Family Visit Form Has Been Submitted
 				if ( vAction NEQ 'denied' AND NOT qGetConfidentialVisitForm.recordCount ) {
-					SESSION.formErrors.Add("Confidential Host Family Visit Form - Please submit a report");
+					//SESSION.formErrors.Add("Confidential Host Family Visit Form - Please submit a report");
+					vAppFullyApproved = false;
 				}
 				
 				// Check if references have been approved
@@ -218,15 +248,17 @@
 				
 				// Only Force References when approving application
 				if ( vAction EQ 'approved' AND vMissingReferences GT 0 ) {
-					SESSION.formErrors.Add("You must submit/approve a total of #vRequiredApprovedReferences# references. #vMissingReferences# reference(s) missing.");
+					//SESSION.formErrors.Add("You must submit/approve a total of #vRequiredApprovedReferences# references. #vMissingReferences# reference(s) missing.");
+					vAppFullyApproved = false;
 				}
 				
 				// Check if there are no errors
-				if ( NOT SESSION.formErrors.length() ) {				
+				if ( NOT SESSION.formErrors.length() AND (vAppFullyApproved OR vAction EQ 'denied') ) {				
 
 					// Approve/Deny Application
 					stReturnMessage = APPLICATION.CFC.HOST.submitApplication(
 						hostID=qGetHostInfo.hostID,
+						seasonID=vSelectedSeason,
 						action=vAction,
 						issueList=vIssueList
 					);
@@ -240,8 +272,11 @@
 					}
 					
 					// Go back to the list information
-					location("#CGI.SCRIPT_NAME#?curdoc=hostApplication/listOfApps&status=#qGetHostInfo.hostAppStatus#", "no");
+					location("#CGI.SCRIPT_NAME#?curdoc=hostApplication/listOfApps&status=#qGetHostInfo.applicationStatusID#", "no");
 					
+				} else {
+					// Reload the to do list
+					location("#CGI.SCRIPT_NAME#?curdoc=hostApplication/toDoList&hostID=#qGetHostInfo.hostID#", "no");	
 				}
 				
 			}
@@ -318,6 +353,15 @@
 	var jsCheckAll = function(className) { 
 		$("." + className).attr('checked',true).trigger("click");;
 	}
+	
+	function reloadWithSelectedSeason() {
+		var newURL = document.URL.toString();
+		if (newURL.indexOf("&seasonID=") > 0) {
+			newURL = newURL.substring(0,newURL.indexOf("&seasonID="));
+		}
+		newURL = newURL + "&seasonID=" + $("#seasonID").val();
+		window.location.href = newURL;
+	}
 </script>
 
 <cfoutput>
@@ -338,7 +382,7 @@
                     <th width="13%" align="left">Regional Manager</th>
                     <th width="13%" align="left">Facilitator</th>
                     <th width="16%" align="left">Status</th>
-            		<th width="14%" align="left">Actions</th>
+            		<th width="14%" align="center">Actions</th>
             	</tr>
                 <tr>
                     <td valign="top">
@@ -367,22 +411,16 @@
                         <a href="mailto:#qGetHostInfo.facilitatorEmail#">#qGetHostInfo.facilitatorEmail#</a>
                     </td>
                     <td valign="top">
-						<cfif isDate(qGetHostInfo.applicationSent)>
-                        	Date Created: #DateFormat(qGetHostInfo.applicationSent, 'mm/dd/yyyy')# <br />
+						<cfif isDate(qGetHostInfo.dateSent)>
+                        	Date Created: #DateFormat(qGetHostInfo.dateSent, 'mm/dd/yyyy')# <br />
                         </cfif>
-                        
-						<!---
-						<cfif isDate(qGetHostInfo.applicationStarted)>
-							Date HF Started: #DateFormat(qGetHostInfo.applicationStarted, 'mm/dd/yyyy')# <br />
-						</cfif>
-						--->
 
                     	<!--- App has been denied, display message --->
                     	<cfif vHasAppBeenDeniedByOneLevelUpUser>
                         	#stUserOneLevelUpInfo.description# has denied one or more sections.
                         <cfelse>
 
-                            <cfswitch expression="#qGetHostInfo.hostAppStatus#">
+                            <cfswitch expression="#qGetHostInfo.applicationStatusID#">
                                 
                                 <cfcase value="9">
                                     Application Created
@@ -445,8 +483,14 @@
         <div class="rdholder"> 
         
             <div class="rdtop"> 
-                <span class="rdtitle">Host Family Application</span> 
-                <a href="?curdoc=hostApplication/listOfApps&status=#qGetHostInfo.hostAppStatus#" class="floatRight"><img src="pics/buttons/back.png" border="0" /></a>
+                <span class="rdtitle">Host Family Application</span>
+                <b>SEASON: </b>
+                <select name="seasonID" id="seasonID" onchange="reloadWithSelectedSeason()">
+                	<cfloop query="qGetAllSeasonsForHost">
+                    	<option value="#seasonID#" <cfif seasonID EQ vSelectedSeason>selected="selected"</cfif>>#season#</option>
+                    </cfloop>
+                </select>
+                <a href="?curdoc=hostApplication/listOfApps&status=#qGetHostInfo.applicationStatusID#" class="floatRight"><img src="pics/buttons/back.png" border="0" /></a>
             </div> <!-- end top --> 
     
             <div class="rdbox">
@@ -540,12 +584,12 @@
                             <td>#vSetDescLink#</td>
                             <td>
                             	<!--- Host Family still filling out --->
-								<cfif ListFind("9,8", qGetHostInfo.hostAppStatus) AND NOT listFind("14,15", qGetApprovalHistory.ID)>
+								<cfif ListFind("9,8", qGetHostInfo.applicationStatusID) AND NOT listFind("14,15", qGetApprovalHistory.ID)>
                                     
                                     <font color="##CCCCCC"><em>Application has NOT been submitted</em></font>
                                 
                                 <!--- Previously approved sections --->    
-								<cfelseif qGetApprovalHistory[stOneLevelUpFieldSet.statusFieldName][qGetApprovalHistory.currentrow] EQ 'approved' OR ( qGetApprovalHistory[stCurrentUserFieldSet.statusFieldName][qGetApprovalHistory.currentrow] EQ 'approved' AND qGetHostInfo.hostAppStatus LT CLIENT.userType )>
+								<cfelseif qGetHostInfo.applicationStatusID LT CLIENT.userType>
 									
                                     <font color="##CCCCCC"><em>Previously Approved</em></font>
                                     <!--- This will automatically approve items in case upper lever has approved them | In the future we can give the approval/deny option --->
@@ -553,7 +597,7 @@
                                     <!--- input type="hidden" name="sectionStatus#qGetApprovalHistory.ID#" value="#FORM['sectionStatus' & qGetApprovalHistory.ID]#" />  --->
                                     
                                 <!--- Approve/Deny Options --->      
-								<cfelseif qGetHostInfo.hostAppStatus GTE CLIENT.userType>
+								<cfelseif qGetHostInfo.applicationStatusID GTE CLIENT.userType>
                                     
                                     <cfscript>
 										// Only Display approval option if there is a school acceptance and a confidential host visit report
@@ -602,23 +646,23 @@
                                 
                                     <!--- Report Never Submitted --->
                                     <cfif NOT qGetConfidentialVisitForm.recordCount> 
-                                        <a href="#qGetApprovalHistory.section#?hostID=#qGetHostInfo.hostID#" title="Click to view item" class="jQueryModalRefresh" style="display:block;">[ Submit Visit Form ]</a>
+                                        <a href="#qGetApprovalHistory.section#?hostID=#qGetHostInfo.hostID#&seasonID=#vSelectedSeason#" title="Click to view item" class="jQueryModalRefresh" style="display:block;">[ Submit Visit Form ]</a>
                                     <!--- Report Denied by up level user - Edit Report --->
                                     <cfelseif qGetApprovalHistory[stCurrentUserFieldSet.statusFieldName][qGetApprovalHistory.currentrow] NEQ 'approved' OR qGetApprovalHistory[stOneLevelUpFieldSet.statusFieldName][qGetApprovalHistory.currentrow] EQ 'denied'>
-                                        <a href="#qGetApprovalHistory.section#?hostID=#qGetHostInfo.hostID#" title="Click to view item" class="jQueryModalRefresh" style="display:block;">[ Edit Visit Form ]</a>
+                                        <a href="#qGetApprovalHistory.section#?hostID=#qGetHostInfo.hostID#&seasonID=#vSelectedSeason#" title="Click to view item" class="jQueryModalRefresh" style="display:block;">[ Edit Visit Form ]</a>
 									<!--- Print View Default --->
                                     <cfelseif qGetApprovalHistory[stCurrentUserFieldSet.statusFieldName][qGetApprovalHistory.currentrow] EQ 'approved' OR qGetApprovalHistory[stOneLevelUpFieldSet.statusFieldName][qGetApprovalHistory.currentrow] NEQ 'denied'>
-                                        <a href="#qGetApprovalHistory.section#?hostID=#qGetHostInfo.hostID#" target="_blank" style="display:block;">[ View Visit Form ]</a>
+                                        <a href="#qGetApprovalHistory.section#?hostID=#qGetHostInfo.hostID#&seasonID=#vSelectedSeason#" target="_blank" style="display:block;">[ View Visit Form ]</a>
                                     </cfif>   
 
 							  	<!--- School Acceptance --->
                               	<cfelseif qGetApprovalHistory.ID EQ 15>
                                 
                                     <cfif NOT qGetSchoolAcceptance.recordCount>
-                                        <a href="#qGetApprovalHistory.section#?hostID=#qGetHostInfo.hostID#" title="Click to view item" class="jQueryModalRefresh" style="display:block;">[ Upload School Acceptance Letter ]</a>
+                                        <a href="#qGetApprovalHistory.section#?hostID=#qGetHostInfo.hostID#&seasonID=#vSelectedSeason#" title="Click to view item" class="jQueryModalRefresh" style="display:block;">[ Upload School Acceptance Letter ]</a>
                                     <!--- Print View Default --->
                                     <cfelseif qGetApprovalHistory[stCurrentUserFieldSet.statusFieldName][qGetApprovalHistory.currentrow] EQ 'approved' OR qGetApprovalHistory[stOneLevelUpFieldSet.statusFieldName][qGetApprovalHistory.currentrow] NEQ 'denied'>
-                                        <a href="publicDocument.cfm?ID=#qGetSchoolAcceptance.ID#&key=#qGetSchoolAcceptance.hashID#" target="_blank" style="display:block;">[ Download School Acceptance Letter ]</a>
+                                        <a href="publicDocument.cfm?ID=#qGetSchoolAcceptance.ID#&key=#qGetSchoolAcceptance.hashID#&seasonID=#vSelectedSeason#" target="_blank" style="display:block;">[ Download School Acceptance Letter ]</a>
                                     	<!--- ADD OPTION TO DELETE A FILE --->
 										<!--- Delete --->
                                     <cfelse>
@@ -775,7 +819,7 @@
                                 <cfif VAL(qGetReferences.ID)>	
 
 									<!--- Previously approved reports --->    
-                                    <cfif qGetReferences[stOneLevelUpFieldSet.statusFieldName][qGetReferences.currentrow] EQ 'approved' OR ( qGetReferences[stCurrentUserFieldSet.statusFieldName][qGetReferences.currentrow] EQ 'approved' AND qGetHostInfo.hostAppStatus LT CLIENT.userType )>
+                                    <cfif qGetHostInfo.applicationStatusID LT CLIENT.userType>
                                         
                                         <font color="##CCCCCC"><em>Previously Approved</em></font>
                                         <!--- This will automatically approve items in case upper lever has approved them | In the future we can give the approval/deny option --->
@@ -783,7 +827,7 @@
                                         <!--- <input type="hidden" name="referenceStatus#qGetReferences.ID#" value="#FORM['referenceStatus' & qGetReferences.ID]#" /> --->
                                         
 									<!--- Approve/Deny Options --->      
-                                    <cfelseif qGetHostInfo.hostAppStatus GTE CLIENT.userType>
+                                    <cfelseif qGetHostInfo.applicationStatusID GTE CLIENT.userType>
                                         
                                         <input type="radio" name="referenceStatus#qGetReferences.ID#" id="referenceApprove#qGetReferences.ID#" class="approveOption" value="approved" onclick="toggleReferenceReason('approved', '#qGetReferences.ID#');" <cfif FORM["referenceStatus" & qGetReferences.ID] EQ 'approved'> checked="checked" </cfif> /> 
                                         <label for="referenceApprove#qGetReferences.ID#">Approve</label>
@@ -801,17 +845,17 @@
                                     
                                     <!--- Report Does not exist or has not been approved by current level or has not been denied by upper level - Edit Report --->
                                     <cfif qGetReferences[stCurrentUserFieldSet.statusFieldName][qGetReferences.currentrow] NEQ 'approved' OR qGetReferences[stOneLevelUpFieldSet.statusFieldName][qGetReferences.currentrow] EQ 'denied'>
-                                        <a class="jQueryModalRefresh" href="hostApplication/referenceQuestionnaire.cfm?refID=#qGetReferences.refID#&hostID=#qGetHostInfo.hostID#" style="display:block;">[ Edit Reference Questionnaire ]</a>
+                                        <a class="jQueryModalRefresh" href="hostApplication/referenceQuestionnaire.cfm?refID=#qGetReferences.refID#&hostID=#qGetHostInfo.hostID#&seasonID=#vSelectedSeason#" style="display:block;">[ Edit Reference Questionnaire ]</a>
                                     <!--- Print View Default --->
 									<cfelse>
-                                        <a href="hostApplication/referenceQuestionnaire.cfm?refID=#qGetReferences.refID#&hostID=#qGetHostInfo.hostID#" target="_blank" style="display:block;">[ View Reference Questionnaire ]</a>
+                                        <a href="hostApplication/referenceQuestionnaire.cfm?refID=#qGetReferences.refID#&hostID=#qGetHostInfo.hostID#&seasonID=#vSelectedSeason#" target="_blank" style="display:block;">[ View Reference Questionnaire ]</a>
                                     </cfif>
                                     
                                     <span style="display:block; color:##CCCCCC;"><em>Submitted on #DateFormat(qGetReferences.dateInterview,'mm/dd/yyyy')# by #qGetReferences.submittedBy#</em></span>   
                                     
                                 <cfelse>
                                 
-                                    <a class="jQueryModalRefresh" href="hostApplication/referenceQuestionnaire.cfm?refID=#qGetReferences.refID#&hostID=#qGetHostInfo.hostID#">
+                                    <a class="jQueryModalRefresh" href="hostApplication/referenceQuestionnaire.cfm?refID=#qGetReferences.refID#&hostID=#qGetHostInfo.hostID#&seasonID=#vSelectedSeason#">
                                    		[ Submit Reference Questionnaire ]
                                     </a>
                                     
@@ -909,7 +953,7 @@
                 </table>
                 
                 <!--- Update Button --->
-                <cfif qGetHostInfo.hostAppStatus GTE CLIENT.userType>
+                <cfif qGetHostInfo.applicationStatusID GTE CLIENT.userType>
                     <table cellpadding="4" align="center">
                         <tr>
                             <td><input type="image" src="pics/buttons/update.png" /></td>

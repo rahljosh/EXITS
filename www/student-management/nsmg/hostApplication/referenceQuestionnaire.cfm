@@ -13,16 +13,18 @@
 <cfsilent>
 
 	<!--- Import CustomTag --->
-    <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
+    <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />
 
     <!--- Param URL Variables --->
     <cfparam name="URL.hostID" default="0">
     <cfparam name="URL.refID" default="0">
+    <cfparam name="URL.seasonID" default="0">
     
 	<!--- Param FORM Variables --->
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.hostID" default="0">
     <cfparam name="FORM.refID" default="0">
+    <cfparam name="FORM.seasonID" default="0">
 	<cfparam name="FORM.dateInterview" default="">    
     
     <cfscript>
@@ -36,17 +38,19 @@
 			FORM.refID = URL.refID;
 		}
 		
-		// Get Current SeasonID
-		vCurrentSeasonID = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID; // This needs to be replaced to get the assigned season for this app as a host family might apply to different seasons
+		// Check if we have a valid URL.seasonID
+		if ( VAL(URL.seasonID) AND NOT VAL(FORM.seasonID) ) {
+			FORM.seasonID = URL.seasonID;
+		}
 		
 		// Get List of Host Family Applications
 		qGetHostInfo = APPLICATION.CFC.HOST.getApplicationList(hostID=FORM.hostID);	
 
 		// Get Reference for this season
-		qGetReferenceInfo = APPLICATION.CFC.HOST.getReferences(refID=FORM.refID,hostID=qGetHostInfo.hostID,seasonID=vCurrentSeasonID);
+		qGetReferenceInfo = APPLICATION.CFC.HOST.getReferences(refID=FORM.refID,hostID=qGetHostInfo.hostID,seasonID=FORM.seasonID);
 		
 		// Get Reference Questionnaire Details
-		qGetQuestionnaireDetails = APPLICATION.CFC.HOST.getReferenceQuestionnaireAnswers(fk_reportID=FORM.refID);
+		qGetQuestionnaireDetails = APPLICATION.CFC.HOST.getReferenceQuestionnaireAnswers(fk_reportID=FORM.refID,fk_seasonID=FORM.seasonID);
 
 		// Get User By Userid
 		qGetCurrentUserInfo = APPLICATION.CFC.USER.getUserByID(userID=CLIENT.userID);
@@ -60,7 +64,7 @@
 		stCurrentUserFieldSet = APPLICATION.CFC.HOST.getApprovalFieldNames();
 		
 		// This Returns who is the next user approving / denying the report
-		stUserOneLevelUpInfo = APPLICATION.CFC.USER.getUserOneLevelUpInfo(currentUserType=qGetHostInfo.hostAppStatus,regionalAdvisorID=qGetHostInfo.regionalAdvisorID);
+		stUserOneLevelUpInfo = APPLICATION.CFC.USER.getUserOneLevelUpInfo(currentUserType=qGetHostInfo.applicationStatusID,regionalAdvisorID=qGetHostInfo.regionalAdvisorID);
 		
 		// This returns the fields that need to be checked
 		stOneLevelUpFieldSet = APPLICATION.CFC.HOST.getApprovalFieldNames(userType=stUserOneLevelUpInfo.userType);
@@ -119,8 +123,6 @@
                         	answer = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM['question' & qGetQuestionnaireDetails.ID]#">
                         WHERE
                         	ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetQuestionnaireDetails.answerID#">
-                        AND
-                        	fk_reportID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.refID#">
                     </cfquery>
                     
                 <!--- Insert Answers --->
@@ -132,12 +134,14 @@
                         (
                         	fk_reportID, 
                             fk_questionID,
+                            fk_seasonID,
                             answer
                         )
                         VALUES
                         (
                         	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.refID#">,
 	                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetQuestionnaireDetails.ID#">,
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.seasonID)#">,
                             <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM['question' & qGetQuestionnaireDetails.ID]#">
                         )
                     </cfquery>
@@ -157,13 +161,14 @@
 					areaRepID=qGetHostInfo.areaRepID,
 					regionalAdvisorID=qGetHostInfo.regionalAdvisorID,
 					regionalManagerID=qGetHostInfo.regionalManagerID,
-					dateInterview=FORM.dateInterview
+					dateInterview=FORM.dateInterview,
+					seasonID=FORM.seasonID
 				);
             </cfscript>
         
             <cfscript>
                 // Refresh Query used in the approval process
-                qGetQuestionnaireDetails = APPLICATION.CFC.HOST.getReferenceQuestionnaireAnswers();
+                qGetQuestionnaireDetails = APPLICATION.CFC.HOST.getReferenceQuestionnaireAnswers(fk_reportID=FORM.refID,fk_seasonID=FORM.seasonID);
 			
 				// Set Page Message
 				SESSION.pageMessages.Add("Reference Questionnaire successfully submitted. This window will close shortly.");
@@ -257,9 +262,10 @@
         </cfif>
         
         <form action="#CGI.SCRIPT_NAME#" method="POST"> 
-            <input type="hidden" name="submitted" value="1">
+            <input type="hidden" name="submitted" value="1" />
             <input type="hidden" name="refID" value="#FORM.refID#" />
-            <input type="hidden" name="hostID" value="#FORM.hostID#">
+            <input type="hidden" name="hostID" value="#FORM.hostID#" />
+            <input type="hidden" name="seasonID" value="#FORM.seasonID#" />
         	
             <div class="myform stylized">
 

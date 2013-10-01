@@ -821,9 +821,60 @@
 	<!--- ------------------------------------------------------------------------- ----
 		HOST FAMILY APPLICATION
 	----- ------------------------------------------------------------------------- --->
+    
+    <cffunction name="setHostSeasonStatus" access="public" returntype="void" output="no" hint="Inserts or updates host season status">
+    	<cfargument name="hostID" default="0" hint="hostID is not required">
+        <cfargument name="seasonID" default="#APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID#" hint="seasonID is not required, defaults to current season">
+        <cfargument name="applicationStatusID" default="9" hint="applicationStatusID is not required">
+        <cfargument name="ID" default="" hint="ID is not required, if passed in attempts to update that record with the passed in applicationStatusID">
+        
+        <cfquery name="qCheckForRecord" datasource="#APPLICATION.DSN#">
+        	SELECT *
+            FROM smg_host_app_season
+            WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
+            AND seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
+        </cfquery>
+        
+        <cfscript>
+			if (NOT LEN(ARGUMENTS.ID)) {
+				if (VAL(qCheckForRecord.recordCount)) {
+					ARGUMENTS.ID = qCheckForRecord.ID;	
+				}
+			}
+		</cfscript>
+        
+        <cfif LEN(ARGUMENTS.ID)>
+            <cfquery datasource="#APPLICATION.DSN#">
+                UPDATE smg_host_app_season
+                SET 
+                    applicationStatusID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.applicationStatusID)#">,
+                    updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
+                WHERE ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.ID)#">
+            </cfquery>
+        <cfelse>
+        	<cfquery datasource="#APPLICATION.DSN#">
+            	INSERT INTO smg_host_app_season (
+                	hostID,
+                    seasonID,
+                    applicationStatusID,
+                    dateSent,
+                    createdBy,
+                    dateCreated )
+              	VALUES (
+                	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.applicationStatusID)#">,
+                    <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
+                    <cfqueryparam cfsqltype="cf_sql_timestamp" value="#NOW()#"> )
+            </cfquery>
+        </cfif>
+    
+    </cffunction>
 
 	<cffunction name="getApplicationList" access="public" returntype="query" output="false" hint="Gets a list of host family applications">
         <cfargument name="hostID" default="" hint="hostID">
+        <cfargument name="seasonID" default="#APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID#" hint="seasonID is not required">
         <cfargument name="uniqueID" default="" hint="uniqueID">
         <cfargument name="statusID" default="" hint="statusID is not required">
         <cfargument name="companyID" default="#CLIENT.companyID#" hint="CompanyID is not required">
@@ -935,20 +986,31 @@
                                 uarRM.regionID = r.regionID
                             LIMIT 1 
                         ) AS regionalManagerID,
-						<!--- Regional Advisor Info --->
+						<!--- Regional Advisor Info (This will list the AR info if there is no RA and the AR is also an RA) --->
                         ra.userID AS regionalAdvisorID,
                         (
                             CASE 
-                                WHEN 
-                                    ra.userID IS NULL
-                                THEN 
-                                    "n/a"
-                                ELSE 
-                                    CAST(CONCAT(ra.firstName, ' ', ra.lastName,  ' (##', ra.userID, ')' ) AS CHAR)
-                                END
+                                WHEN ra.userID IS NULL AND areaRep.userType = 6
+                                THEN CAST(CONCAT(areaRep.firstName, ' ', areaRep.lastName,  ' (##', areaRep.userID, ')' ) AS CHAR)
+                              	WHEN ra.userID IS NULL
+                               	THEN "n/a"
+                                ELSE CAST(CONCAT(ra.firstName, ' ', ra.lastName,  ' (##', ra.userID, ')' ) AS CHAR)
+                     		END
                         ) AS regionalAdvisor,
-                        ra.email AS regionalAdvisorEmail,
-                        ra.phone AS regionalAdvisorPhone,
+                        (
+                            CASE 
+                                WHEN ra.userID IS NULL AND areaRep.userType = 6
+                                THEN areaRep.email
+                                ELSE ra.email
+                         	END
+                        ) AS regionalAdvisorEmail,
+                        (
+                            CASE 
+                                WHEN ra.userID IS NULL AND areaRep.userType = 6
+                                THEN areaRep.phone
+                                ELSE ra.phone
+                         	END
+                        ) AS regionalAdvisorPhone,
                         <!--- Area Representative Info --->
                         areaRep.userID AS areaRepresentativeID,
                         (
@@ -975,9 +1037,24 @@
                                     CAST(CONCAT(fac.firstName, ' ', fac.lastName,  ' (##', fac.userID, ')' ) AS CHAR)
                             END
                         ) AS facilitator,
-                        fac.email AS facilitatorEmail	                        
+                        fac.email AS facilitatorEmail,
+                        <!--- Host Season-based approval status --->
+                        smg_host_app_season.applicationStatusID,
+                        smg_host_app_season.dateSent,
+                        smg_host_app_season.dateStarted,
+                        smg_host_app_season.dateSubmitted,
+                        smg_host_app_season.ID AS hostAppSeasonID                      
                     FROM 
                         smg_hosts h
+                  	<!--- Host Season-based approval status --->
+                    <cfif LEN(ARGUMENTS.statusID)>
+                    	INNER JOIN smg_host_app_season ON smg_host_app_season.hostID = h.hostID
+                        	AND smg_host_app_season.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
+                            AND smg_host_app_season.applicationStatusID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.statusID)#">
+                   	<cfelse>
+                    	LEFT OUTER JOIN smg_host_app_season ON smg_host_app_season.hostID = h.hostID
+                        	AND smg_host_app_season.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
+                    </cfif>
                     <!--- Region --->
                     LEFT OUTER JOIN
                         smg_regions r ON r.regionID = h.regionID
@@ -1023,11 +1100,6 @@
                         </cfif>
                         
 					</cfif>
-                    
-                    <cfif LEN(ARGUMENTS.statusID)>
-                        AND
-                            h.hostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.statusID)#">
-                    </cfif>
                     
                     <cfswitch expression="#ARGUMENTS.userType#">
                         
@@ -1078,32 +1150,32 @@
 	</cffunction>
     
     
-	<cffunction name="updateApplicationStatus" access="public" returntype="void" output="false" hint="Updates a host family application status">
-        <cfargument name="hostID" default="" hint="HostID is not required">
-        <cfargument name="statusID" default="" hint="statusID is not required">
-			
-            <cfif VAL(ARGUMENTS.hostID) AND listFind("0,1,2,3,4,5,6,7,8,9", ARGUMENTS.statusID)>
-            
-                <cfquery datasource="#APPLICATION.DSN#">
-                    UPDATE
-                        smg_hosts
-                    SET 
-                        hostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.statusID#">,
-                        dateUpdated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
-            			updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
-                    WHERE        	
-                        hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#">
-                </cfquery>
-                
-			</cfif>                
-	
+    <cffunction name="getSeasonsForHost" access="public" returntype="query" output="no" hint="Gets the seasons the host has paperwork for">
+    	<cfargument name="hostID" default="0" type="numeric" required="yes">
+        <cfargument name="includeCurrent" default="0" required="no">
+        
+        <cfscript>
+			vCurrentSeason = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID;
+		</cfscript>
+        
+        <cfquery name="qGetSeasonsForHost" datasource="#APPLICATION.DSN#">
+        	SELECT *
+            FROM smg_seasons
+            WHERE seasonID IN (SELECT seasonID FROM smg_host_app_season WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">)
+            <cfif VAL(ARGUMENTS.includeCurrent)>
+            	OR seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(vCurrentSeason)#">
+           	</cfif>
+        </cfquery>
+        
+        <cfreturn qGetSeasonsForHost>
+        
     </cffunction>
     
 
 	<cffunction name="getReferences" access="public" returntype="query" output="false" hint="Gets references for a host family application">
         <cfargument name="hostID" default="" hint="HostID is not required">
         <cfargument name="refID" default="" hint="refID is not required">
-		<cfargument name="seasonID" default="" hint="Current Paperwork Season ID">        
+		<cfargument name="seasonID" default="" hint="Current Paperwork Season ID">    
         <cfargument name="getCurrentUserApprovedReferences" default="0" hint="Pass userType to get current user ID approved references">
         
         <cfquery 
@@ -1147,13 +1219,10 @@
                     smg_host_reference sfr
                 LEFT OUTER JOIN
                 	smg_host_reference_tracking hrqt ON hrqt.fk_referencesID = sfr.refID
-
-					<!--- Get SeasonID--->
                     <cfif LEN(ARGUMENTS.seasonID)>
                         AND
                             hrqt.season = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
                     </cfif>
-                     
                 LEFT OUTER JOIN
                 	smg_users u ON u.userID = hrqt.interviewer
                 WHERE
@@ -1230,6 +1299,7 @@
     
 	<cffunction name="getReferenceQuestionnaireAnswers" access="public" returntype="query" output="false" hint="Gets references questionnaire anwers">
         <cfargument name="fk_reportID" default="0" hint="fk_reportID is not required">
+        <cfargument name="fk_seasonID" default="0" hint="seasonID is not required">
 
         <cfquery 
 			name="qGetReferenceQuestionnaireQuestions" 
@@ -1247,7 +1317,11 @@
                 LEFT OUTER JOIN
                 	smg_host_reference_answers shra ON shra.fk_questionID = shrq.ID 
                 	AND
-                    	fk_reportID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.fk_reportID)#">
+                    	shra.fk_reportID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.fk_reportID)#">
+                 	<cfif VAL(ARGUMENTS.fk_seasonID)>
+                    	AND
+                        	shra.fk_seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.fk_seasonID#">
+                    </cfif>
                 WHERE
                 	shrq.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">   
 				ORDER BY
@@ -1302,7 +1376,7 @@
 					smg_host_app_history h ON h.itemID = ap.ID                  
                     AND
                         h.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
-                   <!------->AND
+                   	AND
                         h.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
                 WHERE
                 	1 = 1
@@ -1678,6 +1752,7 @@
     
 	<cffunction name="submitApplication" access="public" returntype="struct" output="false" hint="Approves a Host Family Application">
         <cfargument name="hostID" default="" hint="hostID">
+        <cfargument name="seasonID" default="#APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID#" hint="seasonID">
         <cfargument name="action" default="" hint="approve/deny/newApplication">
         <cfargument name="issueList" default="" hint="Lists issues when denying an application">
         <cfargument name="userType" default="#CLIENT.userType#" hint="userType">
@@ -1704,7 +1779,7 @@
 			var vSetEmailTemplate = "";
 			
 			// Get Host Family Info - Includes AR, RA, RD and Facilitator information
-			var qGetHostInfo = getApplicationList(hostID=ARGUMENTS.hostID);	
+			var qGetHostInfo = getApplicationList(hostID=ARGUMENTS.hostID,seasonID=ARGUMENTS.seasonID);	
 			
 			// Get Current User
 			var vSubmittedBy = SESSION.USER.fullName & " (##" & SESSION.USER.ID & ")";
@@ -1896,7 +1971,7 @@
 				}
 				
 				// Update Host Status According to usertype approving/denying the application
-				updateApplicationStatus(hostID=qGetHostInfo.hostID,statusID=vNextStatus);
+				setHostSeasonStatus(ID=qGetHostInfo.hostAppSeasonID,applicationStatusID=vNextStatus);
 		
 			} // New Application - Welcome Email
 
@@ -1908,7 +1983,7 @@
 			qGetApprovalHistory = APPLICATION.CFC.HOST.getApplicationApprovalHistory(hostID=qGetHostInfo.hostID, whoViews=CLIENT.userType);
 
 			// This Returns who is the next user approving / denying the report
-			stUserOneLevelUpInfo = APPLICATION.CFC.USER.getUserOneLevelUpInfo(currentUserType=qGetHostInfo.hostAppStatus,regionalAdvisorID=qGetHostInfo.regionalAdvisorID);
+			stUserOneLevelUpInfo = APPLICATION.CFC.USER.getUserOneLevelUpInfo(currentUserType=qGetHostInfo.applicationStatusID,regionalAdvisorID=qGetHostInfo.regionalAdvisorID);
 			
 			// This returns the fields that need to be checked
 			stOneLevelUpFieldSet = APPLICATION.CFC.HOST.getApprovalFieldNames(userType=stUserOneLevelUpInfo.userType);
@@ -1924,7 +1999,7 @@
 
 			// Get Email Template
 			vGetEmailTemplate = getApplicationEmailTemplate(
-				applicatonStatus = qGetHostInfo.hostAppStatus,
+				applicatonStatus = qGetHostInfo.applicationStatusID,
 				issueList = ARGUMENTS.issueList,												
 				emailTemplate = vSetEmailTemplate,
 				submittedBy = vSubmittedBy,
@@ -2369,7 +2444,7 @@
 			var	qGetHostInfo = APPLICATION.CFC.HOST.getApplicationList(hostID=ARGUMENTS.hostID);	
 
 			// Date submitted by Host Family
-			var vDateFamilySubmitted = qGetHostInfo.dateApplicationSubmitted;
+			var vDateFamilySubmitted = qGetHostInfo.dateSubmitted;
 			
 			// Date of office approval
 			var vDateOfficeApproved = ARGUMENTS.dateApproved;

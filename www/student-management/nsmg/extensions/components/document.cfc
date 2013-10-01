@@ -414,6 +414,7 @@
         <cfargument name="description" type="string" required="no" default="" />
         <cfargument name="allowedExt" type="string" required="no" default="" />
 		<cfargument name="blockedExt" type="string" required="no" default="" />
+        <cfargument name="seasonID" type="numeric" required="no" default="" />
         
         <cfscript>
 			// Set Result Message
@@ -424,11 +425,15 @@
 			// List of Accepted Files
 			var vAcceptedFilesList = ARGUMENTS.allowedExt;
 			
-			// Get Current Season Information
-			var qGetCurrentSeason = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason();
+			var vSeason = 0;
+			if (LEN(ARGUMENTS.seasonID)) {
+				vSeason = ARGUMENTS.seasonID;
+			} else {
+				vSeason = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID;
+			}
 			
 			// Use documentGroup field to rename the files (eg familyAlbum/schoolAcceptance, etc)
-			var vNewFileName = "season" & qGetCurrentSeason.seasonID & "-" & getDocumentType(ID=ARGUMENTS.documentTypeID).documentGroup;
+			var vNewFileName = "season" & vSeason & "-" & getDocumentType(ID=ARGUMENTS.documentTypeID).documentGroup;
 			
 			// Make sure folder exists
 			createFolder(ARGUMENTS.uploadPath);
@@ -478,7 +483,7 @@
 						foreignTable = ARGUMENTS.foreignTable,	   
 						foreignID = ARGUMENTS.foreignID,	   
 						documentTypeID = ARGUMENTS.documentTypeID,
-						seasonID = qGetCurrentSeason.seasonID,
+						seasonID = vSeason,
 						serverExt = FILE.ServerFileExt,
 						serverName = vNewFileName,
 						clientExt = LCase(FILE.ClientFileExt),

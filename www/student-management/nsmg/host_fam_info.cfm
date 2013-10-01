@@ -56,7 +56,12 @@
 			foreignID=hostID
 		);
 		
-		qGetHostInfo = APPLICATION.CFC.HOST.getApplicationList(hostID=URL.hostID);	
+		qGetHostInfo = APPLICATION.CFC.HOST.getApplicationList(hostID=URL.hostID);
+		qGetAreaRep = APPLICATION.CFC.USER.getUsers(userID = qGetHostInfo.areaRepID);
+		
+		qCurrentSeason = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason();
+		vCurrentSeasonStatus = APPLICATION.CFC.HOST.getApplicationList(hostID=qGetHostInfo.hostID,seasonID=qCurrentSeason.seasonID).applicationStatusID;
+		vHasEhost = APPLICATION.CFC.HOST.getSeasonsForHost(hostID=qGetHostInfo.hostID).recordCount;
     </cfscript>
 
 
@@ -80,22 +85,11 @@
         WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
     </cfquery>
     
-    <cfquery name="family_info" datasource="#application.dsn#">
-        SELECT *
-        FROM smg_hosts
-        WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(url.hostID)#">
-    </cfquery>
-    <cfscript>
-		qGetAreaRep = APPLICATION.CFC.USER.getUsers(
-			userID = family_info.areaRepID
-		);
-	</cfscript>
-    
      <cfquery name="host_children" datasource="#application.dsn#">
         SELECT *
         FROM smg_host_children
         WHERE 
-        	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(family_info.hostID)#">
+        	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostInfo.hostID)#">
         AND
         	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
         ORDER BY birthdate
@@ -114,7 +108,7 @@
         FROM smg_students
         INNER JOIN smg_programs p ON smg_students.programid = p.programid
         LEFT JOIN smg_countrylist c ON smg_students.countryresident = c.countryid
-        WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(family_info.hostID)#">
+        WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostInfo.hostID)#">
         AND smg_students.active = 1
         ORDER BY familylastname
     </cfquery>
@@ -126,7 +120,7 @@
         INNER JOIN smg_hosthistory h ON smg_students.studentid = h.studentid
         INNER JOIN smg_programs p ON smg_students.programid = p.programid
         LEFT JOIN smg_countrylist c ON smg_students.countryresident = c.countryid
-        WHERE h.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(family_info.hostID)#">
+        WHERE h.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostInfo.hostID)#">
         ORDER BY familylastname
     </cfquery>
     
@@ -135,14 +129,14 @@
         SELECT regionid, regionname
 
         FROM smg_regions
-        WHERE regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(family_info.regionid)#">
+        WHERE regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostInfo.regionid)#">
     </cfquery>
     
     <!--- SCHOOL ---->
     <cfquery name="get_school" datasource="#application.dsn#">
         SELECT schoolid, schoolname, address, city, state, begins, ends
         FROM smg_schools
-        WHERE schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(family_info.schoolid)#">
+        WHERE schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostInfo.schoolid)#">
     </cfquery>
     
 	<!--- CROSS DATA - check if was submitted under a user --->
@@ -153,7 +147,7 @@
         LEFT JOIN smg_seasons ON smg_seasons.seasonid = cbc.seasonid
         WHERE u.ssn != ''
         AND cbc.familyid = '0'
-        AND ((u.ssn = '#family_info.motherssn#' AND u.ssn != '') OR (u.firstname = '#family_info.motherfirstname#' AND u.lastname = '#family_info.familylastname#' <cfif family_info.motherdob NEQ ''>AND u.dob = '#DateFormat(family_info.motherdob,'yyyy/mm/dd')#'</cfif>))
+        AND ((u.ssn = '#qGetHostInfo.motherssn#' AND u.ssn != '') OR (u.firstname = '#qGetHostInfo.motherfirstname#' AND u.lastname = '#qGetHostInfo.familylastname#' <cfif qGetHostInfo.motherdob NEQ ''>AND u.dob = '#DateFormat(qGetHostInfo.motherdob,'yyyy/mm/dd')#'</cfif>))
     </cfquery>
     
     <cfquery name="qCheckCBCFather" datasource="#application.dsn#">
@@ -164,7 +158,7 @@
         LEFT JOIN smg_seasons ON smg_seasons.seasonid = cbc.seasonid
         WHERE u.ssn != ''
         AND cbc.familyid = '0'
-        AND ((u.ssn = '#family_info.fatherssn#' AND u.ssn != '') OR (u.firstname = '#family_info.fatherfirstname#' AND u.lastname = '#family_info.familylastname#' <cfif family_info.fatherdob NEQ ''>AND u.dob = '#DateFormat(family_info.fatherdob,'yyyy/mm/dd')#'</cfif>))
+        AND ((u.ssn = '#qGetHostInfo.fatherssn#' AND u.ssn != '') OR (u.firstname = '#qGetHostInfo.fatherfirstname#' AND u.lastname = '#qGetHostInfo.familylastname#' <cfif qGetHostInfo.fatherdob NEQ ''>AND u.dob = '#DateFormat(qGetHostInfo.fatherdob,'yyyy/mm/dd')#'</cfif>))
     </cfquery>
 
 </cfsilent>
@@ -176,6 +170,15 @@
     	<cfset goingToHost = 0>
     <cfelse>
     	<cfset goingToHost = 1>
+    </cfif>
+</cfif>
+
+<cfif isDefined('hostNewSeason')>
+	<cfif FORM.hostNewSeason EQ 1>
+    	<cfscript>
+			APPLICATION.CFC.HOST.setHostSeasonStatus(hostID=qGetHostInfo.hostID,seasonID=qCurrentSeason.seasonID);
+			goingToHost = 1;
+		</cfscript>
     </cfif>
 </cfif>
 
@@ -192,19 +195,20 @@
         			,areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
               	</cfif>
            	</cfif>
-			<cfif NOT VAL(family_info.hostAppStatus)>
-                ,hostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="9">
-                ,applicationSent = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
-            </cfif>
-            <cfif family_info.password is ''>
+            <cfif qGetHostInfo.password is ''>
               	,password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#strPassword#">
             </cfif>
-  		WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(family_info.hostID)#">
+  		WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostInfo.hostID)#">
 	</cfquery>
+    <cfif NOT VAL(qGetHostInfo.applicationStatusID)>
+    	<cfscript>
+			APPLICATION.CFC.HOST.setHostSeasonStatus(hostID=qGetHostInfo.hostID,seasonID=qCurrentSeason.seasonID);
+		</cfscript>
+    </cfif>
     <cfquery name="qGetUpdatedPassword" datasource="#APPLICATION.DSN#">
         SELECT password, email
         FROM smg_hosts
-        WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(family_info.hostID)#">
+        WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostInfo.hostID)#">
     </cfquery>
     
        <cfscript>
@@ -224,10 +228,10 @@
     <cfif NOT SESSION.formErrors.length()>
  	<cfscript>
 		APPLICATION.CFC.HOST.sendWelcomeLetter(
-			email=#family_info.email#,
+			email=#qGetHostInfo.email#,
 			password=#qGetUpdatedPassword.password#,
-			fatherFirstName=#family_info.fatherFirstName#,
-			motherFirstName=#family_info.motherFirstName#);
+			fatherFirstName=#qGetHostInfo.fatherFirstName#,
+			motherFirstName=#qGetHostInfo.motherFirstName#);
 	</cfscript>
     </cfif>
     <!--- Only reload the page if it does not need to change the host family's active status --->
@@ -242,7 +246,7 @@
         SET dateUpdated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
             updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
       		isHosting = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.decideToHost)#">
-        WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#family_info.hostID#">
+        WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostInfo.hostID#">
     </cfquery>
     <cflocation url="?#CGI.QUERY_STRING#"/>
 </cfif>
@@ -276,7 +280,7 @@
 	
 	function confirmDelete() {
 		if (confirm('You are about to delete this Host Family. You will not be able to recover this information. Click OK to continue.')) {
-			window.location.href='?curdoc=querys/delete_host&hostID=<cfoutput>#family_info.hostID#</cfoutput>'
+			window.location.href='?curdoc=querys/delete_host&hostID=<cfoutput>#qGetHostInfo.hostID#</cfoutput>'
 		}	
 	}
 </script>
@@ -312,7 +316,7 @@ div.scroll2 {
 }
 </style>
 
-<cfif family_info.recordcount EQ 0>
+<cfif qGetHostInfo.recordcount EQ 0>
 	The host family ID you are looking for, <cfoutput>#url.hostID#</cfoutput>, was not found. This could be for a number of reasons.<br><br>
 	<ul>
 		<li>the host family record was deleted or renumbered
@@ -329,10 +333,10 @@ div.scroll2 {
 <!----check if single placement family assign a value of 1 to each family memmber, if sum of total family members over 1, no worries.  Other wise, display warning---->
 <Cfset father=0>
 <cfset mother=0>
-<Cfif family_info.fatherfirstname is not ''>
+<Cfif qGetHostInfo.fatherfirstname is not ''>
 	<cfset father = 1>
 </Cfif>
-<Cfif family_info.motherfirstname is not ''>
+<Cfif qGetHostInfo.motherfirstname is not ''>
 	<cfset mother = 1>
 </Cfif>
 <cfset totalfam = mother + father + kidsAtHome.recordcount>
@@ -372,13 +376,13 @@ div.scroll2 {
                     <td height="24" width="26" background="pics/header_background.gif"><img src="pics/family.gif"></td>
                     <td background="pics/header_background.gif"><h2>&nbsp;&nbsp;Host Family Information</h2></td>
                     <td background="pics/header_background.gif" style="text-align:right">
-                    	<cfif VAL(family_info.hostAppStatus)>
-                            <span class="buttonBlue smallerButton" onclick="window.location.href='?curdoc=hostApplication/toDoList&hostID=#family_info.hostID#'">
+                    	<cfif VAL(vHasEhost)>
+                            <span class="buttonBlue smallerButton" onclick="window.location.href='?curdoc=hostApplication/toDoList&hostID=#qGetHostInfo.hostID#'">
                                 Open eHost Application
                             </span>
                         	&nbsp;
                        	</cfif>
-                        <span class="buttonBlue smallerButton" onclick="window.location.href='?curdoc=forms/host_fam_form&hostID=#family_info.hostID#'">
+                        <span class="buttonBlue smallerButton" onclick="window.location.href='?curdoc=forms/host_fam_form&hostID=#qGetHostInfo.hostID#'">
                         	Edit
                       	</span>
                         &nbsp;
@@ -390,34 +394,34 @@ div.scroll2 {
                 </tr>
             </table>
             <table width="100%" border=0 cellpadding=4 cellspacing=0 class="section">
-                <tr><td>Family Name:</td><td>#family_info.familylastname#</td><td>ID:</td><td>#family_info.hostID#</td></tr>
-                <tr><td>Address:</td><td>#family_info.address#<br />#family_info.address2#</td></tr>
-                <tr><td>City:</td><td>#family_info.city#</td></tr>
-                <tr><td>State:</td><td>#family_info.state#</td><td>ZIP:</td><td>#family_info.zip#</td></tr>
-                <tr><td>Phone:</td><td>#family_info.phone#</td></tr>
+                <tr><td>Family Name:</td><td>#qGetHostInfo.familylastname#</td><td>ID:</td><td>#qGetHostInfo.hostID#</td></tr>
+                <tr><td>Address:</td><td>#qGetHostInfo.address#<br />#qGetHostInfo.address2#</td></tr>
+                <tr><td>City:</td><td>#qGetHostInfo.city#</td></tr>
+                <tr><td>State:</td><td>#qGetHostInfo.state#</td><td>ZIP:</td><td>#qGetHostInfo.zip#</td></tr>
+                <tr><td>Phone:</td><td>#qGetHostInfo.phone#</td></tr>
                 <tr>
                     <td>Email:</td>
                     <td>
-                        <a href="mailto:#family_info.email#">#family_info.email#</a>
-                        <cfif VAL(family_info.hostAppStatus)>
+                        <a href="mailto:#qGetHostInfo.email#">#qGetHostInfo.email#</a>
+                        <cfif VAL(qGetHostInfo.applicationStatusID)>
                             <br /><span class="required">*eHost - Online Application</span>
                         </cfif>                
                     </td>
                 	<td>Password:</td>
                     <td>
-						<cfif family_info.password is not ''>
-                        	#family_info.password#
+						<cfif qGetHostInfo.password is not ''>
+                        	#qGetHostInfo.password#
                      	<cfelse>
                         	No Password on File
                        	</cfif>
                  	</td>
                 </tr>
                 <tr><th colspan="2" align="left">Father's Information</th></tr>
-                <tr><td>Name:</td><td>#family_info.fatherfirstname# #family_info.fatherlastname#</td><td>Age:</td><td><cfif family_info.fatherdob NEQ ''>#dateDiff('yyyy', family_info.fatherdob, now())#</cfif></td></tr>
-                <tr><td>Occupation:</td><td><cfif family_info.fatherworktype is ''>n/a<cfelse>#family_info.fatherworktype#</cfif></td><td>Cell Phone:</td><td>#family_info.father_cell#</td></tr>
+                <tr><td>Name:</td><td>#qGetHostInfo.fatherfirstname# #qGetHostInfo.fatherlastname#</td><td>Age:</td><td><cfif qGetHostInfo.fatherdob NEQ ''>#dateDiff('yyyy', qGetHostInfo.fatherdob, now())#</cfif></td></tr>
+                <tr><td>Occupation:</td><td><cfif qGetHostInfo.fatherworktype is ''>n/a<cfelse>#qGetHostInfo.fatherworktype#</cfif></td><td>Cell Phone:</td><td>#qGetHostInfo.father_cell#</td></tr>
                 <tr><th colspan="2" align="left">Mother's Information</th></tr>
-                <tr><td>Name:</td><td>#family_info.motherfirstname# #family_info.motherlastname#</td><td>Age:</td><td><cfif family_info.motherdob NEQ ''>#dateDiff('yyyy', family_info.motherdob, now())#</cfif></td></tr>
-                <tr><td>Occupation:</td><td><cfif family_info.motherworktype is ''>n/a<cfelse>#family_info.motherworktype#</cfif></td><td>Cell Phone:</td><td>#family_info.mother_cell#</td></tr>
+                <tr><td>Name:</td><td>#qGetHostInfo.motherfirstname# #qGetHostInfo.motherlastname#</td><td>Age:</td><td><cfif qGetHostInfo.motherdob NEQ ''>#dateDiff('yyyy', qGetHostInfo.motherdob, now())#</cfif></td></tr>
+                <tr><td>Occupation:</td><td><cfif qGetHostInfo.motherworktype is ''>n/a<cfelse>#qGetHostInfo.motherworktype#</cfif></td><td>Cell Phone:</td><td>#qGetHostInfo.mother_cell#</td></tr>
             </table>
             <table width=100% cellpadding=0 cellspacing=0 border=0>
                 <tr valign="bottom"><td width=9 valign="top" height=12><img src="pics/footer_leftcap.gif" ></td><td width=100% background="pics/header_background_footer.gif"></td><td width=9 valign="top"><img src="pics/footer_rightcap.gif"></td></tr>
@@ -435,7 +439,7 @@ div.scroll2 {
                                 <td width=26 background="pics/header_background.gif"><img src="pics/family.gif"></td>
                                 <td background="pics/header_background.gif"><h2>&nbsp;&nbsp;Community Information</h2></td>
                                 <td background="pics/header_background.gif" width=16>
-                                	<span class="buttonBlue smallerButton" onclick="window.location.href='?curdoc=forms/host_fam_pis_7&hostID=#family_info.hostID#'">Edit</span>
+                                	<span class="buttonBlue smallerButton" onclick="window.location.href='?curdoc=forms/host_fam_pis_7&hostID=#qGetHostInfo.hostID#'">Edit</span>
                            		</td>
                                 <td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
                           	</tr>
@@ -445,24 +449,24 @@ div.scroll2 {
                             	<td>Region:</td><td colspan="3"><cfif get_region.regionname is ''>not assigned<cfelse>#get_region.regionname#</cfif></td>
                           	</tr>
                             <tr>
-                            	<td>Community:</td><td colspan="3"><cfif family_info.community is ''>n/a<cfelse>#family_info.community#</cfif></td>
+                            	<td>Community:</td><td colspan="3"><cfif qGetHostInfo.community is ''>n/a<cfelse>#qGetHostInfo.community#</cfif></td>
                           	</tr>
                             <tr>
-                            	<td>Closest City:</td><td><cfif family_info.nearbigcity is ''>n/a<cfelse>#family_info.nearbigcity#</cfif></td><td>Distance:</td><td>#family_info.near_City_dist# miles</td>
+                            	<td>Closest City:</td><td><cfif qGetHostInfo.nearbigcity is ''>n/a<cfelse>#qGetHostInfo.nearbigcity#</cfif></td><td>Distance:</td><td>#qGetHostInfo.near_City_dist# miles</td>
                          	</tr>
                             <tr>
-                            	<td>Airport Code:</td><td colspan="3"><cfif family_info.major_air_code is ''>n/a<cfelse>#family_info.major_air_code#</cfif></td>
+                            	<td>Airport Code:</td><td colspan="3"><cfif qGetHostInfo.major_air_code is ''>n/a<cfelse>#qGetHostInfo.major_air_code#</cfif></td>
                           	</tr>
                             <tr>
                             	<td>Airport City:</td>
                                 <td colspan="3">
-									<cfif family_info.airport_city is '' and family_info.airport_state is ''>n/a<cfelse>#family_info.airport_city# / #family_info.airport_state#</cfif>
+									<cfif qGetHostInfo.airport_city is '' and qGetHostInfo.airport_state is ''>n/a<cfelse>#qGetHostInfo.airport_city# / #qGetHostInfo.airport_state#</cfif>
                               	</td>
                           	</tr>
                             <tr>
                                 <td valign="top">Interests: </td>
                                 <td colspan="3">
-                                    <cfif len(#family_info.pert_info#) gt '100'>#Left(family_info.pert_info,92)# <a href="?curdoc=forms/host_fam_pis_7">more...</a><cfelse>#family_info.pert_info#</cfif>
+                                    <cfif len(#qGetHostInfo.pert_info#) gt '100'>#Left(qGetHostInfo.pert_info,92)# <a href="?curdoc=forms/host_fam_pis_7">more...</a><cfelse>#qGetHostInfo.pert_info#</cfif>
                                 </td>
                           	</tr>
                         </table>				
@@ -481,7 +485,7 @@ div.scroll2 {
                                 <td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td><td width=26 background="pics/header_background.gif"><img src="pics/school.gif"></td>
                                 <td background="pics/header_background.gif"><h2>School Information</h2></td>
                                 <td background="pics/header_background.gif" width=16>
-                                	<span class="buttonBlue smallerButton" onclick="window.location.href='?curdoc=forms/host_fam_pis_5&hostID=#family_info.hostID#'">Edit</span> 
+                                	<span class="buttonBlue smallerButton" onclick="window.location.href='?curdoc=forms/host_fam_pis_5&hostID=#qGetHostInfo.hostID#'">Edit</span> 
 								</td>
                                 <td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
                          	</tr>
@@ -511,7 +515,7 @@ div.scroll2 {
                     <td background="pics/header_background.gif"><h2>Criminal Background Check</td>
                     <cfif client.usertype EQ '1' OR user_compliance.compliance EQ '1'>
                         <td background="pics/header_background.gif" width=16>
-                        	<span class="buttonBlue smallerButton" onclick="window.location.href='?curdoc=cbc/hosts_cbc&hostID=#family_info.hostID#'">Edit</span>
+                        	<span class="buttonBlue smallerButton" onclick="window.location.href='?curdoc=cbc/hosts_cbc&hostID=#qGetHostInfo.hostID#'">Edit</span>
                 		</td>
                     </cfif>
                     <td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
@@ -534,7 +538,7 @@ div.scroll2 {
                     <tr><td colspan="6"><strong>Host Mother:</strong></td></tr>
                     <cfloop query="qGetCBCMother">
                     <tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
-                        <td style="padding-left:20px;">#family_info.motherfirstname# #family_info.motherlastname#</td>
+                        <td style="padding-left:20px;">#qGetHostInfo.motherfirstname# #qGetHostInfo.motherlastname#</td>
                         <td align="center">#season#</td>
                         <td align="center"><cfif isDate(date_sent)>#DateFormat(date_sent, 'mm/dd/yyyy')#<cfelse>processing</cfif></td>
                         <td align="center"><cfif isDate(date_expired)>#DateFormat(date_expired, 'mm/dd/yyyy')#<cfelse>n/a</cfif></td>
@@ -591,7 +595,7 @@ div.scroll2 {
                             </cfif>
                              <td>
                                 <cfif ListFind("1,2,3,4", CLIENT.userType)>
-                                    <input type="button" onclick="getCBCFromUser(#family_info.hostID#, #cbcid#,'mother')" value="Transfer CBC" style="font-size:10px" />
+                                    <input type="button" onclick="getCBCFromUser(#qGetHostInfo.hostID#, #cbcid#,'mother')" value="Transfer CBC" style="font-size:10px" />
                                 </cfif>
                             </td>
                             <td align="left">
@@ -602,7 +606,7 @@ div.scroll2 {
                     <tr bgcolor="e2efc7"><td colspan="7"><strong>Host Father:</strong></td></tr>
                     <cfloop query="qGetCBCFather">
                     <tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
-                        <td style="padding-left:20px;">#family_info.fatherfirstname# #family_info.fatherlastname#</td>
+                        <td style="padding-left:20px;">#qGetHostInfo.fatherfirstname# #qGetHostInfo.fatherlastname#</td>
                         <td align="center">#season#</td>
                         <td align="center"><cfif isDate(date_sent)>#DateFormat(date_sent, 'mm/dd/yyyy')#<cfelse>processing</cfif></td>
                         <td align="center"><cfif isDate(date_expired)>#DateFormat(date_expired, 'mm/dd/yyyy')#<cfelse>n/a</cfif></td>
@@ -662,7 +666,7 @@ div.scroll2 {
                             </cfif>
                             <td>
                                 <cfif ListFind("1,2,3,4", CLIENT.userType)>
-                                    <input type="button" onclick="getCBCFromUser(#family_info.hostID#, #cbcid#, 'father')" value="Transfer CBC" style="font-size:10px" />
+                                    <input type="button" onclick="getCBCFromUser(#qGetHostInfo.hostID#, #cbcid#, 'father')" value="Transfer CBC" style="font-size:10px" />
                                 </cfif>
                             </td>
                         </tr>
@@ -719,49 +723,7 @@ div.scroll2 {
         
         <!--- RIGHT SIDE --->
         <td width="40%" align="right" valign="top">
-        	<!--- OTHER FAMILY MEMBERS --->
-            <table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
-                <tr valign=middle height=24>
-                    <td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
-                    <td width=26 background="pics/header_background.gif"><img src="pics/family.gif"></td>
-                    <td background="pics/header_background.gif"><h2>&nbsp;&nbsp;Other Family Members</h2></td>
-                    <td background="pics/header_background.gif" width=16>
-                    	<span class="buttonBlue smallerButton" onclick="window.location.href='index.cfm?curdoc=forms/host_fam_mem_form&hostID=#family_info.hostID#'">Add</span>
-              		</td>
-                    <td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
-            	</tr>
-            </table>
-            <div class="scroll">
-            <table width=100% align="left" border=0 cellpadding=2 cellspacing=0>
-                <tr>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td><u>Name</u></td>
-                    <td><u>Sex</u></td>
-                    <td><u>Age</u></td>
-                    <td><u>Relation</u></td>
-                    <td><u>At Home</u></td>
-                </tr>	
-                <cfloop query="host_children">
-                    <tr bgcolor="#iif(currentRow MOD 2 ,DE("ffffe6") ,DE("white") )#">
-                        <td><a href="index.cfm?curdoc=host_fam_info&delete_child=#childid#&hostID=#family_info.hostID#" onClick="return confirm('Are you sure you want to delete this Family Member?')"><img src="pics/deletex.gif" border="0" alt="Delete"></a></td>
-                        <td><a href="index.cfm?curdoc=forms/host_fam_mem_form&childid=#childid#"><img src="pics/edit.png" border="0" alt="Edit"></a></td>
-                        <td>#name#</td>
-                        <td>#sex#</td>
-                        <td><cfif birthdate NEQ ''>#DateDiff('yyyy', birthdate, now())#</cfif></td>
-                        <td>#membertype#</td>
-                        <td>#liveathome#</td>
-                    </tr>
-                </cfloop>
-            </table>
-            </div>
-            <table width=100% cellpadding=0 cellspacing=0 border=0>
-                <tr valign="bottom"><td width=9 valign="top" height=12><img src="pics/footer_leftcap.gif" ></td><td width=100% background="pics/header_background_footer.gif"></td><td width=9 valign="top"><img src="pics/footer_rightcap.gif"></td></tr>
-            </table>
-            
-            <br/>
-            
-            <!--- HOST ELIGIBILITY --->
+        	<!--- HOST ELIGIBILITY --->
             <table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
                 <tr valign=middle height=24>
                     <td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
@@ -769,21 +731,21 @@ div.scroll2 {
                     <td background="pics/header_background.gif"><h2>&nbsp;&nbsp;Host Eligibility</h2></td>
                     <td background="pics/header_background.gif" width=16>
                         <cfif APPLICATION.CFC.USER.isOfficeUser()>
-                        	<span class="buttonBlue smallerButton" onclick="window.location.href='index.cfm?curdoc=forms/host_fam_eligibility_form&hostID=#family_info.hostID#'">Edit</span>
+                        	<span class="buttonBlue smallerButton" onclick="window.location.href='index.cfm?curdoc=forms/host_fam_eligibility_form&hostID=#qGetHostInfo.hostID#'">Edit</span>
                         </cfif>
                     </td>
                     <td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
                 </tr>
             </table>
             <table width="100%" align="left" cellpadding=8 class="section">
-                <cfif family_info.isNotQualifiedToHost EQ 0>
+                <cfif qGetHostInfo.isNotQualifiedToHost EQ 0>
                     <tr>
                         <td>
                             <input type="checkbox" disabled="disabled" /> Not Qualified
                         </td>
                         <td>
                             <cfif CLIENT.usertype LTE 7>
-                                <cfif VAL(family_info.isHosting)>
+                                <cfif VAL(qGetHostInfo.isHosting)>
                                     <form 
                                         method="post" 
                                         action="index.cfm?curdoc=host_fam_info&hostid=#url.hostid#" 
@@ -792,7 +754,7 @@ div.scroll2 {
                                         <input type="hidden" name="decideToHost" value="0"/>
                                         <input type="submit" value="Decided Not To Host"  alt="Decided Not To Host" border="0" class="buttonRed" />
                                     </form>
-                                    <cfif VAL(family_info.hostAppStatus)>
+                                    <cfif VAL(qGetHostInfo.applicationStatusID)>
                                         <form method="post" action="index.cfm?curdoc=host_fam_info&hostid=#url.hostid#" style="display:inline;">
                                             <input name="sendAppEmail" type="submit" value="Resend Login Info"  alt="Resend Login Info" border="0" class="buttonGreen" />
                                         </form>
@@ -807,7 +769,14 @@ div.scroll2 {
                                         <input type="submit" value="Decided To Host"  alt="Decided To Host" border="0" class="buttonYellow" />
                                     </form>
                                 </cfif>
+                                
                             </cfif>
+                            <cfif NOT VAL(vCurrentSeasonStatus) AND VAL(qGetHostInfo.isHosting)>
+                                <form method="post" action="index.cfm?curdoc=host_fam_info&hostid=#url.hostid#" style="display:inline;">
+                                    <input type="hidden" name="hostNewSeason" value="1"/>
+                                    <input type="submit" value="Host #qCurrentSeason.season#"  alt="Host Season X" border="0" class="buttonGreen" />
+                                </form>
+                         	</cfif>
                         </td>
                 </tr>
                 <cfelse>
@@ -868,7 +837,7 @@ div.scroll2 {
                     <td background="pics/header_background.gif"><h2>&nbsp;&nbsp;Area Representative</h2></td>
                     <td background="pics/header_background.gif" width=16>
                         <cfif CLIENT.userType LTE 7>
-                        	<span class="buttonBlue smallerButton" onclick="window.location.href='index.cfm?curdoc=forms/setHostAreaRepForm&hostID=#family_info.hostID#'">Edit</span>
+                        	<span class="buttonBlue smallerButton" onclick="window.location.href='index.cfm?curdoc=forms/setHostAreaRepForm&hostID=#qGetHostInfo.hostID#'">Edit</span>
                         </cfif>
                     </td>
                     <td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
@@ -890,6 +859,49 @@ div.scroll2 {
                         <img src="pics/footer_rightcap.gif">
                     </td>
                 </tr>
+            </table>
+            
+            <br/>
+            
+            
+        	<!--- OTHER FAMILY MEMBERS --->
+            <table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
+                <tr valign=middle height=24>
+                    <td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
+                    <td width=26 background="pics/header_background.gif"><img src="pics/family.gif"></td>
+                    <td background="pics/header_background.gif"><h2>&nbsp;&nbsp;Other Family Members</h2></td>
+                    <td background="pics/header_background.gif" width=16>
+                    	<span class="buttonBlue smallerButton" onclick="window.location.href='index.cfm?curdoc=forms/host_fam_mem_form&hostID=#qGetHostInfo.hostID#'">Add</span>
+              		</td>
+                    <td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
+            	</tr>
+            </table>
+            <div class="scroll">
+            <table width=100% align="left" border=0 cellpadding=2 cellspacing=0>
+                <tr>
+                    <td>&nbsp;</td>
+                    <td>&nbsp;</td>
+                    <td><u>Name</u></td>
+                    <td><u>Sex</u></td>
+                    <td><u>Age</u></td>
+                    <td><u>Relation</u></td>
+                    <td><u>At Home</u></td>
+                </tr>	
+                <cfloop query="host_children">
+                    <tr bgcolor="#iif(currentRow MOD 2 ,DE("ffffe6") ,DE("white") )#">
+                        <td><a href="index.cfm?curdoc=host_fam_info&delete_child=#childid#&hostID=#qGetHostInfo.hostID#" onClick="return confirm('Are you sure you want to delete this Family Member?')"><img src="pics/deletex.gif" border="0" alt="Delete"></a></td>
+                        <td><a href="index.cfm?curdoc=forms/host_fam_mem_form&childid=#childid#"><img src="pics/edit.png" border="0" alt="Edit"></a></td>
+                        <td>#name#</td>
+                        <td>#sex#</td>
+                        <td><cfif birthdate NEQ ''>#DateDiff('yyyy', birthdate, now())#</cfif></td>
+                        <td>#membertype#</td>
+                        <td>#liveathome#</td>
+                    </tr>
+                </cfloop>
+            </table>
+            </div>
+            <table width=100% cellpadding=0 cellspacing=0 border=0>
+                <tr valign="bottom"><td width=9 valign="top" height=12><img src="pics/footer_leftcap.gif" ></td><td width=100% background="pics/header_background_footer.gif"></td><td width=9 valign="top"><img src="pics/footer_rightcap.gif"></td></tr>
             </table>
             
             <br/>
@@ -947,9 +959,9 @@ div.scroll2 {
                     <td width=17 background="pics/header_rightcap.gif">&nbsp;</td></tr>
             </table>
             <table width="100%" border=0 cellpadding=4 cellspacing=0 class="section">
-                <tr><td><a href="index.cfm?curdoc=forms/host_fam_pis_3&hostID=#family_info.hostID#">Room, Smoking, Pets, Church</a></td></tr>
-                <tr bgcolor="ffffe6"><td><a class="nav_bar" href="index.cfm?curdoc=forms/host_fam_pis_4&hostID=#family_info.hostID#">Family Interests</a></td></tr>
-                <tr><td><a class="nav_bar" href="index.cfm?curdoc=forms/double_placement&hostID=#family_info.hostID#">Rep Info</a></td></tr>
+                <tr><td><a href="index.cfm?curdoc=forms/host_fam_pis_3&hostID=#qGetHostInfo.hostID#">Room, Smoking, Pets, Church</a></td></tr>
+                <tr bgcolor="ffffe6"><td><a class="nav_bar" href="index.cfm?curdoc=forms/host_fam_pis_4&hostID=#qGetHostInfo.hostID#">Family Interests</a></td></tr>
+                <tr><td><a class="nav_bar" href="index.cfm?curdoc=forms/double_placement&hostID=#qGetHostInfo.hostID#">Rep Info</a></td></tr>
             </table>				
             <table width=100% cellpadding=0 cellspacing=0 border=0>
                 <tr valign="bottom"><td width=9 valign="top" height=12><img src="pics/footer_leftcap.gif" ></td><td width=100% background="pics/header_background_footer.gif"></td><td width=9 valign="top"><img src="pics/footer_rightcap.gif"></td></tr>

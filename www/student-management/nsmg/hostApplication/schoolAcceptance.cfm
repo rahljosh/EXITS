@@ -19,10 +19,12 @@
     <cfparam name="URL.ID" default="0">
     <cfparam name="URL.hashID" default="0">
     <cfparam name="URL.hostID" default="0">
+    <cfparam name="URL.seasonID" default="0">
 
     <!--- Param FORM Variables --->
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.hostID" default="0">
+    <cfparam name="FORM.seasonID" default="0">
     <cfparam name="FORM.signedDate" default="">
     <cfparam name="FORM.fileData" default="">
     
@@ -38,6 +40,11 @@
 		if ( VAL(URL.hostID) AND NOT VAL(FORM.hostID) ) {
 			FORM.hostID = URL.hostID;
 		}
+		
+		// Check if we have a valid URL.seasonID
+		if ( VAL(URL.seasonID) AND NOT VAL(FORM.seasonID) ) {
+			FORM.seasonID = URL.seasonID;
+		}
 
 		// Get List of Host Family Applications
 		qGetHostInfo = APPLICATION.CFC.HOST.getApplicationList(hostID=FORM.hostID);	
@@ -47,7 +54,7 @@
 			foreignTable="smg_hosts",	
 			foreignID=FORM.hostID, 			
 			documentGroup="schoolAcceptance",
-			seasonID=APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID // This needs to be replaced to get the assigned season for this app as a host family might apply to different seasons
+			seasonID=FORM.seasonID
 		);
 	</cfscript>
     
@@ -94,7 +101,8 @@
 					documentTypeID=27,
 					uploadPath=vSetUploadPath,					
 					description="School Acceptance Form - Signed #form.signedDate#",
-					allowedExt="jpg,jpeg,png,pdf"
+					allowedExt="jpg,jpeg,png,pdf",
+					seasonID=FORM.seasonID
 				);
 
 				if ( stResult.isSuccess ) {
@@ -102,6 +110,7 @@
 					// Use same approval process of the host family sections
 					APPLICATION.CFC.HOST.updateSectionStatus(
 						hostID=FORM.hostID,
+						seasonID=FORM.seasonID,
 						itemID=15,
                         action="approved",
                         notes="",
@@ -169,9 +178,10 @@
             </cfif>
 
 			<!--- Upload Form --->        
-			<form action="#CGI.SCRIPT_NAME#" enctype="multipart/form-data" method="post">             
-                <input type="hidden" name="submitted" value="1">
-                <input type="hidden" name="hostID" value="#FORM.hostID#">
+			<form action="#CGI.SCRIPT_NAME#" enctype="multipart/form-data" method="post">        
+                <input type="hidden" name="submitted" value="1" />
+                <input type="hidden" name="hostID" value="#FORM.hostID#" />
+                <input type="hidden" name="seasonID" value="#FORM.seasonID#" />
                 <table width="50%" cellspacing="0" cellpadding="4" class="border" align="center">
                     <tr bgcolor="##1b99da">
                         <td align="center" colspan="2">
