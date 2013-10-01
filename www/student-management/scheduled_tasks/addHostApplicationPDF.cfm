@@ -14,7 +14,7 @@
     	SELECT smg_hosts.hostID 
        	FROM smg_hosts 
         INNER JOIN smg_host_app_season ON smg_host_app_season.hostID = smg_hosts.hostID
-        	AND smg_host_app_season.seasonID = vCurrentSeason
+        	AND smg_host_app_season.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#vCurrentSeason#">
       	WHERE active = 1 )
     AND studentID NOT IN (SELECT DISTINCT fk_studentID FROM virtualFolder WHERE fk_hostID = hostID AND fk_documentType = 28 AND isDeleted = 0)
 </cfquery>
