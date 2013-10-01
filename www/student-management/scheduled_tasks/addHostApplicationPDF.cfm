@@ -11,7 +11,7 @@
     AND hostID != 0
     AND ( host_fam_approved IN (1,2,3,4) OR datePISEmailed IS NOT NULL )
     AND hostID IN (
-    	SELECT hostID 
+    	SELECT smg_hosts.hostID 
        	FROM smg_hosts 
         INNER JOIN smg_host_app_season ON smg_host_app_season.hostID = smg_hosts.hostID
         	AND smg_host_app_season.seasonID = vCurrentSeason
