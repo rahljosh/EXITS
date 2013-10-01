@@ -37,7 +37,7 @@
        		<th align="left">On #DateFormat(previousDetails.caseDate, 'mm/dd/yyyy')# #previousDetails.firstname# #previousDetails.firstname#  posted:</th>
        	</Tr>
         <Tr>
-        	<td width=800>#previousDetails.caseNote#</td>
+        	<td width=800><p>#ParagraphFormat(previousDetails.caseNote)#</p></td>
         </Tr>
         
        </table> 
