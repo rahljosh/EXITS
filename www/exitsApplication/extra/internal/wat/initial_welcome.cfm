@@ -193,14 +193,16 @@
 				</cfif>
                 
                 <!--- New Users --->
-	            <tr>
-                    <td colspan="2" style="font-weight:bold; text-decoration:underline;">New user in EXTRA?</td>
-                </tr>
-                <tr>
-                	<td colspan="2" valign="top" class="style1" style="padding:10px 15px 15px 15px;">
-                    	<a href="onlineApplication/tutorial.cfm" style="color:red;">Click here for a breif tutorial</a>
-                    </td>
-                </tr>
+                <cfif NOT ListFind('1,2,3,4',CLIENT.userType)>
+                    <tr>
+                        <td colspan="2" style="font-weight:bold; text-decoration:underline;">New user in EXTRA?</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" valign="top" class="style1" style="padding:10px 15px 15px 15px;">
+                            <a href="onlineApplication/tutorial.cfm" style="color:red;">Click here for a breif tutorial</a>
+                        </td>
+                    </tr>
+               	</cfif>
                 
         	</table>
 
