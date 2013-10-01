@@ -135,7 +135,6 @@
 				// School Acceptance
 				if ( qGetApprovalHistory.ID[i] EQ 15 AND NOT qGetSchoolAcceptance.recordCount ) {
 					vCheckIfMissing = false;
-					vAppFullyApproved = false;
 				}
 
 				// Confidential Host Visit - Require approval when there is a report | School Acceptance - Require approval if there is an uploaded file
