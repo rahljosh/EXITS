@@ -52,7 +52,7 @@
         // Set Application as Paper - Remove from the list
         if ( VAL(FORM.setHostIDAsPaper) AND APPLICATION.CFC.USER.isOfficeUser() ) {
         
-            APPLICATION.CFC.HOST.updateApplicationStatus(hostID=FORM.setHostIDAsPaper,statusID=0);
+            APPLICATION.CFC.HOST.setHostSeasonStatus(hostID=FORM.setHostIDAsPaper,applicationStatusID=0);
             
             // Set Page Message
             SESSION.pageMessages.Add("Record for host family ###FORM.setHostIDAsPaper# has sucessfully been converted to a paper application");

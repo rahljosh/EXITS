@@ -255,6 +255,7 @@
     	<cfargument name="prID" default="" hint="Progress Report ID">
         <cfargument name="hostID" default="" hint="host ID">
         <cfargument name="reportType" default="" hint="Report Type">
+        <cfargument name="seasonID" default="" hint="seasonID is not required">
 		
         <cfquery 
 			name="qGetVisitInformation" 
@@ -262,6 +263,7 @@
                 SELECT 
 					pr.pr_ID,
 					pr.fk_student,
+                    pr.fk_seasonID,
                     pr.pr_uniqueID,
                     pr.pr_month_of_report,
                     pr.pr_sr_approved_date,
@@ -330,7 +332,12 @@
                 <cfif LEN(ARGUMENTS.reportType)>
                     AND
                         fk_reportType = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.reportType)#">
-                </cfif>   
+                </cfif>
+                
+                <cfif LEN(ARGUMENTS.seasonID)>
+                	AND
+                    	pr.fk_seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
+                </cfif>  
 
 		</cfquery>
         

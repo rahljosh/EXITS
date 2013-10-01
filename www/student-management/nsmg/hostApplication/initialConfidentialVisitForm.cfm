@@ -17,11 +17,13 @@
 
     <!--- Param URL Variables --->
     <cfparam name="URL.hostID" default="0">
+    <cfparam name="URL.seasonID" default="0">
     
 	<!--- Param FORM Variables --->
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.pr_ID" default="0">
     <cfparam name="FORM.hostID" default="0">
+    <cfparam name="FORM.seasonID" default="0">
     <cfparam name="FORM.studentID" default= "0">
     <cfparam name="FORM.dateofvisit" default= "">
     <cfparam name="FORM.neighborhoodAppearance" default= "">
@@ -53,21 +55,26 @@
 		if ( VAL(URL.hostID) AND NOT VAL(FORM.hostID) ) {
 			FORM.hostID = URL.hostID;
 		}
+		
+		// Check if we have a valid URL.seasonID
+		if ( VAL(URL.seasonID) AND NOT VAL(FORM.seasonID) ) {
+			FORM.seasonID = URL.seasonID;
+		}
 
 		// Get List of Host Family Applications
 		qGetHostInfo = APPLICATION.CFC.HOST.getApplicationList(hostID=FORM.hostID);	
 
 		// Get Confidential Visit Form
-		qGetConfidentialVisitForm = APPLICATION.CFC.PROGRESSREPORT.getVisitInformation(hostID=VAL(FORM.hostID),reportType=5);
+		qGetConfidentialVisitForm = APPLICATION.CFC.PROGRESSREPORT.getVisitInformation(hostID=VAL(FORM.hostID),reportType=5,seasonID=FORM.seasonID);
 
 		// Get Application Approval History for this section
-		qGetApprovalHistory = APPLICATION.CFC.HOST.getApplicationApprovalHistory(hostID=qGetHostInfo.hostID, itemID=14);
+		qGetApprovalHistory = APPLICATION.CFC.HOST.getApplicationApprovalHistory(hostID=qGetHostInfo.hostID, itemID=14,seasonID=FORM.seasonID);
 
 		// This returns the approval fields for the logged in user
 		stCurrentUserFieldSet = APPLICATION.CFC.HOST.getApprovalFieldNames();
 		
 		// This Returns who is the next user approving / denying the report
-		stUserOneLevelUpInfo = APPLICATION.CFC.USER.getUserOneLevelUpInfo(currentUserType=qGetHostInfo.hostAppStatus,regionalAdvisorID=qGetHostInfo.regionalAdvisorID);
+		stUserOneLevelUpInfo = APPLICATION.CFC.USER.getUserOneLevelUpInfo(currentUserType=qGetHostInfo.applicationStatusID,regionalAdvisorID=qGetHostInfo.regionalAdvisorID);
 		
 		// This returns the fields that need to be checked
 		stOneLevelUpFieldSet = APPLICATION.CFC.HOST.getApprovalFieldNames(userType=stUserOneLevelUpInfo.userType);
@@ -350,7 +357,8 @@
                         progress_reports 
                     (
                         fk_reportType, 
-                        fk_student, 
+                        fk_student,
+                        fk_seasonID,
                         pr_uniqueid, 
                         pr_month_of_report, 
                         fk_sr_user, 
@@ -363,6 +371,7 @@
                     (
                         <cfqueryparam cfsqltype="cf_sql_integer" value="5">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.seasonID)#">,
                         <cfqueryparam cfsqltype="cf_sql_idstamp" value="#createuuid()#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#DateFormat(now(), 'm')#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostInfo.areaRepresentativeID)#">,
@@ -441,7 +450,7 @@
                 
                 <cfscript>
 					// Refresh Query used in the approval process
-					qGetConfidentialVisitForm = APPLICATION.CFC.PROGRESSREPORT.getVisitInformation(hostID=VAL(FORM.hostID),reportType=5);
+					qGetConfidentialVisitForm = APPLICATION.CFC.PROGRESSREPORT.getVisitInformation(hostID=VAL(FORM.hostID),reportType=5,seasonID=FORM.seasonID);
 				</cfscript>
             
             </cfif>
@@ -451,6 +460,7 @@
                 APPLICATION.CFC.HOST.updateSectionStatus(
                     hostID=FORM.hostID,
                     itemID=14,
+					seasonID=FORM.seasonID,
                     action="approved",
                     notes="",
                     areaRepID=qGetHostInfo.areaRepresentativeID,
@@ -613,9 +623,10 @@
         </cfif>
         
         <form action="#CGI.SCRIPT_NAME#" method="POST"> 
-            <input type="hidden" name="submitted" value="1">
+            <input type="hidden" name="submitted" value="1" />
             <input type="hidden" name="pr_ID" value="#FORM.pr_id#" />
-            <input type="hidden" name="hostID" value="#FORM.hostID#">
+            <input type="hidden" name="hostID" value="#FORM.hostID#" />
+            <input type="hidden" name="seasonID" value="#FORM.seasonID#" />
         	
             <div class="myform stylized">
 

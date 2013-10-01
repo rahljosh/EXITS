@@ -69,6 +69,9 @@
 		// Get Host Family Info
 		qGetHostFamilyInfo = APPLICATION.CFC.HOST.getHosts(hostID=FORM.hostID);
 		
+		// Get Host Family Application Info
+		qGetApplicationInfo = APPLICATION.CFC.HOST.getApplicationList(hostID=FORM.hostID);
+		
 		// Get State List
 		qGetStateList = APPLICATION.CFC.LOOKUPTABLES.getState();
 
@@ -278,11 +281,6 @@
                         ---->
                         companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">,
                         email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">,
-                        <!--- Create Online Application --->
-                        <cfif FORM.subAction EQ 'eHost'>
-                            HostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="9">,
-                            applicationSent = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
-                        </cfif>
                         password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#strPassword#">,
                         active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">,
                         dateUpdated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
@@ -292,6 +290,12 @@
                 </cfquery>	
                 
                 <cfscript>
+					// Create Online Application
+					// Create Online Appliation
+					if (FORM.subAction EQ 'eHost') {
+						APPLICATION.CFC.HOST.setHostSeasonStatus(hostID=FORM.hostID);	
+					}
+				
 					// Set Page Message
 					SESSION.pageMessages.Add("Host Family information sucessfully updated");
 				</cfscript>
@@ -338,11 +342,6 @@
                         password,
                         companyID, 
                         regionid,
-                        <!--- Create Online Application ---> 
-                        <cfif FORM.subAction EQ 'eHost'>
-                            HostAppStatus,
-                            applicationSent,
-                        </cfif>
                         arearepid,
                         dateCreated,
                         createdBy,
@@ -384,11 +383,6 @@
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#strPassword#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionid#">,
-                        <!--- Create Online Application --->
-						<cfif FORM.subAction EQ 'eHost'>
-                            <cfqueryparam cfsqltype="cf_sql_integer" value="9">,
-                            <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
-                        </cfif>
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
                         <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
@@ -399,6 +393,11 @@
                 <cfscript>
                     // Set new host company ID
                     FORM.hostID = newRecord.GENERATED_KEY;
+					
+					// Create Online Appliation
+					if (FORM.subAction EQ 'eHost') {
+						APPLICATION.CFC.HOST.setHostSeasonStatus(hostID=FORM.hostID);	
+					}
 					
 					// Set Page Message
 					SESSION.pageMessages.Add("Host Family sucessfully created");
@@ -767,7 +766,7 @@
                 <td class="label">Email:</td>
                 <td>
                 	<input type="text" name="email" value="#FORM.email#" class="xLargeField" maxlength="200">
-					<cfif VAL(qGetHostFamilyInfo.hostAppStatus)>
+					<cfif VAL(qGetApplicationInfo.applicationStatusID)>
 						<br /><span class="required">eHost - Online Application</span>
                     </cfif>
                 </td>
@@ -885,20 +884,14 @@
                         </a>
                      </td>
                	</cfif>
-           		
-                <!--- Remove Office Access 
-				<cfif NOT VAL(qGetHostFamilyInfo.hostAppStatus) AND ( APPLICATION.CFC.USER.isOfficeUser() OR listFind(allowedUsers, CLIENT.userID) OR listFind(allowedRegions, CLIENT.regionID) )>--->
                     <td valing="top" align="center">
                         <input name="subAction" id="submiteHost" type="submit" value="eHost"  alt="Start E-App" border="0" class="buttonBlue" onclick="verifyAddress('submiteHost'); return false;" /> <br />
                         <cfif VAL(FORM.hostID)>
-                        	(Convert this family to an eHost - Host Family fills out application)
+                            (Convert this family to an eHost - Host Family fills out application)
                         <cfelse>
                             (Create an eHost - Host Family fills out application)
                         </cfif>
                     </td>
-                    <!----
-                </cfif>
-                ---->
                 <cfif VAL(FORM.hostID)>
                     <td align="Center">   
                         <input name="subAction" id="submitUpdate" type="submit" value="Update"  alt="Update Information" border="0" class="buttonGreen" onclick="verifyAddress('submitUpdate'); return false;" /><br />

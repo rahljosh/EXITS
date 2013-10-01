@@ -4,6 +4,9 @@
 		// Host Family
 		qGetHostFamily = APPLICATION.CFC.HOST.getHosts(hostID=url.hostID);
 		
+		// Host App Info
+		qGetHostAppInfo = APPLICATION.CFC.HOST.getApplicationList(hostID=URL.hostID);
+		
 		// Host Family Children
 		qGetHostChildren = APPLICATION.CFC.HOST.getHostMemberByID(hostID=url.hostID);
 		
@@ -103,7 +106,7 @@ where school = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(schoolInfo.s
                            <span class="title"><font size=+1> #qGetHostFamily.familyLastName# (#qGetHostFamily.hostid#)<br /> Host Family Application</font></span>
                         </Td>
                         <Td align="right">
-                        <span class="title">Started:</span> #DateFormat(qGetHostFamily.applicationStarted, 'mmm, d, yyyy')#<br />
+                        <span class="title">Started:</span> #DateFormat(qGetHostAppInfo.dateStarted, 'mmm, d, yyyy')#<br />
                         <!---
 						<span class="title">Approved:</span> <cfif qGetHostFamily. is ''>Not Approved<cfelse>#DateFormat(qGetHostFamily., 'mmm, d, yyyy')#</cfif>
 						--->
