@@ -192,7 +192,7 @@
             </td>
             <td>&nbsp;&nbsp;</td>
             <td valign="top">	
-                <cfif qGetHostFamilyInfo.hostAppStatus LTE 7>
+                <cfif qGetHostFamilyInfo.applicationStatusID LTE 7>
                     <h2 align="center">Thank you!</h2>
                     <p>Thats it!  Your application has been submitted for review.  You will hear from your local representative shortly.</p>
                 <cfelse>

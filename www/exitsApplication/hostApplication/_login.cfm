@@ -19,6 +19,10 @@
     <cfparam name="FORM.username" default="">
     <cfparam name="FORM.password" default="">
     <cfparam name="FORM.forgot" default="0">
+	
+	<cfscript>
+        vCurrentSeason = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID;
+    </cfscript>
     
     <!--- Forgot login --->
     <cfif VAL(FORM.forgot)>
@@ -39,10 +43,11 @@
                     password
                 FROM 
                 	smg_hosts
+               	INNER JOIN smg_host_app_season ON smg_host_app_season.hostID = smg_hosts.hostID
+            		AND smg_host_app_season.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#vCurrentSeason#">
+                	AND smg_host_app_season.applicationStatusID != <cfqueryparam cfsqltype="cf_sql_integer" value="0">  
                 WHERE 
                 	email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.username)#">
-               	AND
-            		hostAppStatus != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
                	LIMIT 1 
             </cfquery>
             <cfif VAL(qCheckHost.recordCount)>
@@ -83,39 +88,48 @@
 		<!--- Check if we have a host account --->
         <cfquery name="qLoginHostFamily" datasource="#APPLICATION.DSN.Source#">
             SELECT  
-                hostID, 
-                hostAppStatus,
-                familylastname,
-                email,
-                regionID
+                smg_hosts.hostID,
+                smg_hosts.familylastname,
+                smg_hosts.email,
+                smg_hosts.regionID,
+                smg_host_app_season.applicationStatusID,
+                smg_host_app_season.ID
             FROM 
                 smg_hosts
+          	INNER JOIN smg_host_app_season ON smg_host_app_season.hostID = smg_hosts.hostID
+            	AND smg_host_app_season.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#vCurrentSeason#">
+                AND smg_host_app_season.applicationStatusID != <cfqueryparam cfsqltype="cf_sql_integer" value="0">  
             WHERE 
 			<cfif SESSION.COMPANY.ID EQ	1>
-            	companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,12" list="yes"> )
+            	smg_hosts.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,12" list="yes"> )
             <cfelse>
-                companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(SESSION.COMPANY.ID)#">
+                smg_hosts.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(SESSION.COMPANY.ID)#">
             </cfif>                
             AND            
-                email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.username)#"> 
+                smg_hosts.email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.username)#"> 
             AND 
-                password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.password)#">
-			AND
-            	hostAppStatus != <cfqueryparam cfsqltype="cf_sql_integer" value="0">               
+                smg_hosts.password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.password)#">             
         </cfquery>
         
 		<!--- Host Account found - Log them in --->
         <cfif qLoginHostFamily.recordcount>
 
 			<!--- Set status from "Started" to "Host" ---> 
-            <cfif qLoginHostFamily.hostAppStatus EQ 9>
+            <cfif qLoginHostFamily.applicationStatusID EQ 9>
             
+                <cfquery datasource="#APPLICATION.DSN.Source#">
+                    UPDATE 
+                        smg_host_app_season
+                    SET 
+                        applicationStatusID = <cfqueryparam cfsqltype="cf_sql_integer" value="8">,
+                        dateStarted = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#NOW()#">
+                    WHERE 
+                        ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qLoginHostFamily.ID)#">
+                </cfquery>
                 <cfquery datasource="#APPLICATION.DSN.Source#">
                     UPDATE 
                         smg_hosts
                     SET 
-                        hostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="8">,
-                        applicationStarted = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
                         active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                     WHERE 
                         hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qLoginHostFamily.hostID)#">
@@ -139,7 +153,7 @@
 				// Login Host Family
 				APPLICATION.CFC.SESSION.setHostSession(
 					hostID=qLoginHostFamily.hostID,												
-					applicationStatus=qLoginHostFamily.hostAppStatus,
+					applicationStatus=qLoginHostFamily.applicationStatusID,
 					familyName=qLoginHostFamily.familylastname,
 					email=qLoginHostFamily.email,
 					isExitsLogin=false,
@@ -195,7 +209,6 @@
                         uniqueID,
                         companyID,
                         regionID,
-                        hostAppStatus,
                         familylastname, 
                         address, 
                         address2, 
@@ -213,7 +226,6 @@
                     	<cfqueryparam cfsqltype="cf_sql_varchar" value="#CreateUUID()#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(SESSION.COMPANY.ID)#">,
                     	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qLoginHostFamily.regionID)#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="8">, <!--- New Account | Set Status to "Host" --->
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qLoginHostFamily.lastName#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qLoginHostFamily.address#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qLoginHostFamily.address2#">,
@@ -239,6 +251,23 @@
                                 WHERE
                                     email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#qLoginHostFamily.email#">
                             )   
+                </cfquery>
+                
+                <cfquery datasource="#APPLICATION.DSN#">
+                	INSERT INTO smg_host_app_season (
+                    	hostID,
+                        seasonID,
+                        applicationStatusID,
+                        dateSent,
+                        dateStarted,
+                        dateCreated )
+                  	VALUES (
+                    	<cfqueryparam cfsqltype="cf_sql_integer" value="#newRecord.GENERATED_KEY#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#vCurrentSeason#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="8">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
+                        <cfqueryparam cfsqltype="cf_sql_timestamp" value="#NOW()#"> )
                 </cfquery>
                 
 				<cfscript>

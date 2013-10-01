@@ -101,15 +101,18 @@
             <!--- Check if we have a host account --->
             <cfquery name="qLoginHostFamily" datasource="#APPLICATION.DSN.Source#">
                 SELECT  
-                    hostID, 
-                    hostAppStatus,
-                    familylastname,
-                    email,
-                    regionID
+                    smg_hosts.hostID,
+                    smg_hosts.familylastname,
+                    smg_hosts.email,
+                    smg_hosts.regionID,
+                    smg_host_app_season.applicationStatusID,
+                	smg_host_app_season.ID
                 FROM 
                     smg_hosts
+              	INNER JOIN smg_host_app_season ON smg_host_app_season.hostID = smg_hosts.hostID
+                    AND smg_host_app_season.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID#">
                 WHERE 
-                    uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(URL.uniqueID)#">              
+                    smg_hosts.uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(URL.uniqueID)#">              
             </cfquery>
     
             <cfscript>
@@ -119,7 +122,7 @@
 					// Login Host Family - Menu Available
 					APPLICATION.CFC.SESSION.setHostSession(
 						hostID=qLoginHostFamily.hostID,												
-						applicationStatus=qLoginHostFamily.hostAppStatus,
+						applicationStatus=qLoginHostFamily.applicationStatusID,
 						familyName=qLoginHostFamily.familylastname,
 						email=qLoginHostFamily.email,	
 						isExitsLogin=true,

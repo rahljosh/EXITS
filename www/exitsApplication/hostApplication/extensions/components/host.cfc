@@ -29,6 +29,10 @@
 	<cffunction name="getCompleteHostInfo" access="public" returntype="query" output="false" hint="Gets a list with hosts, if HostID is passed gets a Host by ID">
     	<cfargument name="hostID" default="" hint="HostID is not required">
         
+        <cfscript>
+			vCurrentSeason = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID;
+		</cfscript>
+        
         <cfquery 
 			name="qGetCompleteHostInfo" 
 			datasource="#APPLICATION.DSN.Source#">
@@ -174,9 +178,16 @@
                                     CAST(CONCAT(fac.firstName, ' ', fac.lastName) AS CHAR)
                             END
                         ) AS facilitator,
-                        fac.email AS facilitatorEmail	                        
+                        fac.email AS facilitatorEmail,
+                        <!--- Host Season-based approval status --->
+                        smg_host_app_season.applicationStatusID,
+                        smg_host_app_season.dateSent,
+                        smg_host_app_season.ID AS hostAppSeasonID                      
                     FROM 
                         smg_hosts h
+                  	<!--- Host Season-based approval status --->
+                    LEFT OUTER JOIN smg_host_app_season ON smg_host_app_season.hostID = h.hostID
+                        AND smg_host_app_season.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(vCurrentSeason)#">
                     <!--- Region --->
                     LEFT OUTER JOIN
                         smg_regions r ON r.regionID = h.regionID
@@ -1302,12 +1313,14 @@
 		
         <cfquery datasource="#APPLICATION.DSN.Source#">
             UPDATE 
-                smg_hosts
+                smg_host_app_season
             SET 
-                hostAppStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="7">,
-                dateApplicationSubmitted = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+                applicationStatusID = <cfqueryparam cfsqltype="cf_sql_integer" value="7">,
+                dateSubmitted = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#NOW()#">
             WHERE
                 hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
+           	AND
+            	seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID#">
         </cfquery>
         
 		<cfscript>
