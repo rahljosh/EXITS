@@ -689,6 +689,7 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                         
 					<!--- Bonuses for the Field --->    
                     <cfelse>
+                    	<Cfif client.companyid neq 14>
                     	<cfif isDate('#APPLICATION.CFC.USER.getUserSessionPaperwork().dateDOSTestExpired#')>
                    			<cfif #now()# gt #DateAdd('m','-1','#APPLICATION.CFC.USER.getUserSessionPaperwork().dateDOSTestExpired#')#>
 								<cfset daysToExpire = #dateDiff('d','#now()#','#APPLICATION.CFC.USER.getUserSessionPaperwork().dateDOSTestExpired#')#>
@@ -721,6 +722,7 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                             <div class="rdbottom" style="background-color: ##fef3b9;"></div> <!-- end bottom --> 
                             <br /><br />
                       	</cfif>
+                       </Cfif>
                     
                         <div class="rdtop"> 
                             <span class="rdtitle">Bonuses</span> 
