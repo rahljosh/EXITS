@@ -795,7 +795,8 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                     
                 </div>
                 <!--- End of Case Management --->      
-                </cfif>                
+                </cfif>             
+                <cfif client.companyid neq 14>   
                 <!--- Marketing Material --->
                 <div class="rdholder" style="width:100%; float:right;"> 
                 
@@ -840,6 +841,7 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                     <div class="rdbottom"></div> <!-- end bottom --> 
                     
                 </div>
+               </cfif>
                 <!--- End of Marketing Material --->
             
             
