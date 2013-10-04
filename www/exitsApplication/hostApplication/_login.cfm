@@ -35,19 +35,19 @@
         	<!--- Find user in database --->
         	<cfquery name="qCheckHost" datasource="#APPLICATION.DSN.Source#">
                 SELECT 
-                	hostID,
-                    fatherfirstname,
-                    motherfirstname,
-                    familylastname,
-                    email,
-                    password
+                	smg_hosts.hostID,
+                    smg_hosts.fatherfirstname,
+                    smg_hosts.motherfirstname,
+                    smg_hosts.familylastname,
+                    smg_hosts.email,
+                    smg_hosts.password
                 FROM 
                 	smg_hosts
                	INNER JOIN smg_host_app_season ON smg_host_app_season.hostID = smg_hosts.hostID
             		AND smg_host_app_season.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#vCurrentSeason#">
                 	AND smg_host_app_season.applicationStatusID != <cfqueryparam cfsqltype="cf_sql_integer" value="0">  
                 WHERE 
-                	email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.username)#">
+                	smg_hosts.email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.username)#">
                	LIMIT 1 
             </cfquery>
             <cfif VAL(qCheckHost.recordCount)>
