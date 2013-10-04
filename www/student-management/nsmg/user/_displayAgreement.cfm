@@ -251,7 +251,7 @@
         <div class="wrapper">
         
             <div class="greyHeader">
-                <h1>Services Agreement - AYP #qGetSeason.years#</h1>
+                <h1>Services Agreement - AYP 2014-2015</h1>
             </div> <br />
         
 			<!--- Page Messages --->
