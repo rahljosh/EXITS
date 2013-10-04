@@ -28,7 +28,7 @@
 <div align="center">
     #qGetCompanyInfo.companyname# <br />
     #qGetCompanyInfo.companyname# - (#qGetCompanyInfo.companyshort_nocolor# <br />
-    AYP #qGetSeason.years# Services Agreement
+    AYP 2014-2015 Services Agreement
 </div> <br />
 
 <p>
