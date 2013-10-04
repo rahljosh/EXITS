@@ -57,7 +57,8 @@
             u.firstname as areaRep_first, 
             u.lastname as areaRep_last, 
             u.phone as areaRep_phone,
-            school.schoolname
+            school.schoolname,
+            school.principal
         FROM 
             smg_students s     
         LEFT OUTER JOIN 
@@ -116,20 +117,13 @@
 
 <cfoutput>
 
-    <table width="700" cellpadding="2" cellspacing="0" align="Center">
-        <tr>
-            <td align="Center">    
-                <img src="https://ise.exitsapplication.com/nsmg/pics/#qGetStudentFullInformation.companyID#_short_profile_header.jpg" />
-                <span class="title"><font size=+1>Trip Permission Form</font></span>
-            </td>
-        </tr>
-        <tr>
-            <td align="Center">    
-                <span class="title">MPD TOUR America, Inc.</span> <br />
-                Phone: 1-800-983-7780 &nbsp; - &nbsp; Fax: 1-718-439-8565
-            </td>
-        </tr>
-    </table>
+<div align="Center">
+            <cfif ListFind('1,2,3,4,5,12',qGetStudentFullInformation.companyID)>
+            	<img src="https://ise.exitsapplication.com/nsmg/pics/1_trips_header.jpg" width=800 />
+    		<cfelse>
+            	<img src="https://ise.exitsapplication.com/nsmg/pics/#qGetStudentFullInformation.companyID#_trips_header.jpg" width=800  />
+            </cfif>
+ </div>
      
     <table width="800" align="center" border="0" cellpadding="3" cellspacing="0">
         <tr>           
@@ -181,12 +175,17 @@
                     </tr>
                     
                     <tr>
-                        <td valign="top"><span class="title">Roommate Preference:</span></td>
+                        <td valign="top"><span class="title">Roommate Nationality:</span></td>
                         <td>
                             #qGetRegistrationInfo.nationality# 
-                            <cfif LEN(qGetRegistrationInfo.person1)><br /> #qGetRegistrationInfo.person1#,</cfif>
-                            <cfif LEN(qGetRegistrationInfo.person2)><br /> #qGetRegistrationInfo.person2#,</cfif>
-                            <cfif LEN(qGetRegistrationInfo.person3)><br /> #qGetRegistrationInfo.person3#</cfif>
+                        </td>
+                    </tr>
+                    <tr>
+                    	<td valign="top"><span class="title">Anyone in Particular?</td>
+                        <td>
+                            1) <cfif Trim(LEN(qGetRegistrationInfo.person1))> #qGetRegistrationInfo.person1#<cfelse>No One Specified</cfif><br />
+                            2) <cfif Trim(LEN(qGetRegistrationInfo.person2))> #qGetRegistrationInfo.person2#<cfelse>No One Specified</cfif><Br />
+                            3) <cfif Trim(LEN(qGetRegistrationInfo.person3))> #qGetRegistrationInfo.person3#<cfelse>No One Specified</cfif><Br />
                         </td>
                     </tr>                
                 </table>
@@ -268,7 +267,7 @@
                         <td colspan="2" align="center"><img src="https://ise.exitsapplication.com/nsmg/pics/medicalAllergysm.jpg" /></td>
                     </tr>
                     <tr>
-                        <td colspan="2" align="center"><img src="https://ise.exitsapplication.com/nsmg/pics/remembersm.jpg" /></td>
+                        <td colspan="2" align="center" bgcolor="##FFFFCC"><em>You MUST carry your insurance card on the trip.</em></td>
                     </tr>                    
                     <tr>
                         <td><span class="title">Medical Allergies:</span></td>
@@ -278,10 +277,7 @@
                         <td><span class="title">Other:</span></td>
                         <td><cfif NOT LEN(qGetStudentFullInformation.other_allergies)>no<cfelse>#qGetStudentFullInformation.other_allergies#</cfif></td>
                     </tr>
-                    <tr>
-                        <td><span class="title">Any Thing Else:</span></td>
-                        <td>#qGetRegistrationInfo.med#</td>
-                    </tr>
+                   
                 </table>
     
             </td>
@@ -308,18 +304,24 @@
     
             </td>
         </tr>
-    </table>            
-    
+    </table>  
+    <table width="800" align="center" border="0" cellpadding="3" cellspacing="0">          
+     <tr>
+                        <td wdith=50><span class="title">List allergies, medical conditions or limitations (vegetarian, etc), and any prescription medication. If you are currently being treated for a medical condition, also list the physician's name and phone number.</span></td>
+     
+     </tr>
+     <tr>
+                        <td>#qGetRegistrationInfo.med#</td>
+                    </tr>
+    </table>
+    <br /><br />
     <table width="800" align="center" border="0" cellpadding="3" cellspacing="0">
         <tr>           
             <td align="center"><img src="https://ise.exitsapplication.com/nsmg/pics/signatures.jpg" /></td>
         </tr>
         <tr>
             <td>
-                I have read and understand all the Terms and Conditions either on website or attached form.  
-                All parties acknowledge that while on tour, <!---#SESSION.COMPANY.shortName#---> and MPD Tour America, Inc. 
-                or its representatives may take any action deemed necessary to protect student safety and well being, 
-                including medical treatment at the student's expense and transportaion home at student's expense.
+                I have read and understand all the Terms and Conditions. All parties acknowledge that while on tour, #companyName# and MPD Tours America, Inc. or its representatives may take any action deemed necessary to protect student safety and well being, including medical treatment at the student's expense and transportation home at the student's expense. 
                 <br />
                 &nbsp;&nbsp;<i>Please Sign Form</i>
             </td>
@@ -349,7 +351,8 @@
                             #qGetStudentFullInformation.motherfirstname# #qGetStudentFullInformation.motherlastname#
                         </td>
                         <td>&nbsp;</td>
-                        <td valign="top">
+                        <td valign="top" colspan=2>
+                        #qGetStudentFullInformation.principal#<br />
                            <cfif NOT LEN(qGetStudentFullInformation.schoolname)>School<cfelse>#qGetStudentFullInformation.schoolname#</cfif> Representative<br />
                            <font size="-2"><em>Students may not miss school without school permission and must make up any missed work. Print name and position.</em></font>
                         </td>
@@ -364,12 +367,14 @@
                     <tr>                    
                         <td valign="top">
                         	#qGetRegionalManager.firstName# #qGetRegionalManager.lastName# <Br />
-                            <font size="-2"><em>Regional Manager - #qGetRegionalManager.phone#</em></font>
+                            #qGetRegionalManager.phone#<br />
+                            <font size="-2"><em>Regional Manager</em></font>
                         </td> 
                         <td>&nbsp;</td> 
 						<td valign="top">
                         	#qGetStudentFullInformation.areaRep_first# #qGetStudentFullInformation.areaRep_last# <Br />
-                            <font size="-2"><em>Area Representative - #qGetStudentFullInformation.areaRep_phone#</em></font>
+                            #qGetStudentFullInformation.areaRep_phone#<br />
+                            <font size="-2"><em>Area Representative</em></font>
                         </td>
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>                                     
@@ -377,5 +382,23 @@
                 </table>     
             </td>
         </tr>
-    </table>            
+    </table> 
+    <br /><br /> 
+     <table width="800" align="center" border="0" cellpadding="3" cellspacing="0">
+     <tr>
+     	<td align="center">
+        	<B>MPD Tours America, Inc. </B> 9101 Shore Road, ##203, Brooklyn, NY 11209<br />
+            <A href="mailto:info@mpdtoursamerica.com">info@mpdtoursamerica.com</A>&nbsp;&nbsp;|&nbsp;&nbsp;1-800-983-7780&nbsp;&nbsp;|&nbsp;&nbsp;FAX: 1-718-439-8565
+        </td>
+      </tr>
+     </table>
+     <Br /><br />
+     <table width="800" align="center" border="0" cellpadding="3" cellspacing="0">
+     <tr>
+     	<td align="center" bgcolor="##085dad">
+        	<font color="##FFFFFF">www.iseusa.com</font>
+        </td>
+      </tr>
+     </table>
+              
 </cfoutput>
