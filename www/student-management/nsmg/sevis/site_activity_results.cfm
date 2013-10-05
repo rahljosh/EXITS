@@ -28,7 +28,9 @@
 <cfset site_activity_errors = '0'>
 
 <cfoutput>
-
+<Cfif isDefined(url.batch)>
+	<cfset form.filename = #url.batch#>
+</Cfif>
 <cfif not IsDefined("form.filename") or form.filename is ''>
 	<br>
 	<Table class="nav_bar" cellpadding=6 cellspacing="0" align="center" width="98%">
