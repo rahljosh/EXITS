@@ -23,6 +23,7 @@
 		// Param FORM Variables
 		param name="FORM.submitted" default=0;
 		param name="FORM.regionID" default=0;
+		param name="FORM.dateCreated" default="";
 		param name="FORM.beginDate" default="";
 		param name="FORM.endDate" default="";
 		param name="FORM.includeViewOnly" default="";
@@ -77,6 +78,10 @@
                         u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                     AND
                         u.accountCreationVerified >= <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                  	<cfif FORM.dateCreated NEQ "">
+                    	AND
+                        	u.dateCreated >= <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.dateCreated#">
+                    </cfif>
                     <cfif FORM.beginDate NEQ "">
                         AND
                             u.dateAccountVerified >= <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.beginDate#">
@@ -143,6 +148,12 @@
                             <option value="city">City</option>
                             <option value="state">State</option>
                         </select>
+                    </td>
+                </tr>
+                <tr class="on">
+                    <td class="subTitleRightNoBorder">Entered Date: </td> 
+                    <td>
+                        <input type="text" class="datePicker" name="dateCreated" id="dateCreated" /> <span class="note">(Account Created)</span>
                     </td>
                 </tr>
                 <tr class="on">
@@ -359,6 +370,10 @@
                             u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                         AND
                             u.accountCreationVerified >= <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                      	<cfif FORM.dateCreated NEQ "">
+                            AND
+                                u.dateCreated >= <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.dateCreated#">
+                        </cfif>
                         <cfif FORM.beginDate NEQ "">
                             AND
                                 u.dateAccountVerified >= <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.beginDate#">
@@ -755,6 +770,10 @@
                             u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                         AND
                             u.accountCreationVerified >= <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                       	<cfif FORM.dateCreated NEQ "">
+                            AND
+                                u.dateCreated >= <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.dateCreated#">
+                        </cfif>
                         <cfif FORM.beginDate NEQ "">
                             AND
                                 u.dateAccountVerified >= <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.beginDate#">
