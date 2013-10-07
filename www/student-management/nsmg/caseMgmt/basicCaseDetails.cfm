@@ -50,7 +50,7 @@
       
           <Cfloop query="qUsersInvolved">
                 <Tr <cfif currentrow mod 2>bgcolor="##efefef"</cfif>>
-                    <td><A href="?curdoc=student_info&studentID=#studentid#">#stuFirstName# #stuLastName# (#studentid#)</A></td>
+                    <td><A href="?curdoc=caseMgmt/index&action=viewCaseList&studentID=#studentid#">#stuFirstName# #stuLastName# (#studentid#)</A></td>
                     <td>#programName#</td>
                     <td>#fatherFirstname# <cfif #fatherFirstName# is not ''>&amp;</cfif> #motherFirstName# #hostLastName# (#hostid#)</td>
                     <td>#areaRepFirstName# #areaRepLastName# (#arearepid#) </td>  
