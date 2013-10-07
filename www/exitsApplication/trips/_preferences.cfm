@@ -135,6 +135,14 @@
 				}
 
 			}
+			
+			if ( NOT LEN(FORM.emergencyContactName) ) {
+				SESSION.formErrors.Add("Please indicate an emergency contact name. This can be a host parent.");
+			}
+			
+			if ( NOT LEN(FORM.emergencyContactPhone) ) {
+				SESSION.formErrors.Add("Please indicate an emergency contact.");
+			}
 		</cfscript>
         
         <!--- No Errors Found --->
@@ -188,7 +196,10 @@
                         med,
                         date,
                         dateCreated,
-                        active
+                        active,
+                        emergencyContactName,
+                        emergencyContactPhone
+                        
                     )
                     VALUES
                     (
@@ -204,7 +215,9 @@
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.medicalInformation#">,
                         <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">,
                         <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.emergencyContactName#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.emergencyContactPhone#">
                     )
                 </cfquery>
            
@@ -425,7 +438,7 @@
 	<!--- Include Trip Header --->
     <cfinclude template="_breadCrumb.cfm">
                 
-    <form action="#CGI.SCRIPT_NAME#?action=preferences" method="post">
+    <cfform action="#CGI.SCRIPT_NAME#?action=preferences" method="post">
         <input type="hidden" name="submitted" value="1" />
         
         <!--- Display Form Errors --->
@@ -552,10 +565,22 @@
                     <em class="tripNotesRight">Please list their names above.</em>                            
                 </td>
             </tr>
-            <tr class="blueRow">
+              <tr class="blueRow">
+                <td class="tripFormTitle">Emergency Contact Name:</td>
+                <td class="tripFormField">
+                    <input type="text" name="EmergencyContactName" size=25/>
+                </td>
+            </tr>
+             <tr class="blueRow">
+                <td class="tripFormTitle">Emergency Contact Phone:</td>
+                <td class="tripFormField">
+                    <cfinput type="text" name="EmergencyContactPhone" size=25 mask="(999) 999-9999"/>
+                </td>
+            </tr>
+            <tr >
                 <td class="tripFormTitle">Medical Information:</td>
                 <td class="tripFormField">
-                    <textarea name="medicalInformation" class="largeTextArea">#FORM.medicalInformation#</textarea>
+                    <textarea name="medicalInformation" class="largeTextArea" placeholder=""></textarea>
                     <em class="tripNotesRight">
                         List allergies, medical conditions or limitations (vegitarian, etc), and any prescription medications. <br />
                         If you are currently being treated for a medical condition, include your physicians name and phone number. <br>
@@ -575,6 +600,6 @@
                 <td colspan="2" align="center"><input type="image" src="extensions/images/Next.png" width="89" height="33" /></td>
             </tr>
         </table>
-    </form>
+    </cfform>
 
 </cfoutput>

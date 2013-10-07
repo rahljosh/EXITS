@@ -109,7 +109,7 @@
     </cfquery>
     
     <cfparam name="SESSION.TOUR.declinedTransactions" default="0">
-    
+    <cfset session.tour.declinedTransactions = 0>
     <cfscript>	
 		// Credit Card Denied Multiple Times
 		if ( SESSION.TOUR.declinedTransactions GT 1 ) {
