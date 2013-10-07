@@ -154,6 +154,7 @@ window.onload = function additionalInfo() {
     </cfloop>
 
 </cfif>
+
 <!---Add to list of students if adding more students
 <cfif len(form.studentList)>
 	<cfset studentList = #form.studentList#>
@@ -197,6 +198,17 @@ window.onload = function additionalInfo() {
     </cfquery>
 
 
+<cfquery name="caseStatus" datasource="#APPLICATION.dsn#">
+    select *
+    from smg_caseMgmt_casestatus
+    where isActive = 1
+    </cfquery>
+    
+    <cfquery name="caseLevel" datasource="#APPLICATION.dsn#">
+     select *
+     from smg_Casemgmt_caselevel
+     where isActive = 1
+    </cfquery>
 
 
 
@@ -359,18 +371,19 @@ window.onload = function additionalInfo() {
                    
                    <select name="caseStatus">
                 		<option value=''></option>
-                		<option value='1' <cfif form.caseStatus eq '1'>selected</cfif>>Open</option>
-                        <option value='2' <cfif form.caseStatus eq '2'>selected</cfif>>Pending</option>
-                        <option value='3' <cfif form.caseStatus eq '3'>selected</cfif>>Closed</option>
+                        <cfloop query="caseStatus">
+                		<option value='1' <cfif form.caseStatus eq #id#>selected</cfif>>#status#</option>
+                        </cfloop>
+                      
                     </select>
                 </Td>
                 <td>Level:
                    
                    <select name="caseLevel">
                 		<option value=0></option>
-                		<option value=1 <cfif form.caseLevel eq 1>selected</cfif>>Level 1</option>
-                        <option value=2 <cfif form.caseLevel eq 2>selected</cfif>>Level 2</option>
-                        <option value=3 <cfif form.caseLevel eq 3>selected</cfif>>Level 3</option>
+                        <Cfloop query="caseLevel">
+                		<option value=1 <cfif form.caseLevel eq #id#>selected</cfif>>#caseLevel#</option>
+						</Cfloop>
                     </select>
                 </Td>
                 <td>Privacy:
@@ -387,11 +400,20 @@ window.onload = function additionalInfo() {
             	<td colspan=3><strong>Tags</strong>:
                  <div>
                 
-                      <cfloop query="qGetTags">
-                       
-               <input type="checkbox" name='tags' value='#id#' class="check-with-label" <cfif listFind(#tagsInCase#, #id#)>checked</cfif> />
+                        <table>
+                        	<tr>
+                        <cfloop query="qGetTags">
+                            	<td>
+                            <input type="checkbox" name='tags' value='#id#' class="check-with-label" <cfif listFind(#tagsInCase#, #id#)>checked</cfif> />
                            <label style="font-weight: normal;" class="label-for-check">#tagName#</label>
-                      </cfloop>
+                           		</td>
+                            <cfif currentrow mod 5 eq 0>
+                             </tr>
+                             <tr>
+                            </cfif>
+                        </cfloop>
+                		</table>
+                      
                    </div>
                 </Td>
                 <td colspan=2>

@@ -9,6 +9,7 @@
 <cfparam name="FORM.fileData" default="">
 <cfparam name="FORM.fileDescription" default="">
 <cfparam name="loopedIn" default="">
+
 <script>
 jQuery(document).ready(function($) {
       $(".clickableRow").click(function() {
@@ -64,14 +65,22 @@ window.onload = function additionalInfo() {
 
 
 <cfif isDefined('form.loopIn')>
-
-	<cfquery name="LoopSomeoneIn" datasource="#application.dsn#">
-    insert into smg_casemgmt_loopedin (fk_caseid, email)
-    					values(<cfqueryparam cfsqltype="cf_sql_integer" value="#url.caseid#">, 
-                        	   <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.loopInEmail#">)
-                            
-    </cfquery>
-    	
+	<cfif not len(form.filedata)>
+		  <cfscript>
+                    // Data Validation
+                    // Student Transportation
+                    if  ( NOT  len(TRIM(FORM.fileData)) ) {
+                        SESSION.formErrors.Add("Please enter a name in the looped in box.");
+                    }
+            </cfscript>
+  	<cfelse>
+        <cfquery name="LoopSomeoneIn" datasource="#application.dsn#">
+        insert into smg_casemgmt_loopedin (fk_caseid, email)
+                            values(<cfqueryparam cfsqltype="cf_sql_integer" value="#url.caseid#">, 
+                                   <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.loopInEmail#">)
+                                
+        </cfquery>
+    </cfif>
    
     
 </cfif>
