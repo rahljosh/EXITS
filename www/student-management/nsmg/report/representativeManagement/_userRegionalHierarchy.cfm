@@ -76,8 +76,6 @@
                         r.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionID#" list="yes"> )
                     AND
                         u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-                    AND
-                        u.accountCreationVerified >= <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                   	<cfif FORM.dateCreated NEQ "">
                     	AND
                         	u.dateCreated >= <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.dateCreated#">
@@ -85,10 +83,14 @@
                     <cfif FORM.beginDate NEQ "">
                         AND
                             u.dateAccountVerified >= <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.beginDate#">
+                     	AND
+                        	u.accountCreationVerified >= <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                     </cfif>
                     <cfif FORM.endDate NEQ "">
                         AND
                             u.dateAccountVerified <= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d',1,FORM.endDate)#">
+                      	AND
+                        	u.accountCreationVerified >= <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                     </cfif>
                     <!--- Regional Advisors --->
 					<cfif CLIENT.userType EQ 6>
@@ -368,8 +370,6 @@
                             r.regionID = #currentRegionID#
                         AND
                             u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-                        AND
-                            u.accountCreationVerified >= <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                       	<cfif FORM.dateCreated NEQ "">
                             AND
                                 u.dateCreated >= <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.dateCreated#">
@@ -377,10 +377,14 @@
                         <cfif FORM.beginDate NEQ "">
                             AND
                                 u.dateAccountVerified >= <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.beginDate#">
+                            AND
+                                u.accountCreationVerified >= <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                         </cfif>
                         <cfif FORM.endDate NEQ "">
                             AND
-                                u.dateAccountVerified <= <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.endDate#">
+                                u.dateAccountVerified <= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d',1,FORM.endDate)#">
+                            AND
+                                u.accountCreationVerified >= <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                         </cfif>
                     GROUP BY
                         u.userID
@@ -768,8 +772,6 @@
                             r.regionID = #currentRegionID#
                         AND
                             u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-                        AND
-                            u.accountCreationVerified >= <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                        	<cfif FORM.dateCreated NEQ "">
                             AND
                                 u.dateCreated >= <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.dateCreated#">
@@ -777,10 +779,14 @@
                         <cfif FORM.beginDate NEQ "">
                             AND
                                 u.dateAccountVerified >= <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.beginDate#">
+                            AND
+                                u.accountCreationVerified >= <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                         </cfif>
                         <cfif FORM.endDate NEQ "">
                             AND
-                                u.dateAccountVerified <= <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.endDate#">
+                                u.dateAccountVerified <= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d',1,FORM.endDate)#">
+                            AND
+                                u.accountCreationVerified >= <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                         </cfif>
                         <!--- Regional Advisors --->
                         <cfif CLIENT.userType EQ 6>
