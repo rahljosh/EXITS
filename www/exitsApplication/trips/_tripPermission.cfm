@@ -97,7 +97,7 @@
       	AND
         	tripID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetTourDetails.tour_id#">
     </cfquery>
-     <cfquery name="alltrips">
+     <cfquery name="alltrips" datasource="#APPLICATION.DSN.Source#">
      select *
      from smg_tours
      where tour_status = <cfqueryparam cfsqltype="cf_sql_varchar" value="Active">
@@ -160,7 +160,7 @@
                     </tr>
                     <tr>
                         <td><span class="title">Date of Birth:</span></td>
-                        <td>#DateFormat(qGetRegistrationDetails.dob,"mm/dd/yyyy")#</td>
+                        <td>#DateFormat(qGetStudentFullInformation.dob,"mm/dd/yyyy")#</td>
                     </tr>
                 </table>
     
