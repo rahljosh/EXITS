@@ -40,6 +40,7 @@
             <cfif len(ARGUMENTS.system)>
            		 AND system = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.system#">
             </cfif>
+            order by tagName
           </cfquery>  
        
        <cfreturn qGetTags>
@@ -234,13 +235,14 @@
 
     </cffunction>
     
-        <!----Get case details---->
+             <!----Get case details---->
     <cffunction name="basicCaseDetails" access="public" returntype="query" output="false" hint="Gets a list of users, if usertype is passed gets users by usertype">
     	<cfargument name="caseID" default="" hint="no system defined will return all tags">
         <cfargument name="isActive" default="1" hint="no system defined will return all tags">
         <cfargument name="personid" default="" hint="return all cases associated with a student id">
+       
   
-          <cfquery 
+         <cfquery 
 			name="qBasicCaseDetails" 
 			datasource="#APPLICATION.DSN#">
                    
@@ -436,7 +438,7 @@
 			name="qLoopedinEmails" 
 			datasource="#APPLICATION.DSN#">
             SELECT
-           CAST(CONCAT(u.firstName, ' ', u.LastName,  ' (##', u.userid, ')', '-', u.email) AS CHAR) AS loopedInInfo
+           CAST(CONCAT(u.firstName, ' ', u.LastName,  ' (##', u.userid, ')') AS CHAR) AS loopedInInfo
             from smg_caseMgmt_loopedin li          
             left join smg_users u on u.userid = li.email 
             WHERE fk_caseid = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.caseid#">
@@ -448,22 +450,31 @@
     </cffunction>
     
     <cffunction name="yourCases" access="public" returntype="query" hint="returns cases you are involved with">
-    		<cfargument name="userid" default="" hint="caseid that add to ">
+    		<cfargument name="personID" default="" hint="caseid that add to ">
        	
          
           <cfquery 
 			name="qYourCases" 
 			datasource="#APPLICATION.DSN#">
-                select cases.caseDateOpened, cs.status as caseStatus, cases.caseSubject, cases.caseid,
-                s.firstname, s.familylastname, s.studentid
-                from smg_casemgmt_cases cases
-                left join smg_caseMgmt_casestatus cs on cs.id = cases.caseStatus
-                left join smg_casemgmt_users_involved ui on ui.fk_caseid = cases.caseid
-                left join smg_students s on s.studentid = ui.fk_studentid
-                WHERE (cases.fk_caseOwner = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userid#">
-                OR ui.fk_arearep  = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userid#"> 
-                OR ui.fk_regionalManager = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userid#">)
-         		and cases.caseStatus != 2 
+                 SELECT DISTINCT
+            	cases.caseid, cases.caseDateOpened, cases.caseDateClosed, cases.caseDateOfIncident, cases.caseSubject, cases.casePrivacy, cases.caseLevel, 
+                cases.caseStatus, cases.privacyLevel, cases.fk_caseCreatedBy, cases.fk_caseOwner,
+                 CAST(CONCAT(owner.firstName, ' ', owner.LastName,  ' (##', owner.userid, ')') AS CHAR) AS caseOwnerInfo,
+                 CAST(CONCAT(creator.firstName, ' ', creator.LastName,  ' (##', creator.userid, ')') AS CHAR) AS caseCreatorInfo,
+                 cp.privacyLevel as privacyDescription, cl.caseLevel as levelDescription, cs.status as statusDescription
+            FROM smg_casemgmt_cases cases
+            LEFT JOIN smg_users owner on owner.userid = cases.fk_caseOwner
+            LEFT JOIN smg_users creator on creator.userid = cases.fk_caseCreatedBy
+            LEFT JOIN smg_caseMgmt_casePrivacy cp on cp.id = cases.casePrivacy
+            LEFT JOIN smg_caseMgmt_caseLevel cl on cl.id = cases.caseLevel
+            LEFT JOIN smg_caseMgmt_caseStatus cs on cs.id = cases.caseStatus
+            LEFT JOIN smg_caseMgmt_users_involved cmui on cmui.fk_caseid = cases.caseid
+            LEFT JOIN smg_caseMgmt_loopedin li on li.fk_caseid  = cases.caseid
+                WHERE (cases.fk_caseOwner = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.personid#">
+                OR cmui.fk_arearep  = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.personid#"> 
+                OR cmui.fk_regionalManager = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.personid#">
+                OR li.email = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.personid#">)
+           order by caseStatus
 	
           </cfquery>  
        
@@ -472,11 +483,67 @@
     </cffunction>
     
       <cffunction name="yourLoopedCases" access="public" returntype="query" hint="returns cases you are involved with">
-    		<cfargument name="userid" default="" hint="caseid that add to ">
+    		<cfargument name="personid" default="" hint="caseid that add to ">
        	
          
           <cfquery 
 			name="qYourLoopedCases" 
+			datasource="#APPLICATION.DSN#">
+                 SELECT DISTINCT
+            	cases.caseid, cases.caseDateOpened, cases.caseDateClosed, cases.caseDateOfIncident, cases.caseSubject, cases.casePrivacy, cases.caseLevel, 
+                cases.caseStatus, cases.privacyLevel, cases.fk_caseCreatedBy, cases.fk_caseOwner,
+                 CAST(CONCAT(owner.firstName, ' ', owner.LastName,  ' (##', owner.userid, ')') AS CHAR) AS caseOwnerInfo,
+                 CAST(CONCAT(creator.firstName, ' ', creator.LastName,  ' (##', creator.userid, ')') AS CHAR) AS caseCreatorInfo,
+                 cp.privacyLevel as privacyDescription, cl.caseLevel as levelDescription, cs.status as statusDescription
+            FROM smg_casemgmt_cases cases
+            LEFT JOIN smg_users owner on owner.userid = cases.fk_caseOwner
+            LEFT JOIN smg_users creator on creator.userid = cases.fk_caseCreatedBy
+            LEFT JOIN smg_caseMgmt_casePrivacy cp on cp.id = cases.casePrivacy
+            LEFT JOIN smg_caseMgmt_caseLevel cl on cl.id = cases.caseLevel
+            LEFT JOIN smg_caseMgmt_caseStatus cs on cs.id = cases.caseStatus
+            LEFT JOIN smg_caseMgmt_users_involved cmui on cmui.fk_caseid = cases.caseid
+            LEFT JOIN smg_caseMgmt_loopedin li on li.fk_caseid = cases.caseid
+            WHERE (li.email = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.personid#">)
+         		and cases.caseStatus != 2 
+	
+          </cfquery>  
+       
+     <cfreturn qYourLoopedCases>
+
+    </cffunction>
+ 
+    <!----Your Cases - Initial----->
+       
+    <cffunction name="yourCasesInitial" access="public" returntype="query" hint="returns cases you are involved with">
+    		<cfargument name="personid" default="" hint="caseid that add to ">
+       	
+         
+          <cfquery 
+			name="qYourCasesInitial" 
+			datasource="#APPLICATION.DSN#">
+                select cases.caseDateOpened, cs.status as caseStatus, cases.caseSubject, cases.caseid,
+                s.firstname, s.familylastname, s.studentid
+                from smg_casemgmt_cases cases
+                left join smg_caseMgmt_casestatus cs on cs.id = cases.caseStatus
+                left join smg_casemgmt_users_involved ui on ui.fk_caseid = cases.caseid
+                left join smg_students s on s.studentid = ui.fk_studentid
+                WHERE (cases.fk_caseOwner = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.personid#">
+                OR ui.fk_arearep  = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.personid#"> 
+                OR ui.fk_regionalManager = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.personid#">)
+         		and cases.caseStatus != 2 
+	
+          </cfquery>  
+       
+     <cfreturn qYourCasesInitial>
+
+    </cffunction>
+    
+      <cffunction name="yourLoopedCasesInitial" access="public" returntype="query" hint="returns cases you are involved with">
+    		<cfargument name="personid" default="" hint="caseid that add to ">
+       	
+         
+          <cfquery 
+			name="qYourLoopedCasesInitial" 
 			datasource="#APPLICATION.DSN#">
                 select cases.caseDateOpened, cs.status as caseStatus, cases.caseSubject, cases.caseid,
                  s.firstname, s.familylastname, s.studentid
@@ -487,17 +554,15 @@
                 left join smg_students s on s.studentid = ui.fk_studentid
                 
                 
-                WHERE (li.email = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userid#">)
+                WHERE (li.email = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.personid#">)
          		and cases.caseStatus != 2 
 	
           </cfquery>  
        
-     <cfreturn qYourLoopedCases>
+     <cfreturn qYourLoopedCasesInitial>
 
     </cffunction>
-    
-    
-             <!----Loop In---->
+             
    
 </cfcomponent>
               
