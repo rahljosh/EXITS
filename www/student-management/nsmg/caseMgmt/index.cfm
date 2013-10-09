@@ -109,8 +109,8 @@
 <cfelse>
 	<cfscript>
         // Get case info based on STUDENT ID
-       	qYourCases =  APPLICATION.CFC.CASEMGMT.yourCases(personID=client.userid);
-		qBasicCaseDetails =  APPLICATION.CFC.CASEMGMT.basicCaseDetails(personID=client.userid);
+       	qBasicCaseDetails =  APPLICATION.CFC.CASEMGMT.yourCases(personID=client.userid);
+		//qBasicCaseDetails =  APPLICATION.CFC.CASEMGMT.basicCaseDetails(personID=client.userid);
 		qFullCaseDetails =  APPLICATION.CFC.CASEMGMT.fullCaseDetails(caseid=0);
 		qUsersInvolved =  APPLICATION.CFC.CASEMGMT.usersInvolved(personid=client.userid);
 		qGetFiles = APPLICATION.CFC.DOCUMENT.getDocuments(

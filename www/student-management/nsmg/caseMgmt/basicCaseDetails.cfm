@@ -2,7 +2,8 @@
 	<Cfparam name="studentList" default="">
     <Cfparam name="loopedIn" default="">
     <Cfparam name="rowcount" default="1">
-<cfoutput query="#queryName#">
+
+<cfoutput>
 
         <table width=80% border=0 align="Center" cellpadding="5" cellspacing="0">
         <!----Don't show the label for the list of cases---->
@@ -20,17 +21,17 @@
              <cfelse>
              	 <td rowspan="2"><a href="index.cfm?curdoc=caseMgmt/index&amp;action=basics&amp;caseID=#caseID#" class="basicOrangeButton">Edit</a></td>  
              </cfif>  
-            	<td colspan=2 width=50%>Subject: <strong>#caseSubject#</strong></td>
-                <td width=25%>Level: <strong>#levelDescription#</strong></td>
-                <td width=25%>Privacy <strong>#privacyDescription#</strong></td>
+            	<td colspan=2 width=50%>Subject: <strong>#qBasicCaseDetails.caseSubject#</strong></td>
+                <td width=25%>Level: <strong>#qBasicCaseDetails.levelDescription#</strong></td>
+                <td width=25%>Privacy <strong>#qBasicCaseDetails.privacyDescription#</strong></td>
              
             </tr>
             <Tr <cfif rowcount mod 2>bgcolor="##efefef"</cfif>>
-            	<td colspan=2 valign="top"> Opened: #DateFormat(caseDateOpened, 'mmm. d, yyyy')#</td>
-                <td valign="top">Case <cfif isDate(caseDateClosed)>Closed<cfelse>Status</cfif>: <cfif isDate(caseDateClosed)> #DateFormat(caseDateClosed, 'mmm. d, yyyy')#<cfelse>#statusDescription#</cfif></td>
-                <td valign="top">Case Owner: #caseOwnerInfo#
+            	<td colspan=2 valign="top"> Opened: #DateFormat(qBasicCaseDetails.caseDateOpened, 'mmm. d, yyyy')#</td>
+                <td valign="top">Case <cfif isDate(qBasicCaseDetails.caseDateClosed)>Closed<cfelse>Status</cfif>: <cfif isDate(qBasicCaseDetails.caseDateClosed)> #DateFormat(qBasicCaseDetails.caseDateClosed, 'mmm. d, yyyy')#<cfelse>#qBasicCaseDetails.statusDescription#</cfif></td>
+                <td valign="top">Case Owner: #qBasicCaseDetails.caseOwnerInfo#
                 
-                <cfif fk_caseCreatedBy neq fk_caseOwner><br /> <em>Created By: #caseCreatorInfo#</em></cfif>
+                <cfif qBasicCaseDetails.fk_caseCreatedBy neq qBasicCaseDetails.fk_caseOwner><br /> <em>Created By: #qBasicCaseDetails.caseCreatorInfo#</em></cfif>
                 </td>
             </Tr>
        <!----Dont show the student info if showing the whole list of cases---->

@@ -372,7 +372,7 @@ window.onload = function additionalInfo() {
                    <select name="caseStatus">
                 		<option value=''></option>
                         <cfloop query="caseStatus">
-                		<option value='1' <cfif form.caseStatus eq #id#>selected</cfif>>#status#</option>
+                		<option value='#id#' <cfif form.caseStatus eq #id#>selected</cfif>>#status#</option>
                         </cfloop>
                       
                     </select>
