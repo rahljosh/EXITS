@@ -8,7 +8,6 @@
 <cfparam name="FORM.additionialInfoDiv" default="0">
 <cfparam name="FORM.fileData" default="">
 <cfparam name="FORM.fileDescription" default="">
-<cfparam name="loopedIn" default="">
 
 <script>
 jQuery(document).ready(function($) {
@@ -65,11 +64,11 @@ window.onload = function additionalInfo() {
 
 
 <cfif isDefined('form.loopIn')>
-	<cfif not len(form.filedata)>
+	<cfif not len(form.loopinemail)>
 		  <cfscript>
                     // Data Validation
                     // Student Transportation
-                    if  ( NOT  len(TRIM(FORM.fileData)) ) {
+                    if  ( NOT  len(TRIM(FORM.loopinemail)) ) {
                         SESSION.formErrors.Add("Please enter a name in the looped in box.");
                     }
             </cfscript>
@@ -90,6 +89,7 @@ window.onload = function additionalInfo() {
 		qAvailableUsers = APPLICATION.CFC.CASEMGMT.availableUsers(regionID=client.regionid); 
 		qLoopedInEmails = APPLICATION.CFC.CASEMGMT.loopedInEmails(caseid=url.caseid); 
 </cfscript>
+<Cfset loopedin = ''>
 <Cfloop query="qLoopedInEmails">
 	<cfset loopedin = ListAppend(loopedIn,#loopedInInfo#)>
 </Cfloop>
@@ -200,12 +200,12 @@ window.onload = function additionalInfo() {
             	<td>
                 <cfoutput>
                  <form action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" >
-                	<input type="hidden" value=1 name="loopin"/>
-                	 <select name="loopInEmail" data-placeholder="Enter name or email" class="chzn-select" tabindex="2" size=20>
+                	
+                	 <select name="loopInEmail" data-placeholder="Enter name or ID" class="chzn-select" tabindex="2" size=20>
                        <option value=""></option>
                        <cfloop query="qAvailableUsers">
                        
-                           <option value="#userid#">#firstName# #lastname#</option>
+                           <option value="#userid#">#firstName# #lastname# (#userid#)</option>
                      
                        </cfloop>
                    </select>

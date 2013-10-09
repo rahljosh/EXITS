@@ -60,6 +60,10 @@ padding-left: 10px;
     </div>
     <div class="rdbox">
     <br />
+    <!----
+    <cfif cgi.REMOTE_HOST eq '184.155.135.147'>
+    	<Cfdump var="#qYourCases#">
+    </cfif>
     <Cfif val(url.viewAll)>
     	<cfif qYourCases.recordcount eq 0>
             You are not associated with any cases.
@@ -70,15 +74,16 @@ padding-left: 10px;
         </cfloop>
         </cfif>
     <cfelse>
+	---->
 		<cfif qBasicCaseDetails.recordcount eq 0>
-            There are no cases for this student.
+            There are no cases to display.
         <cfelse>
          <Cfset queryName="qBasicCaseDetails">
         <cfloop query="qBasicCaseDetails">
             <cfinclude template="basicCaseDetails.cfm">
         </cfloop>
         </cfif>
-    </Cfif>
+    <!---</Cfif>---->
     <br />
     <cfoutput>
     <div align="center" class="dottedLineAbove" ><A href="index.cfm?curdoc=caseMgmt/index&action=basics&studentid=#url.studentid#&new=1" class="basicOrangeButton">Add New Case</a></div>
