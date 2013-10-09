@@ -382,7 +382,7 @@ window.onload = function additionalInfo() {
                    <select name="caseLevel">
                 		<option value=0></option>
                         <Cfloop query="caseLevel">
-                		<option value=1 <cfif form.caseLevel eq #id#>selected</cfif>>#caseLevel#</option>
+                		<option value=#id# <cfif form.caseLevel eq #id#>selected</cfif>>#caseLevel#</option>
 						</Cfloop>
                     </select>
                 </Td>

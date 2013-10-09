@@ -60,13 +60,25 @@ padding-left: 10px;
     </div>
     <div class="rdbox">
     <br />
-    <cfif qBasicCaseDetails.recordcount eq 0>
-    	There are no cases for this student.
+    <Cfif val(url.viewAll)>
+    	<cfif qYourCases.recordcount eq 0>
+            You are not associated with any cases.
+        <cfelse>
+        <Cfset queryName="qYourCases">
+        <cfloop query="qYourCases">
+            <cfinclude template="basicCaseDetails.cfm">
+        </cfloop>
+        </cfif>
     <cfelse>
-    <cfloop query="qBasicCaseDetails">
-    	<cfinclude template="basicCaseDetails.cfm">
-    </cfloop>
-    </cfif>
+		<cfif qBasicCaseDetails.recordcount eq 0>
+            There are no cases for this student.
+        <cfelse>
+         <Cfset queryName="qBasicCaseDetails">
+        <cfloop query="qBasicCaseDetails">
+            <cfinclude template="basicCaseDetails.cfm">
+        </cfloop>
+        </cfif>
+    </Cfif>
     <br />
     <cfoutput>
     <div align="center" class="dottedLineAbove" ><A href="index.cfm?curdoc=caseMgmt/index&action=basics&studentid=#url.studentid#&new=1" class="basicOrangeButton">Add New Case</a></div>
