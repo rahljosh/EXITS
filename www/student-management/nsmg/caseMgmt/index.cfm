@@ -20,6 +20,7 @@
     <Cfparam name="URL.new" default="0">
     <cfparam name="FORM.uploadFile" default="0">
     <cfparam name="URL.delete" default="0">
+    <cfparam name="URL.viewAll" default="0">
 <cfif isDefined('url.reset')>
 	<cfset SESSION.studentList = ''>
 </cfif>
@@ -80,6 +81,7 @@
 		);
 </cfscript>
 </Cfif>
+
 <Cfif val(url.caseid)>
 	<cfscript>
         //Get case info based on CASE ID
@@ -107,8 +109,8 @@
 <cfelse>
 	<cfscript>
         // Get case info based on STUDENT ID
-       
-		qBasicCaseDetails =  APPLICATION.CFC.CASEMGMT.basicCaseDetails(personid=client.userid);
+       	qYourCases =  APPLICATION.CFC.CASEMGMT.yourCases(personID=client.userid);
+		qBasicCaseDetails =  APPLICATION.CFC.CASEMGMT.basicCaseDetails(personID=client.userid);
 		qFullCaseDetails =  APPLICATION.CFC.CASEMGMT.fullCaseDetails(caseid=0);
 		qUsersInvolved =  APPLICATION.CFC.CASEMGMT.usersInvolved(personid=client.userid);
 		qGetFiles = APPLICATION.CFC.DOCUMENT.getDocuments(
@@ -118,6 +120,7 @@
 		);
     </cfscript>
 </Cfif>
+
 
 <!---If there are cases, redirect to the list of cases for a student.  Otherwise, go to new case.---->
 <cfif val(url.studentid)>
