@@ -266,8 +266,8 @@
     
     <cfscript>
 		//get all cases that your involved in
-		qYourCases = APPLICATION.CFC.CASEMGMT.yourCases(userid=client.userid); 
-		qYourLoopedCases = APPLICATION.CFC.CASEMGMT.yourLoopedCases(userid=client.userid); 
+		qYourCasesInitial = APPLICATION.CFC.CASEMGMT.yourCasesInitial(personid=client.userid); 
+		qYourLoopedCasesInitial = APPLICATION.CFC.CASEMGMT.yourLoopedCasesInitial(personid=client.userid); 
 	</cfscript>
 </cfsilent>    
 
@@ -421,6 +421,7 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
  }
 	
 </style>
+
 
 <cfoutput>
 	
@@ -738,7 +739,7 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                 				
                 </div>
                 <!--- End of Student Applications / Field Bonuses --->
-                      
+ 
                 <!--- Case Management---->
                  <cfif client.usertype lte 4>
                  <div class="rdholder" style="width:100%; float:right;"> 
@@ -758,13 +759,13 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                                 <th align="left">Status</th>
                                 <th align="left">Date Opened</th>
                             </tr>
-                        <Cfif qYourCases.recordcount eq 0>
+                        <Cfif qYourCasesInitial.recordcount eq 0>
                         	<tr>
                             	<td colspan=4>You have no open cases.</td>
                             </tr>
                         <cfelse>    
                             
-                            <cfloop query="qYourCases">
+                            <cfloop query="qYourCasesInitial">
                                 <tr class='clickableRow' style="cursor: pointer;" href='index.cfm?curdoc=caseMgmt/index&action=viewCase&caseID=#caseID#'  <cfif currentrow mod 2>bgcolor="##ccc"</cfif> >
                                     <td>#firstname# #familylastname# (#studentid#)</td>
                                     <td>#caseSubject#</td>
@@ -772,14 +773,17 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                                     <Td>#DateFormat(caseDateOpened, 'mmm. dd')# - #DateDiff('d', '#caseDateOpened#', '#now()#')#
                                     <cfif #DateDiff('d', '#caseDateOpened#', '#now()#')# gt 1>s</cfif> day ago</Td>
                                 </tr>
-                            </cfloop>   
-                            <cfif qYourLoopedCases.recordcount>
+                            </cfloop> 
+                            
+                          
+						</Cfif>
+   <cfif val(qYourLoopedCasesInitial.recordcount)>
                             <tr bgcolor="##90b2d5">
                             	<th align="left" colspan="4"><em>Looped In</em></th>
                             </tr>
                             </cfif>
-                            <cfloop query="qYourLoopedCases">
-                                <tr class='clickableRow' style="cursor: pointer;" href='index.cfm?curdoc=caseMgmt/index&caseID=#caseID#' <cfif currentrow mod 2>bgcolor="##ccc"</cfif>>
+                            <cfloop query="qYourLoopedCasesInitial">
+                                <tr class='clickableRow' style="cursor: pointer;" href='index.cfm?curdoc=caseMgmt/index&action=viewCase&caseID=#caseID#' <cfif currentrow mod 2>bgcolor="##ccc"</cfif>>
                                     <td>#firstname# #familylastname# (#studentid#)</td>
                                     <td>#caseSubject#</td>
                                     <td>#caseStatus#</td>
@@ -787,10 +791,8 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                                     <cfif #DateDiff('d', '#caseDateOpened#', '#now()#')# gt 1>s</cfif> day ago</Td>
                                 </tr>
                             </cfloop> 
-						</Cfif>
- 
                         </table>
-                   
+                   <div align="right"><em><a href="?curdoc=caseMgmt/index&action=viewCaseList&viewAll=1">View Closed Cases</a></em></div>
                     </div>
                     
                     <div class="rdbottom"></div> <!-- end bottom --> 
