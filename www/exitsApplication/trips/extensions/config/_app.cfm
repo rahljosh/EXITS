@@ -39,7 +39,7 @@
 		Create APPLICATION.EMAIL structure
 	*******************************************/
 	APPLICATION.EMAIL = StructNew();		
-	APPLICATION.EMAIL.support = 'support@iseusa.com';
+	APPLICATION.EMAIL.support = 'josh@iseusa.org';
 	APPLICATION.EMAIL.errors = 'errors@student-management.com';
 	APPLICATION.EMAIL.trips = 'trips@iseusa.com';
 
@@ -84,8 +84,8 @@
 	// Local Enviroment
 	if ( APPLICATION.isServerLocal ) {
 		// Local Enviroment
-		APPLICATION.PATH.TEMP = 'C:/websites/www/student-management/nsmg/uploadedfiles/temp/';
-		APPLICATION.PATH.tour = 'C:/websites/www/student-management/nsmg/uploadedfiles/tours/';
+		APPLICATION.PATH.TEMP = 'C:/websites/student-management/nsmg/uploadedfiles/temp/';
+		APPLICATION.PATH.tour = 'C:/websites/student-management/nsmg/uploadedfiles/tours/';
 	} else {
 		// Production
 		APPLICATION.PATH.TEMP = 'C:/websites/student-management/nsmg/uploadedfiles/temp/';
