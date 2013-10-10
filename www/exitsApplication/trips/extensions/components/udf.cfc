@@ -33,8 +33,8 @@
 			// Check for local servers
 			if (	
 				FindNoCase("dev.iseusa.com", CGI.http_host) OR 
-				FindNoCase("developer", server.ColdFusion.ProductLevel) OR 
-				FindNoCase("184.155.135.147", cgi.remote_host)
+				FindNoCase("developer", server.ColdFusion.ProductLevel) 
+				//OR FindNoCase('184.155.135.147', cgi.REMOTE_HOST)
 				
 			){
 				return(true);
