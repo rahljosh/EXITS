@@ -10,7 +10,7 @@
 ----- ------------------------------------------------------------------------- --->
 
 <!--- Kill Extra Output --->
-
+<cfsilent>
 	
 	<!--- Import CustomTag Used for Page Messages and Form Errors --->
     <cfimport taglib="extensions/customTags/gui/" prefix="gui" />	
@@ -85,21 +85,20 @@
 		);	
 	</cfscript>
 
-    <!--- Try to send out all email notifications MPD | Student | Regional Manager---->
+    <!--- Try to send out all email notifications MPD | Student | Regional Manager --->
     <cftry>
 	
 		<!--- Email Student the Permission Form and Student Packet --->
         <cfinclude template="_sendEmail.cfm">
-	
-    
+
         <cfcatch type="any">
 			<!--- Do Nothing --->    
         </cfcatch>        
     
     </cftry>
 
-
-    
+</cfsilent>
+  
 <cfoutput>
 
 	<!--- Include Trip Header --->
