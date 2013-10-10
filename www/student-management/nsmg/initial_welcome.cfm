@@ -770,8 +770,8 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                                     <td>#firstname# #familylastname# (#studentid#)</td>
                                     <td>#caseSubject#</td>
                                     <td>#caseStatus#</td>
-                                    <Td>#DateFormat(caseDateOpened, 'mmm. dd')# - #DateDiff('d', '#caseDateOpened#', '#now()#')#
-                                    <cfif #DateDiff('d', '#caseDateOpened#', '#now()#')# gt 1>s</cfif> day ago</Td>
+                                    <Td>#DateFormat(caseDateOpened, 'mmm. dd')# 
+                                    </Td>
                                 </tr>
                             </cfloop> 
                             
@@ -787,8 +787,8 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                                     <td>#firstname# #familylastname# (#studentid#)</td>
                                     <td>#caseSubject#</td>
                                     <td>#caseStatus#</td>
-                                    <Td>#DateFormat(caseDateOpened, 'mmm. dd')# - #DateDiff('d', '#caseDateOpened#', '#now()#')#
-                                    <cfif #DateDiff('d', '#caseDateOpened#', '#now()#')# gt 1>s</cfif> day ago</Td>
+                                    <Td>#DateFormat(caseDateOpened, 'mmm. dd')#
+                                    </Td>
                                 </tr>
                             </cfloop> 
                         </table>
