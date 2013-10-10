@@ -13,13 +13,14 @@
     
 	<!--- Include Trip Header --->
     <cfinclude template="_breadCrumb.cfm">
+<!----    <h1>Student Trips</h1>
+    <div style="background-color: ##fefe99; width: 600px; padding: 20px; font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size: 14px; margin-left: auto; margin-right: auto; margin-bottom:20px;">
+  <p>This website is currently undergoing maintenance.    <strong>Please check back in 1 hour. </strong>
+  
+  <!----This website is currently undergoing maintenance as we update information for 2013-2014 trips.    <strong>Please check back on Sept. 17, 2013 </strong>to sign up for upcoming  MPD tours and excursions.----></p>
 
-    <h1>Student Trips</h1>
-    <!---<div style="background-color: ##fefe99; width: 600px; padding: 20px; font-family:'Trebuchet MS', Arial, Helvetica, sans-serif; font-size: 14px; margin-left: auto; margin-right: auto; margin-bottom:20px;">
-  <p>This website is currently undergoing maintenance as we update information for 2013-2014 trips.    <strong>Please check back on Sept. 17, 2013 </strong>to sign up for upcoming  MPD tours and excursions.</p>
-
-</div>--->
-
+</div>
+---->
  <div style="background-color: ##fefe99; width: 580px; padding: 5px 30px 10px 30px; margin-left: auto; margin-right: auto; margin-bottom:20px;">
 <h2>Instructions before applying for a trip!</h2>
 <p>

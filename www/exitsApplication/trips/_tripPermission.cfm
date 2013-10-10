@@ -55,6 +55,7 @@
             u.firstname as areaRep_first, 
             u.lastname as areaRep_last, 
             u.phone as areaRep_phone,
+            u.email as areaRep_email,
             school.schoolname,
             school.principal
         FROM 
@@ -69,7 +70,7 @@
             s.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.studentID#"> 
     </cfquery>
 
-	<cfquery name="qRegionalManager" datasource="#APPLICATION.DSN.Source#">
+	<cfquery name="qGetRegionalManager" datasource="#APPLICATION.DSN.Source#">
         SELECT 
             u.firstName,
             u.lastName,
@@ -86,7 +87,7 @@
         AND 
             uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentFullInformation.regionAssigned#">
 	</cfquery>
-    
+
     <cfquery name="qGetTrip" datasource="#APPLICATION.DSN.Source#">
     	SELECT
         	*
@@ -97,11 +98,7 @@
       	AND
         	tripID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetTourDetails.tour_id#">
     </cfquery>
-     <cfquery name="alltrips" datasource="#APPLICATION.DSN.Source#">
-     select *
-     from smg_tours
-     where tour_status = <cfqueryparam cfsqltype="cf_sql_varchar" value="Active">
-    </cfquery>
+    
     <cfif ListFind('1,2,3,4,5,12',qGetStudentFullInformation.companyID)><cfset companyName = 'ISE'>
     <cfelseif ListFind('10', qGetStudentFullInformation.companyID)><cfset companyName = 'CASE'>
     <cfelseif ListFind('14', qGetStudentFullInformation.companyID)><cfset companyName = 'ESI'>
@@ -309,15 +306,15 @@
                     </tr>
                     <tr>
                         <td><span class="title">Tour Name:</span></td>
-                        <td>#qGetRegistrationDetails.tour_name#</td>
+                        <td>#APPLICATION.CFC.UDF.TextAreaTripOutput(qGetTourDetails.tour_name)#</td>
                     </tr>
                     <tr>
                         <td><span class="title">Dates:</span></td>
-                        <td>#DateFormat(qGetRegistrationDetails.tour_start, 'mmm. d, yyyy')# - #DateFormat(qGetRegistrationDetails.tour_end, 'mmm. d, yyyy')#</td>
+                        <td>#DateFormat(qGetTourDetails.tour_start, 'mmm. d, yyyy')# - #DateFormat(qGetTourDetails.tour_end, 'mmm. d, yyyy')#</td>
                     </tr>
                     <tr>
                         <td><span class="title">Price:</span></td>
-                        <td>#DollarFormat(qGetRegistrationDetails.tour_price)# <span class="title">(per person)</span></td>
+                        <td>#DollarFormat(qGetTourDetails.tour_price)# <span class="title">(per person)</span></td>
                     </tr>
                 </table>
     

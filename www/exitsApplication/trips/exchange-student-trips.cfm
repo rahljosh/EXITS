@@ -94,6 +94,7 @@
             s.sex,
             s.med_allergies,
             s.other_Allergies,
+            s.arearepid,
             c.countryname
     	FROM 
         	smg_students s

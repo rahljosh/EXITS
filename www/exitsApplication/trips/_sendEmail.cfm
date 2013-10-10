@@ -38,6 +38,16 @@
         	uar.userType = <cfqueryparam cfsqltype="cf_sql_integer" value="5">
 	</cfquery>
 
+    <cfquery name="qGetAreaRep" datasource="#APPLICATION.DSN.Source#">
+        SELECT 
+        	u.userID,
+            u.firstName,
+            u.lastName,
+            u.email 
+        FROM 
+        	smg_users u
+        where u.userid  = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.arearepid)#">
+	</cfquery>
 </cfsilent>
 
 <cfoutput>	
@@ -129,7 +139,7 @@
         
         <cfinvoke component="extensions.components.email" method="sendEmail">
             <cfinvokeargument name="email_from" value="<#APPLICATION.MPD.email#> (#SESSION.COMPANY.shortName# Trip Support)">
-            <cfinvokeargument name="email_to" value="#qGetRegionalManager.email#">
+            <cfinvokeargument name="email_to" value="#qGetRegionalManager.email#,#qGetAreaRep.email#">
             <cfinvokeargument name="email_bcc" value="#APPLICATION.EMAIL.trips#">
             <cfinvokeargument name="email_subject" value="Student Trip Registration #qGetTourDetails.tour_name# - #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#)">
             <cfinvokeargument name="email_message" value="#repEmailMessage#">
