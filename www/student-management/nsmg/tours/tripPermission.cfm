@@ -76,7 +76,7 @@
             u.firstName,
             u.lastName,
             u.phone,
-            u.phone
+            u.email
         FROM 
             smg_users u
         INNER JOIN 
@@ -99,6 +99,16 @@
       	AND
         	tripID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRegistrationInfo.tour_id#">
     </cfquery>
+     <cfquery name="alltrips" datasource="#APPLICATION.DSN#">
+     select *
+     from smg_tours
+     where tour_status = <cfqueryparam cfsqltype="cf_sql_varchar" value="Active">
+    </cfquery>
+    <cfif ListFind('1,2,3,4,5,12',qGetStudentFullInformation.companyID)><cfset companyName = 'ISE'>
+    <cfelseif ListFind('10', qGetStudentFullInformation.companyID)><cfset companyName = 'CASE'>
+    <cfelseif ListFind('14', qGetStudentFullInformation.companyID)><cfset companyName = 'ESI'>
+    <cfelseif ListFind('6', qGetStudentFullInformation.companyID)><cfset companyName = 'ESI'>
+    </cfif>
     
 </cfsilent>
 
@@ -251,6 +261,17 @@
                         <td valign="top"><span class="title">Email: </span></td>
                         <td>#qGetStudentFullInformation.hostemail#</td>
                     </tr>
+                     <tr>
+                    	<td>&nbsp;</td>
+                    </tr>
+                     <tr>
+                        <td valign="top"><span class="title">Emergency Contact: </span></td>
+                        <td>#qGetRegistrationInfo.emergencyContactName#</td>
+                    </tr>
+                    <tr>
+                        <td valign="top"><span class="title">Emergency Phone: </span></td>
+                        <td>#qGetRegistrationInfo.emergencyContactPhone#</td>
+                    </tr>
                 </table>
     
             </td>
@@ -294,7 +315,7 @@
                     </tr>
                     <tr>
                         <td><span class="title">Dates:</span></td>
-                        <td>#DateFormat(qGetRegistrationInfo.tour_start, 'mmm. d, yyyy')# - #DateFormat(qGetRegistrationInfo.tour_end, 'mmm. d, yyyy')#</td>
+                        <td>#qGetRegistrationInfo.tour_date#</td>
                     </tr>
                     <tr>
                         <td><span class="title">Price:</span></td>
