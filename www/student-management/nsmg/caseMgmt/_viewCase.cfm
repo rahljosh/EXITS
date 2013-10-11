@@ -59,7 +59,9 @@ window.onload = function additionalInfo() {
 	}
 </script>
 
-
+<Cfif not val(url.caseid)>
+	<cflocation url="?curdoc=student_info&studentID=#url.studentid#">
+</Cfif>
 
 
 

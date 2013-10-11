@@ -427,7 +427,7 @@ window.onload = function additionalInfo() {
    <tr>
            	<td colspan=4>
             	<div class="dottedLineAbove"><p style="text-align:right;">
-                	<a href="?curdoc=caseMgmt/index&action=viewCase&caseID=#url.caseid#&reset" class="basicOrangeButton">Cancel</a>
+                	<a href="?curdoc=caseMgmt/index&action=viewCase&caseID=#url.caseid#&studentid=#url.studentid#&reset" class="basicOrangeButton">Cancel</a>
                     
                     &nbsp; &nbsp; &nbsp; &nbsp;  
                 	<cfif val(url.caseID)>
