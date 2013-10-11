@@ -310,7 +310,7 @@
                     </tr>
                     <tr>
                         <td><span class="title">Dates:</span></td>
-                        <td>#DateFormat(qGetTourDetails.tour_start, 'mmm. d, yyyy')# - #DateFormat(qGetTourDetails.tour_end, 'mmm. d, yyyy')#</td>
+                        <td>#qGetTourDetails.tour_date#</td>
                     </tr>
                     <tr>
                         <td><span class="title">Price:</span></td>
