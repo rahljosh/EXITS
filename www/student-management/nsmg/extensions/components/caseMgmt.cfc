@@ -441,7 +441,7 @@
 			name="qLoopedinEmails" 
 			datasource="#APPLICATION.DSN#">
             SELECT
-           CAST(CONCAT(u.firstName, ' ', u.LastName,  ' (##', u.userid, ')') AS CHAR) AS loopedInInfo
+           CAST(CONCAT(u.firstName, ' ', u.LastName) AS CHAR) AS loopedInInfo
             from smg_caseMgmt_loopedin li          
             left join smg_users u on u.userid = li.email 
             WHERE fk_caseid = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.caseid#">
@@ -477,6 +477,7 @@
                 OR cmui.fk_arearep  = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.personid#"> 
                 OR cmui.fk_regionalManager = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.personid#">
                 OR li.email = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.personid#">)
+           and cases.isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
            order by caseStatus
 	
           </cfquery>  
@@ -508,7 +509,7 @@
             LEFT JOIN smg_caseMgmt_loopedin li on li.fk_caseid = cases.caseid
             WHERE (li.email = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.personid#">)
          		and cases.caseStatus != 2 
-	
+			and cases.isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
           </cfquery>  
        
      <cfreturn qYourLoopedCases>
@@ -534,7 +535,7 @@
                 OR ui.fk_arearep  = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.personid#"> 
                 OR ui.fk_regionalManager = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.personid#">)
          		and cases.caseStatus != 2 
-	
+				and cases.isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
           </cfquery>  
        
      <cfreturn qYourCasesInitial>
@@ -559,6 +560,7 @@
                 
                 WHERE (li.email = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.personid#">)
          		and cases.caseStatus != 2 
+                and cases.isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
 	
           </cfquery>  
        
@@ -581,7 +583,8 @@
                 left join smg_casemgmt_users_involved ui on ui.fk_caseid = cases.caseid
                 left join smg_students s on s.studentid = ui.fk_studentid
                 where ui.fk_studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentid#">
-                and cases.caseStatus != 2
+                and cases.caseStatus != <cfqueryparam cfsqltype="cf_sql_integer" value="2">
+                and cases.isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
                 
                 
                
