@@ -1,0 +1,84 @@
+@charset "UTF-8";
+/* CSS Document */
+
+.column1 {
+	background-image: url(images/Halloween_background.jpg);
+	background-repeat: no-repeat;
+	background-color: #000;
+	min-height: 500px;
+	width: 660px;
+	display: block;
+	margin-top: 5px;
+	margin-right: 5px;
+	margin-bottom: 10px;
+	margin-left: 40px;
+	padding-top: 30px;
+	padding-bottom: 30px;
+}
+.photos {
+	height: 200px;
+	width: 190px;
+	margin-left: 5px;
+	border: medium solid #EC5A25;
+	overflow: hidden;
+	display: inline-block;
+}
+.column2 {
+	float: left;
+	width: 640px;
+	margin-left: 20px;
+	display: block;
+	padding: 0px;
+	color: #FFF;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	text-align: left;
+	/* [disabled]border: medium solid #FFF; */
+}
+.column3 {
+	float: left;
+	width: 620px;
+	margin-left: 30px;
+	margin-bottom: 30px;
+	display: block;
+	color: #FFF;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	text-align: left;
+	padding-right: 5px;
+	/* [disabled]border: medium solid #FFF; */
+}
+.promoHeader {
+	color: #EC5A25;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 18px;
+	font-weight: bold;
+	padding-bottom: 12px;
+	line-height: normal;
+}
+.promoLine {
+	background-color: #ec5a25;
+	text-align: center;
+	height: 3px;
+	width: 95%;
+}
+.darkBox {
+	margin-left: 30px;
+	width: 250px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 18px;
+	padding-left: 30px;
+	color: #FFF;
+	font-weight: bold;
+	text-align: left;
+	background-image: url(images/shade.png);
+	background-repeat: repeat;
+	padding-top: 10px;
+	padding-right: 10px;
+	padding-bottom: 10px;
+}
+.boxClear {
+	height: 420px;
+	width: 600px;
+	display: block;
+}
