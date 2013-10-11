@@ -146,6 +146,7 @@
             	    caseDateOfIncident = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.caseDateOfIncident#">,
                     fk_caseOwner = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.caseOwner#">
                where caseID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.caseID#">
+               and isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
             </cfquery>
        
        
@@ -240,7 +241,7 @@
     	<cfargument name="caseID" default="" hint="no system defined will return all tags">
         <cfargument name="isActive" default="1" hint="no system defined will return all tags">
         <cfargument name="personid" default="" hint="return all cases associated with a student id">
-       
+        <cfargument name="isDeleted" default="0" hint="return all cases associated with a student id">
   
          <cfquery 
 			name="qBasicCaseDetails" 
@@ -265,6 +266,7 @@
             <cfelseif val(ARGUMENTS.personid)>
              cmui.fk_studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.personid#">
             </cfif>
+            and isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.isDeleted#">
           </cfquery>  
        
     
@@ -277,7 +279,7 @@
         <cffunction name="fullCaseDetails" access="public" returntype="query" output="false" hint="Gets a list of users, if usertype is passed gets users by usertype">
     	<cfargument name="caseID" default="" hint="no system defined will return all tags">
         <cfargument name="isActive" default="1" hint="no system defined will return all tags">
-       
+      
   
           <cfquery 
 			name="qfullCaseDetails" 
@@ -290,6 +292,7 @@
             FROM smg_casemgmt_case_items ci
             left join smg_users u on u.userid = ci.fk_postedBy
             WHERE caseid = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.caseID#">
+           
             order by id desc
           </cfquery>  
        
@@ -562,7 +565,32 @@
      <cfreturn qYourLoopedCasesInitial>
 
     </cffunction>
-             
+ 
+       <cffunction name="studentsCases" access="public" returntype="query" hint="returns cases you are involved with">
+    		<cfargument name="studentid" default="" hint="caseid that add to ">
+       	
+         
+          <cfquery 
+			name="qStudentsCases" 
+			datasource="#APPLICATION.DSN#">
+                select cases.caseDateOpened, cs.status as caseStatus, cases.caseSubject, cases.caseid,
+                 s.firstname, s.familylastname, s.studentid
+                from smg_casemgmt_cases cases
+                left join smg_caseMgmt_casestatus cs on cs.id = cases.caseStatus
+                left join smg_casemgmt_loopedin li on li.fk_caseid = cases.caseid
+                left join smg_casemgmt_users_involved ui on ui.fk_caseid = cases.caseid
+                left join smg_students s on s.studentid = ui.fk_studentid
+                where ui.fk_studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentid#">
+                and cases.caseStatus != 2
+                
+                
+               
+	
+          </cfquery>  
+       
+     <cfreturn qStudentsCases>
+
+    </cffunction>            
    
 </cfcomponent>
               
