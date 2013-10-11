@@ -9,6 +9,8 @@
 				
 ----- ------------------------------------------------------------------------- --->
 <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />
+
+
 <!--- Kill extra output --->
 <cfsilent>
 
@@ -25,13 +27,26 @@
 	<cfset SESSION.studentList = ''>
 </cfif>
 <cfif isDefined('form.deleteCase')>
+	
 	<cfif val(url.caseid)>
-    <Cfquery datasource="#application.dsn#">
-    update smg_caseMgmt_cases set isdeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-    where caseid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.caseid#">
-    </Cfquery>
-    <cfset SESSION.studentlist=''>
-    <cflocation url="?curdoc=caseMgmt/index">
+        <cfquery name="studentInvolved" datasource="#application.dsn#">
+        select fk_studentid
+        from smg_caseMgmt_users_involved
+        where fk_caseid = #url.caseid#
+        </cfquery>
+        
+        <Cfquery datasource="#application.dsn#">
+        update smg_caseMgmt_cases set isdeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+        where caseid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.caseid#">
+        </Cfquery>
+        
+        <cfset SESSION.studentlist=''>
+        <Cfif studentInvolved.recordcount eq 1>
+        <cflocation url="?curdoc=caseMgmt/index&studentid=#studentInvolved.fk_studentid#" addtoken="no">
+        <Cfelse>
+            <cflocation url="?curdoc=caseMgmt/index&action=viewCaseList&viewAll=1" addtoken="no">
+        </Cfif>
+    
     </cfif>
 
 </cfif>
@@ -72,14 +87,6 @@
     <cfelse>
     	<cfset FORM.additionialInfoDiv = 1>
     </cfif>
-</Cfif>
-<Cfif val(url.delete)>
-<cfscript>
-//Mark document as deleted
-	deleteDocumentByID =  APPLICATION.CFC.DOCUMENT.deleteDocumentByID(
-			id=url.delete
-		);
-</cfscript>
 </Cfif>
 
 <Cfif val(url.caseid)>
