@@ -6,6 +6,11 @@
 	Changes:
 --->
 
+<!--- Do not run on a weekend --->
+<cfif ListFind("1,7", DayOfWeek(Now()))>
+	<cfabort>
+</cfif>
+
 <cfquery datasource="#APPLICATION.DSN#">
     INSERT INTO smg_users_payments(
         agentID,
