@@ -1559,6 +1559,7 @@
                     ec.lastName,
                     ec.email,
                     ec.ds2019,
+                    ec.ds2019_startdate,
                     ec.us_phone,
                     ec.arrival_address,
                     ec.arrival_city,
@@ -1606,6 +1607,12 @@
 				<cfif VAL(ARGUMENTS.programID)>
                     AND
                         ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#">
+                </cfif>
+                
+                <!--- For Trainee only get records with a DS2019 start date after 9/1/2013 --->
+                <cfif CLIENT.companyID EQ 7>
+                	AND
+                    	ec.ds2019_startdate >= <cfqueryparam cfsqltype="cf_sql_date" value="2013-09-01">
                 </cfif>
                 
 			ORDER BY

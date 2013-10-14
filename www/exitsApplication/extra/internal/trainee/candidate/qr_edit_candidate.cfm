@@ -21,9 +21,22 @@
 <cfparam name="FORM.doc_recom_letter" default="0">
 <cfparam name="FORM.doc_insu" default="0">
 <cfparam name="FORM.doc_sponsor_letter" default="0">
+<cfparam name="FORM.doc_agreement" default="0">
+<cfparam name="FORM.doc_ISEInterviewReport" default="0">
+<cfparam name="FORM.doc_hostEmployerInformation" default="0">
+<cfparam name="FORM.doc_degreeCopy" default="0">
+<cfparam name="FORM.doc_DS7002_applicant" default="0">
+<cfparam name="FORM.doc_DS7002_hostCompany" default="0">
 <cfparam name="FORM.ds2019_dateActivated" default="">
+<!--- Arrival Verification --->
+<cfparam name="FORM.watDateCheckedIn" default="">
+<cfparam name="FORM.usPhone" default="">
+<cfparam name="FORM.arrival_address" default="">
+<cfparam name="FORM.arrival_city" default="">
+<cfparam name="FORM.arrival_state" default="0">
+<cfparam name="FORM.arrival_zip" default="">
 
-<cfquery name="qGetCandidateInfo" datasource="mysql">
+<cfquery name="qGetCandidateInfo" datasource="#APPLICATION.DSN.Source#">
     SELECT 
         candidateID, 
         programID, 
@@ -37,7 +50,7 @@
 <!---- PROGRAM HISTORY ---->
 <cfif qGetCandidateInfo.programID NEQ FORM.programID>
 
-    <cfquery datasource="mysql">
+    <cfquery datasource="#APPLICATION.DSN.Source#">
         INSERT INTO 
             extra_program_history
         (
@@ -67,7 +80,7 @@
 	</cfif>
         
 	<!--- Set Any Previous Companies to Inactive --->
-	<cfquery datasource="mysql">
+	<cfquery datasource="#APPLICATION.DSN.Source#">
 		UPDATE
 			extra_candidate_place_company
 		SET            
@@ -77,7 +90,7 @@
 	</cfquery>        
 
 	<!--- Insert New Host Company --->
-	<cfquery datasource="mysql">
+	<cfquery datasource="#APPLICATION.DSN.Source#">
 		INSERT INTO 
 			extra_candidate_place_company
 		(
@@ -108,7 +121,7 @@
 <cfelse>
 
 	<!--- Update Current Host Company --->
-	<cfquery datasource="mysql">
+	<cfquery datasource="#APPLICATION.DSN.Source#">
 		UPDATE 
 			extra_candidate_place_company
 		SET 
@@ -121,7 +134,7 @@
 
 </cfif>
 
-<cfquery name="check_sevis" datasource="mysql">
+<cfquery name="check_sevis" datasource="#APPLICATION.DSN.Source#">
     SELECT 
         ds2019
     FROM 
@@ -136,7 +149,7 @@
     <cfset sendemail = 'yes'>
 </cfif>
 
-<cfquery name="edit_candidate" datasource="mysql">
+<cfquery name="edit_candidate" datasource="#APPLICATION.DSN.Source#">
     UPDATE 
         extra_candidates
     SET 
@@ -164,15 +177,22 @@
         degree_other = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.degree_other#">,	
         fieldstudyid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fieldstudyid#">,	 
      	subfieldid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.listsubcat#">,	
+        <!--- Documents Control --->
         doc_midterm_evaluation = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.doc_midterm_evaluation#" null="#NOT IsDate(FORM.doc_midterm_evaluation)#">,
         doc_summative_evaluation = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.doc_summative_evaluation#" null="#NOT IsDate(FORM.doc_summative_evaluation)#">,
         doc_application = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.doc_application#">,	 
         doc_resume = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.doc_resume#">,
-        doc_proficiency = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.doc_proficiency#">,	  
+        doc_proficiency = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.doc_proficiency#">,
         doc_passportphoto = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.doc_passportphoto#">,	  
         doc_recom_letter = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.doc_recom_letter#">,	
         doc_insu = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.doc_insu#">,	  
-        doc_sponsor_letter = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.doc_sponsor_letter#">,	 
+        doc_sponsor_letter = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.doc_sponsor_letter#">,
+        doc_agreement = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.doc_agreement#">,
+        doc_ISEInterviewReport = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.doc_ISEInterviewReport#">,
+        doc_hostEmployerInformation = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.doc_hostEmployerInformation#">,
+        doc_degreeCopy = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.doc_degreeCopy#">,
+        doc_DS7002_applicant = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.doc_DS7002_applicant#">, 
+        doc_DS7002_hostCompany = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.doc_DS7002_hostCompany#">,
         missing_documents = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.missing_documents#">,	  
         programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">,	
         hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostCompanyID#">,		  		
@@ -189,15 +209,159 @@
         ds2019_startdate = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.ds2019_startdate#" null="#NOT IsDate(FORM.ds2019_startdate)#">,
         ds2019_enddate = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.ds2019_enddate#" null="#NOT IsDate(FORM.ds2019_enddate)#">,
         <!--- Use Sub Category --->
-        ds2019_subject = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.listsubcat#">,	
-        ds2019_street = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.ds2019_street#">, 
-        ds2019_city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.ds2019_city#">, 
-        ds2019_state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.ds2019_state#">, 
-        ds2019_zip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.ds2019_zip#">, 
+        ds2019_subject = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.listsubcat#">,
         ds2019_cell = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.ds2019_cell#">,
-        ds2019_phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.ds2019_phone#">
+        <!--- Arrival Verification --->
+        watDateCheckedIn = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDateCheckedIn#" null="#NOT IsDate(FORM.watDateCheckedIn)#">,
+        us_phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.usPhone#">,
+        arrival_address = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.arrival_address#">,
+        arrival_city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.arrival_city#">,
+        arrival_state = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.arrival_state#">,
+        arrival_zip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.arrival_zip#">
     WHERE 
         uniqueid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.uniqueid#">
+</cfquery>
+
+<!--- Insert History Record --->
+<cfquery datasource="#APPLICATION.DSN.Source#">
+	INSERT INTO extra_candidates_history (
+    	candidateID,
+        changedBy,
+        dateChanged,
+        firstname, 
+        lastname, 
+        middlename, 
+        dob,
+        sex,  
+        intrep,  
+        birth_city,    
+        birth_country,    
+        citizen_country, 
+        residence_country,
+        home_address,  
+        home_city, 
+        home_zip,	
+        home_country, 
+        home_phone,	 
+        email,	 
+        status,	 
+        emergency_name,	
+        emergency_phone,	
+        emergency_relationship,	
+        degree,	 
+        degree_other,	
+        fieldstudyid,	 
+     	subfieldid,	
+        <!--- Documents Control --->
+        doc_midterm_evaluation,
+        doc_summative_evaluation,
+        doc_application,	 
+        doc_resume,
+        doc_proficiency,
+        doc_passportphoto,	  
+        doc_recom_letter,	
+        doc_insu,	  
+        doc_sponsor_letter,
+        doc_agreement,
+        doc_ISEInterviewReport,
+        doc_hostEmployerInformation,
+        doc_degreeCopy,
+        doc_DS7002_applicant,
+        doc_DS7002_hostCompany,
+        missing_documents,	  
+        programID,	
+        hostCompanyID,		  		
+		<!--- Use DS2019 Dates and Not Program Dates --->
+        startdate,
+        enddate,
+		remarks,  		
+        cancel_date,
+        cancel_reason,
+		<!--- DS 2019 --->
+		verification_received,
+        ds2019_dateActivated,
+        ds2019,
+        ds2019_startdate,
+        ds2019_enddate,
+        <!--- Use Sub Category --->
+        ds2019_subject,
+        ds2019_cell,
+        <!--- Arrival Verification --->
+        watDateCheckedIn,
+        us_phone,
+        arrival_address,
+        arrival_city,
+        arrival_state,
+        arrival_zip )
+  	VALUES (
+    	<cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.candidateID#">,
+        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
+        <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.firstname#">, 
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.lastname#">, 
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.middlename#">, 
+        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.dob#" null="#NOT IsDate(FORM.dob)#">,
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.sex#">,  
+        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intrep#">,  
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.birth_city#">,    
+        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.birth_country#">,    
+        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.citizen_country#">, 
+        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.residence_country#">,
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.home_address#">,  
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.home_city#">, 
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.home_zip#">,	
+        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.home_country#">, 
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.home_phone#">,	 
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">,	 
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.status#">,	 
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.emergency_name#">,	
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.emergency_phone#">,	
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.emergency_relationship#">,	
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.degree#">,	 
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.degree_other#">,	
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fieldstudyid#">,	 
+     	<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.listsubcat#">,	
+        <!--- Documents Control --->
+        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.doc_midterm_evaluation#" null="#NOT IsDate(FORM.doc_midterm_evaluation)#">,
+        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.doc_summative_evaluation#" null="#NOT IsDate(FORM.doc_summative_evaluation)#">,
+        <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.doc_application#">,	 
+        <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.doc_resume#">,
+        <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.doc_proficiency#">,
+        <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.doc_passportphoto#">,	  
+        <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.doc_recom_letter#">,	
+        <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.doc_insu#">,	  
+        <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.doc_sponsor_letter#">,
+        <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.doc_agreement#">,
+        <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.doc_ISEInterviewReport#">,
+        <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.doc_hostEmployerInformation#">,
+        <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.doc_degreeCopy#">,
+        <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.doc_DS7002_applicant#">,
+        <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.doc_DS7002_hostCompany#">,
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.missing_documents#">,	  
+        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">,	
+        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostCompanyID#">,		  		
+		<!--- Use DS2019 Dates and Not Program Dates --->
+        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.ds2019_startdate#" null="#NOT IsDate(FORM.ds2019_startdate)#">,
+        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.ds2019_enddate#" null="#NOT IsDate(FORM.ds2019_enddate)#">,
+		<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.remarks#">,  		
+        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.cancel_date#" null="#NOT IsDate(FORM.cancel_date)#">,
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.cancel_reason#">,
+		<!--- DS 2019 --->
+		<cfqueryparam cfsqltype="cf_sql_date" value="#FORM.verification_received#" null="#NOT IsDate(FORM.verification_received)#">,
+        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.ds2019_dateActivated#" null="#NOT IsDate(FORM.ds2019_dateActivated)#">,
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.ds2019#">,
+        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.ds2019_startdate#" null="#NOT IsDate(FORM.ds2019_startdate)#">,
+        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.ds2019_enddate#" null="#NOT IsDate(FORM.ds2019_enddate)#">,
+        <!--- Use Sub Category --->
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.listsubcat#">,
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.ds2019_cell#">,
+        <!--- Arrival Verification --->
+        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDateCheckedIn#" null="#NOT IsDate(FORM.watDateCheckedIn)#">,
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.usPhone#">,
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.arrival_address#">,
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.arrival_city#">,
+        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.arrival_state#">,
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.arrival_zip#"> )
 </cfquery>
 
 
@@ -207,10 +371,6 @@
     
 <cfoutput>
 <script language="JavaScript">
-    <!-- 
-    // alert("Candidate Updated!");
-        //location.replace("?curdoc=candidate/candidate_form2&unqid=#uniqueid#");
-        location.replace("?curdoc=candidate/candidate_info&uniqueid=#FORM.uniqueid#");
-    -->
+    location.replace("?curdoc=candidate/candidate_info&uniqueid=#FORM.uniqueid#");
 </script>
 </cfoutput>
