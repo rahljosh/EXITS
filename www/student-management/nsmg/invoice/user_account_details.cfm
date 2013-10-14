@@ -1313,12 +1313,13 @@ Dear Partner<br/><br/>
 	<cfcase value="invoice">
 Please find attached your invoices.<br/>
 
-<font color="##FF0000"><strong>IMPORTANT</strong></font>: In order to avoid balance differences, please check if everything is being correctly charged. If you find something wrong please let me know as soon as possible so that I can adjust your account accordingly.<br/>
-<font color="##FF0000"><strong>PAYMENT INSTRUCTION</strong></font>: For every payment remitted, please send me an e-mail with the wire receipt for proper payment identification as well as include the invoice number and respective amounts being paid on all payment information so that we can keep both records, your and ours, on the same page.<br/>
+<font color="##FF0000"><strong>IMPORTANT</strong></font>: In order to avoid balance differences, please check if everything is being correctly charged. If you find an error, please let me know as soon as possible so that I may adjust your account accordingly.<br/>
+
+<font color="##FF0000"><strong>PAYMENT INSTRUCTION</strong></font>: For every payment remitted, please send me an e-mail with the wire receipt for proper payment identification. Please also include the invoice number and respective amounts being paid on all payment information so that I am able to record the payments correctly.<br/>
 Payments by check should be mailed directly to our office address (Do not mail checks directly to our bank).<br/>
 
 		<cfif FORM.companyID EQ 14>
-            Please keep in mind that full payment is required before the districts will release the I-20.<br/><br/>
+            Please keep in mind that the deposit is required before the districts will release the I-20. Final payment is required before our office will release the I-20 to you.<br/><br/>
             
             Thank you for your cooperation,<br/>
             Stacy
