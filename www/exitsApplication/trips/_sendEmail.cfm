@@ -131,10 +131,12 @@
             #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#) has registered to go on the #qGetTourDetails.tour_name# tour.<br /><br />
             
             Dates: #DateFormat(qGetTourDetails.tour_start, 'mmm d, yyyy')# - #DateFormat(qGetTourDetails.tour_end, 'mmm d, yyyy')#
+            <br />
+            Please be advised that this student has been sent a permission form which will need to be signed by their host parents, the representative of their high school,  their Area Representative, and Regional Manager. Upon receipt and completion of this form, please fax the form back to MPD Tours at 1-718-439-8565.
             
             If you feel that #qGetStudentInfo.firstname# should NOT be going on this trip, please notify us by using this 
             <a href="#SESSION.COMPANY.exitsURL#nsmg/index.cfm?curdoc=tours/hold&studentID=#qGetStudentInfo.studentid#&tripID=#qGetTourDetails.tour_id#">form</a> 
-            (you will need to be logged into follow the link)
+            (you will need to be logged in to follow the link)
         </cfsavecontent>
         
         <cfinvoke component="extensions.components.email" method="sendEmail">
