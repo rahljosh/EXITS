@@ -18,6 +18,9 @@
 	<cfscript>
 		// Get Candidate Information
 		qGetCandidate = APPLICATION.CFC.CANDIDATE.getCandidateByID(uniqueID=URL.uniqueID);
+		
+		// Get Incident Report
+		qGetIncidentReport = APPLICATION.CFC.CANDIDATE.getIncidentReport(candidateID=qGetCandidate.candidateID);
 
 		// List of Countries
 		qGetCountryList = APPLICATION.CFC.LOOKUPTABLES.getCountry();
@@ -75,7 +78,7 @@
         	countryID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCandidate.citizen_country)#">
     </cfquery>
 
-    <Cfquery name="qGetIntlRepInfo" datasource="MySQL">
+    <Cfquery name="qGetIntlRepInfo" datasource="#APPLICATION.DSN.Source#">
         SELECT 
         	u.userid, 
             u.businessname, 
@@ -89,7 +92,7 @@
         	u.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidate.intrep#">
     </Cfquery>
     
-    <Cfquery name="qCandidatePlacedCompany" datasource="MySQL">
+    <Cfquery name="qCandidatePlacedCompany" datasource="#APPLICATION.DSN.Source#">
         SELECT 
         	*
         FROM 
@@ -101,7 +104,7 @@
         LIMIT 1
     </Cfquery>
 
-    <Cfquery name="qGetHostCompanyList" datasource="MySQL">
+    <Cfquery name="qGetHostCompanyList" datasource="#APPLICATION.DSN.Source#">
         SELECT 
         	name, 
             hostCompanyID,
@@ -123,7 +126,7 @@
         	hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidate.hostCompanyID#">
     </Cfquery>
 
-    <cfquery name="qCheckNewCandidate" datasource="mySQL">
+    <cfquery name="qCheckNewCandidate" datasource="#APPLICATION.DSN.Source#">
         SELECT 
         	candidateID, 
             firstname, 
@@ -145,7 +148,7 @@
         	candidateID != <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidate.candidateID#">
     </cfquery>
 
-    <cfquery name="qGetExtraJobs" datasource="mySQL">
+    <cfquery name="qGetExtraJobs" datasource="#APPLICATION.DSN.Source#">
         SELECT 
         	id, 
             title, 
@@ -167,7 +170,7 @@
         	candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidate.candidateID#">
     </cfquery>
 
-    <cfquery name="getCategory" datasource="MySql">
+    <cfquery name="getCategory" datasource="#APPLICATION.DSN.Source#">
         SELECT DISTINCT 
         	fieldstudy
         FROM 
@@ -176,7 +179,7 @@
         	fieldstudyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCandidate.fieldstudyid)#">
     </cfquery>
 
-    <cfquery name="getSubCategory" datasource="MySql">
+    <cfquery name="getSubCategory" datasource="#APPLICATION.DSN.Source#">
         SELECT DISTINCT 
         	subfield
         FROM 
@@ -185,7 +188,7 @@
         	subfieldid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCandidate.subfieldid)#">
     </cfquery>
 
-    <cfquery name="qDepartureInfo" datasource="mySQL">
+    <cfquery name="qDepartureInfo" datasource="#APPLICATION.DSN.Source#">
         SELECT 
 			*
         FROM
@@ -198,7 +201,7 @@
         	departDate DESC            
     </cfquery>
     
-    <cfquery name="qArrivalInfo" datasource="mySQL">
+    <cfquery name="qArrivalInfo" datasource="#APPLICATION.DSN.Source#">
         SELECT 
         	*
         FROM 
@@ -211,7 +214,7 @@
         	departDate DESC            
     </cfquery>
 	
-    <cfquery name="qGetQuarterlyEvaluation" datasource="mySQL">
+    <cfquery name="qGetQuarterlyEvaluation" datasource="#APPLICATION.DSN.Source#">
         SELECT 
         	candidateID,
             monthEvaluation,
@@ -257,6 +260,12 @@
         WHERE	
         	monthEvaluation = <cfqueryparam cfsqltype="cf_sql_integer" value="11">  
     </cfquery>
+    
+    <cfquery name="qGetStateList" datasource="#APPLICATION.DSN.Source#">
+        SELECT id, state, stateName
+        FROM smg_states
+      	ORDER BY stateName
+    </cfquery>
 
 </cfsilent>    
 
@@ -287,6 +296,17 @@
 <script language="JavaScript"> 
 	$(document).ready(function() {
 		$(".formField").attr("disabled","disabled");
+		
+		// JQuery Modal
+		$(".jQueryModal").colorbox( {
+			width:"50%", 
+			height:"60%", 
+			iframe:true,
+			overlayClose:false,
+			escKey:true,
+			onClosed:function(){ window.location.reload(); }
+		});	
+		
 	});
 	
 	function readOnlyEditPage() {
@@ -706,118 +726,6 @@
                         
                         <br />
                         
-                        <!--- LETTERS --->
-                        <table cellpadding="5" cellspacing="5" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
-                            <tr>
-                                <td bordercolor="##FFFFFF">
-                                    <table width="100%" cellpadding="5" cellspacing="0" border="0">
-                                        <tr bgcolor="##C2D1EF">
-                                            <td colspan="2" class="style2" bgcolor="8FB6C9">&nbsp;:: Letters</td>
-                                        </tr>
-                                        <tr><td width="15%" class="style4" colspan="2" align="center"><a href='reports/enrollment_confirmation.cfm?uniqueID=#qGetCandidate.uniqueID#' class="style4Big", target="_blank"><b>Enrollment Confirmation</b></a></td></tr>
-                                        <tr><td width="15%" class="style4" colspan="2" align="center"><a href='reports/SevisFeeLetter.cfm?uniqueID=#qGetCandidate.uniqueID#' class="style4Big", target="_blank"><b>Sevis Fee Instruction Letter</b></a></td></tr>
-                                        <tr><td width="15%" class="style4" colspan="2" align="center"><a href='reports/SponsorLetter.cfm?uniqueID=#qGetCandidate.uniqueID#' class="style4Big", target="_blank"><b>Sponsorship Letter</b></a></td></tr>
-                                        <tr><td width="15%" class="style4" colspan="2" align="center"><a href='reports/VisaAppInst.cfm?uniqueID=#qGetCandidate.uniqueID#' class="style4Big", target="_blank"><b>Visa Application Instructions</b></a></td></tr>
-                                    </table>	
-                                </td>
-                            </tr>
-                        </table>
-                        
-                        <br />
-
-                        <!--- EVALUATIONS --->
-                        <table cellpadding="5" cellspacing="5" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
-                            <tr>
-                                <td bordercolor="##FFFFFF">
-                                
-                                    <table width="100%" cellpadding="5" cellspacing="0" border="0">
-                                        <tr bgcolor="##C2D1EF">
-                                            <td colspan="4" class="style2" bgcolor="8FB6C9">&nbsp;:: Evaluations</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="style1" colspan="2">
-												<input type="checkbox" name="ckDoc_midterm_evaluation" id="ckDoc_midterm_evaluation" value="1" class="formField" onClick="checkInsertDate('ckDoc_midterm_evaluation','doc_midterm_evaluation');" disabled <cfif LEN(qGetCandidate.doc_midterm_evaluation)> checked </cfif> >												
-												<label for="ckDoc_midterm_evaluation">Midterm Evaluation</label>
-                                            </td>
-                                            <td class="style1" colspan="2">
-                                            	<span class="readOnly">#DateFormat(qGetCandidate.doc_midterm_evaluation, 'mm/dd/yyyy')#</span>
-                                                <input type="text" name="doc_midterm_evaluation" id="doc_midterm_evaluation" value="#DateFormat(qGetCandidate.doc_midterm_evaluation, 'mm/dd/yyyy')#" class="style1 editPage datePicker" size="12" maxlength="10">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="style1" colspan="2">
-												<input type="checkbox" name="ckDoc_summative_evaluation" id="ckDoc_summative_evaluation" value="1" class="formField" onClick="checkInsertDate('ckDoc_summative_evaluation','doc_summative_evaluation');" disabled <cfif LEN(qGetCandidate.doc_summative_evaluation)> checked </cfif> >												
-												<label for="ckDoc_summative_evaluation">Summative Evaluation</label>
-                                            </td>
-                                            <td class="style1" colspan="2">
-												<span class="readOnly">#DateFormat(qGetCandidate.doc_summative_evaluation, 'mm/dd/yyyy')#</span>
-                                                <input type="text" name="doc_summative_evaluation" id="doc_summative_evaluation" value="#DateFormat(qGetCandidate.doc_summative_evaluation, 'mm/dd/yyyy')#" class="style1 editPage datePicker" size="12" maxlength="10">
-                                            </td>
-                                        </tr>
-									</table>
-								</td>
-							</tr>                                                                    
-						</table>                            
-
-                        <br />
-                        
-                        <!--- Quarterly Questionnaires --->
-                        <table cellpadding="5" cellspacing="5" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
-                            <tr>
-                                <td bordercolor="##FFFFFF">
-                                
-                                    <table width="100%" cellpadding=3 cellspacing="0" border="0">
-                                        <tr bgcolor="##C2D1EF">
-                                            <td colspan="4" class="style2" bgcolor="8FB6C9">&nbsp;:: Quarterly Questionnaire</td>
-                                        </tr>
-                                        <tr>
-                                            <td width="30%" class="style1" align="right"><b>February:</b></td>
-                                            <td width="70%" class="style1">
-                                            	<cfif isDate(qGetFebQuarterlyEvaluation.dateApproved)>
-                                                	#dateformat(qGetFebQuarterlyEvaluation.dateApproved, 'mm/dd/yyyy')#
-                                                <cfelse>                                                
-                                                	n/a
-												</cfif>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="style1" align="right"><b>May:</b></td>
-                                            <td class="style1">
-                                            	<cfif isDate(qGetMayQuarterlyEvaluation.dateApproved)>
-                                                	#dateformat(qGetMayQuarterlyEvaluation.dateApproved, 'mm/dd/yyyy')#
-                                                <cfelse>                                                
-                                                	n/a
-												</cfif>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="style1" align="right"><b>August:</b></td>
-                                            <td class="style1">
-                                            	<cfif isDate(qGetAugQuarterlyEvaluation.dateApproved)>
-                                                	#dateformat(qGetAugQuarterlyEvaluation.dateApproved, 'mm/dd/yyyy')#
-                                                <cfelse>                                                
-                                                	n/a
-												</cfif>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="style1" align="right"><b>November:</b></td>
-                                            <td class="style1">
-                                            	<cfif isDate(qGetNovQuarterlyEvaluation.dateApproved)>
-                                                	#dateformat(qGetNovQuarterlyEvaluation.dateApproved, 'mm/dd/yyyy')#
-                                                <cfelse>                                                
-                                                	n/a
-												</cfif>
-                                            </td>
-                                        </tr>
-                                    </table>
-                                    
-                                </td>	
-                            </tr>
-                        </table>     
-
-                        <br />
-                                           
                         <!---DOCUMENTS CONTROL --->
                         <table cellpadding="5" cellspacing="5" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
                             <tr>
@@ -828,39 +736,63 @@
                                             <td colspan="4" class="style2" bgcolor="8FB6C9">&nbsp;:: Documents Control</td>
                                         </tr>
                                         <tr>
-                                            <td width="46%" class="style1" colspan="2">
+                                            <td width="48%" class="style1" colspan="2">
                                                 <input type="checkbox" name="doc_application" id="doc_application" value="1" class="formField" disabled <cfif VAL(qGetCandidate.doc_application)> checked </cfif> > 
                                                 <label for="doc_application">Application</label>
                                             </td>
-                                            <td width="54%" class="style1" colspan="2">
-												<input type="checkbox" name="doc_passportphoto" id="doc_passportphoto" value="1" class="formField" disabled <cfif VAL(qGetCandidate.doc_passportphoto)> checked </cfif> >
-												<label for="doc_passportphoto">Passport Photocopy</label>
+                                            <td width="52%" class="style1" colspan="2">
+												<input type="checkbox" name="doc_proficiency" id="doc_proficiency" value="1" class="formField" disabled <cfif VAL(qGetCandidate.doc_proficiency)> checked </cfif> >
+												<label for="doc_proficiency">Interview Report</label>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="style1" colspan="2">
-												<input type="checkbox" name="doc_resume" id="doc_resume" value="1" class="formField" disabled <cfif VAL(qGetCandidate.doc_resume)> checked </cfif> >												
-												<label for="doc_resume">Resume</label>
-                                            </td>
                                             <td class="style1" colspan="2">
 												<input type="checkbox" name="doc_insu" id="doc_insu" value="1" class="formField" disabled <cfif VAL(qGetCandidate.doc_insu)> checked </cfif> >
-												<label for="doc_insu">Medical Insurance Appl.</label>
+												<label for="doc_insu">Medical Insurance App.</label>
+                                            </td>
+                                            <td class="style1" colspan="2">
+												<input type="checkbox" name="doc_hostEmployerInformation" id="doc_hostEmployerInformation" value="1" class="formField" disabled <cfif VAL(qGetCandidate.doc_hostEmployerInformation)> checked </cfif> >												
+												<label for="doc_hostEmployerInformation">Host Employer Information</label>
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="style1" colspan="2">
-												<input type="checkbox" name="doc_proficiency" id="doc_proficiency" value="1" class="formField" disabled <cfif VAL(qGetCandidate.doc_proficiency)> checked </cfif> >												
-												<label for="doc_proficiency">Proficiency Verification</label>
-                                            </td>
                                             <td class="style1" colspan="2">
 												<input type="checkbox" name="doc_sponsor_letter" id="doc_sponsor_letter" value="1" class="formField" disabled <cfif VAL(qGetCandidate.doc_sponsor_letter)> checked </cfif> >
 												<label for="doc_sponsor_letter">Home Sponsor Letter</label>
                                             </td>
+                                            <td class="style1" colspan="2">
+												<input type="checkbox" name="doc_agreement" id="doc_agreement" value="1" class="formField" disabled <cfif VAL(qGetCandidate.doc_agreement)> checked </cfif> >
+												<label for="doc_agreement">Agreement</label>
+                                            </td>
                                         </tr>
                                         <tr>
-                                            <td class="style1" colspan="4">
+                                        	<td class="style1" colspan="2">
+												<input type="checkbox" name="doc_passportphoto" id="doc_passportphoto" value="1" class="formField" disabled <cfif VAL(qGetCandidate.doc_passportphoto)> checked </cfif> >
+												<label for="doc_passportphoto">Passport Copy</label>
+                                            </td>
+                                            <td class="style1" colspan="2">
+												<input type="checkbox" name="doc_resume" id="doc_resume" value="1" class="formField" disabled <cfif VAL(qGetCandidate.doc_resume)> checked </cfif> >												
+												<label for="doc_resume">Resume</label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                        	<td class="style1" colspan="2">
 												<input type="checkbox" name="doc_recom_letter" id="doc_recom_letter" value="1" class="formField" disabled <cfif VAL(qGetCandidate.doc_recom_letter)> checked </cfif> >
                                                 <label for="doc_recom_letter">Letters of Recommendation</label>
+                                            </td>
+                                            <td class="style1" colspan="2">
+												<input type="checkbox" name="doc_degreeCopy" id="doc_degreeCopy" value="1" class="formField" disabled <cfif VAL(qGetCandidate.doc_degreeCopy)> checked </cfif> >
+                                                <label for="doc_degreeCopy">Degree/Certificate Copy</label>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                        	<td class="style1" colspan="2">
+												<input type="checkbox" name="doc_DS7002_applicant" id="doc_DS7002_applicant" value="1" class="formField" disabled <cfif VAL(qGetCandidate.doc_DS7002_applicant)> checked </cfif> >												
+												<label for="doc_DS7002_applicant">FORM DS-7002 Applicant</label>
+                                            </td>
+                                            <td class="style1" colspan="2">
+												<input type="checkbox" name="doc_ISEInterviewReport" id="doc_ISEInterviewReport" value="1" class="formField" disabled <cfif VAL(qGetCandidate.doc_ISEInterviewReport)> checked </cfif> >												
+												<label for="doc_ISEInterviewReport">ISE Interview Report</label>
                                             </td>
                                         </tr>
                                         <tr>
@@ -878,115 +810,21 @@
                             </tr>
                         </table>
                         
-                    </td>
-                    
-                    <td width="2%" valign="top">&nbsp;</td>
-                    
-                    <td width="49%" valign="top">
-                    
-                    	<!--- CANCELATION --->
-                    	<div id="divCancelation" <cfif qGetCandidate.status NEQ 'canceled'> style="display:none;" </cfif> >
-                            <table cellpadding="5" cellspacing="5" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
-                                <tr>
-                                    <td bordercolor="##FFFFFF">
-                                    
-                                        <table width="100%" cellpadding="5" cellspacing="0" border="0">
-                                            <tr bgcolor="##C2D1EF">
-                                                <td colspan="2" class="style2" bgcolor="8FB6C9">&nbsp;:: Cancelation	</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="style1" bordercolor="##FFFFFF" align="right" valign="top"><b>Date:</b></td>
-                                                <td class="style1" width="85%">
-                                                	<span class="readOnly">
-                                                    	#DateFormat(qGetCandidate.cancel_date, 'mm/dd/yyyy')#
-                                                    </span>
-                                                    <input type="text" class="style1 datePicker" name="cancel_date" size=20 value="#DateFormat(qGetCandidate.cancel_date, 'mm/dd/yyyy')#" maxlength="10">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td class="style1" bordercolor="##FFFFFF" align="right" valign="top"><b>Reason:</b></td>
-                                                <td class="style1">
-                                                	<span class="readOnly">#qGetCandidate.cancel_reason#</span>
-                                                    <input type="text" class="style1 editPage" name="cancel_reason" size=40 value="#qGetCandidate.cancel_reason#">
-                                                </td>								
-                                            </tr>
-                                        </table>
-                                        
-                                    </td>
-                                </tr>
-                            </table>                        
-                            <br />
-                        </div>
+                        <br />
                         
-                        <!--- HOST COMPANY INFO --->
+                        <!--- LETTERS --->
                         <table cellpadding="5" cellspacing="5" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
                             <tr>
-                                <td bordercolor="##FFFFFF" valign="top">
-                                
+                                <td bordercolor="##FFFFFF">
                                     <table width="100%" cellpadding="5" cellspacing="0" border="0">
                                         <tr bgcolor="##C2D1EF">
-                                            <td colspan="2" class="style2" bgcolor="8FB6C9">&nbsp;:: Host Company Information [<a href="javascript:openWindow('candidate/candidate_host_history.cfm?unqid=#uniqueID#', 400, 750);"><font class="style3" color="FFFFFF"> History </font></a>]</span></td>
+                                            <td colspan="2" class="style2" bgcolor="8FB6C9">&nbsp;:: Letters</td>
                                         </tr>
-                                        <tr>
-                                            <td class="style1" align="right" width="100px"><b>Company Name:</b></td>
-                                            <td class="style1">
-                                                <span class="readOnly">#qGetHostCompanyInfo.name#</span>
-                                                <select name="hostCompanyID" id="hostCompanyID" class="style1 editPage" onChange="displayHostReason(#VAL(qCandidatePlacedCompany.hostCompanyID)#, this.value); loadOptionsHostPosition('jobID');">
-                                                    <cfloop query="qGetHostCompanyList">
-                                                        <option 
-                                                        	value="#hostCompanyID#" 
-															<cfif qGetHostCompanyList.hostCompanyID EQ qCandidatePlacedCompany.hostCompanyID> selected </cfif>
-                                                            <cfif LEN(TRIM(comments))>style="color:red"</cfif> >
-															<cfif len(name) gt 35>
-                                                                #Left(name, 32)#...
-                                                            <cfelse>
-                                                                #name#
-                                                            </cfif>
-                                                        </option>
-                                                    </cfloop>
-                                                </select>
-                                            </td>
-                                        </tr>
-                                        <tr id="host_history" bgcolor="FFBD9D" style="display:none;">
-                                            <td class="style1" align="right"><b>Reason:</b></td>
-                                            <td class="style1"><input name="reason_host" id="reason_host" type="text" class="style1" size="40"></td>
-                                        </tr>
-                                        <tr>
-                                            <td class="style1" align="right"><b>Position:</b> </td>
-                                            <td class="style1">
-                                                <span class="readOnly">
-                                                    #qGetExtraJobs.title# 
-                                                </span>
-                                                <select name="jobID" class="style1 editPage">
-                                                    <option> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </option>
-                                                    <option></option><option></option><option></option><option></option><option></option><option></option>
-                                                    <option></option><option></option><option></option><option></option><option></option><option></option>
-                                                    <option></option><option></option><option></option><option></option><option></option><option></option>
-                                                    <option></option><option></option><option></option><option></option><option></option><option></option>
-                                                 </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="style1" align="right"><b>Start Date:</b></td>
-                                            <td class="style1">
-                                            	<span class="readOnly">
-                                                	#dateformat(qCandidatePlacedCompany.startdate, 'mm/dd/yyyy')#
-                                                 </span>
-                                                 <input type="text" name="host_startdate" class="style1 editPage" size=30 value="#dateformat(qCandidatePlacedCompany.startdate, 'mm/dd/yyyy')#" maxlength="10">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="style1" align="right"><b>End Date:</b></td>
-                                            <td class="style1">
-                                            	<span class="readOnly">
-                                                	#dateformat(qCandidatePlacedCompany.enddate, 'mm/dd/yyyy')#
-                                                </span>    
-                                                <input type="text" name="host_enddate" class="style1 editPage" size=30 value="#dateformat(qCandidatePlacedCompany.enddate, 'mm/dd/yyyy')#" maxlength="10">
-                                            </td>
-                                        </tr>
-                                        
+                                        <tr><td width="15%" class="style4" colspan="2" align="center"><a href='reports/enrollment_confirmation.cfm?uniqueID=#qGetCandidate.uniqueID#' class="style4Big", target="_blank"><b>Enrollment Confirmation</b></a></td></tr>
+                                        <tr><td width="15%" class="style4" colspan="2" align="center"><a href='reports/SevisFeeLetter.cfm?uniqueID=#qGetCandidate.uniqueID#' class="style4Big", target="_blank"><b>Sevis Fee Instruction Letter</b></a></td></tr>
+                                        <tr><td width="15%" class="style4" colspan="2" align="center"><a href='reports/SponsorLetter.cfm?uniqueID=#qGetCandidate.uniqueID#' class="style4Big", target="_blank"><b>Sponsorship Letter</b></a></td></tr>
+                                        <tr><td width="15%" class="style4" colspan="2" align="center"><a href='reports/VisaAppInst.cfm?uniqueID=#qGetCandidate.uniqueID#' class="style4Big", target="_blank"><b>Visa Application Instructions</b></a></td></tr>
                                     </table>	
-                                    
                                 </td>
                             </tr>
                         </table>
@@ -1043,7 +881,178 @@
                         </table>
                         
                         <br />
+                        
+                        <!--- INSURANCE INFO --->
+                        <table cellpadding="5" cellspacing="5" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
+                            <tr>
+                                <td bordercolor="##FFFFFF">		
+                                    
+                                    <table width="100%" cellpadding="5" cellspacing="0" border="0">
+                                        <tr bgcolor="##C2D1EF">
+                                            <td colspan="3" class="style2" bgcolor="8FB6C9">&nbsp;:: Insurance &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [<a href="javascript:openWindow('insurance/insurance_mgmt.cfm?uniqueID=#uniqueID#', 500, 800);"><font class="style2" color="FFFFFF">Insurance Management</font></a>]</td>
+                                        </tr>
+                                        <tr>
+                                          	<td width="2%">
+                                                <input type="checkbox" name="insurance_check" disabled <cfif qGetIntlRepInfo.extra_insurance_typeid GT 1> checked </cfif> >
+                                          	</td>
+                                            <td width="30%" class="style1" align="right"><b>Policy Type:</b></td>
+                                            <td width="68%" class="style1">
+												<cfif qGetIntlRepInfo.extra_insurance_typeid EQ 0>
+                                                	<font color="FF0000">Missing Policy Type</font>
+                                                <cfelse>
+                                                	#qGetIntlRepInfo.type#
+                                             	</cfif>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="checkbox" name="insurance_date" disabled <cfif LEN(qGetCandidate.insurance_date)> checked </cfif>>
+                                            </td>
+                                            <td class="style1" align="right"><b>Filed Date:</b></td>
+                                            <td class="style1">
+                                                <cfif qGetIntlRepInfo.extra_insurance_typeid GT '1' AND qGetCandidate.insurance_date EQ ''>
+                                                    not insured yet
+                                                <cfelseif qGetCandidate.insurance_date NEQ ''>
+                                                    #DateFormat(qGetCandidate.insurance_date, 'mm/dd/yyyy')#
+                                                <cfelse>
+                                                    n/a
+                                                </cfif>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <input type="checkbox" name="insurance_Cancel" disabled="disabled" <cfif LEN(qGetCandidate.insurance_cancel_date)> checked </cfif> >
+                                            </td>
+                                            <td class="style1" align="right"><b>Cancel Date:</b></td>
+                                            <td class="style1">#DateFormat(qGetCandidate.insurance_cancel_date, 'mm/dd/yyyy')#</td>
+                                        </tr>
+                                    </table>
+                                    
+                                </td>	
+                            </tr>
+                        </table>
+
+                    </td>
+                    
+                    <td width="2%" valign="top">&nbsp;</td>
+                    
+                    <td width="49%" valign="top">
+                    
+                    	<!--- HOST COMPANY INFO --->
+                        <table cellpadding="5" cellspacing="5" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
+                            <tr>
+                                <td bordercolor="##FFFFFF" valign="top">
+                                
+                                    <table width="100%" cellpadding="5" cellspacing="0" border="0">
+                                        <tr bgcolor="##C2D1EF">
+                                            <td colspan="2" class="style2" bgcolor="8FB6C9">&nbsp;:: Host Company Information [<a href="javascript:openWindow('candidate/candidate_host_history.cfm?unqid=#uniqueID#', 400, 750);"><font class="style3" color="FFFFFF"> History </font></a>]</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="style1" align="right" width="100px"><b>Company Name:</b></td>
+                                            <td class="style1">
+                                                <span class="readOnly">#qGetHostCompanyInfo.name#</span>
+                                                <select name="hostCompanyID" id="hostCompanyID" class="style1 editPage" onChange="displayHostReason(#VAL(qCandidatePlacedCompany.hostCompanyID)#, this.value); loadOptionsHostPosition('jobID');">
+                                                    <cfloop query="qGetHostCompanyList">
+                                                        <option 
+                                                        	value="#hostCompanyID#" 
+															<cfif qGetHostCompanyList.hostCompanyID EQ qCandidatePlacedCompany.hostCompanyID> selected </cfif>
+                                                            <cfif LEN(TRIM(comments))>style="color:red"</cfif> >
+															<cfif len(name) gt 35>
+                                                                #Left(name, 32)#...
+                                                            <cfelse>
+                                                                #name#
+                                                            </cfif>
+                                                        </option>
+                                                    </cfloop>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr id="host_history" bgcolor="FFBD9D" style="display:none;">
+                                            <td class="style1" align="right"><b>Reason:</b></td>
+                                            <td class="style1"><input name="reason_host" id="reason_host" type="text" class="style1" size="40"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="style1" align="right"><b>Position:</b> </td>
+                                            <td class="style1">
+                                                <span class="readOnly">
+                                                    #qGetExtraJobs.title# 
+                                                </span>
+                                                <select name="jobID" class="style1 editPage">
+                                                    <option> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; </option>
+                                                    <option></option><option></option><option></option><option></option><option></option><option></option>
+                                                    <option></option><option></option><option></option><option></option><option></option><option></option>
+                                                    <option></option><option></option><option></option><option></option><option></option><option></option>
+                                                    <option></option><option></option><option></option><option></option><option></option><option></option>
+                                                 </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                        	<td class="style1" align="right" width="100px"><b>Form DS-7002 Host Company:</b> </td>
+                                        	<td class="style1">
+												<input type="checkbox" name="doc_ds7002_hostCompany" id="doc_ds7002_hostCompany" value="1" class="formField" disabled <cfif VAL(qGetCandidate.doc_ds7002_hostCompany)> checked </cfif> >												
+                                            </td>
+                                      	</tr>
+                                        <tr>
+                                            <td class="style1" align="right"><b>Start Date:</b></td>
+                                            <td class="style1">
+                                            	<span class="readOnly">
+                                                	#dateformat(qCandidatePlacedCompany.startdate, 'mm/dd/yyyy')#
+                                                 </span>
+                                                 <input type="text" name="host_startdate" class="style1 editPage" size=30 value="#dateformat(qCandidatePlacedCompany.startdate, 'mm/dd/yyyy')#" maxlength="10">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="style1" align="right"><b>End Date:</b></td>
+                                            <td class="style1">
+                                            	<span class="readOnly">
+                                                	#dateformat(qCandidatePlacedCompany.enddate, 'mm/dd/yyyy')#
+                                                </span>    
+                                                <input type="text" name="host_enddate" class="style1 editPage" size=30 value="#dateformat(qCandidatePlacedCompany.enddate, 'mm/dd/yyyy')#" maxlength="10">
+                                            </td>
+                                        </tr>
                                         
+                                    </table>	
+                                    
+                                </td>
+                            </tr>
+                        </table>
+                        
+                        <br />
+                        
+                        <!--- CANCELATION --->
+                    	<div id="divCancelation" <cfif qGetCandidate.status NEQ 'canceled'> style="display:none;" </cfif> >
+                            <table cellpadding="5" cellspacing="5" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
+                                <tr>
+                                    <td bordercolor="##FFFFFF">
+                                    
+                                        <table width="100%" cellpadding="5" cellspacing="0" border="0">
+                                            <tr bgcolor="##C2D1EF">
+                                                <td colspan="2" class="style2" bgcolor="8FB6C9">&nbsp;:: Cancelation	</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="style1" bordercolor="##FFFFFF" align="right" valign="top"><b>Date:</b></td>
+                                                <td class="style1" width="85%">
+                                                	<span class="readOnly">
+                                                    	#DateFormat(qGetCandidate.cancel_date, 'mm/dd/yyyy')#
+                                                    </span>
+                                                    <input type="text" class="style1 datePicker" name="cancel_date" size=20 value="#DateFormat(qGetCandidate.cancel_date, 'mm/dd/yyyy')#" maxlength="10">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="style1" bordercolor="##FFFFFF" align="right" valign="top"><b>Reason:</b></td>
+                                                <td class="style1">
+                                                	<span class="readOnly">#qGetCandidate.cancel_reason#</span>
+                                                    <input type="text" class="style1 editPage" name="cancel_reason" size=40 value="#qGetCandidate.cancel_reason#">
+                                                </td>								
+                                            </tr>
+                                        </table>
+                                        
+                                    </td>
+                                </tr>
+                            </table>                        
+                            <br />
+                        </div>
+                        
                         <!----DS2019 Form---->
                         <table cellpadding="5" cellspacing="5" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
                             <tr>
@@ -1138,39 +1147,6 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td class="style1" align="right"><b>Street:</b></td>
-                                            <td colspan="3" class="style1">
-                                            	<span class="readOnly">#qGetCandidate.ds2019_street#</span>
-                                                <input type="text" class="style1 editPage" type="text" name="ds2019_street" size=50 value="#qGetCandidate.ds2019_street#" maxlength="150">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                          	<td class="style1" align="right"><b>City:</b></td>
-                                          	<td class="style1">
-										  		<span class="readOnly">#qGetCandidate.ds2019_city#</span>
-                                          		<input class="style1 editPage" type="text" name="ds2019_city" size=20 value="#qGetCandidate.ds2019_city#" maxlength="100">
-                                        	</td>
-                                            <td align="right" class="style1"><b>Zip:</b></td>
-                                            <td class="style1">
-                                            	<span class="readOnly">#qGetCandidate.ds2019_zip#</span>
-                                                <input type="text" class="style1 editPage" name="ds2019_zip" size=12 value="#qGetCandidate.ds2019_zip#" maxlength="10">
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td align="right" class="style1"><b>State:</b></td>
-                                            <td class="style1">
-                                              <span class="readOnly">#qGetCandidate.ds2019_state#</span>                                            
-                                              <input type="text" class="style1 editPage" name="ds2019_state" size=12 value="#qGetCandidate.ds2019_state#" maxlength="12">
-                                            </td>
-                                            <td align="right" class="style1">&nbsp;</td>
-                                            <td class="style1">&nbsp;</td>
-                                        </tr>
-                                        <tr>
-                                            <td align="right" class="style1"><b>Home Phone:</b></td>
-                                            <td class="style1">
-                                              <span class="readOnly">#qGetCandidate.ds2019_phone#</span>
-                                              <input type="text" class="style1 editPage" name="ds2019_phone" size=20 value="#qGetCandidate.ds2019_phone#" maxlength="12">
-                                            </td>
                                             <td align="right" class="style1"><b>Cell.:</b></td>
                                             <td class="style1">
                                               <span class="readOnly">#qGetCandidate.ds2019_cell#</span>
@@ -1195,58 +1171,6 @@
                             </tr>
                         </table>
                         
-                        <br /> 
-                       
-                        <!--- INSURANCE INFO --->
-                        <table cellpadding="5" cellspacing="5" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
-                            <tr>
-                                <td bordercolor="##FFFFFF">		
-                                    
-                                    <table width="100%" cellpadding="5" cellspacing="0" border="0">
-                                        <tr bgcolor="##C2D1EF">
-                                            <td colspan="3" class="style2" bgcolor="8FB6C9">&nbsp;:: Insurance &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; [<a href="javascript:openWindow('insurance/insurance_mgmt.cfm?uniqueID=#uniqueID#', 500, 800);"><font class="style2" color="FFFFFF">Insurance Management</font></a>]</td>
-                                        </tr>
-                                        <tr>
-                                          	<td width="2%">
-                                                <input type="checkbox" name="insurance_check" disabled <cfif qGetIntlRepInfo.extra_insurance_typeid GT 1> checked </cfif> >
-                                          	</td>
-                                            <td width="30%" class="style1" align="right"><b>Policy Type:</b></td>
-                                            <td width="68%" class="style1">
-												<cfif qGetIntlRepInfo.extra_insurance_typeid EQ 0>
-                                                	<font color="FF0000">Missing Policy Type</font>
-                                                <cfelse>
-                                                	#qGetIntlRepInfo.type#
-                                             	</cfif>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="checkbox" name="insurance_date" disabled <cfif LEN(qGetCandidate.insurance_date)> checked </cfif>>
-                                            </td>
-                                            <td class="style1" align="right"><b>Filed Date:</b></td>
-                                            <td class="style1">
-                                                <cfif qGetIntlRepInfo.extra_insurance_typeid GT '1' AND qGetCandidate.insurance_date EQ ''>
-                                                    not insured yet
-                                                <cfelseif qGetCandidate.insurance_date NEQ ''>
-                                                    #DateFormat(qGetCandidate.insurance_date, 'mm/dd/yyyy')#
-                                                <cfelse>
-                                                    n/a
-                                                </cfif>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                <input type="checkbox" name="insurance_Cancel" disabled="disabled" <cfif LEN(qGetCandidate.insurance_cancel_date)> checked </cfif> >
-                                            </td>
-                                            <td class="style1" align="right"><b>Cancel Date:</b></td>
-                                            <td class="style1">#DateFormat(qGetCandidate.insurance_cancel_date, 'mm/dd/yyyy')#</td>
-                                        </tr>
-                                    </table>
-                                    
-                                </td>	
-                            </tr>
-                        </table>
-                        
                         <br />
                         
                         <!--- FLIGHT INFO --->
@@ -1256,7 +1180,7 @@
                                 
                                     <table width="100%" cellpadding=3 cellspacing="0" border="0">
                                         <tr bgcolor="##C2D1EF">
-                                            <td colspan="4" class="style2" bgcolor="8FB6C9">&nbsp;:: Flight Info</td>
+                                            <td colspan="4" class="style2" bgcolor="8FB6C9">&nbsp;:: Flight Information</td>
                                         </tr>	
                                         <tr>
                                             <td class="style1">Depart Home</td><td class="style1"><cfif LEN(qDepartureInfo.departDate)>#DateFormat(qDepartureInfo.departDate, 'mm/dd/yyyy')#<cfelse>No Flights on Record</cfif> </td>
@@ -1269,6 +1193,230 @@
                                         </tr>
                                     </table>
                                 </td>	
+                            </tr>
+                        </table>
+                        
+                        <br />
+                        
+                        <!---- Arrival Verification --->
+                        <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
+                            <tr>
+                                <td bordercolor="##FFFFFF">
+                        
+                                    <table width="100%" cellpadding=3 cellspacing="0" border="0">
+                                        <tr bgcolor="##C2D1EF">
+                                        	<td colspan="4" class="style2" bgcolor="##8FB6C9">
+                                            	&nbsp;:: Arrival Verification
+                                            	<!--- Office View Only --->  
+                                            	<cfif ListFind("1,2,3,4", CLIENT.userType)>    
+                                                	<span style="float:right; padding-right:20px;">
+                                                    	<a href="javascript:openWindow('candidate/arrival_history.cfm?uniqueID=#URL.uniqueid#', 400, 600);" class="style2">[ History ]</a>
+                                                    </span>
+                                            	</cfif>
+                                         	</td>
+                                        </tr>
+                                        <tr>
+                                        	<td class="style1" width="30%" align="right"><label for="watDateCheckedIn"><strong>Check-in/Validation Date:</strong></label></td>
+                                        	<td class="style1" width="70%">
+                                                <span class="readOnly">#dateFormat(qGetCandidate.watDateCheckedIn, 'mm/dd/yyyy')#</span>
+                                                <input type="text" name="watDateCheckedIn" id="watDateCheckedIn" class="datePicker style1 editPage" value="#dateFormat(qGetCandidate.watDateCheckedIn, 'mm/dd/yyyy')#" maxlength="10">
+                                        		<cfif NOT LEN(qGetCandidate.watDateCheckedIn)><font size="1">(mm/dd/yyyy)</font></cfif>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                        	<td class="style1" width="30%" align="right"><label for="usPhone"><strong>U.S. Phone:</strong></label></td>
+                                        	<td class="style1" width="70%">
+                                            	<span class="readOnly">#qGetCandidate.us_phone#</span>
+                                                <input type="text" name="usPhone" id="usPhone" class="style1 editPage" value="#qGetCandidate.us_phone#" maxlength="10">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                        	<td class="style1" width="30%" align="right"><label for="usPhone"><strong>Address:</strong></label></td>
+                                        	<td class="style1" width="70%">
+                                            	<span class="readOnly">#qGetCandidate.arrival_address#</span>
+                                                <input type="text" name="arrival_address" id="arrival_address" class="style1 editPage" value="#qGetCandidate.arrival_address#">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                        	<td class="style1" width="30%" align="right"><label for="usPhone"><strong>City:</strong></label></td>
+                                        	<td class="style1" width="70%">
+                                            	<span class="readOnly">#qGetCandidate.arrival_city#</span>
+                                                <input type="text" name="arrival_city" id="arrival_city" class="style1 editPage" value="#qGetCandidate.arrival_city#">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                        	<td class="style1" width="30%" align="right"><label for="usPhone"><strong>State:</strong></label></td>
+                                        	<td class="style1" width="70%">
+                                            	<span class="readOnly">
+                                                	<cfloop query="qGetStateList">
+                                                    	<cfif id EQ qGetCandidate.arrival_state>
+                                                        	#state#
+                                                        </cfif>
+                                                   	</cfloop>
+                                             	</span>
+                                                <select name="arrival_state" id="arrival_state" class="style1 editPage">
+                                                	<option value="0"></option>
+                                                	<cfloop query="qGetStateList">
+                                                    	<option value="#id#" <cfif id EQ qGetCandidate.arrival_state>selected="selected"</cfif>>#state#</option>
+                                                    </cfloop>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                        	<td class="style1" width="30%" align="right"><label for="arrival_zip"><strong>Zip:</strong></label></td>
+                                        	<td class="style1" width="70%">
+                                            	<span class="readOnly">#qGetCandidate.arrival_zip#</span>
+                                                <input type="text" name="arrival_zip" id="arrival_zip" class="style1 editPage" value="#qGetCandidate.arrival_zip#" size="5" maxlength="5">
+                                            </td>
+                                        </tr>
+                        			</table>
+                                    
+                                </td>
+                            </tr>
+                        </table>
+                        
+                        <br />
+                        
+                    	<!--- EVALUATIONS --->
+                        <table cellpadding="5" cellspacing="5" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
+                            <tr>
+                                <td bordercolor="##FFFFFF">
+                                
+                                    <table width="100%" cellpadding="5" cellspacing="0" border="0">
+                                        <tr bgcolor="##C2D1EF">
+                                            <td colspan="4" class="style2" bgcolor="8FB6C9">&nbsp;:: Evaluations</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="style1" colspan="2">
+												<input type="checkbox" name="ckDoc_midterm_evaluation" id="ckDoc_midterm_evaluation" value="1" class="formField" onClick="checkInsertDate('ckDoc_midterm_evaluation','doc_midterm_evaluation');" disabled <cfif LEN(qGetCandidate.doc_midterm_evaluation)> checked </cfif> >												
+												<label for="ckDoc_midterm_evaluation">Midterm Evaluation</label>
+                                            </td>
+                                            <td class="style1" colspan="2">
+                                            	<span class="readOnly">#DateFormat(qGetCandidate.doc_midterm_evaluation, 'mm/dd/yyyy')#</span>
+                                                <input type="text" name="doc_midterm_evaluation" id="doc_midterm_evaluation" value="#DateFormat(qGetCandidate.doc_midterm_evaluation, 'mm/dd/yyyy')#" class="style1 editPage datePicker" size="12" maxlength="10">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="style1" colspan="2">
+												<input type="checkbox" name="ckDoc_summative_evaluation" id="ckDoc_summative_evaluation" value="1" class="formField" onClick="checkInsertDate('ckDoc_summative_evaluation','doc_summative_evaluation');" disabled <cfif LEN(qGetCandidate.doc_summative_evaluation)> checked </cfif> >												
+												<label for="ckDoc_summative_evaluation">Summative Evaluation</label>
+                                            </td>
+                                            <td class="style1" colspan="2">
+												<span class="readOnly">#DateFormat(qGetCandidate.doc_summative_evaluation, 'mm/dd/yyyy')#</span>
+                                                <input type="text" name="doc_summative_evaluation" id="doc_summative_evaluation" value="#DateFormat(qGetCandidate.doc_summative_evaluation, 'mm/dd/yyyy')#" class="style1 editPage datePicker" size="12" maxlength="10">
+                                            </td>
+                                        </tr>
+									</table>
+								</td>
+							</tr>                                                                    
+						</table>                            
+
+                        <br />
+                        
+                        <!--- Quarterly Questionnaires --->
+                        <table cellpadding="5" cellspacing="5" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
+                            <tr>
+                                <td bordercolor="##FFFFFF">
+                                
+                                    <table width="100%" cellpadding=3 cellspacing="0" border="0">
+                                        <tr bgcolor="##C2D1EF">
+                                            <td colspan="4" class="style2" bgcolor="8FB6C9">&nbsp;:: Quarterly Questionnaire</td>
+                                        </tr>
+                                        <tr>
+                                            <td width="30%" class="style1" align="right"><b>February:</b></td>
+                                            <td width="70%" class="style1">
+                                            	<cfif isDate(qGetFebQuarterlyEvaluation.dateApproved)>
+                                                	#dateformat(qGetFebQuarterlyEvaluation.dateApproved, 'mm/dd/yyyy')#
+                                                <cfelse>                                                
+                                                	n/a
+												</cfif>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="style1" align="right"><b>May:</b></td>
+                                            <td class="style1">
+                                            	<cfif isDate(qGetMayQuarterlyEvaluation.dateApproved)>
+                                                	#dateformat(qGetMayQuarterlyEvaluation.dateApproved, 'mm/dd/yyyy')#
+                                                <cfelse>                                                
+                                                	n/a
+												</cfif>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="style1" align="right"><b>August:</b></td>
+                                            <td class="style1">
+                                            	<cfif isDate(qGetAugQuarterlyEvaluation.dateApproved)>
+                                                	#dateformat(qGetAugQuarterlyEvaluation.dateApproved, 'mm/dd/yyyy')#
+                                                <cfelse>                                                
+                                                	n/a
+												</cfif>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="style1" align="right"><b>November:</b></td>
+                                            <td class="style1">
+                                            	<cfif isDate(qGetNovQuarterlyEvaluation.dateApproved)>
+                                                	#dateformat(qGetNovQuarterlyEvaluation.dateApproved, 'mm/dd/yyyy')#
+                                                <cfelse>                                                
+                                                	n/a
+												</cfif>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                    
+                                </td>	
+                            </tr>
+                        </table>     
+
+                        <br />
+                        
+                        <!---- Incident Report --->
+                        <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
+                            <tr>
+                                <td bordercolor="##FFFFFF">
+                        
+                                    <table width="100%" cellpadding=3 cellspacing="0" border="0">
+                                        <tr bgcolor="##C2D1EF">
+                                            <td colspan="4" class="style2" bgcolor="##8FB6C9">
+                                                &nbsp;:: Incident Report
+                                                <span style="float:right; padding-right:20px;">
+                                                    <a href="candidate/incidentReport.cfm?uniqueID=#qGetCandidate.uniqueID#" class="style2 jQueryModal">[ New Incident ]</a>
+                                                </span>
+                                            </td>
+                                        </tr>	
+                                        <tr>
+                                            <td class="style1"><strong>Date</strong></td>
+                                            <td class="style1"><strong>Nature of Complaint</strong></td>
+                                            <td class="style1"><strong>Host Company</strong></td>
+                                            <td class="style1"><strong>Solved</strong></td>
+                                        </tr>
+                                        
+                                        <cfloop query="qGetIncidentReport">
+                                            <tr <cfif qGetIncidentReport.currentRow mod 2>bgcolor="##E4E4E4"</cfif>>     
+                                                <td class="style1">
+                                                    <a href="candidate/incidentReport.cfm?uniqueID=#qGetCandidate.uniqueID#&incidentID=#qGetIncidentReport.ID#" class="style4 jQueryModal">
+                                                        #DateFormat(qGetIncidentReport.dateIncident, 'mm/dd/yy')#
+                                                    </a>
+                                                </td>
+                                                <td class="style1">
+                                                    <a href="candidate/incidentReport.cfm?uniqueID=#qGetCandidate.uniqueID#&incidentID=#qGetIncidentReport.ID#" class="style4 jQueryModal">
+                                                        #qGetIncidentReport.subject#
+                                                    </a>
+                                                </td>
+                                                <td class="style1">#qGetIncidentReport.hostCompanyName#</td>
+                                                <td class="style1">#YesNoFormat(VAL(qGetIncidentReport.isSolved))#</td>
+                                            </tr>
+                                        </cfloop>
+                                        
+                                        <cfif NOT VAL(qGetIncidentReport.recordCount)>
+                                            <tr bgcolor="##E4E4E4">
+                                                <td colspan="4" class="style1" align="center">There are no incidents recorded</td>                                                
+                                            </tr>
+                                        </cfif> 
+                                                                                       
+                                    </table>
+                                    
+                                </td>
                             </tr>
                         </table>
                         

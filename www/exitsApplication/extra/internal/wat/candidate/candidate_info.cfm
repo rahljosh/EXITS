@@ -1204,6 +1204,10 @@
                                                     disabled 
 													<cfif VAL(qGetCandidate.wat_doc_job_offer_applicant)> checked </cfif> >
                                                 <label for="wat_doc_job_offer_applicant">Job Offer Agreement Applicant</label>
+                                                <br />
+                                                <div style="font-size:9px; color:##070719;">
+                                                	Attention: Upon reviewing the job offer agreement, additional documents may be applicable.  If housing is not provided on premises, a No Housing Form and Housing Arrangements Form must be submitted. If housing and/or pick-up is/are provided by a third party, a Third Party Form (Housing and/or Pick-up)  must be submitted.
+                                                </div>
                                             </td>
                                         </tr>
                                         <tr>

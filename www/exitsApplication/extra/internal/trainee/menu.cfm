@@ -47,6 +47,7 @@
 		<td bgcolor="##8FB6C9">
             <a class="item1" href="">Tools</a>
             <div class="section">
+            	<a class="item2" href="?curdoc=tools/checkInList">Check-In List</a>
 				<a class="item2" href="?curdoc=tools/idcards_select">ID Cards</a>
                 <a class="item2" href="?curdoc=insurance/insurance_menu">Insurance</a>
 					<div class="section">
