@@ -210,7 +210,6 @@
         ds2019_enddate = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.ds2019_enddate#" null="#NOT IsDate(FORM.ds2019_enddate)#">,
         <!--- Use Sub Category --->
         ds2019_subject = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.listsubcat#">,
-        ds2019_cell = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.ds2019_cell#">,
         <!--- Arrival Verification --->
         watDateCheckedIn = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDateCheckedIn#" null="#NOT IsDate(FORM.watDateCheckedIn)#">,
         us_phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.usPhone#">,
@@ -285,7 +284,6 @@
         ds2019_enddate,
         <!--- Use Sub Category --->
         ds2019_subject,
-        ds2019_cell,
         <!--- Arrival Verification --->
         watDateCheckedIn,
         us_phone,
@@ -354,7 +352,6 @@
         <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.ds2019_enddate#" null="#NOT IsDate(FORM.ds2019_enddate)#">,
         <!--- Use Sub Category --->
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.listsubcat#">,
-        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.ds2019_cell#">,
         <!--- Arrival Verification --->
         <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDateCheckedIn#" null="#NOT IsDate(FORM.watDateCheckedIn)#">,
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.usPhone#">,

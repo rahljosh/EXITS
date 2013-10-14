@@ -1089,25 +1089,7 @@
                                             	<span class="readOnly">#qGetCandidate.ds2019#</span>
                                                 <input type="text" class="style1 editPage" name="ds2019" size="15" value="#qGetCandidate.ds2019#" maxlength="100">
                                             </td>
-                                        </tr>
-                                        
-                                        <tr>
-                                            <td class="style1" align="right">
-                                            	<label for="ds2019_dateActivatedCheck"> <strong>SEVIS Activation:</strong> </label>
-                                            </td>
-                                            <td class="style1" colspan="3">
-												<input type="checkbox" name="ds2019_dateActivatedCheck" id="ds2019_dateActivatedCheck" value="1" class="formField" onClick="populateDate('#DateFormat(now(), 'mm/dd/yyyy')#', this.id, 'ds2019_dateActivated');" disabled <cfif isDate(qGetCandidate.ds2019_dateActivated)>checked="checked"</cfif> >                                                
-
-                                                &nbsp; 
-                                                
-                                                <label for="ds2019_dateActivated"> <strong> Date: </strong> </label>
-                                                
-                                                &nbsp; 
-                                                
-                                                <span class="readOnly">#dateFormat(qGetCandidate.ds2019_dateActivated, 'mm/dd/yyyy')#</span>
-                                                <input type="text" name="ds2019_dateActivated" id="ds2019_dateActivated" class="datePicker style1 editPage" value="#dateFormat(qGetCandidate.ds2019_dateActivated, 'mm/dd/yyyy')#" maxlength="10">
-                                            </td>
-                                        </tr>                                       
+                                        </tr>                                  
                                         
                                         <tr>
                                             <td class="style1" valign="top" align="right"><b>Category:</b></td>
@@ -1144,13 +1126,6 @@
                                                     <option></option><option></option><option></option><option></option><option></option><option></option>
                                                     <option></option><option></option><option></option><option></option><option></option><option></option>
                                                  </select>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td align="right" class="style1"><b>Cell.:</b></td>
-                                            <td class="style1">
-                                              <span class="readOnly">#qGetCandidate.ds2019_cell#</span>
-                                              <input type="text" class="style1 editPage" name="ds2019_cell" size=20 value="#qGetCandidate.ds2019_cell#" maxlength="12">
                                             </td>
                                         </tr>
                                         <tr>
@@ -1216,7 +1191,7 @@
                                          	</td>
                                         </tr>
                                         <tr>
-                                        	<td class="style1" width="30%" align="right"><label for="watDateCheckedIn"><strong>Check-in/Validation Date:</strong></label></td>
+                                        	<td class="style1" width="30%" align="right"><label for="watDateCheckedIn"><strong>Check-in Date:</strong></label></td>
                                         	<td class="style1" width="70%">
                                                 <span class="readOnly">#dateFormat(qGetCandidate.watDateCheckedIn, 'mm/dd/yyyy')#</span>
                                                 <input type="text" name="watDateCheckedIn" id="watDateCheckedIn" class="datePicker style1 editPage" value="#dateFormat(qGetCandidate.watDateCheckedIn, 'mm/dd/yyyy')#" maxlength="10">
@@ -1269,6 +1244,23 @@
                                                 <input type="text" name="arrival_zip" id="arrival_zip" class="style1 editPage" value="#qGetCandidate.arrival_zip#" size="5" maxlength="5">
                                             </td>
                                         </tr>
+                                        <tr>
+                                            <td class="style1" align="right">
+                                            	<label for="ds2019_dateActivatedCheck"> <strong>SEVIS Activation:</strong> </label>
+                                            </td>
+                                            <td class="style1" colspan="3">
+												<input type="checkbox" name="ds2019_dateActivatedCheck" id="ds2019_dateActivatedCheck" value="1" class="formField" onClick="populateDate('#DateFormat(now(), 'mm/dd/yyyy')#', this.id, 'ds2019_dateActivated');" disabled <cfif isDate(qGetCandidate.ds2019_dateActivated)>checked="checked"</cfif> >                                                
+
+                                                &nbsp; 
+                                                
+                                                <label for="ds2019_dateActivated"> <strong> Date: </strong> </label>
+                                                
+                                                &nbsp; 
+                                                
+                                                <span class="readOnly">#dateFormat(qGetCandidate.ds2019_dateActivated, 'mm/dd/yyyy')#</span>
+                                                <input type="text" name="ds2019_dateActivated" id="ds2019_dateActivated" class="datePicker style1 editPage" value="#dateFormat(qGetCandidate.ds2019_dateActivated, 'mm/dd/yyyy')#" maxlength="10">
+                                            </td>
+                                        </tr>  
                         			</table>
                                     
                                 </td>
