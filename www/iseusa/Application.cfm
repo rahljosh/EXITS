@@ -117,6 +117,7 @@
 			APPLICATION.tripsURL = 'http://trips.local/';
 		} else {
 			// Production
+			APPLICATION.PATH.PROMOTIONS = 'C:/websites/student-management/nsmg/uploadedfiles/promotions/';
 			APPLICATION.PATH.TEMP = 'C:/websites/student-management/nsmg/uploadedfiles/temp/';
 			APPLICATION.PATH.tour = 'C:/websites/student-management/nsmg/uploadedfiles/tours/';
 			APPLICATION.siteURL = 'http://' & CGI.HTTP_HOST & '/';
