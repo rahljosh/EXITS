@@ -182,7 +182,11 @@
             <span class="required">* Required fields</span>
             <table width="100%" cellspacing="0" cellpadding="4" class="border">
                 <tr bgcolor="##deeaf3">
-                    <th width="50%" colspan="2">Name <span class="required">*</span></th>
+                    <th width="50%" colspan="2">
+                    	Name <span class="required">*</span>
+                        <br/>
+                        <p style="color:red; font-size:10px; margin:0px; padding:0px;">**Please note that the individual chosen for this form will be the individual to whom the host family stipend checks are written.</font>
+                  	</th>
                     <th width="50%">Address</th>
                 </tr>
                 <tr>
