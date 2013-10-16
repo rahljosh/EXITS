@@ -523,7 +523,7 @@
     </cffunction>
     
 
-	<!--- Creaates CBC Authorization PDF Document --->
+	<!--- Creates CBC Authorization PDF Document --->
 	<cffunction name="generateCBCAuthorization" access="public" returntype="struct" output="no" hint="Creates PDF files and return status message">
 		<cfargument name="foreignTable" type="string" default="" />
 		<cfargument name="foreignID" type="numeric" required="no" default="" />
@@ -604,6 +604,142 @@
                         request from General Information Services, Inc. information about the nature and substance of all records on file about me
                         at the time of my request. This may include the type of information requested as well as those who requested reports from
                         General Information Services, Inc. within the two-year period preceding my request.  <br />
+                    </p>
+                    
+                    <table>
+                        <tr>
+                            <td><u>Current Address</u></td>
+                        </tr>
+                        <tr>    
+                            <td>
+                                <strong>
+                                    #ARGUMENTS.address#<br />
+                                    <cfif LEN(ARGUMENTS.address2)>#ARGUMENTS.address2#<br /></cfif>
+                                    #ARGUMENTS.city# #ARGUMENTS.state#, #ARGUMENTS.zip#
+                                </strong>
+                            </td>
+                        </tr>
+                    </table>   
+                
+                    <br /><br />
+
+                    <hr width="70%" align="center" />
+                    
+                    <br /><br />
+                
+                    <u>Electronically Signed</u><br />
+                    #ARGUMENTS.signature#<br />
+                    <em>This form has already been electronically signed and submitted.  This copy is for your records only.</em> <br />
+                    #DateFormat(now(), 'mmm d, yyyy')# at #TimeFormat(now(), 'h:mm:ss tt')#<br />
+                    IP: #CGI.REMOTE_ADDR# <br /><br />
+                </cfoutput>
+            </cfdocument>
+            
+            <cfscript>
+                // Get File Information
+                stGetFileInfo = GetFileInfo(APPLICATION.CFC.SESSION.getHostSession().PATH.DOCS & vNewFileName & "." & vFileExtension);
+            
+                // Insert Document Record
+                insertDocument(
+                    foreignTable = ARGUMENTS.foreignTable,	   
+                    foreignID = ARGUMENTS.foreignID,	   
+                    documentTypeID = ARGUMENTS.documentTypeID,	
+					seasonID = APPLICATION.CFC.SESSION.getHostSession().seasonID,
+                    serverExt = vFileExtension,
+                    serverName = vNewFileName,
+                    clientExt = vFileExtension,
+                    clientName = vNewFileName,
+                    fileSize = APPLICATION.CFC.UDF.displayFileSize(stGetFileInfo.size),
+                    fileLocation = APPLICATION.CFC.SESSION.getHostSession().PATH.DOCS
+                );
+            </cfscript>
+
+            <cfcatch type="any">
+            
+				<cfscript>
+                    // Error - Could not generate CBC
+                    stResult.isSuccess = false;
+                    stResult.message = "There was a problem generating the CBC authorization, please try again. If problem persists, please contact support.";
+                </cfscript>
+                            
+            </cfcatch>
+        
+        </cftry>
+        
+        <cfreturn stResult>        
+	</cffunction>
+    
+    
+    <!--- Creates W-9 Signature PDF Document --->
+	<cffunction name="generateW9Signature" access="public" returntype="struct" output="no" hint="Creates PDF files and return status message">
+		<cfargument name="foreignTable" type="string" default="" />
+		<cfargument name="foreignID" type="numeric" required="no" default="" />
+        <cfargument name="documentTypeID" type="numeric" required="yes" />
+        <cfargument name="signature" default="" hint="signature is not required" />
+		<cfargument name="address" default="" hint="Address is not required" />
+        <cfargument name="address2" default="" hint="address2 is not required" />
+        <cfargument name="city" default="" hint="city is not required" />
+        <cfargument name="state" default="" hint="state is not required" />
+        <cfargument name="zip" default="" hint="zip is not required" />
+		
+        <cfscript>
+			// Set Result Message
+			var stResult = StructNew();
+			stResult.isSuccess = true;
+			stResult.message = "";
+			
+			// Remove Blank Spaces From File Name
+			vFileName = ReplaceNoCase(ARGUMENTS.signature, " ", "-", "All") & "-season" & APPLICATION.CFC.SESSION.getHostSession().seasonID & "-w9Signature";
+			// File Extension
+			vFileExtension = "pdf";
+		</cfscript>
+        
+        <cftry>
+        
+			<cfscript>
+                // Set desired file name (keep extension consistent as jpg)
+                var vNewFileName = vFileName;
+                
+                // Used to try different file names kitchen.jpg / kitchen1.jpg etc.
+                var vFileCount = 0;
+    
+                // Check if default name is available
+                while ( fileExists(APPLICATION.CFC.SESSION.getHostSession().PATH.DOCS & vNewFileName & "." & vFileExtension) ) { 
+                    vFileCount ++;
+                    if ( VAL(vFileCount) ) {
+                        vNewFileName = vFileName & vFileCount;
+                    } else {
+                        vNewFileName = vFileName;
+                    }
+                }	
+                
+                // Complete File Name
+                vCompleteFileName = vNewFileName & "." & vFileExtension;
+            </cfscript>
+            
+            <!--- Create PDF --->
+            <cfdocument format="PDF" filename="#APPLICATION.CFC.SESSION.getHostSession().PATH.DOCS##vCompleteFileName#" overwrite="no">
+                <cfoutput>
+                    <img src="#APPLICATION.CFC.SESSION.getCompanySessionByKey(structKey='profileHeaderImage')#" border="0" />
+                    
+                    <p>
+                        Under penalties of perjury, I certify that:
+                        <br/>
+                        1. The number shown on this form is my correct taxpayer identification number (or I am waiting for a number to be issued to me), and
+                        <br/>
+                        2. I am not subject to backup withholding because: (a) I am exempt from backup withholding, or (b) I have not been notified by the Internal 
+                        Revenue Service (IRS) that I am subject to backup withholding as a result of a failure to report all interest or dividends, or (c) the 
+                        IRS has notified me that I am no longer subject to backup withholding, and
+                        <br/>
+                        3. I am a U.S. citizen or other U.S. person (defined below), and
+                        <br/>
+                        4. The FATCA code(s) entered on this form (if any) indicating that I am exempt from FATCA reporting is correct.
+                        <br/>
+                        <b>Certification instructions.</b> You must cross out item 2 above if you have been notified by the IRS that you are currently subject to backup 
+                        withholding because you have failed to report all interest and dividends on your tax return. For real estate transactions, item 2 does not apply. 
+                        For mortgage interest paid, acquisition or abandonment of secured property, cancellation of debt, contributions to an individual retirement arrangement 
+                        (IRA), and generally, payments other than interest and dividends, you are not required to sign the certification, but you must provide your correct TIN. 
+                        See the Instructions on page 3.
                     </p>
                     
                     <table>
