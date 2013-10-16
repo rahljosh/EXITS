@@ -1389,6 +1389,12 @@
                         h.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
                 WHERE
                 	1 = 1
+              
+              	<!--- W-9 is only used for ESI --->
+              	<cfif CLIENT.companyID NEQ 14>
+                	AND
+                    	ap.ID != 18
+                </cfif>
                       
                 <cfif LEN(ARGUMENTS.whoViews)>
                 	AND
