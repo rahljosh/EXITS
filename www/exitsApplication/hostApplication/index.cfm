@@ -87,7 +87,7 @@
 						<!--- Check to see which action we are taking. --->
                         <cfswitch expression="#URL.section#">
                         
-                            <cfcase value="login,overview,contactInfo,familyMembers,cbcAuthorization,personalDescription,hostingEnvironment,religiousPreference,familyRules,familyAlbum,schoolInfo,communityProfile,confidentialData,references,checkList,logout" delimiters=",">
+                            <cfcase value="login,overview,contactInfo,familyMembers,cbcAuthorization,w9,personalDescription,hostingEnvironment,religiousPreference,familyRules,familyAlbum,schoolInfo,communityProfile,confidentialData,references,checkList,logout" delimiters=",">
                         		
                                 <!--- Include template --->
                                 <cfinclude template="_#URL.section#.cfm" />

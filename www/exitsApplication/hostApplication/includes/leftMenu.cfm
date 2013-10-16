@@ -20,10 +20,16 @@
         
 				<!--- Loop Through Complete Menu --->
                 <cfloop from="1" to="#ArrayLen(SESSION.LEFTMENU.linkSection)#" index="x">
-                    
-                    <tr onMouseOver="this.style.background='#SESSION.LEFTMENU.colorSection[x]#'" onMouseOut="this.style.background=''" <cfif URL.section EQ SESSION.LEFTMENU.linkSection[x]>bgcolor="#SESSION.LEFTMENU.colorSection[x]#"</cfif> >
-                        <td>#SESSION.LEFTMENU.displaySection[x]#</td>
-                    </tr>	
+                	<!--- Do not display section 5 (W9) if this is not company 14 (ESI) --->
+                    <cfif qGetHostFamilyInfo.companyID NEQ 14 AND x NEQ 5>
+                        <tr onMouseOver="this.style.background='#SESSION.LEFTMENU.colorSection[x]#'" onMouseOut="this.style.background=''" <cfif URL.section EQ SESSION.LEFTMENU.linkSection[x]>bgcolor="#SESSION.LEFTMENU.colorSection[x]#"</cfif> >
+                            <td>#SESSION.LEFTMENU.displaySection[x]#</td>
+                        </tr>
+                  	<cfelseif qGetHostFamilyInfo.companyID EQ 14>
+                    	<tr onMouseOver="this.style.background='#SESSION.LEFTMENU.colorSection[x]#'" onMouseOut="this.style.background=''" <cfif URL.section EQ SESSION.LEFTMENU.linkSection[x]>bgcolor="#SESSION.LEFTMENU.colorSection[x]#"</cfif> >
+                            <td>#SESSION.LEFTMENU.displaySection[x]#</td>
+                        </tr>
+                  	</cfif>	
                                                    
                 </cfloop>
                 

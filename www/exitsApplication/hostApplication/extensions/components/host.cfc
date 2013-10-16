@@ -395,12 +395,12 @@
                         h.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(APPLICATION.CFC.SESSION.getHostSession().seasonID)#">
                 WHERE
                 	ap.appMenuColor != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
-                AND
-                	ap.ID 
-                    	BETWEEN 
-                        	<cfqueryparam cfsqltype="cf_sql_integer" value="2">
-                    	AND 
-                        	<cfqueryparam cfsqltype="cf_sql_integer" value="13">
+                AND (
+                	(ap.ID BETWEEN 2 AND 13)
+                    <cfif SESSION.COMPANY.ID EQ 14>
+                    	OR (ap.ID = 18)
+                  	</cfif>
+                    )
                 ORDER BY
                 	ap.listOrder
         </cfquery>
@@ -480,6 +480,7 @@
 			
 			}
 			
+			currentSection = 1;			
 
 			/********************************************
 				1 - Contact Info 
@@ -728,14 +729,15 @@
             // No Errors Found
             if ( NOT SESSION.formErrors.length() ) {
                 stResults.applicationProgress = stResults.applicationProgress + 25;
-				stResults.section[1].isComplete = true;
-				stResults.section[1].message = "";
+				stResults.section[currentSection].isComplete = true;
+				stResults.section[currentSection].message = "";
             // Errors Found - Erase queue for next section	
             } else {
-				stResults.section[1].isComplete = false;
-				stResults.section[1].message = SESSION.formErrors.GetCollection();
+				stResults.section[currentSection].isComplete = false;
+				stResults.section[currentSection].message = SESSION.formErrors.GetCollection();
 				SESSION.formErrors.clear();
             }
+			currentSection++;
 			
 
 			/********************************************
@@ -790,20 +792,21 @@
             // No Errors Found
             if ( NOT SESSION.formErrors.length() ) {
                 stResults.applicationProgress = stResults.applicationProgress + 25;
-				stResults.section[2].isComplete = true;
+				stResults.section[currentSection].isComplete = true;
 				
 				if ( NOT qGetFamilyMembers.recordCount ) {
-					stResults.section[2].message = "(assuming you have no other family members)";
+					stResults.section[currentSection].message = "(assuming you have no other family members)";
 				} else {
-					stResults.section[2].message = "";
+					stResults.section[currentSection].message = "";
 				}
 					
             // Errors Found - Erase queue for next section	
             } else {
-				stResults.section[2].isComplete = false;
-				stResults.section[2].message = SESSION.formErrors.GetCollection();
+				stResults.section[currentSection].isComplete = false;
+				stResults.section[currentSection].message = SESSION.formErrors.GetCollection();
 				SESSION.formErrors.clear();
             }
+			currentSection++;
 			
 			
 			/********************************************
@@ -865,15 +868,45 @@
             // No Errors Found
             if ( NOT SESSION.formErrors.length() ) {
                 stResults.applicationProgress = stResults.applicationProgress + 25;
-				stResults.section[3].isComplete = true;
-				stResults.section[3].message = "";
+				stResults.section[currentSection].isComplete = true;
+				stResults.section[currentSection].message = "";
             // Errors Found - Erase queue for next section	
             } else {
-				stResults.section[3].isComplete = false;
-				stResults.section[3].message = SESSION.formErrors.GetCollection();
+				stResults.section[currentSection].isComplete = false;
+				stResults.section[currentSection].message = SESSION.formErrors.GetCollection();
 				SESSION.formErrors.clear();
             }
+			currentSection++;
 			
+			
+			/********************************************
+				4 (ESI) - W-9
+			********************************************/
+			if (SESSION.COMPANY.ID EQ 14) {
+				qGetW9Signature = APPLICATION.CFC.DOCUMENT.getDocuments(
+					foreignTable="smg_hosts",																		   
+					foreignID=APPLICATION.CFC.SESSION.getHostSession().ID, 
+					documentTypeID=35, // W-9
+					seasonID=APPLICATION.CFC.SESSION.getHostSession().seasonID
+				);
+				
+				if ( NOT qGetW9Signature.recordcount ) {
+					SESSION.formErrors.Add("The W-9 signature is missing.");
+				}
+				
+				// No Errors Found
+				if ( NOT SESSION.formErrors.length() ) {
+					stResults.applicationProgress = stResults.applicationProgress + 25;
+					stResults.section[currentSection].isComplete = true;
+					stResults.section[currentSection].message = "";
+				// Errors Found - Erase queue for next section	
+				} else {
+					stResults.section[currentSection].isComplete = false;
+					stResults.section[currentSection].message = SESSION.formErrors.GetCollection();
+					SESSION.formErrors.clear();
+				}
+				currentSection++;
+			}
 			
 			/********************************************
 				4 - Personal Description
@@ -892,14 +925,15 @@
             // No Errors Found
             if ( NOT SESSION.formErrors.length() ) {
                 stResults.applicationProgress = stResults.applicationProgress + 25;
-				stResults.section[4].isComplete = true;
-				stResults.section[4].message = "";
+				stResults.section[currentSection].isComplete = true;
+				stResults.section[currentSection].message = "";
             // Errors Found - Erase queue for next section	
             } else {
-				stResults.section[4].isComplete = false;
-				stResults.section[4].message = SESSION.formErrors.GetCollection();
+				stResults.section[currentSection].isComplete = false;
+				stResults.section[currentSection].message = SESSION.formErrors.GetCollection();
 				SESSION.formErrors.clear();
             }
+			currentSection++;
 			
 			
 			/********************************************
@@ -956,14 +990,15 @@
             // No Errors Found
             if ( NOT SESSION.formErrors.length() ) {
                 stResults.applicationProgress = stResults.applicationProgress + 25;
-				stResults.section[5].isComplete = true;
-				stResults.section[5].message = "";
+				stResults.section[currentSection].isComplete = true;
+				stResults.section[currentSection].message = "";
             // Errors Found - Erase queue for next section	
             } else {
-				stResults.section[5].isComplete = false;
-				stResults.section[5].message = SESSION.formErrors.GetCollection();
+				stResults.section[currentSection].isComplete = false;
+				stResults.section[currentSection].message = SESSION.formErrors.GetCollection();
 				SESSION.formErrors.clear();
             }
+			currentSection++;
 
 			
 			/********************************************
@@ -1003,14 +1038,15 @@
             // No Errors Found
             if ( NOT SESSION.formErrors.length() ) {
                 stResults.applicationProgress = stResults.applicationProgress + 25;
-				stResults.section[6].isComplete = true;
-				stResults.section[6].message = "";
+				stResults.section[currentSection].isComplete = true;
+				stResults.section[currentSection].message = "";
             // Errors Found - Erase queue for next section	
             } else {
-				stResults.section[6].isComplete = false;
-				stResults.section[6].message = SESSION.formErrors.GetCollection();
+				stResults.section[currentSection].isComplete = false;
+				stResults.section[currentSection].message = SESSION.formErrors.GetCollection();
 				SESSION.formErrors.clear();
             }
+			currentSection++;
 
 
 			/********************************************
@@ -1045,14 +1081,15 @@
             // No Errors Found
             if ( NOT SESSION.formErrors.length() ) {
                 stResults.applicationProgress = stResults.applicationProgress + 25;
-				stResults.section[7].isComplete = true;
-				stResults.section[7].message = "";
+				stResults.section[currentSection].isComplete = true;
+				stResults.section[currentSection].message = "";
             // Errors Found - Erase queue for next section	
             } else {
-				stResults.section[7].isComplete = false;
-				stResults.section[7].message = SESSION.formErrors.GetCollection();
+				stResults.section[currentSection].isComplete = false;
+				stResults.section[currentSection].message = SESSION.formErrors.GetCollection();
 				SESSION.formErrors.clear();
             }
+			currentSection++;
 
 
 			/********************************************
@@ -1082,14 +1119,15 @@
             // No Errors Found
             if ( NOT SESSION.formErrors.length() ) {
                 stResults.applicationProgress = stResults.applicationProgress + 25;
-				stResults.section[8].isComplete = true;
-				stResults.section[8].message = "";
+				stResults.section[currentSection].isComplete = true;
+				stResults.section[currentSection].message = "";
             // Errors Found - Erase queue for next section	
             } else {
-				stResults.section[8].isComplete = false;
-				stResults.section[8].message = SESSION.formErrors.GetCollection();
+				stResults.section[currentSection].isComplete = false;
+				stResults.section[currentSection].message = SESSION.formErrors.GetCollection();
 				SESSION.formErrors.clear();
             }
+			currentSection++;
 
 
 			/********************************************
@@ -1144,14 +1182,15 @@
             // No Errors Found
             if ( NOT SESSION.formErrors.length() ) {
                 stResults.applicationProgress = stResults.applicationProgress + 25;
-				stResults.section[9].isComplete = true;
-				stResults.section[9].message = "";
+				stResults.section[currentSection].isComplete = true;
+				stResults.section[currentSection].message = "";
             // Errors Found - Erase queue for next section	
             } else {
-				stResults.section[9].isComplete = false;
-				stResults.section[9].message = SESSION.formErrors.GetCollection();
+				stResults.section[currentSection].isComplete = false;
+				stResults.section[currentSection].message = SESSION.formErrors.GetCollection();
 				SESSION.formErrors.clear();
             }
+			currentSection++;
 
 
 			/********************************************
@@ -1206,14 +1245,15 @@
             // No Errors Found
             if ( NOT SESSION.formErrors.length() ) {
                 stResults.applicationProgress = stResults.applicationProgress + 25;
-				stResults.section[10].isComplete = true;
-				stResults.section[10].message = "";
+				stResults.section[currentSection].isComplete = true;
+				stResults.section[currentSection].message = "";
             // Errors Found - Erase queue for next section	
             } else {
-				stResults.section[10].isComplete = false;
-				stResults.section[10].message = SESSION.formErrors.GetCollection();
+				stResults.section[currentSection].isComplete = false;
+				stResults.section[currentSection].message = SESSION.formErrors.GetCollection();
 				SESSION.formErrors.clear();
             }
+			currentSection++;
 
 			
 			/********************************************
@@ -1258,14 +1298,15 @@
             // No Errors Found
             if ( NOT SESSION.formErrors.length() ) {
                 stResults.applicationProgress = stResults.applicationProgress + 25;
-				stResults.section[11].isComplete = true;
-				stResults.section[11].message = "";
+				stResults.section[currentSection].isComplete = true;
+				stResults.section[currentSection].message = "";
             // Errors Found - Erase queue for next section	
             } else {
-				stResults.section[11].isComplete = false;
-				stResults.section[11].message = SESSION.formErrors.GetCollection();
+				stResults.section[currentSection].isComplete = false;
+				stResults.section[currentSection].message = SESSION.formErrors.GetCollection();
 				SESSION.formErrors.clear();
             }
+			currentSection++;
 
 
 			/********************************************
@@ -1289,14 +1330,15 @@
             // No Errors Found
             if ( NOT SESSION.formErrors.length() ) {
                 stResults.applicationProgress = stResults.applicationProgress + 25;
-				stResults.section[12].isComplete = true;
-				stResults.section[12].message = "";
+				stResults.section[currentSection].isComplete = true;
+				stResults.section[currentSection].message = "";
             // Errors Found - Erase queue for next section	
             } else {
-				stResults.section[12].isComplete = false;
-				stResults.section[12].message = SESSION.formErrors.GetCollection();
+				stResults.section[currentSection].isComplete = false;
+				stResults.section[currentSection].message = SESSION.formErrors.GetCollection();
 				SESSION.formErrors.clear();
             }
+			currentSection++;
 				
 			// Set Application Complete true/false
 			if ( stResults.applicationProgress EQ 300 ) {
