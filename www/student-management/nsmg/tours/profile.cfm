@@ -9,9 +9,9 @@
 	
 ----- ------------------------------------------------------------------------- --->
 
-<!--- Kill Extra Output --->
+<!--- Kill Extra Output
 <cfsilent>
-
+---->
 	<!--- Import CustomTag --->
     <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
 
@@ -100,6 +100,8 @@
             st.dateCanceled,
             st.refundAmount,
             st.refundNotes,
+            st.emergencyContactName,
+            st.emergencyContactPhone,
             td.tour_name,
             ap.ID AS applicationPaymentID,
             ap.amount,            
@@ -110,7 +112,7 @@
             s.dob,
             s.cell_phone,
             s.sex, 
-            h.local_air_code, 
+            h.local_air_code,
             h.major_air_code, 
             h.familylastname as hostLast,
             h.phone as hostPhone,
@@ -119,6 +121,7 @@
             h.state as hostState,
             h.address as hostAddress,
             h.zip as hostZip,
+            c.pm_email,
 			<!--- Get a sum of multiple payments (deposit + balance) --->
             ( 
                 SELECT 
@@ -146,6 +149,8 @@
         	smg_tours td on td.tour_id = st.tripID
         LEFT OUTER JOIN 
         	smg_hosts h on h.hostid = s.hostid
+      	LEFT OUTER JOIN
+        	smg_companies c ON c.companyID = s.companyID
         WHERE 
             st.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.studentID)#">
         AND	
@@ -305,7 +310,7 @@
                         <a href="http://trips.exitsapplication.com/frequently-asked-questions.cfm">http://trips.exitsapplication.com/frequently-asked-questions.cfm</a>
                     </p>
                     
-                    <p>If you have any questions that are not answerd please don't hesitate to contact us at info@mpdtoursamerica.com. </p>
+                    <p>If you have any questions that are not answered please don't hesitate to contact us at info@mpdtoursamerica.com. </p>
                     
                     <p>See you soon!</p>
                     
@@ -529,7 +534,7 @@
             
             <!--- // Check if there are no errors  --->
             <cfif NOT SESSION.formErrors.length()>
-            
+           
 				<cfscript>
 					// Try to process payment
 					try {
@@ -575,6 +580,8 @@
 						);															
 						
 						// Transaction Approved
+					
+						
 						if ( stProcessPayment.authIsSuccess ) {
 							// Successfull Message
 							SESSION.pageMessages.Add(stProcessPayment.resultMessage);
@@ -589,7 +596,9 @@
 						SESSION.formErrors.Add(excpt.Message);
 					}
             	</cfscript>
+            
 			
+
 				<!--- Get Total Paid --->
                 <cfquery name="qGetTotalPaid" datasource="#APPLICATION.DSN#">
                     SELECT
@@ -713,7 +722,7 @@
                         <a href="http://trips.exitsapplication.com/frequently-asked-questions.cfm">http://trips.exitsapplication.com/frequently-asked-questions.cfm</a>
                     </p>
                     
-                    <p>If you have any questions that are not answerd please don't hesitate to contact us at info@mpdtoursamerica.com </p>
+                    <p>If you have any questions that are not answered please don't hesitate to contact us at info@mpdtoursamerica.com </p>
                     
                     <p>See you soon!</p>
                     
@@ -794,7 +803,7 @@
                         
                         <p>You have been refunded #NumberFormat(FORM.refundAmount,"$999.99")#</p>
                         
-                        <p>If you have any questions that are not answerd please don't hesitate to contact us at info@mpdtoursamerica.com </p>
+                        <p>If you have any questions that are not answered please don't hesitate to contact us at info@mpdtoursamerica.com </p>
                         
                         <p>
                             MPD Tour America, Inc.<br />
@@ -809,7 +818,7 @@
                 <cfinvoke component="nsmg.cfc.email" method="send_mail">
                     <cfinvokeargument name="email_from" value="<info@mpdtoursamerica.com> (Trip Support)">
                     <cfinvokeargument name="email_to" value="#FORM.emailAddress#">
-                    <cfinvokeargument name="email_cc" value="info@mpdtoursamerica.com,tal@iseusa.com,john@iseusa.com,#qGetRegistrationInfo.hostEmail#">
+                    <cfinvokeargument name="email_cc" value="info@mpdtoursamerica.com,tom@iseusa.com,#qGetRegistrationInfo.pm_email#,#qGetRegistrationInfo.hostEmail#">
                     <cfinvokeargument name="email_bcc" value="trips@iseusa.com">
                     <cfinvokeargument name="email_subject" value="#qGetRegistrationInfo.tour_name# Trip - Notice of Cancellation">
                     <cfinvokeargument name="email_message" value="#cancellationMessage#">
@@ -826,9 +835,9 @@
         </cfcase>
         
     </cfswitch>
-        
+        <!----
 </cfsilent>
-
+---->
 <link rel="stylesheet" href="tours/trips.css" type="text/css"> <!-- trips -->
 
 <script type="text/javascript" src="../nsmg/student_info.js"></script>
