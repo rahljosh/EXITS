@@ -3,9 +3,20 @@
 <cfparam name="form.process" default="">
 <cfparam name="form.fileData" default="">
 <cfparam name="form.submitted" default="">
+<cfparam name="form.yourVote" default="">
  <cfparam name="submitSuccess" default="0">
- 
 
+
+<Cfif val('form.yourVote')>
+	<cfquery name="addVote" datasource="mysql">
+    UPDATE smg_promotion_entries SET votes=votes+1 WHERE uuid=<cfqueryparam cfsqltype="cf_sql_varchar" value="#form.yourVote#">
+    </cfquery>
+    
+    <Cfset DateExpires = #DateAdd('d', '1', '#now()#')#>
+    <cfcookie name = "ISEHalloween"
+    value = "#Now()#"
+    expires = "#DateExpires#" domain="iseusa.com"> 
+</Cfif>
  
   <div class="column1">
   <div class="darkBox">
@@ -53,20 +64,28 @@
             nameconflict="makeunique">
     <cffile action="rename" source="C:\websites\student-management\nsmg\uploadedfiles\promotions\1\#file.ServerFilename#.#file.ServerFileExt#" 
     		destination = "C:\websites\student-management\nsmg\uploadedfiles\promotions\1\#uuid#.#file.ServerFileExt#">
+            <cfimage action="info" structName="picInfo" source="C:\websites\student-management\nsmg\uploadedfiles\promotions\1\#uuid#.#file.ServerFileExt#">
+            <cfif picInfo.height gt picInfo.width>
+            	<cfset picOrientation = 'Port'>
+            <cfelse>
+            	<cfset picOrientation = 'Land'>
+            </cfif>
+            
     <cfquery name="insertInfo" datasource="mysql">        
-    insert into smg_promotion_entries (name, email, fileName, promoID, dateSubmitted, uuid)
+    insert into smg_promotion_entries (name, email, fileName, promoID, dateSubmitted, uuid, orientation)
     							values(<cfqueryparam cfsqltype="cf_sql_varchar" value="#form.fullName#">,
                                  		<cfqueryparam cfsqltype="cf_sql_varchar" value="#form.email#">,
                                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#uuid#.#file.ServerFileExt#">,
                                         <cfqueryparam cfsqltype="cf_sql_integer" value="1">,
                                         <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">,
-                                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#uuid#">
+                                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#uuid#">,
+                                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#picOrientation#">
                                         )
                                         
     </cfquery>
 	<cfset submitSuccess = 1>
     <cfmail to="#form.email#" subject="Halloween Pic Submission" from="support@iseusa.com" type="html">
-    The attached picture was submitted.  
+    The attached picture was submitted.  <br /><br />
     
     To approve click here:  <a href="https://www.iseusa.com/promotions/approve.cfm?uuid=#uuid#"><strong>Approve</strong></a><br /><br />
     To deny click here: <a href="https://www.iseusa.com/promotions/deny.cfm?uuid=#uuid#"><strong>Deny</strong></a><br /><br />
@@ -83,6 +102,7 @@
  select *
  from smg_promotion_entries
  where promoID = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+ order by votes
  </cfquery>
 <a name="contestEntry"></a>Upload your Halloween Costume photos here to automatically be entered into the contest.</p>
 <cfoutput>
@@ -139,9 +159,27 @@
    <cfif isApproved neq 1>
   <div class="photos"><img src="promotions/images/Approval.jpg" width="200" height="180" /><div align="right"></div></div>
    <cfelse>
-    <div class="photos"><img src="https://ise.exitsapplication.com/nsmg/uploadedfiles/promotions/1/#fileName#" width="200" height="180" /><div align="right"><input name="send" type="submit" value="vote"></div></div>
+   	
+    <div class="photos">
+    	<cfif orientation is 'Port'>
+        	<img src="https://ise.exitsapplication.com/nsmg/uploadedfiles/promotions/1/#fileName#" width="200" height="180" />
+        <cfelse>
+        	<img src="https://ise.exitsapplication.com/nsmg/uploadedfiles/promotions/1/#fileName#" width="180" height="200" />
+        </cfif>
+        <div align="right">
+        <cfif form.yourVote is '#uuid#'>
+       		#votes# votes
+        </cfif>
+        <cfif not isDefined('cookie.ISEHalloween')>
+         <form method="post" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#&amp;##contestEntry">
+        <input type="hidden" value="#uuid#" name="yourVote" />
+        <input name="send" type="submit" value="Vote">
+ 		</form>
+        </cfif>
+        </div></div>
    </cfif>
    </Cfloop>
+   <cfset form.yourVote = ''>
   </cfoutput>
 <!--end column2 --></div>
 	
