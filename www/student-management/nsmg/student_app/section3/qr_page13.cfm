@@ -3,191 +3,140 @@
 	<cfabort>
 </cfif>
 
-<cftransaction action="begin" isolation="serializable">
-	<cftry>
+<cftry>
 
-	<!--- NEW DTaP-DT --->
-	<cfif IsDefined('form.new_dpt')>
-		<cfquery name="insert_dpt" datasource="#APPLICATION.DSN#">
-			INSERT INTO smg_student_app_shots (studentid, vaccine, shot1, shot2, shot3, shot4, shot5, booster)
-				VALUES ('#form.studentid#', '#form.new_dpt#', 
-					<cfif form.dpt1 is ''>null,<cfelse>#CreateODBCDate(form.dpt1)#,</cfif>
-					<cfif form.dpt2 is ''>null,<cfelse>#CreateODBCDate(form.dpt2)#,</cfif>
-					<cfif form.dpt3 is ''>null,<cfelse>#CreateODBCDate(form.dpt3)#,</cfif>
-					<cfif form.dpt4 is ''>null,<cfelse>#CreateODBCDate(form.dpt4)#,</cfif>
-					<cfif form.dpt5 is ''>null,<cfelse>#CreateODBCDate(form.dpt5)#,</cfif>
-					<cfif form.dpt_booster is ''>null<cfelse>#CreateODBCDate(form.dpt_booster)#</cfif>	)
-		</cfquery>
-	</cfif>
-	<!--- UPDATE DTaP-DT --->
-	<cfif IsDefined('form.upd_dpt')>
-		<cfquery name="update_dpt" datasource="#APPLICATION.DSN#">
-			UPDATE smg_student_app_shots
-				SET shot1 = <cfif form.dpt1 is ''>null,<cfelse>#CreateODBCDate(form.dpt1)#,</cfif>
-					shot2 = <cfif form.dpt2 is ''>null,<cfelse>#CreateODBCDate(form.dpt2)#,</cfif>
-					shot3 = <cfif form.dpt3 is ''>null,<cfelse>#CreateODBCDate(form.dpt3)#,</cfif>
-					shot4 = <cfif form.dpt4 is ''>null,<cfelse>#CreateODBCDate(form.dpt4)#,</cfif>
-					shot5 = <cfif form.dpt5 is ''>null,<cfelse>#CreateODBCDate(form.dpt5)#,</cfif>
-					booster = <cfif form.dpt_booster is ''>null<cfelse>#CreateODBCDate(form.dpt_booster)#</cfif>
-				WHERE vaccineid = '#form.upd_dpt#'
-		</cfquery>	
-	</cfif>
-	
-	<!--- NEW TOPV --->
-	<cfif IsDefined('form.new_topv')>
-		<cfquery name="insert_topv" datasource="#APPLICATION.DSN#">
-			INSERT INTO smg_student_app_shots (studentid, vaccine, disease, shot1, shot2, shot3, booster)
-				VALUES ('#form.studentid#', '#form.new_topv#', 
-					<cfif form.topv_disease is ''>null,<cfelse>#CreateODBCDate(form.topv_disease)#,</cfif>
-					<cfif form.topv1 is ''>null,<cfelse>#CreateODBCDate(form.topv1)#,</cfif>
-					<cfif form.topv2 is ''>null,<cfelse>#CreateODBCDate(form.topv2)#,</cfif>
-					<cfif form.topv3 is ''>null,<cfelse>#CreateODBCDate(form.topv3)#,</cfif>
-					<cfif form.topv_booster is ''>null<cfelse>#CreateODBCDate(form.topv_booster)#</cfif>	)
-		</cfquery>
-	</cfif>
-	<!--- UPDATE TOPV --->
-	<cfif IsDefined('form.upd_topv')>
-		<cfquery name="update_topv" datasource="#APPLICATION.DSN#">
-			UPDATE smg_student_app_shots
-				SET disease = <cfif form.topv_disease is ''>null,<cfelse>#CreateODBCDate(form.topv_disease)#,</cfif>
-					shot1 = <cfif form.topv1 is ''>null,<cfelse>#CreateODBCDate(form.topv1)#,</cfif>
-					shot2 = <cfif form.topv2 is ''>null,<cfelse>#CreateODBCDate(form.topv2)#,</cfif>
-					shot3 = <cfif form.topv3 is ''>null,<cfelse>#CreateODBCDate(form.topv3)#,</cfif>
-					booster = <cfif form.topv_booster is ''>null<cfelse>#CreateODBCDate(form.topv_booster)#</cfif>
-				WHERE vaccineid = '#form.upd_topv#'
-		</cfquery>	
-	</cfif>
-	
-	<!--- NEW MEASLES --->
-	<cfif IsDefined('form.new_measles')>
-		<cfquery name="insert_measles" datasource="#APPLICATION.DSN#">
-			INSERT INTO smg_student_app_shots (studentid, vaccine, disease, shot1, shot2, booster)
-				VALUES ('#form.studentid#', '#form.new_measles#', 
-					<cfif form.measles_disease is ''>null,<cfelse>#CreateODBCDate(form.measles_disease)#,</cfif>
-					<cfif form.measles1 is ''>null,<cfelse>#CreateODBCDate(form.measles1)#,</cfif>
-					<cfif form.measles2 is ''>null,<cfelse>#CreateODBCDate(form.measles2)#,</cfif>
-					<cfif form.measles_booster is ''>null<cfelse>#CreateODBCDate(form.measles_booster)#</cfif>	)
-		</cfquery>
-	</cfif>
-	<!--- UPDATE MEASLES --->
-	<cfif IsDefined('form.upd_measles')>
-		<cfquery name="update_measles" datasource="#APPLICATION.DSN#">
-			UPDATE smg_student_app_shots
-				SET disease = <cfif form.measles_disease is ''>null,<cfelse>#CreateODBCDate(form.measles_disease)#,</cfif>
-					shot1 = <cfif form.measles1 is ''>null,<cfelse>#CreateODBCDate(form.measles1)#,</cfif>
-					shot2 = <cfif form.measles2 is ''>null,<cfelse>#CreateODBCDate(form.measles2)#,</cfif>
-					booster = <cfif form.measles_booster is ''>null<cfelse>#CreateODBCDate(form.measles_booster)#</cfif>
-				WHERE vaccineid = '#form.upd_measles#'
-		</cfquery>	
-	</cfif>	
-	
-	<!--- NEW MUMPS --->
-	<cfif IsDefined('form.new_mumps')>
-		<cfquery name="insert_mumps" datasource="#APPLICATION.DSN#">
-			INSERT INTO smg_student_app_shots (studentid, vaccine, disease, shot1, shot2, booster)
-				VALUES ('#form.studentid#', '#form.new_mumps#', 
-					<cfif form.mumps_disease is ''>null,<cfelse>#CreateODBCDate(form.mumps_disease)#,</cfif>
-					<cfif form.mumps1 is ''>null,<cfelse>#CreateODBCDate(form.mumps1)#,</cfif>
-					<cfif form.mumps2 is ''>null,<cfelse>#CreateODBCDate(form.mumps2)#,</cfif>
-					<cfif form.mumps_booster is ''>null<cfelse>#CreateODBCDate(form.mumps_booster)#</cfif>	)
-		</cfquery>
-	</cfif>
-	<!--- UPDATE MUMPS --->
-	<cfif IsDefined('form.upd_mumps')>
-		<cfquery name="update_mumps" datasource="#APPLICATION.DSN#">
-			UPDATE smg_student_app_shots
-				SET disease = <cfif form.mumps_disease is ''>null,<cfelse>#CreateODBCDate(form.mumps_disease)#,</cfif>
-					shot1 = <cfif form.mumps1 is ''>null,<cfelse>#CreateODBCDate(form.mumps1)#,</cfif>
-					shot2 = <cfif form.mumps2 is ''>null,<cfelse>#CreateODBCDate(form.mumps2)#,</cfif>
-					booster = <cfif form.mumps_booster is ''>null<cfelse>#CreateODBCDate(form.mumps_booster)#</cfif>
-				WHERE vaccineid = '#form.upd_mumps#'
-		</cfquery>	
-	</cfif>	
-
-	<!--- NEW RUBELLA --->
-	<cfif IsDefined('form.new_rubella')>
-		<cfquery name="insert_rubella" datasource="#APPLICATION.DSN#">
-			INSERT INTO smg_student_app_shots (studentid, vaccine, disease, shot1, shot2, booster)
-				VALUES ('#form.studentid#', '#form.new_rubella#', 
-					<cfif form.rubella_disease is ''>null,<cfelse>#CreateODBCDate(form.rubella_disease)#,</cfif>
-					<cfif form.rubella1 is ''>null,<cfelse>#CreateODBCDate(form.rubella1)#,</cfif>
-					<cfif form.rubella2 is ''>null,<cfelse>#CreateODBCDate(form.rubella2)#,</cfif>
-					<cfif form.rubella_booster is ''>null<cfelse>#CreateODBCDate(form.rubella_booster)#</cfif>	)
-		</cfquery>
-	</cfif>
-	<!--- UPDATE RUBELLA --->
-	<cfif IsDefined('form.upd_rubella')>
-		<cfquery name="update_rubella" datasource="#APPLICATION.DSN#">
-			UPDATE smg_student_app_shots
-				SET disease = <cfif form.rubella_disease is ''>null,<cfelse>#CreateODBCDate(form.rubella_disease)#,</cfif>
-					shot1 = <cfif form.rubella1 is ''>null,<cfelse>#CreateODBCDate(form.rubella1)#,</cfif>
-					shot2 = <cfif form.rubella2 is ''>null,<cfelse>#CreateODBCDate(form.rubella2)#,</cfif>
-					booster = <cfif form.rubella_booster is ''>null<cfelse>#CreateODBCDate(form.rubella_booster)#</cfif>
-				WHERE vaccineid = '#form.upd_rubella#'
-		</cfquery>	
-	</cfif>		
-
-	<!--- NEW VARICELLA --->
-	<cfif IsDefined('form.new_varicella')>
-		<cfquery name="insert_varicella" datasource="#APPLICATION.DSN#">
-			INSERT INTO smg_student_app_shots (studentid, vaccine, disease, shot1, shot2, booster)
-				VALUES ('#form.studentid#', '#form.new_varicella#', 
-					<cfif form.varicella_disease is ''>null,<cfelse>#CreateODBCDate(form.varicella_disease)#,</cfif>
-					<cfif form.varicella1 is ''>null,<cfelse>#CreateODBCDate(form.varicella1)#,</cfif>
-					<cfif form.varicella2 is ''>null,<cfelse>#CreateODBCDate(form.varicella2)#,</cfif>
-					<cfif form.varicella_booster is ''>null<cfelse>#CreateODBCDate(form.varicella_booster)#</cfif>	)
-		</cfquery>
-	</cfif>
-	<!--- UPDATE VARICELLA --->
-	<cfif IsDefined('form.upd_varicella')>
-		<cfquery name="update_varicella" datasource="#APPLICATION.DSN#">
-			UPDATE smg_student_app_shots
-				SET disease = <cfif form.varicella_disease is ''>null,<cfelse>#CreateODBCDate(form.varicella_disease)#,</cfif>
-					shot1 = <cfif form.varicella1 is ''>null,<cfelse>#CreateODBCDate(form.varicella1)#,</cfif>
-					shot2 = <cfif form.varicella2 is ''>null,<cfelse>#CreateODBCDate(form.varicella2)#,</cfif>
-					booster = <cfif form.varicella_booster is ''>null<cfelse>#CreateODBCDate(form.varicella_booster)#</cfif>
-				WHERE vaccineid = '#form.upd_varicella#'
-		</cfquery>	
-	</cfif>
-
-	<!--- NEW HEPATITIS --->
-	<cfif IsDefined('form.new_hepatitis')>
-		<cfquery name="insert_hepatitis" datasource="#APPLICATION.DSN#">
-			INSERT INTO smg_student_app_shots (studentid, vaccine, shot1, shot2, shot3)
-				VALUES ('#form.studentid#', '#form.new_hepatitis#', 
-					<cfif form.hepatitis1 is ''>null,<cfelse>#CreateODBCDate(form.hepatitis1)#,</cfif>
-					<cfif form.hepatitis2 is ''>null,<cfelse>#CreateODBCDate(form.hepatitis2)#,</cfif>
-					<cfif form.hepatitis3 is ''>null<cfelse>#CreateODBCDate(form.hepatitis3)#</cfif>	)
-		</cfquery>
-	</cfif>
-	<!--- UPDATE HEPATITIS --->
-	<cfif IsDefined('form.upd_hepatitis')>
-		<cfquery name="update_hepatitis" datasource="#APPLICATION.DSN#">
-			UPDATE smg_student_app_shots
-				SET shot1 = <cfif form.hepatitis1 is ''>null,<cfelse>#CreateODBCDate(form.hepatitis1)#,</cfif>
-					shot2 = <cfif form.hepatitis2 is ''>null,<cfelse>#CreateODBCDate(form.hepatitis2)#,</cfif>
-					shot3 = <cfif form.hepatitis3 is ''>null<cfelse>#CreateODBCDate(form.hepatitis3)#</cfif>
-				WHERE vaccineid = '#form.upd_hepatitis#'
-		</cfquery>	
-	</cfif>
-
-	<html>
-	<head>
-	<script language="JavaScript">
-	<!-- 
-	alert("You have successfully updated this page. Thank You.");
-	<cfif NOT IsDefined('url.next')>
-		location.replace("?curdoc=section3/page13&id=3&p=13");
-	<cfelse>
-		location.replace("?curdoc=section3/page14&id=3&p=14");
-	</cfif>
-	//-->
-	</script>
-	</head>
-	</html>
-
-	<cfcatch type="any">
+    <cffunction name="insertVaccine">
+        <cfargument name="studentID" required="yes">
+        <cfargument name="vaccine" required="yes">
+        <cfargument name="disease" default="">
+        <cfargument name="shot1" default="">
+        <cfargument name="shot2" default="">
+        <cfargument name="shot3" default="">
+        <cfargument name="shot4" default="">
+        <cfargument name="shot5" default="">
+        <cfargument name="booster" default="">
+        
+        <cfquery datasource="#APPLICATION.DSN#">
+            INSERT INTO smg_student_app_shots(
+                studentID,
+                vaccine,
+                disease,
+                shot1,
+                shot2,
+                shot3,
+                shot4,
+                shot5,
+                booster )
+            VALUES(
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.vaccine#">,
+                <cfif ARGUMENTS.disease EQ "">NULL<cfelse><cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(ARGUMENTS.disease)#"></cfif>,
+                <cfif ARGUMENTS.shot1 EQ "">NULL<cfelse><cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(ARGUMENTS.shot1)#"></cfif>,
+                <cfif ARGUMENTS.shot2 EQ "">NULL<cfelse><cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(ARGUMENTS.shot2)#"></cfif>,
+                <cfif ARGUMENTS.shot3 EQ "">NULL<cfelse><cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(ARGUMENTS.shot3)#"></cfif>,
+                <cfif ARGUMENTS.shot4 EQ "">NULL<cfelse><cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(ARGUMENTS.shot4)#"></cfif>,
+                <cfif ARGUMENTS.shot5 EQ "">NULL<cfelse><cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(ARGUMENTS.shot5)#"></cfif>,
+                <cfif ARGUMENTS.booster EQ "">NULL<cfelse><cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(ARGUMENTS.booster)#"></cfif> )
+        </cfquery>
+    
+    </cffunction>
+    
+    <cffunction name="updateVaccine">
+        <cfargument name="vaccineID" required="yes">
+        <cfargument name="disease" default="">
+        <cfargument name="shot1" default="">
+        <cfargument name="shot2" default="">
+        <cfargument name="shot3" default="">
+        <cfargument name="shot4" default="">
+        <cfargument name="shot5" default="">
+        <cfargument name="booster" default="">
+        
+        <cfquery datasource="#APPLICATION.DSN#">
+            UPDATE smg_student_app_shots
+            SET
+            	disease = <cfif ARGUMENTS.disease EQ "">NULL<cfelse><cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(ARGUMENTS.disease)#"></cfif>,
+                shot1 = <cfif ARGUMENTS.shot1 EQ "">NULL<cfelse><cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(ARGUMENTS.shot1)#"></cfif>,
+                shot2 = <cfif ARGUMENTS.shot2 EQ "">NULL<cfelse><cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(ARGUMENTS.shot2)#"></cfif>,
+                shot3 = <cfif ARGUMENTS.shot3 EQ "">NULL<cfelse><cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(ARGUMENTS.shot3)#"></cfif>,
+                shot4 = <cfif ARGUMENTS.shot4 EQ "">NULL<cfelse><cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(ARGUMENTS.shot4)#"></cfif>,
+                shot5 = <cfif ARGUMENTS.shot5 EQ "">NULL<cfelse><cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(ARGUMENTS.shot5)#"></cfif>,
+                booster = <cfif ARGUMENTS.booster EQ "">NULL<cfelse><cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(ARGUMENTS.booster)#"></cfif>
+            WHERE vaccineID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.vaccineID#">
+        </cfquery>
+    
+    </cffunction>
+    
+    <cfscript>
+		// DTaP
+        if (IsDefined('FORM.new_dpt')) {
+            insertVaccine(FORM.studentID,FORM.new_dpt,"",FORM.dpt1,FORM.dpt2,FORM.dpt3,FORM.dpt4,FORM.dpt5,FORM.dpt_booster);
+        } else if (IsDefined('FORM.upd_dpt')) {
+            updateVaccine(FORM.upd_dpt,"",FORM.dpt1,FORM.dpt2,FORM.dpt3,FORM.dpt4,FORM.dpt5,FORM.dpt_booster);
+        }
+		// TOPV
+		if (IsDefined('FORM.new_dpt')) {
+            insertVaccine(FORM.studentID,FORM.new_topv,FORM.topv_disease,FORM.topv1,FORM.topv2,FORM.topv3,"","",FORM.topv_booster);
+        } else if (IsDefined('FORM.upd_dpt')) {
+            updateVaccine(FORM.upd_topv,FORM.topv_disease,FORM.topv1,FORM.topv2,FORM.topv3,"","",FORM.topv_booster);
+        }
+		// MEASLES
+		if (IsDefined('FORM.new_measles')) {
+            insertVaccine(FORM.studentID,FORM.new_measles,FORM.measles_disease,FORM.measles1,FORM.measles2,"","","",FORM.measles_booster);
+        } else if (IsDefined('FORM.upd_measles')) {
+            updateVaccine(FORM.upd_measles,FORM.measles_disease,FORM.measles1,FORM.measles2,"","","",FORM.measles_booster);
+        }
+		// MUMPS
+		if (IsDefined('FORM.new_mumps')) {
+            insertVaccine(FORM.studentID,FORM.new_mumps,FORM.mumps_disease,FORM.mumps1,FORM.mumps2,"","","",FORM.mumps_booster);
+        } else if (IsDefined('FORM.upd_mumps')) {
+            updateVaccine(FORM.upd_mumps,FORM.mumps_disease,FORM.mumps1,FORM.mumps2,"","","",FORM.mumps_booster);
+        }
+		// RUBELLA
+		if (IsDefined('FORM.new_rubella')) {
+            insertVaccine(FORM.studentID,FORM.new_rubella,FORM.rubella_disease,FORM.rubella1,FORM.rubella2,"","","",FORM.rubella_booster);
+        } else if (IsDefined('FORM.upd_rubella')) {
+            updateVaccine(FORM.upd_rubella,FORM.rubella_disease,FORM.rubella1,FORM.rubella2,"","","",FORM.rubella_booster);
+        }
+		// VARICELLA
+		if (IsDefined('FORM.new_varicella')) {
+            insertVaccine(FORM.studentID,FORM.new_varicella,FORM.varicella_disease,FORM.varicella1,FORM.varicella2,"","","",FORM.varicella_booster);
+        } else if (IsDefined('FORM.upd_varicella')) {
+            updateVaccine(FORM.upd_varicella,FORM.varicella_disease,FORM.varicella1,FORM.varicella2,"","","",FORM.varicella_booster);
+        }
+		// HEPATITIS A
+		if (IsDefined('FORM.new_hepatitisA')) {
+            insertVaccine(FORM.studentID,FORM.new_hepatitisA,"",FORM.hepatitisA1,FORM.hepatitisA2,"","","","");
+        } else if (IsDefined('FORM.upd_hepatitisA')) {
+            updateVaccine(FORM.upd_hepatitisA,"",FORM.hepatitisA1,FORM.hepatitisA2,"","","","");
+        }
+		// HEPATITIS B
+		if (IsDefined('FORM.new_hepatitis')) {
+            insertVaccine(FORM.studentID,FORM.new_hepatitis,"",FORM.hepatitis1,FORM.hepatitis2,FORM.hepatitis3,"","","");
+        } else if (IsDefined('FORM.upd_hepatitis')) {
+            updateVaccine(FORM.upd_hepatitis,"",FORM.hepatitis1,FORM.hepatitis2,FORM.hepatitis3,"","","");
+        }
+		// MENINGOCOCCAL
+		if (IsDefined('FORM.new_meningococcal')) {
+            insertVaccine(FORM.studentID,FORM.new_meningococcal,"",FORM.meningococcal1,FORM.meningococcal2,"","","","");
+        } else if (IsDefined('FORM.upd_meningococcal')) {
+            updateVaccine(FORM.upd_meningococcal,"",FORM.meningococcal1,FORM.meningococcal2,"","","","");
+        }
+    </cfscript>
+    
+    <cfcatch type="any">
 		<cfinclude template="../error_message.cfm">
 	</cfcatch>
-	</cftry>
-</cftransaction>
+</cftry>
+
+<html>
+    <head>
+		<script type="text/javascript">
+        	alert("You have successfully updated this page. Thank You.");
+        	<cfif NOT IsDefined('url.next')>
+            	location.replace("?curdoc=section3/page13&id=3&p=13");
+        	<cfelse>
+            	location.replace("?curdoc=section3/page14&id=3&p=14");
+        	</cfif>
+        </script>
+    </head>
+</html>
