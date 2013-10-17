@@ -1,9 +1,9 @@
-<cfquery name="check_state" datasource="MySql">
+<cfquery name="check_state" datasource="#APPLICATION.DSN#">
 	SELECT statechoiceid, studentid, state1, state2, state3
 	FROM smg_student_app_state_requested
 	WHERE studentid =  <cfqueryparam value="#client.studentid#" cfsqltype="cf_sql_integer">
 </cfquery>
-<cfquery name="check_guarantee" datasource="MySQL">
+<cfquery name="check_guarantee" datasource="#APPLICATION.DSN#">
 	SELECT app_region_guarantee
 	FROM smg_students
 	WHERE studentid = '#client.studentid#'
@@ -98,16 +98,22 @@
 				vOption2 = $("#option2").val();
 				vOption3 = $("#option3").val();
 				
-				if ( vOption1 == vOption2 || vOption1 == vOption3 || vOption2 == vOption3  ) {
+				if (vOption1 == 0) {
+					alert("You must select a 1st choice.");
+					return false;	
+				} else if ( vOption1 == vOption2 || vOption1 == vOption3 || (vOption2 == vOption3 && vOption2 != 0)  ) {
 					alert("You must select 3 different districts, please review your choices and submit this page again.");
 					return false;
 				}
 		
 			});
+			
+			// Set the district options correctly
+			changeValues();
 
 		});
 	</script>
-
+		
 </cfif>
 
 <Cfset doc = 'page21'>
@@ -115,19 +121,19 @@
 <cfinclude template="../querys/get_student_info.cfm">
 
 <!---- International Rep - EF ACCOUNTS ---->
-<cfquery name="int_agent" datasource="MySQL">
+<cfquery name="int_agent" datasource="#APPLICATION.DSN#">
 	SELECT u.businessname, u.userid, u.master_account, u.master_accountid
 	FROM smg_users u
 	WHERE u.userid = <cfif get_student_info.branchid EQ '0'>'#get_student_info.intrep#'<cfelse>'#get_student_info.branchid#'</cfif>
 </cfquery>
 
-<cfquery name="states" datasource="#application.dsn#">
+<cfquery name="states" datasource="#APPLICATION.DSN#">
     select s.statename, s.id
     from smg_states s
     where (s.id < 52 AND s.id !=11 and s.id !=2)
 </cfquery>
 
-<Cfquery name="qGetStateClosed" datasource="#application.dsn#">
+<Cfquery name="qGetStateClosed" datasource="#APPLICATION.DSN#">
     select sc.fk_stateID, s.statename
     from regionStateClosure sc 
     LEFT join smg_states s on s.id = sc.fk_stateID
@@ -141,13 +147,13 @@
 
 <cfset listClosedStateID = ValueList(qGetStateClosed.fk_stateID)>
 
-<cfquery name="check_if_answered" datasource="MySQL">
+<cfquery name="check_if_answered" datasource="#APPLICATION.DSN#">
 	SELECT smg_students.regionalguarantee, smg_students.regionguar, smg_regions.regionname
 	FROM smg_students, smg_regions
 	WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.studentid#">
 </cfquery>
 
-<cfquery name="states_requested" datasource="MySQL">
+<cfquery name="states_requested" datasource="#APPLICATION.DSN#">
 	SELECT 
     	state1, 
         sta1.statename as statename1, 
@@ -167,7 +173,7 @@
     	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.studentid#">
 </cfquery>
 
-<cfquery name="qESIDistrictChoice" datasource="MySQL">
+<cfquery name="qESIDistrictChoice" datasource="#APPLICATION.DSN#">
 	SELECT 
     	option1, 
         option2, 
@@ -185,7 +191,7 @@
 	qGetESIDistrictChoice = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='ESIDistrictChoice',sortBy='sortOrder');
 </cfscript>
 
-<cfquery name="qESIDistrictClosed" datasource="#application.dsn#">
+<cfquery name="qESIDistrictClosed" datasource="#APPLICATION.DSN#">
 	SELECT
     	sc.fk_districtID
    	FROM
@@ -400,16 +406,16 @@
                       <Cfif get_Student_info.programid eq 0>
                           <h2><align="Center">You have not selected a program to apply for.  The program is required to see what districts are available.   Please to go to Page 1 of your application, select a program from the drop down, save the page and return to this page to select your district.</align></h2>
                       <cfelse>
-                        <img src="pics/ESI-Map.gif" width="650" height="380" align="middle"><br>
+                        <img src="pics/ESI-Map.png" width="650" height="380" align="middle"><br>
                        
                         <table cellpadding="2" cellspacing="2" style="margin:10px;">
                             <tr>
                                 <td>1st Choice:</td>
-                                <td><select name="option1" id="option1" onClick="DataChanged();">
+                                <td><select name="option1" id="option1" onClick="DataChanged();" onChange="changeValues();">
                                         <option value="0"></option>
                                         <cfloop query="qGetESIDistrictChoice">
                                         	<cfif NOT ListFind(closedListDistrictID, id) OR qESIDistrictChoice.option1 EQ qGetESIDistrictChoice.fieldID>
-                                        	<option value="#qGetESIDistrictChoice.fieldID#" <cfif qESIDistrictChoice.option1 EQ qGetESIDistrictChoice.fieldID>selected</cfif>>#qGetESIDistrictChoice.sortOrder# - #qGetESIDistrictChoice.name#</option>
+                                        	<option value="#qGetESIDistrictChoice.fieldID#" <cfif qESIDistrictChoice.option1 EQ qGetESIDistrictChoice.fieldID>selected</cfif>>#qGetESIDistrictChoice.name#</option>
                                             </cfif>
                                         </cfloop>
                                     </select>
@@ -417,11 +423,11 @@
                             </tr>
                             <tr>                        
                                 <td>2nd Choice:</td>
-                                <td><select name="option2" id="option2" onClick="DataChanged();">
-                                        <option value="0"></option>
+                                <td><select name="option2" id="option2" onClick="DataChanged();" onChange="changeValues();">
+                                        <option value="0">No Second Choice</option>
                                         <cfloop query="qGetESIDistrictChoice">
                                         <cfif NOT ListFind(closedListDistrictID, id) OR qESIDistrictChoice.option2 EQ qGetESIDistrictChoice.fieldID>
-                                        	<option value="#qGetESIDistrictChoice.fieldID#" <cfif qESIDistrictChoice.option2 EQ qGetESIDistrictChoice.fieldID>selected</cfif>>#qGetESIDistrictChoice.sortOrder# - #qGetESIDistrictChoice.name#</option>
+                                        	<option value="#qGetESIDistrictChoice.fieldID#" <cfif qESIDistrictChoice.option2 EQ qGetESIDistrictChoice.fieldID>selected</cfif>>#qGetESIDistrictChoice.name#</option>
                                         </cfif>
                                         </cfloop>
                                     </select>
@@ -429,11 +435,11 @@
                             </tr>
                             <tr>                        
                                 <td>3rd Choice:</td>
-                                <td><select name="option3" id="option3" onClick="DataChanged();">
-                                        <option value="0"></option>
+                                <td><select name="option3" id="option3" onClick="DataChanged();" onChange="changeValues();">
+                                        <option value="0">No Third Choice</option>
                                         <cfloop query="qGetESIDistrictChoice">
                                         	<cfif NOT ListFind(closedListDistrictID, id) OR qESIDistrictChoice.option3 EQ qGetESIDistrictChoice.fieldID>
-                                        	<option value="#qGetESIDistrictChoice.fieldID#" <cfif qESIDistrictChoice.option3 EQ qGetESIDistrictChoice.fieldID>selected</cfif>>#qGetESIDistrictChoice.sortOrder# - #qGetESIDistrictChoice.name#</option>
+                                        	<option value="#qGetESIDistrictChoice.fieldID#" <cfif qESIDistrictChoice.option3 EQ qGetESIDistrictChoice.fieldID>selected</cfif>>#qGetESIDistrictChoice.name#</option>
                                             </cfif>
                                         </cfloop>
                                     </select>
@@ -461,3 +467,70 @@
 
 <!--- FOOTER OF TABLE --->
 <cfinclude template="../footer_table.cfm">
+
+<script type="text/javascript">
+	// Display and remove district options
+	var allOptions = new Array(<cfoutput>#qGetESIDistrictChoice.recordCount#</cfoutput>);
+	var selectedOption1 = 0;
+	var selectedOption2 = 0;
+	var selectedOption3 = 0;
+	
+	function changeValues() {
+		// Get the current values
+		option1Value = $("#option1").val();
+		option2Value = $("#option2").val();
+		option3Value = $("#option3").val();
+		
+		// Reset all of the choices
+		resetAllOptions(1);
+		resetAllOptions(2);
+		resetAllOptions(3);
+		
+		// Remove options that are already selected, unless the value is 0
+		if (option1Value != 0) {
+			$("#option2 option[value='"+option1Value+"']").remove();
+			$("#option3 option[value='"+option1Value+"']").remove();
+		}
+		if (option2Value != 0) {
+			$("#option1 option[value='"+option2Value+"']").remove();
+			$("#option3 option[value='"+option2Value+"']").remove();
+		}
+		if (option2Value != 0) {
+			$("#option1 option[value='"+option3Value+"']").remove();
+			$("#option2 option[value='"+option3Value+"']").remove();
+		}
+		
+		// Set the selection to the first item by default
+		$("#option1 option[value='0']").attr("selected","selected");
+		$("#option2 option[value='0']").attr("selected","selected");
+		$("#option3 option[value='0']").attr("selected","selected");
+		
+		// Set the selection to the option value if there is one
+		$("#option1 option[value='"+option1Value+"']").attr("selected","selected");
+		$("#option2 option[value='"+option2Value+"']").attr("selected","selected");
+		$("#option3 option[value='"+option3Value+"']").attr("selected","selected");
+	}
+	
+	function resetAllOptions(id) {
+		var option0 = "<option value='0'>"+$("#option"+id+" option[value='0']").html()+"</option>";
+		for (i=document.getElementById("option"+id).options.length-1;i>=0;i--) {
+			document.getElementById("option"+id).remove(i);
+		}
+		$("#option"+id).append(option0);
+		for (j=1;j<allOptions.length;j++) {
+			$("#option"+id).append(allOptions[j]);
+		}
+		
+	}
+</script>
+    
+<!--- List of district choices for javascript functions --->
+<cfoutput>
+	<cfset i = 0>
+	<cfloop query="qGetESIDistrictChoice">
+		<script type="text/javascript">
+            allOptions[#i#] = "<option value='#qGetESIDistrictChoice.fieldID#' selected='selected'>#qGetESIDistrictChoice.name#</option>";
+        </script>
+		<cfset i = i + 1>
+	</cfloop>
+</cfoutput>

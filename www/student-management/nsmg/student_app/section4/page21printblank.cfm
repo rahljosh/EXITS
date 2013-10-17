@@ -83,7 +83,7 @@
 		  <cfelse>
               <!--- Exchange Service Information --->
           
-              <img src="#path#pics/ESI-Map.gif" width="650" height="380" align="middle"><br>
+              <img src="#path#pics/ESI-Map.png" width="650" height="380" align="middle"><br>
 
               <table cellpadding="2" cellspacing="2" style="margin:10px;">
                   <tr>

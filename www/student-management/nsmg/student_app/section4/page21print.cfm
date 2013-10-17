@@ -21,12 +21,12 @@
 <cfinclude template="../querys/get_student_info.cfm">
 
 <cfset doc = 'page21'>
-<cfquery name="check_guarantee" datasource="MySQL">
+<cfquery name="check_guarantee" datasource="#APPLICATION.DSN#">
 	SELECT app_region_guarantee
 	FROM smg_students
 	WHERE studentid = '#client.studentid#'
 </cfquery>
-<cfquery name="states_requested" datasource="MySQL">
+<cfquery name="states_requested" datasource="#APPLICATION.DSN#">
 	SELECT 
     	state1, 
         sta1.statename as statename1, 
@@ -46,11 +46,11 @@
     	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.studentid#">
 </cfquery>
 
-<cfquery name="qESIDistrictChoice" datasource="MySQL">
+<cfquery name="qESIDistrictChoice" datasource="#APPLICATION.DSN#">
 	SELECT 
-    	CAST(CONCAT(opt1.sortOrder, ' - ', opt1.name) AS CHAR) AS option1,
-        CAST(CONCAT(opt2.sortOrder, ' - ', opt2.name) AS CHAR) AS option2,
-        CAST(CONCAT(opt3.sortOrder, ' - ', opt3.name) AS CHAR) AS option3
+    	opt1.name AS option1,
+        opt2.name AS option2,
+        opt3.name AS option3
 	FROM 
     	smg_student_app_options appo
     LEFT OUTER JOIN
@@ -72,7 +72,7 @@
 </cfquery>
 
 <!---- International Rep - EF ACCOUNTS ---->
-<cfquery name="int_agent" datasource="MySQL">
+<cfquery name="int_agent" datasource="#APPLICATION.DSN#">
 	SELECT u.businessname, u.userid, u.master_account, u.master_accountid
 	FROM smg_users u
 	WHERE u.userid = <cfif get_student_info.branchid EQ '0'>'#get_student_info.intrep#'<cfelse>'#get_student_info.branchid#'</cfif>
@@ -198,7 +198,7 @@
                 <cfelse>
                 	<!--- Exchange Service Information --->
                     
-                    <img src="#vStudentAppRelativePath#pics/ESI-Map.gif" width="650" height="380" align="middle"><br>
+                    <img src="#vStudentAppRelativePath#pics/ESI-Map.png" width="650" height="380" align="middle"><br>
 
                     <table cellpadding="2" cellspacing="2" style="margin:10px;">
                         <tr>

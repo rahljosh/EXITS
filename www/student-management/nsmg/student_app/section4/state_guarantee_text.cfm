@@ -5,10 +5,10 @@
     <cfset client.org_code = 5>
     <cfset bgcolor ='B5D66E'>  
 </cfif>
-<cfquery name="org_info" datasource="mysql">
+<cfquery name="org_info" datasource="#APPLICATION.DSN#">
 select *
 from smg_companies
-where companyid = #client.org_code#
+where companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.org_code#">
 </cfquery>
 
 <div align="justify">
@@ -24,6 +24,6 @@ where companyid = #client.org_code#
     If you would like to specify states, select yes at the bottom of this page, select three states of choice and print this page,
     sign it and upload it back into the system with original signatures.<br><br>
 <Cfelse>
-	*** Due to student enrollment limitations, placed upon the schools by the district, we, the organization, cannot guarantee 100% placement of student to chosen school. Therefore, we ask that the student select multiple areas in which they wish to attend. ***<br /><br />
+	Due to student enrollment limitations placed upon the schools by the district, we, the organization, cannot guarantee 100% placement of student in the  chosen school.  Therefore, we ask that the student select multiple areas in which they wish to study.<br /><br />
 </Cfif>
 </div>
