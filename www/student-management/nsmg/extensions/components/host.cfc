@@ -710,8 +710,12 @@
                                 </em>
                             </strong>
                             <br /><br />
-                            <cfif client.companyid eq 10>
+                            <cfif CLIENT.companyid eq 10>
                                 <a href="http://www.case-usa.org/hostApplication/" target="_blank">
+                                    <img src="#client.exits_url#/nsmg/pics/hostAppEmail.jpg" width="200" height="56" border="0">
+                                </a>
+                          	<cfelseif CLIENT.companyID EQ 14>
+                            	<a href="https://exchange-service.org/hostApplication/" target="_blank">
                                     <img src="#client.exits_url#/nsmg/pics/hostAppEmail.jpg" width="200" height="56" border="0">
                                 </a>
                             <cfelse>
@@ -2140,7 +2144,8 @@
                             To start filling out your application, please click on the following link:
                             <cfif CLIENT.companyID EQ 10>
                                 <a href="http://www.case-usa.org/hostApplication/" target="_blank">http://www.case-usa.org/hostApplication/</a>
-                                <!--- <img src="#CLIENT.exits_url#/nsmg/pics/hostAppEmail.jpg" width="200" height="56" border="0"> --->
+                          	<cfelseif CLIENT.companyID EQ 14>
+                            	<a href="https://exchange-service.org/hostApplication/" target="_blank">https://exchange-service.org/hostApplication/</a>
                             <cfelse>
                                 <a href="https://www.iseusa.com/hostApplication/" target="_blank">https://www.iseusa.com/hostApplication/</a>
                             </cfif>
