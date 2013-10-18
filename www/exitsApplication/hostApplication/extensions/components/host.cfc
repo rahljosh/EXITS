@@ -1339,9 +1339,11 @@
 				SESSION.formErrors.clear();
             }
 			currentSection++;
-				
-			// Set Application Complete true/false
-			if ( stResults.applicationProgress EQ 300 ) {
+			
+			// Set Application Complete true/false (ESI is at 325 because of the W-9 section
+			if ( (SESSION.COMPANY.ID EQ 14) AND (stResults.applicationProgress EQ 325) ) {
+				stResults.isComplete = true;
+			} else if ( (SESSION.COMPANY.ID NEQ 14) AND (stResults.applicationProgress EQ 300) ) {
 				stResults.isComplete = true;
 			}
 			
