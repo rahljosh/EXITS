@@ -75,17 +75,16 @@ function NextPage() {
 	<tr><td>&nbsp;</td></tr>
 	<tr><td>
 			<div align="justify">
-			<u>#get_student_info.firstname# #get_student_info.familylastname#,</u> a minor, do hereby authorize and consent to any x-ray
-			examination, anesthetic, or medical or surgical diagnosis rendered under the general or special supervision of any member
-			of the medical staff and emergency room staff licensed under the provisions of the Medicine Practice Act, or a dentist
-			licensed under the provisions of the Dental Practice Act and on the staff of any acute general hospital holding a current
-			license to operate a hospital. It is understood that this authorization is given in advance of any specific diagnosis, 
-			treatment, or hospital care being required, but is given to provide authority and power to render care which the
-			aforementioned physician in the exercise of his best judgment may deem advisable. It is understood that effort shall be
-			made to contact the undersigned prior to rendering treatment to the patient, but that any of the above treatment will not
-			be withheld if the undersigned cannot be reached.<br>
-			Furthermore, we (parents/guardian) want to assure you that we will reimburse any expenditure not covered by the accident
-			and sickness insurance policy of the exchange organization.
+				<u>#get_student_info.firstname# #get_student_info.familylastname#,</u> a minor (hereafter "Exchange Student"), do hereby authorize and consent to the following:
+				<br/><br/>
+				AUTHORIZATION AND CONSENT OF PARENT(S) OR LEGAL GUARDIAN(S) 
+ 				<br/><br/>
+				I do hereby state that I have legal custody of the aforementioned Minor. I grant my authorization and consent for International Student Exchange (ISE), it's officers, staff, regional managers , Area Representatives and Host Families (hereafter “Designated Adults”) to administer general first aid treatment for any minor injuries or illnesses experienced by the Exchange Student. If the injury or illness is life threatening or in need of professional medical treatment treatment, I authorize the Designated Adults to summon any and all professional emergency personnel to attend, transport, and treat the minor and to issue consent for any X-ray, anesthetic, blood transfusion, medication, or other medical diagnosis, treatment, or hospital care deemed advisable by, and to be rendered under the general supervision of, any licensed physician, surgeon, dentist, hospital, or other medical professional or institution duly licensed to practice in 
+the state in which such treatment is to occur. I agree to assume financial responsibility for all expenses of such care. 
+				<br/><br/>
+				I also understand that certain vaccinations may be required for the Exchange Student to participate in certain schools and that the vaccination requirements vary across each state in the United States.  If the documentation of these vaccinations has not been included in the student application submitted to ISE, I authorize the Designated Adults to have the required vaccines administered to the Exchange Student.  I agree to assume financial responsibility for all expenses related to the administration of these vaccines.
+ 				<br/><br/>
+				It is understood that this authorization is given in advance of any such medical treatment, but is given to provide authority and power on the part of the Designated Adult in the exercise of his or her best judgment upon the advice of any such medical or emergency personnel.
 			</div>
 	</td></tr>
 </table><br>

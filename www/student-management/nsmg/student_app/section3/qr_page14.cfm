@@ -5,7 +5,7 @@
 
 <cftransaction action="begin" isolation="serializable">
 
-		<cfquery name="update_student" datasource="MySql">
+		<cfquery name="update_student" datasource="#APPLICATION.DSN#">
 			UPDATE smg_students
 			SET	app_med_restrictions = <cfqueryparam value="#form.app_med_restrictions#" cfsqltype="cf_sql_char">,
 				other_allergies = <cfqueryparam value="#form.other_allergies#" cfsqltype="cf_sql_char">,
