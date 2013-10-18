@@ -34,7 +34,9 @@
 			<div align="justify">
 			The <b>Heath Questionnaire</b> section contains four (4) pages.  Pages [11] and [12] must be filled out in the system only.
 			Pages [13] and [14] require original signatures and are mandatory. 
-			These pages must be filled out, printed, signed and uploaded back into the system with original signatures. 
+			These pages must be filled out, printed, signed and uploaded back into the system with original signatures.
+            It is required that the student disclose any and all physical and psychological health related issues.
+            Failure to disclose any health related information could result in the termination of the student's program.
 			</div>
 			<br><br>
 		</td>
