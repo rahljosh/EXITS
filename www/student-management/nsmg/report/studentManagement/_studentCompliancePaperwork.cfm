@@ -297,6 +297,8 @@
                         
                         <!--- Paperwork Option --->
                         <cfif FORM.compliantOption EQ 'Missing'>
+                            AND
+                            	sh.isActive = 1
                             AND 
                                 (
                                     sh.compliance_host_app_page1_date IS NULL 
