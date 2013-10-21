@@ -44,8 +44,7 @@
                     
                         <li>
                         	Submit permission form and payment forms with all signatures to MPD Tour America either by fax at: <u>718-439-8565</u> or by e-mail: 
-                        	<a href="mailto:#APPLICATION.MPD.email#">#APPLICATION.MPD.email#</a><u>info@mpdtoursamerica.com</u></a>
-                      	</li>
+                        	<a href="mailto:#APPLICATION.MPD.email#">#APPLICATION.MPD.email#</a></li>
                         <ul class="paragraphRules">
                             <li><a href="mailto:#APPLICATION.MPD.email#">#APPLICATION.MPD.email#</a>
                             <li>fax:   +1 718 439 8565  
