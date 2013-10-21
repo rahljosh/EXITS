@@ -147,35 +147,13 @@
 		<td align="center" width="90" valign="top">&nbsp;</td>
 		<td align="center" width="90" valign="top">&nbsp;</td>				
 	</tr>
-    
-    <!--- HEPATITIS A--->
-	<tr>
-		<td align="center" width="130" valign="top"><b>Hepatitis A</b></td>
-		<td align="center" width="90" valign="top"><br> <small>1st </small><br><br></td>
-		<td align="center" width="90" valign="top"><br> <small>2nd </small><br><br></td>
-		<td align="center" width="90" valign="top">&nbsp;</td>
-		<td align="center" width="90" valign="top">&nbsp;</td>
-		<td align="center" width="90" valign="top">&nbsp;</td>
-		<td align="center" width="90" valign="top">&nbsp;</td>				
-	</tr>
 							
-	<!--- HEPATITIS B--->
+	<!--- HEPATITIS --->
 	<tr>
 		<td align="center" width="130" valign="top"><b>Hepatitis B</b></td>
 		<td align="center" width="90" valign="top"><br> <small>1st </small><br><br></td>
 		<td align="center" width="90" valign="top"><br> <small>2nd </small><br><br></td>
 		<td align="center" width="90" valign="top"><br> <small>3rd </small><br><br></td>
-		<td align="center" width="90" valign="top">&nbsp;</td>
-		<td align="center" width="90" valign="top">&nbsp;</td>
-		<td align="center" width="90" valign="top">&nbsp;</td>				
-	</tr>
-    
-    <!--- MENINGOCOCCAL--->
-	<tr>
-		<td align="center" width="130" valign="top"><b>Meningococcal</b></td>
-		<td align="center" width="90" valign="top"><br> <small>1st </small><br><br></td>
-		<td align="center" width="90" valign="top"><br> <small>2nd </small><br><br></td>
-		<td align="center" width="90" valign="top">&nbsp;</td>
 		<td align="center" width="90" valign="top">&nbsp;</td>
 		<td align="center" width="90" valign="top">&nbsp;</td>
 		<td align="center" width="90" valign="top">&nbsp;</td>				

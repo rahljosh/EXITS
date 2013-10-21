@@ -47,58 +47,46 @@ function NextPage() {
 
 <cfset doc = 'page13'>
 
-<cfquery name="get_dpt" datasource="#APPLICATION.DSN#">
+<cfquery name="get_dpt" datasource="MySql">
 	SELECT vaccineid, studentid, vaccine, disease, shot1, shot2, shot3, shot4, shot5, booster
 	FROM smg_student_app_shots
 	WHERE vaccine = 'DTaP' AND studentid = '#get_student_info.studentid#'
 </cfquery>
 
-<cfquery name="get_topv" datasource="#APPLICATION.DSN#">
+<cfquery name="get_topv" datasource="MySql">
 	SELECT vaccineid, studentid, vaccine, disease, shot1, shot2, shot3, shot4, shot5, booster
 	FROM smg_student_app_shots
 	WHERE vaccine = 'topv' AND studentid = '#get_student_info.studentid#'
 </cfquery>
 
-<cfquery name="get_measles" datasource="#APPLICATION.DSN#">
+<cfquery name="get_measles" datasource="MySql">
 	SELECT vaccineid, studentid, vaccine, disease, shot1, shot2, shot3, shot4, shot5, booster
 	FROM smg_student_app_shots
 	WHERE vaccine = 'measles' AND studentid = '#get_student_info.studentid#'
 </cfquery>
 
-<cfquery name="get_mumps" datasource="#APPLICATION.DSN#">
+<cfquery name="get_mumps" datasource="MySql">
 	SELECT vaccineid, studentid, vaccine, disease, shot1, shot2, shot3, shot4, shot5, booster
 	FROM smg_student_app_shots
 	WHERE vaccine = 'mumps' AND studentid = '#get_student_info.studentid#'
 </cfquery>
 
-<cfquery name="get_rubella" datasource="#APPLICATION.DSN#">
+<cfquery name="get_rubella" datasource="MySql">
 	SELECT vaccineid, studentid, vaccine, disease, shot1, shot2, shot3, shot4, shot5, booster
 	FROM smg_student_app_shots
 	WHERE vaccine = 'rubella' AND studentid = '#get_student_info.studentid#'
 </cfquery>
 
-<cfquery name="get_varicella" datasource="#APPLICATION.DSN#">
+<cfquery name="get_varicella" datasource="MySql">
 	SELECT vaccineid, studentid, vaccine, disease, shot1, shot2, shot3, shot4, shot5, booster
 	FROM smg_student_app_shots
 	WHERE vaccine = 'varicella' AND studentid = '#get_student_info.studentid#'
 </cfquery>
 
-<cfquery name="get_hepatitis" datasource="#APPLICATION.DSN#">
+<cfquery name="get_hepatitis" datasource="MySql">
 	SELECT vaccineid, studentid, vaccine, disease, shot1, shot2, shot3, shot4, shot5, booster
 	FROM smg_student_app_shots
 	WHERE vaccine = 'hepatitis b' AND studentid = '#get_student_info.studentid#'
-</cfquery>
-
-<cfquery name="get_hepatitisA" datasource="#APPLICATION.DSN#">
-	SELECT vaccineid, studentid, vaccine, disease, shot1, shot2, shot3, shot4, shot5, booster
-	FROM smg_student_app_shots
-	WHERE vaccine = 'hepatitis a' AND studentid = '#get_student_info.studentid#'
-</cfquery>
-
-<cfquery name="get_meningococcal" datasource="#APPLICATION.DSN#">
-	SELECT vaccineid, studentid, vaccine, disease, shot1, shot2, shot3, shot4, shot5, booster
-	FROM smg_student_app_shots
-	WHERE vaccine = 'meningococcal' AND studentid = '#get_student_info.studentid#'
 </cfquery>
 
 <!--- HEADER OF TABLE --->
@@ -254,24 +242,8 @@ function NextPage() {
 		<td align="center" width="90" valign="top">&nbsp;</td>
 		<td align="center" width="90" valign="top">&nbsp;</td>				
 	</tr>
-    
-    <!--- HEPATITIS A--->
-	<cfif get_hepatitisA.recordcount EQ 0>  <!--- HEPATITIS has not been entered --->
-		<cfinput type="hidden" name="new_hepatitisA" value="HEPATITIS A">	
-	<cfelse>
-		<cfinput type="hidden" name="upd_hepatitisA" value="#get_hepatitisA.vaccineid#">	
-	</cfif>	
-	<tr>
-		<td align="center" width="130" valign="top"><b>Hepatitis A</b></td>
-		<td align="center" width="90" valign="top"><cfinput type="text" name="hepatitisA1" size="11" value="#DateFormat(get_hepatitisA.shot1, 'mm/dd/yyyy')#" maxlength="10" validate="date" message="Please enter a valid date for the 1st Hepatitis A shot" onchange="DataChanged();"><br> <small>1st </small><br><br></td>
-		<td align="center" width="90" valign="top"><cfinput type="text" name="hepatitisA2" size="11" value="#DateFormat(get_hepatitisA.shot2, 'mm/dd/yyyy')#" maxlength="10" validate="date" message="Please enter a valid date for the 2nd Hepatitis A shot" onchange="DataChanged();"><br> <small>2nd </small><br><br></td>
-		<td align="center" width="90" valign="top">&nbsp;</td>
-		<td align="center" width="90" valign="top">&nbsp;</td>
-		<td align="center" width="90" valign="top">&nbsp;</td>
-		<td align="center" width="90" valign="top">&nbsp;</td>				
-	</tr>
 							
-	<!--- HEPATITIS B--->
+	<!--- HEPATITIS --->
 	<cfif get_hepatitis.recordcount EQ 0>  <!--- HEPATITIS has not been entered --->
 		<cfinput type="hidden" name="new_hepatitis" value="HEPATITIS B">	
 	<cfelse>
@@ -282,22 +254,6 @@ function NextPage() {
 		<td align="center" width="90" valign="top"><cfinput type="text" name="hepatitis1" size="11" value="#DateFormat(get_hepatitis.shot1, 'mm/dd/yyyy')#" maxlength="10" validate="date" message="Please enter a valid date for the 1st Hepatitis B shot" onchange="DataChanged();"><br> <small>1st </small><br><br></td>
 		<td align="center" width="90" valign="top"><cfinput type="text" name="hepatitis2" size="11" value="#DateFormat(get_hepatitis.shot2, 'mm/dd/yyyy')#" maxlength="10" validate="date" message="Please enter a valid date for the 2nd Hepatitis B shot" onchange="DataChanged();"><br> <small>2nd </small><br><br></td>
 		<td align="center" width="90" valign="top"><cfinput type="text" name="hepatitis3" size="11" value="#DateFormat(get_hepatitis.shot3, 'mm/dd/yyyy')#" maxlength="10" validate="date" message="Please enter a valid date for the 3rd Hepatitis B shot" onchange="DataChanged();"><br> <small>3rd </small><br><br></td>
-		<td align="center" width="90" valign="top">&nbsp;</td>
-		<td align="center" width="90" valign="top">&nbsp;</td>
-		<td align="center" width="90" valign="top">&nbsp;</td>				
-	</tr>
-    
-    <!--- MENINGOCOCCAL--->
-	<cfif get_meningococcal.recordcount EQ 0>  <!--- MENINGOCOCCAL has not been entered --->
-		<cfinput type="hidden" name="new_meningococcal" value="MENINGOCOCCAL">	
-	<cfelse>
-		<cfinput type="hidden" name="upd_meningococcal" value="#get_meningococcal.vaccineid#">	
-	</cfif>	
-	<tr>
-		<td align="center" width="130" valign="top"><b>Meningococcal (mcv4)</b></td>
-		<td align="center" width="90" valign="top"><cfinput type="text" name="meningococcal1" size="11" value="#DateFormat(get_meningococcal.shot1, 'mm/dd/yyyy')#" maxlength="10" validate="date" message="Please enter a valid date for the 1st Meningococcal shot" onchange="DataChanged();"><br> <small>1st </small><br><br></td>
-		<td align="center" width="90" valign="top"><cfinput type="text" name="meningococcal2" size="11" value="#DateFormat(get_meningococcal.shot2, 'mm/dd/yyyy')#" maxlength="10" validate="date" message="Please enter a valid date for the 2nd Meningococcal shot" onchange="DataChanged();"><br> <small>2nd </small><br><br></td>
-		<td align="center" width="90" valign="top">&nbsp;</td>
 		<td align="center" width="90" valign="top">&nbsp;</td>
 		<td align="center" width="90" valign="top">&nbsp;</td>
 		<td align="center" width="90" valign="top">&nbsp;</td>				

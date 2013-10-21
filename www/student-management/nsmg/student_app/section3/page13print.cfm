@@ -20,58 +20,46 @@
 
 <cfinclude template="../querys/get_student_info.cfm">
 
-<cfquery name="get_dpt" datasource="#APPLICATION.DSN#">
+<cfquery name="get_dpt" datasource="MySql">
 	SELECT vaccineid, studentid, vaccine, disease, shot1, shot2, shot3, shot4, shot5, booster
 	FROM smg_student_app_shots
 	WHERE vaccine = 'DTaP' AND studentid = '#get_student_info.studentid#'
 </cfquery>
 
-<cfquery name="get_topv" datasource="#APPLICATION.DSN#">
+<cfquery name="get_topv" datasource="MySql">
 	SELECT vaccineid, studentid, vaccine, disease, shot1, shot2, shot3, shot4, shot5, booster
 	FROM smg_student_app_shots
 	WHERE vaccine = 'topv' AND studentid = '#get_student_info.studentid#'
 </cfquery>
 
-<cfquery name="get_measles" datasource="#APPLICATION.DSN#">
+<cfquery name="get_measles" datasource="MySql">
 	SELECT vaccineid, studentid, vaccine, disease, shot1, shot2, shot3, shot4, shot5, booster
 	FROM smg_student_app_shots
 	WHERE vaccine = 'measles' AND studentid = '#get_student_info.studentid#'
 </cfquery>
 
-<cfquery name="get_mumps" datasource="#APPLICATION.DSN#">
+<cfquery name="get_mumps" datasource="MySql">
 	SELECT vaccineid, studentid, vaccine, disease, shot1, shot2, shot3, shot4, shot5, booster
 	FROM smg_student_app_shots
 	WHERE vaccine = 'mumps' AND studentid = '#get_student_info.studentid#'
 </cfquery>
 
-<cfquery name="get_rubella" datasource="#APPLICATION.DSN#">
+<cfquery name="get_rubella" datasource="MySql">
 	SELECT vaccineid, studentid, vaccine, disease, shot1, shot2, shot3, shot4, shot5, booster
 	FROM smg_student_app_shots
 	WHERE vaccine = 'rubella' AND studentid = '#get_student_info.studentid#'
 </cfquery>
 
-<cfquery name="get_varicella" datasource="#APPLICATION.DSN#">
+<cfquery name="get_varicella" datasource="MySql">
 	SELECT vaccineid, studentid, vaccine, disease, shot1, shot2, shot3, shot4, shot5, booster
 	FROM smg_student_app_shots
 	WHERE vaccine = 'varicella' AND studentid = '#get_student_info.studentid#'
 </cfquery>
 
-<cfquery name="get_hepatitis" datasource="#APPLICATION.DSN#">
+<cfquery name="get_hepatitis" datasource="MySql">
 	SELECT vaccineid, studentid, vaccine, disease, shot1, shot2, shot3, shot4, shot5, booster
 	FROM smg_student_app_shots
 	WHERE vaccine = 'hepatitis b' AND studentid = '#get_student_info.studentid#'
-</cfquery>
-
-<cfquery name="get_hepatitisA" datasource="#APPLICATION.DSN#">
-	SELECT vaccineid, studentid, vaccine, disease, shot1, shot2, shot3, shot4, shot5, booster
-	FROM smg_student_app_shots
-	WHERE vaccine = 'hepatitis a' AND studentid = '#get_student_info.studentid#'
-</cfquery>
-
-<cfquery name="get_meningococcal" datasource="#APPLICATION.DSN#">
-	SELECT vaccineid, studentid, vaccine, disease, shot1, shot2, shot3, shot4, shot5, booster
-	FROM smg_student_app_shots
-	WHERE vaccine = 'meningococcal' AND studentid = '#get_student_info.studentid#'
 </cfquery>
 
 <cfset doc = 'page13'>
@@ -202,35 +190,13 @@
 		<td align="center" width="90" valign="top">&nbsp;</td>
 		<td align="center" width="90" valign="top">&nbsp;</td>				
 	</tr>
-    
-    <!--- HEPATITIS A --->
-	<tr>
-		<td align="center" width="130" valign="top"><b>Hepatitis A</b></td>
-		<td align="center" width="90" valign="top">#DateFormat(get_hepatitisA.shot1, 'mm/dd/yyyy')#<br> <small>1st </small><br><br></td>
-		<td align="center" width="90" valign="top">#DateFormat(get_hepatitisA.shot2, 'mm/dd/yyyy')#<br> <small>2nd </small><br><br></td>
-		<td align="center" width="90" valign="top">&nbsp;</td>
-		<td align="center" width="90" valign="top">&nbsp;</td>
-		<td align="center" width="90" valign="top">&nbsp;</td>
-		<td align="center" width="90" valign="top">&nbsp;</td>				
-	</tr>
 							
-	<!--- HEPATITIS B --->
+	<!--- HEPATITIS --->
 	<tr>
 		<td align="center" width="130" valign="top"><b>Hepatitis B</b></td>
 		<td align="center" width="90" valign="top">#DateFormat(get_hepatitis.shot1, 'mm/dd/yyyy')#<br> <small>1st </small><br><br></td>
 		<td align="center" width="90" valign="top">#DateFormat(get_hepatitis.shot2, 'mm/dd/yyyy')#<br> <small>2nd </small><br><br></td>
 		<td align="center" width="90" valign="top">#DateFormat(get_hepatitis.shot3, 'mm/dd/yyyy')#<br> <small>3rd </small><br><br></td>
-		<td align="center" width="90" valign="top">&nbsp;</td>
-		<td align="center" width="90" valign="top">&nbsp;</td>
-		<td align="center" width="90" valign="top">&nbsp;</td>				
-	</tr>
-    
-    <!--- MENINGOCOCCAL --->
-	<tr>
-		<td align="center" width="130" valign="top"><b>Meningococcal</b></td>
-		<td align="center" width="90" valign="top">#DateFormat(get_meningococcal.shot1, 'mm/dd/yyyy')#<br> <small>1st </small><br><br></td>
-		<td align="center" width="90" valign="top">#DateFormat(get_meningococcal.shot2, 'mm/dd/yyyy')#<br> <small>2nd </small><br><br></td>
-		<td align="center" width="90" valign="top">&nbsp;</td>
 		<td align="center" width="90" valign="top">&nbsp;</td>
 		<td align="center" width="90" valign="top">&nbsp;</td>
 		<td align="center" width="90" valign="top">&nbsp;</td>				
