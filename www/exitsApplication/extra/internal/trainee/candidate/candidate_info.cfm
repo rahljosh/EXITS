@@ -305,7 +305,17 @@
 			overlayClose:false,
 			escKey:true,
 			onClosed:function(){ window.location.reload(); }
-		});	
+		});
+		
+		// Pop Up Flight Information 
+		$('.popUpFlightInformation').popupWindow({ 
+			height:600, 
+			width:1100,
+			centerBrowser:1,
+			scrollbars:1,
+			resizable:1,
+			windowName:'flightInformation'
+		}); 
 		
 	});
 	
@@ -788,7 +798,7 @@
                                         <tr>
                                         	<td class="style1" colspan="2">
 												<input type="checkbox" name="doc_DS7002_applicant" id="doc_DS7002_applicant" value="1" class="formField" disabled <cfif VAL(qGetCandidate.doc_DS7002_applicant)> checked </cfif> >												
-												<label for="doc_DS7002_applicant">FORM DS-7002 Applicant</label>
+												<label for="doc_DS7002_applicant">Form DS-7002 Applicant</label>
                                             </td>
                                             <td class="style1" colspan="2">
 												<input type="checkbox" name="doc_ISEInterviewReport" id="doc_ISEInterviewReport" value="1" class="formField" disabled <cfif VAL(qGetCandidate.doc_ISEInterviewReport)> checked </cfif> >												
@@ -859,13 +869,6 @@
                                         <tr id="program_history" bgcolor="FFBD9D" style="display:none;">
                                             <td class="style1" align="right"><b>Reason:</b></td>
                                             <td class="style1" colspan="3"><input name="reason" id="reason" type="text" class="style1" size="40"></td>
-                                        </tr>                                        
-                                        <tr>
-                                            <td class="style1" bordercolor="##FFFFFF" align="right"><b>Arrival Date:</b></td>
-                                            <td class="style1" bordercolor="##FFFFFF" colspan="3">
-												<span class="readOnly">#dateformat(qGetCandidate.arrivaldate, 'mm/dd/yyyy')#</span>
-                                                <cfinput type="text" class="style1 editPage" name="arrivaldate" size=35 value="#dateformat(qGetCandidate.arrivaldate, 'mm/dd/yyyy')#" maxlength="35" validate="date" message="Arrival Date(MM/DD/YYYY)">
-                                            </td>
                                         </tr>	
                                         <tr>
                                             <td class="style1" bordercolor="##FFFFFF" align="right"><b>Remarks:</b></td>
@@ -1155,16 +1158,18 @@
                                 
                                     <table width="100%" cellpadding=3 cellspacing="0" border="0">
                                         <tr bgcolor="##C2D1EF">
-                                            <td colspan="4" class="style2" bgcolor="8FB6C9">&nbsp;:: Flight Information</td>
+                                            <td colspan="4" class="style2" bgcolor="8FB6C9">
+                                            	&nbsp;:: Flight Information
+                                                <span style="float:right; padding-right:20px;">
+                                                	<a href="onlineApplication/index.cfm?action=flightInfo&uniqueID=#qGetCandidate.uniqueID#&completeApplication=0" class="style2 popUpFlightInformation">[ Add/Edit ]</a>
+                                                </span>
+                                          	</td>
                                         </tr>	
                                         <tr>
                                             <td class="style1">Depart Home</td><td class="style1"><cfif LEN(qDepartureInfo.departDate)>#DateFormat(qDepartureInfo.departDate, 'mm/dd/yyyy')#<cfelse>No Flights on Record</cfif> </td>
                                         </tr>
                                         <tr>
                                             <td class="style1">Depart US</td><td class="style1"><cfif LEN(qArrivalInfo.departDate)>#DateFormat(qArrivalInfo.departDate, 'mm/dd/yyyy')#<cfelse>No Flights on Record</cfif></td>
-                                        </tr>
-                                        <tr>
-                                            <Td align="Center" colspan=2 class="style1"><a href="" onClick="javascript: win=window.open('flight_info/flight_info.cfm?candidateID=#qGetCandidate.candidateID#', 'Settings', 'height=500, width=740, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">View / Edit  Itinerary</A></Td>
                                         </tr>
                                     </table>
                                 </td>	
