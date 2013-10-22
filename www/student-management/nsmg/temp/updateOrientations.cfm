@@ -5,7 +5,7 @@
     AND fk_studentID = (SELECT studentID FROM smg_students WHERE studentID = fk_studentID AND programID > 338)
     AND fk_studentID IN (SELECT studentID FROM smg_hostHistory WHERE host_arrival_orientation IS NULL AND isActive = 1)
     GROUP BY fk_studentID
-    LIMIT 10
+    LIMIT 50
 </cfquery>
 
 <cfquery name="qGetVFStudentOrientation" datasource="#APPLICATION.DSN#">
@@ -15,7 +15,7 @@
     AND fk_studentID = (SELECT studentID FROM smg_students WHERE studentID = fk_studentID AND programID > 338)
     AND fk_studentID IN (SELECT studentID FROM smg_hostHistory WHERE stu_arrival_orientation IS NULL AND isActive = 1)
     GROUP BY fk_studentID
-    LIMIT 10
+    LIMIT 50
 </cfquery>
 
 <cfoutput>
@@ -26,6 +26,8 @@
         	UPDATE smg_hostHistory
             SET host_arrival_orientation = #dateAdded#
             WHERE studentID = #fk_studentID#
+            AND host_arrival_orientation IS NULL 
+            AND isActive = 1
         </cfquery>
 		<cfset totalHost = totalHost + updatedHostOrientation.recordCount>
     </cfloop>
@@ -34,6 +36,8 @@
         	UPDATE smg_hostHistory
             SET stu_arrival_orientation = #dateAdded#
             WHERE studentID = #fk_studentID#
+            AND stu_arrival_orientation IS NULL 
+            AND isActive = 1
         </cfquery>
         <cfset totalStudent = totalStudent + updatedStudentOrientation.recordCount>
     </cfloop>
