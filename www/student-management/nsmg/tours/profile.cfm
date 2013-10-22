@@ -299,7 +299,7 @@
                     <p>
                         Please return the permission form by:<br />
                         <ul>
-                            <li>email: info@mpdtoursamerica.com</li>
+                            <li>email: mpdtours@exitsapplication.com</li>
                             <li>fax:   +1 718 439 8565</li>
                             <li>mail:  9101 Shore Road, ##203 - Brooklyn, NY 11209</li>
                         </ul>
@@ -310,14 +310,14 @@
                         <a href="http://trips.exitsapplication.com/frequently-asked-questions.cfm">http://trips.exitsapplication.com/frequently-asked-questions.cfm</a>
                     </p>
                     
-                    <p>If you have any questions that are not answered please don't hesitate to contact us at info@mpdtoursamerica.com. </p>
+                    <p>If you have any questions that are not answered please don't hesitate to contact us at mpdtours@exitsapplication.com. </p>
                     
                     <p>See you soon!</p>
                     
                     <p>
                         MPD Tour America, Inc.<br />
                         9101 Shore Road ##203- Brooklyn, NY 11209<br />
-                        Email: info@mpdtoursamerica.com<br />
+                        Email: mpdtours@exitsapplication.com<br />
                         TOLL FREE: 1-800-983-7780<br />
                         Fax: 1-(718)-439-8565
                     </p>
@@ -325,7 +325,7 @@
                 </cfsavecontent>   
                 
                 <cfinvoke component="nsmg.cfc.email" method="send_mail">
-                    <cfinvokeargument name="email_from" value="<info@mpdtoursamerica.com> (Trip Support)">
+                    <cfinvokeargument name="email_from" value="<mpdtours@exitsapplication.com> (Trip Support)">
                     <cfinvokeargument name="email_to" value="#FORM.emailAddress#">
                     <cfinvokeargument name="email_bcc" value="trips@iseusa.com">
                     <cfinvokeargument name="email_subject" value="Your #qGetRegistrationInfo.tour_name# trip Details">
@@ -705,7 +705,7 @@
 					<p><strong>To Book Your Airfare</strong></p>
 
                     <p>
-                    	Please email the tour company at <a href="mailto:info@mpdtoursamerica.com">info@mpdtoursamerica.com</a> explaining you have returned all of 
+                    	Please email the tour company at <a href="mailto:mpdtours@exitsapplication.com">mpdtours@exitsapplication.com</a> explaining you have returned all of 
                         your material (payment and permission forms) and include your full name, student ID number, and a phone number to best reach you.
                     </p>
 
@@ -722,14 +722,14 @@
                         <a href="http://trips.exitsapplication.com/frequently-asked-questions.cfm">http://trips.exitsapplication.com/frequently-asked-questions.cfm</a>
                     </p>
                     
-                    <p>If you have any questions that are not answered please don't hesitate to contact us at info@mpdtoursamerica.com </p>
+                    <p>If you have any questions that are not answered please don't hesitate to contact us at mpdtours@exitsapplication.com </p>
                     
                     <p>See you soon!</p>
                     
                     <p>
                         MPD Tour America, Inc.<br />
                         9101 Shore Road ##203- Brooklyn, NY 11209<br />
-                        Email: info@mpdtoursamerica.com<br />
+                        Email: mpdtours@exitsapplication.com<br />
                         TOLL FREE: 1-800-983-7780<br />
                         Fax: 1-(718)-439-8565
                     </p>
@@ -737,7 +737,7 @@
                 </cfsavecontent>   
                 
                 <cfinvoke component="nsmg.cfc.email" method="send_mail">
-                    <cfinvokeargument name="email_from" value="<info@mpdtoursamerica.com> (Trip Support)">
+                    <cfinvokeargument name="email_from" value="<mpdtours@exitsapplication.com> (Trip Support)">
                     <cfinvokeargument name="email_to" value="#FORM.emailAddress#">
                     <cfinvokeargument name="email_bcc" value="trips@iseusa.com">
                     <cfinvokeargument name="email_subject" value="Your #qGetRegistrationInfo.tour_name# trip - Payment Received">
@@ -803,12 +803,12 @@
                         
                         <p>You have been refunded #NumberFormat(FORM.refundAmount,"$999.99")#</p>
                         
-                        <p>If you have any questions that are not answered please don't hesitate to contact us at info@mpdtoursamerica.com </p>
+                        <p>If you have any questions that are not answered please don't hesitate to contact us at mpdtours@exitsapplication.com </p>
                         
                         <p>
                             MPD Tour America, Inc.<br />
                             9101 Shore Road ##203- Brooklyn, NY 11209<br />
-                            Email: info@mpdtoursamerica.com<br />
+                            Email: mpdtours@exitsapplication.com<br />
                             TOLL FREE: 1-800-983-7780<br />
                             Fax: 1-(718)-439-8565
                         </p>
@@ -816,9 +816,9 @@
                 </cfsavecontent>
                 
                 <cfinvoke component="nsmg.cfc.email" method="send_mail">
-                    <cfinvokeargument name="email_from" value="<info@mpdtoursamerica.com> (Trip Support)">
+                    <cfinvokeargument name="email_from" value="<mpdtours@exitsapplication.com> (Trip Support)">
                     <cfinvokeargument name="email_to" value="#FORM.emailAddress#">
-                    <cfinvokeargument name="email_cc" value="info@mpdtoursamerica.com,tom@iseusa.com,#qGetRegistrationInfo.pm_email#,#qGetRegistrationInfo.hostEmail#">
+                    <cfinvokeargument name="email_cc" value="mpdtours@exitsapplication.com,tom@iseusa.com,#qGetRegistrationInfo.pm_email#,#qGetRegistrationInfo.hostEmail#">
                     <cfinvokeargument name="email_bcc" value="trips@iseusa.com">
                     <cfinvokeargument name="email_subject" value="#qGetRegistrationInfo.tour_name# Trip - Notice of Cancellation">
                     <cfinvokeargument name="email_message" value="#cancellationMessage#">
