@@ -22,9 +22,20 @@
     <cfparam name="FORM.pr_rmonth" default="">
     <cfparam name="CLIENT.pr_rmonth" default="">
     
+    <cfparam name="URL.pr_id" default="0">
+    <cfparam name="URL.pr_action" default="">
+    
     <cfscript>
 		if ( VAL(FORM.pr_rmonth) ) {
 			CLIENT.pr_rmonth = FORM.pr_rmonth;
+		}
+		
+		if ( VAL(URL.pr_id) ) {
+			FORM.pr_id = URL.pr_id;
+		}
+		
+		if ( LEN(URL.pr_action) ) {
+			FORM.pr_action = URL.pr_action;	
 		}
 		
 		questionList = '';

@@ -347,7 +347,10 @@
         AND 
             s.arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
     </cfif>
-
+	
+    GROUP BY
+    	s.studentID
+        
     <!--- include the advisorID and arearepid because we're grouping by those in the output, just in case two have the same first and last name. --->
     ORDER BY 
     	advisor_lastname, 
@@ -358,6 +361,7 @@
         s.arearepid, 
         s.familyLastName, 
         s.firstName
+   	
 </cfquery>
 
 <cfif VAL(qGetResults.recordCount)>
@@ -578,31 +582,15 @@
                             
 								<!--- access is limited to: CLIENT.usertype LTE 4, second vist rep, supervising rep, regional advisor, regional director, and facilitator. --->
                                 <cfif CLIENT.usertype LTE 4 OR listFind("#qGetCurrentReport.fk_secondVisitRep#,#qGetCurrentReport.fk_sr_user#,#qGetCurrentReport.fk_ra_user#,#qGetCurrentReport.fk_rd_user#,#qGetCurrentReport.fk_ny_user#,#qGetCurrentReport.fk_secondVisitRep#", CLIENT.userID)>
-									
-									<!--- restrict view of report until the supervising rep approves it. --->
-                                    <!----check the type of report, use appropriate person to view---->
-                                    <cfif qGetCurrentReport.pr_sr_approved_date EQ '' AND areaRepID NEQ CLIENT.userID>
-                                    
-										<!----allow office to view so can delete if needed---->
-                                        <cfif client.usertype lte 4>
-                                            <form action="index.cfm?curdoc=progress_report_info" method="post" name="theForm_#qGetCurrentReport.pr_id#" id="theForm_#qGetCurrentReport.pr_id#">
-                                            	<input type="hidden" name="pr_id" value="#qGetCurrentReport.pr_id#">
-                                            </form>
-                                        </cfif>	
-                                        
-                                		<a href="javascript:document.theForm_#qGetCurrentReport.pr_id#.submit();">Pending</a>
-                                
-                                	<!----end allow view to delete---->
-                                	<cfelse>
-                                    
-                                        <form action="index.cfm?curdoc=progress_report_info" method="post" name="theForm_#qGetCurrentReport.pr_id#" id="theForm_#qGetCurrentReport.pr_id#">
-                                        	<input type="hidden" name="pr_id" value="#qGetCurrentReport.pr_id#">
-                                        </form>
-                                        
-                                        <a href="javascript:document.theForm_#qGetCurrentReport.pr_id#.submit();">View</a>
-                                        
-                                        
-                                	</cfif>
+									<cfif qGetCurrentReport.pr_sr_approved_date EQ '' AND areaRepID NEQ CLIENT.userID>
+                                    	<cfif client.usertype lte 4>
+                                        	<a href="?curdoc=progress_report_info&pr_id=#qGetCurrentReport.pr_id#">Pending</a>
+                                        <cfelse>
+                                        	Pending
+                                        </cfif>
+                                    <cfelse>
+                                    	<a href="?curdoc=progress_report_info&pr_id=#qGetCurrentReport.pr_id#">View</a>
+                                    </cfif>
                                     
                                 <cfelse>
                                 	N/A 
@@ -636,20 +624,6 @@
 								</cfif>
                                     
 							</cfif>
-                          	
-                            <!--- Not In Country Issue | Troubleshooting --->
-							<!---
-							<cfif CLIENT.userType EQ 1>
-								<br />
-								vInCountryArrival --> #DateFormat(vInCountryArrival, 'mm/dd/yyyy')# <br />
-
-								vInCountryDeparture --> #DateFormat(vInCountryDeparture, 'mm/dd/yyyy')# <br />
-
-								vReportDate -> #DateFormat(vReportDate, 'mm/dd/yyyy')# <br />	
-		
-								vIsStudentInCountry --> #YesNoFormat(VAL(vIsStudentInCountry))# <br />
-							</cfif>
-							--->
                             
                         </td>
                         <td align="center">#dateFormat(qGetCurrentReport.pr_sr_approved_date, 'mm/dd/yyyy')#</td>
@@ -663,7 +637,7 @@
                         <td align="center">#dateFormat(qGetCurrentReport.pr_rd_approved_date, 'mm/dd/yyyy')#</td>
                         <td align="center">
                         	<cfif listFind("1,2,3,4", CLIENT.userType) AND isDate(qGetCurrentReport.pr_rd_approved_date) AND NOT isDate(qGetCurrentReport.pr_ny_approved_date)>
-                            	<a href="javascript:document.theForm_#qGetCurrentReport.pr_id#.submit();">[ Click here to Approve ]</a>
+                            	<a href="?curdoc=progress_report_info&pr_id=#qGetCurrentReport.pr_id#&pr_action=approve">[ Click here to Approve ]</a>
                             <cfelse>
 		                        #dateFormat(qGetCurrentReport.pr_ny_approved_date, 'mm/dd/yyyy')#</td>
                             </cfif>
