@@ -462,7 +462,7 @@
 									#firstname# #middlename# #lastname# - #userID#<br>
 									#address#<br>
 									<cfif address2 NEQ ''>#address2#<br></cfif>
-									#city#, #state##zip# #country#<br>
+									#city#, #state# #zip# #country#<br>
 									<cfif phone NEQ ''>Home: #phone#<br></cfif>
 									<cfif work_phone NEQ ''>Work: #work_phone#<br></cfif>
 									<cfif cell_phone NEQ ''>Cell: #cell_phone#<br></cfif>
@@ -839,8 +839,8 @@
                 <div class="rdholder" style="width:100%;float:left;" > 
 				<div class="rdtop"> 
                 <span class="rdtitle">Criminal Background Checks</span> 
-                <cfif CLIENT.usertype EQ 1 OR user_compliance.compliance EQ 1>
-                <a href="?curdoc=cbc/users_cbc&userID=#rep_info.userID#"><img src="pics/buttons/pencilBlue23x29.png" border="0" alt="Edit" class="floatRight"></a>
+                <cfif CLIENT.usertype EQ 1 OR user_compliance.compliance EQ 1 OR APPLICATION.CFC.USER.hasUserRoleAccess(userID=CLIENT.userID, role="runCBC")>
+                <a href="?curdoc=cbc/users_cbc&userID=#rep_info.userID#"><img src="pics/buttons/pencilBlue23x29.png" alt="Edit" border="0" class="floatRight"></a>
                 </cfif>
             	</div> <!-- end top --> 
              <div class="rdbox">
