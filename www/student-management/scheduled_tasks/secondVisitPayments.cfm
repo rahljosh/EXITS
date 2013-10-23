@@ -12,6 +12,8 @@
 </cfif>
 
 <cfquery datasource="#APPLICATION.DSN#">
+	insert into smg_users_payments (agentID,companyID,studentID,programID,old_programID,hostID,paymenttype,transtype,amount,comment,
+								date,inputby,ispaid)
     select
     pr.fk_secondVisitrep, <!---agentID--->
     st.companyID, <!---companyID--->
