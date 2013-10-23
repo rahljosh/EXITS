@@ -12,50 +12,33 @@
 </cfif>
 
 <cfquery datasource="#APPLICATION.DSN#">
-	INSERT INTO smg_users_payments(
-    	agentID,
-        companyID,
-        studentID,
-        programID,
-        old_programID,
-        hostID,
-        paymenttype,
-        transtype,
-        amount,
-        comment,
-        date,
-        inputby,
-        ispaid )
-  	SELECT
-        pr.fk_secondVisitrep, <!---agentID--->
-        st.companyID, <!---companyID--->
-        st.studentID, <!---studentID--->
-        st.programID, <!---programID--->
-        0, <!---old_programID--->
-        hh.hostID, <!---hostID--->
-        22, <!---paymentType - placement--->
-        "SecondVisit", <!---transtype--->
-        50, <!---amount--->
-        "Auto-created psm", <!---comment--->
-        CURRENT_DATE, <!---date--->
-        "999999", <!---inputby--->
-        1 <!---ispaid--->
-  	FROM smg_students st
-    INNER JOIN smg_hosthistory hh ON st.studentID = hh.studentID
-    INNER JOIN smg_hosts hst ON hh.hostID = hst.hostID
-    LEFT OUTER JOIN smg_users_payments pmt ON st.studentID = pmt.studentID AND pmt.paymenttype = 22 
-    INNER JOIN progress_reports pr ON st.studentID = pr.fk_student AND hh.hostid = pr.fk_host AND pr.fk_reporttype = 2 
-	WHERE hh.isActive = 1
-	AND st.programID > 339
-	AND st.companyid IN (1,2,3,4,5,12)
-	AND hh.isactive
-	AND not EXISTS(
-    	SELECT * 
-        FROM smg_users_payments pmt 
-		WHERE pmt.paymenttype = 22
-        AND st.studentID = pmt.studentID
-        AND hh.hostID = pmt.hostID )
-	AND hh.datePISEmailed IS NOT NULL
-	AND pr.pr_ny_approved_date IS NOT NULL
-	ORDER BY st.placerepID
+    select
+    pr.fk_secondVisitrep, <!---agentID--->
+    st.companyID, <!---companyID--->
+    st.studentID, <!---studentID--->
+    st.programID, <!---programID--->
+    0, <!---old_programID--->
+    hh.hostID, <!---hostID--->
+    22, <!---paymentType - placement--->
+    "SecondVisit", <!---transtype--->
+    50, <!---amount---> 
+    "Auto-created psm",<!---comment--->
+    CURRENT_DATE, <!---date--->
+    "999999", <!---inputby--->
+    1 <!---ispaid--->
+    
+    from smg_students st
+    inner join smg_hosthistory hh on st.studentID = hh.studentID
+    inner join smg_hosts hst on hh.hostID = hst.hostID
+    left outer join smg_users_payments pmt on st.studentID = pmt.studentID and pmt.paymenttype = 22 
+    inner join progress_reports pr on st.studentID = pr.fk_student and hh.hostid = pr.fk_host and pr.fk_reporttype = 2 
+    
+    where st.programID >339
+    and st.companyid in (1,2,3,4,5,12)
+    and not EXISTS(select * from smg_users_payments pmt 
+                    where pmt.paymenttype = 22 and st.studentID = pmt.studentID and hh.hostID = pmt.hostID)
+    and hh.datePISEmailed is not null
+    and pr.pr_ny_approved_date is not null
+    
+    order by st.placerepID
 </cfquery>
