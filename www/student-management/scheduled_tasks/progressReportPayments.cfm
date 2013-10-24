@@ -16,12 +16,12 @@ insert into smg_users_payments (agentID,companyID,studentID,programID,old_progra
 								date,inputby,ispaid)
 
 select distinct
-pr.fk_sr_user, <!---agentID--->
-st.companyID, <!---companyID--->
-st.studentID, <!---studentID--->
-st.programID, <!---programID--->
-0, <!---old_programID--->
-st.hostID, <!---hostID--->
+pr.fk_sr_user,
+st.companyID,
+st.studentID,
+st.programID,
+0,
+st.hostID,
 (CASE
 	when pr.pr_month_of_report = 1 then 31
 	when pr.pr_month_of_report = 2 then 5
@@ -35,20 +35,20 @@ st.hostID, <!---hostID--->
 	when pr.pr_month_of_report = 10 then 3
 	when pr.pr_month_of_report = 11 then 30
 	when pr.pr_month_of_report = 12 then 4
-end), <!---paymenttype--->
-"Supervision", <!---transtype--->
-if(prog.type = 1,40,if(prog.type = 2,42.5,50)),<!---amount depends on program---> 
-"Auto-created psm",<!---comment--->
-CURRENT_DATE, <!---date--->
-"999999", <!---inputby--->
-1 <!---ispaid--->
+end),
+"Supervision",
+if(prog.type = 1,40,if(prog.type = 2,42.5,50)),
+"Auto-created psm",
+CURRENT_DATE,
+"999999",
+1
 
 
 from smg_students st
 inner join progress_reports pr on st.studentID = pr.fk_student and pr.fk_reporttype = 1
 inner join smg_programs prog on st.programID = prog.programID
 inner join smg_hosthistory hh on st.studentID = hh.studentID
-left outer join smg_user_payment_special sppmt on pr.fk_sr_user = sppmt.fk_userID <!---and sppmt.specialpaymenttype = "Draw"--->
+left outer join smg_user_payment_special sppmt on pr.fk_sr_user = sppmt.fk_userID
 
 where 
 st.programID >339
@@ -86,19 +86,17 @@ and (
 	EXISTS(select * from progress_reports pr where st.studentID = pr.fk_student and pr.pr_month_of_report = 12 and pr.fk_reporttype = 1 and pr.pr_ny_approved_date is not null))
 	)
 
-order by st.placerepID;
-
-<!---This part accounts for arrivals who only require one supervision for the first period the student is here--->
+order by st.placerepID
 
 insert into smg_users_payments (agentID,companyID,studentID,programID,old_programID,hostID,paymenttype,transtype,amount,comment,
 								date,inputby,ispaid)
 select distinct
-pr.fk_sr_user, <!---agentID--->
-st.companyID, <!---companyID--->
-st.studentID, <!---studentID--->
-st.programID, <!---programID--->
-0, <!---old_programID--->
-st.hostID, <!---hostID--->
+pr.fk_sr_user,
+st.companyID,
+st.studentID,
+st.programID,
+0,
+st.hostID,
 (CASE
 	when pr.pr_month_of_report = 1 then 31
 	when pr.pr_month_of_report = 2 then 5
@@ -112,14 +110,13 @@ st.hostID, <!---hostID--->
 	when pr.pr_month_of_report = 10 then 3
 	when pr.pr_month_of_report = 11 then 30
 	when pr.pr_month_of_report = 12 then 4
-end), <!---paymenttype--->
-"Supervision", <!---transtype--->
-if(prog.type = 1,80,if(prog.type = 2,85,100)),<!---amount depends on program--->
-"Auto-created psm",<!---comment--->
-CURRENT_DATE, <!---date--->
-"999999", <!---inputby--->
-1 <!---ispaid--->
-
+end),
+"Supervision",
+if(prog.type = 1,80,if(prog.type = 2,85,100)),
+"Auto-created psm",
+CURRENT_DATE,
+"999999",
+1
 
 from smg_students st
 inner join progress_reports pr on st.studentID = pr.fk_student and pr.fk_reporttype = 1
@@ -127,7 +124,7 @@ inner join smg_programs prog on st.programID = prog.programID
 inner join smg_hosthistory hh on st.studentID = hh.studentID
 inner join (select studentID,flight_type, max(dep_date) as arrival_date from smg_flight_info fl where flight_type = "arrival"group by studentID) as fl
 			on st.studentID = fl.studentiD
-left outer join smg_user_payment_special sppmt on pr.fk_sr_user = sppmt.fk_userID <!---and sppmt.specialpaymenttype = "Draw"--->
+left outer join smg_user_payment_special sppmt on pr.fk_sr_user = sppmt.fk_userID
 
 where 
 st.programID >339
