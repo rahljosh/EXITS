@@ -87,7 +87,9 @@ and (
 	)
 
 order by st.placerepID
+</cfquery>
 
+<cfquery datasource="#APPLICATION.DSN#">
 insert into smg_users_payments (agentID,companyID,studentID,programID,old_programID,hostID,paymenttype,transtype,amount,comment,
 								date,inputby,ispaid)
 select distinct
@@ -117,6 +119,7 @@ if(prog.type = 1,80,if(prog.type = 2,85,100)),
 CURRENT_DATE,
 "999999",
 1
+
 
 from smg_students st
 inner join progress_reports pr on st.studentID = pr.fk_student and pr.fk_reporttype = 1
