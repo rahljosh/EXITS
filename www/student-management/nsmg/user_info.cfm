@@ -41,6 +41,22 @@
 		stUserPaperwork = APPLICATION.CFC.USER.getUserPaperwork(userID=URL.userID);
 	</cfscript>
 
+	<cfquery name="availableRights" datasource="#APPLICATION.DSN#">
+    select description, fieldid
+    from applicationlookup
+    where fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="userRole">
+    and isActive = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+    </cfquery>
+    <cfquery name="assignedRights" datasource="#APPLICATION.DSN#">
+    select roleid
+    from smg_users_role_jn
+    where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.userid#">
+    </cfquery>
+    <cfset userRights = ''>
+    <Cfloop query="assignedRights">
+    	<cfset userRights = #ListAppend(userrights, #roleid#)#>	
+    </Cfloop>
+	
 	<!----Rep Info---->
     <cfquery name="rep_info" datasource="#APPLICATION.DSN#">
         SELECT 
@@ -95,7 +111,7 @@
         	userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
     </cfquery>
 
-    <cfquery name="qGetReferences" datasource="MySQL">
+    <cfquery name="qGetReferences" datasource="#application.dsn#">
         SELECT 
         	*
         FROM
@@ -1032,7 +1048,7 @@
 	                <span class="rdtitle">Notes</span> 
                     <!--- DOS Usertype does not have access to edit information --->
                     <cfif CLIENT.userType NEQ 27>
-                        <a href="index.cfm?curdoc=forms/user_form&userID=#url.userID#"><img src="pics/buttons/pencilBlue23x29.png" class="floatRight" border=0/></a>
+                        <a href="index.cfm?curdoc=forms/user_form&userID=#url.userID#"><img src="pics/buttons/pencilBlue23x29.png" height="8" border=0 class="floatRight"/></a>
                     </cfif>
             	</div> <!-- end top --> 
              <div class="rdbox">
@@ -1104,7 +1120,7 @@
             <!--- ------------------------------------------------------------------------- ---->   
                 <br /><br />
                 <cfif APPLICATION.CFC.USER.isOfficeUser()>
-                <cfquery name="qEmploymentHistory" datasource="MySQL">
+                <cfquery name="qEmploymentHistory" datasource="#application.dsn#">
                 select *
                 from smg_users_employment_history
                 where fk_userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.userID#">
@@ -1179,6 +1195,47 @@
     <!--- ------------------------------------------------------------------------- ---->
     <!--- ------------------------------------------------------------------------- ---->
   <div style="width:49%;float:right;display:block;">
+        
+     <!----Start of Access Rights---->   
+     
+<cfif client.usertype lte 4>
+		   <div class="rdholder" style="width:100%;float:right;"> 
+				<div class="rdtop"> 
+                <span class="rdtitle">Access Rights</span> 
+                  <cfif APPLICATION.CFC.USER.hasUserRoleAccess(userID=CLIENT.userID, role="userAccess")><a href="?curdoc=forms/setAccountRights&userid=#url.userid#"> <img src="pics/buttons/pencilBlue23x29.png" border="0" alt="Edit" class="floatRight"></a></cfif>
+                  
+            	</div> <!-- end top --> 
+             <div class="rdbox">
+             <table width=100%>
+             	<tr>
+              <cfloop query="availableRights">
+                	<td valign="Center"><cfif listFind(userRights, fieldID)><img src="pics/valid.png" border=0 /><cfelse><img src="pics/invalid.png" border=0/></cfif> #description#</td>
+              	<cfif (currentrow mod 3) eq 0>
+                </tr>
+                <tr>
+                </cfif>
+                </cfloop>
+                <tr>
+                	<Td colspan=4 align="center"><em><font color="##999999">users need to logout and  back in for their access to update.</font></em></Td>
+                </tr>
+                </table>
+              
+             
+              <!----*****End Account Status****---->	
+             		
+             
+                      
+            </div>
+            	<div class="rdbottom"></div> <!-- end bottom --> 
+         	</div>
+            <!--- ------------------------------------------------------------------------- ---->
+            <!----End Access Rights---->
+            <!--- ------------------------------------------------------------------------- ---->   
+        
+        </cfif>
+
+        
+        
             
      <!-----Account Status---->
 
