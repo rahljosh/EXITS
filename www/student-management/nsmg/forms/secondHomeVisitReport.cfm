@@ -94,6 +94,8 @@
         where fk_reportID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">
     </cfquery>
     
+
+    
     <cfquery name="reportDates" datasource="#application.dsn#">
         select *
         from progress_reports
@@ -386,6 +388,13 @@
         qGetHosts = APPLICATION.CFC.HOST.getHosts(hostID=get_Report.fk_host);
     </cfscript>
     
+     <!----Initial Answers on 1st Report ONLY show for office folks---->
+    <cfscript>
+   // Get Confidential Visit Form
+		previousReport = APPLICATION.CFC.PROGRESSREPORT.getVisitInformation(hostID=VAL(qGetHosts.hostid),reportType=5);
+    </cfscript>
+    
+    
 	<cfset NumberList = '0,1,2,3,4,5,6,7,8,9,10'>
      
     <!--- set the edit/approve/reject/delete access. --->
@@ -605,16 +614,16 @@
             <h1>Second Host Family Home Visit</h1>
             <p>
                 <strong>Student:</strong> #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentid#)<br />
-                <strong>Report ID:</strong> #FORM.pr_id# <br />
+                <strong>Report ID:</strong> #FORM.pr_id# #previousReport.fk_reportID#<br />
                 <strong>Program:</strong> #qGetProgramInfo.programName#
             </p>
 
             <p>
-                <strong>Family:</strong> #qGetHosts.fatherfirstname# <cfif qGetHosts.fatherfirstname is not ''>&amp;</cfif> #qGetHosts.motherfirstname# #qGetHosts.familylastname# <br />
+                <strong>Family:</strong> #qGetHosts.fatherfirstname# <cfif qGetHosts.fatherfirstname is not ''>&amp;</cfif> #qGetHosts.motherfirstname# #qGetHosts.familylastname# (#qGetHosts.hostid#) <br />
                 #qGetHosts.address#<br />
-                <cfif #qGetHosts.address2# is not ''>#qGetHosts.address2# <br /></cfif>
+              <cfif #qGetHosts.address2# is not ''>#qGetHosts.address2# <br /></cfif>
                 #qGetHosts.city# #qGetHosts.state#, #qGetHosts.zip#
-            </p>
+          </p>
     
             <p>
                 <strong>Second Visit Representative::</strong> #get_second_rep.firstname# #get_second_rep.lastname# (###get_second_rep.userid#)<br />
@@ -628,7 +637,7 @@
                     </cfif><br />
                 <strong>Regional Director:</strong> #get_regional_director.firstname# #get_regional_director.lastname# (###get_regional_director.userid#)<br />
                 <strong>Facilitator:</strong> #get_facilitator.firstname# #get_facilitator.lastname# (###get_facilitator.userid#)
-            </p>
+          </p>
         
 			<!--- Form Errors --->
             <gui:displayFormErrors 
@@ -656,6 +665,7 @@
                 <label class="title">
                     Neighborhood Appearance
                     <span class="small">General look and feel</span>
+                  
                 </label>
                 <cfif allow_save>
                     <input type="radio" name="neighborhoodAppearance" id="neighborhoodAppearanceExcellent" value='Excellent' <cfif FORM.neighborhoodAppearance is 'Excellent'>checked</cfif> /> 
@@ -668,8 +678,11 @@
                     <label for="neighborhoodAppearancePoor" class="inputLabel">Poor</label>
                 <cfelse>
                     #FORM.neighborhoodAppearance#
+
+                    
                 </cfif>
-            </div>        
+                <cfif client.usertype lte 4><br /><em><strong>Initial Report Answer: #previousReport.neighborhoodAppearance#</strong></em></cfif>
+          </div>        
             
             
             <div class="item">
@@ -686,6 +699,7 @@
                 <cfelse>
                     #FORM.avoid#
                 </cfif>
+                <cfif client.usertype lte 4><br /><em><strong>Initial Report Answer: #previousReport.avoid#</strong></em></cfif>
             </div>            
             
             
@@ -706,12 +720,14 @@
                 <cfelse>
                     #FORM.homeAppearance#
                 </cfif>
+                <cfif client.usertype lte 4><br /><em><strong>Initial Report Answer: #previousReport.homeAppearance#</strong></em></cfif>
             </div>            
             
             
             <div class="item">
                 <label class="title">
                     Type of Home
+                  
                 </label>
                 <cfif allow_save>
                     <div class="subItems">
@@ -729,10 +745,14 @@
                         
                         <input for="" type="radio" name="typeOfHome" id="typeOfHomeMobile" value='Mobile Home' <cfif FORM.typeOfHome is 'Mobile Home'>checked</cfif> /> 
                         <label for="typeOfHomeMobile" class="inputLabel">Mobile Home</label> 
-					</div>
+					
+                    <cfif client.usertype lte 4><br /><em><strong>Initial Report Answer: #previousReport.typeOfHome#</strong></em></cfif>
+                    </div>
                 <cfelse>
-                    #FORM.typeOfHome#
+                    #FORM.typeOfHome#<br />
+                    <cfif client.usertype lte 4><br /><em><strong>Initial Report Answer: #previousReport.typeOfHome#</strong></em></cfif>
                 </cfif>
+                
             </div>            
 
 
@@ -755,8 +775,8 @@
                     <cfelse>
                         #FORM.numberBedRooms#
                     </cfif>
-                
-                    <br />
+                <cfif client.usertype lte 4><br /><em><strong>Initial Report Answer: #previousReport.numberBedRooms#</strong></em></cfif>
+                  <br />
                  
                     <label for="numberBathRooms" class="subTitle">Bathrooms</label>     
                     <cfif allow_save>
@@ -769,8 +789,8 @@
                     <cfelse>
                         #FORM.numberBathRooms#
                     </cfif>
-        
-                    <br />
+        			<cfif client.usertype lte 4><br /><em><strong>Initial Report Answer: #previousReport.numberBathRooms#</strong></em></cfif>
+                  <br />
                 
                     <label for="livingRoom" class="subTitle">Living Room</label>
                     <cfif allow_save>
@@ -778,8 +798,8 @@
                     <cfelse>
                         #FORM.livingRoom#
                     </cfif>
-                    
-                    <br />
+                    <cfif client.usertype lte 4><br /><em><strong>Initial Report Answer: #previousReport.livingRoom#</strong></em></cfif>
+                  <br />
                 
                     <label for="diningRoom" class="subTitle">Dining Room</label>
                     <cfif allow_save>
@@ -787,8 +807,8 @@
                     <cfelse>
                         #FORM.diningRoom#
                     </cfif>
-                        
-                    <br />
+                    <cfif client.usertype lte 4><br /><em><strong>Initial Report Answer: #previousReport.diningRoom#</strong></em></cfif>
+                  <br />
                     
                     <label for="kitchen" class="subTitle">Kitchen</label>
                     <cfif allow_save>
@@ -796,8 +816,8 @@
                     <cfelse>
                         #FORM.kitchen#
                     </cfif>
-                    
-                    <br />
+                    <cfif client.usertype lte 4><br /><em><strong>Initial Report Answer: #previousReport.kitchen#</strong></em></cfif>
+                  <br />
                     
                     <label for="homeDetailsOther" class="subTitle">Other</label>
                     <cfif allow_save>
@@ -805,8 +825,8 @@
                     <cfelse>
                         #FORM.homeDetailsOther#
                     </cfif>
-                
-                </div>    
+                <cfif client.usertype lte 4><br /><em><strong>Initial Report Answer: #previousReport.homeDetailsOther#</strong></em></cfif>
+              </div>    
 				                    
             </div>            
             
@@ -825,17 +845,25 @@
                 <cfelse>
                     #FORM.ownBed#
                 </cfif>
+                <cfif client.usertype lte 4><br /><em><strong>Initial Report Answer: #previousReport.ownBed#</strong></em></cfif>
             </div>   
                      
                 
                 
             <div class="item">
-                <label class="title">Does #qGetStudentInfo.firstname# have access to a bathroom?</label>          
+                <label class="title">Does #qGetStudentInfo.firstname# have access to a bathroom?
+                <span class="small">Shared, Private</span>
+                </label>    
+               
                 <cfif allow_save>	
                     <input type="text" name="bathRoom" class="xLargeField" value="#FORM.bathRoom#"/>
+                      <cfif client.usertype lte 4><br /><em><strong>Initial Report Answer: #previousReport.bathRoom#</strong></em></cfif>
+                    
                 <cfelse>
-                    #FORM.bathRoom#
+                    #FORM.bathRoom#<br />
+                      <cfif client.usertype lte 4><br /><em><strong>Initial Report Answer: #previousReport.bathRoom#</strong></em></cfif>
                 </cfif>
+              
             </div>            
     
     
@@ -848,6 +876,7 @@
                 <cfelse>
                     #FORM.outdoorsFromBedroom#
                 </cfif>
+                <cfif client.usertype lte 4><br /><em><strong>Initial Report Answer: #previousReport.outdoorsFromBedroom#</strong></em></cfif>
             </div>            
     
     
@@ -864,23 +893,26 @@
                 <cfelse>
                     #FORM.storageSpace#
                 </cfif>
+                <cfif client.usertype lte 4><br /><em><strong>Initial Report Answer: #previousReport.storageSpace#</strong></em></cfif>
             </div>            
             
             
             <div class="item">
                 <label class="title">Does #qGetStudentInfo.firstname# have privacy? 
-                    <span class="small">i.e. a door on their room</span>
+                  <span class="small">i.e. a door on their room</span>
                 </label>
                 <cfif allow_save>	
                     <input type="text" name="privacy" class="xLargeField" value="#FORM.privacy#"/>
                 <cfelse>
                     #FORM.privacy#
                 </cfif>
+                <cfif client.usertype lte 4><br /><em><strong>Initial Report Answer: #previousReport.privacy#</strong></em></cfif>
             </div>
     
 
             <div class="item">
-                <label class="title">Does #qGetStudentInfo.firstname# have adequate study space? </label>
+                <label class="title">Does #qGetStudentInfo.firstname# have adequate study space?
+                <span class="small">in bedroom or other room in home</span> </label>
                 <cfif allow_save>	
                     
                        <select name="studySpace">
@@ -891,6 +923,7 @@
                 <cfelse>
                     #FORM.studySpace#
                 </cfif>
+                <cfif client.usertype lte 4><br /><em><strong>Initial Report Answer: #previousReport.studySpace#</strong></em></cfif>
             </div>
     
             <div class="item">
@@ -902,15 +935,19 @@
                 <cfelse>
                     #FORM.pets#
                 </cfif>
+                <cfif client.usertype lte 4><br /><em><strong>Initial Report Answer: #previousReport.pets#</strong></em></cfif>
             </div>
     
             <div class="item">
                 <label class="title">Other Comments</label>
                 <cfif allow_save>	
                     <textarea name="other" class="xLargeTextArea">#FORM.other#</textarea>
+                  <label class="title"><font color="##000000">Initial Report Answer:</font></label>  <cfif client.usertype lte 4><br /><em><strong> #previousReport.other#</strong></em></cfif>
                 <cfelse>
-                    #FORM.other#
+                    #FORM.other#<br />
+                    <cfif client.usertype lte 4><br /><em><strong>Initial Report Answer: #previousReport.other#</strong></em></cfif>
                 </cfif>
+                
             </div>
 
     	</div>
