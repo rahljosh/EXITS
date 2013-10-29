@@ -11,9 +11,9 @@
 	<cfabort>
 </cfif>
 
-<cfquery datasource="#APPLICATION.DSN#">   
-insert into smg_users_payments (agentID,companyID,studentID,programID,old_programID,hostID,paymenttype,transtype,amount,comment,
-								date,inputby,ispaid)
+
+<cfquery datasource="#APPLICATION.DSN#">
+insert into smg_users_payments (agentID,companyID,studentID,programID,old_programID,hostID,paymenttype,transtype,amount,comment,date,inputby,ispaid)
 
 select distinct
 pr.fk_sr_user,
@@ -48,7 +48,10 @@ from smg_students st
 inner join progress_reports pr on st.studentID = pr.fk_student and pr.fk_reporttype = 1
 inner join smg_programs prog on st.programID = prog.programID
 inner join smg_hosthistory hh on st.studentID = hh.studentID
-left outer join smg_user_payment_special sppmt on pr.fk_sr_user = sppmt.fk_userID
+inner join (select studentID,flight_type, max(dep_date) as arrival_date from smg_flight_info fl where flight_type = "arrival"group by studentID) as fl
+			on st.studentID = fl.studentiD
+left outer join smg_user_payment_special sppmt on pr.fk_sr_user = sppmt.fk_userID and 
+				((st.studentID = sppmt.forStudent and sppmt.specialpaymenttype = "block") or sppmt.receivesProgressReportPayments = 0)
 
 where 
 st.programID >339
@@ -59,7 +62,8 @@ and hh.isactive
 and hh.dateplaced is not null
 and hh.stu_arrival_orientation is not null
 and hh.host_arrival_orientation is not null
-and sppmt.fk_userID is null
+and sppmt.specialPaymentID is null
+and fl.arrival_date < date_add(prog.preayp_date, INTERVAL 31 DAY)
 and (
 	(pr.pr_month_of_report in (1,2) and (not EXISTS(select * from smg_users_payments pmt where pmt.paymenttype = 5 and st.studentID = pmt.studentID)) and
 	EXISTS(select * from progress_reports pr where st.studentID = pr.fk_student and pr.pr_month_of_report = 1 and pr.fk_reporttype = 1 and pr.pr_ny_approved_date is not null) and
@@ -86,12 +90,14 @@ and (
 	EXISTS(select * from progress_reports pr where st.studentID = pr.fk_student and pr.pr_month_of_report = 12 and pr.fk_reporttype = 1 and pr.pr_ny_approved_date is not null))
 	)
 
+
 order by st.placerepID
+
 </cfquery>
 
 <cfquery datasource="#APPLICATION.DSN#">
-insert into smg_users_payments (agentID,companyID,studentID,programID,old_programID,hostID,paymenttype,transtype,amount,comment,
-								date,inputby,ispaid)
+insert into smg_users_payments (agentID,companyID,studentID,programID,old_programID,hostID,paymenttype,transtype,amount,comment,date,inputby,ispaid)
+
 select distinct
 pr.fk_sr_user,
 st.companyID,
@@ -127,7 +133,8 @@ inner join smg_programs prog on st.programID = prog.programID
 inner join smg_hosthistory hh on st.studentID = hh.studentID
 inner join (select studentID,flight_type, max(dep_date) as arrival_date from smg_flight_info fl where flight_type = "arrival"group by studentID) as fl
 			on st.studentID = fl.studentiD
-left outer join smg_user_payment_special sppmt on pr.fk_sr_user = sppmt.fk_userID
+left outer join smg_user_payment_special sppmt on pr.fk_sr_user = sppmt.fk_userID and 
+				((st.studentID = sppmt.forStudent and sppmt.specialpaymenttype = "block") or sppmt.receivesProgressReportPayments = 0)
 
 where 
 st.programID >339
@@ -138,13 +145,18 @@ and hh.isactive
 and hh.dateplaced is not null
 and hh.stu_arrival_orientation is not null
 and hh.host_arrival_orientation is not null
-and sppmt.fk_userID is null
+and sppmt.specialPaymentID is null
 and fl.arrival_date >= date_add(prog.preayp_date, INTERVAL 31 DAY)
 and (
-	(pr.pr_month_of_report = 2 and (not EXISTS(select * from smg_users_payments pmt where pmt.paymenttype = 5 and st.studentID = pmt.studentID)) and
-	EXISTS(select * from progress_reports pr where st.studentID = pr.fk_student and pr.pr_month_of_report = 2 and pr.fk_reporttype = 1 and pr.pr_ny_approved_date is not null))
+	(pr.pr_month_of_report = 2 and (not EXISTS(select * from smg_users_payments pmt where pmt.paymenttype = 5 
+									and st.studentID = pmt.studentID)) and
+	EXISTS(select * from progress_reports pr where st.studentID = pr.fk_student and pr.pr_month_of_report = 2 
+									and pr.fk_reporttype = 1 and pr.pr_ny_approved_date is not null))
 	or
-	(pr.pr_month_of_report = 10 and (not EXISTS(select * from smg_users_payments pmt where pmt.paymenttype = 5 and st.studentID = pmt.studentID)) and
-	EXISTS(select * from progress_reports pr where st.studentID = pr.fk_student and pr.pr_month_of_report = 10 and pr.fk_reporttype = 1 and pr.pr_ny_approved_date is not null))	
-	)
+	(pr.pr_month_of_report = 10 and (not EXISTS(select * from smg_users_payments pmt where pmt.paymenttype = 3 
+									and st.studentID = pmt.studentID)) and
+	EXISTS(select * from progress_reports pr where st.studentID = pr.fk_student and pr.pr_month_of_report = 10
+									and pr.fk_reporttype = 1 and pr.pr_ny_approved_date is not null))	
+	) 
+	
 </cfquery>
