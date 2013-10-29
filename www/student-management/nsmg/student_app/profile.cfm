@@ -18,7 +18,7 @@ function OpenApp(url) {
 </script>
 
 <cfif isdefined('URL.unqid')>
-	<cfquery name="qGetStudentByUniqueID" datasource="MySql">
+	<cfquery name="qGetStudentByUniqueID" datasource="#APPLICATION.DSN#">
 		SELECT *
 		FROM smg_students
 		WHERE uniqueid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#URL.unqid#">
@@ -76,68 +76,68 @@ function OpenApp(url) {
 	<cfabort>
 </cfif>
 
-<cfquery name="regions" datasource="MySQL">
+<cfquery name="regions" datasource="#APPLICATION.DSN#">
 select regionname
 from smg_regions
 where regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_Student_info.regionassigned#">
 </cfquery>
 
-<cfquery name="region_guarantee" datasource="MySQL">
+<cfquery name="region_guarantee" datasource="#APPLICATION.DSN#">
 select regionname
 from smg_regions
 where regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_Student_info.regionalguarantee#">
 </cfquery>
 
-<Cfquery name="religion" datasource="MySQL">
+<Cfquery name="religion" datasource="#APPLICATION.DSN#">
 select religionname 
 from smg_religions
 where religionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_Student_info.religiousaffiliation#">
 </cfquery>
 
-<cfquery name="int_Agent" datasource="MySQL">
+<cfquery name="int_Agent" datasource="#APPLICATION.DSN#">
 select companyid, businessname
 from smg_users 
 where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_Student_info.intrep#">
 </cfquery>
 
-<Cfquery name="companyshort" datasource="MySQL">
+<Cfquery name="companyshort" datasource="#APPLICATION.DSN#">
 select companyshort
 from smg_companies
 where companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.companyid#">
 </Cfquery>
 
-<cfquery name="program_name" datasource="MySQL">
+<cfquery name="program_name" datasource="#APPLICATION.DSN#">
 select programname
 from smg_programs
 where programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_Student_info.programid#">
 </cfquery>
 
-<cfquery name="get_siblings" datasource="MySQL">
+<cfquery name="get_siblings" datasource="#APPLICATION.DSN#">
 Select name, liveathome, sex, birthdate, studentid, childid
 From smg_student_siblings
 Where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.studentid#">
 Order by birthdate
 </cfquery>
 
-<cfquery name="country_birth" datasource="MySql">
+<cfquery name="country_birth" datasource="#APPLICATION.DSN#">
 	SELECT countryname 
 	FROM smg_countrylist	
 	WHERE countryid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.countrybirth#">
 </cfquery>
 
-<cfquery name="country_citizen" datasource="MySql">
+<cfquery name="country_citizen" datasource="#APPLICATION.DSN#">
 	SELECT countryname  
 	FROM smg_countrylist 
 	WHERE countryid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.countrycitizen#">
 </cfquery>
 
-<cfquery name="country_resident" datasource="MySql">
+<cfquery name="country_resident" datasource="#APPLICATION.DSN#">
 	SELECT countryname  
 	FROM smg_countrylist
 	WHERE countryid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.countryresident#">
 </cfquery>
 
-<cfquery name="get_state_guarantee" datasource="MySql">
+<cfquery name="get_state_guarantee" datasource="#APPLICATION.DSN#">
 	SELECT statename  
 	FROM smg_states
 	WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.state_guarantee#">
@@ -338,7 +338,7 @@ Order by birthdate
 	<td colspan="4">
 		<font face="" color="Gray">Interests: &nbsp </font>
 		<cfloop list=#get_student_info.interests# index=i>
-			<cfquery name="get_interests" datasource="MySQL">
+			<cfquery name="get_interests" datasource="#APPLICATION.DSN#">
 			Select interest 
 			from smg_interests 
 			where interestid = #i#
@@ -364,7 +364,7 @@ Order by birthdate
 		<tr><td> </td></tr>	
 	</cfif>
 	<cfif get_student_info.privateschool is 0><cfelse>
-		<cfquery name="private_schools" datasource="MySQL">
+		<cfquery name="private_schools" datasource="#APPLICATION.DSN#">
 			SELECT *
 			FROM smg_private_schools
 			WHERE privateschoolid = #get_student_info.privateschool#

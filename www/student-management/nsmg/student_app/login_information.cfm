@@ -10,7 +10,7 @@
 <cfparam name="URL.status" default="0">
 
 <cfif IsDefined('URL.unqid')>
-	<cfquery name="get_student_info" datasource="MySql">
+	<cfquery name="get_student_info" datasource="#APPLICATION.DSN#">
 		SELECT s.*, u.businessname
 		FROM smg_students s
 		LEFT JOIN smg_users u ON u.userid = s.intrep
@@ -18,7 +18,7 @@
 	</cfquery>
 	<cfset client.studentid = '#get_student_info.studentid#'>
 <cfelseif IsDefined('form.unqid')>
-	<cfquery name="get_student_info" datasource="MySql">
+	<cfquery name="get_student_info" datasource="#APPLICATION.DSN#">
 		SELECT s.*, u.businessname
 		FROM smg_students s
 		LEFT JOIN smg_users u ON u.userid = s.intrep
@@ -119,12 +119,12 @@
 	</table>
 <cfelse>
 
-	<cfquery name="get_student_info" datasource="MySql">
+	<cfquery name="get_student_info" datasource="#APPLICATION.DSN#">
 		SELECT *
 		FROM smg_students
 		WHERE uniqueid = <cfqueryparam value="#form.unqid#" cfsqltype="cf_sql_char">
 	</cfquery>
-	<cfquery name="check_username" datasource="MySql">
+	<cfquery name="check_username" datasource="#APPLICATION.DSN#">
 		SELECT email
 		FROM smg_students
 		WHERE email = '#form.email#'
@@ -166,7 +166,7 @@
 		<cfabort>
 	</cfif>
 
-	<cfquery name="update_student" datasource="MySql">
+	<cfquery name="update_student" datasource="#APPLICATION.DSN#">
 		UPDATE smg_students
 		SET	email = <cfqueryparam value="#form.email#" cfsqltype="cf_sql_char">,
 			password = <cfqueryparam value="#form.password#" cfsqltype="cf_sql_char">

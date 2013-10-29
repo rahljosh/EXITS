@@ -6,7 +6,7 @@
 <cftransaction action="begin" isolation="serializable">
 	
 	<cfif IsDefined('form.region_select')>
-		<cfquery name="update_student" datasource="MySql">
+		<cfquery name="update_student" datasource="#APPLICATION.DSN#">
 			UPDATE smg_students
 			SET	<cfif form.region_select EQ 'NO'>
 					app_region_guarantee = 0

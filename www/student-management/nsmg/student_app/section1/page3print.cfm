@@ -20,14 +20,14 @@
 
 <cfinclude template="../querys/get_student_info.cfm">
 
-<cfquery name="get_interests" datasource="MySQL">
+<cfquery name="get_interests" datasource="#APPLICATION.DSN#">
 	SELECT interestid, interest
 	FROM smg_interests
 	WHERE student_app = 'yes'
 	ORDER BY interest
 </cfquery>
 
-<cfquery name="qGetLanguages" datasource="MySql">
+<cfquery name="qGetLanguages" datasource="#APPLICATION.DSN#">
 	SELECT
         l.ID,
         l.studentID,

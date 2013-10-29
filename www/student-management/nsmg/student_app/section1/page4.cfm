@@ -113,7 +113,7 @@ function OpenDesc(url) {
 				No pictures have been uploaded<br><br>
 			<cfelse>
 				<cfoutput query="fam_pics">
-					<cfquery name="pic_description" datasource="MySQL">
+					<cfquery name="pic_description" datasource="#APPLICATION.DSN#">
 						SELECT description 
 						FROM smg_student_app_family_album
 						WHERE studentid = #client.studentid# and filename = '#name#'

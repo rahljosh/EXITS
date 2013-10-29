@@ -18,13 +18,13 @@ body {font:Arial, Helvetica, sans-serif;}
 
 <cfinclude template="get_student_info.cfm">
 
-<cfquery name="get_intl_rep" datasource="MySql">
+<cfquery name="get_intl_rep" datasource="#APPLICATION.DSN#">
 	SELECT businessname
 	FROM smg_users
 	WHERE userid = <cfqueryparam value="#VAL(get_student_info.intrep)#" cfsqltype="cf_sql_integer">
 </cfquery>
 
-<cfquery name="get_branch" datasource="MySql">
+<cfquery name="get_branch" datasource="#APPLICATION.DSN#">
 	SELECT businessname
 	FROM smg_users
 	WHERE userid = <cfqueryparam value="#VAL(get_student_info.branchid)#" cfsqltype="cf_sql_integer">
@@ -60,7 +60,7 @@ body {font:Arial, Helvetica, sans-serif;}
     <cfset client.org_code = 5>
     <cfset bgcolor ='B5D66E'>  
 </cfif>
-<cfquery name="org_info" datasource="mysql">
+<cfquery name="org_info" datasource="#APPLICATION.DSN#">
 select *
 from smg_companies
 where companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(client.org_code)#">
@@ -97,11 +97,11 @@ where companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(client.or
 			<cfelse>
 			<tr>
 				<Td>
-					<cfquery name="update_app_status" datasource="MySQL">
+					<cfquery name="update_app_status" datasource="#APPLICATION.DSN#">
 						INSERT INTO smg_student_app_status (studentid, status, date, approvedby)
 						VALUES (#client.studentid#, #newstatus#, #now()#, '#client.userid#')
 					</cfquery>
-					<cfquery name="update_app_status" datasource="MySQL">
+					<cfquery name="update_app_status" datasource="#APPLICATION.DSN#">
 						UPDATE smg_students 
 						SET app_intl_comments = <cfqueryparam value="#form.app_intl_comments#" cfsqltype="cf_sql_longvarchar">,
 							active = '1',

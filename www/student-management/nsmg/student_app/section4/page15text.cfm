@@ -2,7 +2,7 @@
 <cfsilent>
 	
     <!--- Get Student Information --->
-    <cfquery name="qGetStudentInfo" datasource="mysql">
+    <cfquery name="qGetStudentInfo" datasource="#APPLICATION.DSN#">
         SELECT 
             s.studentid, 
             s.app_indicated_program,

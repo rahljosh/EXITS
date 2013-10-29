@@ -130,10 +130,28 @@
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
 		</td>
-		<td colspan="3"><em>Have you ever been hospitalized, had surgery, or been under extended medical care? </em></td>
+		<td colspan="3"><em>Have you ever been hospitalized? </em></td>
 	</tr>
 	<tr><td>&nbsp;</td>
-		<td colspan="3"><em>If yes, for what reason?</em> &nbsp; <br><img src="#path#pics/line.gif" width="500" height="1" border="0" align="absmiddle"></td>
+		<td colspan="3"><em>Please Explain:</em> &nbsp; <br><img src="#path#pics/line.gif" width="500" height="1" border="0" align="absmiddle"></td>
+	</tr>
+    <tr><td align="right">
+			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
+			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
+		</td>
+		<td colspan="3"><em>Have you ever had surgery? </em></td>
+	</tr>
+	<tr><td>&nbsp;</td>
+		<td colspan="3"><em>Please Explain:</em> &nbsp; <br><img src="#path#pics/line.gif" width="500" height="1" border="0" align="absmiddle"></td>
+	</tr>
+    <tr><td align="right">
+			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
+			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
+		</td>
+		<td colspan="3"><em>Have you ever been treated for a chronic medical illness? </em></td>
+	</tr>
+	<tr><td>&nbsp;</td>
+		<td colspan="3"><em>Please Explain:</em> &nbsp; <br><img src="#path#pics/line.gif" width="500" height="1" border="0" align="absmiddle"></td>
 	</tr>	
 </table><br>
 
@@ -360,22 +378,123 @@
 	<tr><td colspan="2"> &nbsp; <em>Please explain.</em> &nbsp; <br><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
 		<td colspan="2"> &nbsp; <em>If yes, please list: </em> &nbsp; <br><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
 	</tr>	
-	<tr><td>&nbsp;</td></tr>
-	<tr><td colspan="4"><em>Have you ever received any medical attention or counseling for: </em></td></tr>
-	<tr><td align="right">
+</table><br>
+
+<!--- Psychological Issues --->
+<table width="670" border=0 cellpadding=2 cellspacing=0 align="center">
+	<tr><td colspan="6"><b>PSYCHOLOGICAL ISSUES</b> - <em>Have you ever suffered from and/or received treatment for any of the following psychological issues:</em></td></tr>
+	
+    <tr>
+    	<!--- ADHD --->
+    	<td width="90" align="right">
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
-		</td>
-		<td><em>Depression</em></td>
-		<td align="right">
+        </td>
+        <td width="245"><em>Attention Deficit Hyperactivity Disorder (ADHD)</em></td>
+        <!--- Impulse-control disorders --->
+        <td width="90" align="right">
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
-		</td>
-		<td><em>Eating Disorders</em></td>
-	</tr>
-	<tr><td colspan="4"> &nbsp; <em>Please explain if yes.</em> &nbsp; <br><img src="#path#pics/line.gif" width="665" height="1" border="0" align="absmiddle"></td>
-	</tr>	
+        </td>
+        <td width="245"><em>Impulse-control disorders</em></td>
+    </tr>
+    <tr>
+    	<!--- Anxiety disorders --->
+    	<td width="90" align="right">
+			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
+			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
+        </td>
+        <td width="245"><em>Anxiety disorders</em></td>
+        <!--- Neurocognitive disorders --->
+        <td width="90" align="right">
+			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
+			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
+        </td>
+        <td width="245"><em>Neurocognitive disorders</em></td>
+    </tr>
+    <tr>
+    	<!--- Dissociative disorders --->
+    	<td width="90" align="right">
+			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
+			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
+        </td>
+        <td width="245"><em>Dissociative disorders</em></td>
+        <!--- Neurodevelopmental disorders --->
+        <td width="90" align="right">
+			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
+			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
+        </td>
+        <td width="245"><em>Neurodevelopmental disorders</em></td>
+    </tr>
+    <tr>
+    	<!--- Eating disorders --->
+    	<td width="90" align="right">
+			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
+			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
+        </td>
+        <td width="245"><em>Eating disorders</em></td>
+        <!--- Psychotic disorders --->
+        <td width="90" align="right">
+			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
+			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
+        </td>
+        <td width="245"><em>Psychotic disorders</em></td>
+    </tr>
+    <tr>
+    	<!--- Cutting disorders --->
+    	<td width="90" align="right">
+			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
+			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
+        </td>
+        <td width="245"><em>Cutting behavior (Factitious disorders)</em></td>
+        <!--- Sexual Gender Identity disorders --->
+        <td width="90" align="right">
+			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
+			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
+        </td>
+        <td width="245"><em>Sexual and gender identity disorders</em></td>
+    </tr>
+    <tr>
+    	<!--- Depression --->
+    	<td width="90" align="right">
+			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
+			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
+        </td>
+        <td width="245"><em>Depression</em></td>
+        <!--- Substance Abuse --->
+        <td width="90" align="right">
+			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
+			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
+        </td>
+        <td width="245"><em>Substance Abuse</em></td>
+    </tr>
+    <tr>
+    	<!--- Factitious disorders --->
+    	<td width="90" align="right">
+			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
+			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
+        </td>
+        <td width="245"><em>Factitious disorders</em></td>
+        <td width="90" align="right" colspan="2"></td>
+    </tr>
+    <tr><td colspan="4"><em>If you answered yes to any of these, please provide a detailed explanation:</em></td></tr>
+    <tr><td>&nbsp;</td></tr>
+    <tr><td colspan="4"><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td></tr>
+    <tr>
+    	<td width="90" align="right">
+			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
+			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
+        </td>
+        <td colspan="3"><em>Have you ever received treatment or counseling for any psychological disorder?</em></td>
+    </tr>
+    <tr>
+    	<td colspan="4">
+            <em>If yes, please explain:</em>
+            <img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle">
+  		</td>
+ 	</tr>
 </table><br><br>
+
 </div>
 
 <!--- FOOTER OF TABLE --->

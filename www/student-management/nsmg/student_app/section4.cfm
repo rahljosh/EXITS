@@ -18,7 +18,7 @@
 
 <cfinclude template="querys/get_student_info.cfm">
 
-<cfquery name="get_intl_rep" datasource="MySql">
+<cfquery name="get_intl_rep" datasource="#APPLICATION.DSN#">
 	SELECT businessname
 	FROM smg_users
 	WHERE userid = <cfqueryparam value="#get_student_info.intrep#" cfsqltype="cf_sql_integer">
@@ -40,8 +40,8 @@
 	<tr>
 		<td><br><br>
 			<div align="justify">
-			The <b>Inserts</b> section contains seven (7) pages and all pages in this 
-			section require original signatures. Pages [15], [16], [17] and [18] are 
+			The <b>Inserts</b> section contains seven (12) pages and all pages in this 
+			section require original signatures. Pages [15], [16], [17], [18] and [24] are 
 			mandatory and they must be filled out, printed, signed and uploaded back 
 			into the system with original signatures. Page [19] must be filled out 
 			by #get_intl_rep.businessname#, and this page will be uploaded after you have 
@@ -51,7 +51,9 @@
 			original signatures. Page [22] is a Supplements page that allows for the 
 			loading of all supplemental documents required by #get_intl_rep.businessname#.
 			Supplements may include (but not be limited to) the SLEP Test Answer 
-			Sheet and English Certificates			
+			Sheet and English Certificates. Page [23] is optional, but must be uploaded 
+            if you choose to authorize a double placement. Pages [25], [26] and [27] 
+            are mandatory and must be uploaded.
 			</div>
 			<br><br>
 		</td>

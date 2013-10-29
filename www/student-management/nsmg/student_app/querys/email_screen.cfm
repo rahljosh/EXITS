@@ -1,4 +1,4 @@
-	<cfquery name="agent_info" datasource="MySQL">
+	<cfquery name="agent_info" datasource="#APPLICATION.DSN#">
 		SELECT businessname, phone,email 
 		FROM smg_users 
 		WHERE userid = 19

@@ -6,7 +6,7 @@
 </head>
 
 <body>
-<cfquery name="check_for_agreement" datasource="mysql">
+<cfquery name="check_for_agreement" datasource="#APPLICATION.DSN#">
 select id
 from smg_student_app_state_requested
 where studentid = #client.studentid#
@@ -16,7 +16,7 @@ where studentid = #client.studentid#
 
 <cfif check_for_agreement.recordcount gt 0>
 
-		<Cfquery name="update_States" datasource="MySQL">
+		<Cfquery name="update_States" datasource="#APPLICATION.DSN#">
 		update smg_student_app_state_requested set studentid = #client.studentid#,
 													 state1 = #form.state1#,
 													 state2 = #form.state2#,
@@ -24,13 +24,13 @@ where studentid = #client.studentid#
 												where studentid = #client.studentid#
 		</Cfquery>
 <cfelse>
-				<Cfquery name="add_States" datasource="MySQL">
+				<Cfquery name="add_States" datasource="#APPLICATION.DSN#">
 		insert into smg_student_app_state_requested (studentid, state1, state2, state3)
 											values(#client.studentid#, #form.state1#, #form.state2#, #form.state3#)
 		</Cfquery>
 </cfif>
 
-<cfquery name="get_student_info" datasource="mysql">
+<cfquery name="get_student_info" datasource="#APPLICATION.DSN#">
 select smg_students.city, smg_students.country, smg_countrylist.countryname, smg_students.firstname, smg_students.familylastname,smg_students.sex
 from smg_students right join smg_countrylist on smg_students.country = smg_countrylist.countryid
 where studentid = #client.studentid# 
@@ -58,7 +58,7 @@ where studentid = #client.studentid#
 
 </cfswitch>
 
-<cfquery name="states_requested" datasource="MySQL">
+<cfquery name="states_requested" datasource="#APPLICATION.DSN#">
 select smg_student_app_state_requested.state1, 
 	smg_student_app_state_requested.state2, 
 	smg_student_app_state_requested.state3
@@ -78,19 +78,19 @@ where studentid = #client.studentid#
 Please place me in one of the states listed below:
 <br>
 <br>
-<cfquery name="state_name1" datasource="MYSQL">
+<cfquery name="state_name1" datasource="#APPLICATION.DSN#">
 select statename
 from smg_States 
 where id = #states_requested.state1#
 </cfquery>
 Choice 1: #state_name1.statename#<br>
-<cfquery name="state_name2" datasource="MYSQL">
+<cfquery name="state_name2" datasource="#APPLICATION.DSN#">
 select statename
 from smg_States 
 where id = #states_requested.state2#
 </cfquery>
 Choice 2: #state_name2.statename#<br>
-<cfquery name="state_name3" datasource="MYSQL">
+<cfquery name="state_name3" datasource="#APPLICATION.DSN#">
 select statename
 from smg_States 
 where id = #states_requested.state3#

@@ -43,8 +43,22 @@
 	</table>
 <cfelse>
 	<table width="600px" border="0" cellpadding="3" cellspacing="0" align="center" style="border-bottom:1px solid ##cfcfcf; padding-bottom:10px; margin-bottom:15px; margin-top:5px;">
-		<tr><th><b>Note: &nbsp; This page needs to be uploaded.</b></th></tr>
-		<tr><th><b> Please print, sign, scan and upload this page. Click on the link below to upload this page.</b></th></tr>
+		<tr><th><b>Note: &nbsp; This page needs to be uploaded <cfif URL.p EQ 23>if you are authorizing a double placement</cfif>.</b></th></tr>
+		<tr>
+        	<th>
+            	<b>
+                	<cfif URL.p EQ 25>
+                    	Most US schools now require a Passport for enrollment. To ensure that you can be succesfully enrolled in a school and placed with a host family, please upload a legible copy of your Passport in pdf or jpeg format.
+                   	<cfelseif URL.p EQ 26>
+                    	Most US schools now require a Birth Certificate for enrollment. To ensure that you can be succesfully enrolled in a school and placed with a host family, please upload a legible copy of your Birth Certificate in pdf or jpeg format.
+                    <cfelseif URL.p EQ 27>
+                    	Most US schools now require a SLEP Test for enrollment. To ensure that you can be succesfully enrolled in a school and placed with a host family, please upload a legible copy of your SLEP Test in pdf or jpeg format.
+                    <cfelse>
+        				Please print, sign, scan and upload this page. Click on the link below to upload this page.
+                  	</cfif>
+            	</b>
+           	</th>
+      	</tr>
 		<tr>
         	<td align="center">
             	<a href="" onClick="javascript: win=window.open('upload/upload_file.cfm?referrer=#CGI.HTTP_HOST#&folder=#doc#&student=#client.studentid#', 'UploadFiles', 'height=310, width=600, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">

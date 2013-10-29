@@ -3,7 +3,7 @@
 	<cfabort>
 </cfif>
 
-<cfquery name="check_state" datasource="MySql">
+<cfquery name="check_state" datasource="#APPLICATION.DSN#">
 	SELECT statechoiceid, studentID, state1, state2, state3
 	FROM smg_student_app_state_requested
 	WHERE studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentID#">
@@ -14,7 +14,7 @@
     <!--- Canada --->
 	<cfif CLIENT.companyID EQ 14>
 
-        <cfquery name="qCheckCanadaChoice" datasource="MySql">
+        <cfquery name="qCheckCanadaChoice" datasource="#APPLICATION.DSN#">
             SELECT 
                 ID
             FROM 
@@ -27,7 +27,7 @@
      	
 		<!--- Exchange Service International Application --->
 		<cfif qCheckCanadaChoice.recordcount>
-            <cfquery datasource="MySql">
+            <cfquery datasource="#APPLICATION.DSN#">
                 UPDATE 
                     smg_student_app_options
                 SET	    
@@ -39,7 +39,7 @@
                 LIMIT 1
             </cfquery>
 		 <cfelse>
-            <cfquery datasource="MySql">
+            <cfquery datasource="#APPLICATION.DSN#">
                 INSERT INTO 
                 	smg_student_app_options
                     (
@@ -68,14 +68,14 @@
 		<cfif IsDefined('FORM.state_select')>
             <cfif check_state.recordcount EQ '0'>
                 <!--- INSERT CHOICES ---->
-                <cfquery name="insert_state" datasource="MySql">
+                <cfquery name="insert_state" datasource="#APPLICATION.DSN#">
                     INSERT INTO smg_student_app_state_requested
                         (studentID, state1, state2, state3)
                     VALUES ('#FORM.studentID#', '#FORM.state1#', '#FORM.state2#', '#FORM.state3#')
                 </cfquery>
             <cfelse>
                 <!--- UPDATE CHOICES --->
-                <cfquery name="update_state" datasource="MySql">
+                <cfquery name="update_state" datasource="#APPLICATION.DSN#">
                     UPDATE smg_student_app_state_requested
                     SET	<cfif FORM.state_select EQ 'NO'>
                             state1 = '0',

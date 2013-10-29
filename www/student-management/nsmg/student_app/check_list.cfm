@@ -15,7 +15,7 @@
     	<cfset "count#i#" = 0>
     </cfloop>
     
-    <cfquery name="smg_students" datasource="MySql">
+    <cfquery name="smg_students" datasource="#APPLICATION.DSN#">
         SELECT 
             s.*, 
             u.businessname, 
@@ -30,7 +30,7 @@
             studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.studentID)#">
     </cfquery>
     
-    <cfquery name="qIsStudentAccount" datasource="MySql">
+    <cfquery name="qIsStudentAccount" datasource="#APPLICATION.DSN#">
         SELECT 
             ID
         FROM 
@@ -41,7 +41,7 @@
         	status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">         
     </cfquery>
     
-    <cfquery name="smg_student_siblings" datasource="MySql">
+    <cfquery name="smg_student_siblings" datasource="#APPLICATION.DSN#">
         SELECT 
         	childid, 
             studentID, 
@@ -57,7 +57,7 @@
         	childid
     </cfquery>
     
-    <cfquery name="smg_student_app_family_album" datasource="MySql">
+    <cfquery name="smg_student_app_family_album" datasource="#APPLICATION.DSN#">
         SELECT 	
         	id, 
             studentID, 
@@ -69,7 +69,7 @@
         	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(smg_students.studentID)#">
     </cfquery>
     
-    <cfquery name="smg_student_app_school_year" datasource="MySql">
+    <cfquery name="smg_student_app_school_year" datasource="#APPLICATION.DSN#">
         SELECT 
         	yearid, 
             studentID, 
@@ -82,7 +82,7 @@
         	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(smg_students.studentID)#">
     </cfquery>
     
-    <cfquery name="smg_student_app_grades" datasource="MySql">
+    <cfquery name="smg_student_app_grades" datasource="#APPLICATION.DSN#">
         SELECT 
         	gradesid, 
             smg_student_app_grades.yearid, 
@@ -96,7 +96,7 @@
         	smg_student_app_school_year.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(smg_students.studentID)#">
     </cfquery>
     
-    <cfquery name="smg_student_app_health" datasource="MySql">
+    <cfquery name="smg_student_app_health" datasource="#APPLICATION.DSN#">
         SELECT 
         	* 
         FROM 
@@ -105,7 +105,7 @@
         	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(smg_students.studentID)#">
     </cfquery>
     
-    <cfquery name="smg_student_app_state_requested" datasource="MySql">
+    <cfquery name="smg_student_app_state_requested" datasource="#APPLICATION.DSN#">
         SELECT 
             statechoiceid, 
             studentID, 
@@ -118,7 +118,7 @@
             studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(smg_students.studentID)#">
     </cfquery>
     
-    <cfquery name="smg_student_app_language" datasource="MySql">
+    <cfquery name="smg_student_app_language" datasource="#APPLICATION.DSN#">
     	SELECT
         	ID,
             studentID,
@@ -132,13 +132,13 @@
         	isPrimary = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
     </cfquery>
 
-    <cfquery name="check_guarantee" datasource="MySQL">
+    <cfquery name="check_guarantee" datasource="#APPLICATION.DSN#">
         SELECT app_region_guarantee
         FROM smg_students
         WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value='#VAL(CLIENT.studentid)#'>
     </cfquery>
     
-    <cfquery name="qESIDistrictChoice" datasource="MySql">
+    <cfquery name="qESIDistrictChoice" datasource="#APPLICATION.DSN#">
         SELECT 
             option1,
             option2,
@@ -151,7 +151,7 @@
             fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="ESIDistrictChoice">
     </cfquery>
     
-    <cfquery name="qGetPages" datasource="MySql">
+    <cfquery name="qGetPages" datasource="#APPLICATION.DSN#">
         SELECT
             page
         FROM 
@@ -164,7 +164,7 @@
     
     <cfloop query="qGetPages">
         
-        <cfquery name="page#qGetPages.page#" datasource="MySql">
+        <cfquery name="page#qGetPages.page#" datasource="#APPLICATION.DSN#">
             SELECT 
                 fieldid, 
                 field_label, 
@@ -199,7 +199,7 @@
     <cfdirectory directory="#AppPath.onlineApp.parentLetter#" name="check_06_upload" filter="#smg_students.studentID#.*">
     
     <!--- Inserts --->
-    <cfloop list="08,09,10,11,12,13,14,15,16,17,18,19,20,21" index="i">
+    <cfloop list="08,09,10,11,12,13,14,15,16,17,18,19,20,21,23,24,25,26,27" index="i">
         <cfdirectory directory="#AppPath.onlineApp.inserts#page#i#" name="check_#i#_upload" filter="#smg_students.studentID#.*">	
     </cfloop>
     
@@ -361,7 +361,7 @@
 			<cfset count3 = 1>	
 		</cfif>
 	</cfloop>
-    <cfquery name="qGetSecondaryLanguages" datasource="MySql">
+    <cfquery name="qGetSecondaryLanguages" datasource="#APPLICATION.DSN#">
     	SELECT
         	ID,
             studentID,
@@ -584,10 +584,11 @@
 	<cfset lastvaccine = ''>
 	<cfloop query="page13">
 		<cfif lastvaccine NEQ page13.field_label>
-			<cfquery name="smg_student_app_shots" datasource="MySql">
+			<cfquery name="smg_student_app_shots" datasource="#APPLICATION.DSN#">
 				SELECT vaccineid, studentID, vaccine, disease, shot1, shot2, shot3, shot4, shot5, booster  
 				FROM smg_student_app_shots
-				WHERE vaccine = '#page13.field_label#' AND studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.studentID)#">
+				WHERE vaccine = '#page13.field_label#' 
+                AND studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.studentID)#">
 			</cfquery>
 		</cfif>
 		<cfset lastvaccine = page13.field_label>
@@ -841,12 +842,6 @@
                        
                      </cfloop>
                  </cfif>
-              
-                  
-                 
-                      
-        
-        
         	<cfif len(DisplaySorry)>
             <cfset countRed = countRed + 1>
              <tr><td><font color="FF0000">
@@ -977,6 +972,60 @@
             </cfif>
         </cfif>
     </Cfif>
+    
+    <tr><td>&nbsp;</td></tr>
+    
+    <!--- PAGE 23 --->
+	<tr><td><a href="index.cfm?curdoc=section4/page23&id=4&p=23"><h3>Page [23] - Double Placement Authorization</h3></a></td></tr>
+	<cfif check_23_upload.recordcount EQ 0 AND smg_students.app_authorizeDoublePlacement EQ 1>
+		<tr><td><font color="FF0000">This page has not been uploaded. You must print, sign, scan and upload this page.</font><br></td></tr>
+        <cfset countRed = countRed + 1> 
+	<cfelse>
+		<tr><td><font color="0000FF">Complete</font><br></td></tr>
+	</cfif> 
+      
+    <tr><td>&nbsp;</td></tr>
+    
+    <!--- PAGE 24 --->
+	<tr><td><a href="index.cfm?curdoc=section4/page24&id=4&p=24"><h3>Page [24] - HIPAA Release</h3></a></td></tr>
+	<cfif check_24_upload.recordcount EQ 0>
+		<tr><td><font color="FF0000">This page has not been uploaded. You must upload this page.</font><br></td></tr>
+		<cfset countRed = countRed + 1> 
+	<cfelse>
+		<tr><td><font color="0000FF">Complete</font><br></td></tr>
+	</cfif>
+    <tr><td>&nbsp;</td></tr>
+    
+    <!--- PAGE 25 --->
+	<tr><td><a href="index.cfm?curdoc=section4/page25&id=4&p=25"><h3>Page [25] - Passport</h3></a></td></tr>
+	<cfif check_25_upload.recordcount EQ 0>
+		<tr><td><font color="FF0000">This page has not been uploaded. You must upload this page.</font><br></td></tr>
+		<cfset countRed = countRed + 1> 
+	<cfelse>
+		<tr><td><font color="0000FF">Complete</font><br></td></tr>
+	</cfif>
+    
+    <tr><td>&nbsp;</td></tr>
+    
+    <!--- PAGE 26 --->
+	<tr><td><a href="index.cfm?curdoc=section4/page26&id=4&p=26"><h3>Page [26] - Birth Certificate</h3></a></td></tr>
+	<cfif check_26_upload.recordcount EQ 0>
+		<tr><td><font color="FF0000">This page has not been uploaded. You must upload this page.</font><br></td></tr>
+		<cfset countRed = countRed + 1> 
+	<cfelse>
+		<tr><td><font color="0000FF">Complete</font><br></td></tr>
+	</cfif>
+    
+    <tr><td>&nbsp;</td></tr>
+    
+    <!--- PAGE 27 --->
+	<tr><td><a href="index.cfm?curdoc=section4/page26&id=4&p=26"><h3>Page [27] - SLEP Test</h3></a></td></tr>
+	<cfif check_27_upload.recordcount EQ 0>
+		<tr><td><font color="FF0000">This page has not been uploaded. You must upload this page.</font><br></td></tr>
+		<cfset countRed = countRed + 1> 
+	<cfelse>
+		<tr><td><font color="0000FF">Complete</font><br></td></tr>
+	</cfif>
 	
     <tr><td><br><hr class="bar"></hr><br></td></tr>
 	

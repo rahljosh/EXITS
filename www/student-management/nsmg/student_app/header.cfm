@@ -38,7 +38,7 @@
 	<cfif isDefined('URL.unqID')>
         
         <!----Get student id  for office folks linking into the student app---->
-        <cfquery name="qGetstudentID" datasource="MySQL">
+        <cfquery name="qGetstudentID" datasource="#APPLICATION.DSN#">
             SELECT 
             	studentID 
             FROM
@@ -53,7 +53,7 @@
     
     <cfinclude template="querys/get_student_info.cfm">
 
-    <cfquery name="qOrgInfo" datasource="mysql">
+    <cfquery name="qOrgInfo" datasource="#APPLICATION.DSN#">
         SELECT 
         	companyID,
             companyName,
@@ -64,7 +64,7 @@
         	companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.org_code)#">
     </cfquery> 
 
-    <cfquery name="qGetLatestStatus" datasource="MySQL">
+    <cfquery name="qGetLatestStatus" datasource="#APPLICATION.DSN#">
         SELECT 
             id,        
             studentID,
@@ -80,7 +80,7 @@
 	        ID DESC    
     </cfquery>
 
-    <cfquery name="qGetIntlRep" datasource="MySql">
+    <cfquery name="qGetIntlRep" datasource="#APPLICATION.DSN#">
         SELECT 
         	userID,
             businessname, 
@@ -92,7 +92,7 @@
         	userid = <cfqueryparam value="#VAL(get_student_info.intrep)#" cfsqltype="cf_sql_integer">
     </cfquery>
     
-    <cfquery name="qGetBranch" datasource="MySql">
+    <cfquery name="qGetBranch" datasource="#APPLICATION.DSN#">
         SELECT 
         	userID,
             businessname,

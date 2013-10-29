@@ -18,7 +18,7 @@
 </head>
 <body <cfif NOT LEN(URL.curdoc)>onLoad="print()"</cfif>>
 <cfif isDefined('url.uniqueid')>
-	<cfquery name="get_stu_id3" datasource="mysql">
+	<cfquery name="get_stu_id3" datasource="#APPLICATION.DSN#">
     select studentid 
     from smg_students
     where uniqueid = '#url.uniqueid#'

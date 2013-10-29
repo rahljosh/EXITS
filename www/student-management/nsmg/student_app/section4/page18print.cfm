@@ -20,7 +20,7 @@
 
 <cfinclude template="../querys/get_student_info.cfm">
 
-<cfquery name="private_schools" datasource="MySql">
+<cfquery name="private_schools" datasource="#APPLICATION.DSN#">
 	SELECT privateschoolid, privateschoolprice, type
 	FROM smg_private_schools
 </cfquery>

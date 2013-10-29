@@ -2,7 +2,7 @@
 <body onLoad="opener.location.reload()">
 <cfif isDefined('url.confirmed')>
 	<cfif url.confirmed is 'pdf'>
-		<cfquery name="delete_letter" datasource="mysql">
+		<cfquery name="delete_letter" datasource="#APPLICATION.DSN#">
         	DELETE FROM
             	smg_users letter
           	WHERE

@@ -17,7 +17,7 @@
 
 <cffile action="delete" file="#directory#/#picture#" mode="777">
 
-<cfquery name="delete_picture_description" datasource="MySQL">
+<cfquery name="delete_picture_description" datasource="#APPLICATION.DSN#">
 	DELETE from smg_student_app_family_album
 	WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.studentid#">
 		AND filename = '#picture#'

@@ -59,7 +59,7 @@
     </cfif>
 
 
-    <cfquery name="get_student_info" datasource="MySql">
+    <cfquery name="get_student_info" datasource="#APPLICATION.DSN#">
         SELECT 
             s.firstname, 
             s.familylastname, 
@@ -79,7 +79,7 @@
     </cfquery>
 
 	<!--- Used in the email --->
-    <cfquery name="get_current_user" datasource="MySql">
+    <cfquery name="get_current_user" datasource="#APPLICATION.DSN#">
         SELECT 
             userid, 
             firstname, 

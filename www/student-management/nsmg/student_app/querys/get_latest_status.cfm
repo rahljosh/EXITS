@@ -1,4 +1,4 @@
-<cfquery name="get_latest_status" datasource="MySQL">
+<cfquery name="get_latest_status" datasource="#APPLICATION.DSN#">
 	SELECT id, studentid, status, reason, date 
 	FROM smg_student_app_status
 	WHERE studentid = <cfqueryparam value="#client.studentid#" cfsqltype="cf_sql_integer">

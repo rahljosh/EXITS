@@ -13,7 +13,7 @@
 
 <cfinclude template="../querys/get_student_info.cfm">
 
-<cfquery name="get_health" datasource="MySql">
+<cfquery name="get_health" datasource="#APPLICATION.DSN#">
 	SELECT *
 	FROM smg_student_app_health 
 	WHERE studentid = '#get_student_info.studentid#'

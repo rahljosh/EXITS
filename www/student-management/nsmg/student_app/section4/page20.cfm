@@ -2,7 +2,7 @@
 <cftry>
 ---->
 <Cfparam name="check_guarantee.app_region_guarantee" default="0">
-<cfquery name="check_guarantee" datasource="MySQL">
+<cfquery name="check_guarantee" datasource="#APPLICATION.DSN#">
 	SELECT app_region_guarantee
 	FROM smg_students
 	WHERE studentid = '#client.studentid#'
@@ -87,7 +87,7 @@ function NextPage() {
 
 <cfinclude template="../querys/get_student_info.cfm">
 <!----Get Regions that have been canceled for students Program---->
-<Cfquery name="unAvailableRegions" datasource="MySQL">
+<Cfquery name="unAvailableRegions" datasource="#APPLICATION.DSN#">
 select fk_regionID
 from regionStateClosure sc
 where fk_programid = #get_student_info.programid#
@@ -102,13 +102,13 @@ and sc.fk_companyid = #client.companyid#
 	<cfset closedList = #ListAppend(closedList, fk_regionID)#>
 </Cfloop>
 <!---- International Rep - EF ACCOUNTS ---->
-<cfquery name="int_agent" datasource="MySQL">
+<cfquery name="int_agent" datasource="#APPLICATION.DSN#">
 	SELECT u.businessname, u.userid, u.master_account, u.master_accountid
 	FROM smg_users u
 	WHERE u.userid = <cfif get_student_info.branchid EQ '0'>'#get_student_info.intrep#'<cfelse>'#get_student_info.branchid#'</cfif>
 </cfquery>
 <!----Check if States are Selected, if one is selected, don't show regional options---->
-<Cfquery name="checkStates" datasource="MySQL">
+<Cfquery name="checkStates" datasource="#APPLICATION.DSN#">
 	SELECT 
     	state1, 
         sta1.statename as statename1, 

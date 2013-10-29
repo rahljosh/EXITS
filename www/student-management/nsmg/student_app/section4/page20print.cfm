@@ -20,7 +20,7 @@
 
 <cfinclude template="../querys/get_student_info.cfm">
 <!----Check if States are Selected, if one is selected, don't show regional options---->
-<Cfquery name="checkStates" datasource="MySQL">
+<Cfquery name="checkStates" datasource="#APPLICATION.DSN#">
 	SELECT 
     	state1, 
         sta1.statename as statename1, 
@@ -42,14 +42,14 @@
 
 <cfset doc = 'page20'>
 
-<cfquery name="check_guarantee" datasource="MySQL">
+<cfquery name="check_guarantee" datasource="#APPLICATION.DSN#">
 	SELECT app_region_guarantee
 	FROM smg_students
 	WHERE studentid = '#get_student_info.studentid#'
 </cfquery>
 
 <!---- International Rep - EF ACCOUNTS ---->
-<cfquery name="int_agent" datasource="MySQL">
+<cfquery name="int_agent" datasource="#APPLICATION.DSN#">
 	SELECT u.businessname, u.userid, u.master_account, u.master_accountid
 	FROM smg_users u
 	WHERE u.userid = <cfif get_student_info.branchid EQ '0'>'#get_student_info.intrep#'<cfelse>'#get_student_info.branchid#'</cfif>

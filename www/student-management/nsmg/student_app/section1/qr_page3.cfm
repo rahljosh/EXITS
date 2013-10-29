@@ -5,7 +5,7 @@
 
 <cftransaction action="begin" isolation="serializable">
 
-	<cfquery name="update_student" datasource="MySql">
+	<cfquery name="update_student" datasource="#APPLICATION.DSN#">
 		UPDATE 
         	smg_students
 		SET	
@@ -57,7 +57,7 @@
 		LIMIT 1
 	</cfquery>
     
-    <cfquery name="qGetPrimaryLanguage" datasource="MySql">
+    <cfquery name="qGetPrimaryLanguage" datasource="#APPLICATION.DSN#">
     	SELECT
         	*
       	FROM
@@ -70,7 +70,7 @@
     
     <!--- Update Primary Language --->
     <cfif (qGetPrimaryLanguage.recordCount)>
-    	<cfquery datasource="MySql">
+    	<cfquery datasource="#APPLICATION.DSN#">
         	UPDATE
             	smg_student_app_language
           	SET
@@ -83,7 +83,7 @@
         </cfquery>
     <!--- Insert Primary Language --->
     <cfelse>
-    	<cfquery datasource="MySql">
+    	<cfquery datasource="#APPLICATION.DSN#">
         	INSERT INTO
             	smg_student_app_language
                		( studentID,

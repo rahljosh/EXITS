@@ -1,5 +1,5 @@
 <!-----User Information----->
-<cfquery name="assigned_to" datasource="MySql">
+<cfquery name="assigned_to" datasource="#APPLICATION.DSN#">
 	SELECT sectionid,  sectionname,  assignedid,  
 	userid, firstname, lastname, email 
 	FROM smg_help_desk_section
@@ -7,13 +7,13 @@
 	WHERE sectionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.section#">
 </cfquery>
 
-<cfquery name="get_support" datasource="MySql">
+<cfquery name="get_support" datasource="#APPLICATION.DSN#">
 	SELECT firstname, lastname, email
 	FROM smg_users
 	WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#assigned_to.assignedid#">
 </cfquery>
 
-<cfquery name="get_intrep" datasource="MySql">
+<cfquery name="get_intrep" datasource="#APPLICATION.DSN#">
 	SELECT intrep
 	FROM smg_students
 	WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.studentid#">
@@ -21,7 +21,7 @@
 
 <cfset newtext = #Replace(form.text,"#chr(10)#","<br>","all")#>
 
-<cfquery name="insert_help_desk" datasource="MySql">
+<cfquery name="insert_help_desk" datasource="#APPLICATION.DSN#">
 	INSERT INTO 
     	smg_help_desk
 		(
@@ -59,12 +59,12 @@
      	)
 </cfquery>
 
-<cfquery name="retrive_helpdeskid" datasource="mysql">
+<cfquery name="retrive_helpdeskid" datasource="#APPLICATION.DSN#">
 	Select Max(helpdeskid) as helpdeskid
 	from smg_help_desk
 </cfquery>
 
-<cfquery name="insert_link" datasource="MySQL">
+<cfquery name="insert_link" datasource="#APPLICATION.DSN#">
 	INSERT INTO
     	smg_links
         (
@@ -76,7 +76,7 @@
      	)
 </cfquery>
 
-<cfquery name="get_link_id" datasource="MySQL">
+<cfquery name="get_link_id" datasource="#APPLICATION.DSN#">
 	Select Max(id) as linkid
 	from smg_links
 </cfquery>

@@ -52,7 +52,7 @@
 	<cfif IsDefined('cfcatch.NativeErrorCode')>Native Error: #cfcatch.NativeErrorCode#</cfif>
 	<cfif IsDefined('cfcatch.sqlstate')>SQLState: #cfcatch.SQLState#</cfif>
 	<cfif IsDefined('url.student')>
-		<cfquery name="get_email" datasource="MySql">
+		<cfquery name="get_email" datasource="#APPLICATION.DSN#">
 			SELECT s.studentid, s.email, s.firstname, s.familylastname,
 				u.businessname
 			FROM smg_students s

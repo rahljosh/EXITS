@@ -1,12 +1,12 @@
 <style type="text/css">
-body {font:Arial, Helvetica, sans-serif;}
-.thin-border{ border: 1px solid #000000;
-			  font:Arial, Helvetica, sans-serif;}
-.dashed-border {border: 1px dashed #FF9933;}
-    </style>
+	body {font:Arial, Helvetica, sans-serif;}
+	.thin-border{ border: 1px solid #000000;
+				  font:Arial, Helvetica, sans-serif;}
+	.dashed-border {border: 1px dashed #FF9933;}
+</style>
 
 <cfif isDefined('form.randid')>
-	<cfquery name="check_info" datasource="MySQL">
+	<cfquery name="check_info" datasource="#APPLICATION.DSN#">
 		SELECT email, uniqueid, randid, phone, studentid, firstname, familylastname, companyid
 		FROM smg_students
 		WHERE randid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.randid#">
@@ -15,41 +15,41 @@ body {font:Arial, Helvetica, sans-serif;}
 	
 	<!----If account is not verfied, display verification form with error.---->
 	<cfif check_info.recordcount eq 0>
-				<table align="center" width=550 class=thin-border border=0>
-						<tr>
-							<td colspan=2>
-                            <cfif cgi.server_name is 'wep.exitsapplication.com'>
-                            	<img src="pics/WEPbanner.jpg">
-                            <cfelse>
-                            	<img src="pics/EXITSbanner.jpg">
-                            </cfif>
-                            </td>
-						</tr>
-						<tr>
-							<td align="center" colspan=2><h1>Account Verification</h1></td>
-						</tr>
-						<tr>
-							<td colspan=2 valign="center" class="dashed-border"><img src="pics/error_exclamation_clear.gif" align="left" >The information you entered does not match
-							the information in our system.  Please verify that you entered the correct information.  If you continue to get this 
-							error, please contact the representative indicated in your email.</td>
-						</tr>
-						<tr>
-							<td align="right" width=50%>
-							<br>
-					<cfoutput>
-					<cfform method="post" action="verify.cfm?s=#url.s#">
-					Please enter your email address: </td><td><cfinput type=text name=email size=25 message="Please enter a valid email address." validateat="onSubmit" validate="email" required="yes"></td>
-						</tr>
-						<tr>
-							<td align="right">Your ID Number sent via email:</td><td> <cfinput type=text name=randid size = 8 message="Please enter the validation code included in your email." required="yes"></td>
-						</tr>
-					<tr>
-						<td colspan=2 align="center"><br><cfinput name="Submit" type="image" src="pics/submit_45.png" border=0 alt="Start Application"></td>
-					</tr>
-					</cfform>
-							
-					</cfoutput>
-				</table><br>
+		<table align="center" width=550 class=thin-border border=0>
+				<tr>
+					<td colspan=2>
+						<cfif cgi.server_name is 'wep.exitsapplication.com'>
+							<img src="pics/WEPbanner.jpg">
+						<cfelse>
+							<img src="pics/EXITSbanner.jpg">
+						</cfif>
+	                         </td>
+				</tr>
+				<tr>
+					<td align="center" colspan=2><h1>Account Verification</h1></td>
+				</tr>
+				<tr>
+					<td colspan=2 valign="center" class="dashed-border"><img src="pics/error_exclamation_clear.gif" align="left" >The information you entered does not match
+					the information in our system.  Please verify that you entered the correct information.  If you continue to get this 
+					error, please contact the representative indicated in your email.</td>
+				</tr>
+				<tr>
+					<td align="right" width=50%>
+					<br>
+			<cfoutput>
+			<cfform method="post" action="verify.cfm?s=#url.s#">
+			Please enter your email address: </td><td><cfinput type=text name=email size=25 message="Please enter a valid email address." validateat="onSubmit" validate="email" required="yes"></td>
+				</tr>
+				<tr>
+					<td align="right">Your ID Number sent via email:</td><td> <cfinput type=text name=randid size = 8 message="Please enter the validation code included in your email." required="yes"></td>
+				</tr>
+			<tr>
+				<td colspan=2 align="center"><br><cfinput name="Submit" type="image" src="pics/submit_45.png" border=0 alt="Start Application"></td>
+			</tr>
+			</cfform>
+					
+			</cfoutput>
+		</table><br>
 				<cfabort>
 				<cfelse>
 
@@ -120,7 +120,7 @@ function checkPassword() {
 			</tr>
 			
 
-	<cfquery name="check_exist" datasource="MySQL">
+	<cfquery name="check_exist" datasource="#APPLICATION.DSN#">
         select uniqueid
         from smg_students
         where uniqueid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#url.s#">

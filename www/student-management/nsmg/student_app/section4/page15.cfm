@@ -6,7 +6,7 @@
     <cfset bgcolor ='B5D66E'>  
 </cfif>
 
-<cfquery name="org_info" datasource="mysql">
+<cfquery name="org_info" datasource="#APPLICATION.DSN#">
     select *
     from smg_companies
     where companyid = #client.org_code#

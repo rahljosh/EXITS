@@ -7,7 +7,7 @@
 
 	<!--- UPDATE --->
 	<cfif IsDefined('form.healthid')>
-		<cfquery name="update_questions" datasource="MySql">
+		<cfquery name="update_questions" datasource="#APPLICATION.DSN#">
 		UPDATE smg_student_app_health
 		SET clinical_head = <cfif IsDefined('form.clinical_head')>'#form.clinical_head#'<cfelse>NULL</cfif>,
 			clinical_nose = <cfif IsDefined('form.clinical_nose')>'#form.clinical_nose#'<cfelse>NULL</cfif>,
@@ -63,7 +63,7 @@
 		</cfquery>
 	</cfif>
 	
-	<cfquery name="Update_Student" datasource="MySql">
+	<cfquery name="Update_Student" datasource="#APPLICATION.DSN#">
 	UPDATE 
     	smg_students
 	SET	

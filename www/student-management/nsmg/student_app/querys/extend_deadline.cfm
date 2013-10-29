@@ -2,7 +2,7 @@
 
 	<cfset expiration_date = '#DateFormat(DateAdd('d','#extdeadline#','#now()#'), 'yyyy-mm-dd')# #TimeFormat(DateAdd('d','#extdeadline#','#now()#'), 'HH:mm:ss')#'>
 	
-	<cfquery name="extend_deadline" datasource="MySQL">
+	<cfquery name="extend_deadline" datasource="#APPLICATION.DSN#">
 		UPDATE smg_students
 		SET application_expires = '#expiration_date#'
 		WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.studentid#">

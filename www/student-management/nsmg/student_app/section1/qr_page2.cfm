@@ -9,7 +9,7 @@
 		<cfif IsDefined('form.count')>
 			<cfloop from="1" to="#form.count#" index="x">
 				<cfif form["name" & x] NEQ ''>
-					<cfquery name="update_kids" datasource="MySQL">
+					<cfquery name="update_kids" datasource="#APPLICATION.DSN#">
 						UPDATE smg_student_siblings
 						SET name = '#form["name" & x]#', studentid = '#form.studentid#', 
 							birthdate =  <cfif form["birthdate" & x] NEQ ''>#CreateODBCDate(form["birthdate" & x])#<cfelse>NULL</cfif>,
@@ -26,7 +26,7 @@
 		<cfif IsDefined('form.newcount')>
 			<cfloop From = "1" To = "#form.newcount#" Index = "x">
 				<cfif form["newname" & x] NEQ ''>
-					<cfquery name="insert_kids" datasource="MySQL">
+					<cfquery name="insert_kids" datasource="#APPLICATION.DSN#">
 						INSERT INTO smg_student_siblings(name, studentid, birthdate, sex, liveathome)
 						VALUES(	'#form["newname" & x]#',
 								'#form.studentid#',

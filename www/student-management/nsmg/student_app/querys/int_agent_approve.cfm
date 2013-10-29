@@ -1,6 +1,6 @@
 <meta http-equiv="refresh" content="3;url=close_window.cfm">
 <body onLoad="opener.location.reload()"> 
-<cfquery name="approve_appliation" datasource="MySQL">
+<cfquery name="approve_appliation" datasource="#APPLICATION.DSN#">
 	INSERT INTO
     	smg_student_app_status
         (

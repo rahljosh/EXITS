@@ -42,6 +42,14 @@ function CheckFields() {
 		  alert("Please explain why have you been hospitalized?");
 		  document.page11.hospitalized_reason.focus();
 		  return false;
+   } else if ((document.page11.surgery[1].checked) && (document.page11.surgery_reason.value == '')) {
+		  alert("Please explain why have you had surgery?");
+		  document.page11.surgery_reason.focus();
+		  return false;
+   } else if ((document.page11.chronicIllness[1].checked) && (document.page11.chronicIllness_reason.value == '')) {
+		  alert("Please explain why have you been treated for a chronic medical illness?");
+		  document.page11.chronicIllness_reason.focus();
+		  return false;
    } else if ((document.page11.good_health[0].checked) && (document.page11.good_health_reason.value == '')) {
 		  alert("Please explain why have you not been in good general health?");
 		  document.page11.good_health_reason.focus();
@@ -76,17 +84,17 @@ function NextPage() {
 
 <cfinclude template="../querys/get_student_info.cfm">
 
-<cfquery name="get_health" datasource="MySql">
+<cfquery name="get_health" datasource="#APPLICATION.DSN#">
 	SELECT *
 	FROM smg_student_app_health 
 	WHERE studentid = '#get_student_info.studentid#'
 </cfquery>
 
 <cfif get_health.recordcount EQ 0>
-	<cfquery name="insert_questions" datasource="MySql">
+	<cfquery name="insert_questions" datasource="#APPLICATION.DSN#">
 		INSERT INTO smg_student_app_health (studentid) VALUES ('#get_student_info.studentid#')
 	</cfquery>
-	<cfquery name="get_health" datasource="MySql">
+	<cfquery name="get_health" datasource="#APPLICATION.DSN#">
 		SELECT *
 		FROM smg_student_app_health 
 		WHERE studentid = '#get_student_info.studentid#'
@@ -170,7 +178,7 @@ function NextPage() {
 			<cfif get_health.had_strokes EQ '0'><cfinput type="radio" name="had_strokes" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="had_strokes" value="0" onchange="DataChanged();">No</cfif>
 			<cfif get_health.had_strokes EQ '1'><cfinput type="radio" name="had_strokes" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="had_strokes" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;		
 		</td>
-		<td><em>Strokes / Cerebral Hemorrhage</td>
+		<td><em>Strokes / Cerebral Hemorrhage</em></td>
 	</tr>
 	<tr><td align="right">
 			<cfif get_health.had_concussion EQ '0'><cfinput type="radio" name="had_concussion" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="had_concussion" value="0" onchange="DataChanged();">No</cfif>
@@ -192,14 +200,38 @@ function NextPage() {
 		<td>&nbsp;</td>	
 	</tr>
 	<tr><td>&nbsp;</td></tr>
-	<tr><td align="right">
+	<tr>
+    	<td align="right">
 			<cfif get_health.been_hospitalized EQ '0'><cfinput type="radio" name="been_hospitalized" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="been_hospitalized" value="0" onchange="DataChanged();">No</cfif>
 			<cfif get_health.been_hospitalized EQ '1'><cfinput type="radio" name="been_hospitalized" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="been_hospitalized" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;		
 		</td>
-		<td colspan="3"><em>Have you ever been hospitalized, had surgery, or been under extended medical / psychological care? </em></td>
+		<td colspan="3"><em>Have you ever been hospitalized?</em></td>
 	</tr>
-	<tr><td>&nbsp;</td>
-		<td colspan="3"><em>If yes, please provide details and dates:</em> &nbsp; <cfinput type="text" name="hospitalized_reason" size="50" maxlength="200" value="#get_health.hospitalized_reason#" onchange="DataChanged();"></td>
+	<tr>
+    	<td>&nbsp;</td>
+		<td colspan="3"><em>Please explain:</em> &nbsp; <cfinput type="text" name="hospitalized_reason" size="50" maxlength="200" value="#get_health.hospitalized_reason#" onchange="DataChanged();"></td>
+	</tr>
+    <tr>
+    	<td align="right">
+			<cfif get_health.surgery EQ '0'><cfinput type="radio" name="surgery" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="surgery" value="0" onchange="DataChanged();">No</cfif>
+			<cfif get_health.surgery EQ '1'><cfinput type="radio" name="surgery" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="surgery" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;		
+		</td>
+		<td colspan="3"><em>Have you ever had surgery?</em></td>
+	</tr>
+	<tr>
+    	<td>&nbsp;</td>
+		<td colspan="3"><em>Please explain:</em> &nbsp; <cfinput type="text" name="surgery_reason" size="50" maxlength="200" value="#get_health.surgery_reason#" onchange="DataChanged();"></td>
+	</tr>
+    <tr>
+    	<td align="right">
+			<cfif get_health.chronicIllness EQ '0'><cfinput type="radio" name="chronicIllness" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="chronicIllness" value="0" onchange="DataChanged();">No</cfif>
+			<cfif get_health.chronicIllness EQ '1'><cfinput type="radio" name="chronicIllness" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="chronicIllness" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;		
+		</td>
+		<td colspan="3"><em>Have you been treated for a chronic medical illness?</em></td>
+	</tr>
+	<tr>
+    	<td>&nbsp;</td>
+		<td colspan="3"><em>Please explain:</em> &nbsp; <cfinput type="text" name="chronicIllness_reason" size="50" maxlength="200" value="#get_health.chronicIllness_reason#" onchange="DataChanged();"></td>
 	</tr>	
 </table><br>
 <hr class="bar">
@@ -344,9 +376,9 @@ function NextPage() {
 	<tr><td>&nbsp;</td>
 		<td colspan="5"><em>If not, please explain.</em> &nbsp; <cfinput type="text" name="good_health_reason" size="50" maxlength="200" value="#get_health.good_health_reason#" onchange="DataChanged();"></td>
 	</tr>
-</table><br>
+</table>
 
-<hr class="bar"></hr><br>
+<br><hr class="bar"></hr><br>
 
 <!--- ALLERGIES AND SENSITIVITIES --->
 <table width="670" border=0 cellpadding=2 cellspacing=0 align="center">
@@ -429,8 +461,11 @@ function NextPage() {
 	<tr><td colspan="2"> &nbsp; <em>Please explain.</em> &nbsp; <cfinput type="text" name="pets_list" size="30" maxlength="200" value="#get_health.pets_list#" onchange="DataChanged();"></td>
 		<td colspan="2"> &nbsp; <em>If yes, please list: </em> &nbsp; <cfinput type="text" name="other_allergies_list" size="30" maxlength="200" value="#get_health.other_allergies_list#" onchange="DataChanged();"></td>
 	</tr>	
+	
+    
+    <!--- Being replaced by new psychological section
 	<tr><td>&nbsp;</td></tr>
-	<tr><td colspan="4"><em>Have you ever received any medical attention or counseling for: </em></td></tr>
+    <tr><td colspan="4"><em>Have you ever received any medical attention or counseling for: </em></td></tr>
 	<tr><td align="right">
 			<cfif get_health.depression EQ '0'><cfinput type="radio" name="depression" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="depression" value="0" onchange="DataChanged();">No</cfif>
 			<cfif get_health.depression EQ '1'><cfinput type="radio" name="depression" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="depression" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;
@@ -443,8 +478,142 @@ function NextPage() {
 		<td><em>Eating Disorders</em></td>
 	</tr>
 	<tr><td colspan="4"> &nbsp; <em>Please explain if yes.</em> &nbsp; <cfinput type="text" name="medical_attention_reason" size="60" maxlength="200" value="#get_health.medical_attention_reason#" onchange="DataChanged();"></td>
-	</tr>	
-</table><br>
+	</tr>
+	--->
+		
+</table>
+
+<br><hr class="bar"></hr><br>
+
+<!--- Psychological Issues --->
+<table width="670" border=0 cellpadding=2 cellspacing=0 align="center">
+	<tr><td colspan="6"><b>PSYCHOLOGICAL ISSUES</b> - <em>Have you ever suffered from and/or received treatment for any of the following psychological issues:</em></td></tr>
+	
+    <tr>
+    	<!--- ADHD --->
+    	<td width="90" align="right">
+			<input type="radio" name="psychological_adhd" value="0" <cfif get_health.psychological_adhd EQ '0'>checked="yes"</cfif> onchange="DataChanged();">No
+            <input type="radio" name="psychological_adhd" value="1" <cfif get_health.psychological_adhd EQ '1'>checked="yes"</cfif> onchange="DataChanged();">Yes 
+         	&nbsp;
+        </td>
+        <td width="245"><em>Attention Deficit Hyperactivity Disorder (ADHD)</em></td>
+        <!--- Impulse-control disorders --->
+        <td width="90" align="right">
+			<input type="radio" name="psychological_impulseControl" value="0" <cfif get_health.psychological_impulseControl EQ '0'>checked="yes"</cfif> onchange="DataChanged();">No
+            <input type="radio" name="psychological_impulseControl" value="1" <cfif get_health.psychological_impulseControl EQ '1'>checked="yes"</cfif> onchange="DataChanged();">Yes 
+         	&nbsp;
+        </td>
+        <td width="245"><em>Impulse-control disorders</em></td>
+    </tr>
+    <tr>
+    	<!--- Anxiety disorders --->
+    	<td width="90" align="right">
+			<input type="radio" name="psychological_anxiety" value="0" <cfif get_health.psychological_anxiety EQ '0'>checked="yes"</cfif> onchange="DataChanged();">No
+            <input type="radio" name="psychological_anxiety" value="1" <cfif get_health.psychological_anxiety EQ '1'>checked="yes"</cfif> onchange="DataChanged();">Yes 
+         	&nbsp;
+        </td>
+        <td width="245"><em>Anxiety disorders</em></td>
+        <!--- Neurocognitive disorders --->
+        <td width="90" align="right">
+			<input type="radio" name="psychological_neurocognitive" value="0" <cfif get_health.psychological_neurocognitive EQ '0'>checked="yes"</cfif> onchange="DataChanged();">No
+            <input type="radio" name="psychological_neurocognitive" value="1" <cfif get_health.psychological_neurocognitive EQ '1'>checked="yes"</cfif> onchange="DataChanged();">Yes 
+         	&nbsp;
+        </td>
+        <td width="245"><em>Neurocognitive disorders</em></td>
+    </tr>
+    <tr>
+    	<!--- Dissociative disorders --->
+    	<td width="90" align="right">
+			<input type="radio" name="psychological_dissociative" value="0" <cfif get_health.psychological_dissociative EQ '0'>checked="yes"</cfif> onchange="DataChanged();">No
+            <input type="radio" name="psychological_dissociative" value="1" <cfif get_health.psychological_dissociative EQ '1'>checked="yes"</cfif> onchange="DataChanged();">Yes 
+         	&nbsp;
+        </td>
+        <td width="245"><em>Dissociative disorders</em></td>
+        <!--- Neurodevelopmental disorders --->
+        <td width="90" align="right">
+			<input type="radio" name="psychological_neurodevelopmental" value="0" <cfif get_health.psychological_neurodevelopmental EQ '0'>checked="yes"</cfif> onchange="DataChanged();">No
+            <input type="radio" name="psychological_neurodevelopmental" value="1" <cfif get_health.psychological_neurodevelopmental EQ '1'>checked="yes"</cfif> onchange="DataChanged();">Yes 
+         	&nbsp;
+        </td>
+        <td width="245"><em>Neurodevelopmental disorders</em></td>
+    </tr>
+    <tr>
+    	<!--- Eating disorders --->
+    	<td width="90" align="right">
+			<input type="radio" name="eating_disorders" value="0" <cfif get_health.eating_disorders EQ '0'>checked="yes"</cfif> onchange="DataChanged();">No
+            <input type="radio" name="eating_disorders" value="1" <cfif get_health.eating_disorders EQ '1'>checked="yes"</cfif> onchange="DataChanged();">Yes 
+         	&nbsp;
+        </td>
+        <td width="245"><em>Eating disorders</em></td>
+        <!--- Psychotic disorders --->
+        <td width="90" align="right">
+			<input type="radio" name="psychological_psychotic" value="0" <cfif get_health.psychological_psychotic EQ '0'>checked="yes"</cfif> onchange="DataChanged();">No
+            <input type="radio" name="psychological_psychotic" value="1" <cfif get_health.psychological_psychotic EQ '1'>checked="yes"</cfif> onchange="DataChanged();">Yes 
+         	&nbsp;
+        </td>
+        <td width="245"><em>Psychotic disorders</em></td>
+    </tr>
+    <tr>
+    	<!--- Cutting disorders --->
+    	<td width="90" align="right">
+			<input type="radio" name="psychological_cutting" value="0" <cfif get_health.psychological_cutting EQ '0'>checked="yes"</cfif> onchange="DataChanged();">No
+            <input type="radio" name="psychological_cutting" value="1" <cfif get_health.psychological_cutting EQ '1'>checked="yes"</cfif> onchange="DataChanged();">Yes 
+         	&nbsp;
+        </td>
+        <td width="245"><em>Cutting behavior (Factitious disorders)</em></td>
+        <!--- Sexual Gender Identity disorders --->
+        <td width="90" align="right">
+			<input type="radio" name="psychological_sexualGenderIdentity" value="0" <cfif get_health.psychological_sexualGenderIdentity EQ '0'>checked="yes"</cfif> onchange="DataChanged();">No
+            <input type="radio" name="psychological_sexualGenderIdentity" value="1" <cfif get_health.psychological_sexualGenderIdentity EQ '1'>checked="yes"</cfif> onchange="DataChanged();">Yes 
+         	&nbsp;
+        </td>
+        <td width="245"><em>Sexual and gender identity disorders</em></td>
+    </tr>
+    <tr>
+    	<!--- Depression --->
+    	<td width="90" align="right">
+			<input type="radio" name="depression" value="0" <cfif get_health.depression EQ '0'>checked="yes"</cfif> onchange="DataChanged();">No
+            <input type="radio" name="depression" value="1" <cfif get_health.depression EQ '1'>checked="yes"</cfif> onchange="DataChanged();">Yes 
+         	&nbsp;
+        </td>
+        <td width="245"><em>Depression</em></td>
+        <!--- Substance Abuse --->
+        <td width="90" align="right">
+			<input type="radio" name="psychological_substance" value="0" <cfif get_health.psychological_substance EQ '0'>checked="yes"</cfif> onchange="DataChanged();">No
+            <input type="radio" name="psychological_substance" value="1" <cfif get_health.psychological_substance EQ '1'>checked="yes"</cfif> onchange="DataChanged();">Yes 
+         	&nbsp;
+        </td>
+        <td width="245"><em>Substance Abuse</em></td>
+    </tr>
+    <tr>
+    	<!--- Factitious disorders --->
+    	<td width="90" align="right">
+			<input type="radio" name="psychological_factitious" value="0" <cfif get_health.psychological_factitious EQ '0'>checked="yes"</cfif> onchange="DataChanged();">No
+            <input type="radio" name="psychological_factitious" value="1" <cfif get_health.psychological_factitious EQ '1'>checked="yes"</cfif> onchange="DataChanged();">Yes 
+         	&nbsp;
+        </td>
+        <td width="245"><em>Factitious disorders</em></td>
+        <td width="90" align="right" colspan="2"></td>
+    </tr>
+    <tr><td colspan="4"><em>If you answered yes to any of these, please provide a detailed explanation:</em></td></tr>
+    <tr><td colspan="4"><input type="text" name="medical_attention_reason" size="90" maxlength="200" value="#get_health.medical_attention_reason#" onchange="DataChanged();"></td></tr>
+    <tr>
+    	<td width="90" align="right">
+			<input type="radio" name="psychological_treatment" value="0" <cfif get_health.psychological_treatment EQ '0'>checked="yes"</cfif> onchange="DataChanged();">No
+            <input type="radio" name="psychological_treatment" value="1" <cfif get_health.psychological_treatment EQ '1'>checked="yes"</cfif> onchange="DataChanged();">Yes 
+         	&nbsp;
+        </td>
+        <td colspan="3"><em>Have you ever received treatment or counseling for any psychological disorder?</em></td>
+    </tr>
+    <tr>
+    	<td colspan="4">
+            <em>If yes, please explain:</em>
+            <input type="text" name="psychological_treatmentExplanation" size="60" maxlength="200" value="#get_health.psychological_treatmentExplanation#" onchange="DataChanged();">
+  		</td>
+ 	</tr>
+</table>
+
+<br/>
 
 </div>
 	

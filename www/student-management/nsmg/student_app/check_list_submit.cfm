@@ -7,10 +7,15 @@
 
 	<!--- From Student to Intl. Rep. --->
 	<cfif form.latest_status LTE '2'>
- 		<cfquery name="add_new_status" datasource="MySQL">
-			INSERT INTO smg_student_app_status
-				(studentid, status, date)
-			VALUES ('#form.studentid#', '3', #CreateODBCDateTime(now())# )
+ 		<cfquery name="add_new_status" datasource="#APPLICATION.DSN#">
+			INSERT INTO smg_student_app_status(
+            	studentid,
+                status,
+                date)
+			VALUES(
+            	<cfqueryparam cfsqltype="cf_sql_integer" value="#form.studentid#">,
+                '3',
+                #CreateODBCDateTime(now())#)
 		</cfquery> 
 		<html>
 		<head>
@@ -26,10 +31,15 @@
 
 	<!--- From Intl. Rep. to SMG --->
 	<cfif form.latest_status EQ '3'>
- 		<cfquery name="add_new_status" datasource="MySQL">
-			INSERT INTO smg_student_app_status
-				(studentid, status, date)
-			VALUES ('#form.studentid#', '5', #CreateODBCDateTime(now())# )
+ 		<cfquery name="add_new_status" datasource="#APPLICATION.DSN#">
+			INSERT INTO smg_student_app_status(
+            	studentid,
+                status,
+                date)
+			VALUES(
+            	<cfqueryparam cfsqltype="cf_sql_integer" value="#form.studentid#">,
+                '5',
+                #CreateODBCDateTime(now())#)
 		</cfquery> 
 		<html>
 		<head>
