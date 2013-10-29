@@ -637,7 +637,7 @@
                         <td align="center">#dateFormat(qGetCurrentReport.pr_rd_approved_date, 'mm/dd/yyyy')#</td>
                         <td align="center">
                         	<cfif listFind("1,2,3,4", CLIENT.userType) AND isDate(qGetCurrentReport.pr_rd_approved_date) AND NOT isDate(qGetCurrentReport.pr_ny_approved_date)>
-                            	<a href="?curdoc=progress_report_info&pr_id=#qGetCurrentReport.pr_id#&pr_action=approve">[ Click here to Approve ]</a>
+                            	<a href="?curdoc=progress_report_info&pr_id=#qGetCurrentReport.pr_id#">[ Click here to Approve ]</a>
                             <cfelse>
 		                        #dateFormat(qGetCurrentReport.pr_ny_approved_date, 'mm/dd/yyyy')#</td>
                             </cfif>
