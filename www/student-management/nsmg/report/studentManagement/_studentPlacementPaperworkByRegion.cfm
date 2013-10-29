@@ -224,6 +224,7 @@
                                     AND
                                         <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d', 1, FORM.placedDateTo)#"> 	
                             </cfif>
+							AND (sh.datePlacedEnded IS NULL OR sh.datePlacedEnded > (SELECT MAX(dep_date) FROM smg_flight_info WHERE studentID = s.studentID AND flight_type = "arrival"))
                         INNER JOIN
                             smg_programs p on p.programID = s.programID
                             <!--- Program --->
