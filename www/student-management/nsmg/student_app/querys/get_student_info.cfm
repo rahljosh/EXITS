@@ -1,4 +1,4 @@
-<cfquery name="get_student_info" datasource="mysql">
+<cfquery name="get_student_info" datasource="#APPLICATION.DSN#">
 	SELECT 
     	*
 	FROM 

@@ -17,7 +17,7 @@ function DataChanged()
 // unhide script -->
 </SCRIPT>
 
-<cfquery name="get_pages" datasource="MySql">
+<cfquery name="get_pages" datasource="#APPLICATION.DSN#">
 	SELECT page 
 	FROM smg_student_app_field
 	GROUP BY page
@@ -28,7 +28,7 @@ function DataChanged()
 	<cfset url.page = #get_pages.page#>
 </cfif>
 
-<cfquery name="get_fields" datasource="MySql">
+<cfquery name="get_fields" datasource="#APPLICATION.DSN#">
 	SELECT fieldid, field_label, required, section, page, field_order, field_name, table_located 
 	FROM smg_student_app_field
 	WHERE page = <cfqueryparam value="#url.page#" cfsqltype="cf_sql_integer">

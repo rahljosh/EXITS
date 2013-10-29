@@ -34,18 +34,18 @@
 	<td width=10%></td>
 		<td valign="top" width="80%">
 		<form method="post" action="querys/insert_help_desk.cfm">
-		<cfquery name="student_info" datasource="mysql">
+		<cfquery name="student_info" datasource="#APPLICATION.DSN#">
 			SELECT firstname, familylastname, email
 			FROM smg_students
-			WHERE studentid = #client.studentid#
+			WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.studentid#">
 		</cfquery>
 		
 		<cfoutput>
 		
-		<cfquery name="help_desk_items" datasource="mysql">
+		<cfquery name="help_desk_items" datasource="#APPLICATION.DSN#">
 			SELECT title, text, status, helpdeskid
 			FROM smg_help_desk 
-			WHERE studentid = #client.studentid#
+			WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.studentid#">
 		</cfquery>
 		
 		<cfif help_desk_items.recordcount gt 0>

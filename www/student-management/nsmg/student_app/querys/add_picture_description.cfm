@@ -1,5 +1,5 @@
 <cfif url.insert eq 1>
-	<cfquery name="add_description" datasource="MySQL">
+	<cfquery name="add_description" datasource="#APPLICATION.DSN#">
 		UPDATE
         	smg_student_app_family_album
        	SET
@@ -10,7 +10,7 @@
         	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.studentID#">
 	</cfquery>
 <cfelse>
-	<cfquery name="add_description" datasource="MySQL">
+	<cfquery name="add_description" datasource="#APPLICATION.DSN#">
     	INSERT INTO
         	smg_student_app_family_album
             (

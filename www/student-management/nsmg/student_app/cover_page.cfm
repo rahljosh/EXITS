@@ -31,7 +31,7 @@
 		qGetSelectedCanadaAreaChoice = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='canadaAreaChoice', fieldID=qGetStudentInfo.app_canada_area);
 	</cfscript>
     
-    <cfquery name="qGetApplicationProgram" datasource="MySQL">
+    <cfquery name="qGetApplicationProgram" datasource="#APPLICATION.DSN#">
         SELECT 
         	app_programid, app_program 
         FROM 
@@ -40,7 +40,7 @@
         	app_programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.app_indicated_program)#">
     </cfquery>
      
-    <cfquery name="qGetAdditionalProgram" datasource="MySQL">
+    <cfquery name="qGetAdditionalProgram" datasource="#APPLICATION.DSN#">
         SELECT 
         	app_programid, app_program 
         FROM
@@ -49,7 +49,7 @@
         	app_programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.app_additional_program)#">
     </cfquery> 
     
-    <cfquery name="qGetRegionPreference" datasource="MySQL">
+    <cfquery name="qGetRegionPreference" datasource="#APPLICATION.DSN#">
         SELECT 
         	app_region_guarantee
         FROM 
@@ -58,7 +58,7 @@
         	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentid)#">
     </cfquery>
     
-    <cfquery name="qGetStatePrefence" datasource="MySQL">
+    <cfquery name="qGetStatePrefence" datasource="#APPLICATION.DSN#">
         SELECT 
         	state1, sta1.statename as statename1, state2, sta2.statename as statename2, state3, sta3.statename as statename3
         FROM 
@@ -73,7 +73,7 @@
         	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentid)#">
     </cfquery>
     
-    <cfquery name="qGetPrivateSchool" datasource="MySql">
+    <cfquery name="qGetPrivateSchool" datasource="#APPLICATION.DSN#">
         SELECT 
         	privateschoolid, 
             privateschoolprice, 
@@ -84,7 +84,7 @@
         	privateschoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.privateschool)#">
     </cfquery>
     
-    <cfquery name="qGetStatusHistory" datasource="MySql">
+    <cfquery name="qGetStatusHistory" datasource="#APPLICATION.DSN#">
         SELECT 
         	status, reason, date, u.firstname, u.lastname
         FROM 

@@ -27,7 +27,7 @@
 
 <cfinclude template="../querys/get_student_info.cfm">
 
-<cfquery name="get_interests" datasource="MySQL">
+<cfquery name="get_interests" datasource="#APPLICATION.DSN#">
 	SELECT interestid, interest
 	FROM smg_interests
 	WHERE student_app = 'yes'

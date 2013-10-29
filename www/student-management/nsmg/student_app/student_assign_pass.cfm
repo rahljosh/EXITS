@@ -17,7 +17,7 @@ body {font:Arial, Helvetica, sans-serif;}
     <cfparam name="client.companyname" default ="International Student Exchange">
 </cfif>
 
-<cfquery name="get_name" datasource="mysql">
+<cfquery name="get_name" datasource="#APPLICATION.DSN#">
 	select email, firstname, familylastname, password, app_current_status, application_expires
 	from smg_students
 	where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(client.studentid)#">
@@ -25,14 +25,14 @@ body {font:Arial, Helvetica, sans-serif;}
 
 <!--- DO NOT UPDATE STATUS IF STATUS IS BIGGER THAN 1 --->
 <cfif get_name.app_current_status LTE 1>
-	<cfquery name="assign_student_pass" datasource="MySQL">
+	<cfquery name="assign_student_pass" datasource="#APPLICATION.DSN#">
 		update smg_students
 		set password = '#form.password1#',
 		app_current_status = 2
 		WHERE studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(client.studentid)#">
 	</cfquery>
 	
-	<cfquery name="update_status" datasource="MySQL">
+	<cfquery name="update_status" datasource="#APPLICATION.DSN#">
 		INSERT INTO smg_student_app_status (status, studentid)
 				values ('2', <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(client.studentid)#">)
 	</cfquery>

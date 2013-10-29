@@ -53,7 +53,7 @@ function NextPage() {
 
 <cfinclude template="../querys/get_student_info.cfm">
 
-<cfquery name="get_siblings" datasource="MySql">
+<cfquery name="get_siblings" datasource="#APPLICATION.DSN#">
 	SELECT childid, name, birthdate, sex, liveathome
 	FROM smg_student_siblings
 	WHERE studentid = <cfqueryparam value="#client.studentid#" cfsqltype="cf_sql_integer">

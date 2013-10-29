@@ -6,7 +6,7 @@
 <cftransaction action="begin" isolation="serializable">
 
 		<cfloop From = "1" To = "#form.count#" Index = "x">
-			<cfquery name="update_checklist" datasource="MySQL">
+			<cfquery name="update_checklist" datasource="#APPLICATION.DSN#">
 				UPDATE smg_student_app_field
 				SET	field_label = <cfqueryparam value="#form["field_label" & x]#" cfsqltype="cf_sql_char">,
 					section = <cfqueryparam value="#form["section" & x]#" cfsqltype="cf_sql_char">,

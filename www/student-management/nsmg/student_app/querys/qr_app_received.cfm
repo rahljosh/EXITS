@@ -7,7 +7,7 @@
 
 <body>
 
-<cfquery name="get_student" datasource="MySql">
+<cfquery name="get_student" datasource="#APPLICATION.DSN#Sql">
 	SELECT s.studentid, s.firstname, s.familylastname, s.app_current_status, s.app_indicated_program, s.randid,
 		u.userid, u.businessname, u.email as intrepemail, u.congrats_email,
 		p.app_program
@@ -17,7 +17,7 @@
 	WHERE s.uniqueid = <cfqueryparam value="#url.unqid#" cfsqltype="cf_sql_char">
 </cfquery>	
 
-<cfquery name="qGetAppStatus" datasource="MySQL">
+<cfquery name="qGetAppStatus" datasource="#APPLICATION.DSN#">
 	SELECT 
     	id, 
     	status,	
@@ -33,11 +33,11 @@
 <!--- Set application received - New Status 8 ---->
 <cfif get_student.recordcount AND get_student.app_current_status EQ 7 AND qGetAppStatus.status EQ 7>
 
-	<cfquery name="application_received" datasource="MySQL">
+	<cfquery name="application_received" datasource="#APPLICATION.DSN#">
 		INSERT INTO smg_student_app_status (studentid, status, date, approvedby)
 		VALUES ('#get_student.studentid#', '8', #now()#, '#client.userid#')
 	</cfquery>
-	<cfquery name="application_received" datasource="MySQL">
+	<cfquery name="application_received" datasource="#APPLICATION.DSN#">
 		UPDATE smg_students 
 		SET app_current_status = '8'
 		WHERE studentid = '#get_student.studentid#' 

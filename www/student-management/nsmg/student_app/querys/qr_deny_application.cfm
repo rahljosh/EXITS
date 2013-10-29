@@ -9,12 +9,12 @@
 <body>
 
 <cftransaction>
-	<cfquery name="get_latest_date" datasource="MySQL">
+	<cfquery name="get_latest_date" datasource="#APPLICATION.DSN#">
 		SELECT max(date) as date
 		FROM smg_student_app_status
 		WHERE studentID = <cfqueryparam value="#FORM.studentID#" cfsqltype="cf_sql_integer">
 	</cfquery>
-	<cfquery name="get_status" datasource="MySQL">
+	<cfquery name="get_status" datasource="#APPLICATION.DSN#">
 		SELECT * 
 		FROM smg_student_app_status
 		WHERE studentID = <cfqueryparam value="#FORM.studentID#" cfsqltype="cf_sql_integer">
@@ -31,13 +31,13 @@
 		<cfset newstatus = 4>
 	</cfif>
 
-	<cfquery name="deny_application_status" datasource="MySQL">
+	<cfquery name="deny_application_status" datasource="#APPLICATION.DSN#">
 		INSERT INTO smg_student_app_status (studentID, status, reason, date, approvedby)
 		VALUES (#FORM.studentID#, #newstatus#, '#FORM.reason#', #now()#, '#client.userid#')
 	</cfquery>
 	
 	<cfif newstatus EQ '9'> <!--- DENIED BY SMG --->
-		<cfquery name="deny_application" datasource="MySQL">
+		<cfquery name="deny_application" datasource="#APPLICATION.DSN#">
 			UPDATE smg_students 
 			SET app_current_status = '#newstatus#',
 				companyid = '#FORM.companyid#'				
@@ -51,7 +51,7 @@
 			LIMIT 1
 		</cfquery>
 	<cfelse>
-		<cfquery name="deny_application" datasource="MySQL">
+		<cfquery name="deny_application" datasource="#APPLICATION.DSN#">
 			UPDATE smg_students 
 			SET 
             	<!--- Keep status active so the student can login and re-submit the application --->
@@ -65,7 +65,7 @@
 </cftransaction>
 
 <cfif newstatus LT 9>
-	<cfquery name="get_email" datasource="mysql">
+	<cfquery name="get_email" datasource="#APPLICATION.DSN#">
 		SELECT s.studentID, s.email, s.firstname, s.familylastname, s.password, 
 			u.email as intrepemail, u.businessname,
 			c.companyshort, c.companyname, c.admission_person, c.phone
@@ -78,7 +78,7 @@
 
 <Cfif newstatus LT 9>
 	<!----Check if student is assigned to a branch---->
-	<cfquery name="check_branch" datasource="mysql">
+	<cfquery name="check_branch" datasource="#APPLICATION.DSN#">
 	select branchid 
 	from smg_students
 	where studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentID#">
@@ -87,7 +87,7 @@
 <cfoutput>
 	<cfif check_branch.branchid eq 0>
 	<!----Studnet is filing out application directly with parent company, only send email to student saying app denied---->
-	<cfquery name="student_email" datasource="mysql">
+	<cfquery name="student_email" datasource="#APPLICATION.DSN#">
 		Select s.studentID, s.email, s.firstname, s.familylastname, s.intrep,
 		u.businessname, u.email as intrepemail, u.phone
 		from smg_students s
@@ -119,7 +119,7 @@
 
 	<cfelse>
 
-	<cfquery name="student_email" datasource="mysql">
+	<cfquery name="student_email" datasource="#APPLICATION.DSN#">
 		SELECT s.studentID, s.email, s.firstname, s.familylastname, s.branchid,
 			u.studentcontactemail as branchemail, u.businessname, s.intrep, s.branchid,
 			u.email as intrepemail, u.phone
@@ -157,7 +157,7 @@
 
 <!--- SMG DENIES APPLICATION --->
 <cfif newstatus EQ 9> 
-	<cfquery name="get_email" datasource="mysql">
+	<cfquery name="get_email" datasource="#APPLICATION.DSN#">
 		SELECT s.studentID, s.email, s.firstname, s.familylastname, s.password, 
 			u.email as intrepemail, u.businessname,
 			c.companyshort, c.companyname, c.admission_person, c.phone
@@ -167,7 +167,7 @@
 		WHERE studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentID#">
 	</cfquery>
 	
-	<cfquery name="get_current_user" datasource="MySql">
+	<cfquery name="get_current_user" datasource="#APPLICATION.DSN#">
 		SELECT userid, firstname, lastname, email
 		FROM smg_users
 		WHERE userid = '#client.userid#'

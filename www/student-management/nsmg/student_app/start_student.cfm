@@ -48,7 +48,7 @@
 	</cfscript>
 
 	<!--- Queries --->
-    <cfquery name="qGetMainOffice" datasource="MySql">
+    <cfquery name="qGetMainOffice" datasource="#APPLICATION.DSN#">
         SELECT 
         	userid, 
         	intrepid
@@ -58,7 +58,7 @@
         	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
     </cfquery>    
     
-    <cfquery name="qAppProgramList" datasource="MySQL">
+    <cfquery name="qAppProgramList" datasource="#APPLICATION.DSN#">
         SELECT 
         	app_programID, 
             app_program, 
@@ -105,7 +105,7 @@
     
     <cfset canadaIDList = ValueList(qAppCanadaPrograms.app_programID)>
     
-    <cfquery name="qAppIntlRep" datasource="MySql">
+    <cfquery name="qAppIntlRep" datasource="#APPLICATION.DSN#">
         SELECT 
         	userid, 
             intrepid, 
@@ -116,46 +116,10 @@
         	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#"> 
     </cfquery>
 
-    <!---
-    <cfset maxdeadline = #DateDiff('d', now(), deadline)#>
-    <cfif maxdeadline LT appDays>
-        <cfset appDays = maxdeadline>
-    </cfif>
-    <cfset remainingDays = maxdeadline - appDays> 
-    --->
-	
-	<!--- deadlines --->
-    <!--- 10 month and 1st semester programs - 04/15 ASIANS - 05/01 NON ASIANS --->
-    <!--- 12 month and 2nd semester programs --->
-	<!---
-	<cfquery name="get_intl_country" datasource="MySql">
-		SELECT 
-			continent
-		FROM 
-			smg_users
-		LEFT JOIN 
-			smg_countrylist ON smg_countrylist.countryid = smg_users.country
-		WHERE 
-		<!--- BRANCH --->
-		<cfif qAppIntlRep.usertype EQ 11> 
-			userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qAppIntlRep.intrepid#">
-		<!--- Main Office --->
-		<cfelse>
-			userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qAppIntlRep.userid#"> 
-		</cfif>
-	</cfquery>
-	
-	<cfif get_intl_country.continent EQ 'asia'>
-		<cfset deadline = '04/15/07 23:59:59'>
-	<cfelse>
-		<cfset deadline = '05/01/07 23:59:59'>
-	</cfif>
-	--->
-
 	<!--- FORM SUBMITTED --->
     <cfif FORM.submitted>
   
-        <cfquery name="qCheckUsername" datasource="MySql">
+        <cfquery name="qCheckUsername" datasource="#APPLICATION.DSN#">
             SELECT 
                 email
             FROM 
@@ -250,7 +214,7 @@
 			</cfscript>
 
 			<!--- Insert Student --->
-            <cfquery datasource="MySQL">
+            <cfquery datasource="#APPLICATION.DSN#">
                 INSERT INTO 
                     smg_students 
                 (
@@ -301,7 +265,7 @@
             </cfquery>
             
 			<!--- Retrieve the students ID number --->
-            <cfquery name="qGetStudent" datasource="MySQL">
+            <cfquery name="qGetStudent" datasource="#APPLICATION.DSN#">
                 SELECT 
                     studentid, 
                     branchid, 
@@ -315,7 +279,7 @@
 	        <cfset CLIENT.studentid = qGetStudent.studentid>
         
 			<!--- Insert App Status History --->
-            <cfquery datasource="MySQL">
+            <cfquery datasource="#APPLICATION.DSN#">
                 INSERT INTO 
                 	smg_student_app_status 
                 (
@@ -339,7 +303,7 @@
             <cfif option EQ 1>
             
 				<!--- Get Agent information --->
-                <cfquery name="qIntlRepInfo" datasource="MySQL">
+                <cfquery name="qIntlRepInfo" datasource="#APPLICATION.DSN#">
                     SELECT 
                         userID,
                         businessname, 

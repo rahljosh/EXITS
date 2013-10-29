@@ -8,7 +8,7 @@
 </cfif>
 
 <cfif IsDefined('url.unqid')>
-	<cfquery name="qGetStudentInfoPrint" datasource="MySql">
+	<cfquery name="qGetStudentInfoPrint" datasource="#APPLICATION.DSN#">
 		SELECT
 			s.firstname,
 			s.familylastname,
@@ -26,7 +26,7 @@
 	</cfquery>	
 	<cfset CLIENT.studentid = '#qGetStudentInfoPrint.studentid#'>
 <cfelse>
-	<cfquery name="qGetStudentInfoPrint" datasource="MySql">
+	<cfquery name="qGetStudentInfoPrint" datasource="#APPLICATION.DSN#">
 		SELECT
 			s.firstname,
 			s.familylastname,
@@ -53,7 +53,7 @@
 	<cfset client.org_code = 5>
 	<cfset bgcolor ='B5D66E'>
 </cfif>
-<cfquery name="org_info" datasource="mysql">
+<cfquery name="org_info" datasource="#APPLICATION.DSN#">
 	SELECT
 		*
 	FROM
@@ -63,7 +63,7 @@
 </cfquery>
 
 <!----Check Allergy---->
-<cfquery name="check_allergy" datasource="#application.dsn#">
+<cfquery name="check_allergy" datasource="#APPLICATION.DSN#">
 	SELECT
 		has_an_allergy
 	FROM
@@ -72,7 +72,7 @@
 		studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.studentID)#">
 </cfquery>
 <!-----Check Additional Medical---->
-<cfquery name="additional_info" datasource="#application.dsn#">
+<cfquery name="additional_info" datasource="#APPLICATION.DSN#">
 	SELECT
 		*
 	FROM
@@ -268,6 +268,58 @@
 	<tr>
     	<td valign="top">
         	<cfinclude template="section4/page21print.cfm">
+        </td>
+    </tr>
+</cfsavecontent>
+
+<!--- Pages 23 - 24 use this variable instead of a separate print page --->
+<cfset URL.display = "print">
+
+<cfsavecontent variable="page23">
+	<tr>
+    	<td valign="top">
+        	<cfinclude template="section4/page23.cfm">
+        </td>
+    </tr>
+</cfsavecontent>
+
+<cfsavecontent variable="page24">
+	<tr>
+    	<td valign="top">
+        	<cfinclude template="section4/page24.cfm">
+        </td>
+    </tr>
+</cfsavecontent>
+
+<!--- Pages 25 - 27 use these variables for displaying images if there are any --->
+<cfscript>
+	param name="vStudentAppRelativePath" default="../";
+	param name="vUploadedFilesRelativePath" default="../../";
+</cfscript>
+
+<cfsavecontent variable="page25">
+	<tr>
+    	<td valign="top">
+        	<cfset doc="page25">
+        	<cfinclude template="print_include_file.cfm">
+        </td>
+    </tr>
+</cfsavecontent>
+
+<cfsavecontent variable="page26">
+	<tr>
+    	<td valign="top">
+        	<cfset doc="page26">
+        	<cfinclude template="print_include_file.cfm">
+        </td>
+    </tr>
+</cfsavecontent>
+
+<cfsavecontent variable="page27">
+	<tr>
+    	<td valign="top">
+        	<cfset doc="page27">
+        	<cfinclude template="print_include_file.cfm">
         </td>
     </tr>
 </cfsavecontent>
@@ -487,6 +539,24 @@
                 </cfcatch>
           	</cftry>
 		</cfif>
+    </cfloop>
+    
+    <!--- Pages 23 to 27 (Loop through these and display only the PDF if it exists) --->
+    <cfloop from="23" to="27" index="i">
+    	<cfset page = Evaluate('page' & #i#)>
+        <cfif FileExists(ExpandPath('../uploadedfiles/online_app/page#i#/#CLIENT.studentID#.pdf'))>
+        	<cftry>
+            	<cfpdf action="merge" source="#fileName#,#ExpandPath('../uploadedfiles/online_app/')#page#i#/#CLIENT.studentID#.pdf" destination="#fileName#" overwrite="yes">
+                <cfcatch type="any">
+                    <cfset errorFiles = errorFiles & "Page #i#: #CLIENT.studentID#.pdf\n">
+                </cfcatch>
+            </cftry>
+        <cfelse>
+        	<cfdocument format="pdf" filename="#ExpandPath('../uploadedFiles/temp/')#page#i##CLIENT.studentID#.pdf" overwrite="yes" margintop="0.1" backgroundvisible="no">
+                <table align="center" width="100%" cellpadding="0" cellspacing="0"  border="0">#page#</table>
+            </cfdocument>
+            <cfpdf action="merge" source="#fileName#,#ExpandPath('../uploadedFiles/temp/')#page#i##CLIENT.studentID#.pdf" destination="#fileName#" overwrite="yes">
+        </cfif>
     </cfloop>
     
     <!--- List files that had an error --->

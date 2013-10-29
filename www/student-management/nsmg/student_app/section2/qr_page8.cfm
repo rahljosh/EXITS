@@ -6,7 +6,7 @@
 <cftransaction action="begin" isolation="serializable">
 		<!--- INSERT 9th SCHOOL YEAR --->
 		<cfif IsDefined('form.new_9class')>
-			<cfquery name="Insert_Year" datasource="MySql">
+			<cfquery name="Insert_Year" datasource="#APPLICATION.DSN#">
 				INSERT INTO 
                 	smg_student_app_school_year 
                     (
@@ -31,7 +31,7 @@
 						<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.new_9class#">
                  	)
 			</cfquery>
-			<cfquery name="get_year" datasource="MySql">
+			<cfquery name="get_year" datasource="#APPLICATION.DSN#">
 				SELECT max(yearid) as yearid FROM smg_student_app_school_year
 			</cfquery>
 			<cfset form.new_9class_yearid = '#get_year.yearid#'>
@@ -40,7 +40,7 @@
 		<cfif IsDefined('form.new_9class_count') and form.new_9class_yearid NEQ '0'>
 			<cfloop From = "1" To = "#form.new_9class_count#" Index = "x">
 				<cfif form["new_9class_name" & x] NEQ ''>
-					<cfquery name="insert_classes" datasource="MySQL">
+					<cfquery name="insert_classes" datasource="#APPLICATION.DSN#">
 						INSERT INTO smg_student_app_grades(yearid, class_name, hours, grade)
 						VALUES ('#form.new_9class_yearid#', '#form["new_9class_name" & x]#',
 								'#form["new_9class_hour" & x]#', '#form["new_9class_grade" & x]#')
@@ -50,7 +50,7 @@
 		</cfif>
 		<!--- UPDATE 9th YEAR --->
 		<cfif IsDefined('form.upd_9yearid')>
-			<cfquery name="update_year" datasource="MySql">
+			<cfquery name="update_year" datasource="#APPLICATION.DSN#">
 				UPDATE 
                 	smg_student_app_school_year
 				SET 
@@ -75,7 +75,7 @@
 		<!--- UPDATE 9th CLASSES --->
 		<cfif IsDefined('form.upd_9class_count')>
 			<cfloop from="1" to="#form.upd_9class_count#" index="x">
-				<cfquery name="update_classes" datasource="MySQL">
+				<cfquery name="update_classes" datasource="#APPLICATION.DSN#">
 					UPDATE smg_student_app_grades
 					SET class_name = '#form["upd_9class_name" & x]#', 
 						hours = '#form["upd_9class_hour" & x]#',			
@@ -89,7 +89,7 @@
 
 		<!--- INSERT 10th SCHOOL YEAR --->
 		<cfif IsDefined('form.new_10class')>
-        	<cfquery name="Insert_Year" datasource="MySql">
+        	<cfquery name="Insert_Year" datasource="#APPLICATION.DSN#">
 				INSERT INTO 
                 	smg_student_app_school_year 
                     (
@@ -114,7 +114,7 @@
 						<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.new_10class#">
                  	)
 			</cfquery>
-			<cfquery name="get_year" datasource="MySql">
+			<cfquery name="get_year" datasource="#APPLICATION.DSN#">
 				SELECT max(yearid) as yearid FROM smg_student_app_school_year
 			</cfquery>
 			<cfset form.new_10class_yearid = '#get_year.yearid#'>
@@ -123,7 +123,7 @@
 		<cfif IsDefined('form.new_10class_count')>
 			<cfloop From = "1" To = "#form.new_10class_count#" Index = "x">
 				<cfif form["new_10class_name" & x] NEQ ''>
-					<cfquery name="insert_classes" datasource="MySQL">
+					<cfquery name="insert_classes" datasource="#APPLICATION.DSN#">
 						INSERT INTO smg_student_app_grades(yearid, class_name, hours, grade)
 						VALUES ('#form.new_10class_yearid#', '#form["new_10class_name" & x]#',
 								'#form["new_10class_hour" & x]#', '#form["new_10class_grade" & x]#')
@@ -133,7 +133,7 @@
 		</cfif>
 		<!--- UPDATE 10th YEAR --->
 		<cfif IsDefined('form.upd_10yearid')>
-        	<cfquery name="update_year" datasource="MySql">
+        	<cfquery name="update_year" datasource="#APPLICATION.DSN#">
 				UPDATE 
                 	smg_student_app_school_year
 				SET 
@@ -158,7 +158,7 @@
 		<!--- UPDATE 10th CLASSES --->
 		<cfif IsDefined('form.upd_10class_count')>
 			<cfloop from="1" to="#form.upd_10class_count#" index="x">
-				<cfquery name="update_classes" datasource="MySQL">
+				<cfquery name="update_classes" datasource="#APPLICATION.DSN#">
 					UPDATE smg_student_app_grades
 					SET class_name = '#form["upd_10class_name" & x]#', 
 						hours = '#form["upd_10class_hour" & x]#',
@@ -172,7 +172,7 @@
 
 		<!--- INSERT 11th SCHOOL YEAR --->
 		<cfif IsDefined('form.new_11class')>
-        	<cfquery name="Insert_Year" datasource="MySql">
+        	<cfquery name="Insert_Year" datasource="#APPLICATION.DSN#">
 				INSERT INTO 
                 	smg_student_app_school_year 
                     (
@@ -197,7 +197,7 @@
 						<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.new_11class#">
                  	)
 			</cfquery>
-			<cfquery name="get_year" datasource="MySql">
+			<cfquery name="get_year" datasource="#APPLICATION.DSN#">
 				SELECT max(yearid) as yearid FROM smg_student_app_school_year
 			</cfquery>
 			<cfset form.new_11class_yearid = '#get_year.yearid#'>
@@ -206,7 +206,7 @@
 		<cfif IsDefined('form.new_11class_count')>
 			<cfloop From = "1" To = "#form.new_11class_count#" Index = "x">
 				<cfif form["new_11class_name" & x] NEQ ''>
-					<cfquery name="insert_classes" datasource="MySQL">
+					<cfquery name="insert_classes" datasource="#APPLICATION.DSN#">
 						INSERT INTO smg_student_app_grades(yearid, class_name, hours, grade)
 						VALUES ('#form.new_11class_yearid#', '#form["new_11class_name" & x]#',
 								'#form["new_11class_hour" & x]#', '#form["new_11class_grade" & x]#')
@@ -216,7 +216,7 @@
 		</cfif>
 		<!--- UPDATE 11th YEAR --->
 		<cfif IsDefined('form.upd_11yearid')>
-        	<cfquery name="update_year" datasource="MySql">
+        	<cfquery name="update_year" datasource="#APPLICATION.DSN#">
 				UPDATE 
                 	smg_student_app_school_year
 				SET 
@@ -241,7 +241,7 @@
 		<!--- UPDATE 11th CLASSES --->
 		<cfif IsDefined('form.upd_11class_count')>
 			<cfloop from="1" to="#form.upd_11class_count#" index="x">
-				<cfquery name="update_classes" datasource="MySQL">
+				<cfquery name="update_classes" datasource="#APPLICATION.DSN#">
 					UPDATE smg_student_app_grades
 					SET class_name = '#form["upd_11class_name" & x]#', 
 						hours = '#form["upd_11class_hour" & x]#',
@@ -255,7 +255,7 @@
 
 		<!--- INSERT 12th SCHOOL YEAR --->
 		<cfif IsDefined('form.new_12class')>
-        	<cfquery name="Insert_Year" datasource="MySql">
+        	<cfquery name="Insert_Year" datasource="#APPLICATION.DSN#">
 				INSERT INTO 
                 	smg_student_app_school_year 
                     (
@@ -280,7 +280,7 @@
 						<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.new_12class#">
                  	)
 			</cfquery>
-			<cfquery name="get_year" datasource="MySql">
+			<cfquery name="get_year" datasource="#APPLICATION.DSN#">
 				SELECT max(yearid) as yearid FROM smg_student_app_school_year
 			</cfquery>
 			<cfset form.new_12class_yearid = '#get_year.yearid#'>
@@ -289,7 +289,7 @@
 		<cfif IsDefined('form.new_12class_count')>
 			<cfloop From = "1" To = "#form.new_12class_count#" Index = "x">
 				<cfif form["new_12class_name" & x] NEQ ''>
-					<cfquery name="insert_classes" datasource="MySQL">
+					<cfquery name="insert_classes" datasource="#APPLICATION.DSN#">
 						INSERT INTO smg_student_app_grades(yearid, class_name, hours, grade)
 						VALUES ('#form.new_12class_yearid#', '#form["new_12class_name" & x]#',
 								'#form["new_12class_hour" & x]#', '#form["new_12class_grade" & x]#')
@@ -299,7 +299,7 @@
 		</cfif>
 		<!--- UPDATE 12th YEAR --->
 		<cfif IsDefined('form.upd_12yearid')>
-        	<cfquery name="update_year" datasource="MySql">
+        	<cfquery name="update_year" datasource="#APPLICATION.DSN#">
 				UPDATE 
                 	smg_student_app_school_year
 				SET 
@@ -324,7 +324,7 @@
 		<!--- UPDATE 12th CLASSES --->
 		<cfif IsDefined('form.upd_12class_count')>
 			<cfloop from="1" to="#form.upd_12class_count#" index="x">
-				<cfquery name="update_classes" datasource="MySQL">
+				<cfquery name="update_classes" datasource="#APPLICATION.DSN#">
 					UPDATE smg_student_app_grades
 					SET class_name = '#form["upd_12class_name" & x]#', 
 						hours = '#form["upd_12class_hour" & x]#',

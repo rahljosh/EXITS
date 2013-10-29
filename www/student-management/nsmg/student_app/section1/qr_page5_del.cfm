@@ -1,6 +1,6 @@
 <cftransaction action="begin" isolation="serializable">
 
-<cfquery name="delete_letter" datasource="mysql">
+<cfquery name="delete_letter" datasource="#APPLICATION.DSN#">
 	UPDATE smg_students
 	SET letter = ''
 	WHERE studentid = #client.studentid#	

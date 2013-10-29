@@ -70,13 +70,15 @@
     </tr>
 	<tr><td>&nbsp;</td></tr>
 	<tr><td><b>MINIMUM IMMUNIZATION REQUIREMENTS:</b></td></tr>
-	<tr><td>Five or more doses of DTaP, DT (Pediatric), TD (Adult) vaccine or a combination thereof.</td></tr>
+	<tr><td>Five or more doses of DTaP</td></tr>
 	<tr><td>Three or more doses of trivalent oral polio vaccine (TOPV).</td></tr>
 	<tr><td>Two doses measles vaccine.</td></tr>
 	<tr><td>Two doses mumps vaccine.</td></tr>
 	<tr><td>Two doses rubella vaccine.</td></tr>
+    <tr><td>Two doses of Hepatitis A vaccine.</td></tr>
 	<tr><td>Three doses of Hepatitis B vaccine.</td></tr>
 	<tr><td>Two doses of Varicella vaccine (Two doses required if first dose issued after thirteenth birthday).</td></tr>
+    <tr><td>Two doses of Meningococcal vaccine (Two doses required if older than 16).</td></tr>
 	<tr><td>If the final dose of any of the above vaccines occurs before the third birthday, a booster shot is required.</td></tr>
 </table><br>
 
@@ -147,13 +149,35 @@
 		<td align="center" width="90" valign="top">&nbsp;</td>
 		<td align="center" width="90" valign="top">&nbsp;</td>				
 	</tr>
+    
+    <!--- HEPATITIS A--->
+	<tr>
+		<td align="center" width="130" valign="top"><b>Hepatitis A</b></td>
+		<td align="center" width="90" valign="top"><br> <small>1st </small><br><br></td>
+		<td align="center" width="90" valign="top"><br> <small>2nd </small><br><br></td>
+		<td align="center" width="90" valign="top">&nbsp;</td>
+		<td align="center" width="90" valign="top">&nbsp;</td>
+		<td align="center" width="90" valign="top">&nbsp;</td>
+		<td align="center" width="90" valign="top">&nbsp;</td>				
+	</tr>
 							
-	<!--- HEPATITIS --->
+	<!--- HEPATITIS B--->
 	<tr>
 		<td align="center" width="130" valign="top"><b>Hepatitis B</b></td>
 		<td align="center" width="90" valign="top"><br> <small>1st </small><br><br></td>
 		<td align="center" width="90" valign="top"><br> <small>2nd </small><br><br></td>
 		<td align="center" width="90" valign="top"><br> <small>3rd </small><br><br></td>
+		<td align="center" width="90" valign="top">&nbsp;</td>
+		<td align="center" width="90" valign="top">&nbsp;</td>
+		<td align="center" width="90" valign="top">&nbsp;</td>				
+	</tr>
+    
+    <!--- MENINGOCOCCAL--->
+	<tr>
+		<td align="center" width="130" valign="top"><b>Meningococcal</b></td>
+		<td align="center" width="90" valign="top"><br> <small>1st </small><br><br></td>
+		<td align="center" width="90" valign="top"><br> <small>2nd </small><br><br></td>
+		<td align="center" width="90" valign="top">&nbsp;</td>
 		<td align="center" width="90" valign="top">&nbsp;</td>
 		<td align="center" width="90" valign="top">&nbsp;</td>
 		<td align="center" width="90" valign="top">&nbsp;</td>				

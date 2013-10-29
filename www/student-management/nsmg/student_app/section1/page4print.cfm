@@ -71,7 +71,7 @@
 	</table><br>
 	<!--- pictures have been uploaded --->
 	<cfloop query="fam_pics">
-		<cfquery name="pic_description" datasource="MySQL">
+		<cfquery name="pic_description" datasource="#APPLICATION.DSN#">
 			SELECT description 
 			FROM smg_student_app_family_album
 			WHERE studentid = <cfqueryparam value="#get_student_info.studentid#" cfsqltype="cf_sql_integer"> 

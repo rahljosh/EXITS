@@ -10,7 +10,7 @@
     
     <cfif isDefined('URL.unqid')>
         <!----Get student id  for office folks linking into the student app---->
-        <cfquery name="get_student_id" datasource="MySQL">
+        <cfquery name="get_student_id" datasource="#APPLICATION.DSN#">
             select studentid from smg_students
             where uniqueid = <cfqueryparam value="#URL.unqid#" cfsqltype="cf_sql_char">
         </cfquery>

@@ -24,32 +24,32 @@
 	// Get Canada Area Choice
 	qGetSelectedCanadaAreaChoice = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='canadaAreaChoice',fieldID=get_student_info.app_canada_area);
 </cfscript>
-<cfquery name="get_intrep" datasource="MySql">
+<cfquery name="get_intrep" datasource="#APPLICATION.DSN#">
 	SELECT userid, businessname
 	FROM smg_users 
 	WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value='#VAL(get_student_info.intrep)#'>
 </cfquery>
-<cfquery name="country_list" datasource="MySQL">
+<cfquery name="country_list" datasource="#APPLICATION.DSN#">
 	SELECT countryid, countryname
 	FROM smg_countrylist
 	ORDER BY Countryname
 </cfquery>
-<cfquery name="religion_list" datasource="MySQL">
+<cfquery name="religion_list" datasource="#APPLICATION.DSN#">
 	SELECT religionid, religionname
 	FROM smg_religions
 	ORDER BY religionname
 </cfquery>
-<cfquery name="app_programs" datasource="MySQL">
+<cfquery name="app_programs" datasource="#APPLICATION.DSN#">
 	SELECT app_programid, app_program 
 	FROM smg_student_app_programs
 	WHERE app_programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_student_info.app_indicated_program)#">
 </cfquery>
-<cfquery name="assignedProgram" datasource="mysql">
+<cfquery name="assignedProgram" datasource="#APPLICATION.DSN#">
     SELECT programname
     FROM smg_programs
     WHERE programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_student_info.programid)#">
 </cfquery>
-<cfquery name="app_other_programs" datasource="MySQL">
+<cfquery name="app_other_programs" datasource="#APPLICATION.DSN#">
 	SELECT app_programid, app_program 
 	FROM smg_student_app_programs
 	WHERE app_programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_student_info.app_additional_program)#">
@@ -124,7 +124,7 @@
 								<td>#assignedProgram.programname# - #app_programs.app_program# <cfif LEN(qGetSelectedCanadaAreaChoice.name)> - #qGetSelectedCanadaAreaChoice.name# <cfelse>To be Defined</cfif> <br><img src="#vStudentAppRelativePath#pics/line.gif" width="255" height="1" border="0" align="absmiddle"></td>
 								<td><cfif app_other_programs.recordcount EQ '0'>None<cfelse>
                                 <cfloop list="#get_student_info.app_additional_program#" index=i>
-                                <cfquery name="app_other_programs" datasource="MySQL">
+                                <cfquery name="app_other_programs" datasource="#APPLICATION.DSN#">
                                     SELECT app_programid, app_program 
                                     FROM smg_student_app_programs
                                     WHERE app_programid = '#i#'

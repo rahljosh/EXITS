@@ -13,7 +13,7 @@
         </cfif>
         
         <cfif IsDefined('url.unqid')>
-            <cfquery name="qGetStudentInfoPrint" datasource="MySql">
+            <cfquery name="qGetStudentInfoPrint" datasource="#APPLICATION.DSN#">
                 SELECT
                     s.firstname,
                     s.familylastname,
@@ -31,7 +31,7 @@
             </cfquery>	
             <cfset CLIENT.studentid = '#qGetStudentInfoPrint.studentid#'>
         <cfelse>
-            <cfquery name="qGetStudentInfoPrint" datasource="MySql">
+            <cfquery name="qGetStudentInfoPrint" datasource="#APPLICATION.DSN#">
                 SELECT
                     s.firstname,
                     s.familylastname,
@@ -58,7 +58,7 @@
             <cfset client.org_code = 5>
             <cfset bgcolor ='B5D66E'>
         </cfif>
-        <cfquery name="org_info" datasource="mysql">
+        <cfquery name="org_info" datasource="#APPLICATION.DSN#">
             SELECT
                 *
             FROM
@@ -68,7 +68,7 @@
         </cfquery>
         
         <!----Check Allergy---->
-        <cfquery name="check_allergy" datasource="#application.dsn#">
+        <cfquery name="check_allergy" datasource="#APPLICATION.DSN#">
             SELECT
                 has_an_allergy
             FROM
@@ -77,7 +77,7 @@
                 studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.studentID)#">
         </cfquery>
         <!-----Check Additional Medical---->
-        <cfquery name="additional_info" datasource="#application.dsn#">
+        <cfquery name="additional_info" datasource="#APPLICATION.DSN#">
             SELECT
                 *
             FROM
@@ -90,157 +90,109 @@
 			// This is to set the correct directory for displaying images in the uploaded files
 			vStudentAppRelativePath = "";
 			vUploadedFilesRelativePath = "../";
-        </cfscript>        
+        </cfscript>
         
-        <!--- SECTION 1 --->
-        <tr>
-            <td valign="top">				
-                <cfinclude template="section1/page1print.cfm">
-                <div style="page-break-after:always;"></div>
-            </td>
-        </tr>
-        <tr>
-            <td valign="top">				
-                <cfinclude template="section1/page2print.cfm">
-                <div style="page-break-after:always;"></div>
-            </td>
-        </tr>
-        <tr>
-            <td valign="top">				
-                <cfinclude template="section1/page3print.cfm">
-                <div style="page-break-after:always;"></div>
-            </td>
-        </tr>
-        <tr>
-            <td valign="top">				
-                <cfinclude template="section1/page4print.cfm">
-                <div style="page-break-after:always;"></div>
-            </td>
-        </tr>
-        <tr>
-            <td valign="top">		
-                <cfinclude template="section1/page5print.cfm">
-                <div style="page-break-after:always;"></div>
-            </td>
-        </tr>
-        <tr>
-            <td valign="top">				
-                <cfinclude template="section1/page6print.cfm">
-                <div style="page-break-after:always;"></div>
-            </td>
-        </tr>
-        
-        <!--- SECTION 2 --->
-        <tr>
-            <td valign="top">				
-                <cfinclude template="section2/page7print.cfm">
-                <div style="page-break-after:always;"></div>
-            </td>
-        </tr>
-        <tr>
-            <td valign="top">				
-                <cfinclude template="section2/page8print.cfm">
-                <div style="page-break-after:always;"></div>
-            </td>
-        </tr>
-        <tr>
-            <td valign="top">				
-                <cfinclude template="section2/page9print.cfm">
-                <div style="page-break-after:always;"></div>
-            </td>
-        </tr>
-        <tr>
-            <td valign="top">				
-                <cfinclude template="section2/page10print.cfm">
-                <div style="page-break-after:always;"></div>
-            </td>
-        </tr>
+        <!--- SECTION 1 --->				
+        <cfinclude template="section1/page1print.cfm">
+        <div style="page-break-after:always;"></div>
+                    
+        <cfinclude template="section1/page2print.cfm">
+        <div style="page-break-after:always;"></div>
+                        
+        <cfinclude template="section1/page3print.cfm">
+        <div style="page-break-after:always;"></div>
+                    
+        <cfinclude template="section1/page4print.cfm">
+        <div style="page-break-after:always;"></div>
             
-        <!--- SECTION 3 --->
-        <tr>
-            <td valign="top">				
-                <cfinclude template="section3/page11print.cfm">
-                <div style="page-break-after:always;"></div>
-            </td>
-        </tr>
+        <cfinclude template="section1/page5print.cfm">
+        <div style="page-break-after:always;"></div>
+                    
+        <cfinclude template="section1/page6print.cfm">
+        <div style="page-break-after:always;"></div>
+        
+        <!--- SECTION 2 --->				
+        <cfinclude template="section2/page7print.cfm">
+        <div style="page-break-after:always;"></div>
+                    
+        <cfinclude template="section2/page8print.cfm">
+        <div style="page-break-after:always;"></div>
+                    
+        <cfinclude template="section2/page9print.cfm">
+        <div style="page-break-after:always;"></div>
+                        
+        <cfinclude template="section2/page10print.cfm">
+        <div style="page-break-after:always;"></div>
+            
+        <!--- SECTION 3 --->			
+        <cfinclude template="section3/page11print.cfm">
+        <div style="page-break-after:always;"></div>
+                
         <cfif additional_info.recordcount gt 0>
-            <tr>
-                <td valign="top">
-                    <cfinclude template="section3/additional_info_print.cfm">
-                    <div style="page-break-after:always;"></div>	
-                </td>
-            </tr>
+            <cfinclude template="section3/additional_info_print.cfm">
+            <div style="page-break-after:always;"></div>
         </cfif>
-        <tr>
-            <td valign="top">				
-                <cfinclude template="section3/page12print.cfm">
-                <div style="page-break-after:always;"></div>
-            </td>
-        </tr>
+        			
+        <cfinclude template="section3/page12print.cfm">
+        <div style="page-break-after:always;"></div>
+                
         <cfif additional_info.recordcount gt 0>
-            <tr>
-                <td valign="top">
-                    <cfinclude template="section3/allergy_info_request_print.cfm">
-                    <div style="page-break-after:always;"></div>
-                </td>
-            </tr>
+            <cfinclude template="section3/allergy_info_request_print.cfm">
+            <div style="page-break-after:always;"></div>
         </cfif>
-        <tr>
-            <td valign="top">				
-                <cfinclude template="section3/page13print.cfm">
-                <div style="page-break-after:always;"></div>
-            </td>
-        </tr>
-        <tr>
-            <td valign="top">
-                <cfinclude template="section3/page14print.cfm">
-                <div style="page-break-after:always;"></div>
-            </td>
-        </tr>
+        			
+        <cfinclude template="section3/page13print.cfm">
+        <div style="page-break-after:always;"></div>
+        
+        <cfinclude template="section3/page14print.cfm">
+        <div style="page-break-after:always;"></div>
         
         <!--- SECTION 4 --->
-        <tr>
-            <td valign="top">
-                <cfinclude template="section4/page15print.cfm">
-                <div style="page-break-after:always;"></div>
-            </td>
-        </tr>
-        <tr>
-            <td valign="top">
-                <cfinclude template="section4/page16print.cfm">
-                <div style="page-break-after:always;"></div>
-            </td>
-        </tr>
-        <tr>
-            <td valign="top">
-                <cfinclude template="section4/page17print.cfm">
-                <div style="page-break-after:always;"></div>
-            </td>
-        </tr>
-        <tr>
-            <td valign="top">
-                <cfinclude template="section4/page18print.cfm">
-                <div style="page-break-after:always;"></div>
-            </td>
-        </tr>
-        <tr>
-            <td valign="top">
-                <cfinclude template="section4/page19print.cfm">
-                <div style="page-break-after:always;"></div>
-            </td>
-        </tr>
-        <tr>
-            <td valign="top">
-                <cfinclude template="section4/page20print.cfm">
-                <div style="page-break-after:always;"></div>
-            </td>
-        </tr>
-        <tr>
-            <td valign="top">
-                <cfinclude template="section4/page21print.cfm">
-                <div style="page-break-after:always;"></div>
-            </td>
-        </tr>
+        <cfinclude template="section4/page15print.cfm">
+        <div style="page-break-after:always;"></div>
+        
+        <cfinclude template="section4/page16print.cfm">
+        <div style="page-break-after:always;"></div>
+        
+        <cfinclude template="section4/page17print.cfm">
+        <div style="page-break-after:always;"></div>
+        
+        <cfinclude template="section4/page18print.cfm">
+        <div style="page-break-after:always;"></div>
+        
+        <cfinclude template="section4/page19print.cfm">
+        <div style="page-break-after:always;"></div>
+        
+        <cfinclude template="section4/page20print.cfm">
+        <div style="page-break-after:always;"></div>
+        
+        <cfinclude template="section4/page21print.cfm">
+        <div style="page-break-after:always;"></div>
+        
+        <cfset URL.display = "print"> <!--- This is used for the following pages instead of an additional print page --->
+        
+        <cfinclude template="section4/page23.cfm">
+        <div style="page-break-after:always;"></div>
+        
+        <cfinclude template="section4/page24.cfm">
+        <div style="page-break-after:always;"></div>
+        
+        <cfscript>
+			param name="vStudentAppRelativePath" default="../";
+			param name="vUploadedFilesRelativePath" default="../../";
+		</cfscript>
+        
+        <cfset doc="page25">
+        <cfinclude template="print_include_file.cfm">
+        <div style="page-break-after:always;"></div>
+        
+        <cfset doc="page26">
+        <cfinclude template="print_include_file.cfm">
+        <div style="page-break-after:always;"></div>
+        
+        <cfset doc="page27">
+        <cfinclude template="print_include_file.cfm">
+        <div style="page-break-after:always;"></div>
 
 	</body>
 </html>

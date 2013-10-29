@@ -77,7 +77,7 @@
 
     <cfdirectory directory="#APPLICATION.PATH.onlineApp.picture#" name="file" filter="#qGetStudentInfo.studentid#.*">
 
-    <cfquery name="qGetStatesRequested" datasource="MySQL">
+    <cfquery name="qGetStatesRequested" datasource="#APPLICATION.DSN#">
         SELECT 
         	state1, 
             sta1.statename as statename1, 
@@ -264,14 +264,14 @@
                             <td>
                                 
                                 <cfif #val(get_student_info.app_additional_program)# EQ '0'>None<cfelse>
-                                <cfloop list="#get_student_info.app_additional_program#" index=i>
-                                <cfquery name="app_other_programs" datasource="MySQL">
-                                    SELECT app_programid, app_program 
-                                    FROM smg_student_app_programs
-                                    WHERE app_programid = '#i#'
-                                </cfquery> 
-                                #app_other_programs.app_program#, 
-                                </cfloop>
+                                    <cfloop list="#get_student_info.app_additional_program#" index=i>
+                                        <cfquery name="app_other_programs" datasource="#APPLICATION.DSN#">
+                                            SELECT app_programid, app_program 
+                                            FROM smg_student_app_programs
+                                            WHERE app_programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#">
+                                        </cfquery> 
+                                        #app_other_programs.app_program#, 
+                                    </cfloop>
                                 </cfif>
                                 <br /><img src="pics/line.gif" width="255" height="1" border="0" align="absmiddle"></td>
                         </tr>

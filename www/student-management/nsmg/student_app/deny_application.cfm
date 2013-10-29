@@ -29,35 +29,35 @@ function CheckCompany() {
 
 <cfif isDefined('url.unqid')>
 	<!----Get student id  for office folks linking into the student app---->
-	<cfquery name="get_student_id" datasource="MySQL">
+	<cfquery name="get_student_id" datasource="#APPLICATION.DSN#">
 		SELECT studentid
 		from smg_students
-		WHERE uniqueid = '#url.unqid#'
+		WHERE uniqueid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#url.unqid#">
 	</cfquery>
 	<cfset client.studentid = get_student_id.studentid>
 </cfif>
 
 <cfinclude template="../querys/get_student_info.cfm">
 
-<cfquery name="get_intrep" datasource="MySql">
+<cfquery name="get_intrep" datasource="#APPLICATION.DSN#">
 	SELECT userid, businessname
 	FROM smg_users 
 	WHERE userid = '#get_student_info.intrep#'
 </cfquery>
 
-<cfquery name="app_programs" datasource="MySQL">
+<cfquery name="app_programs" datasource="#APPLICATION.DSN#">
 	SELECT app_programid, app_program 
 	FROM smg_student_app_programs
 	WHERE app_programid = '#get_student_info.app_indicated_program#'
 </cfquery>
  
-<cfquery name="app_other_programs" datasource="MySQL">
+<cfquery name="app_other_programs" datasource="#APPLICATION.DSN#">
 	SELECT app_programid, app_program 
 	FROM smg_student_app_programs
 	WHERE app_programid = '#get_student_info.app_additional_program#'
 </cfquery> 
 
-<cfquery name="states_requested" datasource="MySQL">
+<cfquery name="states_requested" datasource="#APPLICATION.DSN#">
 	SELECT state1, sta1.statename as statename1, state2, sta2.statename as statename2, state3, sta3.statename as statename3
 	FROM smg_student_app_state_requested 
 	LEFT JOIN smg_states sta1 ON sta1.id = state1
@@ -67,7 +67,7 @@ function CheckCompany() {
 </cfquery>
 
 <!----Company and Region Assignment---->
-<cfquery name="get_company" datasource="MySQL">
+<cfquery name="get_company" datasource="#APPLICATION.DSN#">
 	SELECT companyid, companyname
 	FROM smg_companies
 	WHERE 

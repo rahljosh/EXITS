@@ -65,17 +65,17 @@ function NextPage() {
 
 <cfset doc = 'page12'>
 
-<cfquery name="get_health" datasource="MySql">
+<cfquery name="get_health" datasource="#APPLICATION.DSN#">
 	SELECT *
 	FROM smg_student_app_health 
 	WHERE studentid = '#get_student_info.studentid#'
 </cfquery>
 
 <cfif get_health.recordcount EQ 0>
-	<cfquery name="insert_questions" datasource="MySql">
+	<cfquery name="insert_questions" datasource="#APPLICATION.DSN#">
 		INSERT INTO smg_student_app_health (studentid) VALUES ('#get_student_info.studentid#')
 	</cfquery>
-	<cfquery name="get_health" datasource="MySql">
+	<cfquery name="get_health" datasource="#APPLICATION.DSN#">
 		SELECT *
 		FROM smg_student_app_health 
 		WHERE studentid = '#get_student_info.studentid#'

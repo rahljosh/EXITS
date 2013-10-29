@@ -35,7 +35,7 @@
 		<td valign="top" width="33%" colspan=3 align="center">
 			<br>
 			<h3><u>General Application Questions</u></h3>
-			<cfquery name="agent_info" datasource="MySQL">
+			<cfquery name="agent_info" datasource="#APPLICATION.DSN#">
 				SELECT firstname, lastname, phone, email, businessname, studentcontactemail
 				FROM smg_users 
 				WHERE userid = <cfif get_student_info.branchid EQ '0'>'#get_student_info.intrep#'<cfelse>'#get_student_info.branchid#'</cfif>  
@@ -71,7 +71,7 @@
 </table>
 <br><br>
 
-<cfquery name="help_desk" datasource="mysql">
+<cfquery name="help_desk" datasource="#APPLICATION.DSN#">
 	SELECT title, text, status, helpdeskid, date
 	FROM smg_help_desk 
 	WHERE studentid = '#client.studentid#'
@@ -87,7 +87,7 @@
 		<tr><td>Subject: #title#</td></tr>
 		<tr><td><h3><u>Message:</u></h3></td></tr>
 		<tr><td><div align="justify">#text#</div></td></tr>
-		<cfquery name="help_desk_items" datasource="MySql">
+		<cfquery name="help_desk_items" datasource="#APPLICATION.DSN#">
 			SELECT itemsid, helpdeskid, submitid, text, date, 
 			firstname, lastname, usertype
 			FROM smg_help_desk_items

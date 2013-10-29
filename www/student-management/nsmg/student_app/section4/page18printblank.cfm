@@ -25,7 +25,7 @@
 </head>
 <body <cfif NOT LEN(URL.curdoc)>onLoad="print()"</cfif>>
 
-<cfquery name="private_schools" datasource="MySql">
+<cfquery name="private_schools" datasource="#APPLICATION.DSN#">
 	SELECT privateschoolid, privateschoolprice, type
 	FROM smg_private_schools
 </cfquery>

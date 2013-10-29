@@ -16,10 +16,15 @@ body {font:Arial, Helvetica, sans-serif;}
 		<Td>
 		<cfoutput>#client.missingitems#</cfoutput>
 		<cfif client.missingitems eq 0>
-		<cfquery name="update_app_status" datasource="MySQL">  
-		insert into smg_student_app_status (studentid, status, date)
-								values(#client.studentid#, 3, #now()#)
-		
+		<cfquery name="update_app_status" datasource="#APPLICATION.DSN#">  
+			INSERT INTO smg_student_app_status(
+            	studentid,
+                status,
+                date)
+			VALUES(
+            	<cfqueryparam cfsqltype="cf_sql_integer" value="#client.studentid#">,
+                3,
+                #now()#)
 		</cfquery>
 		<h2>Congratulations!</h2>
 		You application has passesd this intial check for information. <br><br> Your application has been approved and submitted to 

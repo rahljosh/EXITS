@@ -65,7 +65,7 @@ function NextPage() {
 <cfinput type="hidden" name="studentid" value="#studentid#">
 <cfinput type="hidden" name="CheckChanged" value="0">
 
-<cfquery name="intl_agent" datasource="MySql">
+<cfquery name="intl_agent" datasource="#APPLICATION.DSN#">
 	SELECT businessname
 	FROM smg_users
 	WHERE userid = <cfqueryparam value="#get_student_info.intrep#">

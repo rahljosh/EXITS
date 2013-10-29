@@ -5,7 +5,7 @@
 
 <cftransaction action="begin" isolation="serializable">
 
-	<cfquery name="update_student" datasource="MySql">
+	<cfquery name="update_student" datasource="#APPLICATION.DSN#">
 		UPDATE smg_students
 		SET	<cfif IsDefined('form.app_social_skills1')>app_social_skills1 = '#form.app_social_skills1#',<cfelse>app_social_skills1 = null,</cfif> 
 			<cfif IsDefined('form.app_social_skills2')>app_social_skills2 = '#form.app_social_skills2#',<cfelse>app_social_skills2 = null,</cfif>

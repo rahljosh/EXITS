@@ -19,7 +19,7 @@
 		<cfabort>
 	</cfif>
 
-    <cfquery name="qGetStudentInfo" datasource="mysql">
+    <cfquery name="qGetStudentInfo" datasource="#APPLICATION.DSN#">
         SELECT 
             studentID,
             uniqueid, 
@@ -37,7 +37,7 @@
     </cfquery>
     
     <!--- send a copy to MAIN OFFICE OR BRANCH - IT DEPENDS WHO CREATED THE STUDENT --->
-    <cfquery name="qGetIntlRepInfo" datasource="MySQL">
+    <cfquery name="qGetIntlRepInfo" datasource="#APPLICATION.DSN#">
         SELECT
         	userID,
             businessname, 

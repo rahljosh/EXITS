@@ -4,7 +4,7 @@
 	.dashed-border {border: 1px solid #FF9933;}
 </style>
 
-<cfquery name="users_bypass" datasource="mysql">
+<cfquery name="users_bypass" datasource="#APPLICATION.DSN#">
 	SELECT
     	userID,
         bypass_checklist

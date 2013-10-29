@@ -9,7 +9,7 @@
 
 <cftry>
 
-<cfquery name="get_current_description" datasource="MySQL">
+<cfquery name="get_current_description" datasource="#APPLICATION.DSN#">
 	SELECT description, id 
 	FROM smg_student_app_family_album
 	WHERE studentid = #client.studentid#

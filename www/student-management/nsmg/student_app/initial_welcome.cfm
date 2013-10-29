@@ -595,7 +595,7 @@
 <!--- Do not display Profiles for these agents --->    
 <cfif NOT ListFind(APPLICATION.displayProfileNotAllowed, qGetIntlRep.userid)>
 
-    <cfquery name="qGetHostID" datasource="MySQL">
+    <cfquery name="qGetHostID" datasource="#APPLICATION.DSN#">
         SELECT 
             hostid
         FROM
@@ -660,7 +660,7 @@
                     <cfinclude template="../querys/family_info.cfm">
                     
                     <!-----Host Children----->
-                    <cfquery name="host_children" datasource="MySQL">
+                    <cfquery name="host_children" datasource="#APPLICATION.DSN#">
                         SELECT *
                         FROM smg_host_children
                         WHERE hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(family_info.hostid)#">
@@ -668,7 +668,7 @@
                         ORDER BY birthdate
                     </cfquery>
 
-                    <cfquery name="qGetInterests" datasource="mysql">
+                    <cfquery name="qGetInterests" datasource="#APPLICATION.DSN#">
                         select interest
                         from smg_interests 
                         where interestid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(family_info.interests)#" list="yes"> )
@@ -676,14 +676,14 @@
                     <cfset displayInterests = ValueList(qGetInterests.interest, ", ")>
                     
 					<!--- REGION --->
-                    <cfquery name="get_region" datasource="MySQl">
+                    <cfquery name="get_region" datasource="#APPLICATION.DSN#">
                         SELECT regionid, regionname
                         FROM smg_regions
                         WHERE regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(family_info.regionid)#">
                     </cfquery>
                 
 					<!--- SCHOOL ---->
-                    <cfquery name="qGetSchoolInfo" datasource="MySQL">
+                    <cfquery name="qGetSchoolInfo" datasource="#APPLICATION.DSN#">
                         SELECT 
                             sc.schoolName,
                             sc.address,
@@ -745,10 +745,10 @@
                             <tr><td>Address:</td><td>#family_info.address#</td></tr>
                             <tr><td>City:</td><td><a href="http://en.wikipedia.org/wiki/#family_info.city#%2C_#family_info.state#" target="_blank">#family_info.city# <img src="pics/external_link.png" border=0></a>  <a href="http://maps.google.com/maps?f=q&hl=en&q=#family_info.city#+#family_info.state#&btnG=Search&t=h"> <img src="pics/sat_image.png" border=0></a></td></tr>
                             <tr><td>State:</td><td>
-                            <cfquery name="get_state_name" datasource="MySQL">
-                            select statename
-                            from smg_states
-                            where state='#family_info.state#'
+                            <cfquery name="get_state_name" datasource="#APPLICATION.DSN#">
+                            	SELECT statename
+                            	FROM smg_states
+                            	WHERE state='#family_info.state#'
                             </cfquery>
                             <a href="http://en.wikipedia.org/wiki/#get_state_name.statename#" target="_blank">#family_info.state# <img src="pics/external_link.png" border=0></a></td><td>ZIP:</td><td>#family_info.zip#</td></tr>
                             <tr><td>Phone:</td><td>#family_info.phone#</td></tr>

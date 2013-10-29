@@ -12,7 +12,7 @@
 <cfparam name="FORM.internalProgram" default="0">
 <cfparam name="FORM.app_additional_program" default="0">
 
-<cfquery name="check_username" datasource="MySql">
+<cfquery name="check_username" datasource="#APPLICATION.DSN#">
 	SELECT email
 	FROM smg_students
 	WHERE email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">
@@ -53,7 +53,7 @@
 
 <cftransaction action="begin" isolation="serializable">
 
-	<cfquery name="update_student" datasource="MySql">
+	<cfquery name="update_student" datasource="#APPLICATION.DSN#">
 		UPDATE 
         	smg_students
 		SET	

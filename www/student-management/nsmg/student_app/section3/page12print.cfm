@@ -21,7 +21,7 @@
 
 <cfinclude template="../querys/get_student_info.cfm">
 
-<cfquery name="get_health" datasource="MySql">
+<cfquery name="get_health" datasource="#APPLICATION.DSN#">
 	SELECT *
 	FROM smg_student_app_health 
 	WHERE studentid = '#get_student_info.studentid#'
@@ -255,7 +255,21 @@
 		<td colspan="2"><small>(NB! if positive, chest x-ray information mandatory)</small></td></tr>
 </table>
 
+<br/>
+
 <table width="660" border=0 cellpadding=1 cellspacing=0 align="center">
+	<tr>
+    	<td colspan="3">
+        	Are you aware on any physical or psychological condition that the student may have that would impact their ability to travel to the United States to participate in a high school exchange program (yes/no)?
+        </td>
+    </tr>
+    <tr><td colspan="3"><img src="#vStudentAppRelativePath#pics/line.gif" width="240" height="1" border="0" align="absmiddle" style="margin-left:425px;"></td></tr>
+    <tr><td>&nbsp;</td></tr>
+    
+    <tr><td colspan="3">If yes, please explain:</td></tr>
+    <tr><td colspan="3"><img src="#vStudentAppRelativePath#pics/line.gif" width="540" height="1" border="0" align="absmiddle" style="margin-left:125px;"></td></tr>
+    <tr><td>&nbsp;</td></tr>
+    
 	<tr><td width="315"><em>Physician's Name</em></td><td width="40">&nbsp;</td><td width="315"><em>Signature</em></td></tr>
 	<tr>
 		<td><br><img src="#vStudentAppRelativePath#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>

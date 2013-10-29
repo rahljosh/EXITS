@@ -7,7 +7,7 @@
 
 	<cfset newletter = #Replace(form.familyletter,"#chr(10)#","<br>","all")#>
 	
-	<cfquery name="insert_typed_letter" datasource="mysql">
+	<cfquery name="insert_typed_letter" datasource="#APPLICATION.DSN#">
 		UPDATE
         	smg_students
 		SET

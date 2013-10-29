@@ -31,7 +31,7 @@ function OpenApp(url)
 
 <cfinclude template="../querys/get_student_info.cfm">
 
-<cfquery name="get_intl_rep" datasource="MySql">
+<cfquery name="get_intl_rep" datasource="#APPLICATION.DSN#">
 	SELECT businessname
 	FROM smg_users
 	WHERE userid = <cfqueryparam value="#get_student_info.intrep#" cfsqltype="cf_sql_integer">
@@ -132,7 +132,9 @@ where studentid = #CLIENT.studentid#
 <table width=100% border=0 cellpadding=0 cellspacing=0 class="section" align="center">
 	<tr>
 		<td align="center" valign="bottom" class="buttontop">
-			<a href="index.cfm?curdoc=check_list&id=cl"><img src="pics/next.gif" border="0"></a>
+			<form action="?curdoc=section4/page23&id=4&p=23" method="post">
+                <input name="Submit" type="image" src="pics/next_page.gif" border=0 alt="Go to the next page">
+            </form>
 		</td>
 	</tr>
 </table>

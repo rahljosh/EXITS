@@ -47,14 +47,14 @@
 
 <!--- querys to get 9, 10, 11 and 12th years and grades --->
 <cfloop from="9" to="12" index="i">
-	<cfquery name="get_#i#class" datasource="MySql">
+	<cfquery name="get_#i#class" datasource="#APPLICATION.DSN#">
 		SELECT yearid, studentid, beg_year, end_year, class_year
 		FROM smg_student_app_school_year 
 		WHERE studentid = <cfqueryparam value="#get_student_info.studentid#" cfsqltype="cf_sql_integer">
 			  AND class_year = '#i#th'
 		ORDER BY class_year
 	</cfquery>
-	<cfquery name="get_#i#grades" datasource="MySql">
+	<cfquery name="get_#i#grades" datasource="#APPLICATION.DSN#">
 		SELECT gradesid, yearid, class_name, hours, grade
 		FROM smg_student_app_grades
 		WHERE yearid = '#Evaluate("get_" & i & "class.yearid")#'

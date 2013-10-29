@@ -16,7 +16,7 @@
 
 	<cfif form.status LTE 5 OR form.status EQ 6 OR form.status EQ 9>
 		<cftransaction>
-			<cfquery name="inactivate" datasource="MySql">
+			<cfquery name="inactivate" datasource="#APPLICATION.DSN#">
 				UPDATE smg_students
 				SET active = '0',
 					canceldate = #CreateODBCDate(now())#,
