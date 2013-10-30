@@ -7,7 +7,7 @@
 
 <body>
 
-<cfquery name="get_student" datasource="#APPLICATION.DSN#Sql">
+<cfquery name="get_student" datasource="#APPLICATION.DSN#">
 	SELECT s.studentid, s.firstname, s.familylastname, s.app_current_status, s.app_indicated_program, s.randid,
 		u.userid, u.businessname, u.email as intrepemail, u.congrats_email,
 		p.app_program
