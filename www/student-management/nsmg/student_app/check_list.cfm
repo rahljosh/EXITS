@@ -978,8 +978,7 @@
     <!--- PAGE 23 --->
 	<tr><td><a href="index.cfm?curdoc=section4/page23&id=4&p=23"><h3>Page [23] - Double Placement Authorization</h3></a></td></tr>
 	<cfif check_23_upload.recordcount EQ 0 AND smg_students.app_authorizeDoublePlacement EQ 1>
-		<tr><td><font color="FF0000">This page has not been uploaded. You must print, sign, scan and upload this page.</font><br></td></tr>
-        <cfset countRed = countRed + 1> 
+		<tr><td><font color="0000FF">This page has not been uploaded. You must print, sign, scan and upload this page.</font><br></td></tr>
 	<cfelse>
 		<tr><td><font color="0000FF">Complete</font><br></td></tr>
 	</cfif> 
@@ -989,8 +988,7 @@
     <!--- PAGE 24 --->
 	<tr><td><a href="index.cfm?curdoc=section4/page24&id=4&p=24"><h3>Page [24] - HIPAA Release</h3></a></td></tr>
 	<cfif check_24_upload.recordcount EQ 0>
-		<tr><td><font color="FF0000">This page has not been uploaded. You must upload this page.</font><br></td></tr>
-		<cfset countRed = countRed + 1> 
+		<tr><td><font color="0000FF">This page has not been uploaded. You must upload this page.</font><br></td></tr>
 	<cfelse>
 		<tr><td><font color="0000FF">Complete</font><br></td></tr>
 	</cfif>
@@ -999,8 +997,7 @@
     <!--- PAGE 25 --->
 	<tr><td><a href="index.cfm?curdoc=section4/page25&id=4&p=25"><h3>Page [25] - Passport</h3></a></td></tr>
 	<cfif check_25_upload.recordcount EQ 0>
-		<tr><td><font color="FF0000">This page has not been uploaded. You must upload this page.</font><br></td></tr>
-		<cfset countRed = countRed + 1> 
+		<tr><td><font color="0000FF">This page has not been uploaded. You must upload this page.</font><br></td></tr>
 	<cfelse>
 		<tr><td><font color="0000FF">Complete</font><br></td></tr>
 	</cfif>
@@ -1010,8 +1007,7 @@
     <!--- PAGE 26 --->
 	<tr><td><a href="index.cfm?curdoc=section4/page26&id=4&p=26"><h3>Page [26] - Birth Certificate</h3></a></td></tr>
 	<cfif check_26_upload.recordcount EQ 0>
-		<tr><td><font color="FF0000">This page has not been uploaded. You must upload this page.</font><br></td></tr>
-		<cfset countRed = countRed + 1> 
+		<tr><td><font color="0000FF">This page has not been uploaded. You must upload this page.</font><br></td></tr>
 	<cfelse>
 		<tr><td><font color="0000FF">Complete</font><br></td></tr>
 	</cfif>
@@ -1021,8 +1017,7 @@
     <!--- PAGE 27 --->
 	<tr><td><a href="index.cfm?curdoc=section4/page26&id=4&p=26"><h3>Page [27] - SLEP Test</h3></a></td></tr>
 	<cfif check_27_upload.recordcount EQ 0>
-		<tr><td><font color="FF0000">This page has not been uploaded. You must upload this page.</font><br></td></tr>
-		<cfset countRed = countRed + 1> 
+		<tr><td><font color="0000FF">This page has not been uploaded. You must upload this page.</font><br></td></tr>
 	<cfelse>
 		<tr><td><font color="0000FF">Complete</font><br></td></tr>
 	</cfif>
