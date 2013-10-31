@@ -41,7 +41,7 @@
 		<td><br><br>
 			<div align="justify">
 			The <b>Inserts</b> section contains seven (12) pages and all pages in this 
-			section require original signatures. Pages [15], [16], [17], [18] and [24] are 
+			section require original signatures. Pages [15], [16], [17], [18]<cfif CLIENT.companyID NEQ 13>, [24]</cfif> are 
 			mandatory and they must be filled out, printed, signed and uploaded back 
 			into the system with original signatures. Page [19] must be filled out 
 			by #get_intl_rep.businessname#, and this page will be uploaded after you have 
@@ -51,9 +51,11 @@
 			original signatures. Page [22] is a Supplements page that allows for the 
 			loading of all supplemental documents required by #get_intl_rep.businessname#.
 			Supplements may include (but not be limited to) the SLEP Test Answer 
-			Sheet and English Certificates. Page [23] is optional, but must be uploaded 
-            if you choose to authorize a double placement. Pages [25], [26] and [27] 
-            are mandatory and must be uploaded.
+			Sheet and English Certificates. 
+			<cfif CLIENT.companyID NEQ 13>
+				Page [23] is optional, but must be uploaded if you choose to authorize a double placement.
+			</cfif>
+			Pages [25], [26] and [27] are mandatory and must be uploaded.
 			</div>
 			<br><br>
 		</td>

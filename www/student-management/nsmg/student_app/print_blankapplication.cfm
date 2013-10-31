@@ -120,10 +120,12 @@ where companyid = #client.org_code#
     <cfset URL.display = "print">
     <cfset URL.printBlank = 1>
     
-    <cfinclude template="section4/page23.cfm"><br>
-    <div style="page-break-after:always;"></div>
-    
-    <cfinclude template="section4/page24.cfm"><br>
+	<!--- Do not display for canada --->
+	<cfif CLIENT.companyID NEQ 13>
+	    <cfinclude template="section4/page23.cfm"><br>
+	    <div style="page-break-after:always;"></div>
+	    <cfinclude template="section4/page24.cfm"><br>
+	</cfif>
     
 </table>
 

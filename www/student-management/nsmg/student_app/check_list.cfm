@@ -968,24 +968,26 @@
     
     <tr><td>&nbsp;</td></tr>
     
-    <!--- PAGE 23 --->
-	<tr><td><a href="index.cfm?curdoc=section4/page23&id=4&p=23"><h3>Page [23] - Double Placement Authorization</h3></a></td></tr>
-	<cfif check_23_upload.recordcount EQ 0 AND smg_students.app_authorizeDoublePlacement EQ 1>
-		<tr><td><font color="0000FF">This page has not been uploaded. You must print, sign, scan and upload this page.</font><br></td></tr>
-	<cfelse>
-		<tr><td><font color="0000FF">Complete</font><br></td></tr>
-	</cfif> 
-      
-    <tr><td>&nbsp;</td></tr>
-    
-    <!--- PAGE 24 --->
-	<tr><td><a href="index.cfm?curdoc=section4/page24&id=4&p=24"><h3>Page [24] - HIPAA Release</h3></a></td></tr>
-	<cfif check_24_upload.recordcount EQ 0>
-		<tr><td><font color="0000FF">This page has not been uploaded. You must upload this page.</font><br></td></tr>
-	<cfelse>
-		<tr><td><font color="0000FF">Complete</font><br></td></tr>
+    <!--- Do not check page 23 or page 24 for Canada --->
+	<cfif CLIENT.companyID NEQ 13>
+		<!--- PAGE 23 --->
+		<tr><td><a href="index.cfm?curdoc=section4/page23&id=4&p=23"><h3>Page [23] - Double Placement Authorization</h3></a></td></tr>
+		<cfif check_23_upload.recordcount EQ 0 AND smg_students.app_authorizeDoublePlacement EQ 1>
+			<tr><td><font color="0000FF">This page has not been uploaded. You must print, sign, scan and upload this page.</font><br></td></tr>
+		<cfelse>
+			<tr><td><font color="0000FF">Complete</font><br></td></tr>
+		</cfif>
+	    <tr><td>&nbsp;</td></tr>
+	    
+	    <!--- PAGE 24 --->
+		<tr><td><a href="index.cfm?curdoc=section4/page24&id=4&p=24"><h3>Page [24] - HIPAA Release</h3></a></td></tr>
+		<cfif check_24_upload.recordcount EQ 0>
+			<tr><td><font color="0000FF">This page has not been uploaded. You must upload this page.</font><br></td></tr>
+		<cfelse>
+			<tr><td><font color="0000FF">Complete</font><br></td></tr>
+		</cfif>
+	    <tr><td>&nbsp;</td></tr>
 	</cfif>
-    <tr><td>&nbsp;</td></tr>
     
     <!--- PAGE 25 --->
 	<tr><td><a href="index.cfm?curdoc=section4/page25&id=4&p=25"><h3>Page [25] - Passport</h3></a></td></tr>
