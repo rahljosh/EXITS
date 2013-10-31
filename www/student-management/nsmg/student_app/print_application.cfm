@@ -171,11 +171,14 @@
         
         <cfset URL.display = "print"> <!--- This is used for the following pages instead of an additional print page --->
         
-        <cfinclude template="section4/page23.cfm">
-        <div style="page-break-after:always;"></div>
-        
-        <cfinclude template="section4/page24.cfm">
-        <div style="page-break-after:always;"></div>
+		<!--- Do not display for Canada --->
+		<cfif CLIENT.companyID NEQ 13>
+	        <cfinclude template="section4/page23.cfm">
+	        <div style="page-break-after:always;"></div>
+	        
+	        <cfinclude template="section4/page24.cfm">
+	        <div style="page-break-after:always;"></div>
+	 	</cfif>
         
         <cfscript>
 			param name="vStudentAppRelativePath" default="../";

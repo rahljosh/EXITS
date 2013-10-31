@@ -541,8 +541,12 @@
 		</cfif>
     </cfloop>
     
-    <!--- Pages 23 to 27 (Loop through these and display only the PDF if it exists) --->
-    <cfloop from="23" to="27" index="i">
+    <!--- Pages 23 to 27 (Loop through these and display only the PDF if it exists) - Do not include 23 or 24 for Canada --->
+	<cfset start = 23>
+	<cfif CLIENT.companyID EQ 13>
+		<cfset start = 25>
+	</cfif>
+    <cfloop from="#start#" to="27" index="i">
     	<cfset page = Evaluate('page' & #i#)>
         <cfif FileExists(ExpandPath('../uploadedfiles/online_app/page#i#/#CLIENT.studentID#.pdf'))>
         	<cftry>

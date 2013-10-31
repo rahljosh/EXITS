@@ -132,9 +132,17 @@ where studentid = #CLIENT.studentid#
 <table width=100% border=0 cellpadding=0 cellspacing=0 class="section" align="center">
 	<tr>
 		<td align="center" valign="bottom" class="buttontop">
-			<form action="?curdoc=section4/page23&id=4&p=23" method="post">
-                <input name="Submit" type="image" src="pics/next_page.gif" border=0 alt="Go to the next page">
-            </form>
+			<!--- Canada is not using pages 23 or 24 --->
+			<cfif CLIENT.companyID EQ 13>
+				<form action="?curdoc=section4/page25&id=4&p=25" method="post">
+	                <input name="Submit" type="image" src="pics/next_page.gif" border=0 alt="Go to the next page">
+	            </form>
+			<cfelse>
+				<form action="?curdoc=section4/page23&id=4&p=23" method="post">
+	                <input name="Submit" type="image" src="pics/next_page.gif" border=0 alt="Go to the next page">
+	            </form>
+			</cfif>
+			
 		</td>
 	</tr>
 </table>
