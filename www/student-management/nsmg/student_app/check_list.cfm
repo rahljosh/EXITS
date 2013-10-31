@@ -794,54 +794,47 @@
 	<cfelseif CLIENT.companyID EQ 14>
 		
 		<!--- Exchange Service International Application --->
-		<cfif qESIDistrictChoice.recordCount AND VAL(qESIDistrictChoice.option1) AND VAL(qESIDistrictChoice.option2) AND VAL(qESIDistrictChoice.option3)>
-        
-        
-         <cfset closedList = ''>
-         <Cfset SorryList = ''>
-          <cfset DisplaySorry = ''>
-                  <cfquery name="districtClosed" datasource="#application.dsn#">
-                    SELECT
-                        sc.fk_districtID
-                    FROM
-                        regionStateClosure sc
-                    WHERE
-                        sc.fk_programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.programID#">
-                    AND
-                        sc.fk_companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-                </cfquery>
-                
-                <cfset disClosedList = ''>
-                <Cfloop query="districtClosed">
-                    <cfset disClosedList = #ListAppend(disClosedList, fk_districtID)#>
-                </Cfloop>
-                 <cfset choice1 = #qESIDistrictChoice.option1# +200>
-                 <cfset choice2 = #qESIDistrictChoice.option2# +200>
-                 <cfset choice3 = #qESIDistrictChoice.option3# +200>
+		<cfif qESIDistrictChoice.recordCount AND VAL(qESIDistrictChoice.option1)>
+
+			<cfset closedList = ''>
+         	<cfset SorryList = ''>
+         	<cfset DisplaySorry = ''>
+         
+			<cfquery name="districtClosed" datasource="#application.dsn#">
+         		SELECT sc.fk_districtID
+	         	FROM regionStateClosure sc
+	         	WHERE sc.fk_programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.programID#">
+	         	AND sc.fk_companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+         	</cfquery>
+		
+			<cfset disClosedList = ValueList(districtClosed.fk_districtID)>
+			
+            <cfset choice1 = #qESIDistrictChoice.option1# +200>
+            <cfset choice2 = #qESIDistrictChoice.option2# +200>
+            <cfset choice3 = #qESIDistrictChoice.option3# +200>
                  
-                 <Cfif listFind(disClosedList, #choice1#)>
-                 	<cfset SorryList = #ListAppend(SorryList, #choice1#)#>
-                 </Cfif>
-                  <Cfif listFind(disClosedList, #choice2#)>
-                 	<cfset SorryList = #ListAppend(SorryList, #choice2#)#>
-                 </Cfif>
-                  <Cfif listFind(disClosedList, #choice3#)>
-                 	<cfset SorryList = #ListAppend(SorryList, #choice3#)#>
-                 </Cfif>
-                
-                 <cfif len(sorryList)>
-                     <cfloop list="#SorryList#" index="i">
-                  
-                        <cfquery name="districtName" datasource="#application.dsn#">
-                        select name
-                        from applicationLookUp
-                        where fieldKey =  <cfqueryparam cfsqltype="cf_sql_varchar" value="ESIDistrictChoice">  
-                        and id = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#">
-                        </cfquery>
-                        <cfset DisplaySorry = #ListAppend(DisplaySorry, #districtName.name#)#>
-                       
-                     </cfloop>
-                 </cfif>
+            <cfif listFind(disClosedList, #choice1#)>
+            	<cfset SorryList = #ListAppend(SorryList, #choice1#)#>
+            </cfif>
+          	<cfif listFind(disClosedList, #choice2#)>
+            	<cfset SorryList = #ListAppend(SorryList, #choice2#)#>
+            </cfif>
+         	<cfif listFind(disClosedList, #choice3#)>
+            	<cfset SorryList = #ListAppend(SorryList, #choice3#)#>
+            </cfif>
+			
+			<cfif len(sorryList)>
+       			<cfloop list="#SorryList#" index="i">
+              		<cfquery name="districtName" datasource="#application.dsn#">
+                        SELECT name
+                        FROM applicationLookUp
+                        WHERE fieldKey =  <cfqueryparam cfsqltype="cf_sql_varchar" value="ESIDistrictChoice">  
+                        AND id = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#">
+               		</cfquery>
+                	<cfset DisplaySorry = #ListAppend(DisplaySorry, #districtName.name#)#>
+         		</cfloop>
+  			</cfif>
+	
         	<cfif len(DisplaySorry)>
             <cfset countRed = countRed + 1>
              <tr><td><font color="FF0000">
@@ -856,7 +849,7 @@
            	</cfif>
         <cfelse>
 			<cfset countRed = countRed + 1>
-            <tr><td><font color="FF0000">Please choose 3 districts</font><br></td></tr>
+            <tr><td><font color="FF0000">Please choose at least 1 district</font><br></td></tr>
         </cfif>	
         
     <cfelse>
