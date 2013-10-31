@@ -201,9 +201,9 @@
 		<tr>	
 			<td colspan="2">Please enter e-mails on the box below.<br></td>
 		</tr>
-		<tr>	
+		<tr>
 			<td colspan="2">
-				<cfinput type="text" name="email_address" message="Please enter one valid email address." validateat="onSubmit" validate="email" size="55">
+				<input type="text" name="email_address" size="55">
 			</td>
 		</tr>
 		<tr>	
