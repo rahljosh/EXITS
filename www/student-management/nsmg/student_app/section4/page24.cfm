@@ -26,7 +26,7 @@
 		param name="vUploadedFilesRelativePath" default="../../";
 	}
 	
-	qGetCompany = APPLICATION.CFC.COMPANY.getCompanies(companyID=CLIENT.org_code);
+	qGetCompany = APPLICATION.CFC.COMPANY.getCompanies(companyID=CLIENT.companyID);
 	qGetStudent = APPLICATION.CFC.STUDENT.getStudentByID(studentID=CLIENT.studentID);
 	
 	doc = 'page24';
