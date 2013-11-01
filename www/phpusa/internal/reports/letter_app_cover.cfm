@@ -113,7 +113,7 @@
 		<tr><td>&nbsp;</td></tr>
 		<tr><td><span class="style2">Program: </span> &nbsp; #programname#</td></tr>
 		<tr><td>&nbsp;</td></tr>
-		<tr><td><span class="style2">Wishes to Graduate: </span> &nbsp; <cfif php_wishes_graduate is ''>No<cfelse>Yes</cfif></td></tr>
+		<tr><td><span class="style2">Wishes to Graduate: </span> &nbsp; <cfif php_wishes_graduate EQ '' OR php_wishes_graduate EQ "no">No<cfelse>Yes</cfif></td></tr>
 	</table><br />	
 		
 	<table width="680" align="center" border=0 cellpadding="1" cellspacing="1">
