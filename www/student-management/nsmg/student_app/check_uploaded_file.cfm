@@ -48,13 +48,22 @@
         	<th>
             	<b>
                 	<cfif URL.p EQ 25>
-                    	Most US schools now require a Passport for enrollment. To ensure that you can be succesfully enrolled in a school and placed with a host family, please upload a legible copy of your Passport in pdf or jpeg format.
+                    	Most US schools now require a Passport for enrollment. To ensure that you 
+						can be succesfully enrolled in a school and placed with a host family, 
+						please upload a legible copy of your Passport in pdf or jpeg format.
                    	<cfelseif URL.p EQ 26>
-                    	Most US schools now require a Birth Certificate for enrollment. To ensure that you can be succesfully enrolled in a school and placed with a host family, please upload a legible copy of your Birth Certificate in pdf or jpeg format.
+                    	Many US schools now require a birth certificate or other official birth 
+						registration document for enrollment. To ensure that you can be 
+						successfully enrolled in a school and placed with a host family, please 
+						upload a legible copy of your Birth Certificate or other official birth 
+						registration document in pdf or jpeg format
                     <cfelseif URL.p EQ 27>
-                    	Most US schools now require a SLEP Test for enrollment. To ensure that you can be succesfully enrolled in a school and placed with a host family, please upload a legible copy of your SLEP Test in pdf or jpeg format.
+                    	Most US schools now require a SLEP Test for enrollment. To ensure that you 
+						can be succesfully enrolled in a school and placed with a host family, 
+						please upload a legible copy of your SLEP Test in pdf or jpeg format.
                     <cfelse>
-        				Please print, sign, scan and upload this page. Click on the link below to upload this page.
+        				Please print, sign, scan and upload this page. Click on the link below to 
+						upload this page.
                   	</cfif>
             	</b>
            	</th>
