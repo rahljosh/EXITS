@@ -188,7 +188,7 @@
                                             <tr><td>&nbsp;</td></tr>
                                             <tr>
                                                 <td colspan="2">
-                                                    Relationship to Representative to Individual:
+                                                    Relationship of Representative to Individual:
                                                     <br/>
                                                     <img src="../pics/line.gif" width="430px" height="1" border="0" align="absmiddle" style="margin-left:250px;">
                                                 </td>
