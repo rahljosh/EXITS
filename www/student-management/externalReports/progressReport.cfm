@@ -257,6 +257,10 @@ border-bottom-left-radius:15px;
     <th colspan="2" bgcolor="##135EAB" class="white">Program</th>
   </tr>
   <tr>
+    <th width="209" align="right">Student:</th>
+    <td width="343">#get_student.firstName# #get_student.familyLastName# (#get_student.studentID#)</td>
+  </tr>
+  <tr>
     <th width="209" align="right">Program Name:</th>
     <td width="343">#get_program.programname# (#get_program.programid#)</td>
   </tr>
