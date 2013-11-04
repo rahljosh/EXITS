@@ -404,7 +404,7 @@
      <tr>
      	<td align="center">
         	<B>MPD Tours America, Inc. </B> 9101 Shore Road, ##203, Brooklyn, NY 11209<br />
-            <A href="mailto:info@mpdtoursamerica.com">info@mpdtoursamerica.com</A>&nbsp;&nbsp;|&nbsp;&nbsp;1-800-983-7780&nbsp;&nbsp;|&nbsp;&nbsp;FAX: 1-718-439-8565
+            <a href="mailto:#APPLICATION.MPD.email#">#APPLICATION.MPD.email#</a>&nbsp;&nbsp;|&nbsp;&nbsp;1-800-983-7780&nbsp;&nbsp;|&nbsp;&nbsp;FAX: 1-718-439-8565
         </td>
       </tr>
      </table>

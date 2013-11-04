@@ -135,7 +135,7 @@
             Please be advised that this student has been sent a permission form which will need to be signed by their host parents, the representative of their high school,  their Area Representative, and Regional Manager. Upon receipt and completion of this form, please fax the form back to MPD Tours at 1-718-439-8565.
             
             If you feel that #qGetStudentInfo.firstname# should NOT be going on this trip, please notify us by using this 
-            <a href="#SESSION.COMPANY.exitsURL#nsmg/index.cfm?curdoc=tours/hold&studentID=#qGetStudentInfo.studentid#&tripID=#qGetTourDetails.tour_id#">form</a> 
+            <a href="#SESSION.COMPANY.exitsURL#/nsmg/index.cfm?curdoc=tours/hold&studentID=#qGetStudentInfo.studentid#&tripID=#qGetTourDetails.tour_id#">form</a> 
             (you will need to be logged in to follow the link)
         </cfsavecontent>
         
