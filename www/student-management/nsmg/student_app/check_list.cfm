@@ -1000,7 +1000,7 @@
     <tr><td>&nbsp;</td></tr>
     
     <!--- PAGE 26 --->
-	<tr><td><a href="index.cfm?curdoc=section4/page26&id=4&p=26"><h3>Page [26] - Birth Certificate</h3></a></td></tr>
+	<tr><td><a href="index.cfm?curdoc=section4/page26&id=4&p=26"><h3>Page [26] - Birth Certificate - Birth Registration</h3></a></td></tr>
 	<cfif check_26_upload.recordcount EQ 0>
 		<tr><td><font color="0000FF">This page has not been uploaded. You must upload this page.</font><br></td></tr>
 	<cfelse>
