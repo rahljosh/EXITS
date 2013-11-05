@@ -33,21 +33,18 @@
 	doc = 'page23';
 </cfscript>
 
-<cfif VAL(FORM.submitted)>
-	<cfquery datasource="#APPLICATION.DSN#">
-    	UPDATE smg_students
-        SET app_authorizeDoublePlacement = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.authorizeDoublePlacement)#">
-        WHERE studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudent.studentID#">
-    </cfquery>
-    <cflocation url="?curdoc=section4/page23&id=4&p=23"/>
-</cfif>
-
 <script type="text/javascript">
 	function changeAuthorization() {
 		$('#authorizeDoublePlacement').val( ($('#authorizeDoublePlacement').val()*(-1))+1 );
 		$('#authorizationForm').submit();
 	}
 </script>
+
+<cfif NOT LEN(URL.curdoc)>
+<table align="center" width=90% cellpadding=0 cellspacing=0  border=0 > 
+<tr><td>&nbsp;</td></tr>
+<tr><td>
+</cfif>
 
 <cftry>
 	<cfoutput>
@@ -88,22 +85,6 @@
                         <cfif URL.display EQ "web">
                             <cfinclude template="../check_uploaded_file.cfm">
                         </cfif>
-                        <table width="670px" cellpadding=3 cellspacing=0 align="center">
-                            <tr>
-                                <td align="center">
-                                    <form id="authorizationForm" action="?curdoc=section4/page23&id=4&p=23" method="post">
-                                        <cfif URL.display EQ "web">
-                                            <input type="hidden" name="submitted" value="1"/>
-                                            <input type="hidden" name="authorizeDoublePlacement" id="authorizeDoublePlacement" value="#qGetStudent.app_authorizeDoublePlacement#"/>
-                                            <input type="checkbox" value="1" <cfif VAL(qGetStudent.app_authorizeDoublePlacement)>checked="checked"</cfif> onClick="changeAuthorization();"/>
-                                        <cfelse>
-                                            <input type="checkbox" value="1" disabled="disabled" <cfif VAL(qGetStudent.app_authorizeDoublePlacement) AND NOT VAL(URL.printBlank)>checked="checked"</cfif>/>
-                                        </cfif> 
-                                        <b>Authorize Double Placement</b> (Below form will need to be signed and uploaded)
-                                    </form>
-                                </td>
-                            </tr>
-                        </table>
                         <br/>
                         
                         <table width="670px" cellpadding=3 cellspacing=0 align="center">

@@ -33,10 +33,6 @@
 </cfscript>
 
 <style type="text/css">
-	body {
-		margin: 0px;
-		padding:0px;
-	}
 	p {
 		margin: 0px;
 		padding: 2px;
@@ -47,6 +43,12 @@
 		padding: 0px;
 	}
 </style>
+
+<cfif NOT LEN(URL.curdoc)>
+<table align="center" width=90% cellpadding=0 cellspacing=0  border=0 > 
+<tr><td>&nbsp;</td></tr>
+<tr><td>
+</cfif>
 
 <cftry>
 	<cfoutput>
