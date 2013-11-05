@@ -4,6 +4,16 @@
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
         <link rel="stylesheet" type="text/css" href="app.css">
         <title>Print Complete Application</title>
+		<style type="text/css">
+			@page {
+				margin: 0px auto;
+				padding: 0px;
+			}
+			table, table tr, table tr td {
+				margin: 0px;
+				padding: 0px;
+			}
+		</style>
     </head>
     <body onLoad="print()">
 
