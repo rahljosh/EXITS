@@ -11,7 +11,7 @@
 
 <!--- Kill Extra Output --->
 <cfsilent>
-
+	<cfparam name="url.caseOrder" default="lastPerCommentDate">
     <cfsetting requesttimeout="200">
 
 	<!--- Old Initial Welcome for WEP and ESI --->
@@ -266,8 +266,8 @@
     
     <cfscript>
 		//get all cases that your involved in
-		qYourCasesInitial = APPLICATION.CFC.CASEMGMT.yourCasesInitial(personid=client.userid); 
-		qYourLoopedCasesInitial = APPLICATION.CFC.CASEMGMT.yourLoopedCasesInitial(personid=client.userid); 
+		qYourCasesInitial = APPLICATION.CFC.CASEMGMT.yourCasesInitial(personid=client.userid,caseOrder=url.caseOrder); 
+		qYourLoopedCasesInitial = APPLICATION.CFC.CASEMGMT.yourLoopedCasesInitial(personid=client.userid,caseOrder=url.caseOrder); 
 	</cfscript>
 </cfsilent>    
 
@@ -746,7 +746,7 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                 
                     <div class="rdtop"> 
                         <span class="rdtitle">Case Management </span> 
-                        <em>Any cases you're involved with or looped in on. <div style="float:right;"><img src="pics/betaTesting.png"></div> </em>
+                        <em>Any cases you're involved with or looped in on.  </em>
                     </div>
                     
                     <div class="rdbox" >
@@ -757,7 +757,9 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                             	<th align="left">Student</th> 
                                 <th align="left">Subject</th>
                                 <th align="left">Status</th>
-                                <th align="left">Date Opened</th>
+                                <th align="left"><a href="?curdoc=initial_welcome&caseOrder=facFirstName"><font color="##000000">Facilitator &uarr;</font></a></th>
+                                <th align="left"><a href="?curdoc=initial_welcome&caseOrder=regionname"><font color="##000000">Region &uarr;</font></a></th>
+                                <th align="left"><a href="?curdoc=initial_welcome&caseOrder=lastPerCommentDate"><font color="##000000">Updated &uarr;</font></a></th>
                             </tr>
                         <Cfif qYourCasesInitial.recordcount eq 0>
                         	<tr>
@@ -766,12 +768,14 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                         <cfelse>    
                             
                             <cfloop query="qYourCasesInitial">
+                            
                                 <tr class='clickableRow' style="cursor: pointer;" href='index.cfm?curdoc=caseMgmt/index&action=viewCase&caseID=#caseID#'  <cfif currentrow mod 2>bgcolor="##ccc"</cfif> >
                                     <td>#firstname# #familylastname# (#studentid#)</td>
-                                    <td>#caseSubject#</td>
+                                    <td>#Left(caseSubject,8)#...</td>
                                     <td>#caseStatus#</td>
-                                    <Td>#DateFormat(caseDateOpened, 'mmm. dd')# 
-                                    </Td>
+                                    <td>#facFirstName#</th>
+                               		<td>#regionname#</th>
+                                    <Td>#DateFormat(lastPerCommentDate, 'mmm. dd')#</Td>
                                 </tr>
                             </cfloop> 
                             
@@ -779,16 +783,18 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
 						</Cfif>
    <cfif val(qYourLoopedCasesInitial.recordcount)>
                             <tr bgcolor="##90b2d5">
-                            	<th align="left" colspan="4"><em>Looped In</em></th>
+                            	<th align="left" colspan="6"><em>Looped In</em></th>
                             </tr>
                             </cfif>
                             <cfloop query="qYourLoopedCasesInitial">
+                            
                                 <tr class='clickableRow' style="cursor: pointer;" href='index.cfm?curdoc=caseMgmt/index&action=viewCase&caseID=#caseID#' <cfif currentrow mod 2>bgcolor="##ccc"</cfif>>
                                     <td>#firstname# #familylastname# (#studentid#)</td>
-                                    <td>#caseSubject#</td>
+                                    <td>#Left(caseSubject,8)#...</td>
                                     <td>#caseStatus#</td>
-                                    <Td>#DateFormat(caseDateOpened, 'mmm. dd')#
-                                    </Td>
+                                    <td>#facFirstName#</th>
+                               		<td>#regionname#</th>
+                                     <Td>#DateFormat(lastPerCommentDate, 'mmm. dd')#</Td>
                                 </tr>
                             </cfloop> 
                         </table>

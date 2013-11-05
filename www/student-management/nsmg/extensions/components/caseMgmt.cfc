@@ -520,22 +520,28 @@
        
     <cffunction name="yourCasesInitial" access="public" returntype="query" hint="returns cases you are involved with">
     		<cfargument name="personid" default="" hint="caseid that add to ">
-       	
+       	    <cfargument name="caseOrder" default="lastPerCommentDate" hint="order by">
          
           <cfquery 
 			name="qYourCasesInitial" 
 			datasource="#APPLICATION.DSN#">
                 select cases.caseDateOpened, cs.status as caseStatus, cases.caseSubject, cases.caseid,
-                s.firstname, s.familylastname, s.studentid
+                s.firstname, s.familylastname, s.studentid, r.regionname, f.`Facilitator First Name` as facFirstName, f.`Facilitator Last Name` as facLastName,
+                (SELECT MAX(casedate) FROM smg_casemgmt_case_items WHERE caseid = cases.caseid) AS lastPerCommentDate
                 from smg_casemgmt_cases cases
                 left join smg_caseMgmt_casestatus cs on cs.id = cases.caseStatus
                 left join smg_casemgmt_users_involved ui on ui.fk_caseid = cases.caseid
                 left join smg_students s on s.studentid = ui.fk_studentid
+                left join smg_regions r on r.regionid = s.regionassigned
+                left join v_user_hierarchy f on f.`Area Rep ID` = s.arearepid
+               
                 WHERE (cases.fk_caseOwner = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.personid#">
                 OR ui.fk_arearep  = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.personid#"> 
                 OR ui.fk_regionalManager = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.personid#">)
          		and cases.caseStatus != 2 
 				and cases.isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                order by <cfqueryparam cfsqltype="cf_sql_varchar"  value="#ARGUMENTS.caseOrder#">
+                <cfif ARGUMENTS.caseOrder is 'lastPerCommentDate'> DESC</cfif>
           </cfquery>  
        
      <cfreturn qYourCasesInitial>
@@ -544,24 +550,27 @@
     
       <cffunction name="yourLoopedCasesInitial" access="public" returntype="query" hint="returns cases you are involved with">
     		<cfargument name="personid" default="" hint="caseid that add to ">
-       	
+       		 <cfargument name="caseOrder" default="lastPerCommentDate" hint="order by">
          
           <cfquery 
 			name="qYourLoopedCasesInitial" 
 			datasource="#APPLICATION.DSN#">
                 select cases.caseDateOpened, cs.status as caseStatus, cases.caseSubject, cases.caseid,
-                 s.firstname, s.familylastname, s.studentid
+                 s.firstname, s.familylastname, s.studentid, r.regionname, f.`Facilitator First Name` as facFirstName, f.`Facilitator Last Name` as facLastName,
+                 (SELECT MAX(casedate) FROM smg_casemgmt_case_items WHERE caseid = cases.caseid) AS lastPerCommentDate
                 from smg_casemgmt_cases cases
                 left join smg_caseMgmt_casestatus cs on cs.id = cases.caseStatus
                 left join smg_casemgmt_loopedin li on li.fk_caseid = cases.caseid
                 left join smg_casemgmt_users_involved ui on ui.fk_caseid = cases.caseid
                 left join smg_students s on s.studentid = ui.fk_studentid
-                
-                
+                left join smg_regions r on r.regionid = s.regionassigned
+                left join v_user_hierarchy f on f.`Area Rep ID` = s.arearepid
+               
                 WHERE (li.email = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.personid#">)
          		and cases.caseStatus != 2 
                 and cases.isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-	
+				order by #ARGUMENTS.caseOrder#
+                  <cfif ARGUMENTS.caseOrder is 'lastPerCommentDate'> DESC</cfif>
           </cfquery>  
        
      <cfreturn qYourLoopedCasesInitial>
