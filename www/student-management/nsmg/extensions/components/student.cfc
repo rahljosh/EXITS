@@ -566,6 +566,7 @@
 			var qGetCurrentPlacementInfo = getPlacementHistory(studentID=ARGUMENTS.studentID,isActive=1);
 			var vHasHostIDChanged = 0;
 			var vHasPlacementChanged = 0;
+			var vAutomaticallyApprove = 0;
 		
 			// Check if Host Family has changed - If Yes reset double placement
 			if ( ARGUMENTS.hostID NEQ qGetCurrentPlacementInfo.hostID ) {
@@ -590,6 +591,21 @@
 				) {
 					// Data has changed - Update student table
 					vHasPlacementChanged = 1;
+			}
+			
+			// Set to automatically approve if the change is to the placing, supervising, or second visit rep - 
+			// and it is not a change to the hostID, schoolID, doublePlacementID, or isWelcomeFamily - 
+			// and it is already approved
+			if ( 
+				(ARGUMENTS.placeRepID NEQ qGetCurrentPlacementInfo.placeRepID 
+					OR ARGUMENTS.areaRepID NEQ qGetCurrentPlacementInfo.areaRepID 
+					OR ARGUMENTS.secondVisitRepID NEQ qGetCurrentPlacementInfo.secondVisitRepID)
+				AND NOT (ARGUMENTS.hostID NEQ qGetCurrentPlacementInfo.hostID
+					OR ARGUMENTS.schoolID NEQ qGetCurrentPlacementInfo.schoolID
+					OR ARGUMENTS.doublePlace NEQ qGetCurrentPlacementInfo.doublePlacementID
+					OR ARGUMENTS.isWelcomeFamily NEQ qGetCurrentPlacementInfo.isWelcomeFamily)
+				AND (ARGUMENTS.placementStatus EQ "Approved") ) {
+					vAutomaticallyApprove = 1;
 			}
 
 			// Insert-Update Placement History
@@ -642,7 +658,11 @@
                         
                         <!--- Automatically Approve Placement for the Field  --->
                         <cfif ListFind("5,6,7", ARGUMENTS.userType)>
-                            host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userType#">,
+							<cfif VAL(vAutomaticallyApprove)>
+								host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="4">,
+							<cfelse>
+                            	host_fam_approved = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userType#">,
+							</cfif>
                         
                         <!--- Office | Reset status if changing hostID or SchoolID --->
                         <cfelseif 
