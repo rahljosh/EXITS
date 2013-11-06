@@ -66,8 +66,9 @@
             <h3>
                 A spot has been reserved for you <cfif VAL(qGetSiblingsRegistered.recordCount)> and #ValueList(qGetSiblingsRegistered.name)# </cfif> on the <strong>#qGetTourDetails.tour_name#</strong> tour.
             </h3>
-                
+             <!----  
             <font color="red">* * Your spot will not be confirmed until permission form has been received by MPD Tours America. Please work on getting this completed as soon as possible * *</font> 
+			---->
         </p>
     
         <p>
