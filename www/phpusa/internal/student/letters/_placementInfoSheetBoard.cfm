@@ -53,6 +53,9 @@
 
 		// Get School Dates
 		qGetSchoolDates = APPLICATION.CFC.SCHOOL.getAllSchoolDateInformation(schoolID=qGetStudentInfo.schoolID, programID=VAL(qGetStudentInfo.programID));
+		
+		// Get School Dates for this program
+		qGetSchoolDatesForProgram = APPLICATION.CFC.SCHOOL.getSchoolDates(schoolID=qGetStudentInfo.schoolID, programID=VAL(qGetStudentInfo.programID));
 
 		// Get School Facilitator
 		qGetFacilitator = APPLICATION.CFC.USER.getUsers(userID=qGetSchool.fk_ny_user);
@@ -281,7 +284,7 @@
             <tr class="placementLetterBlueTitle"><td><img src="../pics/pisStudentInfo.png" /></td></tr>  
             <tr>
                 <td>
-                    <p style="margin-top:5px;">Student is applying for the #qGetProgramInfo.programName# program starting in #DateFormat(qGetSchoolDates.year_begins, 'mmmm')#.</p>	
+                    <p style="margin-top:5px;">Student is applying for the #qGetProgramInfo.programName# program starting in #DateFormat(qGetSchoolDatesForProgram.startDate, 'mmmm')#.</p>	
                     
                     <p style="margin-bottom:5px;">
                         A complete program packet will be sent to you shortly. 
