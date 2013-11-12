@@ -124,11 +124,9 @@ border-bottom-left-radius:15px;
     
              <div class="rdbox">
             
-<cfparam name=url.report default="">
+<cfparam name="url.report" default="">
 
-<cfset url.report = 'C2C96BA8-5056-A020-CCF5046C70B0A3F'>
-
-<cfquery name="get_report" datasource="mysql">
+<cfquery name="get_report" datasource="#APPLICATION.DSN#">
     select *
     from progress_reports
     where pr_uniqueid  = <cfqueryparam cfsqltype="varchar" value="#url.report#">
