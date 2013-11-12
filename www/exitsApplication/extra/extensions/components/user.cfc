@@ -545,7 +545,7 @@
                 INNER JOIN
                 	user_access_rights uar ON uar.userID = u.userID
                 WHERE 
-                   	u.usertype = 8
+                   	(u.usertype = 8 OR uar.usertype = 8)
 					<cfif IsNumeric(ARGUMENTS.searchString)>
                     	AND u.userID LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
                     <cfelse>

@@ -6,7 +6,7 @@
 	<cfparam name="URL.sortBy" default="businessName">
     <cfparam name="URL.sortOrder" default="ASC">
     
-    <cfquery name="qGetIntlReps" datasource="MySql">
+    <cfquery name="qGetIntlReps" datasource="#APPLICATION.DSN.Source#">
         SELECT DISTINCT
         	u.userID, 
             u.uniqueID,
@@ -22,7 +22,7 @@
 		LEFT OUTER JOIN
         	user_access_rights uar ON uar.userID = u.userID AND uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
         WHERE 
-        	u.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+        	(u.usertype = 8 OR uar.usertype = 8)
         AND 
         	u.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">            
         ORDER BY 
