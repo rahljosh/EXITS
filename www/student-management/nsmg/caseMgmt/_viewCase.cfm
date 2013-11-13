@@ -8,6 +8,7 @@
 <cfparam name="FORM.additionialInfoDiv" default="0">
 <cfparam name="FORM.fileData" default="">
 <cfparam name="FORM.fileDescription" default="">
+<Cfparam name="FORM.loopInEmail" default="">
 
 <script>
 jQuery(document).ready(function($) {
@@ -96,7 +97,19 @@ window.onload = function additionalInfo() {
 	<cfset loopedin = ListAppend(loopedIn,#loopedInInfo#)>
 </Cfloop>
 <div class="rdholder" style="width:100%; float:right;"> 
-                
+     <div align="center">
+<!--- Page Messages --->
+    <gui:displayPageMessages 
+        pageMessages="#SESSION.pageMessages.GetCollection()#"
+        messageType="divOnly"
+        />
+	
+	<!--- Form Errors --->
+    <gui:displayFormErrors 
+        formErrors="#SESSION.formErrors.GetCollection()#"
+        messageType="divOnly"
+        />
+</div>           
     <div class="rdtop"> 
         <span class="rdtitle">View Case Details</span> 
         <div style="float:right;"><img src="pics/betaTesting.png"></div>
@@ -204,11 +217,12 @@ window.onload = function additionalInfo() {
                  <form action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" >
                 	
                 	 <select name="loopInEmail" data-placeholder="Enter name or ID" class="chzn-select" tabindex="2" size=20>
+                       
                        <option value=""></option>
                        <cfloop query="qAvailableUsers">
-                       
+                       	<cfif not listFind(#loopedin#, '#firstName# #lastname#')>
                            <option value="#userid#">#firstName# #lastname# (#userid#)</option>
-                     
+                     	</cfif>
                        </cfloop>
                    </select>
                  </td>
