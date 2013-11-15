@@ -76,6 +76,7 @@
 
 	<cffunction name="getDailyFlightReport" access="public" returntype="query" output="false" hint="Emails flight information report updated/entered in the last 25 hours">
         <cfargument name="flightType" required="yes" hint="arrival/departure">
+		<cfargument name="companyID" required="no" default="0">
 
         <cfquery 
 			name="qGetDailyFlightReport" 
@@ -112,6 +113,9 @@
                     extra_hostcompany eh ON ec.hostcompanyID = eh.hostcompanyID
                 WHERE
                     flightType = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.flightType)#">
+				<cfif VAL(ARGUMENTS.companyID)>
+					AND ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
+				</cfif>
                 ORDER BY
                 	u.businessName,
                     ec.candidateID,	
