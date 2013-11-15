@@ -13,15 +13,24 @@
 <cfsilent>
 
 	<!--- Import CustomTag --->
-    <cfimport taglib="../../extensions/customTags/gui/" prefix="gui" />	
+    <cfimport taglib="../../extensions/customTags/gui/" prefix="gui" />
+	
+	<cfparam name="companyID" default="8">
 	
     <cfscript>
 		// Get flights updated in the last 24 hours
-		qGetArrivals = APPLICATION.CFC.FLIGHTINFORMATION.getDailyFlightReport(flightType='Arrival');	
+		qGetArrivals = APPLICATION.CFC.FLIGHTINFORMATION.getDailyFlightReport(flightType='Arrival',companyID=companyID);
 
 		// Get flights updated in the last 24 hours
-		qGetDepartures = APPLICATION.CFC.FLIGHTINFORMATION.getDailyFlightReport(flightType='Departure');	
+		qGetDepartures = APPLICATION.CFC.FLIGHTINFORMATION.getDailyFlightReport(flightType='Departure',companyID=companyID);
 	</cfscript>
+	
+	<!--- Get the company information --->
+	<cfquery name="qGetCompany" datasource="#APPLICATION.DSN.Source#">
+		SELECT *
+		FROM smg_companies
+		WHERE companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#companyID#">
+	</cfquery>
     
 </cfsilent>
 
@@ -141,12 +150,21 @@
 	// Send Email
 	if ( qGetArrivals.recordCount OR qGetDepartures.recordCount ) {
 	
-		APPLICATION.CFC.EMAIL.sendEmail(
-			emailTo=APPLICATION.EMAIL.flightReport ,
-			emailSubject='EXTRA - WAT - Daily Flight Report',
-			emailMessage=flightReport
-		);
-	
+		// Send this to ryan if it is for trainee, the APPLICATION.EMAIL.flightReport variable is already set for WAT
+		if (qGetCompany.companyID EQ 7) {
+			APPLICATION.CFC.EMAIL.sendEmail(
+				emailTo=APPLICATION.EMAIL.traineeFlightReport,
+				emailSubject='EXTRA - Trainee - Daily Flight Report',
+				emailMessage=flightReport
+			);
+		} else if (qGetCompany.companyID EQ 8) {
+			APPLICATION.CFC.EMAIL.sendEmail(
+				emailTo=APPLICATION.EMAIL.flightReport,
+				emailSubject='EXTRA - WAT - Daily Flight Report',
+				emailMessage=flightReport
+			);
+		}
+		
 	}
 	
 	WriteOutput(flightReport);

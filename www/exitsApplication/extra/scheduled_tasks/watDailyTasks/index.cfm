@@ -20,9 +20,14 @@
 <h1>Inactivate Records Task</h1>
 
 
-<!--- Flight Information Report --->
+<!--- Flight Information Report (for Trainee and WAT)--->
+<cfset companyID = 8>
 <cfinclude template="flightInformationReport.cfm">
-<h1>Flight Information Report Task</h1>
+<h1>Flight Information Report Task for WAT</h1>
+
+<cfset companyID = 7>
+<cfinclude template="flightInformationReport.cfm">
+<h1>Flight Information Report Task for Trainee</h1>
 
 
 <!--- Online Application Uploaded Document Report --->
