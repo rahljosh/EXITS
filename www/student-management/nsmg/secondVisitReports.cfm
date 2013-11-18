@@ -366,10 +366,6 @@
                     smg_hostHistory ht ON ht.studentID = s.studentID
                         AND
                             ht.assignedID = <cfqueryparam cfsqltype="cf_sql_bit" value="0"> 
-						<!---
-                        AND
-                        	ht.datePlaced IS NOT NULL
-                       	--->     
                 INNER JOIN 
                     user_access_rights uar ON uar.userID = ht.secondVisitRepID
 						<cfif APPLICATION.CFC.USER.isOfficeUser()>
@@ -562,8 +558,6 @@
                         pr.fk_reportType = <cfqueryparam cfsqltype="cf_sql_integer" value="2">	
                     AND
                         pr.fk_host = ht.hostID
-                    AND
-                        pr.pr_ny_approved_date IS NULL
                 LEFT OUTER JOIN
                     secondVisitAnswers sva ON sva.fk_reportID = pr.pr_ID
                 LEFT OUTER JOIN 
