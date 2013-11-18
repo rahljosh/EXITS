@@ -168,7 +168,7 @@
             <tr>
                 <td class="label" valign="top"><h3>Average annual income range <span class="required">*</span><sup>&dagger;&dagger;</sup></h3></td>
                 <td>
-                    <cfinput checked="#FORM.income EQ 25#" type="radio" name="income" id="income25" value="25" /><label for="income25">Less then $25,000</label><br />
+                    <cfinput checked="#FORM.income EQ 25#" type="radio" name="income" id="income25" value="25" /><label for="income25">Less than $25,000</label><br />
                     <cfinput checked="#FORM.income EQ 35#" type="radio" name="income" id="income35" value="35" /><label for="income35">$25,000 - $35,000</label><br />
                     <cfinput checked="#FORM.income EQ 45#" type="radio" name="income" id="income45" value="45" /><label for="income45">$35,001 - $45,000</label><br />
                     <cfinput checked="#FORM.income EQ 55#" type="radio" name="income" id="income55" value="55" /><label for="income55">$45,001 - $55,000</label><br />

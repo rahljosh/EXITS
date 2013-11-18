@@ -628,7 +628,7 @@
 				
 				// Father Education Level 
 				if ( NOT LEN(qGetHostFamilyInfo.fatherEducationLevel) )  {
-					SESSION.formErrors.Add("Please provide the highest education lever for Host Father.");
+					SESSION.formErrors.Add("Please provide the highest education level for Host Father.");
 				}
 				
 				// Father Occupation
@@ -696,7 +696,7 @@
 
 				// Mother Education Level 
 				if ( NOT LEN(qGetHostFamilyInfo.motherEducationLevel) )  {
-					SESSION.formErrors.Add("Please provide the highest education lever for Host Mother.");
+					SESSION.formErrors.Add("Please provide the highest education level for Host Mother.");
 				}
 				
 				// Mother Occupation
