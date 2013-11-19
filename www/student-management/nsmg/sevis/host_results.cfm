@@ -25,7 +25,7 @@
 
 
 <cfoutput>
-<Cfif isDefined(url.batch)>
+<Cfif isDefined('url.batch')>
 	<cfset form.filename = #url.batch#>
 </Cfif>
 <cfif not IsDefined("form.filename") or form.filename is ''>

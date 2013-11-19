@@ -22,7 +22,7 @@
         companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
 </cfquery>
 
-<Cfif isDefined(url.batch)>
+<Cfif isDefined('url.batch')>
 	<cfset form.filename = #url.batch#>
 </Cfif>
 <cfif not IsDefined("form.filename") or form.filename is ''>
