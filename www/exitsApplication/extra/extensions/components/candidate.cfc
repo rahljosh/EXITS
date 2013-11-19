@@ -2124,10 +2124,14 @@
                 	smg_programs p ON p.programID = ec.programID
                 LEFT OUTER JOIN
                 	extra_hostCompany eh ON eh.hostCompanyID = ec.hostCompanyID
-                LEFT OUTER JOIN
-                	extra_evaluation ee ON ee.candidateID = ec.candidateID
-                   		AND
-                        	ee.monthEvaluation = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.monthEvaluation)#">
+                LEFT OUTER JOIN extra_evaluation ee ON ee.candidateID = ec.candidateID
+						AND ee.monthEvaluation = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.monthEvaluation)#">
+						<!--- This makes sure that we are selecting the most recent evaluation for this month --->
+						AND ee.dateCreated = (
+							SELECT MAX(dateCreated) 
+							FROM extra_evaluation 
+							WHERE candidateID = ec.candidateID 
+							AND monthEvaluation = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.monthEvaluation)#">)
                 WHERE
                     ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
                 AND
