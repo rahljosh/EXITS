@@ -26,7 +26,7 @@
 	
 	<cffunction name="getPrograms" access="public" returntype="query" output="false" hint="Gets a list of programs, if programID is passed gets a program by ID">
     	<cfargument name="programID" default="0" hint="programID is not required">
-		<cfargument name="seasonIDs" default="0" hint="seasonIDs is not required, takes a list of ids">
+		<cfargument name="seasonIDs" default="" hint="seasonIDs is not required, takes a list of ids">
         <cfargument name="programIDList" default="" hint="List of program IDs">
         <cfargument name="isActive" default="" hint="IsActive is not required">
         <cfargument name="dateActive" default="" hint="DateActive is not required, gets current programs and programs that are starting 6 months from now">
