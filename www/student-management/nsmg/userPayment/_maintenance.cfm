@@ -25,7 +25,7 @@
     
         <cfloop From = "1" To = "#form.count#" Index = "x">
          
-            <cfquery name="update_amount" datasource="mySQL">
+            <cfquery name="update_amount" datasource="#APPLICATION.DSN#">
             	UPDATE 
                 	smg_users_payments_amount
                 SET 
@@ -45,7 +45,7 @@
     
     </cfif>
     
-    <cfquery name="qGetPaymentInformation" datasource="MySql">
+    <cfquery name="qGetPaymentInformation" datasource="#APPLICATION.DSN#">
         SELECT 
             spa.amount,
             spa.companyID,

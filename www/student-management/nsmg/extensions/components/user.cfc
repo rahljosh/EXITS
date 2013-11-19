@@ -1773,7 +1773,11 @@ setUserSessionPaperwork
                     rep.transtype,
                     stu.studentid,
                     stu.firstname, 
-                    stu.familylastname,             
+                    stu.familylastname,
+					host.hostID,
+					host.fatherFirstName,
+					host.motherFirstName,
+					host.familyLastName AS hostFamilyLastName,             
                     c.team_id,
                     type.type,
                     p.programName
@@ -1781,6 +1785,8 @@ setUserSessionPaperwork
                     smg_users_payments rep
                 LEFT JOIN 
                     smg_students stu ON stu.studentid = rep.studentid
+				LEFT JOIN
+					smg_hosts host ON host.hostID = rep.hostID
                 INNER JOIN
                     smg_programs p ON p.programID = rep.programID
                 INNER JOIN	

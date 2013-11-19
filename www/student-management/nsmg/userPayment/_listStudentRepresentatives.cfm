@@ -10,7 +10,7 @@
 <!--- Kill extra output --->
 <cfsilent>
     
-    <cfquery name="qGetStudentInfo" datasource="MySql">
+    <cfquery name="qGetStudentInfo" datasource="#APPLICATION.DSN#">
         SELECT 	
             s.studentID,
             s.firstName,
@@ -25,7 +25,7 @@
     </cfquery>
 	
     <!--- Area Rep --->
-    <cfquery name="qGetAreaReps" datasource="MySql">
+    <cfquery name="qGetAreaReps" datasource="#APPLICATION.DSN#">
         SELECT DISTINCT
         	u.userid, 
             u.firstname, 
@@ -77,7 +77,7 @@
     </cfquery>
 
 	<!--- Place Rep --->
-    <cfquery name="qGetPlaceReps" datasource="MySql">
+    <cfquery name="qGetPlaceReps" datasource="#APPLICATION.DSN#">
         SELECT DISTINCT
         	u.userid, 
             u.firstname, 
@@ -129,7 +129,7 @@
     </cfquery>
 
 	<!--- Second Visit --->
-    <cfquery name="qGetSecondVisitReps" datasource="MySql">
+    <cfquery name="qGetSecondVisitReps" datasource="#APPLICATION.DSN#">
         SELECT DISTINCT
         	u.userid, 
             u.firstname, 

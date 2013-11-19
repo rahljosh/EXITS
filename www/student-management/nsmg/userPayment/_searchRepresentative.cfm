@@ -27,7 +27,7 @@
 		}		
 	</cfscript>
     
-    <cfquery name="qSearchRepresentative" datasource="MySql">
+    <cfquery name="qSearchRepresentative" datasource="#APPLICATION.DSN#">
         SELECT DISTINCT 	
             u.userid,
             u.firstName, 

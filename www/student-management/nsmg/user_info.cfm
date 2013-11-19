@@ -1019,12 +1019,26 @@
                                         companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
                                 </cfif>
                             </cfquery>
+							<cfquery name="prePlacement_payment" datasource="#APPLICATION.DSN#">
+								SELECT SUM(amount) AS amount
+								FROM smg_users_payments
+								WHERE agentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#rep_info.userID#">
+								AND transtype = "Pre-Placement"
+								<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+                                    AND companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+                                <cfelse>
+                                    AND companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+                                </cfif>
+							</cfquery>
                             <strong>Supervising Payments:</strong> #LSCurrencyFormat(super_payments.amount, 'local')#<br>
                             <strong>Placement Payments:</strong> #LSCurrencyFormat(place_payments.amount, 'local')#<br>
                             <strong>Second Visit Payments:</strong> #LSCurrencyFormat(second_payments.amount, 'local')#<br>
                             <cfif trip_payments.recordCount NEQ 0>
                             	<strong>Trip Payments:</strong> #LSCurrencyFormat(trip_payments.amount, 'local')#<br>
                            	</cfif>
+							<cfif CLIENT.companyID EQ 14>
+								<strong>Pre-Placement Payments:</strong> #LSCurrencyFormat(prePlacement_payment.amount, 'local')#<br>
+							</cfif>
                             <font size = -2><a href="#CGI.SCRIPT_NAME#?curdoc=userPayment/index&action=paymentReport&userID=#rep_info.userID#">view details</a></font>
                             <cfif APPLICATION.CFC.USER.isOfficeUser()> - <font size = -2><a href="#CGI.SCRIPT_NAME#?curdoc=userPayment/index&action=selectPayment&user=#rep_info.userID#">make payment</a></cfif>
                         </td>

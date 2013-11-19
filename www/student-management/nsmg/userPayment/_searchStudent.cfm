@@ -27,7 +27,7 @@
 		}
 	</cfscript>
 
-    <cfquery name="qSearchStudent" datasource="MySql">
+    <cfquery name="qSearchStudent" datasource="#APPLICATION.DSN#">
         SELECT 
             s.studentID, 
             s.firstName, 

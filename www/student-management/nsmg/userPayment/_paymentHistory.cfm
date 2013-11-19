@@ -26,7 +26,7 @@
 	<!--- Delete Payment - Thea, Craig and Bryan Mc, Stacy --->
     <cfif VAL(URL.userID) AND VAL(URL.paymentID) AND ( listfind(vAllowDeleteListID, CLIENT.userID) OR ListFind("1,2", CLIENT.userType) )>	
 		
-        <cfquery datasource="MySql" result="test">
+        <cfquery datasource="#APPLICATION.DSN#" result="test">
             DELETE FROM 
             	smg_users_payments
 	        WHERE 
@@ -58,7 +58,7 @@
 		qGetRepInfo = APPLICATION.CFC.USER.getUserByID(userID=VAL(URL.userID));
 	</cfscript>
     
-    <cfquery name="qGetPayments" datasource="MySQL">
+    <cfquery name="qGetPayments" datasource="#APPLICATION.DSN#">
         SELECT 
             rep.id, 
             rep.agentid, 

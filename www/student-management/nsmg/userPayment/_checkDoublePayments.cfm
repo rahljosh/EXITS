@@ -1,6 +1,6 @@
 <cfoutput>
 
-<cfquery name="get_payments" datasource="MySql">
+<cfquery name="get_payments" datasource="#APPLICATION.DSN#">
 	SELECT studentID, agentid, count( studentID ) AS totalstudents, paymenttype, programID
 	FROM smg_users_payments
 	<!--- WHERE paymenttype = '3' OR paymenttype = '4' OR paymenttype = '5' OR paymenttype = '6' OR paymenttype = '7' OR paymenttype = '8' --->
@@ -22,7 +22,7 @@
 	</tr>
 	<cfloop query="get_payments">
 		<cfif totalstudents GTE 2>
-			<cfquery name="get_details" datasource="MySql">
+			<cfquery name="get_details" datasource="#APPLICATION.DSN#">
 				SELECT payments.id, payments.studentID, payments.transtype, payments.amount,
 					 payments.comment, payments.date, payments.inputby, payments.companyID,
 					 types.type,

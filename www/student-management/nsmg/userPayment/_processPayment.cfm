@@ -40,6 +40,9 @@
 		// Stores All Students Selected
 		vStudentIDList = 0;
 		
+		// Store All Hosts Selected
+		vHostIDList = 0;
+		
 		if ( LEN(FORM.supervisedStudentIDList) ) {
 			vStudentIDList = ListAppend(vStudentIDList, FORM.supervisedStudentIDList);
 		}
@@ -50,6 +53,14 @@
 		if ( LEN(FORM.secondVisitStudentIDList) ) {
 			vStudentIDList = ListAppend(vStudentIDList, FORM.secondVisitStudentIDList);
 		}
+		
+		if (NOT isDefined("FORM.hostPrePlacementsIDList")) {
+			FORM.hostPrePlacementsIDList = "";
+		} 
+		
+		if ( LEN(FORM.hostPrePlacementsIDList) ) {
+			vHostIDList = ListAppend(vHostIDList, FORM.hostPrePlacementsIDList);
+		}
 
 		if ( LEN(URL.timeStamp) ) {
 			URL.timeStamp = URLDecode(URL.timeStamp);
@@ -57,9 +68,15 @@
 
 		// Get Rep Information
 		qGetRepInfo = APPLICATION.CFC.USER.getUserByID(userID=VAL(FORM.userID));
+		
+		vSeasons = ('#APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID#,#APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID+1#');
+		qGetActivePrograms = APPLICATION.CFC.PROGRAM.getPrograms(
+			companyID=#CLIENT.companyID#,
+			isActive=1,
+			seasonIDs=vSeasons);
 	</cfscript>
     
-    <cfquery name="qGetsupervisedPaymentType" datasource="MySQL">
+    <cfquery name="qGetsupervisedPaymentType" datasource="#APPLICATION.DSN#">
         SELECT 
             pt.type, 
             pt.id, 
@@ -83,7 +100,7 @@
             pt.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
     </cfquery>
     
-    <cfquery name="qGetPlacementPaymentType" datasource="MySQL">
+    <cfquery name="qGetPlacementPaymentType" datasource="#APPLICATION.DSN#">
         SELECT 
             pt.type, 
             pt.id, 
@@ -107,7 +124,7 @@
             pt.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
     </cfquery>
 	
-    <cfquery name="qGetSecondVisitPaymentType" datasource="MySQL">
+    <cfquery name="qGetSecondVisitPaymentType" datasource="#APPLICATION.DSN#">
         SELECT 
             pt.type, 
             pt.id, 
@@ -130,9 +147,33 @@
         AND 
             pt.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
     </cfquery>
+	
+	<cfquery name="qGetPrePlacementPaymentType" datasource="#APPLICATION.DSN#">
+        SELECT 
+            pt.type, 
+            pt.id, 
+            pa.amount
+        FROM 
+            smg_users_payments_type pt
+        LEFT OUTER JOIN
+            smg_users_payments_amount pa ON pt.id = pa.paymentid
+            <!--- ISE - Get Amounts for William --->
+            <cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISE, CLIENT.companyID)>
+                AND
+                    pa.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="1">               
+            <!--- CASE | ESI --->
+			<cfelse>
+                AND
+                    pa.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">               
+            </cfif>		
+        WHERE 
+            pt.type = "Pre-Placement" 
+        AND 
+            pt.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+    </cfquery>
     
     <!--- Gets All Selected Students --->
-    <cfquery name="qGetAllStudents" datasource="MySQL">
+    <cfquery name="qGetAllStudents" datasource="#APPLICATION.DSN#">
         SELECT 
             s.studentID, 
             s.firstName, 
@@ -194,11 +235,18 @@
             studentID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.secondVisitStudentIDList#" list="yes"> )
     </cfquery>
 	
+	<!--- Get host pre-placement list --->
+	<cfquery name="qGetPrePlacementHostList" datasource="#APPLICATION.DSN#">
+		SELECT *
+		FROM smg_hosts
+		WHERE hostID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vHostIDList#" list="yes"> )
+	</cfquery>
+	
     <!--- Get Recorded Payments --->
     <cfif IsDate(URL.timeStamp)>
     
 		<!--- Get Super Payments Made --->
-        <cfquery name="qGetSupervisedPaymentDetail" datasource="MySQL">
+        <cfquery name="qGetSupervisedPaymentDetail" datasource="#APPLICATION.DSN#">
             SELECT
                 srp.ID,
                 srp.amount,
@@ -222,7 +270,7 @@
         </cfquery>
         
 		<!--- Get Place Payments Made --->
-        <cfquery name="qGetPlacedPaymentDetail" datasource="MySQL">
+        <cfquery name="qGetPlacedPaymentDetail" datasource="#APPLICATION.DSN#">
             SELECT
                 srp.ID,
                 srp.amount,
@@ -246,7 +294,7 @@
         </cfquery>
         
 		<!--- Get Second Visit Payments Made --->
-        <cfquery name="qGetSecondVisitPaymentDetail" datasource="MySQL">
+        <cfquery name="qGetSecondVisitPaymentDetail" datasource="#APPLICATION.DSN#">
             SELECT
                 srp.ID,
                 srp.amount,
@@ -267,7 +315,32 @@
                 srp.date = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#URL.timeStamp#">
             AND
             	srp.transtype = <cfqueryparam cfsqltype="cf_sql_varchar" value="secondVisit">
-        </cfquery>        
+        </cfquery>    
+		
+		<!--- Get Pre Placement Payments Made --->
+        <cfquery name="qGetPrePlacementPaymentDetail" datasource="#APPLICATION.DSN#">
+            SELECT
+                srp.ID,
+                srp.amount,
+                srp.comment,
+                spt.type,
+                h.fatherFirstName,
+				h.motherFirstName,
+                h.familyLastName,
+                h.hostID
+            FROM 
+                smg_users_payments srp
+            LEFT OUTER JOIN
+                smg_users_payments_type spt ON spt.ID = srp.paymentType
+            LEFT OUTER JOIN
+                smg_hosts h ON h.hostID = srp.hostID                                
+            WHERE
+               srp.agentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRepInfo.userID#"> 
+            AND    
+                srp.date = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#URL.timeStamp#">
+            AND
+            	srp.transtype = <cfqueryparam cfsqltype="cf_sql_varchar" value="Pre-Placement">
+        </cfquery> 
 	
     </cfif>
 	
@@ -292,7 +365,7 @@
                 
                 <cfif VAL(FORM[studentID & 'superPaymentTypeID']) AND isNumeric(FORM[studentID & 'superAmount'])>
                 
-                    <cfquery datasource="MySQL" result="newRecord">
+                    <cfquery datasource="#APPLICATION.DSN#" result="newRecord">
                         INSERT INTO 
                             smg_users_payments
                         (
@@ -350,7 +423,7 @@
             
                 <cfif VAL(FORM[studentID & 'placePaymentTypeID']) AND isNumeric(FORM[studentID & 'placeAmount'])>
                 
-                    <cfquery datasource="MySQL" result="newRecord">
+                    <cfquery datasource="#APPLICATION.DSN#" result="newRecord">
                         INSERT INTO 
                             smg_users_payments
                         (
@@ -410,7 +483,7 @@
                 <!--- Block Payment if report is not selected --->
                 <cfif VAL(FORM[studentID & 'secondVisitPaymentTypeID']) AND isNumeric(FORM[studentID & 'secondVisitAmount'])>
                     
-                    <cfquery datasource="MySQL" result="newRecord">
+                    <cfquery datasource="#APPLICATION.DSN#" result="newRecord">
                         INSERT INTO 
                             smg_users_payments
                         (
@@ -451,6 +524,52 @@
                     </cfquery>
                 
                 </cfif>
+                
+            </cfloop>
+		
+        </cfif>
+		
+		<!--- Pre-Placement Payments --->
+        <cfif VAL(FORM.hostPrePlacementsIDList)>
+        
+            <cfloop list="#FORM.hostPrePlacementsIDList#" index="hostID">
+            	
+                <!--- Param Variables --->
+                <cfparam name="FORM.prePlacementHost#hostID#" default="0">
+                <cfparam name="FORM.prePlacementProgram#hostID#" default="0">
+                <cfparam name="FORM.prePlacementAmount#hostID#" default="0">
+                <cfparam name="FORM.prePlacementComment#hostID#" default="">
+                
+				<cfquery datasource="#APPLICATION.DSN#">
+					INSERT INTO smg_users_payments (
+						agentID,
+						programID,
+						hostID,
+						paymentType,
+						transType,
+						amount,
+						comment,
+						date,
+						companyID,
+						inputBy)
+					VALUES (
+						<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">,
+						<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM['prePlacementProgram' & hostID]#">,
+						<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM['prePlacementHost' & hostID]#">,
+						<cfqueryparam cfsqltype="cf_sql_integer" value="#qGetPrePlacementPaymentType.ID#">,
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetPrePlacementPaymentType.type#">,
+						<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM['prePlacementAmount' & hostID]#">,
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM['prePlacementComment' & hostID]#">,
+						<cfqueryparam cfsqltype="cf_sql_timestamp" value="#vTimeStamp#">,
+						<!--- ISE - Set Company to 1 --->
+	                   	<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="1">             
+                    	<!--- CASE | ESI --->
+                        <cfelse>
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">             
+                     	</cfif>,
+						<cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">)
+				</cfquery>
                 
             </cfloop>
 		
@@ -575,6 +694,44 @@
             </cfif>
 
         </table>
+		
+		<!--- PRE PLACEMENT HOSTS --->
+        <table width="100%" cellpadding="4" cellspacing="0" style="border:1px solid ##010066; margin-top:20px;">
+            <tr>
+                <td colspan="4" style="background-color:##010066; color:##FFFFFF; font-weight:bold;">Pre-Placed Hosts</td>
+                <td style="background-color:##010066; color:##FFFFFF; font-weight:bold; text-align:right; padding-right:10px;">
+                    Total of #qGetPrePlacementPaymentDetail.recordCount# host(s)
+                </td>
+            </tr>
+            <tr style="background-color:##E2EFC7; font-weight:bold;">
+                <td width="10%">Payment ID</td>
+                <td width="20%">Host</td>
+                <td width="20%">Type</td>
+                <td width="10%">Amount</td>
+                <td width="40%">Comment</td>
+            </tr>
+
+            <cfloop query="qGetPrePlacementPaymentDetail">
+                
+                <tr bgcolor="###iif(qGetSecondVisitPaymentDetail.currentRow MOD 2 ,DE("FFFFFF") ,DE("FFFFE6") )#">
+                    <Td>###qGetPrePlacementPaymentDetail.ID#</Td>
+                    <td>
+						#qGetPrePlacementPaymentDetail.familyLastName#, #qGetPrePlacementPaymentDetail.fatherFirstName#
+						<cfif LEN(qGetPrePlacementPaymentDetail.fatherFirstName) AND LEN(qGetPrePlacementPaymentDetail.motherFirstName)> & </cfif>
+						#qGetPrePlacementPaymentDetail.motherFirstName#
+					</td>
+                    <Td>#qGetPrePlacementPaymentDetail.type#</Td>  
+                    <td>#LSCurrencyFormat(qGetPrePlacementPaymentDetail.amount, 'local')#</td>
+                    <td>#qGetPrePlacementPaymentDetail.comment#</td>
+                </tr>
+                
+            </cfloop>
+            
+            <cfif NOT VAL(qGetPrePlacementPaymentDetail.recordCount)>
+                <tr><td colspan="5" align="center">No pre-placement payments submitted.</td></tr>
+            </cfif>
+
+        </table>
 
         <br />
 
@@ -591,6 +748,7 @@
             <input type="hidden" name="supervisedStudentIDList" value="#FORM.supervisedStudentIDList#">
             <input type="hidden" name="placedStudentIDList" value="#FORM.placedStudentIDList#">
             <input type="hidden" name="secondVisitStudentIDList" value="#FORM.secondVisitStudentIDList#">
+			<input type="hidden" name="hostPrePlacementsIDList" value="#FORM.hostPrePlacementsIDList#">
         	
             <!---- SUPERVISED STUDENTS ---->
             <table width="100%" cellpadding="4" cellspacing="0" style="border:1px solid ##010066; margin-top:20px;"> 
@@ -614,7 +772,7 @@
 
                 <cfloop query="qGetSupervisedStudentList">
 
-                    <cfquery name="qCheckSupervisedCharges" datasource="MySQL">
+                    <cfquery name="qCheckSupervisedCharges" datasource="#APPLICATION.DSN#">
                         SELECT 
                             rep.date,
                             rep.amount,
@@ -756,7 +914,7 @@
 
                 <cfloop query="qGetPlacedStudentList">
 					
-                    <cfquery name="qCheckPlacedCharges" datasource="MySQL">
+                    <cfquery name="qCheckPlacedCharges" datasource="#APPLICATION.DSN#">
                         SELECT                                 
                             rep.paymenttype,
                             rep.date,
@@ -942,7 +1100,7 @@
                 <cfloop query="qGetSecondVisitStudentList">
 					
                     <!--- Get Approved Reports --->
-                    <cfquery name="qGetSecondVisitReports" datasource="MySQL">
+                    <cfquery name="qGetSecondVisitReports" datasource="#APPLICATION.DSN#">
                         SELECT                                 
                             pr.pr_ID,
                             pr.fk_reportType,
@@ -984,7 +1142,7 @@
                                                 
                     </cfquery>
                                         
-                    <cfquery name="qCheckSecondVisitCharges" datasource="MySQL">
+                    <cfquery name="qCheckSecondVisitCharges" datasource="#APPLICATION.DSN#">
                         SELECT                                 
                             rep.paymenttype,
                             rep.date,
@@ -1110,13 +1268,77 @@
                     <tr><td colspan="5" align="center">No students selected.</td></tr>
                 </cfif>
             </table>
-
-			<!--- Submit Button --->
-            <table width="100%" cellpadding="4" cellspacing="0" style="border:1px solid ##010066; margin-top:20px;">
-                <tr style="background-color:##E2EFC7;">
-                    <td colspan="5" align="center"> <input name="submit" type="image" src="pics/submit.gif" border="0" alt="submit"></td>
-                </tr>
-			</table>
+			
+			<!--- Host Pre-Placement --->
+			<cfif CLIENT.companyID EQ 14>
+	            <table width="100%" cellpadding="4" cellspacing="0" style="border:1px solid ##010066; margin-top:20px;">
+	                <tr>
+	                    <td colspan="4" style="background-color:##010066; color:##FFFFFF; font-weight:bold;">
+	                    	Pre-Placed Hosts
+	                    </td>
+	                    <td style="background-color:##010066; color:##FFFFFF; font-weight:bold; text-align:right; padding-right:10px;">
+	                    	Total of #qGetSecondVisitStudentList.recordCount# student(s)
+	                    </td>                
+	                </tr>
+	                <tr style="background-color:##E2EFC7; font-weight:bold;">
+	                    <td width="10%">ID</td>
+	                    <td width="15%">Host</td>
+	                    <td width="30%">Program</td>
+	                    <td width="10%">Amount</td>
+	                    <td width="35%">Comment</td>
+					</tr>
+					
+					<cfloop query="qGetPrePlacementHostList">
+						
+						<!--- Get programs that were already paid for this host --->
+						<cfquery name="qGetPayments" datasource="#APPLICATION.DSN#">
+							SELECT p.programID
+							FROM smg_programs p
+							INNER JOIN smg_users_payments payment ON payment.programID = p.programID
+								AND payment.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetPrePlacementHostList.hostID#">
+							INNER JOIN smg_users_payments_type type ON type.ID = payment.paymentType
+								AND type.type = "Pre-Placement"
+						</cfquery>
+	                    
+	                    <tr bgcolor="###iif(qGetPrePlacementHostList.currentRow MOD 2 ,DE("FFFFFF") ,DE("FFFFE6") )#">
+	                    	<td>#qGetPrePlacementHostList.hostID# <input type="hidden" name="prePlacementHost#qGetPrePlacementHostList.hostID#" value="#qGetPrePlacementHostList.hostID#"></td>
+		                    <td>
+	                            #qGetPrePlacementHostList.familyLastName#, #qGetPrePlacementHostList.fatherFirstName#
+								<cfif LEN(qGetPrePlacementHostList.fatherFirstName) AND LEN(qGetPrePlacementHostList.motherFirstName)> & </cfif>
+								#qGetPrePlacementHostList.motherFirstName#
+	                        </td> 
+							<td>
+								<select name="prePlacementProgram#qGetPrePlacementHostList.hostID#" id="prePlacementProgram#qGetPrePlacementHostList.hostID#" required="yes">
+									<option value="">Select Program</option>
+									<cfloop query="qGetActivePrograms">
+										<cfif ListFind(qGetPayments.programID,programID)>
+											<option value="#programID#" disabled="disabled">#programName# - PAID</option>
+										<cfelse>
+											<option value="#programID#">#programName#</option>
+										</cfif>
+									</cfloop>
+								</select>
+							</td>
+							<td>
+								<cfinput type="text" name="prePlacementAmount#qGetPrePlacementHostList.hostID#" class="smallField" value="#qGetPrePlacementPaymentType.amount#" required="yes" message="Oops! You forgot to enter the amount for host #qGetPrePlacementHostList.hostID#.">
+							</td>
+							<td>
+								<input type="text" name="prePlacementComment#qGetPrePlacementHostList.hostID#" class="xLargeField">
+							</td>
+	                   	</tr>
+	                    
+	            	</cfloop>
+					
+				</table>
+	
+				<!--- Submit Button --->
+	            <table width="100%" cellpadding="4" cellspacing="0" style="border:1px solid ##010066; margin-top:20px;">
+	                <tr style="background-color:##E2EFC7;">
+	                    <td colspan="5" align="center"> <input name="submit" type="image" src="pics/submit.gif" border="0" alt="submit"></td>
+	                </tr>
+				</table>
+			</cfif>
+			
    		</cfform>
 
 	</cfif>

@@ -1,4 +1,4 @@
-<cfparam name="URL.studentID" default="0">
+<cfparam name="URL.hostID" default="0">
 
 <link rel="stylesheet" href="../smg.css" type="text/css">
 
@@ -15,11 +15,9 @@ function areYouSure() {
 
 <cfinclude template="../querys/get_company_short.cfm">
 
-<cfquery name="student_info" datasource="#APPLICATION.DSN#">
-	SELECT firstName, familyLastName, studentID
-	FROM smg_students
-	WHERE studentID = <cfqueryparam value="#url.studentID#" cfsqltype="cf_sql_integer">
-</cfquery>
+<cfscript>
+	qGetHost = APPLICATION.CFC.HOST.getHosts(hostID=#URL.hostID#);
+</cfscript>
 
 <cfquery name="get_charges" datasource="#APPLICATION.DSN#">
 	SELECT rep.id, rep.agentid, rep.amount, rep.comment, rep.date, rep.inputby, rep.companyID, rep.transtype, rep.studentID,
@@ -30,7 +28,7 @@ function areYouSure() {
 	LEFT JOIN smg_users u ON u.userid = rep.agentid
 	LEFT JOIN smg_users_payments_type type ON type.id = rep.paymenttype
 	LEFT JOIN smg_programs p ON p.programID = rep.programID
-	WHERE rep.studentID = <cfqueryparam value="#url.studentID#" cfsqltype="cf_sql_integer">
+	WHERE rep.hostID = <cfqueryparam value="#url.hostID#" cfsqltype="cf_sql_integer">
 	ORDER BY rep.id, rep.date
 </cfquery>
 
@@ -40,7 +38,13 @@ function areYouSure() {
 		<td height=24 width=13 background="../pics/header_leftcap.gif">&nbsp;</td>
 		<td width=26 background="../pics/header_background.gif"><img src="../pics/user.gif"></td>
 		<td background="../pics/header_background.gif"><h2>#companyshort.companyshort#</h2></td>
-		<td align="right" background="../pics/header_background.gif"><h2>All Payments for student #student_info.firstName# #student_info.familyLastName# (#student_info.studentID#)</h2></td>
+		<td align="right" background="../pics/header_background.gif">
+				<h2>
+					All Payments for host #qGetHost.fatherFirstname#
+					<cfif LEN(qGetHost.fatherFirstName) AND LEN(qGetHost.motherFirstName)> &</cfif>
+					#qGetHost.motherFirstName# #qGetHost.familyLastName# (#qGetHost.hostID#)
+				</h2>
+		</td>
 		<td width=17 background="../pics/header_rightcap.gif">&nbsp;</td>
 	</tr>
 </table>
@@ -48,20 +52,20 @@ function areYouSure() {
 <table width="100%" border="0" cellpadding="4" cellspacing="0" class="section">
 	<tr><td><b>Date</b></td><Td><b>ID</b></Td><td><b>Rep</b></td><td><b>Type</b></td><td><b>Program</b></td><td><b>Amount</b></td><td><b>Comment</b></td><td><b>Trans. Type</b></td></tr>
 		<Cfif get_charges.recordcount is '0'>
-		<tr><td colspan="5" align="center">No payments submitted for this student.</td></tr>
+		<tr><td colspan="5" align="center">No payments submitted for this host.</td></tr>
 		<cfelse>
 			<cfset total = '0'>
 			<cfloop query="get_charges">
-			<tr bgcolor="#iif(get_charges.currentrow MOD 2 ,DE("ffffe6") ,DE("e2efc7") )#">
-				<td>#DateFormat(date, 'mm/dd/yyyy')#</td>
-				<Td>#id#</Td>
-				<td>#firstName# #lastname# (#userid#)</td>
-				<Td>#type#</Td> 
-				<td>#programName# (###programID#)</td> 
-				<td>#LSCurrencyFormat(amount, 'local')#</td>
-				<td>#comment#</td>
-				<td>#transtype#</td>
-			</tr>
+				<tr bgcolor="#iif(get_charges.currentrow MOD 2 ,DE("ffffe6") ,DE("e2efc7") )#">
+					<td>#DateFormat(date, 'mm/dd/yyyy')#</td>
+					<Td>#id#</Td>
+					<td>#firstName# #lastname# (#userid#)</td>
+					<Td>#type#</Td> 
+					<td>#programName# (###programID#)</td> 
+					<td>#LSCurrencyFormat(amount, 'local')#</td>
+					<td>#comment#</td>
+					<td>#transtype#</td>
+				</tr>
 			<cfset total =  total +  #amount#>
 			</cfloop>
 			<tr><td colspan=4 align="right"><b>Total to Date:</b></td><td>#LSCurrencyFormat(total, 'local')#</td><td colspan=2></td></tr>
