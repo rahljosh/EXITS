@@ -128,6 +128,7 @@
                         <td><b>Date</b></td>
                         <td><b>ID</b></Td>
                         <td><b>Student</b></td>
+						<td><b>Host</b></td>
                         <td><b>Program</b></td>
                         <td><b>Type</b></td>
                         <td><b>Amount</b></td>
@@ -147,6 +148,15 @@
                             <td>#DateFormat(qPaymentList.date, 'mm/dd/yyyy')#</td>
                             <td>#qPaymentList.id#</Td>
                             <td><cfif NOT VAL(qPaymentList.studentID)> n/a <cfelse> #qPaymentList.firstName# #qPaymentList.familyLastName# (#qPaymentList.studentID#) </cfif></td>
+							<td>
+								<cfif NOT VAL(qPaymentList.hostID)> 
+									n/a 
+								<cfelse> 
+									#qPaymentList.fatherFirstName#
+									<cfif LEN(qPaymentList.fatherFirstName) AND LEN(qPaymentList.motherFirstName)> &</cfif>
+									 #qPaymentList.motherFirstName# #qPaymentList.hostFamilyLastName# (#qPaymentList.hostID#) 
+								</cfif>
+							</td>
                             <td>#qPaymentList.programName#</Td> 
                             <td>#qPaymentList.type#</Td>  
                             <td>#LSCurrencyFormat(qPaymentList.amount, 'local')#</td>

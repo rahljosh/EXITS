@@ -5,7 +5,7 @@
 
 <cfsetting requesttimeout="99999">
 
-<cfquery name="qGetFastTrack" datasource="MySQL">
+<cfquery name="qGetFastTrack" datasource="#APPLICATION.DSN#">
     SELECT
         studentID,
         paymentType,
@@ -30,7 +30,7 @@
 
 <cfloop query="qGetFastTrack">
 
-    <cfquery name="qGetRecords" datasource="MySQL">
+    <cfquery name="qGetRecords" datasource="#APPLICATION.DSN#">
         SELECT
             id,
             agentID,
@@ -64,7 +64,7 @@
         </cfscript>
 		
         <!--- Delete Records --->
-        <cfquery datasource="MySQL" result="newRecord">
+        <cfquery datasource="#APPLICATION.DSN#" result="newRecord">
             DELETE FROM
                 smg_users_payments
 			WHERE
@@ -75,7 +75,7 @@
         
         
         <!--- Insert One Record --->
-        <cfquery datasource="MySQL" result="newRecord">
+        <cfquery datasource="#APPLICATION.DSN#" result="newRecord">
             INSERT INTO 
                 smg_users_payments
             (

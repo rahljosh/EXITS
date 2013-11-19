@@ -18,7 +18,7 @@
     <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
 	
 	<!----Students with associated reps---->
-    <cfquery name="qGetPlacedStudents" datasource="mysql">
+    <cfquery name="qGetPlacedStudents" datasource="#APPLICATION.DSN#">
         SELECT 
         	studentID,
             areaRepID, 
@@ -43,7 +43,7 @@
     </cfquery>
     
     <!----Reps supervising students---->
-    <cfquery name="qGetSupervisingReps" datasource="mysql">
+    <cfquery name="qGetSupervisingReps" datasource="#APPLICATION.DSN#">
         SELECT DISTINCT 
        		u.userid,
         	u.firstName, 
@@ -69,7 +69,7 @@
     </cfquery>
     
     <!----Reps who placed students---->
-    <cfquery name="qGetPlacingReps" datasource="mysql">
+    <cfquery name="qGetPlacingReps" datasource="#APPLICATION.DSN#">
         SELECT DISTINCT 
         	u.userid,        	
             u.firstName, 
@@ -95,7 +95,7 @@
     </cfquery>
 
     <!----Reps who second visited students---->
-    <cfquery name="qGetSecondVisitReps" datasource="mysql">
+    <cfquery name="qGetSecondVisitReps" datasource="#APPLICATION.DSN#">
         SELECT DISTINCT 
         	u.userid,        	
             u.firstName, 
@@ -121,7 +121,7 @@
     </cfquery>
     
     <!--- GET CURRENT AND HISTORY PLACE AND SUPER --->
-    <cfquery name="qGetSplitPaymentReps" datasource="MySql">
+    <cfquery name="qGetSplitPaymentReps" datasource="#APPLICATION.DSN#">
         <!--- Area History --->
         SELECT DISTINCT 
         	u.userid,

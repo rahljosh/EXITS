@@ -27,7 +27,7 @@
 		qGetRepInfo = APPLICATION.CFC.USER.getUserByID(userID=VAL(FORM.userID));
 	</cfscript>
     
-    <cfquery name="qGetTripInfo" datasource="MySQL">
+    <cfquery name="qGetTripInfo" datasource="#APPLICATION.DSN#">
         SELECT 
         	id,
             type             
@@ -37,7 +37,7 @@
         	paymenttype = <cfqueryparam cfsqltype="cf_sql_varchar" value="Trip">
     </cfquery>
 
-    <cfquery name="qGetPaymentDetails" datasource="MySQL">
+    <cfquery name="qGetPaymentDetails" datasource="#APPLICATION.DSN#">
         SELECT 
         	srp.id,            
             srp.amount,
@@ -56,7 +56,7 @@
 
         <cftransaction action="begin" isolation="serializable">
             
-            <cfquery datasource="MySQL" result="newRecord">
+            <cfquery datasource="#APPLICATION.DSN#" result="newRecord">
                 INSERT INTO 
                 	smg_users_payments 
                 (
