@@ -1330,14 +1330,16 @@
 	            	</cfloop>
 					
 				</table>
-	
-				<!--- Submit Button --->
-	            <table width="100%" cellpadding="4" cellspacing="0" style="border:1px solid ##010066; margin-top:20px;">
-	                <tr style="background-color:##E2EFC7;">
-	                    <td colspan="5" align="center"> <input name="submit" type="image" src="pics/submit.gif" border="0" alt="submit"></td>
-	                </tr>
-				</table>
+				
 			</cfif>
+	
+			<!--- Submit Button --->
+            <table width="100%" cellpadding="4" cellspacing="0" style="border:1px solid ##010066; margin-top:20px;">
+                <tr style="background-color:##E2EFC7;">
+                    <td colspan="5" align="center"> <input name="submit" type="image" src="pics/submit.gif" border="0" alt="submit"></td>
+                </tr>
+			</table>
+			
 			
    		</cfform>
 
