@@ -191,24 +191,22 @@ where refid = #questionTracking.fk_ReferencesID#
     	 </cfloop>
          <Cfif client.usertype lte 5 and currentStatus.approved neq 2>
         
-         <input type=hidden name="refid" value="#questionTracking.fk_ReferencesID#" />
-          <TABLE width=100%>
-          	<tR>
-            	<TD><SELECT name=approve>
-                	<option value=1>Needs Further Review</option>
-                    <option value=2>Approved</option>
-                    <option value=3>Rejected</option>
-                    
-                    </SELECT> 
-           		</TD>
-                <Td>
-                     <div align="right" >
-                    <input type="hidden" name="submit" />
-                    <button type="submit">Submit Information</button>
-                    </div>
-        		</Td>
-             </tR>
-          </TABLE>
+   			<input type=hidden name="refid" value="#questionTracking.fk_ReferencesID#" />
+        	<table width=100%>
+       			<tr>
+            		<td>
+						<input type="radio" name="approve" value="1">Needs Further Review<br/>
+						<input type="radio" name="approve" value="2">Approve<br/>
+						<input type="radio" name="approve" value="3">Reject<br/>
+           			</td>
+               		<td>
+                   		<div align="right" >
+	                   		<input type="hidden" name="submit" />
+	                   		<button type="submit">Submit Information</button>
+                   		</div>
+        			</td>
+            	</tr>
+          	</table>
         
         <Cfelse>
         <div align="Ceter">
