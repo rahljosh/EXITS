@@ -195,7 +195,7 @@ where refid = #questionTracking.fk_ReferencesID#
         	<table width=100%>
        			<tr>
             		<td>
-						<input type="radio" name="approve" value="1">Needs Further Review<br/>
+						<input type="radio" name="approve" value="1" checked="checked">Needs Further Review<br/>
 						<input type="radio" name="approve" value="2">Approve<br/>
 						<input type="radio" name="approve" value="3">Reject<br/>
            			</td>
