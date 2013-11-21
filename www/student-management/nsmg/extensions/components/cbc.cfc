@@ -2515,7 +2515,6 @@
                 SELECT hostID 
                 FROM smg_students 
                 WHERE active = 1
-                AND host_fam_approved = 4
                 <cfif LEN(vUpcomingProgramList)>
                 	AND programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vUpcomingProgramList#" list="yes"> )
                	</cfif>
