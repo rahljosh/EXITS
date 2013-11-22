@@ -85,12 +85,14 @@
 			 <table width=670 border=0 cellpadding=0 cellspacing=0 align="center">
                         <tr><td colspan="3"><h1>Select your regions below, then click Next:</h1><br><br></td></tr>
                         <tr>
-                            <td valign="top"><input type="radio" name="region_choice" value="6">West<br><img src="https://ise.exitsapplication.com/nsmg/student_app/pics/west.jpg"></td>
-                            <td valign="top"><input type="radio" name="region_choice" value="7"  >Central<br><img src="https://ise.exitsapplication.com/nsmg/student_app/pics/central.jpg"></td>
+							<td width="10%"></td>
+                            <td valign="top"><input type="radio" name="region_choice" value="6">West<br><img src="https://ise.exitsapplication.com/nsmg/student_app/pics/west.jpg" width="45%"></td>
+                            <td valign="top"><input type="radio" name="region_choice" value="7"  >Central<br><img src="https://ise.exitsapplication.com/nsmg/student_app/pics/central.jpg" width="45%"></td>
                         </tr>
                         <tr>
-                            <td valign="top"><input type="radio" name="region_choice" value="8" >South<br><img src="https://ise.exitsapplication.com/nsmg/student_app/pics/south.jpg"></td>
-                            <td valign="top"><input type="radio" name="region_choice" value="9"  >East<br><img src="https://ise.exitsapplication.com/nsmg/student_app/pics/east.jpg"></td>
+							<td width="10%"></td>
+                            <td valign="top"><input type="radio" name="region_choice" value="8" >South<br><img src="https://ise.exitsapplication.com/nsmg/student_app/pics/south.jpg" width="45%"></td>
+                            <td valign="top"><input type="radio" name="region_choice" value="9"  >East<br><img src="https://ise.exitsapplication.com/nsmg/student_app/pics/east.jpg" width="45%"></td>
                            
                         </tr>
                     </table>			

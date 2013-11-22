@@ -46,7 +46,7 @@
 	</tr>
 </table>
 
-<div class="section"><br>
+<div class="section">
 		
 <!--- MEDICAL HISTORY --->
 <table width="660" border=0 cellpadding=1 cellspacing=0 align="center">
@@ -125,7 +125,6 @@
 		<td align="right">&nbsp;</td>
 		<td>&nbsp;</td>	
 	</tr>
-	<tr><td>&nbsp;</td></tr>
    	<tr>
     	<td align="right">
 			<cfif get_health.been_hospitalized is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
@@ -156,7 +155,7 @@
 	<tr><td>&nbsp;</td>
 		<td colspan="3"><em>Please Explain:</em> &nbsp; #get_health.chronicIllness_reason#<br><img src="#vStudentAppRelativePath#pics/line.gif" width="500" height="1" border="0" align="absmiddle"></td>
 	</tr>
-</table><br>
+</table>
 
 <!--- SYSTEMIC REVIEW --->
 <table width="660" border=0 cellpadding=1 cellspacing=0 align="center">
@@ -288,7 +287,6 @@
 		</td>
 		<td><em>Asthma</em></td>	
 	</tr>
-	<tr><td>&nbsp;</td></tr>
 	<tr><td align="right">
 			<cfif get_health.good_health is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
 			<cfif get_health.good_health is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;		
@@ -298,7 +296,7 @@
 	<tr><td>&nbsp;</td>
 		<td colspan="5"><em>If not, please explain.</em> &nbsp; #get_health.good_health_reason#<br><img src="#vStudentAppRelativePath#pics/line.gif" width="500" height="1" border="0" align="absmiddle"></td>
 	</tr>
-</table><br>
+</table>
 
 <!--- ALLERGIES AND SENSITIVITIES --->
 <table width="660" border=0 cellpadding=1 cellspacing=0 align="center">
@@ -381,7 +379,7 @@
 	<tr><td colspan="2"> &nbsp; <em>Please explain.</em> &nbsp; #get_health.pets_list#<br><img src="#vStudentAppRelativePath#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
 		<td colspan="2"> &nbsp; <em>If yes, please list: </em> &nbsp; #get_health.other_allergies_list#<br><img src="#vStudentAppRelativePath#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
 	</tr>	
-</table><br>
+</table>
 
 <!--- Psychological Issues --->
 <table width="670" border=0 cellpadding=2 cellspacing=0 align="center">
@@ -494,7 +492,7 @@
         <td width="90" align="right" colspan="2"></td>
     </tr>
     <tr><td colspan="4"><em>If you answered yes to any of these, please provide a detailed explanation:</em></td></tr>
-    <tr><td colspan="4">#get_health.medical_attention_reason#</td></tr>
+    <tr><td colspan="4">#get_health.medical_attention_reason#&nbsp;</td></tr>
     <tr><td colspan="4"><img src="#vStudentAppRelativePath#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td></tr>
     <tr>
     	<td width="90" align="right">
@@ -513,7 +511,7 @@
             <img src="#vStudentAppRelativePath#pics/line.gif" width="315" height="1" border="0" align="absmiddle">
   		</td>
  	</tr>
-</table><br><br>
+</table>
 
 </div>
 
