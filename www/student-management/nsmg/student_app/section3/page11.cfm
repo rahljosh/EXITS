@@ -99,7 +99,7 @@ function NextPage() {
 		FROM smg_student_app_health 
 		WHERE studentid = '#get_student_info.studentid#'
 	</cfquery>
-</cfif> 
+</cfif>
 
 <!--- HEADER OF TABLE --->
 <table width="100%" cellpadding="0" cellspacing="0">
@@ -121,6 +121,10 @@ function NextPage() {
 <cfinput type="hidden" name="healthid" value="#get_health.healthid#">
 
 <div class="section"><br>
+
+<!--- Check uploaded file - Upload File Button --->
+<cfset doc='page11'>
+<cfinclude template="../check_uploaded_file.cfm">
 		
 <!--- MEDICAL HISTORY --->
 <table width="670" border=0 cellpadding=2 cellspacing=0 align="center">
