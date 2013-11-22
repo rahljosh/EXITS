@@ -13,14 +13,12 @@
 	<link rel="stylesheet" type="text/css" <cfoutput>href="#path#app.css"</cfoutput>>
 	<title>Page [11] - Health Questionnaire</title>
 	<style type="text/css">
-	<!--
-	body {
-		margin-left: 0.3in;
-		margin-top: 0.3in;
-		margin-right: 0.3in;
-		margin-bottom: 0.3in;
-	}
-	-->
+		body {
+			margin-left: 0.3in;
+			margin-top: 0.3in;
+			margin-right: 0.3in;
+			margin-bottom: 0.3in;
+		}
 	</style>	
 </head>
 <body <cfif NOT LEN(URL.curdoc)>onLoad="print()"</cfif>>
@@ -125,14 +123,14 @@
 		<td align="right">&nbsp;</td>
 		<td>&nbsp;</td>	
 	</tr>
-	<tr><td>&nbsp;</td></tr>
 	<tr><td align="right">
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
 		</td>
 		<td colspan="3"><em>Have you ever been hospitalized? </em></td>
 	</tr>
-	<tr><td>&nbsp;</td>
+	<tr>
+		<td>&nbsp;</td>
 		<td colspan="3"><em>Please Explain:</em> &nbsp; <br><img src="#path#pics/line.gif" width="500" height="1" border="0" align="absmiddle"></td>
 	</tr>
     <tr><td align="right">
@@ -141,7 +139,8 @@
 		</td>
 		<td colspan="3"><em>Have you ever had surgery? </em></td>
 	</tr>
-	<tr><td>&nbsp;</td>
+	<tr>
+		<td>&nbsp;</td>
 		<td colspan="3"><em>Please Explain:</em> &nbsp; <br><img src="#path#pics/line.gif" width="500" height="1" border="0" align="absmiddle"></td>
 	</tr>
     <tr><td align="right">
@@ -285,7 +284,6 @@
 		</td>
 		<td><em>Asthma</em></td>	
 	</tr>
-	<tr><td>&nbsp;</td></tr>
 	<tr><td align="right">
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;

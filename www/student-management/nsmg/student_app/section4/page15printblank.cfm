@@ -13,14 +13,12 @@
 	<link rel="stylesheet" type="text/css" <cfoutput>href="#path#app.css"</cfoutput>>
 	<title>Page [15] - Program Agreement</title>
 	<style type="text/css">
-	<!--
-	body {
-		margin-left: 0.3in;
-		margin-top: 0.3in;
-		margin-right: 0.3in;
-		margin-bottom: 0.3in;
-	}
-	-->
+		body {
+			margin-left: 0.3in;
+			margin-top: 0.3in;
+			margin-right: 0.3in;
+			margin-bottom: 0.3in;
+		}
 	</style>	
 </head>
 <body <cfif NOT LEN(URL.curdoc)>onLoad="print()"</cfif>>

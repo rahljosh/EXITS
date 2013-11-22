@@ -83,7 +83,7 @@
         organization and we give our #subject# permission to participate in this program.
     </p>
     
-    <ol>
+    <ol style="font-size:11px; padding-right:10px;">
     
         <li>
             We understand the program is designed to increase understanding among people of the world and is not to be used for the sole purpose of foreign language training.  

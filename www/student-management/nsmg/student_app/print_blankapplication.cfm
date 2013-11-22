@@ -1,5 +1,3 @@
-<cftry>
-
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -10,10 +8,6 @@
 		@page {
 			margin: 0px auto;
 			padding: 0px;
-		}
-		.pageDiv {
-			margin: 0 auto;
-			width: 100%;
 		}
 		table, table tr, table tr td {
 			margin: 0px;
@@ -54,44 +48,44 @@ where companyid = #client.org_code#
 </cfquery>
 
 <!--- SECTION 1 --->
-<div class="pageDiv" style="page-break-after:always;"><cfinclude template="section1/page1printblank.cfm"></div>
-<div class="pageDiv" style="page-break-after:always;"><cfinclude template="section1/page2printblank.cfm"></div>
-<div class="pageDiv" style="page-break-after:always;"><cfinclude template="section1/page3printblank.cfm"></div>
-<div class="pageDiv" style="page-break-after:always;"><cfinclude template="section1/page4printblank.cfm"></div>
-<div class="pageDiv" style="page-break-after:always;"><cfinclude template="section1/page5printblank.cfm"></div>
-<div class="pageDiv" style="page-break-after:always;"><cfinclude template="section1/page6printblank.cfm"></div>
+<div style="page-break-after:always;"><cfinclude template="section1/page1printblank.cfm"></div>
+<div style="page-break-after:always;"><cfinclude template="section1/page2printblank.cfm"></div>
+<div style="page-break-after:always;"><cfinclude template="section1/page3printblank.cfm"></div>
+<div style="page-break-after:always;"><cfinclude template="section1/page4printblank.cfm"></div>
+<div style="page-break-after:always;"><cfinclude template="section1/page5printblank.cfm"></div>
+<div style="page-break-after:always;"><cfinclude template="section1/page6printblank.cfm"></div>
 
 <!--- SECTION 2 --->
-<div class="pageDiv" style="page-break-after:always;"><cfinclude template="section2/page7printblank.cfm"></div>
-<div class="pageDiv" style="page-break-after:always;"><cfinclude template="section2/page8printblank.cfm"></div>
-<div class="pageDiv" style="page-break-after:always;"><cfinclude template="section2/page9printblank.cfm"></div>
-<div class="pageDiv" style="page-break-after:always;"><cfinclude template="section2/page10printblank.cfm"></div>
+<div style="page-break-after:always;"><cfinclude template="section2/page7printblank.cfm"></div>
+<div style="page-break-after:always;"><cfinclude template="section2/page8printblank.cfm"></div>
+<div style="page-break-after:always;"><cfinclude template="section2/page9printblank.cfm"></div>
+<div style="page-break-after:always;"><cfinclude template="section2/page10printblank.cfm"></div>
 
 <!--- SECTION 3 --->
-<div class="pageDiv" style="page-break-after:always;"><cfinclude template="section3/page11printblank.cfm"></div>
-<div class="pageDiv" style="page-break-after:always;"><cfinclude template="section3/page12printblank.cfm"></div>
-<div class="pageDiv" style="page-break-after:always;"><cfinclude template="section3/page13printblank.cfm"></div>
-<div class="pageDiv" style="page-break-after:always;"><cfinclude template="section3/page14printblank.cfm"></div>
+<div style="page-break-after:always;"><cfinclude template="section3/page11printblank.cfm"></div>
+<div style="page-break-after:always;"><cfinclude template="section3/page12printblank.cfm"></div>
+<div style="page-break-after:always;"><cfinclude template="section3/page13printblank.cfm"></div>
+<div style="page-break-after:always;"><cfinclude template="section3/page14printblank.cfm"></div>
 
 <!--- SECTION 4 --->
-<div class="pageDiv" style="page-break-after:always;"><cfinclude template="section4/page15printblank.cfm"></div>
-<div class="pageDiv" style="page-break-after:always;"><cfinclude template="section4/page16printblank.cfm"></div>
-<div class="pageDiv" style="page-break-after:always;"><cfinclude template="section4/page17printblank.cfm"></div>
+<div style="page-break-after:always;"><cfinclude template="section4/page15printblank.cfm"></div>
+<div style="page-break-after:always;"><cfinclude template="section4/page16printblank.cfm"></div>
+<div style="page-break-after:always;"><cfinclude template="section4/page17printblank.cfm"></div>
 
 <!--- Do not display for ESI or Canada Application --->
 <cfif CLIENT.companyID NEQ 14 AND NOT ListFind("14,15,16", get_student_info.app_indicated_program)> 
-	<div class="pageDiv" style="page-break-after:always;"><cfinclude template="section4/page18printblank.cfm"></div>									
+	<div style="page-break-after:always;"><cfinclude template="section4/page18printblank.cfm"></div>									
 </cfif>
 
-<div class="pageDiv" style="page-break-after:always;"><cfinclude template="section4/page19printblank.cfm"></div>
+<div style="page-break-after:always;"><cfinclude template="section4/page19printblank.cfm"></div>
 
 <!--- Do not print guarantees for EF or Canada --->
 <cfif (qGetIntlRepInfo.userID NEQ '10111' AND qGetIntlRepInfo.master_accountid NEQ '10111') OR client.companyid NEQ 13>
 	<!----We don't need to include 20 for ESI---->
     <cfif CLIENT.companyID NEQ 14>
-		<div class="pageDiv" style="page-break-after:always;"><cfinclude template="section4/page20printblank.cfm"></div>								
+		<div style="page-break-after:always;"><cfinclude template="section4/page20printblank.cfm"></div>								
   	</cfif>
-	<div class="pageDiv" style="page-break-after:always;"><cfinclude template="section4/page21printblank.cfm"></div>
+	<div style="page-break-after:always;"><cfinclude template="section4/page21printblank.cfm"></div>
 </cfif>
 
 <cfset URL.display = "print">
@@ -99,14 +93,11 @@ where companyid = #client.org_code#
 
 <!--- Do not display for canada --->
 <cfif CLIENT.companyID NEQ 13>
-	<div class="pageDiv" style="page-break-after:always;"><cfinclude template="section4/page23.cfm"></div>
-	<div class="pageDiv" style="page-break-after:always;"></div>
+	<div style="page-break-after:always;"><cfinclude template="section4/page23.cfm"></div>
+	<div style="page-break-after:always;"></div>
 	<cfinclude template="section4/page24.cfm">
 </cfif>
 
-<cfcatch type="any">
-	<cfinclude template="error_message.cfm">
-</cfcatch>
-</body></html></cftry>
+</body></html>
 
 
