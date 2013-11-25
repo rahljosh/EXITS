@@ -117,6 +117,8 @@
     <cfparam name="FORM.cbcDateComplianceIDList" default="">
 	<!--- Compliance Log --->
     <cfparam name="FORM.compliandeLogIDList" default="">
+	<!--- Compliance Review ---->
+	<cfparam name="FORM.compliance_review" default="">
 	<!----Emails Possibly Sent---->
     <cfparam name="FORM.rmEmail" default="">
     <cfparam name="FORM.arEmail" default="">
@@ -267,7 +269,9 @@
 				host_arrival_orientation = FORM.host_arrival_orientation,
 				compliance_host_arrival_orientation = FORM.compliance_host_arrival_orientation,
 				doc_class_schedule = FORM.doc_class_schedule,
-				compliance_class_schedule = FORM.compliance_class_schedule
+				compliance_class_schedule = FORM.compliance_class_schedule,
+				// Compliance Review
+				compliance_review = FORM.compliance_review
 			);
 			
 			/**********************************************
@@ -454,6 +458,8 @@
 			FORM.compliance_host_arrival_orientation = qGetPlacementHistoryByID.compliance_host_arrival_orientation;
 			FORM.doc_class_schedule = qGetPlacementHistoryByID.doc_class_schedule;
 			FORM.compliance_class_schedule = qGetPlacementHistoryByID.compliance_class_schedule;
+			// Compliance Review
+			FORM.compliance_review = qGetPlacementHistoryByID.compliance_review;
 
 			// Second Visit Compliance Date Check
 			FORM.secondVisitDateCompliance = qGetSecondVisitReport.dateCompliance;
@@ -1651,8 +1657,31 @@
 				
                 <!--- Only Display for Compliance Users --->
                 <cfif APPLICATION.CFC.USER.hasUserRoleAccess(userID=CLIENT.userID, role="studentComplianceCheckList")>
-                
-					<!--- Compliance Section --->
+				
+					<!--- Compliance overall approval section --->
+                    <table width="90%" cellpadding="2" cellspacing="0" class="section" align="center"> 
+                        <tr bgcolor="##edeff4">
+                            <td class="reportTitleLeftClean" width="5%">&nbsp;</td>
+                            <td class="reportTitleLeftClean" width="85%">Compliance</td>
+                            <td class="reportTitleLeftClean" width="15%">&nbsp;</td>
+                        </tr>
+                    </table>
+					
+					<table width="90%" cellpadding="2" cellspacing="0" class="section paperwork" align="center">
+                        <tr class="mouseOverColor"> 
+	                        <td class="paperworkLeftColumn" width="5%">
+	                            <input type="checkbox" name="check_compliance_review" id="check_compliance_review" class="editPage displayNone" onclick="setTodayDate(this.id, 'compliance_review');" <cfif isDate(FORM.compliance_review)>checked</cfif> >
+							</td>
+	                        <td width="45%"><label for="check_compliance_review">Compliance Review</label></td>
+	                        <td width="35%">
+	                            <span class="readOnly displayNone">#DateFormat(FORM.compliance_review, 'mm/dd/yyyy')#</span>
+	                            <input type="text" name="compliance_review" id="compliance_review" class="datePicker editPage displayNone" value="#DateFormat(FORM.compliance_review, 'mm/dd/yyyy')#">
+	                        </td>
+	                        <td width="15%">&nbsp;</td>                   
+	                    </tr>
+                    </table>	
+				
+					<!--- Compliance Notes and History Section --->
                     <table width="90%" cellpadding="2" cellspacing="0" class="section" align="center"> 
                         <tr bgcolor="##edeff4">
                             <td class="reportTitleLeftClean" width="5%">&nbsp;</td>
