@@ -2430,6 +2430,8 @@
                     h.stu_arrival_orientation,
                     h.host_arrival_orientation,
                     h.doc_class_schedule,
+					<!--- Compliance Review --->
+					h.compliance_review,
                     h.actions,
                     h.isActive,
                     h.dateOfChange,
@@ -2599,6 +2601,8 @@
                     compliance_school_accept_date,
                     doc_school_sign_date,
                     compliance_school_sign_date,
+					<!--- Compliance Review --->
+					compliance_review,
                     <!--- Arrival Orientation --->
                     stu_arrival_orientation,
                     compliance_stu_arrival_orientation,
@@ -2789,7 +2793,8 @@
         <cfargument name="host_arrival_orientation" default="" hint="host_arrival_orientation is not required">
         <cfargument name="compliance_host_arrival_orientation" default="" hint="compliance_host_arrival_orientation is not required">
         <cfargument name="doc_class_schedule" default="" hint="doc_class_schedule is not required">    
-        <cfargument name="compliance_class_schedule" default="" hint="compliance_class_schedule is not required">    
+        <cfargument name="compliance_class_schedule" default="" hint="compliance_class_schedule is not required">
+		<cfargument name="compliance_review" default="" hint="compliance_review is not required">  
 		
         <cfscript>
 			// Check if placement date has changed
@@ -2880,6 +2885,8 @@
                     compliance_school_accept_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_school_accept_date#" null="#NOT IsDate(ARGUMENTS.compliance_school_accept_date)#">,
                     doc_school_sign_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_school_sign_date#" null="#NOT IsDate(ARGUMENTS.doc_school_sign_date)#">,
                     compliance_school_sign_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_school_sign_date#" null="#NOT IsDate(ARGUMENTS.compliance_school_sign_date)#">,
+					<!--- Compliance Review --->
+					compliance_review = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_review#" null="#NOT IsDate(ARGUMENTS.compliance_review)#">,
 					<!--- Arrival Orientation --->
                     stu_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.stu_arrival_orientation#" null="#NOT IsDate(ARGUMENTS.stu_arrival_orientation)#">,
                     compliance_stu_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_stu_arrival_orientation#" null="#NOT IsDate(ARGUMENTS.compliance_stu_arrival_orientation)#">,

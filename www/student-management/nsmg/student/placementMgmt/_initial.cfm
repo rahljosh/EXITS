@@ -67,6 +67,11 @@
 				representativeDistanceInMiles=qGetPlacementHistoryByID.hfSupervisingDistance
 			);
 			
+			// Check if compliance_review is checked
+			if (NOT IsDate(qGetPlacementHistoryByID.compliance_review)) {
+				vIsPlacementCompliant &= "<p style='color:red;'>Compliance Review must be checked off in paperwork before you can approve this placement.</p>";
+			}
+			
 		}
 		
 		// Check if Double Placement is compliant - Office users
