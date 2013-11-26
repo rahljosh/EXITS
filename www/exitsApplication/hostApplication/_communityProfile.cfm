@@ -106,9 +106,9 @@
             }
 
 			// point_interest
-            if( NOT LEN(TRIM(FORM.point_interest)) ) {
-                SESSION.formErrors.Add("Please indicate any interests in your area.");
-            }
+            //if( NOT LEN(TRIM(FORM.point_interest)) ) {
+            //    SESSION.formErrors.Add("Please indicate any interests in your area.");
+          //  }
         </cfscript>
     
 		<cfif NOT SESSION.formErrors.length()>
@@ -120,14 +120,21 @@
 					destination=FORM.nearbigCity
 				);
         	</cfscript>
-
+	<cfif cgi.REMOTE_HOST eq '184.155.135.147'>
+    <cfoutput>
+    	#vCityDistance#
+      
+    </cfoutput>
+    </cfif>
             <cfquery datasource="#APPLICATION.DSN.Source#">
                 UPDATE 
                 	smg_hosts
                 SET 
                     population = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.population#">,
                     cityWebsite = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.cityWebsite#">,
+                    <Cfif val(vCityDistance)>
                     near_city_dist = <cfqueryparam cfsqltype="cf_sql_varchar" value="#vCityDistance#">,
+                    </Cfif>
                     nearbigCity = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LEFT(FORM.nearbigCity, 255)#">,
                     major_air_code = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.major_air_code#">,
                     wintertemp = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.wintertemp#">,
