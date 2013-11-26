@@ -1573,12 +1573,25 @@
                                             </td>
                                         </tr>
                                         <!--- Housing --->
+										<tr>
+											<td class="style1" align="right" width="30%"><strong>Is Housing Provided?:</strong></td>
+                                            <td class="style1" align="left" width="70%">
+												<cfif qCandidatePlaceCompany.isHousingProvided EQ 1>
+                                                	Yes
+                                             	<cfelseif qCandidatePlaceCompany.isHousingProvided EQ 2>
+													Other (third party)
+												<cfelse>
+													No
+												</cfif>
+											</td>
+										</tr>
                                         <tr>
-                                        	<td class="style1" align="right" width="30%"><strong>Housing Arrangements:</strong></td>
+                                        	<td class="style1" align="right" width="30%"><strong>Housing:</strong></td>
                                             <td class="style1" align="left" width="70%">
                                             	<cfif qCandidatePlaceCompany.isHousingProvided EQ 1>
-                                                	Housing on premises
+                                                	On premises
                                              	<cfelse>
+													Not on premises - alternate housing found?: 
                                                 	<span class="readOnly">
                                                     	<cfif VAL(qGetCandidate.housingArrangedPrivately)>
                                                         	Yes
