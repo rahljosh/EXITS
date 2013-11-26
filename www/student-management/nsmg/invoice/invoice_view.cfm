@@ -614,7 +614,7 @@
                             <font color="##FF0000">(#LSCurrencyFormat(qFindDepositInvoice.amount_due,'local')#)</font>
                         </td>
                         <td align="right">
-                            #LSCurrencyFormat(qGetTotalStudent.total_stu_amount - 500, 'local')#
+                            #LSCurrencyFormat(qGetTotalStudent.total_stu_amount - qFindDepositInvoice.amount_due, 'local')#
                         </td>
                     </tr>
                 </cfif>
