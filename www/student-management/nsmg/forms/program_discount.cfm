@@ -170,6 +170,16 @@ If you need to remove an amount, set it to 0 (zero).</p>
     WHERE
     	insutypeID = 14
     </cfquery>
+    
+    <cfquery name="updateUsersTable" datasource="MySQL">
+    UPDATE
+    	smg_users
+    SET
+    	extra_insurance_typeid = #form.insuranceID#,
+        extra_accepts_sevis_fee = #form.includeSevis#
+    WHERE
+    	userID = #url.userid#
+    </cfquery>
 	
     <p align="center"><span class="get_attention"><font color="##FF0000"><b> charges were updated / added Successfully!! </b></font></span><br /><br /></p>
     
@@ -197,7 +207,7 @@ If you need to remove an amount, set it to 0 (zero).</p>
 
 <!--- get insurance type AND insurance cost --->
 <cfquery name="get_insutypes" datasource="MySql">
-	SELECT type, wt
+	SELECT insutypeID, type, wt
 	FROM smg_insurance_type
     WHERE insutypeID = 14
 </cfquery>
@@ -302,6 +312,7 @@ If you need to remove an amount, set it to 0 (zero).</p>
         <tr>
             <td colspan=2>											
                 <input name="insuranceType" type="text" value="#get_insutypes.type#" size="30" disabled="disabled">
+                <input type="hidden" name="insuranceID" value="#get_insutypes.insutypeID#">
             </td>
         </tr>
         <tr bgcolor="00003C">
