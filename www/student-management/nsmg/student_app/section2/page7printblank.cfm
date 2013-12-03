@@ -145,6 +145,9 @@
 	        <td><em>What grade level will student have completed upon arrival in the USA?</em></td>
         </cfif>	
         <td>
+			<cfif companyID EQ 6>
+				<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> 8<sup>th</sup> 
+			</cfif>
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> 9<sup>th</sup> 
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> 10<sup>th</sup>
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> 11<sup>th</sup>
