@@ -22,31 +22,29 @@
 </cfif>
 
 <script type="text/javascript">
-<!--
-function CheckLink()
-{
-  if (document.page7.CheckChanged.value != 0)
-  {
-    if (confirm("You have made changes on this page that have not been submited.\n\These changes will be lost if you navigate away from this page.\n\Click OK to contine and discard changes, or click cancel and submit to save your changes."))
-      return true;
-    else
-      return false;
-  }
-}
-function DataChanged()
-{
-  document.page7.CheckChanged.value = 1;
-}
-function NextPage() {
-	document.page7.action = '?curdoc=section2/qr_page7&next';
+
+	function CheckLink() {
+  		if (document.page7.CheckChanged.value != 0) {
+    		if (confirm("You have made changes on this page that have not been submited.\n\These changes will be lost if you navigate away from this page.\n\Click OK to contine and discard changes, or click cancel and submit to save your changes."))
+      			return true;
+    		else
+      			return false;
+  		}
 	}
-<!--
-function change(href)
-{
-	window.location.href = href;
-}
-//-->
-</SCRIPT>
+
+	function DataChanged() {
+		document.page7.CheckChanged.value = 1;
+	}
+
+	function NextPage() {
+		document.page7.action = '?curdoc=section2/qr_page7&next';
+	}
+
+	function change(href) {
+		window.location.href = href;
+	}
+
+</script>
 
 <cfinclude template="../querys/get_student_info.cfm">
 
@@ -170,6 +168,9 @@ function change(href)
 	        <td><em>What grade level will student have completed upon arrival in the USA?</em></td>
         </cfif>	
 		<td>
+			<cfif companyID EQ 6>
+				<input type="radio" name="grades" id="grade8" value="8" onchange="DataChanged();" style="margin:2px;" <cfif grades EQ 8> checked="yes" </cfif>> <label for="grade8">8<sup>th</sup></label>
+			</cfif>
         	<input type="radio" name="grades" id="grade9" value="9" onchange="DataChanged();" style="margin:2px;" <cfif grades EQ 9> checked="yes" </cfif>> <label for="grade9">9<sup>th</sup></label>
             <input type="radio" name="grades" id="grade10" value="10" onchange="DataChanged();" style="margin:2px;" <cfif grades EQ 10> checked="yes" </cfif>> <label for="grade10">10<sup>th</sup></label>
             <input type="radio" name="grades" id="grade11" value="11" onchange="DataChanged();" style="margin:2px;" <cfif grades EQ 11> checked="yes" </cfif>> <label for="grade11">11<sup>th</sup></label>
