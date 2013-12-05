@@ -7,7 +7,7 @@
 	<cfset REQUEST.URLPath = CGI.SCRIPT_NAME & "?curdoc=calendar/index">
     <cfset REQUEST.URLFullPath = CGI.SCRIPT_NAME & "?" & CGI.QUERY_STRING>   
 	<!--- Allowed ID List | Global Administrators, Gary and Bill --->
-	<cfset REQUEST.AllowedIDs = "12431,8731"> 
+	<cfset REQUEST.AllowedIDs = "12431,8731,18061"> 
 
 	<!--- Set up repeat types. --->
 	<cfset REQUEST.RepeatTypes = QueryNew( "id, name" ) />
