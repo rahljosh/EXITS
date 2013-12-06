@@ -174,7 +174,7 @@
     <script type="text/javascript" src="linked/js/basescript.js "></script> <!-- BaseScript -->
 </head>
 <body>
-
+<cfinclude template="analytics.cfm">
 <script type="text/javascript">
 	// Avoid two selections on quick search
 	var quickSearchValidation = function() {		
