@@ -513,6 +513,17 @@
                 Total
             </td>
         </tr>
+        
+        <cfif client.companyid EQ 14>
+        
+            <tr>
+                <td></td>
+                <td colspan="3">
+                    <font color="##FF0000">Note: If the charge for Insurance and Sevis is $0.00, it means that they are included in the program fee.</font>
+                </td>
+            </tr>
+        
+        </cfif>
 
         <cfloop query="qGetInvoiceInfo">
         
