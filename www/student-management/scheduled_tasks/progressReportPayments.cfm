@@ -71,7 +71,8 @@ and hh.dateplaced is not null
 and hh.stu_arrival_orientation is not null
 and hh.host_arrival_orientation is not null
 and sppmt.specialPaymentID is null
-and fl.arrival_date < date_add(prog.preayp_date, INTERVAL 31 DAY)
+and ((fl.arrival_date < date_add(prog.preayp_date, INTERVAL 31 DAY))
+	or (EXISTS (select * from smg_users_payments pmt where st.studentID = pmt.studentID and transtype = "supervision")))
 and (
 	(pr.pr_month_of_report in (1,2) and (not EXISTS(select * from smg_users_payments pmt where pmt.paymenttype = 5 and st.studentID = pmt.studentID)) and
 	EXISTS(select * from progress_reports pr where st.studentID = pr.fk_student and pr.pr_month_of_report = 1 and pr.fk_reporttype = 1 and pr.pr_ny_approved_date is not null) and
@@ -163,6 +164,7 @@ and hh.stu_arrival_orientation is not null
 and hh.host_arrival_orientation is not null
 and sppmt.specialPaymentID is null
 and fl.arrival_date >= date_add(prog.preayp_date, INTERVAL 31 DAY)
+and not EXISTS (select * from smg_users_payments pmt where st.studentID = pmt.studentID and transtype = "supervision")
 and (
 	(pr.pr_month_of_report = 2 and (not EXISTS(select * from smg_users_payments pmt where pmt.paymenttype = 5 
 									and st.studentID = pmt.studentID)) and
