@@ -413,13 +413,5 @@
         </td>
       </tr>
      </table>
-     <Br /><br />
-     <table width="800" align="center" border="0" cellpadding="3" cellspacing="0">
-     <tr>
-     	<td align="center" bgcolor="##085dad">
-        	<font color="##FFFFFF">www.iseusa.com</font>
-        </td>
-      </tr>
-     </table>
               
 </cfoutput>
