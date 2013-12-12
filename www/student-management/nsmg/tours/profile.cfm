@@ -25,6 +25,9 @@
     <cfparam name="FORM.studentID" default="">
     <cfparam name="FORM.tripID" default="">
     <cfparam name="FORM.newtripID" default="">
+    <cfparam name="FORM.studentEmail" default="">
+    <cfparam name="FORM.hostEmail" default="">
+    <cfparam name="FORM.otherEmail" default="">
     <cfparam name="FORM.emailAddress" default="">
     <!--- Cancelation --->
 	<cfparam name="FORM.dateCanceled" default="">
@@ -111,7 +114,8 @@
             s.familylastname, 
             s.dob,
             s.cell_phone,
-            s.sex, 
+            s.sex,
+            s.areaRepID,
             h.local_air_code,
             h.major_air_code, 
             h.familylastname as hostLast,
@@ -121,6 +125,7 @@
             h.state as hostState,
             h.address as hostAddress,
             h.zip as hostZip,
+            rm.userID AS rmID,
             c.pm_email,
 			<!--- Get a sum of multiple payments (deposit + balance) --->
             ( 
@@ -144,18 +149,98 @@
                 AND	
                     authIsSuccess = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
         LEFT OUTER JOIN 
-        	smg_students s on s.studentID = st. studentID
+        	smg_students s on s.studentID = st.studentID
         LEFT OUTER JOIN
         	smg_tours td on td.tour_id = st.tripID
         LEFT OUTER JOIN 
         	smg_hosts h on h.hostid = s.hostid
       	LEFT OUTER JOIN
         	smg_companies c ON c.companyID = s.companyID
+      	LEFT OUTER JOIN
+        	smg_users rm ON rm.userID = (SELECT userID FROM user_access_rights WHERE userType = 5 AND regionID = s.regionAssigned LIMIT 1)
+            AND rm.active = 1
         WHERE 
             st.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.studentID)#">
         AND	
             st.tripID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.tripID)#">
     </cfquery>
+    
+    <!--- PHP needs to get this information from another table --->
+    <cfif qGetRegistrationInfo.companyID EQ 6>
+    	<cfquery name="qGetRegistrationInfo" datasource="#APPLICATION.DSN#">
+        	SELECT 
+            	td.*,
+                st.id,             
+                st.tripID,
+                st.totalCost,
+                st.dateDepositPaid,
+                st.dateFullyPaid,
+                st.med,
+                st.date, 
+                st.paid, 
+                st.permissionForm,
+                st.stuNationality, 
+                st.email, 
+                st.person1, 
+                st.person2, 
+                st.person3, 
+                st.nationality, 
+                st.dateOnHold,
+                st.holdReason, 
+                st.dateCanceled,
+                st.refundAmount,
+                st.refundNotes,
+                st.emergencyContactName,
+                st.emergencyContactPhone,
+                td.tour_name,
+                ap.ID AS applicationPaymentID,
+                ap.amount,            
+                s.studentID,
+                s.companyID, 
+                s.firstname, 
+                s.familylastname, 
+                s.dob,
+                s.cell_phone,
+                s.sex,
+                php.areaRepID,
+                h.local_air_code,
+                h.major_air_code, 
+                h.familylastname as hostLast,
+                h.phone as hostPhone,
+                h.email as hostEmail, 
+                h.city as hostCity, 
+                h.state as hostState,
+                h.address as hostAddress,
+                h.zip as hostZip,
+            	rm.userID AS rmID,
+            	c.pm_email,
+				<!--- Get a sum of multiple payments (deposit + balance) --->
+                ( 
+                    SELECT 
+                        sum(amount)
+                    FROM
+                        applicationPayment ap
+                    WHERE
+                        ap.foreignID = st.ID
+                    AND
+                        ap.foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="student_tours">
+                    AND	
+                        authIsSuccess = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                ) AS totalReceived	
+	 		FROM student_tours st
+        	INNER JOIN applicationPayment ap ON ap.foreignID = st.ID
+     			AND foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="student_tours">
+          		AND	authIsSuccess = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+        	LEFT OUTER JOIN smg_students s on s.studentID = st.studentID
+            LEFT OUTER JOIN php_students_in_program php ON php.studentID = st.studentID
+        	LEFT OUTER JOIN smg_tours td on td.tour_id = st.tripID
+        	LEFT OUTER JOIN smg_hosts h on h.hostid = php.hostid
+      		LEFT OUTER JOIN smg_companies c ON c.companyID = s.companyID
+      		LEFT OUTER JOIN smg_users rm ON rm.userID = 7630 <!--- The RM for PHP is always Luke Davis --->
+        	WHERE st.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.studentID)#">
+        	AND st.tripID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.tripID)#">
+    	</cfquery>
+    </cfif>
     
     <cfquery name="qGetPaymentHistory" datasource="#APPLICATION.DSN#">
     	SELECT
@@ -221,6 +306,9 @@
 		
 		// Set Balance Due 
 		FORM.balanceDue = qGetRegistrationInfo.totalCost - qGetRegistrationInfo.totalReceived;
+		
+		qGetAreaRepInfo = APPLICATION.CFC.USER.getUsers(userID=qGetRegistrationInfo.areaRepID);
+		qGetRegionalManagerInfo = APPLICATION.CFC.USER.getUsers(userID=qGetRegistrationInfo.rmID);
 	</cfscript>
     
     <!----Get Siblings on tours---->
@@ -269,7 +357,7 @@
     	<cfcase value="resendEmail">
     
 			<!--- Resend Email --->
-            <cfif IsValid("email", FORM.emailAddress)>
+            <cfif ( IsValid("email", FORM.emailAddress) OR IsValid("email", FORM.hostEmail) OR IsValid("email", FORM.studentEmail) )>
                     
                 <!--- trip Permission --->
                 <cfdocument format="PDF" filename="#APPLICATION.PATH.temp#permissionForm_#VAL(qGetRegistrationInfo.studentID)#.pdf" overwrite="yes" margintop="0.2" marginbottom="0.2">
@@ -298,6 +386,10 @@
                     </p>
                     
                     <p>
+                        It is your responsibility as the student to make sure that this permission form is filled out in its entirety. Once the form is complete, you MUST forward a copy of the completed form to BOTH MPD Tours <cfif qGetRegistrationInfo.companyID EQ 6>the Program Director, Luke Davis: luke@phpusa.com<cfelse>and your Regional Manager</cfif>.
+                    </p>
+                    
+                    <p>
                         Please return the permission form by:<br />
                         <ul>
                             <li>email: mpdtours@exitsapplication.com</li>
@@ -323,20 +415,53 @@
                         Fax: 1-(718)-439-8565
                     </p>
                     </cfoutput>
-                </cfsavecontent>   
+                </cfsavecontent>
+                
+                <cfscript>
+					vEmailTo = "";
+					if (IsValid("email",FORM.studentEmail)) {
+						vEmailTo = vEmailTo & FORM.studentEmail;	
+					}
+					if (IsValid("email",FORM.hostEmail)) {
+						if (LEN(vEmailTo)) {
+							vEmailTo = vEmailTo & ",";	
+						}
+						vEmailTo = vEmailTo & FORM.hostEmail;
+					}
+					if (LEN(FORM.otherEmail) AND isValid("email",FORM.emailAddress)) {
+						if (LEN(vEmailTo)) {
+							vEmailTo = vEmailTo & ",";	
+						}
+						vEmailTo = vEmailTo & FORM.emailAddress;
+					}
+				</cfscript>
+                
+                <!--- This is to change the email headers based on the student's company --->
+                <cfquery name="qGetCompany" datasource="#APPLICATION.DSN#">
+                	SELECT *
+                    FROM smg_companies
+                    WHERE companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetRegistrationInfo.companyID)#">
+                </cfquery>
+                <cfset currentCompanyID = CLIENT.companyID>
+                <cfset currentCompanyName = CLIENT.companyName>
+                <cfset CLIENT.companyID = qGetCompany.companyID>
+                <cfset CLIENT.companyName = qGetCompany.companyName>
                 
                 <cfinvoke component="nsmg.cfc.email" method="send_mail">
                     <cfinvokeargument name="email_from" value="<mpdtours@exitsapplication.com> (Trip Support)">
-                    <cfinvokeargument name="email_to" value="#FORM.emailAddress#">
+                    <cfinvokeargument name="email_to" value="#vEmailTo#">
                     <cfinvokeargument name="email_bcc" value="trips@iseusa.com">
                     <cfinvokeargument name="email_subject" value="Your #qGetRegistrationInfo.tour_name# trip Details">
                     <cfinvokeargument name="email_message" value="#stuEmailMessage#">
                     <cfinvokeargument name="email_file" value="#APPLICATION.PATH.temp#permissionForm_#VAL(qGetRegistrationInfo.studentID)#.pdf">
                     <cfinvokeargument name="email_file2" value="#APPLICATION.PATH.uploadedFiles#tours/#qGetRegistrationInfo.packetfile#">
-                </cfinvoke>	
+                </cfinvoke>
+                
+                <cfset CLIENT.companyID = currentCompanyID>
+                <cfset CLIENT.companyName = currentCompanyName>
             	
                 <cfscript>
-					SESSION.pageMessages.Add("Forms have been resent to #FORM.emailAddress#");
+					SESSION.pageMessages.Add("Forms have been resent to #vEmailTo#");
 					
 					Location("#CGI.SCRIPT_NAME#?curdoc=tours/profile&studentID=#FORM.studentID#&tripID=#FORM.tripID#", "no");
 				</cfscript>
@@ -740,6 +865,7 @@
                 <cfinvoke component="nsmg.cfc.email" method="send_mail">
                     <cfinvokeargument name="email_from" value="<mpdtours@exitsapplication.com> (Trip Support)">
                     <cfinvokeargument name="email_to" value="#FORM.emailAddress#">
+                    <cfinvokeargument name="email_cc" value="#qGetRegistrationInfo.hostEmail#">
                     <cfinvokeargument name="email_bcc" value="trips@iseusa.com">
                     <cfinvokeargument name="email_subject" value="Your #qGetRegistrationInfo.tour_name# trip - Payment Received">
                     <cfinvokeargument name="email_message" value="#stuEmailMessage#">
@@ -1087,6 +1213,34 @@
                     <span class="bigLabelBlock">#qGetRegistrationInfo.refundNotes#</span>
                 </cfif>
             </td>
+            <!--- Regional Manager --->
+            <td valign="top" <cfif IsDate(qGetRegistrationInfo.dateCanceled)>background="pics/canceled.jpg"</cfif>>
+                <span class="greyTextBlock">Regional Manager</span>
+                <span class="bigLabelBlock">#qGetRegionalManagerInfo.firstName# #qGetRegionalManagerInfo.lastName#</span>
+                
+                <span class="greyTextBlock">Regional Manager Phone</span>
+                <span class="bigLabelBlock">#qGetRegionalManagerInfo.phone#</span>
+
+                <span class="greyTextBlock">Regional Manager Address</span>
+                <span class="bigLabelBlock">#qGetRegionalManagerInfo.address#<br /> #qGetRegionalManagerInfo.city#, #qGetRegionalManagerInfo.state# #qGetRegionalManagerInfo.zip#</span>
+                
+                <span class="greyTextBlock">Regional Manager Email Address</span>
+                <span class="bigLabelBlock">#qGetRegionalManagerInfo.email#</span>
+            </td>
+            <!--- Area Rep --->
+            <td valign="top" <cfif IsDate(qGetRegistrationInfo.dateCanceled)>background="pics/canceled.jpg"</cfif>>
+                <span class="greyTextBlock">Area Rep</span>
+                <span class="bigLabelBlock">#qGetAreaRepInfo.firstName# #qGetAreaRepInfo.lastName#</span>
+                
+                <span class="greyTextBlock">Area Rep Phone</span>
+                <span class="bigLabelBlock">#qGetAreaRepInfo.phone#</span>
+
+                <span class="greyTextBlock">Area Rep Address</span>
+                <span class="bigLabelBlock">#qGetAreaRepInfo.address#<br /> #qGetAreaRepInfo.city#, #qGetAreaRepInfo.state# #qGetAreaRepInfo.zip#</span>
+                
+                <span class="greyTextBlock">Area Rep Email Address</span>
+                <span class="bigLabelBlock">#qGetAreaRepInfo.email#</span>
+            </td>
             <!--- Host Family --->
             <td valign="top" <cfif IsDate(qGetRegistrationInfo.dateCanceled)>background="pics/canceled.jpg"</cfif>>
                 <span class="greyTextBlock">Host Family </span>
@@ -1101,7 +1255,7 @@
                 <span class="greyTextBlock">Host Email Address</span>
                 <span class="bigLabelBlock">#qGetRegistrationInfo.hostEmail#</span>
 
-                <span class="greyTextBlock">Prefered Airport &nbsp; / &nbsp; Alt. Airport</span>
+                <span class="greyTextBlock">Preferred Airport &nbsp; / &nbsp; Alt. Airport</span>
                 <span class="bigLabelBlock">
                     <cfif NOT LEN(qGetRegistrationInfo.local_air_code)>
                         none
@@ -1545,7 +1699,12 @@
                         </tr> 
                         <tr>
                             <td width="30%" class="greyTextRight">Email</td>
-                            <td width="70%"><input type="text" name="emailAddress" value="#FORM.emailAddress#" class="largeField"/></td>
+                            <td width="70%">
+                            	<input type="checkbox" name="studentEmail" value="#FORM.emailAddress#" checked="checked" />Email Student: #FORM.emailAddress#<br/>
+                            	<input type="checkbox" name="hostEmail" value="#qGetRegistrationInfo.hostEmail#" checked="checked" />Email Host: #qGetRegistrationInfo.hostEmail#<br/>
+                                <input type="checkbox" name="otherEmail" value="1" />Other Email(s): 
+                                <input type="text" name="emailAddress" value="" class="largeField"/>
+                          	</td>
                         </tr> 
                         <tr>
                             <td colspan="2" align="center" valign="top"><input type="submit" value="Resend Email" /></td>

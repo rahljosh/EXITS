@@ -39,12 +39,32 @@
         SELECT 
         	studentID,
         	firstName, 
-            familylastname
+            familylastname,
+            areaRepID,
+            regionAssigned
         FROM 
         	smg_students
         WHERE
         	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentID#">
     </cfquery>
+    
+    <cfquery name="qGetRegionalManager" datasource="#APPLICATION.dsn#">
+        SELECT 
+            u.firstName,
+            u.lastName,
+            u.phone,
+            u.email
+        FROM 
+            smg_users u
+        INNER JOIN 
+            user_access_rights uar ON u.userid = uar.userid                  
+        WHERE 
+            u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+        AND 
+            uar.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="5">
+        AND 
+            uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.regionAssigned#">
+	</cfquery>
 
     <cfquery name="qGetTripDetails" datasource="#APPLICATION.DSN#">
         SELECT 
@@ -62,6 +82,7 @@
                 // Get all the missing items in a list
                 SESSION.formErrors.Add("Please explain why you don't think the student should be able to go");
             }
+			qGetAreaRep = APPLICATION.CFC.USER.getUsers(userID=qGetStudentInfo.areaRepID);
 		</cfscript>
 
         <!--- // Check if there are no errors --->
@@ -94,7 +115,7 @@
     
             <cfinvoke component="nsmg.cfc.email" method="send_mail">
                 <cfinvokeargument name="email_from" value="<trips@iseusa.com> (Trip Support)">
-                <cfinvokeargument name="email_to" value="tom@iseusa.com">
+                <cfinvokeargument name="email_to" value="tom@iseusa.com,#qGetRegionalManager.email#,#qGetAreaRep.email#">
                 <cfinvokeargument name="email_bcc" value="trips@iseusa.com">
                 <cfinvokeargument name="email_subject" value="#qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# - #qGetTripDetails.tour_name# - Student on Hold">
                 <cfinvokeargument name="email_message" value="#holdEmailMessage#">

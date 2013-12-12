@@ -59,35 +59,67 @@
             u.phone as areaRep_phone,
             school.schoolname,
             school.principal
-        FROM 
-            smg_students s     
-        LEFT OUTER JOIN 
-            smg_hosts h on h.hostid = s.hostid
-        LEFT OUTER JOIN
-            smg_users u on u.userid = s.arearepid
-        LEFT OUTER JOIN
-            smg_schools school on school.schoolid = s.schoolid
-        WHERE 
-            s.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.studentID)#"> 
+        FROM smg_students s     
+        LEFT OUTER JOIN smg_hosts h on h.hostid = s.hostid
+        LEFT OUTER JOIN smg_users u on u.userid = s.arearepid
+        LEFT OUTER JOIN smg_schools school on school.schoolid = s.schoolid
+        WHERE s.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.studentID)#"> 
     </cfquery>
     
-	<cfquery name="qGetRegionalManager" datasource="#APPLICATION.dsn#">
-        SELECT 
-            u.firstName,
-            u.lastName,
-            u.phone,
-            u.email
-        FROM 
-            smg_users u
-        INNER JOIN 
-            user_access_rights uar ON u.userid = uar.userid                  
-        WHERE 
-            u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-        AND 
-            uar.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="5">
-        AND 
-            uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentFullInformation.regionAssigned#">
-	</cfquery>
+    <!--- PHP needs to get this information from another table --->
+    <cfif qGetStudentFullInformation.companyID EQ 6>
+        <cfquery name="qGetStudentFullInformation" datasource="#APPLICATION.DSN#">
+            SELECT 
+                s.studentID,
+                s.companyID,
+                s.familylastname, 
+                s.firstname,  
+                s.med_allergies, 
+                s.other_allergies,
+                s.dob, 
+                s.email, 
+                s.cell_phone, 
+                s.sex, 
+                s.regionassigned,  
+                s.countrybirth, 
+                s.countrycitizen, 
+                s.med_allergies, 
+                s.other_allergies, 
+                s.countryresident, 
+                h.hostid, 
+                h.airport_city, 
+                h.airport_state, 
+                h.local_air_code, 
+                h.major_air_code, 
+                h.familylastname hostlast, 
+                h.motherfirstname, 
+                h.fatherfirstname, 
+                h.motherlastname, 
+                h.fatherlastname, 
+                h.address, 
+                h.address2, 
+                h.city, 
+                h.state, 
+                h.zip, 
+                h.email as hostemail, 
+                h.phone as hostphone, 
+                h.mother_cell, 
+                h.father_cell, 
+                h.fatherworkphone, 
+                h.motherworkphone,
+                u.firstname as areaRep_first, 
+                u.lastname as areaRep_last, 
+                u.phone as areaRep_phone,
+                school.schoolname,
+                school.principal
+            FROM smg_students s
+            LEFT OUTER JOIN php_students_in_program php ON php.studentID = s.studentID   
+            LEFT OUTER JOIN smg_hosts h on h.hostid = php.hostid
+            LEFT OUTER JOIN smg_users u on u.userid = php.arearepid
+            LEFT OUTER JOIN smg_schools school on school.schoolid = php.schoolid
+            WHERE s.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.studentID)#"> 
+        </cfquery>
+  	</cfif>
     
  	<cfquery name="qGetTrip" datasource="#APPLICATION.DSN#">
     	SELECT
@@ -107,7 +139,7 @@
     <cfif ListFind('1,2,3,4,5,12',qGetStudentFullInformation.companyID)><cfset companyName = 'ISE'>
     <cfelseif ListFind('10', qGetStudentFullInformation.companyID)><cfset companyName = 'CASE'>
     <cfelseif ListFind('14', qGetStudentFullInformation.companyID)><cfset companyName = 'ESI'>
-    <cfelseif ListFind('6', qGetStudentFullInformation.companyID)><cfset companyName = 'ESI'>
+    <cfelseif ListFind('6', qGetStudentFullInformation.companyID)><cfset companyName = 'PHP'>
     </cfif>
     
 </cfsilent>
@@ -341,6 +373,11 @@
             <td align="center"><img src="https://ise.exitsapplication.com/nsmg/pics/signatures.jpg" /></td>
         </tr>
         <tr>
+        	<td>
+            	It is your responsibility as the student to make sure that this permission form is filled out in its entirety. Once the form is complete, you MUST forward a copy of the completed form to BOTH MPD Tours <cfif companyName EQ "PHP">the Program Director, Luke Davis: luke@phpusa.com<cfelse>and your Regional Manager</cfif>
+            </td>
+        </tr>
+        <tr>
             <td>
                 I have read and understand all the Terms and Conditions. All parties acknowledge that while on tour, #companyName# and MPD Tours America, Inc. or its representatives may take any action deemed necessary to protect student safety and well being, including medical treatment at the student's expense and transportation home at the student's expense. 
                 <br />
@@ -379,24 +416,20 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="signatureLine" valign="bottom">_______________________________</td>
+                    	<td class="signatureLine" valign="bottom">_______________________________</td>
                         <td>&nbsp;</td>
-                        <td class="signatureLine" valign="bottom">_______________________________</td>
+                        <td>&nbsp;</td>
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>
                     </tr>
-                    <tr>                    
-                        <td valign="top">
-                        	#qGetRegionalManager.firstName# #qGetRegionalManager.lastName# <Br />
-                            #qGetRegionalManager.phone#<br />
-                            <font size="-2"><em>Regional Manager</em></font>
-                        </td> 
-                        <td>&nbsp;</td> 
+                    <tr>
 						<td valign="top">
                         	#qGetStudentFullInformation.areaRep_first# #qGetStudentFullInformation.areaRep_last# <Br />
                             #qGetStudentFullInformation.areaRep_phone#<br />
                             <font size="-2"><em>Area Representative</em></font>
                         </td>
+                        <td>&nbsp;</td> 
+                        <td>&nbsp;</td>
                         <td>&nbsp;</td>
                         <td>&nbsp;</td>                                     
                     </tr>
@@ -409,7 +442,7 @@
      <tr>
      	<td align="center">
         	<B>MPD Tours America, Inc. </B> 9101 Shore Road, ##203, Brooklyn, NY 11209<br />
-            <a href="mailto:#APPLICATION.MPD.email#">#APPLICATION.MPD.email#</a>&nbsp;&nbsp;|&nbsp;&nbsp;1-800-983-7780&nbsp;&nbsp;|&nbsp;&nbsp;FAX: 1-718-439-8565
+            <a href="mailto:trips@iseusa.com">trips@iseusa.com</a>&nbsp;&nbsp;|&nbsp;&nbsp;1-800-983-7780&nbsp;&nbsp;|&nbsp;&nbsp;FAX: 1-718-439-8565
         </td>
       </tr>
      </table>
