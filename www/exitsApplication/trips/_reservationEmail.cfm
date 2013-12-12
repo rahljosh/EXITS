@@ -37,6 +37,12 @@
         AND
         	uar.userType = <cfqueryparam cfsqltype="cf_sql_integer" value="5">
 	</cfquery>
+    
+    <cfquery name="qGetAreaRep" datasource="#APPLICATION.DSN.Source#">
+    	SELECT *
+        FROM smg_users
+        WHERE userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.areaRepID)#">
+    </cfquery>
 
 </cfsilent>
 
@@ -101,6 +107,10 @@
         <p>
         	Once the permission forms are returned signed then MPD will contact you to book your flights. Do <strong>NOT</strong> book your own flights.
         </p>
+        
+        <p>
+        	It is your responsibility as the student to make sure that this permission form is filled out in its entirety. Once the form is complete, you MUST forward a copy of the completed form to BOTH MPD Tours <cfif qGetStudentInfo.companyID EQ 6>the Program Director, Luke Davis: luke@phpusa.com<cfelse>and your Regional Manager</cfif>.
+        </p>
     
         <p>
             Please submit your permission form with all signatures to MPD Tours
@@ -148,12 +158,12 @@
         
         If you feel that #qGetStudentInfo.firstname# should NOT be going on this trip, please notify us by using this 
         <a href="#SESSION.COMPANY.exitsURL#nsmg/index.cfm?curdoc=tours/hold&studentID=#qGetStudentInfo.studentid#&tripID=#qGetTourDetails.tour_id#">form</a> 
-        (you will need to be logged into follow the link)
+        (you will need to be logged in to follow the link)
     </cfsavecontent>
     
     <cfinvoke component="extensions.components.email" method="sendEmail">
         <cfinvokeargument name="email_from" value="<#APPLICATION.MPD.email#> (#SESSION.COMPANY.shortName# Trip Support)">
-        <cfinvokeargument name="email_to" value="#qGetRegionalManager.email#">
+        <cfinvokeargument name="email_to" value="#qGetRegionalManager.email#,#qGetAreaRep.email#">
         <cfinvokeargument name="email_bcc" value="#APPLICATION.EMAIL.trips#">
         <cfinvokeargument name="email_subject" value="Student Trip Reservation #qGetTourDetails.tour_name# - #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#)">
         <cfinvokeargument name="email_message" value="#repEmailMessage#">
@@ -165,6 +175,43 @@
         <p>FYI,</p>
         
         <p>#qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#) has reserved a spot to go on the #qGetTourDetails.tour_name# tour.</p>
+        
+        <p>
+        	<table>
+            	<tr>
+                	<td><b>Regional Manager</b></td>
+                    <td><b>Area Rep</b></td>
+                </tr>
+                <tr>
+                	<td>#qGetRegionalManager.firstName# #qGetRegionalManager.lastName#</td>
+                    <td>#qGetAreaRep.firstName# #qGetAreaRep.lastName#</td>
+                </tr>
+                <tr>
+                	<td><b>Regional Manager Phone</b></td>
+                    <td><b>Area Rep Phone</b></td>
+                </tr>
+                <tr>
+                	<td>#qGetRegionalManager.phone#</td>
+                    <td>#qGetAreaRep.phone#</td>
+                </tr>
+                <tr>
+                	<td><b>Regional Manager Address</b></td>
+                    <td><b>Area Rep Address</b></td>
+                </tr>
+                <tr>
+                	<td>#qGetRegionalManager.address# #qGetRegionalManager.city#, #qGetRegionalManager.state# #qGetRegionalManager.zip#</td>
+                    <td>#qGetAreaRep.address# #qGetAreaRep.city#, #qGetAreaRep.state# #qGetAreaRep.zip#</td>
+                </tr>
+                <tr>
+                	<td><b>Regional Manager Email Address</b></td>
+                    <td><b>Area Rep Email Address</b></td>
+                </tr>
+                <tr>
+                	<td>#qGetRegionalManager.email#</td>
+                    <td>#qGetAreaRep.email#</td>
+                </tr>
+            </table>
+        </p>
         
         <p>
         	PS: PAYMENT IS PENDING, once you received the payment please check as received on EXITS.
