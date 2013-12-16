@@ -349,6 +349,13 @@
         WHERE
 	        tour_status != <cfqueryparam cfsqltype="cf_sql_varchar" value="inactive">
     </cfquery>
+    
+    <!--- This is to change the email headers based on the student's company --->
+    <cfquery name="qGetCompany" datasource="#APPLICATION.DSN#">
+        SELECT *
+        FROM smg_companies
+        WHERE companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetRegistrationInfo.companyID)#">
+    </cfquery>
 	
     <!--- Check what action --->
     <cfswitch expression="#FORM.action#">
@@ -436,14 +443,9 @@
 					}
 				</cfscript>
                 
-                <!--- This is to change the email headers based on the student's company --->
-                <cfquery name="qGetCompany" datasource="#APPLICATION.DSN#">
-                	SELECT *
-                    FROM smg_companies
-                    WHERE companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetRegistrationInfo.companyID)#">
-                </cfquery>
+                <!--- To get the right headers --->
                 <cfset currentCompanyID = CLIENT.companyID>
-                <cfset currentCompanyName = CLIENT.companyName>
+				<cfset currentCompanyName = CLIENT.companyName>
                 <cfset CLIENT.companyID = qGetCompany.companyID>
                 <cfset CLIENT.companyName = qGetCompany.companyName>
                 
@@ -860,7 +862,13 @@
                         Fax: 1-(718)-439-8565
                     </p>
                     </cfoutput>
-                </cfsavecontent>   
+                </cfsavecontent>
+                
+                <!--- To get the right headers --->
+                <cfset currentCompanyID = CLIENT.companyID>
+				<cfset currentCompanyName = CLIENT.companyName>
+                <cfset CLIENT.companyID = qGetCompany.companyID>
+                <cfset CLIENT.companyName = qGetCompany.companyName> 
                 
                 <cfinvoke component="nsmg.cfc.email" method="send_mail">
                     <cfinvokeargument name="email_from" value="<mpdtours@exitsapplication.com> (Trip Support)">
@@ -869,7 +877,10 @@
                     <cfinvokeargument name="email_bcc" value="trips@iseusa.com">
                     <cfinvokeargument name="email_subject" value="Your #qGetRegistrationInfo.tour_name# trip - Payment Received">
                     <cfinvokeargument name="email_message" value="#stuEmailMessage#">
-                </cfinvoke>	
+                </cfinvoke>
+                
+                <cfset CLIENT.companyID = currentCompanyID>
+                <cfset CLIENT.companyName = currentCompanyName>
 
                 <cfscript>
                     SESSION.pageMessages.Add("Payment has successfully been recorded");
@@ -942,6 +953,12 @@
                    	</cfoutput>
                 </cfsavecontent>
                 
+                <!--- To get the right headers --->
+                <cfset currentCompanyID = CLIENT.companyID>
+				<cfset currentCompanyName = CLIENT.companyName>
+                <cfset CLIENT.companyID = qGetCompany.companyID>
+                <cfset CLIENT.companyName = qGetCompany.companyName>
+                
                 <cfinvoke component="nsmg.cfc.email" method="send_mail">
                     <cfinvokeargument name="email_from" value="<mpdtours@exitsapplication.com> (Trip Support)">
                     <cfinvokeargument name="email_to" value="#FORM.emailAddress#">
@@ -949,7 +966,10 @@
                     <cfinvokeargument name="email_bcc" value="trips@iseusa.com">
                     <cfinvokeargument name="email_subject" value="#qGetRegistrationInfo.tour_name# Trip - Notice of Cancellation">
                     <cfinvokeargument name="email_message" value="#cancellationMessage#">
-                </cfinvoke> 
+                </cfinvoke>
+                
+                <cfset CLIENT.companyID = currentCompanyID>
+                <cfset CLIENT.companyName = currentCompanyName>
     
                 <cfscript>
                     SESSION.pageMessages.Add("Trip has been canceled");
