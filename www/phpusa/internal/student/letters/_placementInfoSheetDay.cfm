@@ -601,7 +601,14 @@
             <tr class="placementLetterBlueplacementLetterDetail"><td><img src="#level#../pics/pisStudentInfo.png" /></td></tr>  
             <tr>
                 <td>
-                    <p style="margin-top:5px;">Student is applying for the #qGetProgramInfo.programName# program starting in #DateFormat(qGetSchoolDatesForProgram.startdate, 'mmmm')#.</p>	
+                    <p style="margin-top:5px;">
+                    	Student is applying for the #qGetProgramInfo.programName# program starting in 
+                        <cfif IsDate(qGetSchoolDatesForProgram.startdate)>
+                        	#DateFormat(qGetSchoolDatesForProgram.startdate, 'mmmm')#
+                        <cfelse>
+                        	n/a
+                        </cfif>.
+                  	</p>	
                     
                     <p style="margin-bottom:5px;">
                         We will be sending you the complete Host Family application shortly. The student should plan to arrive within five days from start of school. 
