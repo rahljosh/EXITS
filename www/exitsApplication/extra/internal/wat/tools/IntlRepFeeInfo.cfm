@@ -12,11 +12,11 @@
     <cfif FORM.submitted>
     	
         <cfloop from="1" to="#FORM.count#" index="x">
-            <cfquery datasource="mySQL">
+            <cfquery datasource="#APPLICATION.DSN.Source#">
                  UPDATE 
                  	smg_users 
                  SET 
-                 	extra_accepts_sevis_fee = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM[x & '_extra_accepts_sevis_fee']#">,
+                 	extra_accepts_sevis_fee = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM[x & '_extra_accepts_sevis_fee']#" null="#NOT LEN(FORM[x & '_extra_accepts_sevis_fee'])#">,
                   	extra_insurance_typeid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM[x & '_extra_insurance_typeID']#">
                  WHERE 
                  	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM[x & '_userid']#">
@@ -31,7 +31,7 @@
     
     </cfif>
 
-    <cfquery name="qGetIntlReps" datasource="mysql">
+    <cfquery name="qGetIntlReps" datasource="#APPLICATION.DSN.Source#">
         SELECT 
         	u.userid, 
             u.businessname, 
@@ -51,7 +51,7 @@
         	businessname	
     </cfquery>
 
-    <cfquery name="qGetInsuranceTypes" datasource="MySql">
+    <cfquery name="qGetInsuranceTypes" datasource="#APPLICATION.DSN.Source#">
         SELECT 
         	insutypeid, type
         FROM 
