@@ -57,9 +57,9 @@
                 OR 
                     c.wat_doc_signed_assessment = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
                 OR 
-                    c.wat_doc_job_offer_employer = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
+                    (hc.name != "" AND c.wat_doc_job_offer_employer = <cfqueryparam cfsqltype="cf_sql_integer" value="0">)
                 OR 
-                    c.wat_doc_job_offer_applicant = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
+                    (hc.name != "" AND c.wat_doc_job_offer_applicant = <cfqueryparam cfsqltype="cf_sql_integer" value="0">)
                 OR
                     c.wat_doc_passport_copy = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
                 OR 
