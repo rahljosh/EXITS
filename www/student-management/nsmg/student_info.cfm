@@ -86,6 +86,8 @@
 		// Get Facilitator for this Region
 		qFacilitator = APPLICATION.CFC.USER.getUserByID(userID=VAL(qRegionAssigned.regionfacilitator));
 		
+		// Get Facilitator for this Region
+		qStudentsCases = APPLICATION.CFC.caseMgmt.studentsCases(studentid=VAL(qGetStudentInfo.studentID));
 		//Get available programs
 		if ( CLIENT.companyid eq 13 OR client.companyid eq 14){
 			qGetActivePrograms = APPLICATION.CFC.PROGRAM.getPrograms(companyid=client.companyid,isActive=1);
@@ -594,7 +596,7 @@
 											</cfif>
 											<br /><a href="javascript:OpenMediumW('student_app/section4/page22print.cfm?unqid=#uniqueid#');"><img src="pics/attached-files.gif" border="0"></a>	
 											<cfif CLIENT.usertype lt 7>
-                                            <br /><a href="javascript:SendEmail('student_app/email_form.cfm?unqid=#uniqueid#', 400, 450);"><img src="pics/send-email.gif" border="0"></a>	</cfif>
+                                            <br /><em><font size=-1>Send As Email Is currently unavailable</font></em><!----<a href="javascript:SendEmail('student_app/email_form.cfm?unqid=#uniqueid#', 400, 450);"><img src="pics/send-email.gif" border="0"></a>---->	</cfif>
 											</td>
 										</tr>
 										<cfelse>
@@ -654,7 +656,7 @@
                 <a href="student/index.cfm?action=flightInformation&uniqueID=#qGetStudentInfo.uniqueID#&programID=#qGetStudentInfo.programID#" class="jQueryModal">Flight Information</a>
                 <a href="" onClick="javascript: win=window.open('tours/trips.cfm', 'Settings', 'height=450, width=800, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Student Trips</a>
                 <Cfif client.usertype lte 4>
-                <a href="index.cfm?curdoc=caseMgmt/index&studentid=#qGetStudentInfo.studentid#" >Case Management</a>
+               <a href="index.cfm?curdoc=caseMgmt/index&studentid=#qGetStudentInfo.studentid#"> <cfif val(qStudentsCases.recordcount)><img src="pics/attention.png" border=0 /></cfif> Case Management</a>
 				</Cfif>
                
 			</div>
