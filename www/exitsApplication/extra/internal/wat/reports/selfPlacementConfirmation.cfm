@@ -442,7 +442,7 @@
                                 	<cfif LEN(qTotalPerAgent.confirmedDate)>
                                     	#DateFormat(qTotalPerAgent.confirmedDate, "mm/dd/yyyy")#
                                   	<cfelse>
-                                    	<font color="red">Confirmed - Date Missing</font>
+                                    	<font color="red">Missing</font>
                                     </cfif>
                                	<cfelse>
                                 	<font color="red">Missing</font>
@@ -453,7 +453,7 @@
                                 	<cfif LEN(qTotalPerAgent.verifiedDate)>
                                     	#DateFormat(qTotalPerAgent.verifiedDate, "mm/dd/yyyy")#
                                   	<cfelse>
-                                    	<font color="red">Available - Date Missing</font>
+                                    	<font color="red">Missing</font>
                                     </cfif>
                                	<cfelse>
                                 	<font color="red">Missing</font>
