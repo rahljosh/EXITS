@@ -596,7 +596,7 @@
 											</cfif>
 											<br /><a href="javascript:OpenMediumW('student_app/section4/page22print.cfm?unqid=#uniqueid#');"><img src="pics/attached-files.gif" border="0"></a>	
 											<cfif CLIENT.usertype lt 7>
-                                            <br /><em><font size=-1>Send As Email Is currently unavailable</font></em><!----<a href="javascript:SendEmail('student_app/email_form.cfm?unqid=#uniqueid#', 400, 450);"><img src="pics/send-email.gif" border="0"></a>---->	</cfif>
+                                            <br /><em><font size=-1><a href="javascript:SendEmail('student_app/email_form.cfm?unqid=#uniqueid#', 400, 450);"><img src="pics/send-email.gif" border="0"></a></cfif>
 											</td>
 										</tr>
 										<cfelse>
