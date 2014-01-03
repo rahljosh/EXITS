@@ -18,7 +18,7 @@
 		<!--- Check if we are on Local Server --->
         <cfif APPLICATION.IsServerLocal>
         
-            <cfquery name="qGetCompany" datasource="mysql">
+            <cfquery name="qGetCompany" datasource="#application.dsn#">
                 SELECT 
                     companyid, 
                     companyname
@@ -31,7 +31,7 @@
         <!--- Production Server --->    
         <cfelse>
         
-            <cfquery name="qGetCompany" datasource="mysql">
+            <cfquery name="qGetCompany" datasource="#application.dsn#">
                 SELECT 
                     companyid, 
                     companyname,
@@ -149,7 +149,7 @@
         <cfif qAuthenticateUser.recordcount EQ 0>
         	<cfreturn 'Username & Password combination is not valid.'>            
         </cfif>
-        
+       
 		<!--- get all of the user's access records in the SMG companies. --->
         <cfquery name="get_access" datasource="#APPLICATION.dsn#">
             SELECT 
@@ -350,14 +350,17 @@
 
         <!--- Check if server is local, if it is do not redirect to SSL --->
 		<cfif APPLICATION.IsServerLocal>
-
-			<cflocation url="/nsmg/index.cfm?curdoc=initial_welcome" addtoken="no">
-		
+			
+				<cflocation url="/nsmg/index.cfm?curdoc=initial_welcome" addtoken="no">
+			
         <!--- Production / Force SSL if not Case --->
         <cfelse>
-        
+       		<Cfif url.ref is 'studentApp'>
+            	
+            	<cflocation url="/nsmg/exits_app.cfm?unqid=#url.uniqid#" addtoken="no"> 
+            <cfelse>
             <cflocation url="#CLIENT.exits_url#/nsmg/index.cfm?curdoc=initial_welcome" addtoken="no">
-
+			</Cfif>
         </cfif>
         
 	</cffunction>
