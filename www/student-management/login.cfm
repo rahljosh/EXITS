@@ -1,4 +1,6 @@
+
 <!--- Kill Extra Output --->
+
 <cfsilent>
 	<cfloop list="#GetClientVariablesList()#" index="ThisVarName">
 		<cfset temp = DeleteClientVariable(ThisVarName)>
@@ -15,6 +17,7 @@
     <cfparam name="FORM.password" default="">
     <cfparam name="FORM.email" default="">
     <cfparam name="URL.forgot" default="0">
+    <cfparam name="URL.ref" default="">
     <cfset errorMsg = ''>
         
     <cfquery name="qGetCompany" datasource="mysql">
@@ -249,7 +252,7 @@ a:active {
 </cfif>
 
 <body>
-
+<cfinclude template="analytics.cfm">
 <div id="mainContent">
 <div id="loginBox">
   <div class="loginTop"></div>
@@ -271,7 +274,7 @@ a:active {
   <div class="exitLogo"></div>
   <div class="form1">
    <cfif url.forgot>
-        <cfform name="login" action="login.cfm?forgot=1" method="post">
+        <cfform name="login" action="login.cfm?forgot=1&#cgi.SCRIPT_NAME#" method="post">
         <input type="hidden" name="forgot_submitted" value="1">
         <table border="0" align="center" cellpadding="4" cellspacing="0" width=95%>
             <tr><td class="style3" colspan=2>Your login information will be sent to the address entered:</td></tr>
@@ -295,7 +298,7 @@ a:active {
 	
 	<!--- login form --->
     <cfelse>
-        <cfform name="login" action="login.cfm" method="post">
+        <cfform name="login" action="login.cfm?#cgi.QUERY_STRING#" method="post">
         <input type="hidden" name="login_submitted" value="1">
         <table border="0" align="center" cellpadding="4" cellspacing="0" width=95%>
           <tr>
@@ -316,9 +319,11 @@ a:active {
           <tr>
             <td><a href="login.cfm?forgot=1" class="style2" valign="middle" align="right">Forgot Login?</a></td><td align="right" width=100> <input type="image" src="exitsapp_images/button.png" alt="Login" /></td>
           </tr>
+          <cfif qGetCompany.companyid neq 14>
           <tr>
-          	<td colspan=2>Host Families:   <a href="https://www.iseusa.com/hostApp">Click Here!</a></td>
+          	<td colspan=2>Host Families: <cfif qGetCompany.companyid eq 10>  <a href="https://www.case-usa.org/hostApp"><Cfelse><a href="https://www.iseusa.org/hostApp"></cfif>Click Here!</a></td>
           </tr>
+          </cfif>
           </tr>
         </table>
         </cfform> 
