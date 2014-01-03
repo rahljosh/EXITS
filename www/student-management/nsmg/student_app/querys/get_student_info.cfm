@@ -4,8 +4,8 @@
 	FROM 
     	smg_students
 	WHERE 
-		<cfif isDefined(url.uniqid)>
-        uniquieID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#url.uniqid#">
+		<cfif isDefined('url.uniqid')>
+        uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#url.uniqid#">
         <cfelse>
     	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.studentid)#">
         </cfif>
