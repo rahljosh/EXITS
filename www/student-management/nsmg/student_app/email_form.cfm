@@ -104,7 +104,7 @@
                 
                 Additional Comments:<br>
                 <cfif FORM.comments EQ ''>n/a<cfelse>#FORM.comments#</cfif><br><br>
-                Please click <a href="#client.exits_url#/login.cfm?ref=studentApp&unqid=#get_student_info.uniqueid#">here</a>
+                Please click <a href="#client.exits_url#/login.cfm?ref=studentApp&uniqid=#get_student_info.uniqueid#">here</a>
                 to see the student's online application.<br><br>
                 
                 Please keep in mind that this application might take a few minutes to load completely. The loading time will depend on your internet connection.<br><br>             
