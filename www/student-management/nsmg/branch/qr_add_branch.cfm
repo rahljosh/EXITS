@@ -15,7 +15,7 @@
 	<cfset form.username = #Replace(form.username, "'", "", "all")#>
 	<cfset form.password = #Replace(form.password, "'", "", "all")#>
 	
-	<cfquery name="check_username" datasource="MySql">
+	<cfquery name="check_username" datasource="#APPLICATION.DSN#">
 		SELECT username
 		FROM smg_users
 		WHERE username = '#form.username#'
@@ -58,16 +58,55 @@
 	</cfif>
 
 	<cftransaction action="begin" isolation="serializable">
-		<cfquery name="insert_branch" datasource="MySql">
-			INSERT INTO smg_users
-				(intrepid, usertype, businessname, firstname, lastname, sex, address, address2, city, state, country, zip, phone, fax, email, username,
-				 password, datecreated,studentcontactemail)
-			VALUES 
-				('#form.intrepid#', '#form.usertype#', '#form.businessname#', '#form.firstname#', '#form.lastname#', 
-				<cfif IsDefined('form.sex')>'#form.sex#'<cfelse>''</cfif>,  '#form.address#', '#form.address2#', 
-				'#form.city#', '#form.state#', '#form.country#', '#form.zip#', '#form.phone#', '#form.fax#', 
-				'#form.email#', '#form.username#', '#form.password#', #CreateODBCDate(now())#,'#form.studentcontactemail#')
-		</cfquery>
+    	<cfquery name="insert_branch" datasource="#APPLICATION.DSN#">
+        	INSERT INTO smg_users (
+            	intrepid, 
+                master_accountid, 
+                usertype, 
+                businessname, 
+                firstname, 
+                lastname, 
+                sex, 
+                address, 
+                address2, 
+                city, 
+                state, 
+                country, 
+                zip, 
+                phone, 
+                fax, 
+                email, 
+                username,
+				password, 
+                datecreated,
+                studentcontactemail)
+          	VALUES (
+            	<cfqueryparam cfsqltype="cf_sql_integer" value="#form.intrepid#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#form.intrepid#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#form.usertype#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.businessname#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.firstname#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.lastname#">, 
+				<cfif IsDefined('form.sex')>
+                	<cfqueryparam cfsqltype="cf_sql_varchar" value="#form.sex#">
+              	<cfelse>
+                	<cfqueryparam cfsqltype="cf_sql_varchar" value="">
+               	</cfif>,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.address#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.address2#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.city#">, 
+				<cfqueryparam cfsqltype="cf_sql_varchar" value="#form.state#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.country#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.zip#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.phone#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.fax#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.email#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.username#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.password#">,
+                <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(now())#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.studentcontactemail#">)
+        </cfquery>
+        
         <cfquery name="user_id" datasource="mysql">
         select max(userid) as branchid
         from smg_users
