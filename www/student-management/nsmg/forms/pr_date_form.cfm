@@ -84,17 +84,9 @@
     <cfloop from="#qGetSeasonDateRange.startDate#" to="#qGetSeasonDateRange.endDate#" index="i" step="#CreateTimeSpan(31,0,0,0)#">
        	
         <cfif CLIENT.pr_rmonth EQ DatePart('m', i)>
-			<cfif DatePart('m', qGetSeasonDateRange.startDate) eq 1 and client.pr_rmonth eq 1>
-           
-                <cfset newYear = DateAdd('yyyy', 0,'#qGetSeasonDateRange.startDate#')>
-                <cfset vSetStartDate =  DateAdd('m', -1, DatePart("yyyy", newYear) & '-' & DatePart("m", #qGetSeasonDateRange.startDate#) & '-01')>
-                <cfset vSetEndDate = CreateDate(year(vSetStartDate), month(vSetStartDate), DaysInMonth(vSetStartDate))>
-                <cfset vSetDueDate = CreateDate(DatePart("yyyy", #qGetSeasonDateRange.startDate#), DatePart("m", #qGetSeasonDateRange.startDate#), '01')>
-            <cfelse> 
-                <cfset vSetStartDate =  DateAdd('m', -1, DatePart("yyyy", i) & '-' & DatePart("m", i) & '-01')>
-                <cfset vSetEndDate = CreateDate(year(vSetStartDate), month(vSetStartDate), DaysInMonth(vSetStartDate))>
-                <cfset vSetDueDate = CreateDate(DatePart("yyyy", i), DatePart("m", i), '01')>
-             </cfif>
+			<cfset vSetStartDate =  DateAdd('m', -1, DatePart("yyyy", i) & '-' & DatePart("m", i) & '-01')>
+            <cfset vSetEndDate = CreateDate(year(vSetStartDate), month(vSetStartDate), DaysInMonth(vSetStartDate))>
+            <cfset vSetDueDate = CreateDate(DatePart("yyyy", i), DatePart("m", i), '01')>
 		</cfif>
          
     </cfloop>
