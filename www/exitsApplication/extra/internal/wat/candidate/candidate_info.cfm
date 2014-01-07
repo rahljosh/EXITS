@@ -1555,11 +1555,28 @@
                                                 </select>
                                             </td>
                                         </tr>
-
+                                        <tr class="readOnly">
+                                        	<td class="style1" align="right" width="30%"><strong>Address:</strong></td>
+                                            <td class="style1" align="left" width="70%"><span class="readOnly">#qCandidatePlaceCompany.address#</span></td>
+                                        </tr>
+                                        <tr class="readOnly">
+                                        	<td class="style1" align="right" width="30%"><strong>City:</strong></td>
+                                            <td class="style1" align="left" width="70%"><span class="readOnly">#qCandidatePlaceCompany.city#</span></td>
+                                        </tr>
+                                        <tr class="readOnly">
+                                        	<td class="style1" align="right" width="30%"><strong>State:</strong></td>
+                                            <td class="style1" align="left" width="70%"><span class="readOnly">#qCandidatePlaceCompany.state#</span></td>
+                                        </tr>
+                                        <tr class="readOnly">
+                                        	<td class="style1" align="right" width="30%"><strong>Zip:</strong></td>
+                                            <td class="style1" align="left" width="70%"><span class="readOnly">#qCandidatePlaceCompany.zip#</span></td>
+                                        </tr>
                                         <tr>
                                         	<td class="style1" align="right" width="30%"><strong>Job Title:</strong></td>
                                             <td class="style1" align="left" width="70%">
-                                            	<span class="readOnly">#qCandidatePlaceCompany.jobTitle#</span>
+                                            	<span class="readOnly">
+                                                	#qCandidatePlaceCompany.jobTitle#, POC: #qCandidatePlaceCompany.supervisor#, POC Phone: #qCandidatePlaceCompany.phone#
+                                              	</span>
                                                 <cfselect 
                                                     name="jobID"
                                                     id="jobID"

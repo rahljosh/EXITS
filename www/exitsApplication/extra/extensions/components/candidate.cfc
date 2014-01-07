@@ -1138,6 +1138,12 @@
                 eh.WC_carrierPhone,
                 eh.WC_policyNumber,
                 eh.WCDateExpired,
+                eh.supervisor,
+                eh.phone,
+                eh.address,
+                eh.city,
+                eh.zip,
+                s.state,
                 <!--- Candidate Place Company --->
                 ecpc.candCompID,
                 ecpc.status,
@@ -1169,6 +1175,8 @@
                 extra_candidate_place_company ecpc
             INNER JOIN
                 extra_hostcompany eh ON eh.hostCompanyID = ecpc.hostCompanyID
+          	LEFT JOIN
+            	smg_states s ON s.id = eh.state
             LEFT OUTER JOIN
             	extra_jobs ej ON ej.ID = ecpc.jobID
            	LEFT OUTER JOIN
