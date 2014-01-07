@@ -69,6 +69,7 @@
                 candidate.email, 
                 candidate.wat_placement, 
                 candidate.housingArrangedPrivately,
+                candidate.housingDetails,
                 candidate.ds2019,
                 host.isHousingProvided,
                 host.city,
@@ -218,14 +219,14 @@
                 </td>
             </tr>
             <tr>
-                <td valign="middle" align="right" class="style1"><b>Housing Arrangements:</b></td>
+                <td valign="middle" align="right" class="style1"><b>Housing Availability:</b></td>
                 <td> 
                     <select name="housingArrangements" class="style1" onchange="checkToDisplayEmail(this.value);">
                     	<option value="All" <cfif FORM.housingArrangements EQ "All">selected="selected"</cfif>>All</option>
-                        <option value="employerProvides" <cfif FORM.housingArrangements EQ "employerProvides">selected="selected"</cfif>>Housing on premises</option>
-                        <option value="All_notProvided" <cfif FORM.housingArrangements EQ "All_notProvided">selected="selected"</cfif>>Housing not on premises - all</option>
-                        <option value="1" <cfif FORM.housingArrangements EQ "1">selected="selected"</cfif>>Housing not on premises - housing found</option>
-                        <option value="0" <cfif FORM.housingArrangements EQ "0">selected="selected"</cfif>>Housing not on premises - housing not found</option>
+                        <option value="employerProvides" <cfif FORM.housingArrangements EQ "employerProvides">selected="selected"</cfif>>Housing provided</option>
+                        <option value="All_notProvided" <cfif FORM.housingArrangements EQ "All_notProvided">selected="selected"</cfif>>Housing not provided - all</option>
+                        <option value="1" <cfif FORM.housingArrangements EQ "1">selected="selected"</cfif>>Housing not provided - housing arranged</option>
+                        <option value="0" <cfif FORM.housingArrangements EQ "0">selected="selected"</cfif>>Housing not provided - housing not arranged</option>
                     </select>
                 </td>
             </tr>
@@ -336,11 +337,10 @@
                                         #placementSelf.recordCount# Self; &nbsp; 
                                         #placementWalkIn.recordCount# Walk-In; &nbsp; 
                                     )
-                                    &nbsp; | &nbsp;
-                                    Housing Arrangements: 
-                                    #housingProvidedByHost.recordCount# Housing on premises; &nbsp;
-                                    #housingFound.recordCount# Yes; &nbsp;
-                                    #housingNotFound.recordCount# No; &nbsp;
+                                    <br/>
+                                    Housing provided: #housingProvidedByHost.recordCount# &nbsp; | &nbsp;
+                                    Housing not provided - housing found: #housingFound.recordCount# &nbsp; | &nbsp;
+                                    Housing not provided - housing not found: #housingNotFound.recordCount#
                                 </small>
                             </td>
                         </tr>
@@ -354,14 +354,15 @@
                             <th align="left" class="#tableTitleClass#" width="8%">Last Name</Th>
                             <th align="left" class="#tableTitleClass#" width="8%">First Name</Th>
                             <th align="left" class="#tableTitleClass#" width="8%">Sex</th>
-                            <th align="left" class="#tableTitleClass#" width="12%">E-mail</th>
+                            <th align="left" class="#tableTitleClass#" width="11%">E-mail</th>
                             <th align="left" class="#tableTitleClass#" width="8%">Start Date</th>
                             <th align="left" class="#tableTitleClass#" width="8%">End Date</th>
-                            <th align="left" class="#tableTitleClass#" width="9%">Placement Information</th>
-                            <th align="left" class="#tableTitleClass#" width="9%">City</th>
-                            <th align="left" class="#tableTitleClass#" width="8%">State</th>
-                            <th align="left" class="#tableTitleClass#" width="8%">Option</th>
-                            <th align="left" class="#tableTitleClass#" width="9%">Housing Arrangements</th>
+                            <th align="left" class="#tableTitleClass#" width="8%">Placement Information</th>
+                            <th align="left" class="#tableTitleClass#" width="8%">City</th>
+                            <th align="left" class="#tableTitleClass#" width="7%">State</th>
+                            <th align="left" class="#tableTitleClass#" width="7%">Option</th>
+                            <th align="left" class="#tableTitleClass#" width="8%">Housing Arranged</th>
+                            <th align="left" class="#tableTitleClass#" width="6%">Housing Details</th>
                         </tr>
                         <cfif ListFind("2,3", FORM.printOption)>
                             <tr>
@@ -408,7 +409,7 @@
                                 <td class="style1">#wat_placement#</td>
                                 <td class="style1">
                                     <cfif isHousingProvided EQ 1>
-                                        Housing on premises
+                                        Housing provided
                                     <cfelse>
                                         <cfif VAL(housingArrangedPrivately)>
                                             Yes
@@ -417,6 +418,17 @@
                                         </cfif>
                                     </cfif>
                                 </td>
+                                <td class="style1">
+                                	<cfif isHousingProvided EQ 1>
+                                      	n/a
+                                    <cfelse>
+                                        <cfif VAL(housingArrangedPrivately)>
+                                            #housingDetails#
+                                        <cfelse>
+                                        	pending
+                                        </cfif>
+                                    </cfif>
+                              	</td>
                             </tr>
                         </cfloop>
                     </table>
