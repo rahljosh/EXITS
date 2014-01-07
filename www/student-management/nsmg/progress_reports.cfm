@@ -508,7 +508,7 @@
                     	<cfcase value="1">
 						
                             <!--- This should have the same Year as the previous year program start date for Jan reports only.--->
-                            <cfset vReportDate = '12/01/#Year(qGetResults.startDate - 1)#'>	
+                            <cfset vReportDate = '12/01/#Year(qGetResults.startDate)#'>	
                         
                         </cfcase>
 
