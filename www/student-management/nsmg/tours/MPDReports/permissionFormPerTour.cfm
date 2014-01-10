@@ -23,6 +23,7 @@
 		param name="FORM.tourID" default=0;
 		param name="FORM.receivedStatus" default="all";
 		param name="FORM.outputType" default="onScreen";
+		param name="FORM.sendEmail" default=0;
 
 		// Set Report Title To Keep Consistency
 		vReportTitle = "Permission Form Per Tour";
@@ -50,9 +51,14 @@
                 	st.email,
                     st.studentID,
                     st.permissionForm,
+                    st.companyID,
                     ss.firstName,
                     ss.familyLastName,
+                    <!--- Use Luke for PHP --->
+                    CASE WHEN st.companyID = 6 THEN 7630 ELSE ss.areaRepID END AS areaRepID,
+                    CASE WHEN st.companyID = 6 THEN 7630 ELSE rm.userID END AS regionalManagerID,
                     tour.tour_name,
+                    tour.tour_date,
                     h.familyLastName AS hostName,
                     h.address,
                     h.city,
@@ -66,8 +72,10 @@
                 	smg_students ss ON ss.studentID = st.studentID
               	INNER JOIN
                 	smg_tours tour ON tour.tour_id = st.tripID
-              	INNER JOIN
+              	LEFT JOIN
                 	smg_hosts h ON h.hostID = ss.hostID
+              	LEFT JOIN user_access_rights rm ON rm.regionID = ss.regionAssigned
+                    AND usertype = 5
                	WHERE
                 	tripID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.tourID#" list="yes"> )
               	AND
@@ -83,6 +91,138 @@
                 	familyLastName,
                     firstName           	
             </cfquery>
+            
+            <!--- Send email to AR's and RM's --->
+            <cfif VAL(FORM.sendEmail)>
+            	
+                <!--- Get all area reps --->
+                <cfquery name="qGetAreaReps" datasource="#APPLICATION.DSN#">
+                	SELECT userID, firstName, lastName, email
+                    FROM smg_users
+                    WHERE userID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#VALUELIST(qGetResults.areaRepID)#" list="yes"> )
+                    GROUP BY userID
+                </cfquery>
+                
+                <!--- Loop through all area reps --->
+                <cfloop query="qGetAreaReps">
+                
+                	<!--- Get all students under the current area rep --->
+                    <cfquery name="qGetResultsByAreaRep" dbtype="query">
+                    	SELECT *
+                        FROM qGetResults
+                        WHERE areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#userID#">
+                    </cfquery>
+                    
+                    <!--- Set up email message --->
+                    <cfsavecontent variable="message">
+                    	Please be advised that the following student(s) have outstanding permission forms for the MPD Trip outlined below. 
+                        Please follow up with the student(s) and ensure that the completed permission form is forwarded to both MPD Tours 
+                        and the appropriate Area Representative as soon as possible.<br/>
+                        Thank you<br/>
+                        <ul>
+                            <cfloop query="qGetResultsByAreaRep">
+                                <li><cfoutput>#firstName# #familyLastName# (###studentID#) - #tour_name# #tour_date#</cfoutput></li>
+                            </cfloop>
+                        </ul>
+                    </cfsavecontent>
+                    
+                    <!--- Send email to area rep --->
+                    <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                        <cfinvokeargument name="email_to" value="#qGetAreaReps.email#">
+                        <cfinvokeargument name="email_subject" value="MPD Tours - Outstanding permission forms">
+                        <cfinvokeargument name="email_message" value="#message#">
+                        <cfinvokeargument name="email_from" value="#CLIENT.emailFrom#">
+                        <cfinvokeargument name="isMPDEmail" value="1">
+                    </cfinvoke>
+                    
+                </cfloop>
+                
+                <!--- Get all regional managers --->
+                <cfquery name="qGetRegionalManagers" datasource="#APPLICATION.DSN#">
+                	SELECT userID, firstName, lastName, email
+                    FROM smg_users
+                    WHERE userID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#VALUELIST(qGetResults.regionalManagerID)#" list="yes"> )
+                    GROUP BY userID
+                </cfquery>
+                
+                <!--- Loop through all regional managers --->
+                <cfloop query="qGetRegionalManagers">
+                
+                	<!--- Get all students under the current regional manager --->
+                    <cfquery name="qGetResultsByRegionalManager" dbtype="query">
+                    	SELECT *
+                        FROM qGetResults
+                        WHERE regionalManagerID = <cfqueryparam cfsqltype="cf_sql_integer" value="#userID#">
+                    </cfquery>
+                    
+                    <!--- Set up email message --->
+                    <cfsavecontent variable="message">
+                    	Please be advised that the following student(s) have outstanding permission forms for the MPD Trip outlined below. 
+                        Please follow up with the student(s) and ensure that the completed permission form is forwarded to both MPD Tours 
+                        and the appropriate Area Representative as soon as possible.<br/>
+                        Thank you<br/>
+                        <ul>
+                            <cfloop query="qGetResultsByRegionalManager">
+                                <li><cfoutput>#firstName# #familyLastName# (###studentID#) - #tour_name# #tour_date#</cfoutput></li>
+                            </cfloop>
+                        </ul>
+                    </cfsavecontent>
+                    
+                    <!--- Send email to regional manager --->
+                    <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                        <cfinvokeargument name="email_to" value="#qGetRegionalManagers.email#">
+                        <cfinvokeargument name="email_subject" value="MPD Tours - Outstanding permission forms">
+                        <cfinvokeargument name="email_message" value="#message#">
+                        <cfinvokeargument name="email_from" value="#CLIENT.emailFrom#">
+                        <cfinvokeargument name="isMPDEmail" value="1">
+                    </cfinvoke>
+                    
+                </cfloop>
+                
+                <!--- Get all program managers --->
+                <cfquery name="qGetProgramManagers" datasource="#APPLICATION.DSN#">
+                    SELECT *
+                    FROM smg_companies
+                    WHERE companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#VALUELIST(qGetResults.companyID)#" list="yes"> ) 
+                    GROUP BY companyID                  
+                </cfquery>
+                
+                <!--- Loop through all program managers --->
+                <cfloop query="qGetProgramManagers">
+                	
+                    <!--- Get all students under the current program manager --->
+                    <cfquery name="qGetResultsByProgramManager" dbtype="query">
+                    	SELECT *
+                        FROM qGetResults
+                        WHERE companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#companyID#">
+                    </cfquery>
+                    
+                    <!--- Set up email message --->
+                    <cfsavecontent variable="message">
+                    	Please be advised that the following student(s) have outstanding permission forms for the MPD Trip outlined below. 
+                        Please follow up with the student(s) and ensure that the completed permission form is forwarded to both MPD Tours 
+                        and the appropriate Area Representative as soon as possible.<br/>
+                        Thank you<br/>
+                        <ul>
+                            <cfloop query="qGetResultsByProgramManager">
+                                <li><cfoutput>#firstName# #familyLastName# (###studentID#) - #tour_name# #tour_date#</cfoutput></li>
+                            </cfloop>
+                        </ul>
+                    </cfsavecontent>
+                    
+                    <!--- Send email to program manager --->
+                    <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                        <cfinvokeargument name="email_to" value="#qGetProgramManagers.pm_email#">
+                        <cfinvokeargument name="email_subject" value="MPD Tours - Outstanding permission forms">
+                        <cfinvokeargument name="email_message" value="#message#">
+                        <cfinvokeargument name="email_from" value="#CLIENT.emailFrom#">
+                        <cfinvokeargument name="isMPDEmail" value="1">
+                    </cfinvoke>
+                    
+                </cfloop>
+                
+            </cfif>
+            <!--- END - Send email to AR's and RM's --->
 
 		</cfif>
 		<!--- END - No Errors Found ---->
@@ -91,6 +231,16 @@
 	<!--- END - FORM Submitted --->
     
 </cfsilent>
+
+<script type="text/javascript">
+	function showHideSendEmailRow() {
+		if ($('#receivedStatus').val() == "missing") {
+			$('#sendEmailRow').show();	
+		} else {
+			$('#sendEmailRow').hide();	
+		}
+	}
+</script>
 
 <!--- BEGIN - FORM NOT submitted --->
 <cfif NOT VAL(FORM.Submitted)>
@@ -114,7 +264,7 @@
                 <tr class="on">
                 	<td class="subTitleRightNoBorder">Received: <span class="required">*</span></td>
                     <td>
-                    	<select name="receivedStatus" id="receivedStatus" class="xLargeField">
+                    	<select name="receivedStatus" id="receivedStatus" class="xLargeField" onchange="showHideSendEmailRow();">
                         	<option value="all">All</option>
                             <option value="missing">Missing</option>
                             <option value="received">Received</option>
@@ -129,6 +279,12 @@
                             <option value="Excel">Excel Spreadsheet</option>
                         </select>
                     </td>		
+                </tr>
+                <tr id="sendEmailRow" class="on" style="display:none;">
+                	<td class="subTitleRightNoBorder">Email:&nbsp;&nbsp;</td>
+                    <td>
+                    	<input type="checkbox" name="sendEmail" value="1"/>&nbsp;Send email to Area Reps and Regional Managers
+                    </td>
                 </tr>
                 <tr class="on">
                     <td>&nbsp;</td>
@@ -151,6 +307,12 @@
 
 <!--- FORM Submitted --->
 <cfelse>
+
+	<cfif VAL(FORM.sendEmail)>
+    	<script type="text/javascript">
+			alert("Emails have been sent to the ARs and RMs.");
+		</script>
+    </cfif>
 
 	<!--- Page Header --->
     <gui:pageHeader
