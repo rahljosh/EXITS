@@ -61,7 +61,7 @@
             LEFT OUTER JOIN smg_user_payment_special sppmt ON st.placeRepID = sppmt.fk_userID AND sppmt.specialPaymentType = "draw"
             LEFT OUTER JOIN smg_states states ON st.state_guarantee = states.id AND st.state_guarantee > 0
 	WHERE
-        st.programID > 365 <!---starting with 2014/15 placement year--->
+        st.programID > 367 <!---starting with 2014/15 placement year--->
         AND st.companyid IN (1,2,3,4,5,12)
         AND pmt.ID is null  <!---payment does not already exist--->
         AND hh.compliance_review IS NOT NULL
