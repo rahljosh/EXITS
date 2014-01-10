@@ -182,8 +182,6 @@
                             p.endDate <= <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.endDate#">                              
                 INNER JOIN
                     smg_hostHistory sh ON sh.studentID = s.studentID
-                        AND
-                            sh.isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
                 INNER JOIN
                     smg_schools sc ON sh.schoolID = sc.schoolID
                         AND
