@@ -418,6 +418,18 @@
                         </tr>
                     </cfif>
                     <cfloop query="qTotalPerAgent">
+                    
+                    	<!--- Get workmans compensation file --->
+                        <cfquery name="qGetWCFile" datasource="#APPLICATION.DSN.Source#">
+                            SELECT *
+                            FROM extra_hostauthenticationfiles
+                            WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qTotalPerAgent.hostCompanyID#">
+                            AND (dateExpires >= <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
+                            	OR dateExpires IS NULL)
+                            AND authenticationType = <cfqueryparam cfsqltype="cf_sql_varchar" value="workmensCompensation">
+                            ORDER BY dateAdded DESC
+                        </cfquery>
+                    
                         <tr <cfif qTotalPerAgent.currentRow mod 2>bgcolor="##E4E4E4"</cfif>>                    
                             <td class="style1">
                                 <a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerAgent.uniqueID#" target="_blank" class="style4">
@@ -500,11 +512,15 @@
                                 </cfif>
                             </td>
                             <td class="style1">
-                            	<cfif ListFind("0,1", qTotalPerAgent.workmensCompensation)>
-                                	#YesNoFormat(qTotalPerAgent.workmensCompensation)#
-								<cfelseif qTotalPerAgent.workmensCompensation EQ 2>
-                                	N/A
-								</cfif>                                            
+                            	<cfif VAL(qGetWCFile.recordCount)>
+									<cfif ListFind("0,1", qTotalPerAgent.workmensCompensation)>
+                                        #YesNoFormat(qTotalPerAgent.workmensCompensation)#
+                                    <cfelseif qTotalPerAgent.workmensCompensation EQ 2>
+                                        N/A
+                                    </cfif>
+                              	<cfelse>
+                                	<font color="red">Missing</font>
+                                </cfif>                                           
 							</td>
                             <cfif FORM.selfJobOfferStatus NEQ "pending" AND FORM.selfJobOfferStatus NEQ "confirmed" AND FORM.selfJobOfferStatus NEQ "rejected">
 	                            <td class="style1">#qTotalPerAgent.selfConfirmationMethod#</td>
