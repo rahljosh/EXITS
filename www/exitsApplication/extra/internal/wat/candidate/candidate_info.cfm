@@ -384,7 +384,7 @@
 		$("#savedJobOfferStatus").val($("#selfJobOfferStatus").val());
 		$("#savedName").val($("#selfConfirmationName").val());
 		$("#savedEmailConfirmation").val($("#selfEmailConfirmationDate").val());
-		$("#savedPhoneConfirmation").val($("#selfPhoneConfirmationDate").val());
+		$("#savedPhoneConfirmation").val($("#confirmation_phone").val());
 		$("#savedJobFound").val($("#selfFindJobOffer").val());
 		$("#savedNotes").val($("#selfConfirmationNotes").val());
 	}
@@ -394,7 +394,7 @@
 		$("#selfJobOfferStatus").val($("#savedJobOfferStatus").val());
 		$("#selfConfirmationName").val($("#savedName").val());
 		$("#selfEmailConfirmationDate").val($("#savedEmailConfirmation").val());
-		$("#selfPhoneConfirmationDate").val($("#savedPhoneConfirmation").val());
+		$("#confirmation_phone").val($("#savedPhoneConfirmation").val());
 		$("#selfFindJobOffer").val($("#savedJobFound").val());
 		$("#selfConfirmationNotes").val($("#savedNotes").val());
 	}
@@ -542,7 +542,7 @@
 			$("#WC_carrierPhone").val(WC_carrierPhone);
 			$("#WC_policyNumber").val(WC_policyNumber);
 			$("#numberPositionsSelect").val(numberPositions);
-			$("#selfPhoneConfirmationDate").val(phoneConfirmation);
+			$("#confirmation_phone").val(phoneConfirmation);
 		} else {
 			getCompanyInfoError();
 		}
@@ -2142,9 +2142,9 @@
                                         <tr class="hiddenField selfPlacementInfo">
                                             <td class="style1" align="right"><strong>Phone Confirmation:</strong></td>
                                             <td class="style1" colspan="3">
-                                                <span class="readOnly selfPlacementReadOnly">#DateFormat(qCandidatePlaceCompany.selfPhoneConfirmationDate, 'mm/dd/yyyy')#</span>
-                                                <input type="text" name="selfPhoneConfirmationDate" id="selfPhoneConfirmationDate" class="style1 datePicker editPage selfPlacementField" value="#DateFormat(qCandidatePlaceCompany.selfPhoneConfirmationDate, 'mm/dd/yyyy')#" maxlength="10">
-                                                <cfif NOT LEN(qCandidatePlaceCompany.selfPhoneConfirmationDate)><font size="1">(mm/dd/yyyy)</font></cfif>
+                                                <span class="readOnly selfPlacementReadOnly">#DateFormat(qCandidatePlaceCompany.confirmation_phone, 'mm/dd/yyyy')#</span>
+                                                <input type="text" name="confirmation_phone" id="confirmation_phone" class="style1 datePicker editPage selfPlacementField" value="#DateFormat(qCandidatePlaceCompany.confirmation_phone, 'mm/dd/yyyy')#" maxlength="10">
+                                                <cfif NOT LEN(qCandidatePlaceCompany.confirmation_phone)><font size="1">(mm/dd/yyyy)</font></cfif>
                                             </td>
                                         </tr>
 
@@ -2559,9 +2559,9 @@
                                                 <tr class="hiddenField selfPlacementInfo">
                                                     <td class="style1" align="right"><strong>Phone Confirmation:</strong></td>
                                                     <td class="style1" colspan="3">
-                                                        <span class="readOnly selfPlacementReadOnly">#DateFormat(qGetAllPlacements.selfPhoneConfirmationDate, 'mm/dd/yyyy')#</span>
-                                                        <input type="text" name="selfPhoneConfirmationDate_#qGetAllPlacements.candCompID#" id="selfPhoneConfirmationDate_#qGetAllPlacements.candCompID#" class="style1 datePicker editPage selfPlacementField" value="#DateFormat(qGetAllPlacements.selfPhoneConfirmationDate, 'mm/dd/yyyy')#" maxlength="10">
-                                                        <cfif NOT LEN(qGetAllPlacements.selfPhoneConfirmationDate)><font size="1">(mm/dd/yyyy)</font></cfif>
+                                                        <span class="readOnly selfPlacementReadOnly">#DateFormat(qGetAllPlacements.confirmation_phone, 'mm/dd/yyyy')#</span>
+                                                        <input type="text" name="confirmation_phone_#qGetAllPlacements.candCompID#" id="confirmation_phone_#qGetAllPlacements.candCompID#" class="style1 datePicker editPage selfPlacementField" value="#DateFormat(qGetAllPlacements.confirmation_phone, 'mm/dd/yyyy')#" maxlength="10">
+                                                        <cfif NOT LEN(qGetAllPlacements.confirmation_phone)><font size="1">(mm/dd/yyyy)</font></cfif>
                                                     </td>
                                                 </tr>
                                                 <tr class="hiddenField selfPlacementInfo">

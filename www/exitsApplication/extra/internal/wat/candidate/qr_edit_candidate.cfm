@@ -33,7 +33,7 @@
 <cfparam name="FORM.selfConfirmationDate" default="">
 <cfparam name="FORM.selfConfirmationMethod" default="">
 <cfparam name="FORM.selfEmailConfirmationDate" default="">
-<cfparam name="FORM.selfPhoneConfirmationDate" default="">
+<cfparam name="FORM.confirmation_phone" default="">
 <cfparam name="FORM.cancelStatus" default="">
 <!--- Program Information --->
 <cfparam name="FORM.wat_participation" default="">
@@ -82,7 +82,7 @@
         <cfparam name="FORM.selfJobOfferStatus_#qGetAllPlacements.candCompID#" default="Pending">
         <cfparam name="FORM.selfConfirmationName_#qGetAllPlacements.candCompID#" default="">
         <cfparam name="FORM.selfConfirmationMethod_#qGetAllPlacements.candCompID#" default="">
-        <cfparam name="FORM.selfPhoneConfirmationDate_#qGetAllPlacements.candCompID#" default="">
+        <cfparam name="FORM.confirmation_phone_#qGetAllPlacements.candCompID#" default="">
         <cfparam name="FORM.cancelStatus_#qGetAllPlacements.candCompID#" default="">
         <cfparam name="FORM.authentication_secretaryOfState_#qGetAllPlacements.candCompID#" default="0">
         <cfparam name="FORM.authentication_departmentOfLabor_#qGetAllPlacements.candCompID#" default="0">
@@ -266,12 +266,6 @@
                 	jobID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM['jobID_#qGetAllPlacements.candCompID#']#">, 
                     selfConfirmationName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM['selfConfirmationName_#qGetAllPlacements.candCompID#']#">,
                     selfJobOfferStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM['selfJobOfferStatus_#qGetAllPlacements.candCompID#']#">,
-                    <!--- Erase phone confirmation date if the program has changed --->
-                    <cfif qGetCandidateInfo.programID NEQ FORM.programID>
-                    	selfPhoneConfirmationDate = null,
-                    <cfelse>
-                    	selfPhoneConfirmationDate = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM['selfPhoneConfirmationDate_#qGetAllPlacements.candCompID#']#">,
-                    </cfif>
                     selfConfirmationNotes = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM['selfConfirmationNotes_#qGetAllPlacements.candCompID#']#">,
                     selfFindJobOffer = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM['selfFindJobOffer_#qGetAllPlacements.candCompID#']#">,
                     isTransferJobOfferReceived = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM['newJobOffer_#qGetAllPlacements.candCompID#'])#">,
@@ -280,6 +274,14 @@
                 WHERE
                     candcompid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetAllPlacements.candCompID#">
             </cfquery>
+            
+            <!--- Update program related confirmations --->
+            <cfscript>
+				APPLICATION.CFC.HOSTCOMPANY.updateInsertProgramConfirmations(
+					hostID=qGetAllPlacements.hostCompanyID,
+					programID=qGetAllPlacements.programID,
+					confirmation_phone=FORM['confirmation_phone_#qGetAllPlacements.candCompID#']);
+			</cfscript>
             
             <!--- Update secondary confirmations --->
             <cfquery datasource="#APPLICATION.DSN.Source#">
@@ -527,7 +529,7 @@
                 selfJobOfferStatus,
                 selfConfirmationDate,
                 selfEmailConfirmationDate,
-                selfPhoneConfirmationDate,
+                confirmation_phone,
                 selfFindJobOffer,
                 selfConfirmationNotes,
                 isSecondary,
@@ -552,7 +554,7 @@
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfJobOfferStatus#">,
                 <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.selfConfirmationDate#" null="#NOT IsDate(FORM.selfConfirmationDate)#">,
                 <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.selfEmailConfirmationDate#" null="#NOT IsDate(FORM.selfEmailConfirmationDate)#">,
-                <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.selfPhoneConfirmationDate#" null="#NOT IsDate(FORM.selfPhoneConfirmationDate)#">,
+                <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.confirmation_phone#" null="#NOT IsDate(FORM.confirmation_phone)#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfFindJobOffer#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationNotes#">,
                 <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isSecondary)#">,
@@ -579,12 +581,6 @@
                 selfJobOfferStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfJobOfferStatus#">,
                 selfConfirmationDate = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.selfConfirmationDate#" null="#NOT IsDate(FORM.selfConfirmationDate)#">,
                 selfEmailConfirmationDate = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.selfEmailConfirmationDate#" null="#NOT IsDate(FORM.selfEmailConfirmationDate)#">,
-                <!--- Erase phone confirmation date if the program has changed --->
-				<cfif qGetCandidateInfo.programID NEQ FORM.programID>
-                    selfPhoneConfirmationDate = null,
-                <cfelse>
-                    selfPhoneConfirmationDate = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.selfPhoneConfirmationDate#" null="#NOT IsDate(FORM.selfPhoneConfirmationDate)#">,
-                </cfif>
                 selfFindJobOffer = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfFindJobOffer#">,
                 selfConfirmationNotes = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationNotes#">,                
 				isTransfer = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isTransfer)#">, 
@@ -595,77 +591,15 @@
             WHERE 
                 candcompid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCurrentPlacement.candCompID#">
         </cfquery>
-	
-    </cfif>
-    
-    <!--- Update other records assigned to same host company and program --->
-    <cfif IsDate(FORM.selfPhoneConfirmationDate)>
-    
-        <cfquery datasource="#APPLICATION.DSN.Source#">
-            UPDATE 
-                extra_candidate_place_company ecpc
-            INNER JOIN
-            	extra_candidates ec ON ec.candidateID = ecpc.candidateID
-                    AND
-                        ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">   
-                    AND	
-                   		ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">             
-            SET 
-                ecpc.selfPhoneConfirmationDate = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.selfPhoneConfirmationDate#">
-            WHERE 
-            	ecpc.hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">
-           	AND     
-                ecpc.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-            AND
-            	ecpc.selfPhoneConfirmationDate IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
-        </cfquery>
-    
-    <!--- Check if there is a date in other records, if there is update this record --->
-    <cfelse>
-
-        <cfquery name="qGetPlaceCompanyInfo" datasource="#APPLICATION.DSN.Source#">
-            SELECT
-            	ecpc.selfPhoneConfirmationDate
-            FROM
-            	extra_candidate_place_company ecpc
-            INNER JOIN
-            	extra_candidates ec ON ec.candidateID = ecpc.candidateID
-                    AND
-                        ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">   
-                    AND	
-                   		ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">             
-            WHERE 
-            	ecpc.hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">
-           	AND     
-                ecpc.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-            AND
-            	ecpc.selfPhoneConfirmationDate IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">
-			LIMIT 1                
-        </cfquery>
         
-        <cfif isDate(qGetPlaceCompanyInfo.selfPhoneConfirmationDate)>
-
-            <cfquery datasource="#APPLICATION.DSN.Source#">
-                UPDATE 
-                    extra_candidate_place_company ecpc
-                INNER JOIN
-                    extra_candidates ec ON ec.candidateID = ecpc.candidateID
-                        AND
-                            ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">   
-                        AND	
-                            ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">             
-                SET 
-                    ecpc.selfPhoneConfirmationDate = <cfqueryparam cfsqltype="cf_sql_date" value="#qGetPlaceCompanyInfo.selfPhoneConfirmationDate#">
-                WHERE 
-                    ecpc.hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">
-                AND     
-                    ecpc.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-                AND
-                    ecpc.selfPhoneConfirmationDate IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
-            </cfquery>
-
-    	</cfif>
-    
+        <!--- Update program related confirmations --->
+		<cfscript>
+            APPLICATION.CFC.HOSTCOMPANY.updateInsertProgramConfirmations(
+                hostID=qGetCurrentPlacement.hostCompanyID,
+                programID=qGetCurrentPlacement.programID,
+                confirmation_phone=FORM.confirmation_phone);
+        </cfscript>
+	
     </cfif>
     
 	<!--- Update confirmations --->
