@@ -254,7 +254,7 @@
 						) 
 					AS CHAR) LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.search#%">
                	<!--- Check if family is approved, do not check this for ESI --->
-               	<cfif CLIENT.companyID NEQ 14>
+               	<cfif CLIENT.companyID EQ 14>
                     AND
                         hostID IN (
                             SELECT hostID 
