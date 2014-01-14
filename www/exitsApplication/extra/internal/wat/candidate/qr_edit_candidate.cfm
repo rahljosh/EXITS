@@ -529,7 +529,6 @@
                 selfJobOfferStatus,
                 selfConfirmationDate,
                 selfEmailConfirmationDate,
-                confirmation_phone,
                 selfFindJobOffer,
                 selfConfirmationNotes,
                 isSecondary,
@@ -554,7 +553,6 @@
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfJobOfferStatus#">,
                 <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.selfConfirmationDate#" null="#NOT IsDate(FORM.selfConfirmationDate)#">,
                 <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.selfEmailConfirmationDate#" null="#NOT IsDate(FORM.selfEmailConfirmationDate)#">,
-                <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.confirmation_phone#" null="#NOT IsDate(FORM.confirmation_phone)#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfFindJobOffer#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationNotes#">,
                 <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isSecondary)#">,
@@ -565,6 +563,14 @@
                 <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isTransferSevisUpdated)#">
             )
         </cfquery>
+        
+        <!--- Insert program related confirmations --->
+		<cfscript>
+            APPLICATION.CFC.HOSTCOMPANY.updateInsertProgramConfirmations(
+                hostID=FORM.hostCompanyID,
+                programID=FORM.programID,
+                confirmation_phone=FORM.confirmation_phone);
+        </cfscript>
         
     <cfelse>
         
