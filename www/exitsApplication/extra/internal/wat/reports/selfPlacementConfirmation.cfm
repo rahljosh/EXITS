@@ -102,7 +102,6 @@
                 ecpc.selfConfirmationName,
                 ecpc.selfConfirmationDate,
                 ecpc.selfEmailConfirmationDate,
-                ecpc.selfPhoneConfirmationDate,
                 ecpc.selfConfirmationMethod,  
                 ecpc.selfConfirmationNotes,
                 ecpc.placement_date,
@@ -111,7 +110,8 @@
                 conf.confirmed,
                 conf.confirmedDate,
                 j1.numberPositions,
-                j1.verifiedDate
+                j1.verifiedDate,
+                epc.confirmation_phone
             FROM
                 extra_candidates ec
             LEFT OUTER JOIN
@@ -136,6 +136,8 @@
             	extra_j1_positions j1 ON j1.hostID = ecpc.hostcompanyID
                 	AND
                     	j1.programID = ec.programID
+          	LEFT OUTER JOIN extra_program_confirmations epc ON epc.hostID = ecpc.hostCompanyID
+         		AND epc.programID = ec.programID
             WHERE 
                 ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
             AND 
@@ -533,8 +535,8 @@
                                 </cfif>
                           	</td>
                             <td class="style1">
-                            	<cfif LEN(qTotalPerAgent.selfPhoneConfirmationDate)>
-                                	#DateFormat(qTotalPerAgent.selfPhoneConfirmationDate, 'mm/dd/yyyy')#
+                            	<cfif LEN(qTotalPerAgent.confirmation_phone)>
+                                	#DateFormat(qTotalPerAgent.confirmation_phone, 'mm/dd/yyyy')#
                                	<cfelse>
                                 	<font color="red">Missing</font>
                                 </cfif>

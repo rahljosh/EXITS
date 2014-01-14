@@ -209,7 +209,7 @@
                       	</cfif>
                         <tr>
                             <td align="right" class="right">Phone Confirmation:</td>
-                            <td align="left" class="left">#DateFormat(qCandidatePlaceCompany.selfPhoneConfirmationDate, 'mm/dd/yyyy')#</td>
+                            <td align="left" class="left">#DateFormat(qCandidatePlaceCompany.confirmation_phone, 'mm/dd/yyyy')#</td>
                         </tr>
                         <cfif qCandidatePlaceCompany.isTransfer EQ 0 AND qCandidatePlaceCompany.isSecondary EQ 0>   
                             <tr>

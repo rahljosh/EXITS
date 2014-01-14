@@ -1333,10 +1333,13 @@
 			var state = $.trim($("#state").val());
 			var zip = $.trim($("#zip").val());
 			
+			// Address verification is broken (It was based on Google Maps API v2) commented out until working.
+			$("#hostCompany").submit();
+			
 			// Setting a callback handler for the proxy automatically makes the proxy's calls asynchronous. 
-			udf.setCallbackHandler(checkAddress); 
-			udf.setErrorHandler(myErrorHandler);
-			udf.addressLookup(address,city,state,zip,"232");
+			//udf.setCallbackHandler(checkAddress); 
+			//udf.setErrorHandler(myErrorHandler);
+			//udf.addressLookup(address,city,state,zip,"232");
 		}
 	} 
 
@@ -1507,82 +1510,42 @@
 		}	
 	}
 	
-	// Use an asynchronous call to get the city and state from the zip code. The function is called when the user inputs a zip. 
-	var getLocationByZipWorkSite = function(fieldid) { 
-		
-		// FORM Variables
-		var zip = $("#" + fieldid).val();
-
-		if (zip.length == 5) {
-			// Setting a callback handler for the proxy automatically makes the proxy's calls asynchronous. 
-			udf.setCallbackHandler(checkZipWorkSite); 
-			udf.setErrorHandler(myErrorHandler); 
-			udf.zipCodeLookUp(zip);
-		} else {
-			alert("Please verify your zip code");
-		}
-	} 
+	// store state ID's so it can be dynamically changed
+	var states = [];
+	<cfoutput>
+		<cfloop query="qGetStateList">
+			states.push({
+				key: #id#,
+				value: '#state#'
+			});
+		</cfloop>
+	</cfoutput>
 	
-	var checkZipWorkSite = function(googleResponse) { 
-
-		var isAddressVerified = googleResponse.ISVERIFIED;
-
-		if ( isAddressVerified == 1 ) {
-		
-			// Get Data Back	
-			var city = googleResponse.CITY;
-			var state = googleResponse.STATE;
-			var zip = googleResponse.ZIP;
-			zip = zip.substring('zip='.length);
-			
-			$("#city").val(city);
-			$("#state").val(state);
-			$("#zip").val(zip);
-			
-			$("#trZipLookUp").fadeOut();
-		} else {
-			alert("Please verify your zip code");
-		}
-
-	}
-	
-	// Use an asynchronous call to get the city and state from the zip code. The function is called when the user inputs a zip. 
-	var getLocationByZipHQ = function(fieldid) { 
-		
-		// FORM Variables
-		var zip = $("#" + fieldid).val();
-
-		if (zip.length == 5) {
-			// Setting a callback handler for the proxy automatically makes the proxy's calls asynchronous. 
-			udf.setCallbackHandler(checkZipHQ); 
-			udf.setErrorHandler(myErrorHandler); 
-			udf.zipCodeLookUp(zip);
-		} else {
-			alert("Please verify your zip code");
-		}
-	} 
-	
-	var checkZipHQ = function(googleResponse) { 
-
-		var isAddressVerified = googleResponse.ISVERIFIED;
-
-		if ( isAddressVerified == 1 ) {
-		
-			// Get Data Back	
-			var city = googleResponse.CITY;
-			var state = googleResponse.STATE;
-			var zip = googleResponse.ZIP;
-			zip = zip.substring('zip='.length);
-			
-			$("#hqCity").val(city);
-			$("#hqState").val(state);
-			$("#hqZip").val(zip);
-			
-			$("#trZipLookUpHQ").fadeOut();
-		} else {
-			alert("Please verify your zip code");
-		}
-
+	// Get the city and state based on the zip code
+	var getLocationByZipCode = function(ID) {
+		var zipcode = $("#"+ID).val();
+		$.getJSON('http://ziptasticapi.com/'+zipcode,function(address) {
+			if (!address['error']) {
+				city = address['city'];
+				state = 0;
+				$.each(states, function(k,v) {
+					if (v.value == address['state']) {
+						state = k;
+					}
+				});
+				if (ID.substring(0,2) == "hq") {
+					$("#hqCity").val(city.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();}));
+					$("#hqState").val(state);
+					$("#hqZip").val(zipcode);
+				} else {
+					$("#city").val(city.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();}));
+					$("#state").val(state);
+					$("#zip").val(zipcode);
+				}
+			} else {
+				alert("Please verify your zip code");
+			}												  
+		});
 	}
 
 	// Error handler for the asynchronous functions. 
@@ -1836,21 +1799,6 @@
                                                 </cfif>
                                             </td>
                                         </tr>
-                                        <cfif #hostCompanyID# EQ 0 >
-                                            <tr id="trZipLookUp">
-                                                <td class="style1" align="right"><strong>Input your zip code:</strong></td>
-                                                <td class="style1">
-                                                	<input 
-                                                    	type="text" 
-                                                        name="zipLookup" 
-                                                        id="zipLookup" 
-                                                        size="10" 
-                                                        maxlength="5" 
-                                                        class="style1 editPage" 
-                                                        onBlur="getLocationByZipWorkSite(this.id);">
-                                           		</td>											
-                                            </tr>
-                                        </cfif>
                                         <tr>
                                             <td width="35%" class="style1" align="right"><strong>Address:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
@@ -1881,7 +1829,7 @@
                                             <td class="style1" align="right"><strong>Zip:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                                 <span class="readOnly">#FORM.zip#</span>
-                                                <input type="text" name="zip" id="zip" value="#FORM.zip#" class="style1 editPage" size="10" maxlength="5" onblur="getLocationByZipWorkSite(this.id);">
+                                                <input type="text" name="zip" id="zip" value="#FORM.zip#" class="style1 editPage" size="10" maxlength="5" onblur="getLocationByZipCode(this.id);">
                                             </td>
                                         </tr>
                                     </table>
@@ -1904,21 +1852,6 @@
                                         	<td class="style1" align="right"><input type="checkbox" name="copyAddress" id="copyAddress" class="style1 editPage" onclick="jsCopyAddress();" /></td>
                                             <td class="style1"><strong><label for="copyAddress">Same as Main Address</label></strong></td>
                                         </tr>
-                                        <cfif #hostCompanyID# EQ 0 >
-                                            <tr id="trZipLookUpHQ">
-                                                <td class="style1" align="right"><strong>Input your zip code:</strong></td>
-                                                <td class="style1">
-                                                	<input 
-                                                    	type="text" 
-                                                        name="zipLookup" 
-                                                        id="zipLookupHQ" 
-                                                        size="10" 
-                                                        maxlength="5" 
-                                                        class="style1 editPage" 
-                                                        onBlur="getLocationByZipHQ(this.id);">
-                                               	</td>											
-                                            </tr>
-                                        </cfif>
                                         <tr>
                                             <td width="35%" class="style1" align="right"><strong>Address:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
@@ -1957,7 +1890,7 @@
                                                     class="style1 editPage" 
                                                     size="10" 
                                                     maxlength="5" 
-                                                    onblur="getLocationByZipHQ(this.id);">
+                                                    onblur="getLocationByZipCode(this.id);">
                                             </td>
                                         </tr>
                                     </table>

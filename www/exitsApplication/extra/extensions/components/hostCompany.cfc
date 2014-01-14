@@ -91,25 +91,18 @@
             	eh.*,
                 ec.confirmed,
                 ep.numberPositions,
-                ecpc.selfPhoneConfirmationDate
-          	FROM
-            	extra_hostcompany eh
-			LEFT OUTER JOIN
-            	extra_confirmations ec ON ec.hostID = eh.hostCompanyID
-                	AND
-                    	ec.programID = (SELECT programID FROM extra_candidates WHERE candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#"> LIMIT 1)
-          	LEFT OUTER JOIN
-            	extra_j1_positions ep ON ep.hostID = eh.hostCompanyID
-                	AND
-                    	ep.programID = (SELECT programID FROM extra_candidates WHERE candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#"> LIMIT 1)
-          	LEFT OUTER JOIN
-            	extra_candidate_place_company ecpc ON ecpc.hostCompanyID = eh.hostCompanyID
-                	AND
-                    	ecpc.selfPhoneConfirmationDate IS NOT NULL
+                epc.confirmation_phone
+          	FROM extra_hostcompany eh
+			LEFT OUTER JOIN extra_confirmations ec ON ec.hostID = eh.hostCompanyID
+           		AND ec.programID = (SELECT programID FROM extra_candidates WHERE candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#"> LIMIT 1)
+          	LEFT OUTER JOIN extra_j1_positions ep ON ep.hostID = eh.hostCompanyID
+       			AND ep.programID = (SELECT programID FROM extra_candidates WHERE candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#"> LIMIT 1)
+          	LEFT OUTER JOIN extra_program_confirmations epc ON epc.hostID = eh.hostCompanyID
+         		AND epc.programID = ep.programID
            	WHERE
             	eh.hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostCompanyID#">
           	ORDER BY
-            	ecpc.selfPhoneConfirmationDate DESC
+            	epc.confirmation_phone DESC
           	LIMIT 1
         </cfquery>
         
@@ -166,7 +159,7 @@
 				result.WC_POLICYNUMBER = qGetHCInfo.WC_policyNumber;
 				result.CONFIRMED = qGetHCInfo.confirmed;
 				result.POSITIONS = qGetHCInfo.numberPositions;
-				result.PHONECONFIRMATION = DateFormat(qGetHCInfo.selfPhoneConfirmationDate, 'mm/dd/yyyy');
+				result.PHONECONFIRMATION = DateFormat(qGetHCInfo.confirmation_phone, 'mm/dd/yyyy');
 			}
 			return result;
 		</cfscript>
@@ -235,6 +228,45 @@
 			return vReturnArray;
         </cfscript>
 
+    </cffunction>
+    
+    <!--- Update / Insert program related confirmations --->
+    <cffunction name="updateInsertProgramConfirmations" access="public" returntype="void" output="no">
+    	<cfargument name="hostID" required="yes">
+        <cfargument name="programID" required="yes">
+        <cfargument name="confirmation_phone" default="">
+        
+        <cfquery name="qGetProgramConfirmations" datasource="#APPLICATION.DSN.Source#">
+        	SELECT *
+            FROM extra_program_confirmations
+            WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
+            AND programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.programID)#">
+        </cfquery>
+        
+        <cfif VAL(qGetProgramConfirmations.recordCount)>
+        	<cfquery datasource="#APPLICATION.DSN.Source#">
+            	UPDATE extra_program_confirmations
+                <cfif IsDate(ARGUMENTS.confirmation_phone)>
+                	SET confirmation_phone = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.confirmation_phone#">
+                <cfelse>
+                	SET confirmation_phone = <cfqueryparam cfsqltype="cf_sql_date" value="#qGetProgramConfirmations.confirmation_phone#">
+                </cfif>
+                WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetProgramConfirmations.id#">
+            </cfquery>
+        <cfelse>
+        	<cfquery datasource="#APPLICATION.DSN.Source#">
+            	INSERT INTO extra_program_confirmations (
+                	hostID,
+                    programID,
+                    confirmation_phone)
+               	VALUES (
+                	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">,
+            		<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.programID)#">,
+                    <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.confirmation_phone#" null="#NOT ISDATE(ARGUMENTS.confirmation_phone)#">
+                )
+            </cfquery>
+        </cfif>
+        
     </cffunction>
 
 </cfcomponent>

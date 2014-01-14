@@ -1156,7 +1156,6 @@
                 ecpc.selfJobOfferStatus,
                 ecpc.selfConfirmationDate,
                 ecpc.selfEmailConfirmationDate,
-                ecpc.selfPhoneConfirmationDate,
                 ecpc.selfFindJobOffer,
                 ecpc.selfConfirmationNotes,
                 ecpc.reason_host,
@@ -1170,23 +1169,18 @@
                 ej.title AS jobTitle,
                 ec.confirmed,
                 ep.numberPositions,
-                ep.programID
-            FROM
-                extra_candidate_place_company ecpc
-            INNER JOIN
-                extra_hostcompany eh ON eh.hostCompanyID = ecpc.hostCompanyID
-          	LEFT JOIN
-            	smg_states s ON s.id = eh.state
-            LEFT OUTER JOIN
-            	extra_jobs ej ON ej.ID = ecpc.jobID
-           	LEFT OUTER JOIN
-            	extra_confirmations ec ON ec.hostID = eh.hostCompanyID
-                	AND
-                    	ec.programID = (SELECT programID FROM extra_candidates WHERE candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#"> LIMIT 1)
-          	LEFT OUTER JOIN
-            	extra_j1_positions ep ON ep.hostID = eh.hostCompanyID
-                	AND
-                    	ep.programID = (SELECT programID FROM extra_candidates WHERE candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#"> LIMIT 1)
+                ep.programID,
+                epc.confirmation_phone
+            FROM extra_candidate_place_company ecpc
+            INNER JOIN extra_hostcompany eh ON eh.hostCompanyID = ecpc.hostCompanyID
+          	LEFT JOIN smg_states s ON s.id = eh.state
+            LEFT OUTER JOIN extra_jobs ej ON ej.ID = ecpc.jobID
+           	LEFT OUTER JOIN extra_confirmations ec ON ec.hostID = eh.hostCompanyID
+           		AND ec.programID = (SELECT programID FROM extra_candidates WHERE candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#"> LIMIT 1)
+          	LEFT OUTER JOIN extra_j1_positions ep ON ep.hostID = eh.hostCompanyID
+       			AND ep.programID = (SELECT programID FROM extra_candidates WHERE candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#"> LIMIT 1)
+          	LEFT OUTER JOIN extra_program_confirmations epc ON epc.hostID = ecpc.hostCompanyID
+         		AND epc.programID = ep.programID
             WHERE 
                 ecpc.candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#">
             

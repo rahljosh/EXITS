@@ -8,6 +8,10 @@
 <!--- Ajax Call to the Component --->
 <cfajaxproxy cfc="extensions.components.udf" jsclassname="UDFComponent">
 
+<cfinclude template="../querys/statelist.cfm">
+
+<cfinclude template="../querys/countrylist.cfm">
+
 <SCRIPT LANGUAGE="JavaScript">
 <!-- Begin -->
 function UserName() {
@@ -157,40 +161,39 @@ function UserName() {
 			});
 		}
 	}
-	 
-	var getLocationByZip = function(zip) { 
-		if ($("#country").val() == 232) {
-			if (zip.length == 5) {
-				udf.setCallbackHandler(checkZip); 
-				udf.setErrorHandler(myErrorHandler); 
-				udf.zipCodeLookUp(zip);
-			}
-		}
-	} 
 	
-	var checkZip = function(googleResponse) { 
-
-		var isAddressVerified = googleResponse.ISVERIFIED;
-
-		if ( isAddressVerified == 1 ) {
-		
-			var city = googleResponse.CITY;
-			var state = googleResponse.STATE;
-			var zip = googleResponse.ZIP;
-			zip = zip.substring('zip='.length);
-			
-			$("#city").val(city);
-			$("#state").val(state);
-			$("#zip").val(zip);
-			
-			$("#trZipLookUp").fadeOut();
-			
-		} else {
-			alert("Please verify your zip code");
-		}
-
+	// store state ID's so it can be dynamically changed
+	var states = [];
+	<cfoutput>
+		<cfloop query="statelist">
+			states.push({
+				key: #id#,
+				value: '#state#'
+			});
+		</cfloop>
+	</cfoutput>
+	
+	// Get the city and state based on the zip code
+	var getLocationByZipCode = function(ID) {
+		var zipcode = $("#"+ID).val();
+		$.getJSON('http://ziptasticapi.com/'+zipcode,function(address) {
+			if (!address['error']) {
+				city = address['city'];
+				state = 0;
+				$.each(states, function(k,v) {
+					if (v.value == address['state']) {
+						state = k;
+					}
+				});
+				$("#city").val(city.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();}));
+				$("#state").val(state);
+				$("#zip").val(zipcode);
+			} else {
+				alert("Please verify your zip code");
+			}												  
+		});
 	}
-
+	 
 	// Error handler for the asynchronous functions. 
 	var myErrorHandler = function(statusCode, statusMsg) { 
 		alert('Status: ' + statusCode + ', ' + statusMsg); 
@@ -203,10 +206,6 @@ function UserName() {
 <body>
 
 <cftry>
-
-<cfinclude template="../querys/statelist.cfm">
-
-<cfinclude template="../querys/countrylist.cfm">
 
 <!--- GET COMPANIES SESSION.USERID HAS ACCESS TO --->
 <cfquery name="list_companies" datasource="MySql">
@@ -312,7 +311,7 @@ function UserName() {
 										</tr>
                                         <tr>
 											<td class="style1"><b>Zip Code:</b></td>
-											<td class="style1"><cfinput type="text" name="zip" id="zip" size="10" maxlength="10" onBlur="getLocationByZip(this.value);"></td>											
+											<td class="style1"><cfinput type="text" name="zip" id="zip" size="10" maxlength="10" onBlur="getLocationByZipCode(this.id);"></td>											
 										</tr>
                                         <tr>
 											<td class="style1"><b>Country:</b></td>
