@@ -187,8 +187,8 @@
                         AND
                             sc.schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.schoolID#">
                
-                WHERE
-                    s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                WHERE s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+               	AND ( sh.datePlacedEnded > p.startDate or sh.datePlacedEnded is null )
                 
                 <!--- Check ISE companies --->
                 <cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
@@ -198,6 +198,8 @@
                     AND	
                         s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
                 </cfif>
+                
+                GROUP BY s.studentID
                 
 				ORDER BY
                 	sh.datePlaced DESC,
