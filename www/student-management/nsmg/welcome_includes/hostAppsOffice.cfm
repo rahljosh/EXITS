@@ -43,7 +43,11 @@
                     </cfif>
                     
                     <cfscript>
-						vCurrentSeason = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID;
+						if (VAL(vSelectedSeason)) {
+							vCurrentSeason = vSelectedSeason;	
+						} else {
+							vCurrentSeason = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID;
+						}
 					</cfscript>
 
                     <cfquery name="apps" datasource="#application.dsn#">
@@ -89,7 +93,7 @@
                         
                     </cfquery> 
                     
-                    <cfoutput><a href="index.cfm?curdoc=hostApplication/listOfApps&status=#i#">#apps.count#</a></cfoutput>
+                    <cfoutput><a href="index.cfm?curdoc=hostApplication/listOfApps&status=#i#&seasonID=#vCurrentSeason#">#apps.count#</a></cfoutput>
                 </td>
             </cfloop>
             </tr>

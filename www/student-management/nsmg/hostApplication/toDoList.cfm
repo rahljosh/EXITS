@@ -505,7 +505,7 @@
                         </cfif>
                     </td>                    
                     <td valign="top" align="center">
-                        <a class="jQueryModal" href="/hostApplication/index.cfm?uniqueID=#qGetHostInfo.uniqueID#&userID=#CLIENT.userID#" title="View Complete Application"><img src="pics/buttons/openApplication.png" border="0"></a>
+                        <a class="jQueryModal" href="/hostApplication/index.cfm?uniqueID=#qGetHostInfo.uniqueID#&season=#vSelectedSeason#&userID=#CLIENT.userID#" title="View Complete Application"><img src="pics/buttons/openApplication.png" border="0"></a>
                         <br/>
                         <cfif CLIENT.userType LTE 4> 
                             <a class="jQueryModal" href="hostApplication/viewPDF.cfm?hostID=#qGetHostInfo.hostID#&pdf&reportType=office" title="Print Application">
@@ -597,7 +597,7 @@
 								vSetDescLink = '#qGetApprovalHistory.description#';
 							// Set Up Link for HF section
 							} else { 
-                                vSetDescLink = '<a href="/hostApplication/index.cfm?uniqueID=#qGetHostInfo.uniqueID#&section=#qGetApprovalHistory.section#&userID=#CLIENT.userID#" title="Click to view item" class="jQueryModal">#qGetApprovalHistory.description#</a>';
+                                vSetDescLink = '<a href="/hostApplication/index.cfm?uniqueID=#qGetHostInfo.uniqueID#&season=#vSelectedSeason#&section=#qGetApprovalHistory.section#&userID=#CLIENT.userID#" title="Click to view item" class="jQueryModal">#qGetApprovalHistory.description#</a>';
                             }
 							
 							// Block approval of forms that require a student

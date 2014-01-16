@@ -16,9 +16,10 @@
     <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
     
     <!--- Param URL Variables --->
-    <cfparam name="URL.statusID" default="">
+    <cfparam name="URL.status" default="">
     <cfparam name="URL.approve" default="">
-    <cfparam name="URL.hostID" default="0">  
+    <cfparam name="URL.hostID" default="0">
+    <cfparam name="URL.seasonID" default="0">  
     <!--- Param FORM Variables --->  
     <cfparam name="FORM.setHostIDAsPaper" default="">
 
@@ -63,7 +64,7 @@
         }
 		
 		// Get List of Host Family Applications
-		qGetHostApplications = APPLICATION.CFC.HOST.getApplicationList(statusID=URL.status);	
+		qGetHostApplications = APPLICATION.CFC.HOST.getApplicationList(statusID=URL.status,seasonID=URL.seasonID);	
     </cfscript>
     
     <cfparam name="FORM.notHosting" default="0">
