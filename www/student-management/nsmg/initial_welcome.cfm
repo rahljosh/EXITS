@@ -13,7 +13,26 @@
 <cfsilent>
 	<cfparam name="url.caseOrder" default="lastPerCommentDate">
     <cfsetting requesttimeout="200">
-
+    
+    <!--- Set the default season --->
+	<cfparam name="URL.seasonID" default="0">
+    
+    <!--- Get all of the seasons from AYP 13/14 - current --->
+    <cfquery name="qGetSeasons" datasource="#APPLICATION.DSN#">
+    	SELECT *
+        FROM smg_seasons
+        WHERE datePaperworkStarted <= <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
+        AND seasonID >= 10
+    </cfquery>
+    
+    <!--- Set the season --->
+    <cfscript>
+		vSelectedSeason = ListLast(ValueList(qGetSeasons.seasonID));
+		if (VAL(URL.seasonID)) {
+			vSelectedSeason = URL.seasonID;	
+		}
+	</cfscript>
+    
 	<!--- Old Initial Welcome for WEP and ESI --->
     <cfif ListFind("11", CLIENT.companyID)>
         <cflocation url="index.cfm?curdoc=old_initial_welcome" addtoken="no">
@@ -290,11 +309,25 @@
 	// End -->
 </script>
 <script>
-jQuery(document).ready(function($) {
-      $(".clickableRow").click(function() {
-            window.document.location = $(this).attr("href");
-      });
-});
+	jQuery(document).ready(function($) {
+		$(".clickableRow").click(function() {
+      		window.document.location = $(this).attr("href");
+      	});
+	});
+
+	// Set a new season
+	function reloadWithSelectedSeason() {
+		var newURL = document.URL.toString();
+		if (newURL.indexOf("&seasonID=") > 0) {
+			newURL = newURL.substring(0,newURL.indexOf("&seasonID="));
+		}
+		if (newURL.indexOf("?") > 0) {
+			newURL = newURL + "&seasonID=" + $("#seasonID").val();
+		} else {
+			newURL = newURL + "?seasonID=" + $("#seasonID").val();
+		}
+		window.location.href = newURL;
+	}
 </script>
 <script type="text/javascript" language="JavaScript">
 <!-- Script to Swap div area
@@ -309,7 +342,7 @@ jQuery(document).ready(function($) {
 		// JQuery ColorBox Modal
 		$(document).ready(function(){ 
 			$.fn.colorbox( {href:'hostLeads/index.cfm?action=needAttention', iframe:true,width:'60%',height:'50%', onLoad: function() { }} );
-		}); 
+		});
 	</script>
 
 </cfif>
@@ -448,7 +481,17 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                 <div class="rdholder" style="width:100%; float:left;"> 
                 
                     <div class="rdtop"> 
-                        <span class="rdtitle">Host  Applications</span> 
+                        <span class="rdtitle">
+                        	Host  Applications 
+                            <span style="float:right; margin-right:5px;">
+                                <font size="-1">SEASON: </font>
+                                <select name="seasonID" id="seasonID" onchange="reloadWithSelectedSeason()">
+                                    <cfloop query="qGetSeasons">
+                                        <option value="#seasonID#" <cfif seasonID EQ vSelectedSeason>selected="selected"</cfif>>#season#</option>
+                                    </cfloop>
+                                </select>
+                           	</span>
+                     	</span> 
                     </div> <!-- end top --> 
                     
                     <div class="rdbox">
