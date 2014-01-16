@@ -161,7 +161,7 @@
                         phone_ext = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone_ext#" null="#yesNoFormat(TRIM(FORM.phone_ext) EQ '')#">,
                         fax = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fax#" null="#yesNoFormat(TRIM(FORM.fax) EQ '')#">,
                         url = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.url#" null="#yesNoFormat(TRIM(FORM.url) EQ '')#">,
-						numberOfStudents = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.numberOfStudents#">
+						numberOfStudents = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.numberOfStudents)#">
                     WHERE 
                     	schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.schoolID#">
         		</cfquery>
@@ -203,7 +203,7 @@
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone_ext#" null="#yesNoFormat(TRIM(FORM.phone_ext) EQ '')#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fax#" null="#yesNoFormat(TRIM(FORM.fax) EQ '')#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.url#" null="#yesNoFormat(TRIM(FORM.url) EQ '')#">,
-						<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.numberOfStudents#">
+						<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.numberOfStudents)#">
                     )  
 				</cfquery>
                 
