@@ -41,6 +41,7 @@
 		<cfargument name="email_file2" type="string" required="false" default="" hint="optional attachment">        
 		<cfargument name="email_file3" type="string" required="false" default="" hint="optional attachment">
         <cfargument name="includeTemplate" type="numeric" default="1" hint="Set to 0 to not include header/footer">
+        <cfargument name="isMPDEmail" type="numeric" default="0" hint="Set to 1 to show the MPD logo instead of the current company logo">
 
     	<cfscript>
 			var template_file = '';
@@ -81,6 +82,7 @@
 
 				<!--- Email Header --->
                 <cfif VAL(ARGUMENTS.includeTemplate)>
+                	<cfset isMPDEmail = ARGUMENTS.isMPDEmail>
                     <cfinclude template="../email/email_top.cfm">
                 </cfif>
                 

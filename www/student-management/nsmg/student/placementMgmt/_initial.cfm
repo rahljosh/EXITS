@@ -47,6 +47,9 @@
     <!--- Rejecting / Unplacing / Resubmitting --->
     <cfparam name="FORM.reason" default="" /> 
 
+	<!--- check if the double placement form was uploaded in the student's app --->
+	<cfdirectory directory="#AppPath.onlineApp.inserts#page23" name="doublePlacementFile" filter="#qGetStudentInfo.studentID#.*">
+
     <cfscript>
 		// Set default value
 		vIsPlacementCompliant = '';
@@ -70,6 +73,16 @@
 			// Check if compliance_review is checked
 			if (NOT IsDate(qGetPlacementHistoryByID.compliance_review)) {
 				vIsPlacementCompliant &= "<p style='color:red;'>Compliance Review must be checked off in paperwork before you can approve this placement.</p>";
+			}
+			
+			// Check if this is a double placement and both the student and the host app have approval for it
+			if (VAL(qGetPlacementHistoryByID.doublePlacementID)) {
+				if (NOT qGetHostInfo.acceptDoublePlacement) {
+					vIsPlacementCompliant &= "<p style='color:red;'>Missing host family approval for double placement.</p>";
+				}
+				if (NOT doublePlacementFile.recordcount) {
+					vIsPlacementCompliant &= "<p style='color:red;'>Missing student/natural family approval for double placement.</p>";
+				}
 			}
 			
 		}
@@ -269,7 +282,24 @@
 					changedBy = CLIENT.userID,
 					userType = CLIENT.userType,
 					placementStatus = vPlacementStatus
-				);													 
+				);
+				
+				// Updated double placement
+				if (VAL(qGetPlacementHistoryByID.doublePlacementID)) {
+					qGetDoublePlacementPaperworkHistory = APPLICATION.CFC.STUDENT.getDoublePlacementPaperworkHistory(historyID=qGetPlacementHistoryByID.historyID, studentID=qGetStudentInfo.studentID);
+					if (qGetHostInfo.acceptDoublePlacement AND doublePlacementFile.recordcount) {
+						APPLICATION.CFC.STUDENT.updateDoublePlacementTrackingHistory(
+							ID = qGetDoublePlacementPaperworkHistory.ID,
+							isDoublePlacementPaperworkRequired = 1,
+							doublePlacementParentsDateSigned = NOW(),
+							doublePlacementParentsDateCompliance = NOW(),
+							doublePlacementStudentDateSigned = NOW(),
+							doublePlacementStudentDateCompliance = NOW(),
+							doublePlacementHostFamilyDateSigned = NOW(),
+							doublePlacementHostFamilyDateCompliance = NOW()
+						);
+					}
+				}
 			
 				// Set Page Message
 				SESSION.pageMessages.Add("Form successfully submitted.");
@@ -1297,7 +1327,7 @@
                                 name="hostIDSuggest" 
                                 id="hostIDSuggest"
                                 value="#FORM.hostIDSuggest#" 
-                                autosuggest="cfc:nsmg.extensions.components.host.lookupHostFamily({cfautosuggestvalue},#qGetStudentInfo.regionAssigned#)" 
+                                autosuggest="cfc:nsmg.extensions.components.host.lookupHostFamily({cfautosuggestvalue},#qGetStudentInfo.regionAssigned#,#qGetStudentInfo.programID#)" 
                                 class="xLargeField"
                                 maxResultsDisplayed="25"
                                 showautosuggestloadingicon="true"

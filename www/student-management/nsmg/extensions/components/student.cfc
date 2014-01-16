@@ -401,6 +401,21 @@
 		<cfreturn qGetAvailableDoublePlacement>
 	</cffunction>
     
+    
+    <cffunction name="getCurrentStudentsByHost" access="public" returntype="query" output="no" hint="Gets students that are currently placed with the given host">
+    	<cfargument name="hostID" required="yes">
+        
+        <cfquery name="qGetStudents" datasource="#APPLICATION.DSN#">
+            SELECT *
+            FROM smg_students
+            WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
+            AND active = 1
+            ORDER BY familylastname
+        </cfquery>
+        
+        <cfreturn qGetStudents>
+    </cffunction>
+    
     <!--- ------------------------------------------------------------------------- ----
 		
 		Languages
@@ -2415,6 +2430,7 @@
                     h.doc_income_ver_date,
                     <!--- Page 10 - Confidential HF Visit --->
                     h.doc_conf_host_rec,
+                    h.compliance_conf_host_rec,
                     h.doc_date_of_visit,
                     <!--- Page 11 - Reference 1 ---> 
                     h.doc_ref_form_1,
@@ -2425,10 +2441,13 @@
                     h.doc_host_orientation,
                     <!--- Arrival Compliance --->
                     h.doc_school_accept_date,
+                    h.compliance_school_accept_date,
                     h.doc_school_sign_date,
                     <!--- Arrival Orientation --->
                     h.stu_arrival_orientation,
+                    h.compliance_stu_arrival_orientation,
                     h.host_arrival_orientation,
+                    h.compliance_host_arrival_orientation,
                     h.doc_class_schedule,
 					<!--- Compliance Review --->
 					h.compliance_review,
@@ -2679,6 +2698,51 @@
         </cfquery>
                 
         <cfreturn qGetDoublePlacementPaperworkHistory>
+    </cffunction>
+    
+    
+    <!--- Updates fields in smg_hostHistory that are now in the host application --->
+    <cffunction name="updateOldHostHistoryFields" access="public" returntype="void" output="no">
+    	<cfargument name="historyID" type="numeric" required="yes" hint="historyID is required">
+        <cfargument name="doc_conf_host_rec" default="" hint="doc_conf_host_rec is not required">
+        <cfargument name="doc_school_accept_date" default="" hint="doc_school_accept_date is not required">
+        <cfargument name="host_arrival_orientation" default="" hint="host_arrival_orientation is not required">
+        <cfargument name="stu_arrival_orientation" default="" hint="stu_arrival_orientation is not required">
+        <cfargument name="compliance_conf_host_rec" default="" hint="compliance_doc_conf_host_rec is not required">
+        <cfargument name="compliance_school_accept_date" default="" hint="compliance_doc_school_accept_date is not required">
+        <cfargument name="compliance_host_arrival_orientation" default="" hint="compliance_host_arrival_orientation is not required">
+        <cfargument name="compliance_stu_arrival_orientation" default="" hint="compliance_stu_arrival_orientation is not required">
+        
+        <cfquery datasource="#APPLICATION.DSN#">
+        	UPDATE smg_hosthistory
+            SET historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.historyID#"> <!--- To make sure something is updated --->
+            <cfif IsDate(ARGUMENTS.doc_conf_host_rec)>
+            	,doc_conf_host_rec = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_conf_host_rec#">
+            </cfif>
+            <cfif IsDate(ARGUMENTS.doc_school_accept_date)>
+            	,doc_school_accept_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_school_accept_date#">
+            </cfif>
+            <cfif IsDate(ARGUMENTS.host_arrival_orientation)>
+            	,host_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.host_arrival_orientation#">
+            </cfif>
+            <cfif IsDate(ARGUMENTS.stu_arrival_orientation)>
+            	,stu_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.stu_arrival_orientation#">
+            </cfif>
+            <cfif IsDate(ARGUMENTS.compliance_conf_host_rec)>
+            	,compliance_conf_host_rec = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_conf_host_rec#">
+            </cfif>
+            <cfif IsDate(ARGUMENTS.compliance_school_accept_date)>
+            	,compliance_school_accept_date = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_school_accept_date#">
+            </cfif>
+            <cfif IsDate(ARGUMENTS.compliance_host_arrival_orientation)>
+            	,compliance_host_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_host_arrival_orientation#">
+            </cfif>
+            <cfif IsDate(ARGUMENTS.compliance_stu_arrival_orientation)>
+            	,compliance_stu_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.compliance_stu_arrival_orientation#">
+            </cfif>
+            WHERE historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.historyID#">
+        </cfquery>
+        
     </cffunction>
     
     
