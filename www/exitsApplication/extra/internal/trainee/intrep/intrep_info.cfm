@@ -61,7 +61,7 @@ function UserName() {
 
 <cfoutput>
 
-<cfform method="post" name="new_user" action="?curdoc=intrep/qr_new_intrep">
+<cfform method="post" name="new_user" action="?curdoc=intrep/qr_intrep_info">
 <cfinput type="hidden" name="userid" value="#get_intrep.userid#">
 <cfinput type="hidden" name="uniqueid" value="#get_intrep.uniqueid#">
 
