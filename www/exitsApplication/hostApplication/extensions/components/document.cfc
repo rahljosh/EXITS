@@ -146,6 +146,7 @@
     	<cfargument name="ID" default="0" hint="ID is not required">
         <cfargument name="applicationID" default="3" hint="Host Family Application = 3">
         <cfargument name="documentGroup" default="" hint="documentGroup is not required">
+		<cfargument name="ignoreIDs" default="" hint="list of ID's to ignore">
 
         <cfquery 
         	name="qGetDocumentType"
@@ -163,7 +164,7 @@
                 	documentType
 				WHERE
                 	1 = 1
-                    
+				  
 				<cfif VAL(ARGUMENTS.ID)>
 	                AND 
                         ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.ID#">
@@ -177,7 +178,12 @@
 				<cfif LEN(ARGUMENTS.documentGroup)>
 	                AND 
                         documentGroup = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.documentGroup#">
-                </cfif>  
+                </cfif>
+				
+				<cfif LEN(ARGUMENTS.ignoreIDs)>
+					AND
+						ID NOT IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.ignoreIDs#" list="yes">)
+				</cfif>
                                       
         </cfquery> 
 
