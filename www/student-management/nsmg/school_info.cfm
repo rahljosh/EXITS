@@ -54,16 +54,21 @@
 		<tr><td>State:</td><td>#get_school.state#</td><td>Zip:</td><td>#get_school.zip#</td></tr>
 		<tr><td>Contact:</td><td>#get_school.principal#</td><td>Contact Email:</td><td><a href="mailto:#get_school.email#">#get_school.email#</a></td></tr>
 		<tr><td>Phone:</td><td>#get_school.phone#</td><td>Fax:</td><td>#get_school.fax#</td></tr>
-		<tr><td>Web Site:</td><td>
-        	<!--- url validation was recently added to the form, so some values might have http:// and some might not. --->
-            <cfif get_school.url neq ''>
-				<cfif left(get_school.url, 7) eq 'http://'>
-                    <a href="#get_school.url#" target="_blank">#get_school.url#</a>
-                <cfelse>
-                    <a href="http://#get_school.url#" target="_blank">http://#get_school.url#</a>
-                </cfif>
-            </cfif>
-        </td></tr>
+		<tr>
+			<td>Web Site:</td>
+			<td>
+	        	<!--- url validation was recently added to the form, so some values might have http:// and some might not. --->
+	            <cfif get_school.url neq ''>
+					<cfif left(get_school.url, 7) eq 'http://'>
+	                    <a href="#get_school.url#" target="_blank">#get_school.url#</a>
+	                <cfelse>
+	                    <a href="http://#get_school.url#" target="_blank">http://#get_school.url#</a>
+	                </cfif>
+	            </cfif>
+       	 	</td>
+			<td>Number of Students</td>
+			<td>#get_school.numberOfStudents#</td>
+		</tr>
 	</table>
 	<!--- BOTTOM OF A TABLE --->
 	<table width=100% cellpadding=0 cellspacing=0 border=0>

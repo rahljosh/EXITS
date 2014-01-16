@@ -34,6 +34,7 @@
     <cfparam name="FORM.phone_ext" default="">
     <cfparam name="FORM.fax" default="">
     <cfparam name="FORM.url" default="">
+	<cfparam name="FORM.numberOfStudents" default="0">
 	<!--- Error Handling --->
 	<cfparam name="FORM.errorMsg" default="">
 	<cfparam name="FORM.lookup_success" default="0">
@@ -144,7 +145,7 @@
 			<cfif VAL(FORM.schoolID)>
                 
                 <!--- Update --->
-                <cfquery datasource="MySql">
+                <cfquery datasource="#APPLICATION.DSN#">
                     UPDATE 
                     	smg_schools 
                     SET
@@ -159,7 +160,8 @@
                         phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#">,
                         phone_ext = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone_ext#" null="#yesNoFormat(TRIM(FORM.phone_ext) EQ '')#">,
                         fax = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fax#" null="#yesNoFormat(TRIM(FORM.fax) EQ '')#">,
-                        url = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.url#" null="#yesNoFormat(TRIM(FORM.url) EQ '')#">
+                        url = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.url#" null="#yesNoFormat(TRIM(FORM.url) EQ '')#">,
+						numberOfStudents = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.numberOfStudents#">
                     WHERE 
                     	schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.schoolID#">
         		</cfquery>
@@ -167,7 +169,7 @@
 			<cfelse>
 
 				<!--- Insert School --->                  
-                <cfquery result="newRecord" datasource="MySql">
+                <cfquery result="newRecord" datasource="#APPLICATION.DSN#">
                     INSERT INTO 
                     	smg_schools 
                     (	
@@ -183,7 +185,8 @@
                         phone, 
                         phone_ext, 
                         fax, 
-                        url
+                        url,
+						numberOfStudents
                     )
                     VALUES 
                     (
@@ -199,7 +202,8 @@
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone_ext#" null="#yesNoFormat(TRIM(FORM.phone_ext) EQ '')#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fax#" null="#yesNoFormat(TRIM(FORM.fax) EQ '')#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.url#" null="#yesNoFormat(TRIM(FORM.url) EQ '')#">
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.url#" null="#yesNoFormat(TRIM(FORM.url) EQ '')#">,
+						<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.numberOfStudents#">
                     )  
 				</cfquery>
                 
@@ -231,6 +235,7 @@
 			FORM.phone_ext = qGetSchoolInfo.phone_ext;
 			FORM.fax = qGetSchoolInfo.fax;
 			FORM.url = qGetSchoolInfo.url;
+			FORM.numberOfStudents = qGetSchoolInfo.numberOfStudents;
 		</cfscript>
     
     </cfif>
@@ -585,6 +590,10 @@
         <tr>
             <td class="label">Web Site:</td>
             <td colspan="3"><cfinput type="text" name="url" value="#FORM.url#" size="40" maxlength="200" validate="url" message="Please enter a valid Web Site starting with http://"></td>
+        </tr>
+		<tr>
+            <td class="label">Number of Students:</td>
+            <td colspan="3"><input type="text" name="numberOfStudents" value="#FORM.numberOfStudents#" size="14" maxlength="14"></td>
         </tr>
     	<tr>
         	<td class="label">

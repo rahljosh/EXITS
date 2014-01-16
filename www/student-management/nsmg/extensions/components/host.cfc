@@ -209,6 +209,14 @@
     <cffunction name="lookupHostFamily" access="remote" returntype="string" output="false" hint="Remote function to get host families">
         <cfargument name="search" type="string" default="" hint="Search is not required">
         <cfargument name="regionID" default="" hint="regionID is not required">
+        <cfargument name="programID" default="" hint="programID is not required">
+        
+        <cfscript>
+			vSeasonID = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID;
+			if (LEN(ARGUMENTS.programID)) {
+				vSeasonID = APPLICATION.CFC.PROGRAM.getPrograms(programID=ARGUMENTS.programID).seasonID;	
+			}
+		</cfscript>
         
         <!--- Do search --->
         <cfquery 
@@ -253,15 +261,13 @@
                             ')'                    
 						) 
 					AS CHAR) LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.search#%">
-               	<!--- Check if family is approved, do not check this for ESI --->
-               	<cfif CLIENT.companyID EQ 14>
-                    AND
-                        hostID IN (
-                            SELECT hostID 
-                            FROM smg_host_app_season 
-                            WHERE applicationStatusID < 4 
-                            AND seasonID >= <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID#"> )
-             	</cfif>
+               	<!--- Check if family is approved --->
+                AND
+                    hostID IN (
+                        SELECT hostID 
+                        FROM smg_host_app_season 
+                        WHERE applicationStatusID < 4 
+                        AND seasonID >= <cfqueryparam cfsqltype="cf_sql_integer" value="#vSeasonID#"> )
                 ORDER BY 
                     familyLastName
         </cfquery>
@@ -835,6 +841,34 @@
 		HOST FAMILY APPLICATION
 	----- ------------------------------------------------------------------------- --->
     
+    <cffunction name="updateRepNotes" access="public" returntype="void" output="no" hint="updates the repNotes field in the smg_host_app_season table">
+    	<cfargument name="hostID" required="yes" hint="hostID is required">
+        <cfargument name="seasonID" default="#APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID#" hint="seasonID is not required, defaults to current season">
+        <cfargument name="repNotes" default="" hint="repNotes is not required, if nothing is passed in the field is set to blank">
+        
+        <cfquery name="qGetRepNotes" datasource="#APPLICATION.DSN#">
+        	SELECT repNotes
+            FROM smg_host_app_season
+            WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#">
+            AND seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.seasonID#">
+        </cfquery>
+        
+        <cfscript>
+			qGetClientInfo = APPLICATION.CFC.USER.getUsers(userID=CLIENT.userID);
+			vNewNotes= TRIM(ReplaceNoCase(ARGUMENTS.repNotes,'"','','ALL'));
+			vNotes = vNewNotes & "<div contenteditable=false style=background-color:lightgray;><b>&nbsp;Added By " & qGetClientInfo.firstName & " " & qGetClientInfo.lastName & " (##" & qGetClientInfo.userID & ") on " & dateFormat(NOW(),'mm/dd/yyyy') &"</b><br/><br/></div><br/>";
+		</cfscript>
+        
+        <cfif vNewNotes NEQ qGetRepNotes.repNotes>
+            <cfquery datasource="#APPLICATION.DSN#">
+                UPDATE smg_host_app_season
+                SET repNotes = <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#vNotes#">
+                WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#">
+                AND seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.seasonID#">
+            </cfquery>
+		</cfif>
+    </cffunction>
+    
     <cffunction name="setHostSeasonStatus" access="public" returntype="void" output="no" hint="Inserts or updates host season status">
     	<cfargument name="hostID" default="0" hint="hostID is not required">
         <cfargument name="seasonID" default="#APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID#" hint="seasonID is not required, defaults to current season">
@@ -1053,6 +1087,7 @@
                         fac.email AS facilitatorEmail,
                         <!--- Host Season-based approval status --->
                         smg_host_app_season.applicationStatusID,
+                        smg_host_app_season.repNotes,
                         smg_host_app_season.dateSent,
                         smg_host_app_season.dateStarted,
                         smg_host_app_season.dateSubmitted,
@@ -1382,7 +1417,8 @@
                     h.regionalManagerNotes,
                     h.facilitatorStatus,
                     h.facilitatorDateStatus,
-                    h.facilitatorNotes
+                    h.facilitatorNotes,
+                    0 AS studentID
                 FROM 
                     smg_host_app_section ap
 				LEFT OUTER JOIN	
@@ -1391,8 +1427,8 @@
                         h.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
                    	AND
                         h.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
-                WHERE
-                	1 = 1
+                WHERE ap.ID != 15 
+                AND ap.ID != 20
               
               	<!--- W-9 is only used for ESI --->
               	<cfif CLIENT.companyID NEQ 14>
@@ -1414,7 +1450,40 @@
                 	AND
                     	h.facilitatorStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.facilitatorStatus#">
                 </cfif>
-				
+                
+                <!--- This is to add the school acceptance and student orientation per student --->
+                UNION
+                
+                SELECT
+                    ap.ID,
+                    ap.section,
+                    ap.whoViews,
+                    CONCAT(ap.description," for ",s.firstName," ",s.familyLastName," (##",CAST(s.studentID AS CHAR(10)),")") AS description,
+                    ap.isStudentRequired,
+                    ap.isRequiredForApproval,
+                    ap.listOrder,
+                    h.areaRepStatus,
+                    h.areaRepDateStatus,
+                    h.areaRepNotes,                    
+                    h.regionalAdvisorStatus,
+                    h.regionalAdvisorDateStatus,
+                    h.regionalAdvisorNotes,
+                    h.regionalManagerStatus,
+                    h.regionalManagerDateStatus,
+                    h.regionalManagerNotes,
+                    h.facilitatorStatus,
+                    h.facilitatorDateStatus,
+                    h.facilitatorNotes,
+                    s.studentID  
+                FROM smg_host_app_section ap
+                INNER JOIN smg_students s ON s.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
+                     AND s.active = 1
+             	LEFT OUTER JOIN smg_host_app_history h ON h.itemID = ap.ID                  
+                    AND h.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
+                    AND h.seasonID = 10
+                    AND h.studentID = s.studentID 
+                WHERE (ap.ID = 15 OR ap.ID = 20)
+                
                 ORDER BY
                 <cfswitch expression="#ARGUMENTS.sortBy#">
                 
@@ -1483,14 +1552,25 @@
                 case 4: 
                 case 3:
                 case 2:
-                case 1: 
-                    stFieldSet.statusFieldName = "facilitatorStatus";
-                    stFieldSet.dateFieldName = "facilitatorDateStatus";
-                    stFieldSet.notesFieldName = "facilitatorNotes";
-					stFieldSet.idName = "facilitatorID";
-					// Used for Initial Host Family Visit
-					stFieldSet.prUserFieldName = "fk_ny_user";
-                    stFieldSet.prApproveFieldName = "pr_ny_approved_date";
+                case 1:
+                	// Only allow office users with compliance access to get this role, other office users will be set to regional manager status.
+                	if  (APPLICATION.CFC.USER.hasUserRoleAccess(userID=CLIENT.userID, role="studentComplianceCheckList")) {
+                		stFieldSet.statusFieldName = "facilitatorStatus";
+	                    stFieldSet.dateFieldName = "facilitatorDateStatus";
+	                    stFieldSet.notesFieldName = "facilitatorNotes";
+						stFieldSet.idName = "facilitatorID";
+						// Used for Initial Host Family Visit
+						stFieldSet.prUserFieldName = "fk_ny_user";
+	                    stFieldSet.prApproveFieldName = "pr_ny_approved_date";
+                	} else {
+                		stFieldSet.statusFieldName = "regionalManagerStatus";
+	                    stFieldSet.dateFieldName = "regionalManagerDateStatus";
+	                    stFieldSet.notesFieldName = "regionalManagerNotes";
+						stFieldSet.idName = "regionalManagerID";
+						// Used for Initial Host Family Visit
+						stFieldSet.prUserFieldName = "fk_rd_user";
+	                    stFieldSet.prApproveFieldName = "pr_rd_approved_date";
+                	}
                 break;
                 
                 // User Not Found - Default to lowest level
@@ -1513,6 +1593,7 @@
     
 	<cffunction name="updateSectionStatus" access="public" returntype="void" output="false" hint="Approves/Denies sections">
         <cfargument name="hostID" default="" hint="HostID is not required">
+        <cfargument name="studentID" default="" hint="studentID is not required">
         <cfargument name="itemID" default="" hint="itemID">
         <cfargument name="seasonID" default="#APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID#" hint="Gets current paperwork season ID">
         <cfargument name="action" default="" hint="Approve/Deny an item">
@@ -1540,7 +1621,11 @@
                     AND
                         itemID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.itemID)#">                  
                     AND
-                        seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">                   
+                        seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
+                 	<cfif VAL(ARGUMENTS.studentID)>
+                    	AND
+                        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
+                    </cfif>                   
             </cfquery>	
             
             <!--- Update --->
@@ -1568,6 +1653,9 @@
                             smg_host_app_history
                         (
                             hostID,
+                            <cfif VAL(ARGUMENTS.studentID)>
+                            	studentID,
+                            </cfif>
                             itemID,
                             seasonID,
                             #stFieldSet.statusFieldName#,
@@ -1578,6 +1666,9 @@
                         VALUES
                         (
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">,
+                            <cfif VAL(ARGUMENTS.studentID)>
+                            	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">,
+                            </cfif>
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.itemID)#">,
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">,
                             <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.action#">,
@@ -1627,7 +1718,11 @@
                             AND
                                 itemID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.itemID)#">                  
                             AND
-                                seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">                   
+                                seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
+                          	<cfif VAL(ARGUMENTS.studentID)>
+                                AND
+                                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
+                            </cfif>                 
                     </cfquery>	
                     
               	</cfif> 

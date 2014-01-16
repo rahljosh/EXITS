@@ -21,6 +21,9 @@
 
 </cfswitch>
 
+<!--- Check if it is an email for MPD --->
+<cfparam name="isMPDEmail" default="0">
+
 <style type="text/css">
 	<!--
 	table,tr,td				{font-family:Arial, Helvetica, sans-serif;}
@@ -44,11 +47,16 @@
 <div class="thin-border">
     <table background="#CLIENT.exits_url#/nsmg/pics/email_textured_background.png" width="90%">
         <tr>
-            <td width="94"><img src="#CLIENT.exits_url#/nsmg/pics/logos/#CLIENT.companyid#_header_logo.png"></td>
-            <cfif ListFind("1,2,3,4,5,12", CLIENT.companyID)>
-                <td><strong><font size=+2>INTERNATIONAL <span color="#vCompanyColor#">STUDENT EXCHANGE</span></font></strong></td>
-            <cfelse>
-                <td><strong><font size=+2>#CLIENT.companyname#</font></strong></td>
+        	<cfif NOT VAL(isMPDEmail)>
+                <td width="94"><img src="#CLIENT.exits_url#/nsmg/pics/logos/#CLIENT.companyid#_header_logo.png"></td>
+                <cfif ListFind("1,2,3,4,5,12", CLIENT.companyID)>
+                    <td><strong><font size=+2>INTERNATIONAL <span color="#vCompanyColor#">STUDENT EXCHANGE</span></font></strong></td>
+                <cfelse>
+                    <td><strong><font size=+2>#CLIENT.companyname#</font></strong></td>
+                </cfif>
+           	<cfelse>
+            	<td width="94"><img src="#CLIENT.exits_url#/nsmg/pics/logos/mpdtours.png"></td>
+                <td><strong><font size=+2>MPD Tours</font></strong></td>
             </cfif>
         </tr>	
         <tr>

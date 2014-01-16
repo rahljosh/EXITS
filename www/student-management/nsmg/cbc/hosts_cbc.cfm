@@ -526,7 +526,7 @@
             
             <!--- HOST MOTHER --->
             <cfif LEN(qGetHost.motherfirstname) AND LEN(qGetHost.motherlastname)>
-                <tr><td colspan="11" bgcolor="##e2efc7"><b>Host Mother - #qGetHost.motherfirstname# #qGetHost.motherlastname#</b></td></tr>
+                <tr><td colspan="11" bgcolor="##e2efc7"><b>Primary Host Parent - #qGetHost.motherfirstname# #qGetHost.motherlastname#</b></td></tr>
                 <tr>
                     <td class="columnHeader">Company</td>
                     <td class="columnHeader">Season</td>		
@@ -609,7 +609,7 @@
             
             <!--- HOST FATHER --->
             <cfif LEN(qGetHost.fatherfirstname) AND LEN(qGetHost.fatherlastname)>
-                <tr><td colspan="11" bgcolor="##e2efc7"><b>Host Father - #qGetHost.fatherfirstname# #qGetHost.fatherlastname#</b></td></tr>
+                <tr><td colspan="11" bgcolor="##e2efc7"><b>Other Host Parent - #qGetHost.fatherfirstname# #qGetHost.fatherlastname#</b></td></tr>
                 <tr>
                     <td class="columnHeader">Company</td>
                     <td class="columnHeader">Season</td>		

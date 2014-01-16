@@ -26,6 +26,7 @@
     <!--- Param FORM Variables --->
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.hostID" default="0">
+    <cfparam name="FORM.repNotes" default="">
     
     <!----Delete the school acceptance letter---->
 	<cfif isDefined('url.deleteSchoolAccept')>
@@ -64,19 +65,22 @@
 		// Get Application Approval History
 		qGetApprovalHistory = APPLICATION.CFC.HOST.getApplicationApprovalHistory(hostID=qGetHostInfo.hostID, whoViews=CLIENT.userType,seasonID=vSelectedSeason);
 		
-		// Get Uploaded Images
-		qGetSchoolAcceptance = APPLICATION.CFC.DOCUMENT.getDocuments(
-			foreignTable="smg_hosts",	
-			foreignID=FORM.hostID, 			
-			documentGroup="schoolAcceptance",
-			seasonID=vSelectedSeason			
-		);
+		// Get Students associated with this host
+		qGetCurrentStudents = APPLICATION.CFC.STUDENT.getCurrentStudentsByHost(hostID=qGetHostInfo.hostID);
 		
 		// Get References
 		qGetReferences = APPLICATION.CFC.HOST.getReferences(hostID=qGetHostInfo.hostID,seasonID=vSelectedSeason);
 
 		// Get Confidential Visit Form
 		qGetConfidentialVisitForm = APPLICATION.CFC.PROGRESSREPORT.getVisitInformation(hostID=FORM.hostID,reportType=5,seasonID=vSelectedSeason);
+		
+		// Get Host Family Orientation
+		qGetHostFamilyOrientation = APPLICATION.CFC.DOCUMENT.getDocuments(
+			foreignTable="smg_hosts",
+			foreignID=FORM.hostID,
+			documentGroup="hostOrientation",
+			seasonID=vSelectedSeason
+		);
 
 		// This returns the approval fields for the logged in user
 		stCurrentUserFieldSet = APPLICATION.CFC.HOST.getApprovalFieldNames();
@@ -98,8 +102,8 @@
 
 		// Param Form Variables - Approval History
 		For ( i=1; i LTE qGetApprovalHistory.recordCount; i++ ) {
-			param name="FORM.sectionStatus#qGetApprovalHistory.ID[i]#" default="";
-			param name="FORM.sectionNotes#qGetApprovalHistory.ID[i]#" default="";
+			param name="FORM.sectionStatus#qGetApprovalHistory.ID[i]#_#qGetApprovalHistory.studentID[i]#" default="";
+			param name="FORM.sectionNotes#qGetApprovalHistory.ID[i]#_#qGetApprovalHistory.studentID[i]#" default="";
 			
 			// Check if level app has denied any of the sections
 			if ( qGetApprovalHistory[stOneLevelUpFieldSet.statusFieldName][i] EQ 'denied' ) {
@@ -117,6 +121,9 @@
 		// FORM Submitted
 		if ( VAL(FORM.submitted) ) {
 			
+			// Update rep notes, this field can be updated regardless of what the approval status is.
+			APPLICATION.CFC.HOST.updateRepNotes(hostID=qGetHostInfo.hostID,seasonID=vSelectedSeason,repNotes=FORM.repNotes);
+			
 			// Variable to decide if the entire app is approved and should go to the next level
 			vAppFullyApproved = true;
 			
@@ -132,22 +139,24 @@
 					vAppFullyApproved = false;
 				}
 				
-				// School Acceptance
-				if ( qGetApprovalHistory.ID[i] EQ 15 AND NOT qGetSchoolAcceptance.recordCount ) {
+				// Don't prevent approval if the host family orientation or any student orientations or school acceptances are missing
+				if ( qGetApprovalHistory.ID[i] EQ 15 OR qGetApprovalHistory.ID[i] EQ 19 OR qGetApprovalHistory.ID[i] EQ 20 ) {
 					vCheckIfMissing = false;
 				}
 
-				// Confidential Host Visit - Require approval when there is a report | School Acceptance - Require approval if there is an uploaded file
+				// Confidential Host Visit - Require approval when there is a report
 				if ( vCheckIfMissing ) {
 					
 					// Check if all sections have an approval/denial value
-					if ( NOT LEN(FORM["sectionStatus" & qGetApprovalHistory.ID[i]]) ) {
+					if ( NOT LEN(FORM["sectionStatus" & qGetApprovalHistory.ID[i] & "_" & qGetApprovalHistory.studentID[i]]) ) {
 						//SESSION.formErrors.Add("#qGetApprovalHistory.description[i]# - Please approve or deny this section");
 						vAppFullyApproved = false;
 					}
 					
 					// Check for reason if any section is denied
-					if ( FORM["sectionStatus" & qGetApprovalHistory.ID[i]] EQ 'denied' AND NOT LEN(FORM["sectionNotes" & qGetApprovalHistory.ID[i]]) ) {
+					if ( 
+						FORM["sectionStatus" & qGetApprovalHistory.ID[i] & "_" & qGetApprovalHistory.studentID[i]] EQ 'denied' 
+						AND NOT LEN(FORM["sectionNotes" & qGetApprovalHistory.ID[i] & "_" & qGetApprovalHistory.studentID[i]]) ) {
 						SESSION.formErrors.Add("#qGetApprovalHistory.description[i]# - Please enter a reason for denying this section");
 						vAppFullyApproved = false;
 					}
@@ -189,20 +198,59 @@
 					
 					APPLICATION.CFC.HOST.updateSectionStatus(
 						hostID=FORM.hostID,
+						studentID=qGetApprovalHistory.studentID[i],
 						itemID=qGetApprovalHistory.ID[i],
 						seasonID=vSelectedSeason,
-                        action=FORM["sectionStatus" & qGetApprovalHistory.ID[i]],
-                        notes=FORM["sectionNotes" & qGetApprovalHistory.ID[i]],
+                        action=FORM["sectionStatus" & qGetApprovalHistory.ID[i] & "_" & qGetApprovalHistory.studentID[i]],
+                        notes=FORM["sectionNotes" & qGetApprovalHistory.ID[i] & "_" & qGetApprovalHistory.studentID[i]],
 						areaRepID=qGetHostInfo.areaRepresentativeID,
 						regionalAdvisorID=qGetHostInfo.regionalAdvisorID,
 						regionalManagerID=qGetHostInfo.regionalManagerID
 					);
 					
+					// Get the history records for updating old fields (the first returned record is the current record)
+					qGetPlacementHistory = APPLICATION.CFC.STUDENT.getPlacementHistory(studentID=qGetApprovalHistory.studentID[i]);
+					vHasComplianceAccess = APPLICATION.CFC.USER.hasUserRoleAccess(userID=CLIENT.userID, role="studentComplianceCheckList");
+					
+					// Update old fields if neccessary
+					if (FORM["sectionStatus" & qGetApprovalHistory.ID[i] & "_" & qGetApprovalHistory.studentID[i]] EQ 'approved') {
+						if (qGetApprovalHistory.ID[i] EQ 15) {
+							if (NOT VAL(qGetPlacementHistory.doc_school_accept_date) AND NOT VAL(qGetPlacementHistory.compliance_school_accept_date) AND vHasComplianceAccess) {
+								APPLICATION.CFC.STUDENT.updateOldHostHistoryFields(historyID=VAL(qGetPlacementHistory.historyID),doc_school_accept_date=NOW(),compliance_school_accept_date=NOW());
+							} else if (NOT VAL(qGetPlacementHistory.doc_school_accept_date)) {
+								APPLICATION.CFC.STUDENT.updateOldHostHistoryFields(historyID=VAL(qGetPlacementHistory.historyID),doc_school_accept_date=NOW());
+							}
+						} else if (qGetApprovalHistory.ID[i] EQ 20) {
+							if (NOT VAL(qGetPlacementHistory.stu_arrival_orientation) AND NOT VAL(qGetPlacementHistory.compliance_stu_arrival_orientation) AND vHasComplianceAccess) {
+								APPLICATION.CFC.STUDENT.updateOldHostHistoryFields(historyID=VAL(qGetPlacementHistory.historyID),stu_arrival_orientation=NOW(),compliance_stu_arrival_orientation=NOW());
+							} else if (NOT VAL(qGetPlacementHistory.stu_arrival_orientation)) {
+								APPLICATION.CFC.STUDENT.updateOldHostHistoryFields(historyID=VAL(qGetPlacementHistory.historyID),stu_arrival_orientation=NOW());
+							}
+						} else if (qGetApprovalHistory.ID[i] EQ 14 OR qGetApprovalHistory.ID[i] EQ 19) {
+							For ( j=1; j LTE qGetCurrentStudents.recordCount; j++ ) {
+								qGetPlacementHistory = APPLICATION.CFC.STUDENT.getPlacementHistory(studentID=qGetCurrentStudents.studentID[j]);
+								if (qGetApprovalHistory.ID[i] EQ 14) {
+									if (NOT VAL(qGetPlacementHistory.doc_conf_host_rec) AND NOT VAL(qGetPlacementHistory.compliance_conf_host_rec) AND vHasComplianceAccess) {
+										APPLICATION.CFC.STUDENT.updateOldHostHistoryFields(historyID=VAL(qGetPlacementHistory.historyID),doc_conf_host_rec=NOW(),compliance_conf_host_rec=NOW());
+									} else if (NOT VAL(qGetPlacementHistory.doc_conf_host_rec)) {
+										APPLICATION.CFC.STUDENT.updateOldHostHistoryFields(historyID=VAL(qGetPlacementHistory.historyID),doc_conf_host_rec=NOW());
+									}
+								} else {
+									if (NOT VAL(qGetPlacementHistory.host_arrival_orientation) AND NOT VAL(qGetPlacementHistory.compliance_host_arrival_orientation) AND vHasComplianceAccess) {
+										APPLICATION.CFC.STUDENT.updateOldHostHistoryFields(historyID=VAL(qGetPlacementHistory.historyID),host_arrival_orientation=NOW(),compliance_host_arrival_orientation=NOW());
+									} else if (NOT VAL(qGetPlacementHistory.host_arrival_orientation)) {
+										APPLICATION.CFC.STUDENT.updateOldHostHistoryFields(historyID=VAL(qGetPlacementHistory.historyID),host_arrival_orientation=NOW());
+									}
+								}
+							}
+						}
+					}
+					
 					// If at least one section is denied we must send the application back one level
-					if ( FORM["sectionStatus" & qGetApprovalHistory.ID[i]] EQ 'denied' ) {
+					if ( FORM["sectionStatus" & qGetApprovalHistory.ID[i] & "_" & qGetApprovalHistory.studentID[i]] EQ 'denied' ) {
 						vAction = "denied";
 						// Store a list of issues
-						vIssueList = ListAppend(vIssueList, '<li>#qGetApprovalHistory.description[i]# Section - #FORM["sectionNotes" & qGetApprovalHistory.ID[i]]#</li>');
+						vIssueList = ListAppend(vIssueList, '<li>#qGetApprovalHistory.description[i]# Section - #FORM["sectionNotes" & qGetApprovalHistory.ID[i] & "_" & qGetApprovalHistory.studentID[i]]#</li>');
 						vAppFullyApproved = false;
 					}
 					
@@ -282,12 +330,15 @@
 						
 		} else {
 			
+			// Set the repNotes Form value
+			FORM.repNotes = qGetHostInfo.repNotes;
+			
 			// Set Default Form Values Based on Current User
 			For ( i=1; i LTE qGetApprovalHistory.recordCount; i++ ) {
 				
 				// Set Default Form Name
-				FORM["sectionStatus" & qGetApprovalHistory.ID[i]] = qGetApprovalHistory[stCurrentUserFieldSet.statusFieldName][i];
-				FORM["sectionNotes" & qGetApprovalHistory.ID[i]] = qGetApprovalHistory[stCurrentUserFieldSet.notesFieldName][i];
+				FORM["sectionStatus" & qGetApprovalHistory.ID[i] & "_" & qGetApprovalHistory.studentID[i]] = qGetApprovalHistory[stCurrentUserFieldSet.statusFieldName][i];
+				FORM["sectionNotes" & qGetApprovalHistory.ID[i] & "_" & qGetApprovalHistory.studentID[i]] = qGetApprovalHistory[stCurrentUserFieldSet.notesFieldName][i];
 			}
 
 			// Set Default Form Values - Reference Approval History
@@ -537,12 +588,12 @@
                     </tr>
                                        
                     <cfloop query="qGetApprovalHistory">
-                        
+                    
                         <cfscript>
                             // Set Links
 							
 							// Host Visit Report / Second Visit Report - No link, text only
-                            if ( ListFind("14,15", qGetApprovalHistory.ID) ) {
+                            if ( ListFind("14,15,19,20", qGetApprovalHistory.ID) ) {
 								vSetDescLink = '#qGetApprovalHistory.description#';
 							// Set Up Link for HF section
 							} else { 
@@ -562,7 +613,7 @@
                             	
                                 <cfif ListFind(qGetApprovalHistory.isRequiredForApproval, CLIENT.userType)>
                                     
-                                    <cfif qGetApprovalHistory[stCurrentUserFieldSet.statusFieldName][qGetApprovalHistory.currentrow] EQ 'approved'> 
+                                    <cfif qGetApprovalHistory[stCurrentUserFieldSet.statusFieldName][qGetApprovalHistory.currentrow] EQ 'approved'>
                                         <!--- Approved --->
                                         <img src="pics/valid.png" width="16" heigh="16">
                                     <cfelseif qGetApprovalHistory[stCurrentUserFieldSet.statusFieldName][qGetApprovalHistory.currentrow] EQ 'denied'>
@@ -602,29 +653,68 @@
 										// Only Display approval option if there is a school acceptance and a confidential host visit report
 										vDisplayApprovalButtons = true;
 										
+										// Holds the student ID if there is one for this approval field
+										vCurrentStudent = qGetApprovalHistory.studentID;
+										
+										qGetSchoolAcceptance = APPLICATION.CFC.UDF.getVirtualFolderDocuments(
+											documentType=47,
+											studentID=vCurrentStudent			
+										);
+										
+										qGetStudentOrientation = APPLICATION.CFC.UDF.getVirtualFolderDocuments(
+											documentType=49,
+											studentID=vCurrentStudent			
+										);
+										
 										// Confidential Host Family Visit Form
 										if ( qGetApprovalHistory.ID EQ 14 AND NOT qGetConfidentialVisitForm.recordCount ) {
 											vDisplayApprovalButtons = false;
 										}
 
+										// Host Family Orientation
+										if ( qGetApprovalHistory.ID EQ 19 AND NOT qGetHostFamilyOrientation.recordCount ) {
+											vDisplayApprovalButtons = false;
+										}
+										
 										// School Acceptance
 										if ( qGetApprovalHistory.ID EQ 15 AND NOT qGetSchoolAcceptance.recordCount ) {
+											vDisplayApprovalButtons = false;
+										}
+										
+										// Student Orientation
+										if ( qGetApprovalHistory.ID EQ 20 AND NOT qGetStudentOrientation.recordCount ) {
 											vDisplayApprovalButtons = false;
 										}
 									</cfscript>
 									
 									<cfif vDisplayApprovalButtons>
                                     
-                                        <input type="radio" name="sectionStatus#qGetApprovalHistory.ID#" id="approve#qGetApprovalHistory.ID#" class="approveOption" value="approved" onclick="toggleReason('approved', '#qGetApprovalHistory.ID#');" <cfif FORM["sectionStatus" & qGetApprovalHistory.ID] EQ 'approved'> checked="checked" </cfif> /> 
-                                        <label for="approve#qGetApprovalHistory.ID#">Approve</label>
+                                        <input 
+                                        	type="radio" 
+                                            name="sectionStatus#qGetApprovalHistory.ID#_#vCurrentStudent#" 
+                                            id="approve#qGetApprovalHistory.ID#_#vCurrentStudent#" 
+                                            class="approveOption" 
+                                            value="approved" 
+                                            onclick="toggleReason('approved', '#qGetApprovalHistory.ID#_#vCurrentStudent#');" 
+											<cfif FORM["sectionStatus" & qGetApprovalHistory.ID & "_" & vCurrentStudent] EQ 'approved'> checked="checked" </cfif> 
+                                      	/> 
+                                        <label for="approve#qGetApprovalHistory.ID#_#vCurrentStudent#">Approve</label>
                                         &nbsp; &nbsp;
-                                        <input type="radio" name="sectionStatus#qGetApprovalHistory.ID#" id="deny#qGetApprovalHistory.ID#" class="denyOption" value="denied" onclick="toggleReason('denied', '#qGetApprovalHistory.ID#');" <cfif FORM["sectionStatus" & qGetApprovalHistory.ID] EQ 'denied'> checked="checked" </cfif> /> 
-                                        <label for="deny#qGetApprovalHistory.ID#">Deny</label> 
+                                        <input 
+                                        	type="radio" 
+                                            name="sectionStatus#qGetApprovalHistory.ID#_#vCurrentStudent#" 
+                                            id="deny#qGetApprovalHistory.ID#_#vCurrentStudent#" 
+                                            class="denyOption" 
+                                            value="denied" 
+                                            onclick="toggleReason('denied', '#qGetApprovalHistory.ID#_#vCurrentStudent#');" 
+											<cfif FORM["sectionStatus" & qGetApprovalHistory.ID & "_" & vCurrentStudent] EQ 'denied'> checked="checked" </cfif>
+                                        /> 
+                                        <label for="deny#qGetApprovalHistory.ID#_#vCurrentStudent#">Deny</label> 
                                         
                                         <!--- Reason for denial --->
-                                        <div class="reasonForDenial#qGetApprovalHistory.ID# <cfif FORM["sectionStatus" & qGetApprovalHistory.ID] NEQ 'denied'> displayNone </cfif>">
+                                        <div class="reasonForDenial#qGetApprovalHistory.ID#_#vCurrentStudent# <cfif FORM["sectionStatus" & qGetApprovalHistory.ID & "_" & vCurrentStudent] NEQ 'denied'> displayNone </cfif>">
                                             <p class="formNote">Please enter a reason for denying this section <span class="required">*</span></p>
-                                            <textarea name="sectionNotes#qGetApprovalHistory.ID#" id="sectionNotes#qGetApprovalHistory.ID#" class="smallTextArea">#FORM["sectionNotes" & qGetApprovalHistory.ID]#</textarea>
+                                            <textarea name="sectionNotes#qGetApprovalHistory.ID#_#vCurrentStudent#" id="sectionNotes#qGetApprovalHistory.ID##vCurrentStudent#" class="smallTextArea">#FORM["sectionNotes" & qGetApprovalHistory.ID & "_" & vCurrentStudent]#</textarea>
                                         </div>
                                     
                                     </cfif>
@@ -652,24 +742,46 @@
 									<!--- Print View Default --->
                                     <cfelseif qGetApprovalHistory[stCurrentUserFieldSet.statusFieldName][qGetApprovalHistory.currentrow] EQ 'approved' OR qGetApprovalHistory[stOneLevelUpFieldSet.statusFieldName][qGetApprovalHistory.currentrow] NEQ 'denied'>
                                         <a href="#qGetApprovalHistory.section#?hostID=#qGetHostInfo.hostID#&seasonID=#vSelectedSeason#" target="_blank" style="display:block;">[ View Visit Form ]</a>
-                                    </cfif>   
+                                    </cfif>
+                                    
+                              	<!--- Host Family Orientation --->
+                              	<cfelseif qGetApprovalHistory.ID EQ 19>
+                                    <cfif NOT qGetHostFamilyOrientation.recordCount> 
+                                        <a href="hostApplication/hostOrientation.cfm?hostID=#qGetHostInfo.hostID#&seasonID=#vSelectedSeason#" class="jQueryModalRefresh" style="display:block;">
+                                            [ Upload Host Orientation ]
+                                        </a>
+                                    <cfelse>
+                                        <a href="hostApplication/hostOrientation.cfm?hostID=#qGetHostInfo.hostID#&seasonID=#vSelectedSeason#&view=1" class="jQueryModalRefresh" style="display:block;">
+                                            [ View Host Orientation ]
+                                        </a>
+                                    </cfif>  
 
 							  	<!--- School Acceptance --->
                               	<cfelseif qGetApprovalHistory.ID EQ 15>
-                                
                                     <cfif NOT qGetSchoolAcceptance.recordCount>
-                                        <a href="#qGetApprovalHistory.section#?hostID=#qGetHostInfo.hostID#&seasonID=#vSelectedSeason#" title="Click to view item" class="jQueryModalRefresh" style="display:block;">[ Upload School Acceptance Letter ]</a>
+                                        <a href="hostApplication/virtualFolderDocuments.cfm?studentID=#studentID#&documentType=47" title="Click to view item" class="jQueryModalRefresh" style="display:block;">
+                                        	[ Upload School Acceptance Letter ]
+                                     	</a>
                                     <!--- Print View Default --->
-                                    <cfelseif qGetApprovalHistory[stCurrentUserFieldSet.statusFieldName][qGetApprovalHistory.currentrow] EQ 'approved' OR qGetApprovalHistory[stOneLevelUpFieldSet.statusFieldName][qGetApprovalHistory.currentrow] NEQ 'denied'>
-                                        <a href="publicDocument.cfm?ID=#qGetSchoolAcceptance.ID#&key=#qGetSchoolAcceptance.hashID#&seasonID=#vSelectedSeason#" target="_blank" style="display:block;">[ Download School Acceptance Letter ]</a>
-                                    	<!--- ADD OPTION TO DELETE A FILE --->
-										<!--- Delete --->
                                     <cfelse>
-                                    	<!--- ADD OPTION TO DELETE A FILE --->
-                                    	<!--- <a href="" title="Click to delete this item" class="jQueryModalRefresh" style="display:block;">[ Delete File ]</a> --->
+                                        <a href="hostApplication/virtualFolderDocuments.cfm?studentID=#studentID#&documentType=47&view=1" class="jQueryModalRefresh" style="display:block;">
+                                        	[ View School Acceptance Letter ]
+                                      	</a>
+                                    </cfif>
+                                
+                                <!--- Student Orientation --->
+                              	<cfelseif qGetApprovalHistory.ID EQ 20>
+                                	<cfif NOT qGetStudentOrientation.recordCount>
+                                        <a href="hostApplication/virtualFolderDocuments.cfm?studentID=#studentID#&documentType=49" class="jQueryModalRefresh" style="display:block;">
+                                            [ Upload Student Orientation ]
+                                        </a>
+                                    <cfelse>
+                                        <a href="hostApplication/virtualFolderDocuments.cfm?studentID=#studentID#&documentType=49&view=1" class="jQueryModalRefresh" style="display:block;">
+                                            [ View Student Orientation ]
+                                        </a>
                                     </cfif>
                                     
-                              </cfif>
+                              	</cfif>
                                 
                             </td> 
                             <!--- Area Representative --->
@@ -769,13 +881,6 @@
                                 
                             </td>
                             <TD>
-                            <cfif qGetApprovalHistory.ID EQ 15>
-								<cfif qGetSchoolAcceptance.recordCount>
-                                    <a href="index.cfm?curdoc=hostApplication/toDoList&id=#qGetSchoolAcceptance.ID#&key=#qGetSchoolAcceptance.hashID#&hostID=#url.hostid#&deleteSchoolAccept" style="display:block;">
-                                    <img src="pics/deletex.gif" height="10" border=0/>
-                                    </a>
-                                </cfif>
-                            </cfif>
                             </TD>
                         </tr>
 
@@ -783,7 +888,7 @@
                             <tr bgcolor="##1b99da">
                                 <td colspan="8" align="center"><h2 style="color:##FFFFFF;">FORMS</h2></td>
                             </tr>
-                        </cfif> 
+                        </cfif>
                         
                     </cfloop>   
                     
@@ -949,6 +1054,26 @@
                             <td></td>
                         </tr>
                     </cfloop>
+                    
+                    <!--- Representative Notes --->
+                    <tr bgcolor="##1b99da">
+                        <td colspan="8" align="center">
+                        	<h2 style="color:##FFFFFF;">REPRESENTATIVE NOTES</h2>
+                        </td>
+                    </tr>
+                    <tr>
+                    	<td colspan="7">
+                        	<input type="hidden" name="repNotes" id="repNotes" value="#FORM.repNotes#" />
+                        	<div 
+                            	id="repNotesDiv" 
+                                onkeyup="$('##repNotes').val($('##repNotesDiv').html());" 
+                                style="margin:auto; width:80%; height:120px; border:thin solid gray; overflow:scroll;" 
+                                contenteditable="true">
+                            	#FORM.repNotes#
+                            </div>
+                        </td>
+                    </tr>
+                    
                 </table>
                 
                 <!--- Update Button --->

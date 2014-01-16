@@ -986,6 +986,39 @@
         </cfscript>
             
 	</cffunction>
+    
+    <!--- Get virtual folder documents --->
+    <cffunction name="getVirtualFolderDocuments" access="public" returntype="query">
+    	<cfargument name="documentType" default="0" required="no" hint="documentType is not required">
+        <cfargument name="categoryID" default="0" required="no" hint="categoryID is not required">
+        <cfargument name="hostID" default="0" required="no" hint="hostID is not required">
+        <cfargument name="studentID" default="0" required="no" hint="studentID is not required">
+        <cfargument name="userID" default="0" required="no" hint="userID is not required">
+        
+        <cfquery name="qGetVFDocuments" datasource="#APPLICATION.DSN#">
+        	SELECT *
+            FROM virtualFolder
+            WHERE isDeleted = 0
+            <cfif VAL(ARGUMENTS.documentType)>
+            	AND fk_documentType = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.documentType#">
+            </cfif>
+            <cfif VAL(ARGUMENTS.categoryID)>
+            	AND fk_categoryID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.categoryID#">
+            </cfif>
+            <cfif VAL(ARGUMENTS.hostID)>
+            	AND fk_hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#">
+            </cfif>
+            <cfif VAL(ARGUMENTS.studentID)>
+            	AND fk_studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">
+            </cfif>
+            <cfif VAL(ARGUMENTS.userID)>
+            	AND fk_userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
+            </cfif>
+        </cfquery>
+        
+        <cfreturn qGetVFDocuments>
+        
+    </cffunction>
 
     
     <!--- Insert pdf file to the internal virtual folder --->
@@ -1027,7 +1060,7 @@
     
 	<!--- Insert file information into the virtualfolder table. --->
     <cffunction name="insertIntoVirtualFolder" access="public" returntype="void" output="no">
-    	<cfargument name="categoryID" type="numeric" required="yes">
+    	<cfargument name="categoryID" type="numeric" default="0">
         <cfargument name="documentType" type="numeric" required="yes">
         <cfargument name="studentID" type="numeric" required="yes">
         <cfargument name="hostID" type="numeric" default="0">
@@ -1037,7 +1070,19 @@
         <cfargument name="generatedHow" type="string" default="auto" hint="auto/manual">
         
         <cfif NOT LEN(ARGUMENTS.filePath)>
-        	<cfset vPath = "uploadedfiles/virtualFolder/" & ARGUMENTS.studentID & "/">
+        	<cfset vPath = "uploadedfiles/virtualfolder/" & ARGUMENTS.studentID & "/">
+            <cfif VAL(ARGUMENTS.hostID)>
+            	<cfset vPath = vPath & ARGUMENTS.hostID & "/">
+            </cfif>
+        </cfif>
+        
+        <cfif NOT VAL(ARGUMENTS.categoryID)>
+        	<cfquery name="qGetCategory" datasource="#APPLICATION.DSN#">
+            	SELECT fk_category
+                FROM virtualfolderdocuments
+                WHERE ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.documentType#">
+            </cfquery>
+            <cfset ARGUMENTS.categoryID = qGetCategory.fk_category>
         </cfif>
         
         <cfquery datasource="#APPLICATION.DSN#">

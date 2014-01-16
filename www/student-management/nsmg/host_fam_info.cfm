@@ -416,12 +416,36 @@ div.scroll2 {
                        	</cfif>
                  	</td>
                 </tr>
-                <tr><th colspan="2" align="left">Father's Information</th></tr>
-                <tr><td>Name:</td><td>#qGetHostInfo.fatherfirstname# #qGetHostInfo.fatherlastname#</td><td>Age:</td><td><cfif qGetHostInfo.fatherdob NEQ ''>#dateDiff('yyyy', qGetHostInfo.fatherdob, now())#</cfif></td></tr>
-                <tr><td>Occupation:</td><td><cfif qGetHostInfo.fatherworktype is ''>n/a<cfelse>#qGetHostInfo.fatherworktype#</cfif></td><td>Cell Phone:</td><td>#qGetHostInfo.father_cell#</td></tr>
-                <tr><th colspan="2" align="left">Mother's Information</th></tr>
-                <tr><td>Name:</td><td>#qGetHostInfo.motherfirstname# #qGetHostInfo.motherlastname#</td><td>Age:</td><td><cfif qGetHostInfo.motherdob NEQ ''>#dateDiff('yyyy', qGetHostInfo.motherdob, now())#</cfif></td></tr>
-                <tr><td>Occupation:</td><td><cfif qGetHostInfo.motherworktype is ''>n/a<cfelse>#qGetHostInfo.motherworktype#</cfif></td><td>Cell Phone:</td><td>#qGetHostInfo.mother_cell#</td></tr>
+                <tr><th colspan="2" align="left">Primary Host Parent</th></tr>
+                <tr>
+                	<td>Name:</td>
+                    <td>#qGetHostInfo.motherfirstname# #qGetHostInfo.motherlastname#</td>
+                    <td>Age:</td>
+                    <td><cfif qGetHostInfo.motherdob NEQ ''>#dateDiff('yyyy', qGetHostInfo.motherdob, now())#</cfif></td>
+             	</tr>
+                <tr>
+                	<td>Occupation:</td>
+                    <td><cfif qGetHostInfo.motherworktype is ''>n/a<cfelse>#qGetHostInfo.motherworktype#</cfif></td>
+                    <td>Cell Phone:</td>
+                    <td>#qGetHostInfo.mother_cell#</td>
+             	</tr>
+                <tr><th colspan="2" align="left">Other Host Parent</th></tr>
+                <cfif qGetHostInfo.otherHostParent EQ "none">
+                	<tr><td>None</td></tr>
+              	<cfelse>
+                	<tr>
+                    	<td>Name:</td>
+                        <td>#qGetHostInfo.fatherfirstname# #qGetHostInfo.fatherlastname#</td>
+                        <td>Age:</td>
+                        <td><cfif qGetHostInfo.fatherdob NEQ ''>#dateDiff('yyyy', qGetHostInfo.fatherdob, now())#</cfif></td>
+                  	</tr>
+                	<tr>
+                    	<td>Occupation:</td>
+                        <td><cfif qGetHostInfo.fatherworktype is ''>n/a<cfelse>#qGetHostInfo.fatherworktype#</cfif></td>
+                        <td>Cell Phone:</td>
+                        <td>#qGetHostInfo.father_cell#</td>
+                 	</tr>
+                </cfif>
             </table>
             <table width=100% cellpadding=0 cellspacing=0 border=0>
                 <tr valign="bottom"><td width=9 valign="top" height=12><img src="pics/footer_leftcap.gif" ></td><td width=100% background="pics/header_background_footer.gif"></td><td width=9 valign="top"><img src="pics/footer_rightcap.gif"></td></tr>
@@ -535,7 +559,7 @@ div.scroll2 {
                 <cfif qGetCBCMother.recordcount EQ '0' AND qCheckCBCMother.recordcount EQ '0' AND qGetCBCFather.recordcount EQ '0' AND qCheckCBCFather.recordcount EQ '0'>
                     <tr><td align="center" colspan="5">No CBC has been submitted.</td></tr>
                 <cfelse>
-                    <tr><td colspan="6"><strong>Host Mother:</strong></td></tr>
+                    <tr><td colspan="6"><strong>Primary Host Parent:</strong></td></tr>
                     <cfloop query="qGetCBCMother">
                     <tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
                         <td style="padding-left:20px;">#qGetHostInfo.motherfirstname# #qGetHostInfo.motherlastname#</td>
@@ -603,7 +627,7 @@ div.scroll2 {
                         </tr>
                     </cfloop>
                     
-                    <tr bgcolor="e2efc7"><td colspan="7"><strong>Host Father:</strong></td></tr>
+                    <tr bgcolor="e2efc7"><td colspan="7"><strong>Other Host Parent:</strong></td></tr>
                     <cfloop query="qGetCBCFather">
                     <tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
                         <td style="padding-left:20px;">#qGetHostInfo.fatherfirstname# #qGetHostInfo.fatherlastname#</td>
