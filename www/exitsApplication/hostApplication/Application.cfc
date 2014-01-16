@@ -11,11 +11,12 @@
 		THIS.sessionManagement = true;
 		THIS.sessionTimeout = CreateTimeSpan( 0, 4, 0, 0 ); // Session Expires in 4 hours
 		THIS.clientManagement = true;
+		THIS.selectedSeason = 0; 
 		
 		// Create a function that let us create CFCs from any location
 		function CreateCFC(strCFCName){
 			return(CreateObject("component", ("extensions.components." & ARGUMENTS.strCFCName)));
-		}
+		}   
 	</cfscript>
 
 
@@ -51,7 +52,6 @@
 		<!--- Return out. --->
 		<cfreturn />
 	</cffunction>
-
  
 	<cffunction
 		name="OnRequestStart"
@@ -69,6 +69,7 @@
         <cfparam name="URL.initSession" default="0">
         <cfparam name="URL.uniqueID" default="">
         <cfparam name="URL.userID" default="0">
+        <cfparam name="URL.season" default="0">
         <cfparam name="URL.section" default="login">
         
 		<cfscript>
@@ -88,6 +89,11 @@
 				THIS.OnSessionStart();
 			}
 			
+			// Set the season to the URL variable if it exists
+			if (VAL(URL.season)) {
+				APPLICATION.selectedSeason = URL.season;	
+			}
+			
 			/***
 				Check to see if the current path is legal. The user cannot access 
 				files starting with "_" so throw error if need be. 
@@ -97,7 +103,7 @@
         
 		<!--- uniqueID Login | Make sure the link is coming from EXITS --->  
         <cfif LEN(URL.uniqueID) AND ( FindNoCase("smg.local", CGI.HTTP_REFERER) OR FindNoCase("esi.local",CGI.HTTP_REFERER) OR FindNoCase("exitsapplication.com", CGI.HTTP_REFERER) )>
-    
+            
             <!--- Check if we have a host account --->
             <cfquery name="qLoginHostFamily" datasource="#APPLICATION.DSN.Source#">
                 SELECT  
@@ -110,7 +116,7 @@
                 FROM 
                     smg_hosts
               	INNER JOIN smg_host_app_season ON smg_host_app_season.hostID = smg_hosts.hostID
-                    AND smg_host_app_season.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID#">
+                    AND smg_host_app_season.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.selectedSeason#">
                 WHERE 
                     smg_hosts.uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(URL.uniqueID)#">              
             </cfquery>
@@ -131,7 +137,9 @@
 						currentSection=URL.section
 					);
 													
-                }
+                } else {
+					APPLICATION.CFC.SESSION.doLogout();	
+				}
             </cfscript>
         
         </cfif>

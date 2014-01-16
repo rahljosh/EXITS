@@ -29,10 +29,6 @@
 	<cffunction name="getCompleteHostInfo" access="public" returntype="query" output="false" hint="Gets a list with hosts, if HostID is passed gets a Host by ID">
     	<cfargument name="hostID" default="" hint="HostID is not required">
         
-        <cfscript>
-			vCurrentSeason = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID;
-		</cfscript>
-        
         <cfquery 
 			name="qGetCompleteHostInfo" 
 			datasource="#APPLICATION.DSN.Source#">
@@ -187,7 +183,7 @@
                         smg_hosts h
                   	<!--- Host Season-based approval status --->
                     LEFT OUTER JOIN smg_host_app_season ON smg_host_app_season.hostID = h.hostID
-                        AND smg_host_app_season.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(vCurrentSeason)#">
+                        AND smg_host_app_season.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(APPLICATION.selectedSeason)#">
                     <!--- Region --->
                     LEFT OUTER JOIN
                         smg_regions r ON r.regionID = h.regionID
@@ -1356,7 +1352,7 @@
             WHERE
                 hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
            	AND
-            	seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID#">
+            	seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.selectedSeason#">
         </cfquery>
         
 		<cfscript>
