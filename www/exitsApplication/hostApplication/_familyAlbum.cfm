@@ -27,7 +27,7 @@
 		qGetUploadedImages = APPLICATION.CFC.DOCUMENT.getDocuments(
 			foreignTable="smg_hosts",	
 			foreignID=APPLICATION.CFC.SESSION.getHostSession().ID,
-			seasonID=APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID,
+			seasonID=APPLICATION.selectedSeason,
 			documentGroup="familyAlbum"
 		);
 	

@@ -19,10 +19,6 @@
     <cfparam name="FORM.username" default="">
     <cfparam name="FORM.password" default="">
     <cfparam name="FORM.forgot" default="0">
-	
-	<cfscript>
-        vCurrentSeason = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID;
-    </cfscript>
     
     <!--- Forgot login --->
     <cfif VAL(FORM.forgot)>
@@ -40,17 +36,21 @@
                     smg_hosts.motherfirstname,
                     smg_hosts.familylastname,
                     smg_hosts.email,
-                    smg_hosts.password
+                    smg_hosts.password,
+                    shas.seasonID
                 FROM 
                 	smg_hosts
-               	INNER JOIN smg_host_app_season ON smg_host_app_season.hostID = smg_hosts.hostID
-            		AND smg_host_app_season.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#vCurrentSeason#">
-                	AND smg_host_app_season.applicationStatusID != <cfqueryparam cfsqltype="cf_sql_integer" value="0">  
+               	INNER JOIN (
+                	SELECT hostID, applicationStatusID, MAX(seasonID) AS seasonID
+                    FROM smg_host_app_season
+                    GROUP BY hostID ) shas ON shas.hostID = smg_hosts.hostID
+                	AND shas.applicationStatusID != <cfqueryparam cfsqltype="cf_sql_integer" value="0">  
                 WHERE 
                 	smg_hosts.email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.username)#">
                	LIMIT 1 
             </cfquery>
             <cfif VAL(qCheckHost.recordCount)>
+            	<cfset APPLICATION.selectedSeason = qCheckHost.seasonID>
             	<cfsavecontent variable="emailContent">
                 	<cfoutput query="qCheckHost">
                     	<p>
@@ -92,13 +92,16 @@
                 smg_hosts.familylastname,
                 smg_hosts.email,
                 smg_hosts.regionID,
-                smg_host_app_season.applicationStatusID,
-                smg_host_app_season.ID
+                shas.applicationStatusID,
+                shas.ID,
+                shas.seasonID
             FROM 
                 smg_hosts
-          	INNER JOIN smg_host_app_season ON smg_host_app_season.hostID = smg_hosts.hostID
-            	AND smg_host_app_season.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#vCurrentSeason#">
-                AND smg_host_app_season.applicationStatusID != <cfqueryparam cfsqltype="cf_sql_integer" value="0">  
+          	INNER JOIN (
+                SELECT ID, hostID, applicationStatusID, MAX(seasonID) AS seasonID
+                FROM smg_host_app_season
+                GROUP BY hostID ) shas ON shas.hostID = smg_hosts.hostID
+                AND shas.applicationStatusID != <cfqueryparam cfsqltype="cf_sql_integer" value="0">  
             WHERE 
 			<cfif SESSION.COMPANY.ID EQ	1>
             	smg_hosts.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,12" list="yes"> )
@@ -116,6 +119,8 @@
 
 			<!--- Set status from "Started" to "Host" ---> 
             <cfif qLoginHostFamily.applicationStatusID EQ 9>
+            
+            	<cfset APPLICATION.selectedSeason = qLoginHostFamily.seasonID>
             
                 <cfquery datasource="#APPLICATION.DSN.Source#">
                     UPDATE 
@@ -263,7 +268,7 @@
                         dateCreated )
                   	VALUES (
                     	<cfqueryparam cfsqltype="cf_sql_integer" value="#newRecord.GENERATED_KEY#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#vCurrentSeason#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.selectedSeason#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="8">,
                         <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
                         <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,

@@ -130,7 +130,7 @@
 			SESSION.HOST.applicationStatus = VAL(ARGUMENTS.applicationStatus);
 			SESSION.HOST.familyName = ARGUMENTS.familyName;
 			SESSION.HOST.email = ARGUMENTS.email;
-			SESSION.HOST.seasonID = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID;
+			SESSION.HOST.seasonID = APPLICATION.selectedSeason;
 			SESSION.HOST.regionID = VAL(ARGUMENTS.regionID);
 			SESSION.HOST.userID = VAL(ARGUMENTS.userID);
 			

@@ -44,6 +44,9 @@
 	APPLICATION.PATH.css = "extensions/css/"; 
 	APPLICATION.PATH.js = "extensions/js/"; 
 	APPLICATION.PATH.Images = "images/";
+	
+	// Set the season
+	APPLICATION.selectedSeason = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID;
 
 
 	// Local Enviroment
