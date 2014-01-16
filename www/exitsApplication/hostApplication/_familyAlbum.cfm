@@ -31,8 +31,13 @@
 			documentGroup="familyAlbum"
 		);
 	
-		// Get Category List
-		qGetCategoryList = APPLICATION.CFC.DOCUMENT.getDocumentType(documentGroup="familyAlbum");
+		// Get Category List - do not require pictures for second room unless double placement is selected
+		if (qGetHostFamilyInfo.acceptDoublePlacement EQ 1 AND qGetHostFamilyInfo.sharingBedroom NEQ "EachOther") {
+			qGetCategoryList = APPLICATION.CFC.DOCUMENT.getDocumentType(documentGroup="familyAlbum");
+		} else {
+			qGetCategoryList = APPLICATION.CFC.DOCUMENT.getDocumentType(documentGroup="familyAlbum",ignoreIDs="38,39");
+		}
+		
 	
     	vUploadedImageList = ValueList(qGetUploadedImages.documentTypeID);
 		
@@ -241,11 +246,22 @@
                         <select name="categoryID" id="dropdown" class="xLargeField">
                             <option value="0"></option>
                             <cfloop query="qGetCategoryList">
-                                <option value="area#qGetCategoryList.ID#" <cfif ListFind(vUploadedImageList, qGetCategoryList.ID)> style="background-color:##deeaf3;" </cfif> <cfif FORM.categoryID EQ "area#qGetCategoryList.ID#">selected</cfif>>
-                                    #qGetCategoryList.name#
-                                    <cfif ListFind(vUploadedImageList, qGetCategoryList.ID)>(Uploaded)</cfif>
-                                    <cfif qGetCategoryList.ID NEQ 26> <span class="required">*</span></cfif>
-                                </option>
+								<cfif qGetCategoryList.ID NEQ 26>
+	                                <option value="area#qGetCategoryList.ID#" <cfif ListFind(vUploadedImageList, qGetCategoryList.ID)> style="background-color:##deeaf3;" </cfif> <cfif FORM.categoryID EQ "area#qGetCategoryList.ID#">selected</cfif>>
+	                                    #qGetCategoryList.name#
+                                    	<cfif ListFind(vUploadedImageList, qGetCategoryList.ID)>(Uploaded)</cfif>
+	                                    <span class="required">*</span>
+	                                </option>
+								</cfif>
+                            </cfloop>
+							<!--- This is to ensure that the misc category appears last --->
+							<cfloop query="qGetCategoryList">
+								<cfif qGetCategoryList.ID EQ 26>
+	                                <option value="area#qGetCategoryList.ID#" <cfif ListFind(vUploadedImageList, qGetCategoryList.ID)> style="background-color:##deeaf3;" </cfif> <cfif FORM.categoryID EQ "area#qGetCategoryList.ID#">selected</cfif>>
+	                                    #qGetCategoryList.name#
+                                    	<cfif ListFind(vUploadedImageList, qGetCategoryList.ID)>(Uploaded)</cfif>
+	                                </option>
+								</cfif>
                             </cfloop>
                         </select>
                     </td>

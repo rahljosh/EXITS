@@ -215,18 +215,76 @@
             if ( NOT LEN(TRIM(FORM.fatherlastname)) AND NOT LEN(TRIM(FORM.motherlastname)) )  {
                 SESSION.formErrors.Add("If you are single, you must provide information for at least one of the host parents, either the father or mother. If you are not single, please provide information on both host parents.");
 			}
+			
+			// Primary Host Parent DOB 
+			if ( NOT LEN(TRIM(FORM.motherDOB)) )  {
+				SESSION.formErrors.Add("Please provide the date of birth for the Primary Host Parent.");
+			}
+			
+			// Primary Host Parent DOB 
+			if ( LEN(TRIM(FORM.motherDOB)) AND NOT isDate(TRIM(FORM.motherDOB)) )  {
+				SESSION.formErrors.Add("Please provide a valid date of birth for the Primary Host Parent.");
+				FORM.motherDOB = '';
+			}
 
-			// Check if there is a father
-			if ( LEN(TRIM(FORM.fatherFirstName)) ) {
+			// Calculate Age
+			if ( isDate(FORM.motherDOB) ) {
+				vCalculateMotherAge = Datediff('yyyy',FORM.motherDOB, now());
+			} else {
+				vCalculateMotherAge = 0;
+			}
 
-				// Father DOB 
+			// Birthdate
+			if ( vCalculateMotherAge GT 120 ) {
+				SESSION.formErrors.Add("The Primary Host Parent's date of birth indicates that they are over 120 years old. Please check the Primary Host Parent's date of birth.");				
+			}	
+			
+			// Birthdate
+			if ( isDate(FORM.motherDOB) AND FORM.motherDOB GT now() ) {
+				SESSION.formErrors.Add("The Primary Host Parent's date of birth indicates that they have not been born yet. Please check the Primary Host Parent's date of birth.");				
+			}	
+
+			// Primary Host Parent Education Level 
+			if ( NOT LEN(FORM.motherEducationLevel) )  {
+				SESSION.formErrors.Add("Please provide the highest education level for Primary Host Parent.");
+			}
+			
+			// Primary Host Parent Occupation
+			if ( NOT LEN(TRIM(FORM.motherworktype)) )  {
+				SESSION.formErrors.Add("Please provide the occupation for the Primary Host Parent.");
+			}
+			
+			// Primary Host Parent Full/Part Time
+			if ( NOT LEN(FORM.motherfullpart) ) {
+				SESSION.formErrors.Add("You provided a job for the Primary Host Parent, but didn't indicate if they work full or part time.");
+			}
+			
+			// Primary Host Parent Employer
+			if ( NOT LEN(TRIM(FORM.motherEmployeer)) ) {
+				SESSION.formErrors.Add("You provided a job for the Primary Host Parent, but didn't indicate the employer.");
+			}
+
+			// Valid Primary Host Parent's Phone
+			if ( LEN(TRIM(FORM.mother_cell)) AND NOT isValid("telephone", TRIM(FORM.mother_cell)) ) {
+				SESSION.formErrors.Add("Please enter a valid phone number for the Primary Host Parent's Cell Phone");
+			}
+
+			// Primary Host Parent Interests
+			if ( NOT LEN(TRIM(FORM.motherInterests)) ) {
+				SESSION.formErrors.Add("Please provide interests for the Primary Host Parent");
+			}
+			
+			// Check if there is an additional host parent (stored in the db as the father)
+			if ( FORM.otherHostParent NEQ "none" ) {
+
+				// Other Host Parent DOB 
 				if ( NOT LEN(TRIM(FORM.fatherDOB)) )  {
-					SESSION.formErrors.Add("Please provide date of birth for the Host Father.");
+					SESSION.formErrors.Add("Please provide the date of birth for the Other Host Parent.");
 				}
 				
-				// Father DOB 
+				// Other Host Parent DOB 
 				if ( LEN(TRIM(FORM.fatherDOB)) AND NOT isDate(TRIM(FORM.fatherDOB)) )  {
-					SESSION.formErrors.Add("Please provide a valid date of birth for Host Father.");
+					SESSION.formErrors.Add("Please provide a valid date of birth for the Other Host Parent.");
 					FORM.fatherDOB = '';
 				}
 
@@ -235,121 +293,48 @@
 					vCalculateFatherAge = Datediff('yyyy',FORM.fatherDOB, now());
 				} else {
 					vCalculateFatherAge = 0;
-				}
-
-				// Birthdate
-				//if ( vCalculateFatherAge LTE 18 ) {
-				//	SESSION.formErrors.Add("The host father date of birth indicates he is 18 years old. Please check host fathers's date of birth.");				
-				//}	
+				}	
 
 				// Birthdate
 				if ( vCalculateFatherAge GT 120 ) {
-					SESSION.formErrors.Add("The host father date of birth indicates he is over 120 years old. Please check host father's date of birth.");				
+					SESSION.formErrors.Add("The Other Host Parent's date of birth indicates that they are over 120 years old. Please check the Other Host Parent's date of birth.");				
 				}	
 				
 				// Birthdate
 				if ( isDate(FORM.fatherDOB) AND FORM.fatherDOB GT now() ) {
-					SESSION.formErrors.Add("The host father date of birth indicates he has not been born yet. Please check host father's date of birth.");				
+					SESSION.formErrors.Add("The Other Host Parent's date of birth indicates that they have not been born yet. Please check the Other Host Parent's date of birth.");				
 				}	
 				
-				// Father Education Level 
+				// Other Host Parent Education Level 
 				if ( NOT LEN(FORM.fatherEducationLevel) )  {
-					SESSION.formErrors.Add("Please provide the highest education level for Host Father.");
+					SESSION.formErrors.Add("Please provide the highest education level for the Other Host Parent.");
 				}
 				
-				// Father Occupation
+				// Other Host Parent Occupation
 				if ( NOT LEN(TRIM(FORM.fatherworktype)) )  {
-					SESSION.formErrors.Add("Please provide the occupation for the Host Father.");
+					SESSION.formErrors.Add("Please provide the occupation for the Other Host Parent.");
 				}
 				
-				// Father Full/part time
+				// Other Host Parent Full/part time
 				if ( LEN(TRIM(FORM.fatherworktype)) AND NOT LEN (FORM.fatherfullpart) ) {
-					SESSION.formErrors.Add("You provided a job for the host father, but didn't indicate if you work full or part time.");
+					SESSION.formErrors.Add("You provided a job for the Other Host Parent, but didn't indicate if they work full or part time.");
 				}
 				
-				// Father Employer
+				// Other Host Parent Employer
 				if ( LEN(TRIM(FORM.fatherworktype)) AND NOT LEN(TRIM(FORM.fatherEmployeer)) ) {
-					SESSION.formErrors.Add("You provided a job for the host father, but didn't indicate the employer.");
+					SESSION.formErrors.Add("You provided a job for the Other Host Parent, but didn't indicate the employer.");
 				}
 
-				// Valid Father's Phone
+				// Valid Other Host Parent's Phone
 				if ( LEN(TRIM(FORM.father_cell)) AND NOT isValid("telephone", TRIM(FORM.father_cell)) ) {
-					SESSION.formErrors.Add("Please enter a valid phone number for the Father's Cell Phone.");
+					SESSION.formErrors.Add("Please enter a valid phone number for the Other Host Parent's Cell Phone.");
 				}	
 
-				// Father Interests
+				// Other Host Parent Interests
 				if ( NOT LEN(TRIM(FORM.fatherInterests)) ) {
-					SESSION.formErrors.Add("Please provide interests for host father");
+					SESSION.formErrors.Add("Please provide interests for the Other Host Parent");
 				}
 
-			}
-			
-			// Check if there is a mother
-			if ( LEN(TRIM(FORM.motherFirstName)) ) {
-				
-				// Mother DOB 
-				if ( NOT LEN(TRIM(FORM.motherDOB)) )  {
-					SESSION.formErrors.Add("Please provide date of birth for the Host Mother.");
-				}
-				
-				// Mother DOB 
-				if ( LEN(TRIM(FORM.motherDOB)) AND NOT isDate(TRIM(FORM.motherDOB)) )  {
-					SESSION.formErrors.Add("Please provide a valid date of birth for Host Mother.");
-					FORM.motherDOB = '';
-				}
-
-				// Calculate Age
-				if ( isDate(FORM.motherDOB) ) {
-					vCalculateMotherAge = Datediff('yyyy',FORM.motherDOB, now());
-				} else {
-					vCalculateMotherAge = 0;
-				}
-
-				// Birthdate
-				//if ( vCalculateMotherAge LTE 18 ) {
-				//	SESSION.formErrors.Add("The host mother date of birth indicates she is 18 years old. Please check host mother's date of birth.");				
-				//}	
-
-				// Birthdate
-				if ( vCalculateMotherAge GT 120 ) {
-					SESSION.formErrors.Add("The host mother date of birth indicates she is over 120 years old. Please check host mother's date of birth.");				
-				}	
-				
-				// Birthdate
-				if ( isDate(FORM.motherDOB) AND FORM.motherDOB GT now() ) {
-					SESSION.formErrors.Add("The host mother date of birth indicates she has not been born yet. Please check host mother's date of birth.");				
-				}	
-
-				// Mother Education Level 
-				if ( NOT LEN(FORM.motherEducationLevel) )  {
-					SESSION.formErrors.Add("Please provide the highest education level for Host Mother.");
-				}
-				
-				// Mother Occupation
-				if ( NOT LEN(TRIM(FORM.motherworktype)) )  {
-					SESSION.formErrors.Add("Please provide the occupation for the Host Mother.");
-				}
-				
-				// Mother Full/Part Time
-				if ( NOT LEN(FORM.motherfullpart) ) {
-					SESSION.formErrors.Add("You provided a job for the host mother, but didn't indicate if you work full or part time.");
-				}
-				
-				// Mother Employer
-				if ( NOT LEN(TRIM(FORM.motherEmployeer)) ) {
-					SESSION.formErrors.Add("You provided a job for the host mother, but didn't indicate the employer.");
-				}
-
-				// Valid Mother's Phone
-				if ( LEN(TRIM(FORM.mother_cell)) AND NOT isValid("telephone", TRIM(FORM.mother_cell)) ) {
-					SESSION.formErrors.Add("Please enter a valid phone number for Mother's Cell Phone");
-				}
-
-				// Mother Interests
-				if ( NOT LEN(TRIM(FORM.motherInterests)) ) {
-					SESSION.formErrors.Add("Please provide interests for host mother");
-				}
-			
 			}
 		</cfscript>
         
@@ -369,6 +354,8 @@
                     smg_hosts 
                 SET
                     familylastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.familylastname)#">,
+                    primaryHostParent = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.primaryHostParent#">,
+                    otherHostParent = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.otherHostParent#">,
 					<!--- Address --->
                     address = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address#">,
                     address2 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address2#">,
@@ -440,6 +427,8 @@
          <cfscript>
 			 // Set FORM Values   
 			FORM.familylastname = qGetHostInfo.familylastname;
+			FORM.primaryHostParent = qGetHostInfo.primaryHostParent;
+			FORM.otherHostParent = qGetHostInfo.otherHostParent;
 			// Address --->
 			FORM.address = qGetHostInfo.address;
 			FORM.address2 = qGetHostInfo.address2;
@@ -527,6 +516,14 @@
 		if (document.my_form.state.value.length == 0) {alert("Please select the State."); return false; }
 		if (document.my_form.phone.value.length == 0 && document.my_form.father_cell.value.length == 0 && document.my_form.mother_cell.value.length == 0) {alert("Please enter one of the Phone fields."); return false; }
 		return true;
+	}
+	
+	function updateOtherHostParent() {
+		if ($("#otherHostParent").val() == "none") {
+			$("#otherHostParentFields").hide();
+		} else {
+			$("#otherHostParentFields").show();
+		}
 	}
 </script>
 
@@ -751,67 +748,15 @@
             </tr>
         </table> <br />
         
-        <h3>Father's Information</h3>
+        <h3>
+        	Primary Host Parent: &nbsp;
+            <select name="primaryHostParent">
+                <option value="mother" <cfif FORM.primaryHostParent EQ "mother">selected="selected"</cfif>>Host Mother</option>
+                <option value="father" <cfif FORM.primaryHostParent EQ "father">selected="selected"</cfif>>Host Father</option>
+            </select>
+   		</h3>
         
-        <table width="100%" cellspacing="0" cellpadding="2" class="border">
-            <tr bgcolor="##deeaf3">
-                <td class="label" width="180px"><h3>First Name</h3></td>
-                <td><cfinput type="text" name="fatherFirstName" value="#FORM.fatherFirstName#" class="xLargeField" maxlength="150"></td>
-            </tr>
-            <tr>
-                <td class="label"><h3>Last Name</h3></td>
-                <td><cfinput type="text" name="fatherlastname" value="#FORM.fatherlastname#" class="xLargeField" maxlength="150"></td>
-            </tr>
-            <tr>
-                <td class="label"><h3>Middle Name</h3></td>
-                <td><cfinput type="text" name="fathermiddlename" value="#FORM.fathermiddlename#" class="xLargeField" maxlength="150"></td>
-            </tr>
-            <tr bgcolor="##deeaf3">
-                <td class="label"><h3>Date of Birth</h3></td>
-                <td><cfinput type="text" name="fatherDOB" value="#dateFormat(FORM.fatherDOB, 'mm/dd/yyyy')#" class="mediumField" maxlength="10" mask="99/99/9999" placeholder="MM/DD/YYYY"> </td>
-            </tr>
-            <tr>
-                <td class="label"><h3>Highest level of formal education <span class="required">*</span></h3></td>
-                <td>
-                	<select name="fatherEducationLevel" id="fatherEducationLevel">
-                    	<option value="" <cfif NOT LEN(FORM.fatherEducationLevel)>selected="selected"</cfif> ></option>
-                    	<option value="Grade school or less" <cfif FORM.fatherEducationLevel EQ 'Grade school or less'>selected="selected"</cfif> >Grade school or less</option>
-                    	<option value="Some high school" <cfif FORM.fatherEducationLevel EQ 'Some high school'>selected="selected"</cfif> >Some high school</option>
-                    	<option value="High school graduate" <cfif FORM.fatherEducationLevel EQ 'High school graduate'>selected="selected"</cfif> >High school graduate</option>
-                    	<option value="Grade school or less" <cfif FORM.fatherEducationLevel EQ 'Grade school or less'>selected="selected"</cfif> >Grade school or less</option>
-                    	<option value="Some college" <cfif FORM.fatherEducationLevel EQ 'Some college'>selected="selected"</cfif> >Some college</option>
-                    	<option value="2-year college/technical school" <cfif FORM.fatherEducationLevel EQ '2-year college/technical school'>selected="selected"</cfif> >2-year college/technical school</option>
-                    	<option value="4-year college" <cfif FORM.fatherEducationLevel EQ '4-year college'>selected="selected"</cfif> >4-year college</option>
-                    	<option value="Some postgraduate work" <cfif FORM.fatherEducationLevel EQ 'Some postgraduate work'>selected="selected"</cfif>>Some postgraduate work</option>
-                        <option value="Postgraduate degree" <cfif FORM.fatherEducationLevel EQ 'Postgraduate degree'>selected="selected"</cfif> >Postgraduate degree</option>
-                    </select>
-                </td>
-            </tr>
-            <tr bgcolor="##deeaf3">
-                <td class="label"><h3>Occupation <span class="required">*</span></h3></td>
-                <td>
-                    <cfinput type="text" name="fatherworktype" value="#FORM.fatherworktype#" class="xLargeField" maxlength="200"> 
-                    <input name="fatherfullpart" id="fatherFullTime" type="radio" value="1" <cfif FORM.fatherfullpart eq 1>checked</cfif>> <label for="fatherFullTime">Full Time</label>
-                    <input name="fatherfullpart" id="fatherPartTime" type="radio" value="0" <cfif FORM.fatherfullpart eq 0>checked</cfif>> <label for="fatherPartTime">Part Time</label>
-                </td>
-            </tr>
-            <tr>
-                <td class="label"><h3>Employer <span class="required">*</span></h3></td>
-                <td><cfinput type="text" name="fatherEmployeer" value="#FORM.fatherEmployeer#" class="xLargeField" maxlength="100"> </td>
-            </tr>
-            <tr bgcolor="##deeaf3">
-                <td class="label"><h3>Cell Phone <span class="required">+</span></h3></td>
-                <td colspan="3"><cfinput type="text" name="father_cell" value="#FORM.father_cell#" size="14" maxlength="14" placeholder="(999) 999-9999"  mask="(999) 999-9999" ></td>
-            </tr>
-            <tr>
-                <td class="label" valign="top" ><h3>Interests <span class="required">*</span></h3></td>
-                <td><textarea name="fatherInterests" rows="5" cols="50">#FORM.fatherInterests#</textarea></td>
-            </tr>
-        </table> <br />
-        
-        <h3>Mother's Information</h3>
-        
-        <table width="100%" cellspacing="0" cellpadding="2" class="border">
+       	<table width="100%" cellspacing="0" cellpadding="2" class="border">
             <tr bgcolor="##deeaf3">
                 <td class="label" width="180px"><h3>First Name</h3></td>
                 <td><cfinput type="text" name="motherFirstName" value="#FORM.motherFirstName#" class="xLargeField" maxlength="150"></td>
@@ -865,7 +810,72 @@
                 <td class="label" valign="top" ><h3>Interests <span class="required">*</span></h3></td>
                 <td><textarea name="motherInterests" rows="5" cols="50">#FORM.motherInterests#</textarea></td>
             </tr>
-        </table> 		
+        </table> <br/>
+        
+        <h3>
+        	Other Host Parent: &nbsp;
+      		<select name="otherHostParent" id="otherHostParent" onchange="updateOtherHostParent()">
+            	<option value="father" <cfif FORM.otherHostParent EQ "father">selected="selected"</cfif>>Host Father</option>
+                <option value="mother" <cfif FORM.otherHostParent EQ "mother">selected="selected"</cfif>>Host Mother</option>
+                <option value="none" <cfif FORM.otherHostParent EQ "none">selected="selected"</cfif>>None</option>
+            </select>
+        </h3>
+        
+    	<table width="100%" cellspacing="0" cellpadding="2" class="border" id="otherHostParentFields" <cfif FORM.otherHostParent EQ "none">style="display:none;"</cfif>>
+            <tr bgcolor="##deeaf3" id="otherHostParentFields">
+                <td class="label" width="180px"><h3>First Name</h3></td>
+                <td><cfinput type="text" name="fatherFirstName" value="#FORM.fatherFirstName#" class="xLargeField" maxlength="150"></td>
+            </tr>
+            <tr>
+                <td class="label"><h3>Last Name</h3></td>
+                <td><cfinput type="text" name="fatherlastname" value="#FORM.fatherlastname#" class="xLargeField" maxlength="150"></td>
+            </tr>
+            <tr>
+                <td class="label"><h3>Middle Name</h3></td>
+                <td><cfinput type="text" name="fathermiddlename" value="#FORM.fathermiddlename#" class="xLargeField" maxlength="150"></td>
+            </tr>
+            <tr bgcolor="##deeaf3">
+                <td class="label"><h3>Date of Birth</h3></td>
+                <td><cfinput type="text" name="fatherDOB" value="#dateFormat(FORM.fatherDOB, 'mm/dd/yyyy')#" class="mediumField" maxlength="10" mask="99/99/9999" placeholder="MM/DD/YYYY"> </td>
+            </tr>
+            <tr>
+                <td class="label"><h3>Highest level of formal education <span class="required">*</span></h3></td>
+                <td>
+                    <select name="fatherEducationLevel" id="fatherEducationLevel">
+                        <option value="" <cfif NOT LEN(FORM.fatherEducationLevel)>selected="selected"</cfif> ></option>
+                        <option value="Grade school or less" <cfif FORM.fatherEducationLevel EQ 'Grade school or less'>selected="selected"</cfif> >Grade school or less</option>
+                        <option value="Some high school" <cfif FORM.fatherEducationLevel EQ 'Some high school'>selected="selected"</cfif> >Some high school</option>
+                        <option value="High school graduate" <cfif FORM.fatherEducationLevel EQ 'High school graduate'>selected="selected"</cfif> >High school graduate</option>
+                        <option value="Grade school or less" <cfif FORM.fatherEducationLevel EQ 'Grade school or less'>selected="selected"</cfif> >Grade school or less</option>
+                        <option value="Some college" <cfif FORM.fatherEducationLevel EQ 'Some college'>selected="selected"</cfif> >Some college</option>
+                        <option value="2-year college/technical school" <cfif FORM.fatherEducationLevel EQ '2-year college/technical school'>selected="selected"</cfif> >2-year college/technical school</option>
+                        <option value="4-year college" <cfif FORM.fatherEducationLevel EQ '4-year college'>selected="selected"</cfif> >4-year college</option>
+                        <option value="Some postgraduate work" <cfif FORM.fatherEducationLevel EQ 'Some postgraduate work'>selected="selected"</cfif>>Some postgraduate work</option>
+                        <option value="Postgraduate degree" <cfif FORM.fatherEducationLevel EQ 'Postgraduate degree'>selected="selected"</cfif> >Postgraduate degree</option>
+                    </select>
+                </td>
+            </tr>
+            <tr bgcolor="##deeaf3">
+                <td class="label"><h3>Occupation <span class="required">*</span></h3></td>
+                <td>
+                    <cfinput type="text" name="fatherworktype" value="#FORM.fatherworktype#" class="xLargeField" maxlength="200"> 
+                    <input name="fatherfullpart" id="fatherFullTime" type="radio" value="1" <cfif FORM.fatherfullpart eq 1>checked</cfif>> <label for="fatherFullTime">Full Time</label>
+                    <input name="fatherfullpart" id="fatherPartTime" type="radio" value="0" <cfif FORM.fatherfullpart eq 0>checked</cfif>> <label for="fatherPartTime">Part Time</label>
+                </td>
+            </tr>
+            <tr>
+                <td class="label"><h3>Employer <span class="required">*</span></h3></td>
+                <td><cfinput type="text" name="fatherEmployeer" value="#FORM.fatherEmployeer#" class="xLargeField" maxlength="100"> </td>
+            </tr>
+            <tr bgcolor="##deeaf3">
+                <td class="label"><h3>Cell Phone <span class="required">+</span></h3></td>
+                <td colspan="3"><cfinput type="text" name="father_cell" value="#FORM.father_cell#" size="14" maxlength="14" placeholder="(999) 999-9999"  mask="(999) 999-9999" ></td>
+            </tr>
+            <tr>
+                <td class="label" valign="top" ><h3>Interests <span class="required">*</span></h3></td>
+                <td><textarea name="fatherInterests" rows="5" cols="50">#FORM.fatherInterests#</textarea></td>
+            </tr>
+        </table>
 
         <!--- Check if FORM submission is allowed --->
         <cfif APPLICATION.CFC.UDF.allowFormSubmission(section=URL.section)>

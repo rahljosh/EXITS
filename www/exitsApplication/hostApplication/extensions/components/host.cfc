@@ -590,17 +590,75 @@
                 SESSION.formErrors.Add("If you are single, you must provide information for at least one of the host parents, either the father or mother. If you are not single, please provide information on both host parents.");
 			}
 
-			// Check if there is a father
-			if ( LEN(TRIM(qGetHostFamilyInfo.fatherFirstName)) ) {
+			// Primary Host Parent DOB 
+			if ( NOT LEN(TRIM(qGetHostFamilyInfo.motherDOB)) )  {
+				SESSION.formErrors.Add("Please provide the date of birth for the Primary Host Parent.");
+			}
+			
+			// Primary Host Parent DOB 
+			if ( LEN(TRIM(qGetHostFamilyInfo.motherDOB)) AND NOT isDate(TRIM(qGetHostFamilyInfo.motherDOB)) )  {
+				SESSION.formErrors.Add("Please provide a valid date of birth for the Primary Host Parent.");
+				qGetHostFamilyInfo.motherDOB = '';
+			}
 
-				// Father DOB 
+			// Calculate Age
+			if ( isDate(qGetHostFamilyInfo.motherDOB) ) {
+				vCalculateMotherAge = Datediff('yyyy',qGetHostFamilyInfo.motherDOB, now());
+			} else {
+				vCalculateMotherAge = 0;
+			}
+
+			// Birthdate
+			if ( vCalculateMotherAge GT 120 ) {
+				SESSION.formErrors.Add("The Primary Host Parent's date of birth indicates that they are over 120 years old. Please check the Primary Host Parent's date of birth.");				
+			}	
+			
+			// Birthdate
+			if ( isDate(qGetHostFamilyInfo.motherDOB) AND qGetHostFamilyInfo.motherDOB GT now() ) {
+				SESSION.formErrors.Add("The Primary Host Parent's date of birth indicates that they have not been born yet. Please check the Primary Host Parent's date of birth.");				
+			}	
+
+			// Primary Host Parent Education Level 
+			if ( NOT LEN(qGetHostFamilyInfo.motherEducationLevel) )  {
+				SESSION.formErrors.Add("Please provide the highest education level for Primary Host Parent.");
+			}
+			
+			// Primary Host Parent Occupation
+			if ( NOT LEN(TRIM(qGetHostFamilyInfo.motherworktype)) )  {
+				SESSION.formErrors.Add("Please provide the occupation for the Primary Host Parent.");
+			}
+			
+			// Primary Host Parent Full/Part Time
+			if ( NOT LEN(qGetHostFamilyInfo.motherfullpart) ) {
+				SESSION.formErrors.Add("You provided a job for the Primary Host Parent, but didn't indicate if they work full or part time.");
+			}
+			
+			// Primary Host Parent Employer
+			if ( NOT LEN(TRIM(qGetHostFamilyInfo.motherEmployeer)) ) {
+				SESSION.formErrors.Add("You provided a job for the Primary Host Parent, but didn't indicate the employer.");
+			}
+
+			// Valid Primary Host Parent's Phone
+			if ( LEN(TRIM(qGetHostFamilyInfo.mother_cell)) AND NOT isValid("telephone", TRIM(qGetHostFamilyInfo.mother_cell)) ) {
+				SESSION.formErrors.Add("Please enter a valid phone number for the Primary Host Parent's Cell Phone");
+			}
+
+			// Primary Host Parent Interests
+			if ( NOT LEN(TRIM(qGetHostFamilyInfo.motherInterests)) ) {
+				SESSION.formErrors.Add("Please provide interests for the Primary Host Parent");
+			}
+			
+			// Check if there is an additional host parent (stored in the db as the father)
+			if ( qGetHostFamilyInfo.otherHostParent NEQ "none" ) {
+
+				// Other Host Parent DOB 
 				if ( NOT LEN(TRIM(qGetHostFamilyInfo.fatherDOB)) )  {
-					SESSION.formErrors.Add("Please provide date of birth for the Host Father.");
+					SESSION.formErrors.Add("Please provide the date of birth for the Other Host Parent.");
 				}
 				
-				// Father DOB 
+				// Other Host Parent DOB 
 				if ( LEN(TRIM(qGetHostFamilyInfo.fatherDOB)) AND NOT isDate(TRIM(qGetHostFamilyInfo.fatherDOB)) )  {
-					SESSION.formErrors.Add("Please provide a valid date of birth for Host Father.");
+					SESSION.formErrors.Add("Please provide a valid date of birth for the Other Host Parent.");
 					qGetHostFamilyInfo.fatherDOB = '';
 				}
 
@@ -609,121 +667,48 @@
 					vCalculateFatherAge = Datediff('yyyy',qGetHostFamilyInfo.fatherDOB, now());
 				} else {
 					vCalculateFatherAge = 0;
-				}
-
-				// Birthdate
-				//if ( vCalculateFatherAge LTE 18 ) {
-				//	SESSION.formErrors.Add("The host father date of birth indicates he is 18 years old. Please check host fathers's date of birth.");				
-				//}	
+				}	
 
 				// Birthdate
 				if ( vCalculateFatherAge GT 120 ) {
-					SESSION.formErrors.Add("The host father date of birth indicates he is over 120 years old. Please check host father's date of birth.");				
+					SESSION.formErrors.Add("The Other Host Parent's date of birth indicates that they are over 120 years old. Please check the Other Host Parent's date of birth.");				
 				}	
 				
 				// Birthdate
 				if ( isDate(qGetHostFamilyInfo.fatherDOB) AND qGetHostFamilyInfo.fatherDOB GT now() ) {
-					SESSION.formErrors.Add("The host father date of birth indicates he has not been born yet. Please check host father's date of birth.");				
+					SESSION.formErrors.Add("The Other Host Parent's date of birth indicates that they have not been born yet. Please check the Other Host Parent's date of birth.");				
 				}	
 				
-				// Father Education Level 
+				// Other Host Parent Education Level 
 				if ( NOT LEN(qGetHostFamilyInfo.fatherEducationLevel) )  {
-					SESSION.formErrors.Add("Please provide the highest education level for Host Father.");
+					SESSION.formErrors.Add("Please provide the highest education level for the Other Host Parent.");
 				}
 				
-				// Father Occupation
+				// Other Host Parent Occupation
 				if ( NOT LEN(TRIM(qGetHostFamilyInfo.fatherworktype)) )  {
-					SESSION.formErrors.Add("Please provide the occupation for the Host Father.");
+					SESSION.formErrors.Add("Please provide the occupation for the Other Host Parent.");
 				}
 				
-				// Father Full/part time
+				// Other Host Parent Full/part time
 				if ( LEN(TRIM(qGetHostFamilyInfo.fatherworktype)) AND NOT LEN (qGetHostFamilyInfo.fatherfullpart) ) {
-					SESSION.formErrors.Add("You provided a job for the host father, but didn't indicate if you work full or part time.");
+					SESSION.formErrors.Add("You provided a job for the Other Host Parent, but didn't indicate if they work full or part time.");
 				}
 				
-				// Father Employer
+				// Other Host Parent Employer
 				if ( LEN(TRIM(qGetHostFamilyInfo.fatherworktype)) AND NOT LEN(TRIM(qGetHostFamilyInfo.fatherEmployeer)) ) {
-					SESSION.formErrors.Add("You provided a job for the host father, but didn't indicate the employer.");
+					SESSION.formErrors.Add("You provided a job for the Other Host Parent, but didn't indicate the employer.");
 				}
 
-				// Valid Father's Phone
+				// Valid Other Host Parent's Phone
 				if ( LEN(TRIM(qGetHostFamilyInfo.father_cell)) AND NOT isValid("telephone", TRIM(qGetHostFamilyInfo.father_cell)) ) {
-					SESSION.formErrors.Add("Please enter a valid phone number for the Father's Cell Phone.");
+					SESSION.formErrors.Add("Please enter a valid phone number for the Other Host Parent's Cell Phone.");
 				}	
 
-				// Father Interests
+				// Other Host Parent Interests
 				if ( NOT LEN(TRIM(qGetHostFamilyInfo.fatherInterests)) ) {
-					SESSION.formErrors.Add("Please provide interests for host father");
+					SESSION.formErrors.Add("Please provide interests for the Other Host Parent");
 				}
 
-			}
-			
-			// Check if there is a mother
-			if ( LEN(TRIM(qGetHostFamilyInfo.motherFirstName)) ) {
-				
-				// Mother DOB 
-				if ( NOT LEN(TRIM(qGetHostFamilyInfo.motherDOB)) )  {
-					SESSION.formErrors.Add("Please provide date of birth for the Host Mother.");
-				}
-				
-				// Mother DOB 
-				if ( LEN(TRIM(qGetHostFamilyInfo.motherDOB)) AND NOT isDate(TRIM(qGetHostFamilyInfo.motherDOB)) )  {
-					SESSION.formErrors.Add("Please provide a valid date of birth for Host Mother.");
-					qGetHostFamilyInfo.motherDOB = '';
-				}
-
-				// Calculate Age
-				if ( isDate(qGetHostFamilyInfo.motherDOB) ) {
-					vCalculateMotherAge = Datediff('yyyy',qGetHostFamilyInfo.motherDOB, now());
-				} else {
-					vCalculateMotherAge = 0;
-				}
-
-				// Birthdate
-				//if ( vCalculateMotherAge LTE 18 ) {
-				//	SESSION.formErrors.Add("The host mother date of birth indicates she is 18 years old. Please check host mother's date of birth.");				
-				//}	
-
-				// Birthdate
-				if ( vCalculateMotherAge GT 120 ) {
-					SESSION.formErrors.Add("The host mother date of birth indicates she is over 120 years old. Please check host mother's date of birth.");				
-				}	
-				
-				// Birthdate
-				if ( isDate(qGetHostFamilyInfo.motherDOB) AND qGetHostFamilyInfo.motherDOB GT now() ) {
-					SESSION.formErrors.Add("The host mother date of birth indicates she has not been born yet. Please check host mother's date of birth.");				
-				}	
-
-				// Mother Education Level 
-				if ( NOT LEN(qGetHostFamilyInfo.motherEducationLevel) )  {
-					SESSION.formErrors.Add("Please provide the highest education level for Host Mother.");
-				}
-				
-				// Mother Occupation
-				if ( NOT LEN(TRIM(qGetHostFamilyInfo.motherworktype)) )  {
-					SESSION.formErrors.Add("Please provide the occupation for the Host Mother.");
-				}
-				
-				// Mother Full/Part Time
-				if ( NOT LEN(qGetHostFamilyInfo.motherfullpart) ) {
-					SESSION.formErrors.Add("You provided a job for the host mother, but didn't indicate if you work full or part time.");
-				}
-				
-				// Mother Employer
-				if ( NOT LEN(TRIM(qGetHostFamilyInfo.motherEmployeer)) ) {
-					SESSION.formErrors.Add("You provided a job for the host mother, but didn't indicate the employer.");
-				}
-
-				// Valid Mother's Phone
-				if ( LEN(TRIM(qGetHostFamilyInfo.mother_cell)) AND NOT isValid("telephone", TRIM(qGetHostFamilyInfo.mother_cell)) ) {
-					SESSION.formErrors.Add("Please enter a valid phone number for Mother's Cell Phone");
-				}
-
-				// Mother Interests
-				if ( NOT LEN(TRIM(qGetHostFamilyInfo.motherInterests)) ) {
-					SESSION.formErrors.Add("Please provide interests for host mother");
-				}
-			
 			}
     
             // No Errors Found
@@ -1096,7 +1081,13 @@
 				8 - Family Album
 			********************************************/
 			
-			var qCategoryList = APPLICATION.CFC.DOCUMENT.getDocumentType(documentGroup="familyAlbum");
+			// Get Category List - do not require pictures for second room unless double placement is selected
+			if (qGetHostFamilyInfo.acceptDoublePlacement EQ 1 AND qGetHostFamilyInfo.sharingBedroom NEQ "EachOther") {
+				var qCategoryList = APPLICATION.CFC.DOCUMENT.getDocumentType(documentGroup="familyAlbum");
+			} else {
+				var qCategoryList = APPLICATION.CFC.DOCUMENT.getDocumentType(documentGroup="familyAlbum",ignoreIDs="38,39");
+			}
+			
 			var qUploadedPictureCategoryList = APPLICATION.CFC.DOCUMENT.getDocuments(
 				foreignTable="smg_hosts",	
 				foreignID=APPLICATION.CFC.SESSION.getHostSession().ID, 

@@ -18,6 +18,7 @@
     <cfparam name="FORM.submitted" default="0">
     <!--- School Dropdown --->
     <cfparam name="FORM.schoolID" default="">
+	<cfparam name="FORM.numberOfStudentsNotNew" default="0">
     <!--- New School --->
     <cfparam name="FORM.newSchool" default="0">    
     <cfparam name="FORM.schoolname" default="">
@@ -46,7 +47,7 @@
 		// Get States
 		qGetStateList = APPLICATION.CFC.LOOKUPTABLES.getState();
 	</cfscript>
-    <cfset vSchoolSize = '0 - 200,200 - 500,500 - 1000,1000 - 2000, 2000 +'>
+    <cfset vSchoolSize = '0 - 50,50 - 100,100 - 250,250 - 500,500 - 1000,1000 - 2000,>2000'>
     
     <cfquery name="qGetLocalSchools" datasource="#APPLICATION.DSN.Source#">
         SELECT 
@@ -119,6 +120,11 @@
 			// School
 			if ( NOT VAL(FORM.schoolID) AND NOT VAL(FORM.newSchool) ) {
 				SESSION.formErrors.Add("You must select a school from the drop down list, if school is not listed, please click on +/- Our school is not listed above, I need to add it.");
+			}
+			
+			// Number of students
+			if ( NOT LEN(TRIM(FORM.numberofstudentsNotNew)) ) {
+				SESSION.formErrors.Add("Please indicate the size of this school.");
 			}
 			
 			// Works at School
@@ -206,6 +212,13 @@
                 <cfset FORM.schoolID = newRecord.GENERATED_KEY>
             
             </cfif>
+			
+			<!--- Update number of students in school --->
+			<cfquery datasource="#APPLICATION.DSN.Source#" result="newRecord">
+                    UPDATE smg_schools
+					SET numberOfStudents = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.numberofstudentsNotNew)#">
+					WHERE schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.schoolID)#">
+       		</cfquery>
 
 			<!--- Update School ID, transportation, relationships --->
             <cfquery datasource="#APPLICATION.DSN.Source#">
@@ -321,7 +334,15 @@
                         </cfloop> 
                     </select>
 				</td>  
-                <td>Number of Students: <Cfif qNumberOfStudents.numberofstudents eq 0><em>Not Available</em><Cfelse>#qNumberOfStudents.numberofstudents#</Cfif></td>                  
+                <td>
+					Number of Students:
+                    <select name="numberOfStudentsNotNew">
+                        <option value=""></option>
+                        <Cfloop list="#vSchoolSize#" index=i>
+                             <option value="#i#" <cfif qNumberOfStudents.numberofstudents is #i#>selected</cfif>>#i#</option>
+                        </Cfloop>
+                    </select>
+				</td>                  
             </tr>
         </table> <br />
         

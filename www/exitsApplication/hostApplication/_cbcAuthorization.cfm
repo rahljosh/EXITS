@@ -416,16 +416,16 @@
 			if ( NOT LEN(qGetHostFamilyInfo.address) OR NOT LEN(qGetHostFamilyInfo.city) OR NOT LEN(qGetHostFamilyInfo.state) OR NOT LEN(qGetHostFamilyInfo.zip) ) {
 				 SESSION.formErrors.Add("A complete address is missing. Please click on Name & Contact info in the left menu and enter the address prior to complete this section."); 
 			}
-		
-			// Host Father - Check if we have a valid DOB 
-            if ( LEN(qGetHostFamilyInfo.fatherFirstName) AND NOT isDate(qGetHostFamilyInfo.fatherdob) )  {
-                SESSION.formErrors.Add("Date of birth is missing for host father #qGetHostFamilyInfo.fatherFirstName#. Please click on Name & Contact info in the left menu and enter the date of birth prior to complete this section.");
-            }
-
+			
 			// Host Mother - Check if we have a valid DOB 
 			if ( LEN(qGetHostFamilyInfo.motherFirstName) AND NOT isDate(qGetHostFamilyInfo.motherdob) )  {
-                SESSION.formErrors.Add("Date of birth is missing for host mother #qGetHostFamilyInfo.motherFirstName#. Please click on Name & Contact info in the left menu and enter the date of birth prior to complete this section.");
-            }     
+                SESSION.formErrors.Add("Date of birth is missing for the Primary Host Parent #qGetHostFamilyInfo.motherFirstName#. Please click on Name & Contact info in the left menu and enter the date of birth prior to complete this section.");
+            } 
+		
+			// Host Father - Check if we have a valid DOB 
+            if ( LEN(qGetHostFamilyInfo.fatherFirstName) AND NOT isDate(qGetHostFamilyInfo.fatherdob) AND qGetHostFamilyInfo.otherHostParent NEQ "none" )  {
+                SESSION.formErrors.Add("Date of birth is missing for the Other Host Parent #qGetHostFamilyInfo.fatherFirstName#. Please click on Name & Contact info in the left menu and enter the date of birth prior to complete this section.");
+            }
 			
 			// Family Members - Check if we have a valid DOB for all members 
 			for ( i=1; i LTE qGetAllFamilyMembersAtHome.recordCount; i++ ) {	
@@ -493,11 +493,32 @@
                     <th width="25%">Social Security ## <span class="required">*</span></th>
                 </tr>
                 
-                <!--- Host Father --->
-                <cfif LEN(qGetHostFamilyInfo.fatherFirstName) OR LEN(qGetHostFamilyInfo.fatherlastname)>
+                <!--- Primary Host Parent --->
+                <cfif LEN(qGetHostFamilyInfo.motherFirstName) OR LEN(qGetHostFamilyInfo.motherlastname)>
+                    <tr <cfif vSSNCurrentRow MOD 2> bgcolor="##deeaf3" </cfif> >
+                        <td><h3>#qGetHostFamilyInfo.motherFirstName# #qGetHostFamilyInfo.motherlastname#</h3></td>
+                        <td><h3><cfif qGetHostFamilyInfo.primaryHostParent EQ "mother">Host Mother<cfelse>Host Father</cfif></h3></td>
+                        <td><h3>#DateFormat(qGetHostFamilyInfo.motherdob, 'mmm d, yyyy')#</h3></td>
+                        <td><h3><cfif isDate(qGetHostFamilyInfo.motherdob)>#DateDiff('yyyy',qGetHostFamilyInfo.motherdob,now())#</cfif></h3></td> 
+                        <td>
+                            <cfif NOT LEN(qGetHostFamilyInfo.motherSSN)>
+                                <cfinput type="text" name="motherSSN" value="#FORM.motherSSN#" mask="999-99-9999" class="mediumField" maxlength="50">
+                            <cfelse>
+                                Submitted <!--- #FORM.motherSSN# --->
+                            </cfif>
+                        </td>
+                    </tr>
+                    <cfscript>
+                        // Increase value of current row
+                        vSSNCurrentRow ++;
+                    </cfscript>
+                </cfif>
+                
+                <!--- Other Host Parent --->
+                <cfif qGetHostFamilyInfo.otherHostParent NEQ "none">
                     <tr <cfif vSSNCurrentRow MOD 2> bgcolor="##deeaf3" </cfif> >
                         <td><h3>#qGetHostFamilyInfo.fatherFirstName# #qGetHostFamilyInfo.fatherlastname#</h3></td>
-                        <td><h3>Host Father</h3></td>
+                        <td><h3><cfif qGetHostFamilyInfo.otherHostParent EQ "mother">Host Mother<cfelse>Host Father</cfif></h3></td>
                         <td><h3>#DateFormat(qGetHostFamilyInfo.fatherdob, 'mmm d, yyyy')#</h3></td>
                         <td><h3><cfif isDate(qGetHostFamilyInfo.fatherdob)>#DateDiff('yyyy', qGetHostFamilyInfo.fatherdob, now())#</cfif></h3></td> 
                         <td>
@@ -513,27 +534,7 @@
                         vSSNCurrentRow ++;
                     </cfscript>
                 </cfif>
-                
-                <!--- Host Mother --->
-                <cfif LEN(qGetHostFamilyInfo.motherFirstName) OR LEN(qGetHostFamilyInfo.motherlastname)>
-                    <tr <cfif vSSNCurrentRow MOD 2> bgcolor="##deeaf3" </cfif> >
-                        <td><h3>#qGetHostFamilyInfo.motherFirstName# #qGetHostFamilyInfo.motherlastname#</h3></td>
-                        <td><h3>Host Mother</h3></td>
-                        <td><h3>#DateFormat(qGetHostFamilyInfo.motherdob, 'mmm d, yyyy')#</h3></td>
-                        <td><h3><cfif isDate(qGetHostFamilyInfo.motherdob)>#DateDiff('yyyy',qGetHostFamilyInfo.motherdob,now())#</cfif></h3></td> 
-                        <td>
-                            <cfif NOT LEN(qGetHostFamilyInfo.motherSSN)>
-                                <cfinput type="text" name="motherSSN" value="#FORM.motherSSN#" mask="999-99-9999" class="mediumField" maxlength="50">
-                            <cfelse>
-                                Submitted <!--- #FORM.motherSSN# --->
-                            </cfif>
-                        </td>
-                    </tr>
-                    <cfscript>
-                        // Increase value of current row
-                        vSSNCurrentRow ++;
-                    </cfscript>
-                </cfif>			
+                		
             </table> <br />             
             
             <!--- Host Members --->
@@ -592,28 +593,9 @@
                 <tr bgcolor="##deeaf3">
                     <th>Name</th>
                     <th>Signature <span class="required">*</span></h3></th>
-                </tr>                
+                </tr>
                 
-                <!--- Host Father --->
-                <cfif LEN(qGetHostFamilyInfo.fatherFirstName)>
-                    <tr <cfif vSignatureCurrentRow MOD 2> bgcolor="##deeaf3" </cfif> >
-                        <td><h3>#qGetHostFamilyInfo.fatherFirstName# #qGetHostFamilyInfo.fatherlastname#</h3></td>
-                        <td>
-                            <cfif NOT qGetFatherCBCAuthorization.recordcount>
-                                <input type="text" name="fatherSignature" value="#FORM.fatherSignature#" class="largeField"/>
-                            <cfelse>
-                                <a href="publicDocument.cfm?ID=#qGetFatherCBCAuthorization.ID#&Key=#APPLICATION.CFC.DOCUMENT.generateHashID(qGetFatherCBCAuthorization.ID)#" target="_blank">Download Copy of Electronic Authorization</a>
-                                <!--- <a href="#APPLICATION.CFC.SESSION.getHostSession().PATH.relativeDocs##qGetFatherCBCAuthorization.fileName#" target="_blank">View CBC Authoriaztion</a> --->
-                            </cfif>
-                        </td>                        
-                    </tr>  
-                    <cfscript>
-                        // Increase value of current row
-                        vSignatureCurrentRow ++;
-                    </cfscript>
-                </cfif>
-                
-                <!--- Host Mother --->
+                <!--- Primary Host Parent --->
                 <cfif LEN(qGetHostFamilyInfo.motherFirstName)>
                     <tr <cfif vSignatureCurrentRow MOD 2> bgcolor="##deeaf3" </cfif> >
                         <td><h3>#qGetHostFamilyInfo.motherFirstName# #qGetHostFamilyInfo.motherlastname#</h3></td>
@@ -625,6 +607,25 @@
                             </cfif>
                         </td>
                     </tr> 
+                    <cfscript>
+                        // Increase value of current row
+                        vSignatureCurrentRow ++;
+                    </cfscript>
+                </cfif>
+                
+                <!--- Other Host Parent --->
+                <cfif qGetHostFamilyInfo.otherHostParent NEQ "none">
+                    <tr <cfif vSignatureCurrentRow MOD 2> bgcolor="##deeaf3" </cfif> >
+                        <td><h3>#qGetHostFamilyInfo.fatherFirstName# #qGetHostFamilyInfo.fatherlastname#</h3></td>
+                        <td>
+                            <cfif NOT qGetFatherCBCAuthorization.recordcount>
+                                <input type="text" name="fatherSignature" value="#FORM.fatherSignature#" class="largeField"/>
+                            <cfelse>
+                                <a href="publicDocument.cfm?ID=#qGetFatherCBCAuthorization.ID#&Key=#APPLICATION.CFC.DOCUMENT.generateHashID(qGetFatherCBCAuthorization.ID)#" target="_blank">Download Copy of Electronic Authorization</a>
+                                <!--- <a href="#APPLICATION.CFC.SESSION.getHostSession().PATH.relativeDocs##qGetFatherCBCAuthorization.fileName#" target="_blank">View CBC Authoriaztion</a> --->
+                            </cfif>
+                        </td>                        
+                    </tr>  
                     <cfscript>
                         // Increase value of current row
                         vSignatureCurrentRow ++;

@@ -27,8 +27,8 @@
     <cfparam name="FORM.indoor" default="">
 	<!--- Form --->
     <cfparam name="FORM.pet_allergies" default="">
-    <cfparam name="FORM.isStudentSharingBedroom" default="">
-    <cfparam name="FORM.sharingWithID" default="">
+	<cfparam name="FORM.acceptDoublePlacement" default="0">
+    <cfparam name="FORM.sharingBedroom" default="Neither">
     <cfparam name="FORM.hostSmokes" default="">
     <cfparam name="FORM.smokeConditions" default="">
     <cfparam name="FORM.famDietRest" default="">
@@ -52,15 +52,6 @@
 		// Get Host Members
 		qGetHostMembers = APPLICATION.CFC.HOST.getHostMemberByID(hostID=APPLICATION.CFC.SESSION.getHostSession().ID);
 	</cfscript>
-    
-    <cfquery name="qGetWhoIsSharingRoom" dbtype="query">
-        SELECT 
-        	*
-        FROM 
-        	qGetHostMembers
-        WHERE 
-        	shared = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">
-    </cfquery>
     
 	<!--- Delete a Pet --->
     <cfif VAL(URL.deleteAnimalID)>
@@ -170,19 +161,19 @@
 		<cfscript>
 			// Data Validation
 
+			// Double Placement
+			if ( NOT LEN(FORM.acceptDoublePlacement) ) {
+				SESSION.formErrors.Add("Please indicate if you would be willing to host more than 1 student");
+			}
+
 			// Allergies
 			if ( NOT LEN(FORM.pet_allergies) ) {
 				SESSION.formErrors.Add("Please indicate if you would be willing to host a student who is allergic to animals");
 			}
 
 			// Room Sharing
-			if (NOT LEN(FORM.isStudentSharingBedroom) ) {
+			if (NOT LEN(FORM.sharingBedroom) ) {
 				SESSION.formErrors.Add("Please indicate if the student is going to share a bedroom");
-			}
-
-			// Room Sharing
-			if ( FORM.isStudentSharingBedroom EQ 1 AND NOT VAL(FORM.sharingWithID) )  {
-				SESSION.formErrors.Add("You have indicated that the student will share a room, but have not indicated with whom they will share the room");
 			}
 			
 			// Family Smokes
@@ -239,10 +230,6 @@
 				if ( FORM.hostSmokes EQ "no" ) {
 					FORM.smokeConditions = "";
 				}
-				
-				if ( NOT VAL(FORM.isStudentSharingBedroom) ) {
-					FORM.sharingWithID = "";
-				}
 
 				if ( NOT VAL(FORM.famDietRest) ) {
 					FORM.famDietRestDesc = "";
@@ -253,51 +240,11 @@
 				}
 			</cfscript>
             
-			<!--- share room --->
-            <cfif VAL(FORM.isStudentSharingBedroom) AND VAL(FORM.sharingWithID)>
-            
-                <cfquery datasource="#APPLICATION.DSN.Source#">
-                    UPDATE 
-                        smg_host_children
-                    SET
-                        shared = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">
-                    WHERE
-                        childid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.sharingWithID)#">
-                    AND
-                        hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
-                </cfquery>
-            
-            <cfelse>
-            
-                <cfquery datasource="#APPLICATION.DSN.Source#">
-                    UPDATE 
-                        smg_host_children
-                    SET
-                        shared = <cfqueryparam cfsqltype="cf_sql_varchar" value="no">
-                    WHERE
-                        hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
-                </cfquery>
-                
-            </cfif>
-            
             <cfquery datasource="#APPLICATION.DSN.Source#">
                 UPDATE 
                 	smg_hosts
                 SET
                 	pet_allergies = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pet_allergies#">,
-                    <cfif VAL(isStudentSharingBedroom)>
-                    	isStudentSharingBedroom = <cfqueryparam cfsqltype="cf_sql_bit" value="1">,
-                        <cfif isStudentSharingBedroom EQ 1>
-                        	sharingBedroomOptions = <cfqueryparam cfsqltype="cf_sql_varchar" value="member">,
-                        <cfelseif isStudentSharingBedroom EQ 2>
-                        	sharingBedroomOptions = <cfqueryparam cfsqltype="cf_sql_varchar" value="student">,
-                        <cfelseif isStudentSharingBedroom EQ 3>
-                        	sharingBedroomOptions = <cfqueryparam cfsqltype="cf_sql_varchar" value="depends">,
-                        </cfif>
-                    <cfelse>
-                    	isStudentSharingBedroom = <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
-                        sharingBedroomOptions = NULL,
-                    </cfif>
                 	hostSmokes = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hostSmokes#">,
                     smokeconditions = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.smokeConditions#">,
                     famDietRest = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.famDietRest#">,
@@ -306,7 +253,9 @@
                     stuDietRestDesc = <cfqueryparam cfsqltype="cf_sql_varchar" value="#LEFT(FORM.stuDietRestDesc, 300)#">,
                     dietaryRestriction = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.dietaryRestriction#">,
                     threesquares = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.threesquares#">,
-                    internetConnection = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.internetConnection#">
+                    internetConnection = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.internetConnection#">,
+					acceptDoublePlacement = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.acceptDoublePlacement#">,
+					sharingBedroom = '#FORM.sharingBedroom#'
                 WHERE 
                 	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
             </cfquery>
@@ -338,18 +287,8 @@
             FORM.threesquares = qGetHostFamilyInfo.threesquares;
 			FORM.internetConnection = qGetHostFamilyInfo.internetConnection;
 			
-			if ( qGetHostFamilyInfo.sharingBedroomOptions == 'member' ) {
-				FORM.isStudentSharingBedroom = 1;
-				if ( qGetWhoIsSharingRoom.recordcount ) {
-					FORM.sharingWithID = qGetWhoIsSharingRoom.childID;
-				}
-			} else if ( qGetHostFamilyInfo.sharingBedroomOptions == 'student' ) {
-				FORM.isStudentSharingBedroom = 2;
-			} else if ( qGetHostFamilyInfo.sharingBedroomOptions == 'depends' ) {
-				FORM.isStudentSharingBedroom = 3;
-			} else {
-				FORM.isStudentSharingBedroom = 0;	
-			}
+			FORM.acceptDoublePlacement = qGetHostFamilyInfo.acceptDoublePlacement;
+			FORM.sharingBedroom = qGetHostFamilyInfo.sharingBedroom;
         </cfscript>
     
     </cfif>
@@ -481,31 +420,56 @@
 				</td>          
             </tr>
         </table> <br />
+		
+		<h3>Double Placement</h3>
+		
+		<table width="100%" cellspacing="0" cellpadding="2" class="border">
+			<tr bgcolor="##deeaf3">
+				<td>Would you like the option to host two students? <span class="required">*</span></td>
+				<td>
+					<cfinput 
+						type="radio" 
+						name="acceptDoublePlacement" 
+						id="acceptDoublePlacement1"
+						value="1" 
+						checked="#FORM.acceptDoublePlacement EQ 1#" 
+						onclick="$('##singleBedroomSharingRow').hide();$('##dualBedroomSharingRow').show();$('##sharingBedroomSingle').attr('disabled','disabled');$('##sharingBedroomDual').removeAttr('disabled');"/>
+                    <label for="acceptDoublePlacement1">Yes, I would like to host a second student.</label>
+                    <br/>
+                    <cfinput 
+						type="radio" 
+						name="acceptDoublePlacement" 
+						id="acceptDoublePlacement0" 
+						value="0" 
+						checked="#FORM.acceptDoublePlacement EQ 0#"
+						onclick="$('##singleBedroomSharingRow').show();$('##dualBedroomSharingRow').hide();$('##sharingBedroomSingle').removeAttr('disabled');$('##sharingBedroomDual').attr('disabled','disabled');"/>
+                    <label for="acceptDoublePlacement0">No, I would like to host only one student.</label>
+				</td>
+			</tr>
+		</table> <br/>
         
         <h3>Room Sharing</h3>
         
         <div class="get_Attention">The student may share a bedroom with someone of the same sex and within a reasonable age difference, but must have his/her own bed.</div>
         
         <table width="100%" cellspacing="0" cellpadding="2" class="border">
-            <tr bgcolor="##deeaf3">
+            <tr bgcolor="##deeaf3" id="singleBedroomSharingRow" <cfif FORM.acceptDoublePlacement NEQ 0>style="display:none;"</cfif>>
                 <td id="shareBedroom" width="50%">Will the student share a bedroom? <span class="required">*</span></td>
                 <td>
-                    <select name="isStudentSharingBedroom" id="isStudentSharingBedroom" onchange="showHideStudents(this.value)">
-                        <option value="0" <cfif FORM.isStudentSharingBedroom EQ 0>selected="selected"</cfif>>Will not share a room</option>
-                        <option value="1" <cfif FORM.isStudentSharingBedroom EQ 1>selected="selected"</cfif>>Will share with a specific family member</option>
-                        <option value="2" <cfif FORM.isStudentSharingBedroom EQ 2>selected="selected"</cfif>>Will share with another exchange student</option>
-                        <option value="3" <cfif FORM.isStudentSharingBedroom EQ 3>selected="selected"</cfif>>Will share - depends on student's gender</option>
+                    <select name="sharingBedroom" id="sharingBedroomSingle" <cfif FORM.acceptDoublePlacement NEQ 0>disabled="disabled"</cfif>>
+                        <option value="Neither" <cfif FORM.sharingBedroom EQ "Neither">selected="selected"</cfif>>Will not share a room</option>
+                        <option value="One" <cfif FORM.sharingBedroom EQ "One">selected="selected"</cfif>>Will share a room</option>
                     </select>
                 </td>
             </tr>
-            <tr id="showname" <cfif FORM.isStudentSharingBedroom NEQ 1>class="displayNone"</cfif> >
-                <td width="50%">Who will they share a room with? <span class="required">*</span></td>
-                <td> 
-                    <select name="sharingWithID" class="largeField">
-                        <option value=""></option>
-                        <cfloop query="qGetHostMembers">
-                            <option value="#qGetHostMembers.childid#" <cfif qGetHostMembers.childID EQ FORM.sharingWithID> selected</cfif> >#qGetHostMembers.name#</option>
-                        </cfloop>
+			<tr bgcolor="##deeaf3" id="dualBedroomSharingRow" disabled="true" <cfif FORM.acceptDoublePlacement NEQ 1>style="display:none;"</cfif>>
+                <td id="shareBedroom" width="50%">Will either of the students share a bedroom? <span class="required">*</span></td>
+                <td>
+                    <select name="sharingBedroom" id="sharingBedroomDual" <cfif FORM.acceptDoublePlacement NEQ 1>disabled="disabled"</cfif>>
+                        <option value="Neither" <cfif FORM.sharingBedroom EQ "Neither">selected="selected"</cfif>>Neither will share a bedroom</option>
+                        <option value="One" <cfif FORM.sharingBedroom EQ "One">selected="selected"</cfif>>One of the students will share a bedroom</option>
+                        <option value="Both" <cfif FORM.sharingBedroom EQ "Both">selected="selected"</cfif>>Both of the students will share a bedroom</option>
+                        <option value="EachOther" <cfif FORM.sharingBedroom EQ "EachOther">selected="selected"</cfif>>The students will share a bedroom with each other</option>
                     </select>
                 </td>
             </tr>
