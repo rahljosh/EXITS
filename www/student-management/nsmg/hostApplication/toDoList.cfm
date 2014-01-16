@@ -633,6 +633,21 @@
                             </td>
                             <td>#vSetDescLink#</td>
                             <td>
+                            	<cfscript>
+									// Holds the student ID if there is one for this approval field
+									vCurrentStudent = qGetApprovalHistory.studentID;
+									
+									qGetSchoolAcceptance = APPLICATION.CFC.UDF.getVirtualFolderDocuments(
+										documentType=47,
+										studentID=vCurrentStudent			
+									);
+									
+									qGetStudentOrientation = APPLICATION.CFC.UDF.getVirtualFolderDocuments(
+										documentType=49,
+										studentID=vCurrentStudent			
+									);
+								</cfscript>
+                            	
                             	<!--- Host Family still filling out --->
 								<cfif ListFind("9,8", qGetHostInfo.applicationStatusID) AND NOT listFind("14,15", qGetApprovalHistory.ID)>
                                     
@@ -652,19 +667,6 @@
                                     <cfscript>
 										// Only Display approval option if there is a school acceptance and a confidential host visit report
 										vDisplayApprovalButtons = true;
-										
-										// Holds the student ID if there is one for this approval field
-										vCurrentStudent = qGetApprovalHistory.studentID;
-										
-										qGetSchoolAcceptance = APPLICATION.CFC.UDF.getVirtualFolderDocuments(
-											documentType=47,
-											studentID=vCurrentStudent			
-										);
-										
-										qGetStudentOrientation = APPLICATION.CFC.UDF.getVirtualFolderDocuments(
-											documentType=49,
-											studentID=vCurrentStudent			
-										);
 										
 										// Confidential Host Family Visit Form
 										if ( qGetApprovalHistory.ID EQ 14 AND NOT qGetConfidentialVisitForm.recordCount ) {
