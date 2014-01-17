@@ -82,10 +82,12 @@ where companyid = #client.org_code#
 <!--- Do not print guarantees for EF or Canada --->
 <cfif (qGetIntlRepInfo.userID NEQ '10111' AND qGetIntlRepInfo.master_accountid NEQ '10111') OR client.companyid NEQ 13>
 	<!----We don't need to include 20 for ESI---->
-    <cfif CLIENT.companyID NEQ 14>
+    <cfif (CLIENT.companyID NEQ 14 AND CLIENT.companyID NEQ 13)>
 		<div style="page-break-after:always;"><cfinclude template="section4/page20printblank.cfm"></div>								
   	</cfif>
+<CFIF client.companyid NEQ 13>
 	<div style="page-break-after:always;"><cfinclude template="section4/page21printblank.cfm"></div>
+ </CFIF>
 </cfif>
 
 <cfset URL.display = "print">
