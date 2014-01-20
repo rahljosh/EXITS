@@ -1571,6 +1571,7 @@
                         h.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
                     AND
                         h.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
+             	LEFT OUTER JOIN smg_hosts c ON c.hostID = h.hostID
                 WHERE
                 	appMenuColor != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
                 <!--- Check if we are bulding a menu for a specific section --->
@@ -1578,6 +1579,8 @@
                 	AND
                     	section = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.section#">
                 </cfif>
+                <!--- Don't include W9 unless this is ESI --->
+                AND (c.companyID = 14 OR ap.ID != 18)
                 ORDER BY
                 	listOrder
 		</cfquery>
