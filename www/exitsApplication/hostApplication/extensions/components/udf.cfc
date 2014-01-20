@@ -65,6 +65,9 @@
 			// Create MENU structure
 			stBuildMenu = StructNew();
 			
+			// Set the ID Section
+			stBuildMenu.IDSection = arrayNew(1);
+			
 			// Set Menu Link Section
 			stBuildMenu.linkSection = arrayNew(1);
 			
@@ -94,6 +97,9 @@
 				
 				// Link Section
 				stBuildMenu.linkSection[i] = qGetMenuHistory.section[i];
+				
+				// ID Section
+				stBuildMenu.IDSection[i] = qGetMenuHistory.ID[i];
 				
 				/*** 
 					Remove link for approved sections (approved by current usertype or denied by one level up user) 
