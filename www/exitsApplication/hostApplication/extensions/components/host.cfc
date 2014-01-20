@@ -253,6 +253,8 @@
                     isDeleted
                 FROM 
                     smg_host_children
+              	LEFT OUTER JOIN 
+                	smg_seasons s ON s.seasonID = (SELECT MAX(seasonID) FROM smg_host_app_season WHERE hostID = smg_host_children.hostID)
                 WHERE
                 	1 = 1
                 
@@ -280,13 +282,7 @@
                 <!--- Gets any family member that are turning 18 in the next 12 months and live at home --->
                 <cfif VAL(ARGUMENTS.getCBCQualifiedMembers)>
                     AND
-                    <!----
-                        FLOOR(DATEDIFF(DATE_ADD(CURRENT_DATE, INTERVAL 12 MONTH), birthdate)/365) >= <cfqueryparam cfsqltype="cf_sql_integer" value="18">
-						
-                        
-                        
-                        FLOOR(DATEDIFF('2013-07-30', birthdate)/365.25) >= <cfqueryparam cfsqltype="cf_sql_integer" value="18">---->
-                        FLOOR(DATEDIFF('2014-06-30', birthdate)/365.25) >= <cfqueryparam cfsqltype="cf_sql_integer" value="18">
+                    	FLOOR(DATEDIFF(s.endDate, birthdate)/365.25) >= <cfqueryparam cfsqltype="cf_sql_integer" value="18">
                     AND
                         (liveAtHome = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes"> 
                           OR liveathomePartTime  = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">)
