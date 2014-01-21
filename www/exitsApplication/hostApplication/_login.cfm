@@ -41,10 +41,10 @@
                 FROM 
                 	smg_hosts
                	INNER JOIN (
-                	SELECT hostID, applicationStatusID, MAX(seasonID) AS seasonID
-                    FROM smg_host_app_season
-                    GROUP BY hostID ) shas ON shas.hostID = smg_hosts.hostID
-                	AND shas.applicationStatusID != <cfqueryparam cfsqltype="cf_sql_integer" value="0">  
+                    SELECT ID, hostID, applicationStatusID, seasonID
+                    FROM smg_host_app_season    
+                    WHERE seasonID = (SELECT MAX(seasonID) FROM smg_host_app_season WHERE hostID = smg_host_app_season.hostID)) shas ON shas.hostID = smg_hosts.hostID
+                    AND shas.applicationStatusID != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
                 WHERE 
                 	smg_hosts.email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.username)#">
                	LIMIT 1 
@@ -98,10 +98,10 @@
             FROM 
                 smg_hosts
           	INNER JOIN (
-                SELECT ID, hostID, applicationStatusID, MAX(seasonID) AS seasonID
-                FROM smg_host_app_season
-                GROUP BY hostID ) shas ON shas.hostID = smg_hosts.hostID
-                AND shas.applicationStatusID != <cfqueryparam cfsqltype="cf_sql_integer" value="0">  
+                SELECT ID, hostID, applicationStatusID, seasonID
+                FROM smg_host_app_season    
+                WHERE seasonID = (SELECT MAX(seasonID) FROM smg_host_app_season WHERE hostID = smg_host_app_season.hostID)) shas ON shas.hostID = smg_hosts.hostID
+                AND shas.applicationStatusID != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
             WHERE 
 			<cfif SESSION.COMPANY.ID EQ	1>
             	smg_hosts.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,12" list="yes"> )
