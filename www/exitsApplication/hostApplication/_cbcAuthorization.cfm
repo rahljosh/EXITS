@@ -79,6 +79,13 @@
         
     </cfloop>
     
+    <!--- For showing the date for required child CBCs --->
+    <cfquery name="qGetSeasonEndDate" datasource="#APPLICATION.DSN.Source#">
+        SELECT endDate
+        FROM smg_seasons
+        WHERE seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.selectedSeason#">
+    </cfquery>
+    
     <!--- FORM Submitted --->    
 	<cfif VAL(FORM.submitted)>
 		
@@ -134,7 +141,7 @@
 				
 				
 			}			
-		</cfscript>	
+		</cfscript>
         
         <!--- No Errors Found --->
         <cfif NOT SESSION.formErrors.length()>
@@ -577,7 +584,7 @@
                     </tr>            
                 </cfloop>
                 <tr>
-                	<td colspan=5 bgcolor="##deeaf3"> <em>Background checks are required for anyone turning 18 on or before #DateFormat(qGetCBCQualifiedMembers.endDate,'mm/dd/yyyy')#</em></td>
+                	<td colspan=5 bgcolor="##deeaf3"> <em>Background checks are required for anyone turning 18 on or before #DateFormat(qGetSeasonEndDate.endDate,'mm/dd/yyyy')#</em></td>
                 </tr>
             </table> <br />
    

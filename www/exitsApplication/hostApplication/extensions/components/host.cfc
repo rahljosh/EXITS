@@ -250,8 +250,7 @@
                     employer,
                     gradeInSchool,
                     schoolActivities,
-                    isDeleted,
-                    s.endDate
+                    isDeleted
                 FROM 
                     smg_host_children
               	LEFT OUTER JOIN 
