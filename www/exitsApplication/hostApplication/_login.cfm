@@ -30,24 +30,21 @@
         <cfelse>
         	<!--- Find user in database --->
         	<cfquery name="qCheckHost" datasource="#APPLICATION.DSN.Source#">
-                SELECT 
-                	smg_hosts.hostID,
-                    smg_hosts.fatherfirstname,
-                    smg_hosts.motherfirstname,
-                    smg_hosts.familylastname,
-                    smg_hosts.email,
-                    smg_hosts.password,
-                    shas.seasonID
-                FROM 
-                	smg_hosts
-               	INNER JOIN (
-                    SELECT ID, hostID, applicationStatusID, seasonID
-                    FROM smg_host_app_season    
-                    WHERE seasonID = (SELECT MAX(seasonID) FROM smg_host_app_season WHERE hostID = smg_host_app_season.hostID)) shas ON shas.hostID = smg_hosts.hostID
-                    AND shas.applicationStatusID != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-                WHERE 
-                	smg_hosts.email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.username)#">
-               	LIMIT 1 
+            	SELECT
+                    s.ID,
+                    s.applicationStatusID,
+                    s.seasonID,       
+                    h.hostID,       
+                    h.familyLastName,       
+                    h.email,       
+                    h.regionID,       
+                    h.companyID       
+                FROM smg_host_app_season s
+                INNER JOIN smg_hosts h ON h.hostID = s.hostID
+                WHERE s.applicationStatusID != 0
+                AND h.email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.username)#">   
+                ORDER BY s.seasonID DESC
+                LIMIT 1 
             </cfquery>
             <cfif VAL(qCheckHost.recordCount)>
             	<cfset APPLICATION.selectedSeason = qCheckHost.seasonID>
@@ -87,31 +84,28 @@
     
 		<!--- Check if we have a host account --->
         <cfquery name="qLoginHostFamily" datasource="#APPLICATION.DSN.Source#">
-            SELECT  
-                smg_hosts.hostID,
-                smg_hosts.familylastname,
-                smg_hosts.email,
-                smg_hosts.regionID,
-                shas.applicationStatusID,
-                shas.ID,
-                shas.seasonID
-            FROM 
-                smg_hosts
-          	INNER JOIN (
-                SELECT ID, hostID, applicationStatusID, seasonID
-                FROM smg_host_app_season    
-                WHERE seasonID = (SELECT MAX(seasonID) FROM smg_host_app_season WHERE hostID = smg_host_app_season.hostID)) shas ON shas.hostID = smg_hosts.hostID
-                AND shas.applicationStatusID != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-            WHERE 
-			<cfif SESSION.COMPANY.ID EQ	1>
-            	smg_hosts.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,12" list="yes"> )
-            <cfelse>
-                smg_hosts.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(SESSION.COMPANY.ID)#">
-            </cfif>                
-            AND            
-                smg_hosts.email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.username)#"> 
-            AND 
-                smg_hosts.password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.password)#">             
+        	SELECT
+            	s.ID,
+                s.applicationStatusID,
+                s.seasonID,       
+                h.hostID,       
+                h.familyLastName,       
+                h.email,       
+                h.regionID,       
+                h.companyID       
+            FROM smg_host_app_season s
+            INNER JOIN smg_hosts h ON h.hostID = s.hostID
+            WHERE s.applicationStatusID != 0
+            AND
+            	<cfif SESSION.COMPANY.ID EQ	1>
+                    h.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,12" list="yes"> )
+                <cfelse>
+                    h.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(SESSION.COMPANY.ID)#">
+                </cfif>
+            AND h.email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.username)#">
+            AND h.password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.password)#">    
+            ORDER BY s.seasonID DESC
+            LIMIT 1           
         </cfquery>
         
 		<!--- Host Account found - Log them in --->
