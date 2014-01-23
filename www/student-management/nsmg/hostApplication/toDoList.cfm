@@ -66,7 +66,7 @@
 		qGetApprovalHistory = APPLICATION.CFC.HOST.getApplicationApprovalHistory(hostID=qGetHostInfo.hostID, whoViews=CLIENT.userType,seasonID=vSelectedSeason);
 		
 		// Get Students associated with this host
-		qGetCurrentStudents = APPLICATION.CFC.STUDENT.getCurrentStudentsByHost(hostID=qGetHostInfo.hostID);
+		qGetCurrentStudents = APPLICATION.CFC.STUDENT.getCurrentStudentsByHost(hostID=qGetHostInfo.hostID,seasonID=vSelectedSeason);
 		
 		// Get References
 		qGetReferences = APPLICATION.CFC.HOST.getReferences(hostID=qGetHostInfo.hostID,seasonID=vSelectedSeason);

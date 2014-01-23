@@ -1478,6 +1478,7 @@
                 FROM smg_host_app_section ap
                 INNER JOIN smg_students s ON s.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
                      AND s.active = 1
+                     AND s.programID IN (SELECT programID FROM smg_programs WHERE seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.seasonID#">)
              	LEFT OUTER JOIN smg_host_app_history h ON h.itemID = ap.ID                  
                     AND h.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
                     AND h.seasonID = 10
