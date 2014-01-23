@@ -404,11 +404,15 @@
     
     <cffunction name="getCurrentStudentsByHost" access="public" returntype="query" output="no" hint="Gets students that are currently placed with the given host">
     	<cfargument name="hostID" required="yes">
+        <cfargument name="seasonID" default="0" required="no">
         
         <cfquery name="qGetStudents" datasource="#APPLICATION.DSN#">
             SELECT *
             FROM smg_students
             WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
+            <cfif VAL(ARGUMENTS.seasonID)>
+            	AND programID IN (SELECT programID FROM smg_programs WHERE seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.seasonID#">)
+            </cfif>
             AND active = 1
             ORDER BY familylastname
         </cfquery>
