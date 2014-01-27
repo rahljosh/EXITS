@@ -79,10 +79,16 @@
 <cfoutput>
 
 	<cfif URL.view EQ 1>
-    	<div style="text-align:center; margin:auto;">
-        	<img src="../#qGetVFDocuments.filePath##qGetVFDocuments.fileName#"/>
-       	</div>
-      	<cfabort/>
+   		<!--- Determins if this is a PDF or not --->
+        <cfif LCASE(RIGHT(qGetVFDocuments.fileName,3)) EQ "pdf">
+        	<cfset rPath = "../" & qGetVFDocuments.filePath & qGetVFDocuments.fileName>
+        	<cfcontent type="application/pdf" file="#ExpandPath(rPath)#" deletefile="no">
+        <cfelse>
+            <div style="text-align:center; margin:auto;">
+                <img src="../#qGetVFDocuments.filePath##qGetVFDocuments.fileName#"/>
+            </div>
+       	</cfif>
+        <cfabort/>
     </cfif>
 
 	<!--- Page Header --->
