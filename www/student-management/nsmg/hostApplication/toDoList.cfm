@@ -436,11 +436,23 @@
             	</tr>
                 <tr>
                     <td valign="top">
-                    	#APPLICATION.CFC.HOST.displayHostFamilyName(
-                        	fatherFirstName=qGetHostInfo.fatherFirstName,
-                            fatherLastName=qGetHostInfo.fatherLastName,
-                            motherFirstName=qGetHostInfo.motherFirstName,
-                            motherLastName=qGetHostInfo.motherLastName)# (###qGetHostInfo.hostid#) <br />
+                    	<cfscript>
+							vDisplayName = "";
+							if (qGetHostInfo.otherHostParent EQ "none") {
+								vDisplayName = APPLICATION.CFC.HOST.displayHostFamilyName(
+									fatherFirstName="",
+									fatherLastName="",
+									motherFirstName=qGetHostInfo.motherFirstName,
+									motherLastName=qGetHostInfo.motherLastName);
+							} else {
+								vDisplayName = APPLICATION.CFC.HOST.displayHostFamilyName(
+									fatherFirstName=qGetHostInfo.fatherFirstName,
+									fatherLastName=qGetHostInfo.fatherLastName,
+									motherFirstName=qGetHostInfo.motherFirstName,
+									motherLastName=qGetHostInfo.motherLastName);
+							}
+						</cfscript>
+                    	#vDisplayName# (###qGetHostInfo.hostid#) <br />
                         #qGetHostInfo.city#, #qGetHostInfo.state# #qGetHostInfo.zip# <br />  
                         #qGetHostInfo.email#
                     </td>
