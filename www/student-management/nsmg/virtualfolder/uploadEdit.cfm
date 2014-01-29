@@ -245,7 +245,7 @@
 					emailRecipient = qGetRegionInfo.email;
 				}
         	</cfscript>	
-    
+   
     		<cfoutput>
         		<cfsavecontent variable="email_message">
             		Dear #qGetRegionInfo.firstname# #qGetRegionInfo.lastname#,<br><br>
@@ -258,7 +258,7 @@
             		EXITS - #CLIENT.companyname#<br><br>
         		</cfsavecontent>
         	</cfoutput>            
-        
+        <!----
 			<!--- send email --->
             <cfinvoke component="nsmg.cfc.email" method="send_mail">
                 <cfinvokeargument name="email_to" value="#emailRecipient#">
@@ -267,7 +267,7 @@
                 <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
             </cfinvoke>
     		<!----End of Email---->
-    
+    ---->
     
     		<!--- Email International Representative if file has been upload by Office and in Production Environment and Int Rep is in view Permissions--->
 			<cfif ListFind("1,2,3,4,5,6,7", CLIENT.userType) AND NOT APPLICATION.isServerLocal AND listFind(qGetCategory.viewPermissions, 8)>
@@ -281,7 +281,7 @@
                         EXITS - #CLIENT.companyname#<br><br>
         			</cfsavecontent>
         		</cfoutput>
-        
+        <!----
 				<!--- send email --->
                 <cfinvoke component="nsmg.cfc.email" method="send_mail">
                     <cfinvokeargument name="email_to" value="#qIntlRep.email#">
@@ -290,7 +290,7 @@
                     <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
                 </cfinvoke>
                 <!----End of Email---->
-      
+      ---->
     		</cfif>
             <!---- End of Email to Intl. Representative --->
 		
@@ -365,7 +365,7 @@
                 <table cellpadding=4 cellspacing="0" width=60% align=center>
                     <tr>
                         <th align="left">Select Document</th>
-                        <td><input name="fileToUpload" id="fileToUpload" type="file" size="35" onchange="checkFileName(this.value);"/></td>
+                        <td><input name="fileToUpload" id="fileToUpload" type="file" size="35" onChange="checkFileName(this.value);"/></td>
                     </tr>
                     <tr>
                         <th align="left">Document Type</th>
