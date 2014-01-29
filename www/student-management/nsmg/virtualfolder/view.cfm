@@ -125,7 +125,7 @@
 	<cfdirectory directory="#flightInfoDirectory#" name="flightDocs" sort="datelastmodified DESC" filter="*.*">
     
     <cfquery name="qGetOtherFiles" datasource="#application.dsn#">
-    	SELECT vf.fileName, vf.dateAdded, vf.filePath, vfc.categoryName, vf.fk_categoryid, vfd.documentType, u.firstname, u.lastname , u.userid, vf.generatedHow, vf.uploadedBy, vf.vfid,
+    	SELECT vf.fileName, vf.dateAdded, vf.filePath, vfc.categoryName, vfd.documentType, u.firstname, u.lastname , u.userid, vf.generatedHow, vf.uploadedBy, vf.vfid,
         h.familylastname, vf.fk_hostid, vfd.viewPermissions
         FROM virtualFolder vf
         LEFT JOIN virtualFolderDocuments vfd on vfd.id = vf.fk_documentType
@@ -135,7 +135,6 @@
         WHERE vf.fk_studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.studentID#">
        <cfif val(url.placement)> AND vf.fk_hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.placement#"></cfif>
        and isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.isDeleted#">
-      
         ORDER by categoryName
     </cfquery>
     <cfif VAL(url.placement)>
@@ -149,7 +148,6 @@
        <cfdirectory action = "create" directory = "#currentDirectory#" mode="777">
     </cfif>
     <cfdirectory directory="#currentDirectory#" name="mydirectory" sort="datelastmodified DESC" filter="*.*">
-    
     <cfquery name="qGetUploadedFiles" datasource="#APPLICATION.DSN#">
     	SELECT v.fileName, v.dateAdded, v.filePath,  v.generatedHow, v.uploadedBy, v.vfid, v.fk_hostid, u.userID, u.firstName, u.lastName,  vfd.documentType, vfc.categoryName
         FROM virtualfolder v
@@ -162,7 +160,6 @@
         </cfif>
         AND <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userType)#"> IN (SELECT categoryAccessList FROM virtualfoldercategory WHERE categoryID = v.fk_categoryID)
     </cfquery>
-	
     <cfquery name="check_allergies" datasource="#application.dsn#">
     select has_an_allergy
     from smg_student_app_health
@@ -302,10 +299,10 @@
                     <td><a href="?curdoc=student_app/section3/allergy_info_request">Allergy Clarification Form</a></td>
                 </tr>
             </cfif>
-            <!----
+            
             <cfloop query="qGetUploadedFiles">
 				<tr>
-            		<td>#fileDescription#</td>
+            		<td>#documentType#</td>
                   	<td><a href="javascript:OpenApp('#filePath#/#fileName#');" target="_blank">#fileName#</a></td>
                   	<td>#DateFormat(dateAdded,'mmm d, yyyy')#</td>
                   	<td>
@@ -318,7 +315,6 @@
                   	<td>#generatedHow#</td>	
                 </tr>
             </cfloop>
-			---->
        </cfif>
       <!--- Automatic Files --->
             <tr bgcolor="##CCCCCC">
