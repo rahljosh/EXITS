@@ -935,7 +935,7 @@
                 SELECT DISTINCT
                 	*,
                      <!--- Total Family At Home --->
-                    (isFatherHome + isMotherHome + totalChildrenAtHome) AS totalFamilyMembers,
+                    (1 + isOtherHostParentHome + totalChildrenAtHome) AS totalFamilyMembers,
                     <!--- Regional Manager Info --->
                     rm.userID AS regionalManagerID,
                     (
@@ -967,32 +967,14 @@
                                 ')'                    
                             ) 
                         AS CHAR) AS displayHostFamily,
-                        <!--- Is father home? --->
+                        <!--- Is other host parent home? --->
                         (
                             CASE 
-                                WHEN 
-                                    h.fatherFirstName != '' 
-                                THEN 
-                                    1
-                                WHEN 	
-                                    h.fatherFirstName = ''  
-                                THEN 
-                                    0
+                                WHEN h.otherHostParent = 'none' 
+                                THEN 0
+                               	ELSE 1
                             END
-                        ) AS isFatherHome,
-                        <!--- Is mother home? --->
-                        (
-                            CASE 
-                                WHEN 
-                                    h.motherFirstName != '' 
-                                THEN 
-                                    1
-                                WHEN 	
-                                    h.motherFirstName = ''  
-                                THEN 
-                                    0                               
-                            END
-                        ) AS isMotherHome,
+                        ) AS isOtherHostParentHome,
                         <!--- Total of Children at home --->
                         (
                             SELECT 
