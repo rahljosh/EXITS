@@ -796,7 +796,7 @@
 			}
 			
 			// Father
-			if ( (LEN(qGetHostFamilyInfo.fatherFirstName) OR LEN(qGetHostFamilyInfo.fatherLastName)) AND (qGetHostFamilyInfo.otherHostParent NEQ "none" OR qGetHostFamilyInfo.primaryHostParent EQ "father") ) {
+			if ( (LEN(qGetHostFamilyInfo.fatherFirstName) OR LEN(qGetHostFamilyInfo.fatherLastName)) AND (qGetHostFamilyInfo.otherHostParent NEQ "none") ) {
 				
 				// SSN
 				if  ( NOT LEN(qGetHostFamilyInfo.fatherSSN) ) {
@@ -811,7 +811,7 @@
 			}
 
 			// Mother
-			if ( (LEN(qGetHostFamilyInfo.motherFirstName) OR LEN(qGetHostFamilyInfo.motherLastName)) AND (qGetHostFamilyInfo.otherHostParent NEQ "none" OR qGetHostFamilyInfo.primaryHostParent EQ "mother") ) {
+			if (LEN(qGetHostFamilyInfo.motherFirstName) OR LEN(qGetHostFamilyInfo.motherLastName)) {
 				
 				// SSN
 				if  ( NOT LEN(qGetHostFamilyInfo.motherSSN) ) {
