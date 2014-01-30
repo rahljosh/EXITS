@@ -505,7 +505,7 @@
 				}
 	
 				if ( VAL(qGetPlacementHistoryByID.isRelocation) ) {
-					vDateStartWindowCompliance = qGetPlacementHistoryByID.datePlaced;
+					vDateStartWindowCompliance = qGetPlacementHistoryByID.dateRelocated;
 				} else {
 					vDateStartWindowCompliance = qGetArrival.dep_date;
 				}
