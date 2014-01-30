@@ -47,7 +47,6 @@
             s.seasonID
         FROM smg_users u
         INNER JOIN user_access_rights uar ON uar.userid = u.userid
-     	<!---INNER JOIN smg_students stu ON stu.intrep = u.userid--->
         LEFT JOIN smg_users_allocation sua ON u.userid = sua.userid
 			AND sua.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.seasonID)#">
         LEFT JOIN smg_seasons s ON s.seasonID = sua.seasonID
@@ -61,24 +60,28 @@
     <cfif VAL(FORM.submitted)>
     
         <cfloop query="qGetRepresentatives">
+        
+        	<cfquery name="qGetAllocations" datasource="#APPLICATION.DSN#">
+            	SELECT *
+                FROM smg_users_allocation
+                WHERE userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRepresentatives.userID#">
+                AND seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#">
+            </cfquery>
             
-            <cfif VAL(FORM[qGetRepresentatives.userID & '_allocationID'])>
+            <cfif VAL(qGetAllocations.recordCount)>
             
-                <cfquery name="updateAllocations" datasource="MySql">
-                    UPDATE 	
-                        smg_users_allocation
+                <cfquery name="updateAllocations" datasource="#APPLICATION.DSN#">
+                    UPDATE smg_users_allocation
                     SET 
                         januaryAllocation = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM[qGetRepresentatives.userID & '_januaryAllocation'])#">,
                         augustAllocation = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM[qGetRepresentatives.userID & '_augustAllocation'])#">
-                    WHERE 
-                        userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRepresentatives.userid#">
-                    AND 
-                        seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#">
+                    WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetAllocations.id#">
+                    
                  </cfquery>
                  
-            <cfelseif VAL(FORM[qGetRepresentatives.userID & '_januaryAllocation']) OR VAL(FORM[qGetRepresentatives.userID & '_augustAllocation'])>
+            <cfelse>
             
-                <cfquery name="addAllocations" datasource="MySql">
+                <cfquery name="addAllocations" datasource="#APPLICATION.DSN#">
                     INSERT INTO smg_users_allocation
                         (
                             userID, 
@@ -114,13 +117,6 @@
 </cfsilent>
 
 <script type="text/javascript">
-	// submit the form
-	var submitform = function() {
-		// Set Submitted to 0 so we don't update the form when changing seasons
-		$("#submitted").val(0);
-		$("#intlRepAllocation").submit();
-	}
-	
 	// change the season
 	var changeSeason = function(url) {
 		var season = $("#seasonID").val();
@@ -174,7 +170,6 @@
                 <td>January Allocation</td>
             </tr>
             <cfloop query="qGetRepresentatives">
-                <input type="hidden" name="#qGetRepresentatives.userID#_allocationID" value="#qGetRepresentatives.id#">
                 <tr bgcolor="#iif(currentrow MOD 2 ,DE("ffffe6") ,DE("white") )#">
                     <td><a href="index.cfm?curdoc=user_info&userid=#qGetRepresentatives.userid#">#qGetRepresentatives.businessname# (###qGetRepresentatives.userid#)</a></td>
                     <td><input type="text" class="smallField" name="#qGetRepresentatives.userID#_augustAllocation" value="#qGetRepresentatives.augustAllocation#"></td>
