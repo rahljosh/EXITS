@@ -77,7 +77,20 @@
 			
 			// Check if this is a double placement and both the student and the host app have approval for it
 			if (VAL(qGetPlacementHistoryByID.doublePlacementID)) {
-				if (NOT qGetHostInfo.acceptDoublePlacement) {
+				vHostAcceptsDoublePlacement = 0;
+				if (qGetHostInfo.acceptDoublePlacement) {
+					vHostAcceptsDoublePlacement = 1;	
+				} else {
+					vHostAcceptsDoublePlacement = 1;
+					for ( i=1; i LTE qGetDoublePlacementPaperworkHistory.recordCount; i=i+1 ) {
+						if (qGetDoublePlacementPaperworkHistory.isdoubleplacementpaperworkrequired[i] EQ 1) {
+							if (qGetDoublePlacementPaperworkHistory.doublePlacementHostFamilyDateCompliance[i] EQ "") {
+								vHostAcceptsDoublePlacement = 0;
+							}
+						}
+					}
+				}
+				if (NOT vHostAcceptsDoublePlacement) {
 					vIsPlacementCompliant &= "<p style='color:red;'>Missing host family approval for double placement.</p>";
 				}
 				
@@ -85,16 +98,13 @@
 				if (doublePlacementFile.recordcount) {
 					vStudentAcceptsDoublePlacement = 1;	
 				} else {
-					vHasPaperwork = 1;
+					vStudentAcceptsDoublePlacement = 1;
 					for ( i=1; i LTE qGetDoublePlacementPaperworkHistory.recordCount; i=i+1 ) {
 						if (qGetDoublePlacementPaperworkHistory.isdoubleplacementpaperworkrequired[i] EQ 1) {
 							if (qGetDoublePlacementPaperworkHistory.doublePlacementParentsDateCompliance[i] EQ "" OR qGetDoublePlacementPaperworkHistory.doublePlacementStudentDateCompliance[i] EQ "") {
-								vHasPaperwork = 0;
+								vStudentAcceptsDoublePlacement = 0;
 							}
 						}
-					}
-					if (vHasPaperwork EQ 1) {
-						vStudentAcceptsDoublePlacement = 1;
 					}
 				}
 				if (NOT vStudentAcceptsDoublePlacement) {
