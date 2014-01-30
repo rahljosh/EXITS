@@ -32,58 +32,44 @@
 		vApplicationStatusList = "7,8,10,11";
 	</cfscript>
     
+    <cfquery name="qGetStudentsReps" datasource="#APPLICATION.DSN#">
+    	SELECT s.intRep 
+        FROM smg_students s
+        INNER JOIN smg_programs ON s.programID = smg_programs.programID
+            AND smg_programs.type IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vProgramTypeList#" list="yes"> )
+        INNER JOIN smg_seasons ON smg_programs.seasonID = smg_seasons.seasonID
+            AND smg_seasons.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#">  
+        WHERE s.active = 1
+        AND s.app_current_status IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vApplicationStatusList#" list="yes"> )
+        <cfif VAL(FORM.countryID)>
+            AND s.countryresident = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.countryID#">
+        </cfif>
+        <cfif CLIENT.companyID EQ 5>
+            AND s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )        
+        <cfelse>
+            AND s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">        
+        </cfif>
+    </cfquery>
+    
 	<!--- Get total students grouped by Agent --->
 	<cfquery name="qGetIntlReps" datasource="#APPLICATION.DSN#">
 		SELECT DISTINCT
-			u.businessname,
-			u.userID,
-			sea.season,
-            p.programName,
-			country.countryName,
-            sua.januaryAllocation,
-            sua.augustAllocation
-		FROM 	
-			smg_students s
-		INNER JOIN 
-			smg_users u ON u.userid = s.intrep
-		INNER JOIN 
-			smg_programs p ON s.programID = p.programID
-           		AND
-                	p.type IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vProgramTypeList#" list="yes"> )
-		INNER JOIN 
-			smg_seasons sea ON p.seasonID = sea.seasonID
-				AND
-					sea.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#">            
-		LEFT JOIN 
-			smg_countrylist country ON u.country = country.countryID   
-        LEFT OUTER JOIN
-        	smg_users_allocation sua ON sua.userID = u.userID
-            	AND
-                	sua.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#">
-		WHERE
-            s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-
-        AND 
-            s.app_current_status IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vApplicationStatusList#" list="yes"> )
-			
-		<cfif VAL(FORM.countryID)>
-			AND 
-				s.countryresident = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.countryID#">
-		</cfif>
-		
-		<!--- Apps that are not approved have no companyID ( = 0 ) --->                  
-        <cfif CLIENT.companyID EQ 5>
-            AND
-                s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )        
-        <cfelse>
-            AND
-                s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">        
-        </cfif>        
-		  
-		GROUP BY 
-			u.businessname
-		ORDER BY 
-			u.businessname
+			u.businessname,      
+            u.userID,      
+            alloc.seasonID AS season,      
+            alloc.januaryAllocation,      
+            alloc.augustAllocation,
+            country.countryName
+      	FROM smg_users u
+        INNER JOIN user_access_rights uar ON u.userID = uar.userID
+              AND uar.userType = 8      
+        LEFT OUTER JOIN smg_users_allocation alloc ON alloc.userID = u.userID
+             AND alloc.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#">
+      	LEFT JOIN smg_countrylist country ON u.country = country.countryID   
+        WHERE ( u.userID IN (<cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#ValueList(qGetStudentsReps.intRep)#">)
+      		OR (alloc.januaryAllocation > 0 OR alloc.augustAllocation > 0) )
+        GROUP BY u.businessname
+		ORDER BY u.businessname
 	</cfquery>
 
     <cfscript>
