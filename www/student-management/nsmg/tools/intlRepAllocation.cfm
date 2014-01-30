@@ -13,7 +13,7 @@
 	<!--- Import CustomTag --->
     <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />
     
-    <cfquery name="qGetSeasons" datasource="MySql">
+    <cfquery name="qGetSeasons" datasource="#APPLICATION.DSN#">
         SELECT
             seasonID,
             season
@@ -34,7 +34,7 @@
         }
     </cfscript>
     
-    <cfquery name="qGetRepresentatives" datasource="MySql">
+    <cfquery name="qGetRepresentatives" datasource="#APPLICATION.DSN#">
         SELECT DISTINCT
             u.userid,
             u.firstName,
@@ -45,26 +45,16 @@
             sua.ID,
             s.season,
             s.seasonID
-        FROM
-            smg_users u
-        INNER JOIN
-            user_access_rights uar ON uar.userid = u.userid
-        LEFT JOIN
-            smg_users_allocation sua ON u.userid = sua.userid
-            <cfif VAL(FORM.seasonID)>
-                AND
-                    sua.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#">
-			</cfif>
-        LEFT JOIN
-            smg_seasons s ON s.seasonID = sua.seasonID
-        WHERE
-            uar.userType = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
-        AND
-            u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-        AND
-            uar.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="5">
-        ORDER BY
-            u.businessname   
+        FROM smg_users u
+        INNER JOIN user_access_rights uar ON uar.userid = u.userid
+     	<!---INNER JOIN smg_students stu ON stu.intrep = u.userid--->
+        LEFT JOIN smg_users_allocation sua ON u.userid = sua.userid
+			AND sua.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.seasonID)#">
+        LEFT JOIN smg_seasons s ON s.seasonID = sua.seasonID
+        WHERE uar.userType = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+        AND u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+        AND uar.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="5">
+        ORDER BY u.businessname   
     </cfquery>
 
 	<!--- To update the records if update was selected --->
@@ -124,14 +114,18 @@
 </cfsilent>
 
 <script type="text/javascript">
-<!--
 	// submit the form
 	var submitform = function() {
 		// Set Submitted to 0 so we don't update the form when changing seasons
 		$("#submitted").val(0);
 		$("#intlRepAllocation").submit();
 	}
-//-->
+	
+	// change the season
+	var changeSeason = function(url) {
+		var season = $("#seasonID").val();
+		window.location = url + "&seasonID=" + season;
+	}
 </script>
     
 <cfoutput>
@@ -156,7 +150,7 @@
         width="100%"
         />
         
-    <!--- Form to choose which seasons to show allocation for --->
+	<!--- Form to choose which seasons to show allocation for --->
     <form name="intlRepAllocation" id="intlRepAllocation" action="#CGI.SCRIPT_NAME#?curdoc=tools/intlRepAllocation" method="post">
     	<input type="hidden" name="submitted" id="submitted" value="1">
         
@@ -164,7 +158,7 @@
             <tr>
                 <td>
                 	Season:
-                    <select name="seasonID" id="seasonID" class="mediumField" onchange="submitform();">
+                    <select name="seasonID" id="seasonID" class="mediumField" onchange="changeSeason('#CGI.SCRIPT_NAME#?curdoc=tools/intlRepAllocation');">
                         <cfloop query="qGetSeasons">
                         	<option value="#qGetSeasons.seasonID#" <cfif FORM.seasonID EQ qGetSeasons.seasonID>selected="selected"</cfif>>#qGetSeasons.season#</option>
                         </cfloop>
