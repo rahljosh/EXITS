@@ -63,7 +63,9 @@
 			// Student is unplaced 
 			qGetPlacementHistoryByID = APPLICATION.CFC.STUDENT.getHostHistoryByID(studentID=qGetStudentInfo.studentID, historyID=0);
 		};
-    
+		
+		// Get Double Placement History Paperwork
+		qGetDoublePlacementPaperworkHistory = APPLICATION.CFC.STUDENT.getDoublePlacementPaperworkHistory(historyID=qGetPlacementHistoryByID.historyID, studentID=qGetStudentInfo.studentID);
     
 		// Set a list of current reps assigned to student
 		vCurrentUsersAssigned = '';

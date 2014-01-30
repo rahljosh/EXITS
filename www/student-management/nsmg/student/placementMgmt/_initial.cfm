@@ -80,7 +80,24 @@
 				if (NOT qGetHostInfo.acceptDoublePlacement) {
 					vIsPlacementCompliant &= "<p style='color:red;'>Missing host family approval for double placement.</p>";
 				}
-				if (NOT doublePlacementFile.recordcount) {
+				
+				vStudentAcceptsDoublePlacement = 0;
+				if (doublePlacementFile.recordcount) {
+					vStudentAcceptsDoublePlacement = 1;	
+				} else {
+					vHasPaperwork = 1;
+					for ( i=1; i LTE qGetDoublePlacementPaperworkHistory.recordCount; i=i+1 ) {
+						if (qGetDoublePlacementPaperworkHistory.isdoubleplacementpaperworkrequired[i] EQ 1) {
+							if (qGetDoublePlacementPaperworkHistory.doublePlacementParentsDateCompliance[i] EQ "" OR qGetDoublePlacementPaperworkHistory.doublePlacementStudentDateCompliance[i] EQ "") {
+								vHasPaperwork = 0;
+							}
+						}
+					}
+					if (vHasPaperwork EQ 1) {
+						vStudentAcceptsDoublePlacement = 1;
+					}
+				}
+				if (NOT vStudentAcceptsDoublePlacement) {
 					vIsPlacementCompliant &= "<p style='color:red;'>Missing student/natural family approval for double placement.</p>";
 				}
 			}

@@ -156,9 +156,6 @@
 			param name="FORM.#qGetComplianceHistory.ID[i]#_complianceLogisResolved" default="";
 		}
 
-		// Get Double Placement History Paperwork
-		qGetDoublePlacementPaperworkHistory = APPLICATION.CFC.STUDENT.getDoublePlacementPaperworkHistory(historyID=qGetPlacementHistoryByID.historyID, studentID=qGetStudentInfo.studentID);
-
 		// Param Double Placement Paperwork FORM Variables 
 		for ( i=1; i LTE qGetDoublePlacementPaperworkHistory.recordCount; i=i+1 ) {
 			param name="FORM.#qGetDoublePlacementPaperworkHistory.ID[i]#_isDoublePlacementPaperworkRequired" default="1";
