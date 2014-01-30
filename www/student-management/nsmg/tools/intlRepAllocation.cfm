@@ -49,8 +49,6 @@
             smg_users u
         INNER JOIN
             user_access_rights uar ON uar.userid = u.userid
-        INNER JOIN
-            smg_students stu ON stu.intrep = u.userid
         LEFT JOIN
             smg_users_allocation sua ON u.userid = sua.userid
             <cfif VAL(FORM.seasonID)>
