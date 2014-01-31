@@ -70,7 +70,7 @@ function confirm_reactivate() {
 <cfquery name="get_company" datasource="MySQL">
 	SELECT companyid, companyname, companyshort
 	FROM smg_companies
-	WHERE companyid <= '6'
+	WHERE companyid IN (1,2,3,4,5,6,10,12)
 </cfquery>
 
 <cfdirectory directory="#AppPath.onlineApp.picture#" name="file" filter="#get_student_info.studentid#.*">
