@@ -107,7 +107,7 @@
                                         	<td>#DateFormat(dateAdded,'mm/dd/yyyy')#</td>
                                             <td>#DateFormat(dateExpires,'mm/dd/yyyy')#</td>
                                             <td><img src="../../pics/view.gif" alt="view" onClick="printAuthenticationFile('#id#')"/></td>
-                                            <td><img src="../../pics/delete.gif" alt="delete" onClick="deleteAuthenticationFile('#id#')"/></td>
+                                            <td><img src="../../pics/deletex.gif" alt="delete" onClick="deleteAuthenticationFile('#id#')"/></td>
                                         </tr>
                                     </cfloop>
                                 </cfif>
@@ -135,7 +135,7 @@
                                         	<td>#DateFormat(dateAdded,'mm/dd/yyyy')#</td>
                                             <td>#DateFormat(dateExpires,'mm/dd/yyyy')#</td>
                                             <td><img src="../../pics/view.gif" alt="view" onClick="printAuthenticationFile('#id#')"/></td>
-                                            <td><img src="../../pics/delete.gif" alt="delete" onClick="deleteAuthenticationFile('#id#')"/></td>
+                                            <td><img src="../../pics/deletex.gif" alt="delete" onClick="deleteAuthenticationFile('#id#')"/></td>
                                         </tr>
                                     </cfloop>
                                 </cfif>
@@ -163,7 +163,7 @@
                                         	<td>#DateFormat(dateAdded,'mm/dd/yyyy')#</td>
                                             <td>#DateFormat(dateExpires,'mm/dd/yyyy')#</td>
                                             <td><img src="../../pics/view.gif" alt="view" onClick="printAuthenticationFile('#id#')"/></td>
-                                            <td><img src="../../pics/delete.gif" alt="delete" onClick="deleteAuthenticationFile('#id#')"/></td>
+                                            <td><img src="../../pics/deletex.gif" alt="delete" onClick="deleteAuthenticationFile('#id#')"/></td>
                                         </tr>
                                     </cfloop>
                                 </cfif>
