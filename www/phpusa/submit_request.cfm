@@ -5,48 +5,44 @@
 <title>DMD &#45; Private High Schools Contact Us</title>
 <link rel="shortcut icon" href="favicon.ico" />
 <style type="text/css">
-<!--
-.table {
-	width: 700px;
-}
--->
+	.table {
+		width: 700px;
+	}
 </style>
 <link href="css/phpusa.css" rel="stylesheet" type="text/css" />
 </head>
 <body class="oneColFixCtrHdr">
 <div id="container">
-  <cfinclude template="header.cfm">
-  <div class="spacer"></div>
-  
-  <div id="mainContent">
-  <div class="spacerlg"></div>
-   <cfparam name="fname" default="Not filled in the request form">
-<cfparam name="address" default="Not filled in the request form">
-<cfparam name="city" default="Not filled in the request form">
-<cfparam name="country" default="Not filled in the request form">
-<cfparam name="phone" default="Not filled in the request form">
-<cfparam name="fax" default="Not filled in the request form">
-<cfparam name="email" default="">
-<cfparam name="info" default="Not filled in the request form">
+	<cfinclude template="header.cfm">
+	<div class="spacer"></div>
+	<div id="mainContent">
+		
+        <div class="spacerlg"></div>
+		
+        <cfparam name="FORM.new_account" default="person">
+        <cfparam name="FORM.lastName" default="Not filled in the request form">
+		<cfparam name="FORM.address" default="Not filled in the request form">
+		<cfparam name="FORM.city" default="Not filled in the request form">
+		<cfparam name="FORM.country" default="Not filled in the request form">
+		<cfparam name="FORM.phone" default="Not filled in the request form">
+		<cfparam name="FORM.fax" default="Not filled in the request form">
+		<cfparam name="FORM.email" default="">
+		<cfparam name="FORM.info" default="Not filled in the request form">
 
-<cfset desc = 'The following student requested information on being an exchange student'>
-
-<cfmail to='luke@phpusa.com' cc='craig@phpusa.com' from='php@phpusa.com' subject='Request for Info'>
-#desc# from the PHP web site on #dateformat(Now())#.
-
-Name: #form.fname#
-Address: #form.address#
-City: #form.city#
-<cfif isDefined('form.country')>
-Country: #form.country#
-</cfif>
-Zip: #form.zip#
-Phone: #form.phone#
-Fax: #form.fax#
-E-Mail Address: #form.email#
-
-
-</cfmail>
+		<cfmail to='luke@phpusa.com' cc='craig@phpusa.com' from='php@phpusa.com' subject='Request for Info'>
+            The following #FORM.new_account# requested information about PHP from the PHP web site on #dateformat(Now())#.
+            
+            Name: #form.lastName#
+            Address: #form.address#
+            City: #form.city#
+            <cfif isDefined('form.country')>
+            Country: #form.country#
+            </cfif>
+            Zip: #form.zip#
+            Phone: #form.phone#
+            Fax: #form.fax#
+            E-Mail Address: #form.email#
+		</cfmail>
 <div class="spacerlg"></div>
 <div class="spacerlg"></div>
 <div class="clearfix"></div>
@@ -67,10 +63,10 @@ E-Mail Address: #form.email#
                   <tr>
                     <td class="menu">Request Submitted&nbsp;</td></tr></table>
                       <p class="text">
-The following information was submitted to ISE: </p><cfoutput>
+The following information was submitted to PHP: </p><cfoutput>
   <table width=400px align="center">
     <tr>
-      <td class="menu"> Name: #form.fname#<br>
+      <td class="menu"> Name: #form.lastName#<br>
         Address: #form.address#<br>
         City: #form.city#<br>
         <cfif isDefined('form.country')>

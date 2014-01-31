@@ -52,10 +52,10 @@ from smg_states
 </cfquery>
      <cfoutput>
          <cfform id="form1" name="form1" method="post" action="submit_request.cfm">
-         <input type="hidden" name="new_account" />
+         <input type="hidden" name="new_account" value="student" />
            Name
         <br />
-            <cfinput type="text" name="fname" message="Please enter your last name." required="yes" id="Name" size=22 typeahead="no" showautosuggestloadingicon="true" /><br />
+            <cfinput type="text" name="lastName" message="Please enter your last name." required="yes" id="Name" size=22 typeahead="no" showautosuggestloadingicon="true" /><br />
             Address
             <br />
             <cfinput type="text" name="address" message="Please enter your street address." required="yes" id="Name" size=22 typeahead="no" showautosuggestloadingicon="true"  /><br />
