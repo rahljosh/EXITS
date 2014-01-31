@@ -2985,8 +2985,9 @@
                                                                     PRINT
                                                                 </a>
                                                             <cfelse>
-                                                                <p class="readOnly">NO FILE</p>
+                                                                <span class="readOnly">NO FILE</span>
                                                             </cfif>
+                                                            <a href="javascript:openWindow('hostCompany/workmensCompensationHistory.cfm?hostID=#URL.hostCompanyID#',980,500);" class="style1">[ History ]</a>
                                                       	</span>
                                                     </span>
                                                     <select name="workmensCompensation" id="workmensCompensation" class="style1 editPage selfPlacementField"> 

@@ -11,13 +11,13 @@
 	
     <cfparam name="URL.hostID" default="0">
     
-    <cfquery name="qGetHost" datasource="MySql">
+    <cfquery name="qGetHost" datasource="#APPLICATION.DSN.Source#">
     	SELECT *
         FROM extra_hostcompany
         WHERE hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostID#">
     </cfquery>
     
-    <cfquery name="qGetHistoryRecords" datasource="MySql">
+    <cfquery name="qGetHistoryRecords" datasource="#APPLICATION.DSN.Source#">
     	SELECT hih.*, u.firstName, u.lastName, u.userID
         FROM extra_hostinfohistory hih
         LEFT JOIN smg_users u ON u.userID = hih.changedBy
