@@ -11,13 +11,13 @@
 	
     <cfparam name="URL.hostID" default="0">
     
-    <cfquery name="qGetHost" datasource="MySql">
+    <cfquery name="qGetHost" datasource="#APPLICATION.DSN.Source#">
     	SELECT *
         FROM extra_hostcompany
         WHERE hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostID#">
     </cfquery>
     
-    <cfquery name="qGetSecretaryOfState" datasource="MySql">
+    <cfquery name="qGetSecretaryOfState" datasource="#APPLICATION.DSN.Source#">
     	SELECT *
         FROM extra_hostauthenticationfiles
         WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.hostID)#">
@@ -25,7 +25,7 @@
         ORDER BY dateAdded ASC
     </cfquery>
     
-    <cfquery name="qGetDepartmentOfLabor" datasource="MySql">
+    <cfquery name="qGetDepartmentOfLabor" datasource="#APPLICATION.DSN.Source#">
     	SELECT *
         FROM extra_hostauthenticationfiles
         WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.hostID)#">
@@ -33,7 +33,7 @@
         ORDER BY dateAdded ASC
     </cfquery>
     
-    <cfquery name="qGetGoogleEarth" datasource="MySql">
+    <cfquery name="qGetGoogleEarth" datasource="#APPLICATION.DSN.Source#">
     	SELECT *
         FROM extra_hostauthenticationfiles
         WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.hostID)#">
