@@ -5,6 +5,7 @@
     <cfparam name="FORM.programID" default="0">
     <cfparam name="FORM.emailIntlRep" default="0">
     <cfparam name="FORM.printOption" default="1">
+    <cfparam name="FORM.status" default="">
 
     <cfscript>
 		// Get Program List
@@ -46,8 +47,9 @@
                 extra_hostcompany hc ON hc.hostCompanyID = c.hostCompanyID
             WHERE 
                 c.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
-            AND 
-                c.status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+          	<cfif FORM.status NEQ "">
+            	AND c.status = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.status)#">
+            </cfif>
             AND (
                     c.wat_doc_agreement = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
                 OR 
@@ -136,6 +138,16 @@
                     <cfloop query="qGetProgramList">
                         <option value="#qGetProgramList.programID#" <cfif qGetProgramList.programid eq FORM.programID> selected</cfif>>#qGetProgramList.programname#</option>
                     </cfloop>
+                </select>
+	        </td>
+        </tr>
+        <tr>
+        	<td valign="middle" align="right" class="style1"><b>Status: </b></td>
+            <td> 
+            	<select name="status" class="style1">
+                    <option value="" <cfif FORM.status EQ "">selected="selected"</cfif>>All</option>
+                    <option value="1" <cfif FORM.status EQ 1>selected="selected"</cfif>>Active</option>
+                    <option value="0" <cfif FORM.status EQ 0>selected="selected"</cfif>>Inactive</option>
                 </select>
 	        </td>
         </tr>
