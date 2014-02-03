@@ -182,7 +182,34 @@ function launchRemote() {
 	</td></tr>
 	<tr><td valign="top">
 		<cfinclude template="nsmg/student_app/section4/page21print.cfm">
-	</td></tr>		
+	</td></tr>
+ 	
+	<!--- Pages 23 - 24 use this variable instead of a separate print page --->
+	<cfset URL.display = "print">
+	<tr><td valign="top">
+        	<cfinclude template="nsmg/student_app/section4/page23.cfm">
+	</td></tr>
+	<tr><td valign="top">
+        	<cfinclude template="nsmg/student_app/section4/page24.cfm">
+	</td></tr>
+
+	<!--- Pages 25 - 27 use these variables for displaying images if there are any --->
+    <cfscript>
+        param name="vStudentAppRelativePath" default="../";
+        param name="vUploadedFilesRelativePath" default="../../";
+    </cfscript>
+    <tr><td valign="top">
+		<cfset doc="page25">
+        <cfinclude template="nsmg/student_app/print_include_file.cfm">
+	</td></tr>
+    <tr><td valign="top">
+		<cfset doc="page26">
+        <cfinclude template="nsmg/student_app/print_include_file.cfm">
+	</td></tr>
+    <tr><td valign="top">
+		<cfset doc="page27">
+        <cfinclude template="nsmg/student_app/print_include_file.cfm">
+	</td></tr>	
 </table>
 
 <cfcatch type="any">
