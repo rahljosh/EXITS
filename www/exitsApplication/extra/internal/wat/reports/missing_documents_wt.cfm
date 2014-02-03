@@ -47,6 +47,7 @@
                 extra_hostcompany hc ON hc.hostCompanyID = c.hostCompanyID
             WHERE 
                 c.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
+          	AND c.status != "canceled"
           	<cfif FORM.status NEQ "">
             	AND c.status = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.status)#">
             </cfif>
