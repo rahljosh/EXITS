@@ -231,7 +231,7 @@
         FROM 
         	qGetQuarterlyEvaluation
         WHERE	
-        	monthEvaluation = <cfqueryparam cfsqltype="cf_sql_integer" value="5">  
+        	monthEvaluation = <cfqueryparam cfsqltype="cf_sql_integer" value="2">  
     </cfquery>
 
     <cfquery name="qGetMayQuarterlyEvaluation" dbtype="query">
