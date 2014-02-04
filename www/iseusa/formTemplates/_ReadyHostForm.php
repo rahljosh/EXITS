@@ -47,10 +47,13 @@ function show_results ()
    	$result = $db->query($hostID);
 	$checkHost = $db->query($hostEmail);	
 
-	
+	 while($fieldData=$result->fetch_object())
+	 {
+		$newID = ($fieldData->lastID+1);
+		$hashid = (($newID*64) % 29).chr((substr($newID,-1,1)+65)).($newID % 4);
+	 }
  
-	$newID = ($fieldData->lastID+1);
-	$hashid = (($newID*64) % 29).chr((substr($newID,-1,1)+65)).($newID % 4);
+	
 	
 
 if ($checkHost->num_rows == 0) {
