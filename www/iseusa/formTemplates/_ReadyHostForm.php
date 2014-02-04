@@ -23,11 +23,11 @@ function show_results ()
 
 { 
 
-function generatePassword( $length = 8 ) {
-$chars = "abcdefghijkmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ23456789!@$_=+;:,.?23456789!@$_=+;:,.?";
-$password = substr( str_shuffle( $chars ), 0, $length );
-return $password;
-}
+	function generatePassword( $length = 8 ) {
+	$chars = "abcdefghijkmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ23456789!@$_=+;:,.?23456789!@$_=+;:,.?";
+	$password = substr( str_shuffle( $chars ), 0, $length );
+	return $password;
+	}
  
 
 	$userPass = generatePassword();
@@ -35,20 +35,26 @@ return $password;
 
    if (mysqli_connect_errno()) {
 
-   exit();
-  } else {
+	   exit();
+	  } else {
 
 	$hostID = "select max(id) as lastID
 	 			from smg_host_lead";
-					
+	$hostEmail = 'select email 
+					from smg_host_lead
+					where email = "'.$_POST[email].'"';
+								
    	$result = $db->query($hostID);
-	 while($fieldData=$result->fetch_object())
-	 {
-		$newID = ($fieldData->lastID+1);
-		$hashid = (($newID*64) % 29).chr((substr($newID,-1,1)+65)).($newID % 4);
-	 }
-  
+	$checkHost = $db->query($hostEmail);	
 
+	
+ 
+	$newID = ($fieldData->lastID+1);
+	$hashid = (($newID*64) % 29).chr((substr($newID,-1,1)+65)).($newID % 4);
+	
+
+if ($checkHost->num_rows == 0) {
+	
   $query = "INSERT INTO
 				smg_host_lead 
 			(
@@ -85,7 +91,7 @@ return $password;
 	$hashid = $hashid;
 	$contactWithRepName = $_POST['who'];
 	$hearAboutUs = $_POST['howHear'];
-	$dateCreated = date("Y-m-d");
+	$dateCreated = date("Y-m-d H:i:s");
 	
 	/*	
 	$historyQuery = "INSERT INTO
@@ -138,6 +144,7 @@ return $password;
 	include('formTemplates/_sendEmail.php');
 	// Send the message
 	
+	} else {
 	
 
   }
@@ -150,7 +157,7 @@ return $password;
 				<input type="submit" value="View Student Profiles" class="basicBlueButton"> 
 		</form></div>';
 	}
-	
+}
 	
 	
 
@@ -357,7 +364,12 @@ ISE Representative?');
             'rep' =>  'Yes',
         ), 'mycallback, 1'),
     ));
-    $form->add('submit', 'btnsubmit', 'Submit');
+    $form->add('submit', 'btnsubmit', 'Submit',
+	array(
+        'onClick' => '_gaq.push([\'_trackEvent\', \'form\', \'formsubmit\', \'hostfamily\', 100, false]);'
+    )
+	);
+	
 
     // if the form is valid
     if ($form->validate()) {
