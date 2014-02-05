@@ -1,3 +1,15 @@
+ <!--- To set the correct fk_smg_student_app_programid --->
+ <cfscript>
+ 	vSMGProgramType = 5;
+	if (FORM.type EQ 1) {
+		vSMGProgramType = 18;
+	} else if (FORM.type EQ 2) {
+		vSMGProgramType = 19;
+	} else {
+		vSMGProgramType = 17;
+	}
+ </cfscript> 
+ 
  <cfquery name="add_program" datasource="mysql">
     INSERT INTO 
         smg_programs
@@ -17,7 +29,7 @@
     (			
         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyid)#">,
         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.seasonid)#">, 
-        <cfqueryparam cfsqltype="cf_sql_integer" value="5">, 
+        <cfqueryparam cfsqltype="cf_sql_integer" value="#vSMGProgramType#">, 
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.programname#">, 
         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.type)#">,
         <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.startdate#" null="#NOT IsDate(FORM.startdate)#">,
