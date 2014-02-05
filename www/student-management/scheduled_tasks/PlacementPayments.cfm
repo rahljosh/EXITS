@@ -70,6 +70,7 @@ WHERE
 					AND (pmt2.agentID = st.placerepID or pmt2.hostID = st.hostID))
 	AND hh.compliance_review IS NOT NULL
 	AND hh.isActive
+	AND st.canceldate IS NULL
 	AND hh.datePISEmailed IS NOT NULL
 	AND (
 		((hst.motherlastname <> "" AND fatherlastname <> "") OR (ctch.numChildren IS NOT NULL))
@@ -77,15 +78,21 @@ WHERE
 		AND (hh.dateplaced IS NOT NULL))
 		)
 	AND st.programID = pmtrng.fk_programID
-	AND st.canceldate IS NULL
-	AND (
-		pmtrng.fk_paymentType = 1
-		OR (st.aypEnglish > 0 AND pmtrng.fk_paymentType IN (18,19,20) AND 
-			hh.datePISEmailed >= pmtrng.paymentStartDate AND hh.datePISEmailed <= pmtrng.paymentEndDate)
-		OR (st.aypEnglish > 0 AND st.intrep = 11878 AND pmtrng.fk_paymentType = 24 AND hh.datePISEmailed <= pmtrng.paymentEndDate)
-		OR (states.state = hst.state and pmtrng.fk_paymentType = 14)
-		OR (pmtrng.fk_paymenttype = 25 AND hh.datePISEmailed >= pmtrng.paymentStartDate AND hh.datePISEmailed <= pmtrng.paymentEndDate)
-		OR (pmtrng.fk_paymenttype = 35 AND hh.datePISEmailed >= pmtrng.paymentStartDate AND hh.datePISEmailed <= pmtrng.paymentEndDate)
+		AND
+		(
+			pmtrng.fk_paymentType = 1
+			OR	
+			(
+			(hh.iswelcomeFamily = 0 and (pmtrng.paymentEndDate is null or (hh.datePISEMailed <= DATE_ADD(pmtrng.paymentEndDate, INTERVAL 7 DAY))))
+				AND 
+				(
+					(st.aypEnglish > 0 AND pmtrng.fk_paymentType IN (18,19,20) AND 
+					hh.datePISEmailed >= pmtrng.paymentStartDate AND hh.datePISEmailed <= pmtrng.paymentEndDate) 
+					OR (st.aypEnglish > 0 AND st.intrep = 11878 AND pmtrng.fk_paymentType = 24 AND hh.datePISEmailed <= pmtrng.paymentEndDate)
+					OR (states.state = hst.state and pmtrng.fk_paymentType = 14)
+					OR (pmtrng.fk_paymenttype = 25 AND hh.dateCreated >= pmtrng.paymentStartDate AND hh.dateCreated <= pmtrng.paymentEndDate)
+					OR (pmtrng.fk_paymenttype = 35 AND hh.dateCreated >= pmtrng.paymentStartDate AND hh.dateCreated <= pmtrng.paymentEndDate)
+				) 
+			)
 		)
-
 </cfquery>
