@@ -79,7 +79,7 @@
                 
                 <!--- ISE Store --->
                 <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
-                    <li><a href="http://www.iseusa.com/webstore.cfm" target="_blank">Store</a></li>            
+                    <li><a href="http://www.iseusa.com/webstore" target="_blank">Store</a></li>            
                 <!--- Case Store --->
 				<cfelseif CLIENT.companyID EQ 10>
                      <li><a href="http://www.case-usa.org/store/store.cfm" target="_blank">Store</a></li>
@@ -117,7 +117,7 @@
                 
                 <!--- ISE Store --->
                 <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
-                    <li><a href="http://www.iseusa.com/webstore.cfm" target="_blank">Store</a></li>            
+                    <li><a href="http://www.iseusa.com/webstore" target="_blank">Store</a></li>            
                 <!--- Case Store --->
 				<cfelseif CLIENT.companyID EQ 10>
                      <li><a href="http://www.case-usa.org/store/store.cfm" target="_blank">Store</a></li>
@@ -139,7 +139,7 @@
                 
                 <!--- ISE Store --->
                 <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
-                    <li><a href="http://www.iseusa.com/webstore.cfm" target="_blank">Store</a></li>            
+                    <li><a href="http://www.iseusa.com/webstore" target="_blank">Store</a></li>            
                 <!--- Case Store --->
 				<cfelseif CLIENT.companyID EQ 10>
                      <li><a href="http://www.case-usa.org/store/store.cfm" target="_blank">Store</a></li>
@@ -169,7 +169,7 @@
                 
                 <!--- ISE Store --->
                 <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
-                    <li><a href="http://www.iseusa.com/webstore.cfm" target="_blank">Store</a></li>            
+                    <li><a href="http://www.iseusa.com/webstore" target="_blank">Store</a></li>            
                 <!--- Case Store --->
 				<cfelseif CLIENT.companyID EQ 10>
                      <li><a href="http://www.case-usa.org/store/store.cfm" target="_blank">Store</a></li>
@@ -190,7 +190,7 @@
                 
                 <!--- ISE Store --->
                 <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
-                    <li><a href="http://www.iseusa.com/webstore.cfm" target="_blank">Store</a></li>            
+                    <li><a href="http://www.iseusa.com/webstore" target="_blank">Store</a></li>            
                 <!--- Case Store --->
 				<cfelseif CLIENT.companyID EQ 10>
                      <li><a href="http://www.case-usa.org/store/store.cfm" target="_blank">Store</a></li>
@@ -281,7 +281,7 @@
                 
                 <!--- ISE Store --->
                 <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
-                    <li><a href="http://www.iseusa.com/webstore.cfm" target="_blank">Store</a></li>            
+                    <li><a href="http://www.iseusa.com/webstore" target="_blank">Store</a></li>            
                 <!--- Case Store --->
 				<cfelseif CLIENT.companyID EQ 10>
                      <li><a href="http://www.case-usa.org/store/store.cfm" target="_blank">Store</a></li>
@@ -467,7 +467,7 @@
 				
                 <!--- ISE Store --->
                 <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
-                    <li><a href="http://www.iseusa.com/webstore.cfm" target="_blank">Store</a></li>            
+                    <li><a href="http://www.iseusa.com/webstore" target="_blank">Store</a></li>            
                 <!--- Case Store --->
 				<cfelseif CLIENT.companyID EQ 10>
                      <li><a href="http://www.case-usa.org/store/store.cfm" target="_blank">Store</a></li>
@@ -498,7 +498,7 @@
 				
                 <!--- ISE Store --->
                 <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
-                    <li><a href="http://www.iseusa.com/webstore.cfm" target="_blank">Store</a></li>            
+                    <li><a href="http://www.iseusa.com/webstore" target="_blank">Store</a></li>            
                 <!--- Case Store --->
 				<cfelseif CLIENT.companyID EQ 10>
                      <li><a href="http://www.case-usa.org/store/store.cfm" target="_blank">Store</a></li>
