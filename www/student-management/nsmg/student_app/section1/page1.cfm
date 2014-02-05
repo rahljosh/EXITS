@@ -68,13 +68,10 @@
         country
     FROM smg_student_app_programs
     WHERE isActive = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-    <!--- Include PHP programs if this is ISE --->
-	AND
-	<cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG,CLIENT.companyID)>
-    	( companyID LIKE ( <cfqueryparam cfsqltype="cf_sql_varchar" value="%#CLIENT.companyID#%"> )
-        OR companyID = 6)
-    <cfelse>
-    	companyID LIKE ( <cfqueryparam cfsqltype="cf_sql_varchar" value="%#CLIENT.companyID#%"> )
+    <cfif CLIENT.companyID NEQ 6>
+		AND companyID LIKE ( <cfqueryparam cfsqltype="cf_sql_varchar" value="%#CLIENT.companyID#%"> )
+   	<cfelse>
+    	AND app_programID = 5
     </cfif>
 </cfquery>
 
