@@ -40,7 +40,11 @@
 		// Get User Paperwork Struct
 		stUserPaperwork = APPLICATION.CFC.USER.getUserPaperwork(userID=URL.userID);
 	</cfscript>
-
+	<Cfquery name="smgMediaRights" datasource="#APPLICATION.DSN#">
+    select fk_companyid
+    from smg_media_user_access
+    where fk_userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.userid#">
+    </Cfquery>
 	<cfquery name="availableRights" datasource="#APPLICATION.DSN#">
     select description, fieldid
     from applicationlookup
@@ -1247,8 +1251,38 @@
             <!--- ------------------------------------------------------------------------- ---->   
         
         </cfif>
-
+ <!----SMG Media Access---->
+ <cfif client.userid eq 12313 or client.userid eq 1>
+         <div class="rdholder" style="width:100%;float:right;"> 
+				<div class="rdtop"> 
+                <span class="rdtitle">SMG Media Access</span> 
+                <cfif (client.userid eq 1 or client.userid eq 12312)><a href="?curdoc=forms/setMediaRights&userid=#url.userid#"> <img src="pics/buttons/pencilBlue23x29.png" alt="Edit"border="0" class="floatRight"></a></cfif>
+            	</div> <!-- end top --> 
+             <div class="rdbox">
+             	<table align="center" cellpadding=4 cellspacing = 0>
+                	<Tr>
+                    <Cfif smgMediaRights.recordcount eq 0>
+                    <Td colspan=2>User has no rights to SMG Media Site. 
+                     <cfif (client.userid eq 1 or client.userid eq 12312)><a href="?curdoc=forms/setMediaRights&userid=#url.userid#">Grant access by clicking here.</a></cfif>
+                    </Td>
+                    <cfelse>
+                    <cfloop query="smgMediaRights">
+                    	<Td colspan=2><img src="pics/smgLogos/#fk_companyid#.png" width=90%></Td>
+                    </cfloop>
+                    </Cfif>    
+                     </tr>
+                </table>
+             
+             
+              <!----*****End SMG MEDIA ACCESS ****---->	
+             		
+             
+                      
+            </div>
+            	<div class="rdbottom"></div> <!-- end bottom --> 
+         	</div>
         
+    </cfif>    
         
             
      <!-----Account Status---->
