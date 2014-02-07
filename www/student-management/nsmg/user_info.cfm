@@ -1220,7 +1220,7 @@
 		   <div class="rdholder" style="width:100%;float:right;"> 
 				<div class="rdtop"> 
                 <span class="rdtitle">Access Rights</span> 
-                  <cfif APPLICATION.CFC.USER.hasUserRoleAccess(userID=CLIENT.userID, role="userAccess")><a href="?curdoc=forms/setAccountRights&userid=#url.userid#"> <img src="pics/buttons/pencilBlue23x29.png" border="0" alt="Edit" class="floatRight"></a></cfif>
+                  <cfif APPLICATION.CFC.USER.hasUserRoleAccess(userID=CLIENT.userID, role="userAccess")><a href="?curdoc=forms/setAccountRights&userid=#url.userid#"> <img src="pics/buttons/pencilBlue23x29.png" alt="Edit" height="8" border="0" class="floatRight"></a></cfif>
                   
             	</div> <!-- end top --> 
              <div class="rdbox">
@@ -1256,7 +1256,7 @@
          <div class="rdholder" style="width:100%;float:right;"> 
 				<div class="rdtop"> 
                 <span class="rdtitle">SMG Media Access</span> 
-                <cfif (client.userid eq 1 or client.userid eq 12312)><a href="?curdoc=forms/setMediaRights&userid=#url.userid#"> <img src="pics/buttons/pencilBlue23x29.png" alt="Edit"border="0" class="floatRight"></a></cfif>
+                <cfif (client.userid eq 1 or client.userid eq 12313 or client.userid eq 20748)><a href="?curdoc=forms/setMediaRights&userid=#url.userid#"> <img src="pics/buttons/pencilBlue23x29.png" alt="Edit"border="0" class="floatRight"></a></cfif>
             	</div> <!-- end top --> 
              <div class="rdbox">
              	<table align="center" cellpadding=4 cellspacing = 0>
