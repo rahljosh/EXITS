@@ -56,50 +56,34 @@
             birth.countryname as countrybirth,
           	resident.countryname as countryresident,
             citizen.countryname as countrycitizen
-        FROM 	
-        	extra_candidates c
-        LEFT JOIN
-        	smg_countrylist birth ON c.birth_country = birth.countryid
-        LEFT JOIN 
-        	smg_countrylist resident ON c.residence_country = resident.countryid
-        LEFT JOIN 
-        	smg_countrylist citizen ON c.citizen_country = citizen.countryid
-        WHERE 
-        	c.verification_received IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
-        AND 
-        	c.status = <cfqueryparam cfsqltype="cf_sql_varchar" value="1">
-        AND 
-        	c.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyID)#">
-        AND 
-        	c.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.program)#">        
-        AND 
-        	c.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.intRep)#">
-		AND 
-            c.ds2019 = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
-		AND
-			c.hostcompanyid != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-		AND
-			c.wat_doc_job_offer_applicant = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-		AND
-			c.wat_doc_job_offer_employer = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-        AND	
-        	(
-            	c.wat_placement IN ( <cfqueryparam cfsqltype="cf_sql_varchar" value="Walk-In,CSB-Placement" list="yes"> )
-			OR	
-            	c.candidateID IN ( 
-                					SELECT                 
-                						c.candidateID
-                                    FROM
-                                    	extra_candidates c
-                                    INNER JOIN
-                                    	extra_candidate_place_company ecpc ON ecpc.candidateID = c.candidateID
-                                        AND
-                                            ecpc.selfJobOfferStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="Confirmed">
-                                    WHERE
-                                    	c.wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="Self-Placement"> 
-                                 )
-                                    	
-            )
+        FROM extra_candidates c
+        LEFT JOIN smg_countrylist birth ON c.birth_country = birth.countryid
+        LEFT JOIN smg_countrylist resident ON c.residence_country = resident.countryid
+        LEFT JOIN smg_countrylist citizen ON c.citizen_country = citizen.countryid
+        WHERE c.verification_received IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+        AND c.status = <cfqueryparam cfsqltype="cf_sql_varchar" value="1">
+        AND c.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyID)#">
+        AND c.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.program)#">        
+        AND c.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.intRep)#">
+		AND c.ds2019 = ""
+		AND c.hostcompanyid != 1
+		AND c.wat_doc_job_offer_applicant = 1
+		AND c.wat_doc_job_offer_employer = 1
+      	AND c.wat_doc_agreement = 1
+        AND c.wat_doc_signed_assessment = 1
+        AND c.wat_doc_college_letter = 1
+        AND c.wat_doc_college_letter_translation = 1
+        AND c.wat_doc_passport_copy = 1
+        AND (
+        	(c.wat_placement = "Walk-In" AND c.wat_doc_walk_in_agreement = 1)
+            OR (c.wat_placement = "CSB-Placement" AND c.wat_doc_cv = 1)
+            OR (c.wat_placement != "Walk-In" AND c.wat_placement != "CSB-Placement") )
+        AND (
+        	c.candidateID IN ( 
+                SELECT c.candidateID
+                FROM extra_candidates c
+                INNER JOIN extra_candidate_place_company ecpc ON ecpc.candidateID = c.candidateID
+                    AND ecpc.selfJobOfferStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="Confirmed"> ) )
         ORDER BY 
         	c.lastName, 
             c.firstName

@@ -24,7 +24,7 @@
 
 </cfscript>
 
-<cfquery name="qGetIntlRepInfo" datasource="MySQL">
+<cfquery name="qGetIntlRepInfo" datasource="#APPLICATION.DSN.Source#">
     SELECT 
         u.userid, 
         u.businessname, 
@@ -113,6 +113,10 @@
                             <td width="50%" align="left" class="left">#qCandidatePlaceCompany.hostCompanyName#</td>
                         </tr>
                         <tr>
+                            <td width="50%" align="right" class="right">Address:</td>
+                            <td width="50%" align="left" class="left">#qCandidatePlaceCompany.address#<br/>#qCandidatePlaceCompany.city#, #qCandidatePlaceCompany.state# #qCandidatePlaceCompany.zip#</td>
+                        </tr>
+                        <tr>
                             <td align="right" class="right">Job Title:</td>
                             <td align="left" class="left">#qCandidatePlaceCompany.jobTitle#</td>
                         </tr>
@@ -190,6 +194,18 @@
                                     N/A
                                 </cfif>
                             </td>
+                        </tr>
+                        <tr>
+                            <td align="right" class="right">Carrier Name:</td>
+                            <td align="left" class="left">#qCandidatePlaceCompany.WC_carrierName#</td>
+                        </tr>
+                        <tr>
+                            <td align="right" class="right">Carrier Phone:</td>
+                            <td align="left" class="left">#qCandidatePlaceCompany.WC_carrierPhone#</td>
+                        </tr>
+                        <tr>
+                            <td align="right" class="right">Policy Number:</td>
+                            <td align="left" class="left">#qCandidatePlaceCompany.WC_policyNumber#</td>
                         </tr>
                         <tr>
                             <td align="right" class="right">WC Expiration Date:</td>
