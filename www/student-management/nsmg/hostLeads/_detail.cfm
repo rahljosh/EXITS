@@ -52,7 +52,7 @@
 		if ( Compare(APPLICATION.CFC.UDF.HashID(URL.id), URL.key) ) {
 			// Wrong Key - Display message to user
 			familyFound=0;
-			SESSION.formErrors.Add('Host Family Lead could not be found. Please try again.');
+			SESSION.formErrors.Add('Host Family Lead could not be found (hashID mismatch). Please try again.');
 		} 
 
 		// Get the given host family lead record
