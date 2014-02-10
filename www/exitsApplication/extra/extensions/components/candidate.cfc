@@ -1484,7 +1484,7 @@
     <!------------------------------------------------------------ 
 		Visa Interview Update Tool
 	------------------------------------------------------------->
-	<cffunction name="getMissingVisaInterviewStudentList" access="remote" returnFormat="json" output="false" hint="Returns students missing visa interview list in Json format">
+	<cffunction name="getMissingVisaInterviewStudentList" access="public" returntype="query" output="false" hint="Returns students missing visa interview list in Json format">
     	<cfargument name="intRep" default="0" hint="intRep is not required">
         <cfargument name="programID" default="0" hint="programID is not required">
         
@@ -1524,12 +1524,13 @@
   	</cffunction>
     
     
-    <cffunction name="setVisaInterviewDateToday" access="remote" returntype="void" hint="Updates a candidate visa interview date to today.">
+    <cffunction name="setVisaInterviewDate" access="remote" returntype="void" hint="Updates a candidate visa interview date to today.">
         <cfargument name="candidateID" required="yes" hint="candidateID is required">
+        <cfargument name="date" required="no" default="#NOW()#">
 
         <cfquery datasource="#APPLICATION.DSN.Source#">
                 UPDATE extra_candidates
-				SET visaInterview = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
+				SET visaInterview = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.date#">
                 WHERE candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.candidateID#">
 		</cfquery>
         
