@@ -63,6 +63,12 @@
 		// Get Uploaded Resume
 		qGetUploadedResume = APPLICATION.CFC.DOCUMENT.getDocumentsByFilter(foreignTable=APPLICATION.foreignTable, foreignID=qGetCandidate.candidateID, documentTypeID=9);
 		
+		// Get Uploaded Job Offer
+		qGetUploadedJobOffer = APPLICATION.CFC.DOCUMENT.getDocumentsByFilter(foreignTable=APPLICATION.foreignTable, foreignID=qGetCandidate.candidateID, documentTypeID=7);
+		
+		// Get Uploaded DS-2019
+		qGetUploadedDS2019 = APPLICATION.CFC.DOCUMENT.getDocumentsByFilter(foreignTable=APPLICATION.foreignTable, foreignID=qGetCandidate.candidateID, documentTypeID=36);
+		
 		// Get Questions for section 1
 		qGetQuestionsSection1 = APPLICATION.CFC.ONLINEAPP.getQuestionByFilter(sectionName='section1');
 		
@@ -714,7 +720,20 @@
                                     </cfif>
                                     </strong>
                                 </td>
-                            </tr>													
+                            </tr>
+                            <tr>
+                                <td colspan="2" align="center">
+                                    <cfif VAL(qGetUploadedResume.recordCount)>
+                                        #qGetUploadedResume.downloadLink#
+                                    </cfif>
+                                    <cfif VAL(qGetUploadedJobOffer.recordCount)>
+                                        #qGetUploadedJobOffer.downloadLink#
+                                    </cfif>
+                                    <cfif VAL(qGetUploadedDS2019.recordCount)>
+                                        #qGetUploadedDS2019.downloadLink#
+                                    </cfif>
+                            	</td>
+                      		</tr>										
                         </table>
                         
                         <!--- CANDIDATE INFO - EDIT PAGE --->
@@ -793,18 +812,11 @@
                                     	<p><a href="onlineApplication/index.cfm?action=initial&uniqueID=#qGetCandidate.uniqueID#" class="style4 popUpOnlineApplication">[ Online Application ]</a></p>
                                     </cfif>
                                     
-                                    <!--- Display Resume Link --->
-                                    <cfif VAL(qGetUploadedResume.recordCount)>
-                                        <p>#qGetUploadedResume.downloadLink#</p>
-                                    </cfif>
-                                    
                                     <!--- Office View Only --->
                                     <cfif ListFind("1,2,3,4", CLIENT.userType)>
                                         <p><a href="candidate/employerLetter.cfm?uniqueid=#qGetCandidate.uniqueid#" class="style4" target="_blank">[ Employer Letter ]</a></p>
-
+										<p><a href="candidate/supportLetter.cfm?uniqueid=#qGetCandidate.uniqueid#" class="style4" target="_blank">[ Support Letter ]</a></p>
                                         <p><a href="candidate/sevisFeeLetter.cfm?uniqueid=#qGetCandidate.uniqueid#" class="style4" target="_blank">[ SEVIS Fee Payment Instructions ]</a></p>
-                                        
-                                        <p><a href="candidate/supportLetter.cfm?uniqueid=#qGetCandidate.uniqueid#" class="style4" target="_blank">[ Support Letter ]</a></p>
 									</cfif>
                                     
                             	</td>

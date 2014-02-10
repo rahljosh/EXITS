@@ -229,7 +229,15 @@
                     fileSize,
                     location,
                     CONCAT(location, serverName, '.', serverExt) AS filePath,
-                    CONVERT(CONCAT('<a href="onlineApplication/publicDocument.cfm?ID=', ID, '&Key=', hashID, '" class="style4">[ Download Resume ]</a> &nbsp; ') USING latin1) AS downloadLink,
+                    <cfif ARGUMENTS.documentTypeID EQ 7>
+                    	CONVERT(CONCAT('<a href="onlineApplication/publicDocument.cfm?ID=', ID, '&Key=', hashID, '" class="style4">[ Download Job Offer ]</a> &nbsp; ') USING latin1) AS downloadLink,
+                    <cfelseif ARGUMENTS.documentTypeID EQ 9>
+                    	CONVERT(CONCAT('<a href="onlineApplication/publicDocument.cfm?ID=', ID, '&Key=', hashID, '" class="style4">[ Download Resume ]</a> &nbsp; ') USING latin1) AS downloadLink,
+                    <cfelseif ARGUMENTS.documentTypeID EQ 36>
+                    	CONVERT(CONCAT('<a href="onlineApplication/publicDocument.cfm?ID=', ID, '&Key=', hashID, '" class="style4">[ Download DS-2019 ]</a> &nbsp; ') USING latin1) AS downloadLink,
+                    <cfelse>
+                    	CONVERT(CONCAT('<a href="onlineApplication/publicDocument.cfm?ID=', ID, '&Key=', hashID, '" class="style4">[ Download File ]</a> &nbsp; ') USING latin1) AS downloadLink,
+                    </cfif>
                     isDeleted,
                     dateCreated,
                     dateUpdated
