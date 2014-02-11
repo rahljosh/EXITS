@@ -227,18 +227,6 @@
                             <td align="right" class="right">Phone Confirmation:</td>
                             <td align="left" class="left">#DateFormat(qCandidatePlaceCompany.confirmation_phone, 'mm/dd/yyyy')#</td>
                         </tr>
-                        <cfif qCandidatePlaceCompany.isTransfer EQ 0 AND qCandidatePlaceCompany.isSecondary EQ 0>   
-                            <tr>
-                                <td align="right" class="right">Job Found:</td>
-                                <td align="left" class="left">#qCandidatePlaceCompany.selfFindJobOffer#</td>
-                            </tr>
-                        </cfif>
-                        <tr>
-                            <td align="center" class="right" colspan="2">Notes:</td>
-                        </tr>
-                        <tr>
-                            <td align="center" class="left" colspan="2">#qCandidatePlaceCompany.selfConfirmationNotes#</td>
-                        </tr>
                     </table>
                 
                 </td>

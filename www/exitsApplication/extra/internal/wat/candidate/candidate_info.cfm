@@ -720,20 +720,7 @@
                                     </cfif>
                                     </strong>
                                 </td>
-                            </tr>
-                            <tr>
-                                <td colspan="2" align="center">
-                                    <cfif VAL(qGetUploadedResume.recordCount)>
-                                        #qGetUploadedResume.downloadLink#
-                                    </cfif>
-                                    <cfif VAL(qGetUploadedJobOffer.recordCount)>
-                                        #qGetUploadedJobOffer.downloadLink#
-                                    </cfif>
-                                    <cfif VAL(qGetUploadedDS2019.recordCount)>
-                                        #qGetUploadedDS2019.downloadLink#
-                                    </cfif>
-                            	</td>
-                      		</tr>										
+                            </tr>										
                         </table>
                         
                         <!--- CANDIDATE INFO - EDIT PAGE --->
@@ -818,6 +805,21 @@
 										<p><a href="candidate/supportLetter.cfm?uniqueid=#qGetCandidate.uniqueid#" class="style4" target="_blank">[ Support Letter ]</a></p>
                                         <p><a href="candidate/sevisFeeLetter.cfm?uniqueid=#qGetCandidate.uniqueid#" class="style4" target="_blank">[ SEVIS Fee Payment Instructions ]</a></p>
 									</cfif>
+                                    
+                                    <!--- Quick Downloads --->
+                                    <div>
+                                    	<b><u>Quick Downloads</u></b>
+                                        <br>
+                                        <cfloop query="qGetUploadedResume">
+                                        	#downloadLink#<br>
+                                        </cfloop>
+                                        <cfloop query="qGetUploadedJobOffer">
+                                        	#downloadLink#<br>
+                                        </cfloop>
+                                        <cfloop query="qGetUploadedDS2019">
+                                        	#downloadLink#<br>
+                                        </cfloop>
+                                    </div>                                    
                                     
                             	</td>
                       		</tr>
