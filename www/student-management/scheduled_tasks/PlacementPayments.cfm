@@ -50,9 +50,9 @@ SELECT DISTINCT
 	END,
 	"9999999",
 	CURRENT_DATE,
-	CURRENT_DATE,
-	1
-	
+	CURRENT_DATE, 
+	1 
+
 FROM
 	smg_students st
 		INNER JOIN smg_hosthistory hh ON st.studentID = hh.studentID AND hh.isactive
@@ -78,7 +78,14 @@ WHERE
 		AND (hh.dateplaced IS NOT NULL))
 		)
 	AND st.programID = pmtrng.fk_programID
-		AND
+	AND (
+		IF	(
+			(SELECT MAX(dep_date) FROM smg_flight_info flt WHERE st.studentID = flt.studentID) IS NOT NULL, 
+			(SELECT MAX(dep_date) FROM smg_flight_info flt WHERE st.studentID = flt.studentID) < CURRENT_DATE,
+			(SELECT MAX(start_date) FROM smg_sevis_history sev where st.studentID = sev.studentID) < CURRENT_DATE
+			)
+		)	
+	AND
 		(
 			pmtrng.fk_paymentType = 1
 			OR	
@@ -87,12 +94,12 @@ WHERE
 				AND 
 				(
 					(st.aypEnglish > 0 AND pmtrng.fk_paymentType IN (18,19,20) AND 
-					hh.datePISEmailed >= pmtrng.paymentStartDate AND hh.datePISEmailed <= pmtrng.paymentEndDate) 
+					hh.datePISEmailed >= pmtrng.paymentStartDate AND hh.datePISEmailed <= pmtrng.paymentEndDate)
 					OR (st.aypEnglish > 0 AND st.intrep = 11878 AND pmtrng.fk_paymentType = 24 AND hh.datePISEmailed <= pmtrng.paymentEndDate)
 					OR (states.state = hst.state and pmtrng.fk_paymentType = 14)
 					OR (pmtrng.fk_paymenttype = 25 AND hh.dateCreated >= pmtrng.paymentStartDate AND hh.dateCreated <= pmtrng.paymentEndDate)
 					OR (pmtrng.fk_paymenttype = 35 AND hh.dateCreated >= pmtrng.paymentStartDate AND hh.dateCreated <= pmtrng.paymentEndDate)
-				) 
+				)
 			)
 		)
 </cfquery>
