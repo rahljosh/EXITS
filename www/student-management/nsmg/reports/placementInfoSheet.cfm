@@ -592,7 +592,7 @@
                                         <td><span class="title">Orientation</span></td>
                                         <td>
                                             <cfif IsDate(qGetSchoolDates.enrollment)>
-                                                #DateFormat(qGetSchoolDates.enrollment, 'mmmm d, yyyy')#
+                                                #DateFormat(qGetSchoolDates.enrollment, 'mmmm d, yyyy')#**
                                             <cfelse>
                                                 Not Available
                                             </cfif>
@@ -603,7 +603,7 @@
                                     <td><span class="title">1<sup>st</sup> Semester Begins:</span></td>
                                     <td>
 										<cfif IsDate(qGetSchoolDates.year_begins)>
-                                        	#DateFormat(qGetSchoolDates.year_begins, 'mmmm d, yyyy')#
+                                        	#DateFormat(qGetSchoolDates.year_begins, 'mmmm d, yyyy')#**
 										<cfelse>
 											Not Available
 										</cfif>
@@ -613,7 +613,7 @@
                                     <td><span class="title">1<sup>st</sup> Semester Ends:</span></td>
                                     <td>
 										<cfif IsDate(qGetSchoolDates.semester_ends)>
-                                        	#DateFormat(qGetSchoolDates.semester_ends, 'mmmm d, yyyy')#
+                                        	#DateFormat(qGetSchoolDates.semester_ends, 'mmmm d, yyyy')#**
 										<cfelse>
                                         	Not Available
 										</cfif>                                    
@@ -623,7 +623,7 @@
                                     <td><span class="title">2<sup>nd</sup> Semester Begins:</span></td>
                                     <td>
 										<cfif IsDate(qGetSchoolDates.semester_begins)>
-                                        	#DateFormat(qGetSchoolDates.semester_begins, 'mmmm d, yyyy')#
+                                        	#DateFormat(qGetSchoolDates.semester_begins, 'mmmm d, yyyy')#**
 										<cfelse>
                                         	Not Available
 										</cfif>
@@ -633,7 +633,7 @@
                                 	<td><span class="title">Year Ends:</span></td>
                                     <td>
 										<cfif IsDate(qGetSchoolDates.year_ends)>
-                                        	#DateFormat(qGetSchoolDates.year_ends, 'mmmm d, yyyy')#
+                                        	#DateFormat(qGetSchoolDates.year_ends, 'mmmm d, yyyy')#**
 										<cfelse>
                                         	Not Available
 										</cfif>
@@ -685,6 +685,14 @@
                             <Td colspan=2>The student is responsible for the following expenses: #qGetHostFamily.schoolcosts#</Td>
                         </Tr>
                     </cfif>
+                    
+                    <tr>
+                        <td colspan=2>
+                            <i>
+                                ** These school dates are preliminary and subject to change due to school schedule changes, weather-related school closures and other factors.  Flights booked based on these dates will need to be changed if the schedule changes.
+                            </i>
+                        </td>
+                    </tr>
                 </table>
     
                 <table width="800">
