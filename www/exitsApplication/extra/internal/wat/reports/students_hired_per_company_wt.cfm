@@ -362,7 +362,8 @@
                             <cfquery name="qGetHostHistory" datasource="#APPLICATION.DSN.Source#">
                                 SELECT  
                                     reason_host,
-                                    placement_date
+                                    placement_date,
+                                    seekingDeadline
                                 FROM 
                                     extra_candidate_place_company 
                                 WHERE 
@@ -384,22 +385,26 @@
 									alertColor = "red";
 								}
 							</cfscript>
-    
-                            <tr bgcolor="###IIf(qTotalPerHostCompany.currentRow MOD 2 ,DE("FFFFFF") ,DE("E4E4E4") )#">
-                                <td colspan="2" class="style1" style="border-top:1px solid ###IIf(qTotalPerHostCompany.currentRow MOD 2 ,DE("E4E4E4") ,DE("FFFFFF") )#;">
-                                    <strong>
-                                    	Days Since Placement:
-                                    	<span style="color:#alertColor#;">#daysSincePlacement#</span>
-                                  	</strong> 
-                                </td>
-                                <td colspan="15" class="style1" style="border-top:1px solid ###IIf(qTotalPerHostCompany.currentRow MOD 2 ,DE("E4E4E4") ,DE("FFFFFF") )#;">
-                                    <!--- Only display for Seeking Employment --->
-									<cfif qGetHostCompany.hostCompanyID EQ 195>
-                                        <strong>Reason:</strong> 
+                            
+                            <!--- Only display for Seeking Employment --->
+							<cfif qGetHostCompany.hostCompanyID EQ 195>
+                                <tr bgcolor="###IIf(qTotalPerHostCompany.currentRow MOD 2 ,DE("FFFFFF") ,DE("E4E4E4") )#">
+                                    <td colspan="17" class="style1" style="border-top:1px solid ###IIf(qTotalPerHostCompany.currentRow MOD 2 ,DE("E4E4E4") ,DE("FFFFFF") )#;">
+										<strong>Reason:</strong> 
                                         <cfloop query="qGetHostHistory">
                                             #qGetHostHistory.reason_host# <br />
                                         </cfloop>
-                                  	</cfif>
+                                    </td>
+                                </tr>
+                            </cfif>
+                           	
+                            <tr bgcolor="###IIf(qTotalPerHostCompany.currentRow MOD 2 ,DE("FFFFFF") ,DE("E4E4E4") )#">
+                                <td colspan="17" class="style1" style="border-top:1px solid ###IIf(qTotalPerHostCompany.currentRow MOD 2 ,DE("E4E4E4") ,DE("FFFFFF") )#;">
+                                  	<strong>Deadline: </strong>#DateFormat(qGetHostHistory.seekingDeadline,'mm/dd/yyyy')#
+                                    <strong>
+                                    	Days Since Placement: 
+                                    	<span style="color:#alertColor#;">#daysSincePlacement#</span>
+                                  	</strong> 
                                 </td>
                             </tr>
                         </cfif>

@@ -334,7 +334,9 @@
 			}
 			
 			// remove deadline if not Seeking Employment
-			$("#deadline").fadeOut("fast");	
+			$("#deadline").fadeOut("fast");
+			
+			$(".hideForSeeking").fadeIn("fast");
 
 		} else {
 			// Erase self placement data
@@ -342,7 +344,8 @@
 			$(".selfPlacementInfo").fadeOut("fast");
 			// display deadline field for Seeking Employment
 			if (getHostID == 195) {
-				$("#deadline").fadeIn("fast");	
+				$("#deadline").fadeIn("fast");
+				$(".hideForSeeking").fadeOut("fast");
 			} else {
 				$("#deadline").fadeOut("fast");		
 			}
@@ -2136,7 +2139,7 @@
                                                 </td>
                                             </tr>
                                       	</cfif>
-                                        <tr>
+                                        <tr class="hideForSeeking">
                                         	<td class="style1" align="right"><strong>WC Expiration Date:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                             	<span class="readOnly selfPlacementReadOnly">
@@ -2186,7 +2189,7 @@
 										<!--- Office View Only --->
                                         <cfif ListFind("1,2,3,4", CLIENT.userType) AND qCandidatePlaceCompany.isTransfer EQ 0>
                                            
-                                            <tr class="hiddenField notReplacement">
+                                            <tr class="hiddenField notReplacement hideForSeeking">
                                                 <td class="style1" align="right"><strong>Job Found:</strong></td>
                                                 <td class="style1">
                                                     <span class="readOnly selfPlacementReadOnly">
