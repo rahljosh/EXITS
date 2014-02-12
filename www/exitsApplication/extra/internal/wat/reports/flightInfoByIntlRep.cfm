@@ -262,6 +262,23 @@
                 
                 totalPerIntlRepWalkInPlacements = filterGetAllCandidates(placementType='Walk-In', intRep=qGetIntlRep.userID).recordCount;
             </cfscript>
+            
+            <cfsavecontent variable="currentRepReportText">
+            	<p>
+                	Dear #qGetIntlRep.businessName#,
+                    <br/>
+                    <br/>
+					Please take notice of the list of all participants who are missing the Flight Information from their applications. 
+                    As previously notified, due to concerns over the health, welfare and safety of the SWT Program participants, the entire flight information 
+                    <font color="red">must be added in EXTRA system (online application, flight information section) with 10 (ten) days before their specific arrival dates.</font>
+                    <br/>
+                    <br/>
+					Please ensure you submit this crucial information on time. If you have any questions or concerns, please feel free to contact us.
+                    <br/>
+                    <br/>
+					Note: If meanwhile you have submitted the requested information, thank you and please disregard this notice.
+                </p>
+            </cfsavecontent>
 
 			<cfsavecontent variable="currentRepReportContent">
 
@@ -341,8 +358,8 @@
             	<cfscript>
 					APPLICATION.CFC.EMAIL.sendEmail(
 						emailTo=qGetIntlRep.email,
-						emailMessage=currentRepReportContent,
-						emailSubject='Flight Report Information',
+						emailMessage=currentRepReportText & currentRepReportContent,
+						emailSubject='SWT CSB Participants – Missing Flight Information',
 						companyID=CLIENT.companyID,
 						footerType='emailRegular');
 				</cfscript>

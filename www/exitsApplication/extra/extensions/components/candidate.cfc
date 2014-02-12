@@ -1159,6 +1159,7 @@
                 ecpc.selfFindJobOffer,
                 ecpc.selfConfirmationNotes,
                 ecpc.reason_host,
+                ecpc.seekingDeadline,
                 ecpc.isTransfer,
                 ecpc.isSecondary,
                 ecpc.isTransferHousingAddressReceived,
