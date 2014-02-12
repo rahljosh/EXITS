@@ -400,7 +400,7 @@
                            	
                             <tr bgcolor="###IIf(qTotalPerHostCompany.currentRow MOD 2 ,DE("FFFFFF") ,DE("E4E4E4") )#">
                                 <td colspan="17" class="style1" style="border-top:1px solid ###IIf(qTotalPerHostCompany.currentRow MOD 2 ,DE("E4E4E4") ,DE("FFFFFF") )#;">
-                                  	<strong>Deadline: </strong>#DateFormat(qGetHostHistory.seekingDeadline,'mm/dd/yyyy')#
+                                  	<strong>Deadline: </strong><cfif IsDate(qGetHostHistory.seekingDeadline)>#DateFormat(qGetHostHistory.seekingDeadline,'mm/dd/yyyy')#<cfelse>n/a</cfif>
                                     <strong>
                                     	Days Since Placement: 
                                     	<span style="color:#alertColor#;">#daysSincePlacement#</span>

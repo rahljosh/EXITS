@@ -434,7 +434,9 @@
                             <br/>
                             <br/>
                             Note: If meanwhile you have submitted the requested information, thank you and please disregard this notice.
-							Clarification: The Orientation Sign Off Form, if included in this report, must be submitted only after the 
+							<br/>
+                            <br/>
+                            Clarification: The Orientation Sign Off Form, if included in this report, must be submitted only after the 
                             participants received the visa documents from CSB and after they passed the orientation session organized by 
                             your organization, in preparation for their departure from the home country to the United States.
                         </p>
