@@ -136,10 +136,7 @@ if(prog.type = 1,80,if(prog.type = 2,85,100)),
     WHEN DAYOFWEEK(CURDATE()) = 2 THEN DATE_ADD(CURDATE(), INTERVAL 0 DAY)
 END),
 "999999",
-1,
-fldep.departure_date,
-date_add(prog.enddate, INTERVAL -1 MONTH)
-
+1
 
 from smg_students st
 inner join progress_reports pr on st.studentID = pr.fk_student and pr.fk_reporttype = 1
@@ -176,7 +173,7 @@ and (
 		EXISTS(select * from progress_reports pr where st.studentID = pr.fk_student and pr.pr_month_of_report = 10
 									and pr.fk_reporttype = 1 and pr.pr_ny_approved_date is not null))	
 	)
-	OR 	
+	OR
 		(prog.fk_smg_student_app_programID = 2 AND fldep.departure_date <= date_add(prog.enddate, INTERVAL -1 MONTH) 
 		AND pr.pr_month_of_report = 1
 		AND NOT EXISTS(SELECT * FROM smg_users_payments pmt where pmt.paymenttype = 31 and st.studentID = pmt.studentID)
