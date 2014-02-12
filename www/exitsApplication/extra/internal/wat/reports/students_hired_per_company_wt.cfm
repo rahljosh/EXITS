@@ -356,12 +356,13 @@
                             <td><span class="style1">#DateFormat(qTotalPerHostCompany.visaInterview,'mm/dd/yyyy')#</span></td>
                         </tr>
                         
-                        <!--- Seeking Employment - Display Reason --->
-                        <cfif qGetHostCompany.hostCompanyID EQ 195>
+                        <!--- Seeking Employment or Exempt from Pre-Placement - Display Reason --->
+                        <cfif ListFind("195,4600",qGetHostCompany.hostCompanyID)>
                         
                             <cfquery name="qGetHostHistory" datasource="#APPLICATION.DSN.Source#">
                                 SELECT  
-                                    reason_host
+                                    reason_host,
+                                    placement_date
                                 FROM 
                                     extra_candidate_place_company 
                                 WHERE 
@@ -372,13 +373,33 @@
                                     candCompID DESC
                                 LIMIT 1		                           
                             </cfquery>
+                            
+                            <cfscript>
+								daysSincePlacement = ROUND(NOW() - qGetHostHistory.placement_date);
+								alertColor = "black";
+								if (daysSincePlacement GTE 7) {
+									alertColor = "orange";
+								}
+								if (daysSincePlacement GTE 14) {
+									alertColor = "red";
+								}
+							</cfscript>
     
                             <tr bgcolor="###IIf(qTotalPerHostCompany.currentRow MOD 2 ,DE("FFFFFF") ,DE("E4E4E4") )#">
+                                <td colspan="2" class="style1" style="border-top:1px solid ###IIf(qTotalPerHostCompany.currentRow MOD 2 ,DE("E4E4E4") ,DE("FFFFFF") )#;">
+                                    <strong>
+                                    	Days Since Placement:
+                                    	<span style="color:#alertColor#;">#daysSincePlacement#</span>
+                                  	</strong> 
+                                </td>
                                 <td colspan="15" class="style1" style="border-top:1px solid ###IIf(qTotalPerHostCompany.currentRow MOD 2 ,DE("E4E4E4") ,DE("FFFFFF") )#;">
-                                    <strong>Reason:</strong> 
-                                    <cfloop query="qGetHostHistory">
-                                        #qGetHostHistory.reason_host# <br />
-                                    </cfloop>
+                                    <!--- Only display for Seeking Employment --->
+									<cfif qGetHostCompany.hostCompanyID EQ 195>
+                                        <strong>Reason:</strong> 
+                                        <cfloop query="qGetHostHistory">
+                                            #qGetHostHistory.reason_host# <br />
+                                        </cfloop>
+                                  	</cfif>
                                 </td>
                             </tr>
                         </cfif>

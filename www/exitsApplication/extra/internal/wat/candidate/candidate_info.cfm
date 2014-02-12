@@ -105,7 +105,7 @@
     <cfinclude template="../querys/fieldstudy.cfm">
     <cfinclude template="../querys/program.cfm">
     
-    <cfquery name="qGetStateList" datasource="MySql">
+    <cfquery name="qGetStateList" datasource="#APPLICATION.DSN.Source#">
         SELECT id, state, stateName
         FROM smg_states
       	ORDER BY stateName
@@ -332,11 +332,20 @@
 			if (getTransferValue == 1) {
 				$("#emailConfirmationRow").fadeOut("fast");
 			}
+			
+			// remove deadline if not Seeking Employment
+			$("#deadline").fadeOut("fast");	
 
 		} else {
 			// Erase self placement data
 			$(".selfPlacementField").val("");
 			$(".selfPlacementInfo").fadeOut("fast");
+			// display deadline field for Seeking Employment
+			if (getHostID == 195) {
+				$("#deadline").fadeIn("fast");	
+			} else {
+				$("#deadline").fadeOut("fast");		
+			}
 		}
 	}
 
@@ -1641,6 +1650,7 @@
                                                 </td>
                                             </tr>
                                         </cfif>
+                                        
                                         <tr class="notReplacement">
                                         	<td class="style1" align="right" width="30%">
                                             	<label for="wat_doc_job_offer_employer"><strong>Job Offer Agreement Employer:</strong></label>
@@ -1674,7 +1684,18 @@
                                             <td width="70%" class="style1">
                                             	<textarea name="reason_host" id="reason_host" class="style1 editPage mediumTextArea">#qCandidatePlaceCompany.reason_host#</textarea>
                                             </td>
-                                        </tr>  
+                                        </tr>
+                                        
+                                        <!--- Deadline for seeking employment --->
+                                        <tr id="deadline">
+                                            <td class="style1" align="right" width="30%"><strong>Deadline:</strong></td>
+                                            <td class="style1" align="left" width="70%">
+                                                <span class="readOnly">#DateFormat(qCandidatePlaceCompany.seekingDeadline,'mm/dd/yyyy')#</span>
+                                                <span class="editPage">
+                                                	<input type="text" class="datePicker editPage" name="seekingDeadline" value="#DateFormat(qCandidatePlaceCompany.seekingDeadline,'mm/dd/yyyy')#"/>
+                                                </span>
+                                            </td>
+                                        </tr>
 
                                         <!--- Placement Date --->
                                         <tr class="readOnly">

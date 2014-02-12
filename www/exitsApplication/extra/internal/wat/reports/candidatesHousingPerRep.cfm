@@ -326,6 +326,25 @@
                     AND housingArrangedPrivately = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
                 </cfquery>
                 
+                <cfsavecontent variable="emailText">
+                	<p>
+                    	Dear #qGetIntlReps.businessname#,
+ 						<br/>
+                        <br/>
+						Please take notice of the list of all participants who are missing the Housing Arrangements Form from their applications. 
+                        As previously notified, due to concerns over the health, welfare and safety of the SWT Program participants, this form 
+                        <font color="red">must be filled-in and uploaded in EXTRA system (online application, upload section) with 15 (fifteen) days before their specific program start dates.</font> 
+                        In certain special cases (e.g. late visa interview, unforeseen delay in arrival, etc.), the maximum limit allowed for 
+                        compliance with this requirement is for the form to be filled-in and uploaded with 10 (ten) days before arrival.
+ 						<br/>
+                        <br/>
+                        Please ensure you submit this crucial form on time. If you have any questions or concerns, please feel free to contact us.
+ 						<br/>
+                        <br/>
+                        Note: If meanwhile you have submitted the requested information, thank you and please disregard this notice.
+                    </p>
+                </cfsavecontent>
+                
                 <cfsavecontent variable="listPerRep">
                     <table width="99%" cellpadding="4" cellspacing=0 align="center">
                         <tr>
@@ -440,8 +459,8 @@
                 	<cfscript>
 						APPLICATION.CFC.EMAIL.sendEmail(
 							emailTo=qGetIntlReps.email,
-							emailSubject="Candidates missing housing",
-							emailMessage=listPerRep,
+							emailSubject="SWT CSB Participants – Missing Housing Arrangements Form",
+							emailMessage=emailText & listPerRep,
 							companyID=CLIENT.companyID,
 							footerType="emailRegular");
 					</cfscript>

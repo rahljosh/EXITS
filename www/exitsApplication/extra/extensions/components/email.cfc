@@ -417,7 +417,7 @@
                 <cfcase value="watMissingDocuments">
     
                     <cfscript>
-                        stEmailStructure.subject = csbEmailSubject & ' - Missing Documents Report';
+                        stEmailStructure.subject = 'SWT CSB Participants – Missing Documents Report';
                     </cfscript>
     
                     <cfsavecontent variable="stEmailStructure.message">
@@ -430,7 +430,13 @@
                             	Please send the requested missing information within 5 (five) business days of this notice. 
                                 The document(s) must be uploaded in EXTRA system (online application) for each participant listed below. 
                             </font>
-                            It is crucial that we receive it on time. 
+                            It is crucial that we receive it on time.
+                            <br/>
+                            <br/>
+                            Note: If meanwhile you have submitted the requested information, thank you and please disregard this notice.
+							Clarification: The Orientation Sign Off Form, if included in this report, must be submitted only after the 
+                            participants received the visa documents from CSB and after they passed the orientation session organized by 
+                            your organization, in preparation for their departure from the home country to the United States.
                         </p>
                     </cfsavecontent>
                 

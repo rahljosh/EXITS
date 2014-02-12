@@ -35,6 +35,7 @@
 <cfparam name="FORM.selfEmailConfirmationDate" default="">
 <cfparam name="FORM.confirmation_phone" default="">
 <cfparam name="FORM.cancelStatus" default="">
+<cfparam name="FORM.seekingDeadline" default="">
 <!--- Program Information --->
 <cfparam name="FORM.wat_participation" default="">
 <cfparam name="FORM.wat_participation_info" default="">
@@ -524,6 +525,7 @@
                 enddate, 
                 status, 
                 reason_host,
+                seekingDeadline,
                 selfConfirmationName,
                 selfConfirmationMethod,
                 selfJobOfferStatus,
@@ -548,6 +550,7 @@
                 <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.program_enddate#" null="#NOT IsDate(FORM.program_enddate)#">,
                 <cfqueryparam cfsqltype="cf_sql_integer" value="1">, 
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.reason_host#">,
+                <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.seekingDeadline#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationName#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfConfirmationMethod#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfJobOfferStatus#">,
@@ -593,7 +596,8 @@
                 dateTransferConfirmed = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.dateTransferConfirmed#" null="#NOT IsDate(FORM.dateTransferConfirmed)#">,
                 isTransferJobOfferReceived = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isTransferJobOfferReceived)#">,
                 isTransferHousingAddressReceived = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isTransferHousingAddressReceived)#">,                
-                isTransferSevisUpdated = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isTransferSevisUpdated)#">
+                isTransferSevisUpdated = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isTransferSevisUpdated)#">,
+                seekingDeadline = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.seekingDeadline#">
             WHERE 
                 candcompid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCurrentPlacement.candCompID#">
         </cfquery>
