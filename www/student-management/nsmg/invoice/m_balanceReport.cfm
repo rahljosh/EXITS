@@ -69,13 +69,26 @@
 
 <cfparam name="FORM.selectPrograms" default="0">
 <cfparam name="form.printFormat" default="0">
+<cfparam name="form.balanceDate" default="">
+<cfparam name="form.userid" default="0">
 
 <cfscript>
 	// returns total balance per agent
-	qTotalAgentBalance = APPCFC.INVOICE.totalAgentBalance(programChoice = FORM.selectPrograms);	
+	qTotalAgentBalance = APPCFC.INVOICE.totalAgentBalance(programChoice = FORM.selectPrograms, balanceDate = form.balanceDate, userID = form.userid);
 	// returns total balance per agent per program 	
-	qTotalAgentRefund = APPCFC.INVOICE.totalAgentBalance(programChoice = FORM.selectPrograms, balanceType = 0);		
+	qTotalAgentRefund = APPCFC.INVOICE.totalAgentBalance(programChoice = FORM.selectPrograms, balanceType = 0, balanceDate = form.balanceDate, userID = form.userid);		
 </cfscript>
+
+<Cfquery name="get_intl_rep" datasource="MySQL">
+	SELECT userid, businessname
+	FROM smg_users
+	WHERE usertype = '8'
+		AND active = '1'
+		<cfif client.usertype GT '4'>
+			AND userid = <cfqueryparam value="#client.userid#" cfsqltype="cf_sql_integer">
+		</cfif>
+	ORDER BY businessname
+</Cfquery>
 
 <cfquery name="getPrograms" datasource="MySQL">
 SELECT 
@@ -100,10 +113,30 @@ ORDER BY
 <cfif NOT ISDEFINED('form.submitted')>
 <div align="center">
 <strong><small>Outstanding Balances Report</small></strong>
+
+    <br/>
+    <br/>
     <cfform>
         
         <cfinput type="hidden" name="submitted">
-    
+
+        <div align="center">
+        	<strong><small>Choose Agent: </small></strong>
+        </div>
+		<select name="userid" multiple="multiple" size="10">
+        	<option value="All" selected="selected">Select All</option>
+            <cfoutput query="get_intl_rep">
+            	<cfif businessname IS NOT "">
+                    <option value="#userid#">#businessname#</option>
+                </cfif>
+            </cfoutput>
+        </select>
+        
+        <br/>
+        <br/>
+        <div align="center">
+        	<strong><small>Choose Programs: </small></strong>
+        </div>
         <select name="selectPrograms" multiple="multiple" size="30">
             <option value="All" selected="selected">Select All</option>
             <option value="0">Charges not related to a program</option>
@@ -123,8 +156,15 @@ ORDER BY
                 <option value="#programid#">#variables.compId# - #getPrograms.programname#</option>
             </cfoutput>
         </select>
+        
+        <br/>
+        <br/>
+        	<strong><small>Balance Date: </small></strong>
+            <cfinput name="balanceDate" type="text" validate="date">
+        <br/>
         <br/>
         	<cfinput name="printFormat" value="1" type="checkbox" checked="yes"> <strong><small>Display print format?</small></strong>
+        <br/>
         <br/>
         <cfinput name="submit" type="image" src="../pics/update.gif">
     
@@ -138,7 +178,17 @@ ORDER BY
 </cfif>
 
 <cfoutput>
-<div align="center"><h2>Outstanding balances as of #DateFormat(now(), 'mm-dd-yyyy')# at #TimeFormat(now(),'h:mm:ss tt')#<br></h2></div>
+
+<div align="center"><h2>Outstanding balances as of 
+
+<cfif form.balanceDate IS "">
+	#DateFormat(now(), 'mm-dd-yyyy')# at #TimeFormat(now(),'h:mm:ss tt')#
+<cfelse>
+	#DateFormat(form.balanceDate, 'mm-dd-yyyy')#
+</cfif>
+
+<br></h2></div>
+
 </cfoutput>
 
 <strong><small>Programs Selected:</small></strong><br/>
@@ -249,12 +299,6 @@ ORDER BY
 
 <cfform method="post" action="m_sendEmailNotification.cfm">
 
-<cfif form.printFormat EQ 0>
-    <div align="center">
-        <cfinput type="image" name="sendEmail" src="../pics/send-email.gif">
-    </div>
-</cfif>
-
 <br/><br/>
 
 <strong><small>RECEIVABLES</small></strong>
@@ -263,6 +307,13 @@ ORDER BY
 <cfif qTotalAgentBalance.recordCount EQ 0>
 	<small>There are not receivables for the selected programs</small>
 <cfelse>
+
+<cfif form.printFormat EQ 0>
+    <div align="center">
+        <cfinput type="image" name="sendEmail" src="../pics/send-email.gif">
+    </div>
+</cfif>
+
 <table class="frame">
 
     <tr class="darkBlue">
@@ -323,7 +374,7 @@ ORDER BY
     
     	<!--- query qProgramBalance returns the balance per agent per program --->
 		<cfscript>
-			qProgramBalance = APPCFC.INVOICE.programBalance(agentId = qTotalAgentBalance.agentId, programChoice = FORM.selectPrograms, companyId = indexCompId);
+			qProgramBalance = APPCFC.INVOICE.programBalance(agentId = qTotalAgentBalance.agentId, programChoice = FORM.selectPrograms, companyId = indexCompId, balanceDate = form.balanceDate);
 		</cfscript>
         
         <cfif qProgramBalance.recordCount NEQ 0>          
@@ -496,7 +547,7 @@ ORDER BY
     
     	<!--- query qProgramBalance returns the balance per agent per program --->
 		<cfscript>
-			qProgramBalance = APPCFC.INVOICE.programBalance(agentId = qTotalAgentRefund.agentId, programChoice = FORM.selectPrograms, companyId = indexCompId);
+			qProgramBalance = APPCFC.INVOICE.programBalance(agentId = qTotalAgentRefund.agentId, programChoice = FORM.selectPrograms, companyId = indexCompId, balanceDate = form.balanceDate);
 		</cfscript>
         
         <cfif qProgramBalance.recordCount NEQ 0>          

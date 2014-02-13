@@ -26,6 +26,8 @@
     <cffunction name="totalAgentBalance" access="public" output="no" returntype="query" hint="Returns the total balance due for each agent">
     	<cfargument name="programChoice" required="yes" hint="List of programs chosen by user">
         <cfargument name="balanceType" default="1" hint="Type 1: returns balances greater than zero. Type 0: returns balances less than zero.">
+        <cfargument name="balanceDate" default="" hint="It is the date of the balance">
+        <cfargument name="userID" default="ALL" hint="Agent ID">
     
         <cfquery name="qGetAgentsReceivable" datasource="MySQL"> 
         SELECT
@@ -46,9 +48,19 @@
             	smg_users su 
             ON 
             	su.userid = sch.agentid
+            WHERE
+            	1=1
 			<cfif ARGUMENTS.programChoice IS NOT 'All'>
-                WHERE 
+                 AND
                     sch.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programChoice#" list="yes"> )
+            </cfif>
+			<cfif ARGUMENTS.balanceDate IS NOT "">
+                 AND
+                    sch.date <= ( <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDateTime(ARGUMENTS.balanceDate)#"> )
+            </cfif>
+			<cfif ARGUMENTS.userID IS NOT 'All'>
+                 AND
+                    sch.agentid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#" list="yes"> )
             </cfif>
             GROUP BY 
             	agentid
@@ -70,11 +82,26 @@
             	smg_users su 
             ON 
             	su.userid = sch.agentid
+            LEFT JOIN 
+            	smg_payment_received spr 
+            ON 
+            	spr.paymentid = spc.paymentid
+            WHERE
+            	1=1
             <cfif ARGUMENTS.programChoice IS NOT 'All'>
-                WHERE 
+                AND 
                     sch.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programChoice#" list="yes"> )
             </cfif>
-            GROUP BY sch.agentid
+			<cfif ARGUMENTS.balanceDate IS NOT "">
+                 AND
+                    spr.date <= ( <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDateTime(ARGUMENTS.balanceDate)#"> )
+            </cfif>
+			<cfif ARGUMENTS.userID IS NOT 'All'>
+                 AND
+                    sch.agentid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#" list="yes"> )
+            </cfif> 
+            GROUP BY 
+            	sch.agentid
             
             <!--- Union 3: smg_credit --->            
             UNION ALL
@@ -102,6 +129,14 @@
                             OR sch.programID IS NULL
                         </cfif>
                     )
+            </cfif>
+			<cfif ARGUMENTS.balanceDate IS NOT "">
+                 AND
+                    sc.date <= ( <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDateTime(ARGUMENTS.balanceDate)#"> )
+            </cfif>
+			<cfif ARGUMENTS.userID IS NOT 'All'>
+                 AND
+                    sc.agentid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#" list="yes"> )
             </cfif>
             GROUP BY 
             	sc.agentid
@@ -131,6 +166,7 @@
     	<cfargument name="agentId" required="yes" hint="Agent ID">
     	<cfargument name="programChoice" required="yes" hint="List of programs chosen by user">
         <cfargument name="companyId" required="yes" hint="Company ID">
+        <cfargument name="balanceDate" default="" hint="It is the date of the balance">
         
         <cfquery name="qGetProgramBalance" datasource="MySQL"> 
         SELECT 
@@ -173,6 +209,10 @@
                 AND
                     sch.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programChoice#" list="yes"> )
             </cfif>
+			<cfif ARGUMENTS.balanceDate IS NOT "">
+                 AND
+                    sch.date <= ( <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDateTime(ARGUMENTS.balanceDate)#"> )
+            </cfif>
             GROUP BY 
             	testCompId 
             HAVING 
@@ -211,11 +251,19 @@
             	smg_users su 
             ON 
             	su.userid = sch.agentid
+            LEFT JOIN 
+            	smg_payment_received spr 
+            ON 
+            	spr.paymentid = spc.paymentid
             WHERE  
             	sch.agentid = #VAL(ARGUMENTS.agentId)#
             <cfif ARGUMENTS.programChoice IS NOT 'All'>
                 AND
                     sch.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programChoice#" list="yes"> )
+            </cfif>
+			<cfif ARGUMENTS.balanceDate IS NOT "">
+                 AND
+                    spr.date <= ( <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDateTime(ARGUMENTS.balanceDate)#"> )
             </cfif>
             GROUP BY 
             	testCompId 
@@ -266,6 +314,10 @@
                             OR sch.programID IS NULL
                         </cfif>
                     )
+            </cfif>
+			<cfif ARGUMENTS.balanceDate IS NOT "">
+                 AND
+                    sc.date <= ( <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDateTime(ARGUMENTS.balanceDate)#"> )
             </cfif>
             GROUP BY 
             	testCompId 
