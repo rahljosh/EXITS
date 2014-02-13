@@ -309,7 +309,7 @@ ORDER BY
 <cfelse>
 
 <cfif form.printFormat EQ 0>
-    <div align="center">
+    <div align="center" style="padding-bottom:30px;">
         <cfinput type="image" name="sendEmail" src="../pics/send-email.gif">
     </div>
 </cfif>
