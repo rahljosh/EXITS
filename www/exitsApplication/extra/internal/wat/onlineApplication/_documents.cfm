@@ -31,7 +31,7 @@
 		
 		// This variable will prevent non-office users from editing and deleting files after the application has been approved.
 		FORM.blockEditDelete = 0;
-		if (qGetCandidateInfo.applicationStatusID EQ 11 AND CLIENT.userType GT 3) {
+		if (qGetCandidateInfo.applicationStatusID EQ 11 AND NOT ListFind("1,2,3",CLIENT.userType)) {
 			FORM.blockEditDelete = 1;
 		}
 	</cfscript>
