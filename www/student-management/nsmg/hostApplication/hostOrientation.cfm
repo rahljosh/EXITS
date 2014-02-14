@@ -132,9 +132,13 @@
 <cfoutput>
 
 	<cfif vDisplayFile>
-    	<div style="text-align:center; margin:auto;">
-        	<img src="../uploadedfiles/hostApp/#FORM.hostID#/docs/#qGetHostOrientation.serverName#.#qGetHostOrientation.serverExt#"/>
-     	</div>
+    	<cfif qGetHostOrientation.serverExt EQ "pdf">
+        	<cflocation url="../uploadedfiles/hostApp/#FORM.hostID#/docs/#qGetHostOrientation.serverName#.#qGetHostOrientation.serverExt#">
+        <cfelse>
+        	<div style="text-align:center; margin:auto;">
+                <img src="../uploadedfiles/hostApp/#FORM.hostID#/docs/#qGetHostOrientation.serverName#.#qGetHostOrientation.serverExt#"/>
+            </div>
+        </cfif>
         <cfabort/>
     </cfif> 
 
