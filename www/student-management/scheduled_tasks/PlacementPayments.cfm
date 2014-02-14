@@ -12,7 +12,7 @@
 
 <cfquery datasource="#APPLICATION.DSN#">
 INSERT INTO smg_users_payments (agentID,companyID,studentID,programID,old_programID,hostID,reportID,
-							paymenttype,transtype,amount,comment,date,inputby,dateCreated,dateUpdated,isPaid)
+						paymenttype,transtype,amount,comment,date,inputby,dateCreated,dateUpdated,isPaid)
 
 SELECT DISTINCT
 	st.placerepID,
@@ -33,12 +33,14 @@ SELECT DISTINCT
 		WHEN pmtrng.fk_paymenttype =  24 AND NOT sppmt.receivesPreAYPBonus THEN 0
 		WHEN pmtrng.fk_paymenttype =  14 AND (sppmt.specialPaymentId IS NULL OR sppmt.receivesStateGuarantee) THEN pmtrng.paymentAmount
 		WHEN pmtrng.fk_paymenttype =  14 AND NOT sppmt.receivesStateGuarantee THEN 0
+		WHEN pmtrng.fk_paymenttype =  23 AND (sppmt.specialPaymentId IS NULL OR sppmt.receivesCEOBonus) THEN pmtrng.paymentAmount
+		WHEN pmtrng.fk_paymenttype =  23 AND NOT sppmt.receivesCEOBonus THEN 0
 		WHEN pmtrng.fk_paymenttype =  25 AND (sppmt.specialPaymentId IS NULL OR sppmt.receivesCEOBonus) THEN pmtrng.paymentAmount
 		WHEN pmtrng.fk_paymenttype =  25 AND NOT sppmt.receivesCEOBonus THEN 0
 		WHEN pmtrng.fk_paymenttype =  35 AND (sppmt.receives12MOSBonus IS NULL OR sppmt.receives12MOSBonus) THEN pmtrng.paymentAmount
 		WHEN pmtrng.fk_paymenttype =  35 AND NOT sppmt.receives12MOSBonus THEN 0
 	END,
-	"Auto-processed",
+	"Auto-processed - ISE",
 	CASE 
 		WHEN DAYOFWEEK(CURDATE()) = 3 THEN DATE_ADD(CURDATE(), INTERVAL 2 DAY)           
 		WHEN DAYOFWEEK(CURDATE()) = 4 THEN DATE_ADD(CURDATE(), INTERVAL 1 DAY)           
@@ -50,8 +52,9 @@ SELECT DISTINCT
 	END,
 	"9999999",
 	CURRENT_DATE,
-	CURRENT_DATE, 
-	1 
+	CURRENT_DATE,
+	1,
+	(pmtrng.fk_paymenttype = 23 AND hh.dateCreated >= pmtrng.paymentStartDate AND hh.dateCreated <= pmtrng.paymentEndDate)
 
 FROM
 	smg_students st
@@ -79,7 +82,8 @@ WHERE
 		)
 	AND st.programID = pmtrng.fk_programID
 	AND (
-		IF	(
+			(ds2019_no IS NULL or ds2019_no = "") 
+			OR IF (
 			(SELECT MAX(dep_date) FROM smg_flight_info flt WHERE st.studentID = flt.studentID) IS NOT NULL, 
 			(SELECT MAX(dep_date) FROM smg_flight_info flt WHERE st.studentID = flt.studentID) < CURRENT_DATE,
 			(SELECT MAX(start_date) FROM smg_sevis_history sev where st.studentID = sev.studentID) < CURRENT_DATE
@@ -97,6 +101,7 @@ WHERE
 					hh.datePISEmailed >= pmtrng.paymentStartDate AND hh.datePISEmailed <= pmtrng.paymentEndDate)
 					OR (st.aypEnglish > 0 AND st.intrep = 11878 AND pmtrng.fk_paymentType = 24 AND hh.datePISEmailed <= pmtrng.paymentEndDate)
 					OR (states.state = hst.state and pmtrng.fk_paymentType = 14)
+					OR (pmtrng.fk_paymenttype = 23 AND hh.dateCreated >= pmtrng.paymentStartDate AND hh.dateCreated <= pmtrng.paymentEndDate)
 					OR (pmtrng.fk_paymenttype = 25 AND hh.dateCreated >= pmtrng.paymentStartDate AND hh.dateCreated <= pmtrng.paymentEndDate)
 					OR (pmtrng.fk_paymenttype = 35 AND hh.dateCreated >= pmtrng.paymentStartDate AND hh.dateCreated <= pmtrng.paymentEndDate)
 				)
