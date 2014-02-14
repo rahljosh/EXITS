@@ -406,12 +406,24 @@
     	<cfargument name="hostID" required="yes">
         <cfargument name="seasonID" default="0" required="no">
         
+        <!--- Checks if the host has a previous app, only application --->
+        <cfquery name="qGetPreviousHostApp" datasource="#APPLICATION.DSN#">
+        	SELECT *
+            FROM smg_host_app_season
+            WHERE seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.seasonID - 1#">
+            AND hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#">
+        </cfquery>
+        
         <cfquery name="qGetStudents" datasource="#APPLICATION.DSN#">
             SELECT *
             FROM smg_students
             WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
             <cfif VAL(ARGUMENTS.seasonID)>
-            	AND programID IN (SELECT programID FROM smg_programs WHERE seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.seasonID#">)
+            	<cfif NOT VAL(qGetPreviousHostApp.recordCount)>
+                	AND programID IN (SELECT programID FROM smg_programs WHERE seasonID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.seasonID#,#ARGUMENTS.seasonID - 1#" list="yes">) )
+                <cfelse>
+            		AND programID IN (SELECT programID FROM smg_programs WHERE seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.seasonID#">)
+              	</cfif>
             </cfif>
             AND active = 1
             ORDER BY familylastname

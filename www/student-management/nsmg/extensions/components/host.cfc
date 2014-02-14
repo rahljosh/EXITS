@@ -1375,7 +1375,16 @@
 			if ( NOT ListFind("ASC,DESC", ARGUMENTS.sortOrder ) ) {
 				ARGUMENTS.sortOrder = 'ASC';			  
 			}
+			vPreviousSeasonID = ARGUMENTS.seasonID - 1;
 		</cfscript>
+        
+        <!--- Checks if the host has a previous app, only application --->
+        <cfquery name="qGetPreviousHostApp" datasource="#APPLICATION.DSN#">
+        	SELECT *
+            FROM smg_host_app_season
+            WHERE seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#vPreviousSeasonID#">
+            AND hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#">
+        </cfquery>
        
         <cfquery 
 			name="qGetApplicationApprovalHistory" 
@@ -1459,8 +1468,12 @@
                     s.studentID  
                 FROM smg_host_app_section ap
                 INNER JOIN smg_students s ON s.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
-                     AND s.active = 1
-                     AND s.programID IN (SELECT programID FROM smg_programs WHERE seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.seasonID#">)
+                     AND s.active = 1 
+                     <cfif NOT VAL(qGetPreviousHostApp.recordCount)>
+                        AND programID IN (SELECT programID FROM smg_programs WHERE seasonID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.seasonID#,#vPreviousSeasonID#" list="yes">) )
+                    <cfelse>
+                        AND programID IN (SELECT programID FROM smg_programs WHERE seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.seasonID#">)
+                    </cfif>
              	LEFT OUTER JOIN smg_host_app_history h ON h.itemID = ap.ID                  
                     AND h.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
                     AND h.seasonID = 10
