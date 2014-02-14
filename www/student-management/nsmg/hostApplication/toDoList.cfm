@@ -760,10 +760,14 @@
                                     
                               	<!--- Host Family Orientation --->
                               	<cfelseif qGetApprovalHistory.ID EQ 19>
-                                    <cfif NOT qGetHostFamilyOrientation.recordCount> 
-                                        <a href="hostApplication/hostOrientation.cfm?hostID=#qGetHostInfo.hostID#&seasonID=#vSelectedSeason#" class="jQueryModalRefresh" style="display:block;">
-                                            [ Upload Host Orientation ]
-                                        </a>
+                                    <cfif NOT qGetHostFamilyOrientation.recordCount>
+                                    	<cfif qGetHostInfo.applicationStatusID GTE 4>
+                                        	This section can be uploaded after the application has been approved by Headquarters.
+                                        <cfelse>
+                                            <a href="hostApplication/hostOrientation.cfm?hostID=#qGetHostInfo.hostID#&seasonID=#vSelectedSeason#" class="jQueryModalRefresh" style="display:block;">
+                                                [ Upload Host Orientation ]
+                                            </a>
+                                       	</cfif>
                                     <cfelse>
                                         <a href="hostApplication/hostOrientation.cfm?hostID=#qGetHostInfo.hostID#&seasonID=#vSelectedSeason#&view=1" class="jQueryModalRefresh" style="display:block;">
                                             [ View Host Orientation ]
