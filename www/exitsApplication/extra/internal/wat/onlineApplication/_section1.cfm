@@ -378,7 +378,7 @@
 <cfoutput>
 
 <!--- Application Body --->
-<div class="form-container">
+<div class="form-container" style="margin:0px; padding:0px;">
   
   	<!--- Only Display Messages if Current tab is updated --->
   	<cfif currentTabID EQ 0>

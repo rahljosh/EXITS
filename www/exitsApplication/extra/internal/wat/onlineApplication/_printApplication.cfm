@@ -44,7 +44,10 @@
 
 		// Make sure they are not going to process any updates
 		FORM.submittedType = '';
-		FORM.submitted = 0;		
+		FORM.submitted = 0;	
+		
+		// Check if there is an English Assessment uploaded
+		qGetEnglishAssessment = APPLICATION.CFC.DOCUMENT.getDocuments(foreignTable=APPLICATION.foreignTable, foreignID=qGetCandidateInfo.candidateID, documentType="English Assessment");
 	</cfscript>
     
 </cfsilent>
@@ -127,14 +130,17 @@
                             <cfinclude template="_section2.cfm">
                         </div>
                 	</cfif>
-                
-                        <!--- Page Break --->
-                        <cfdocumentitem type="pagebreak"></cfdocumentitem>
-                
-                        <!--- Section 3 --->
-                        <div class="printWrapper">
-                            <cfinclude template="_section3.cfm">
-                        </div>
+                		
+                        <!--- Only display this page if the document has not been uploaded --->
+                        <cfif NOT VAL(qGetEnglishAssessment.recordCount)>
+							<!--- Page Break --->
+                            <cfdocumentitem type="pagebreak"></cfdocumentitem>
+                    
+                            <!--- Section 3 --->
+                            <div class="printWrapper">
+                                <cfinclude template="_section3.cfm">
+                            </div>
+                      	</cfif>
                     
                 </cfdefaultcase>
             

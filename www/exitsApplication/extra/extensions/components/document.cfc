@@ -384,7 +384,8 @@
     <!--- Function to get a document list for a candidate --->
 	<cffunction name="getDocuments" access="public" returntype="query" output="false" hint="Returns a list of documents">
     	<cfargument name="foreignTable" required="yes" hint="Foreign Table Name">
-        <cfargument name="foreignID" required="yes" hint="Foreign ID">        
+        <cfargument name="foreignID" required="yes" hint="Foreign ID">
+        <cfargument name="documentType" required="no" default="">      
 
         <cfquery 
 			name="qGetDocuments" 
@@ -406,7 +407,11 @@
                 AND    
                     foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.foreignTable#">
 				AND
-                	foreignID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.foreignID#">  
+                	foreignID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.foreignID#"> 
+               	<cfif LEN(ARGUMENTS.documentType)>
+                	AND
+                    	dt.name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.documentType#">
+                </cfif>
                 ORDER BY
                     d.dateCreated DESC     
 		</cfquery>
