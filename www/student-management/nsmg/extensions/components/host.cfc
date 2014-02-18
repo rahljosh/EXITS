@@ -2857,10 +2857,10 @@
                 
                 AND
                     (
-                    	<!--- Get New Host Leads | 3 = Not Interested | 8 = Committed to Host | 9 - Interested in Hosting in the Future --->
+                    	<!--- Get New Host Leads | 3 = Not Interested | 8 = Committed to Host | 9 - Interested in Hosting in the Future | 10 - Not Qualified to Host --->
                     	hl.dateUpdated >= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#ARGUMENTS.lastLogin#">
 					 AND
-                     	hl.statusID NOT IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="3,8,9" list="yes"> )
+                     	hl.statusID NOT IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="3,8,9,10" list="yes"> )
 
                      OR
                      	<!--- Get Host Leads That do not have a final disposition --->
@@ -2870,7 +2870,7 @@
                             FROM
                             	smg_host_lead
                             WHERE	
-                            	statusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="3,8" list="yes"> )
+                            	statusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="3,8,10" list="yes"> )
                         )
                      
                      )
