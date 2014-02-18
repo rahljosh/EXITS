@@ -164,7 +164,7 @@
             <cfset safeAddress2 = ReplaceNoCase(qGetStudents.schooladdress2, "&", "and")>
         </cfsilent>
         <ExchangeVisitor sevisID="#qGetStudents.ds2019_no#" requestID="#qGetStudents.studentid#" userID="#qGetCompany.sevis_userid#">
-			<SiteOfActivity>
+			<SiteOfActivity xsi:type="SOA">
 				<Edit printForm="false">
 					<Address1>#safeAddress1#</Address1> 
 					<cfif NOT LEN(safeAddress2)><Address2>#safeAddress2#</Address2></cfif>
