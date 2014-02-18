@@ -23,7 +23,7 @@
 
 	<!--- Import CustomTag --->
     <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
-
+	
 	<cfscript>
 		// Param URL Variables
 		param name="URL.Key" type="string" default=0;	
@@ -44,7 +44,7 @@
 		param name="FORM.comments" default='';
 		param name="familyFound" default=1;
 		param name="displayForm" default=1;
-	
+		param name="form.hostid" default=0;
 		/* 
 			Check to see if passed key is the correct hash for the record. 
 			This will stop people from tampering with the URLs.
@@ -64,6 +64,10 @@
 		// Get List of Status
 		qGetStatus = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='hostLeadStatus');
 		
+		//get status of app, if they have started filling it out.
+		//this will only apply if they app was started from the host lead page.
+		
+		
 		// Get History
 		qGetHostLeadHistory = APPLICATION.CFC.LOOKUPTABLES.getApplicationHistory(
 			applicationID=APPLICATION.CONSTANTS.type.hostFamilyLead,
@@ -76,7 +80,7 @@
 		
 		// FORM SUBMITTED
 		if ( FORM.submitted ) {
-			
+			 
 			// Host Lead User is able to enter a comment only
 			if ( CLIENT.userType NEQ 26 ) {
 			
@@ -154,6 +158,14 @@
 
 <cfoutput>
 
+<Cfif val(qGetHostLead.hostid)>
+    <cfquery name=qGetHostInfo datasource="#application.dsn#">
+    select applicationSent
+	from smg_hosts
+	where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostLead.hostid#">
+    </cfquery>
+</Cfif>
+
 	<!--- Page Header --->
     <gui:pageHeader
         headerType="applicationNoHeader"
@@ -195,7 +207,88 @@
 				}
 			}
         </script>
-		
+		<cfif isDefined('url.startApp')>
+          <!--- Check for duplicate accounts --->
+		<cfif isValid("email", qGetHostLead.email)>
+        
+        	<cfscript>
+				
+				qCheckEmail = APPLICATION.CFC.host.checkHostEmail(email=qGetHostLead.email,companyID=CLIENT.companyID);
+				
+                // Check for email address. 
+                if ( qCheckEmail.recordCount ) {
+                    //Get all the missing items in a list
+                    SESSION.formErrors.Add("There is already an account using the same email address, please refer to host family ID ###qCheckEmail.hostID#");
+                }
+            </cfscript>
+
+        </cfif>
+        <cfif NOT SESSION.formErrors.length()>
+		 <cfquery result="newRecord" datasource="#APPLICATION.DSN#">
+                    INSERT INTO 
+                        smg_hosts 
+                    (
+                        uniqueID,
+                        familyLastName, 
+                        fatherLastName, 
+                        fatherFirstName, 
+                        address, 
+                        address2, 
+                        city, 
+                        state, 
+                        zip, 
+                        phone, 
+                        email, 
+                        password,
+                        companyID, 
+                        regionid,
+                        <!--- Create Online Application ---> 
+                        
+                            HostAppStatus,
+                            applicationSent
+                    )
+                    VALUES 
+                    (
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#CreateUUID()#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(qGetHostLead.lastname)#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(qGetHostLead.lastName)#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(qGetHostLead.firstName)#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetHostLead.address#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetHostLead.address2#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetHostLead.city#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetHostLead.state#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetHostLead.zipCode#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetHostLead.phone#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetHostLead.email#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetHostLead.password#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostLead.companyID#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionid#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="9">,
+                        <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+                    )  
+                </cfquery>
+				<!----Insert Host ID into HostLead Table, so we know the app has been sent---->
+                <Cfquery datasource="#APPLICATION.DSN#">
+                update smg_host_lead
+       				set hostid = #form.hostID#
+                </Cfquery>
+                <cfscript>
+                    // Set new host company ID
+                    FORM.hostID = newRecord.GENERATED_KEY;
+					  // Email Host Family - Welcome Email
+                    stSubmitApplication = APPLICATION.CFC.HOST.submitApplication(hostID=FORM.hostID,action="newApplication");
+					
+					// Set Page Message
+					SESSION.pageMessages.Add("Host App Email Sent.");
+				</cfscript>
+                
+                <script language="javascript">
+                // Close Window After 1.5 Seconds
+                setTimeout(function() { parent.$.fn.colorbox.close(); }, 1500);
+            </script>
+            </cfif>
+		</cfif>
+        
         <cfif VAL(FORM.submitted) AND NOT SESSION.formErrors.length()>
         
 			<script language="javascript">
@@ -270,6 +363,22 @@
                                     <th align="right" style="padding-bottom:5px;">Date Submitted:</th>
                                     <td style="padding-bottom:5px;">#DateFormat(qGetHostLead.dateCreated, 'mm/dd/yyyy')# #TimeFormat(qGetHostLead.dateCreated, 'hh:mm:tt')# EST</td>
                                 </tr>
+                                
+                              
+                                <tr>
+                                    <th align="right" style="padding-bottom:5px;">Application:</th>
+                                    <td style="padding-bottom:5px;">
+                                  
+                                    <cfif not val(#qGetHostLead.companyID#)>
+                                    	Assign Company before sending
+                                    <cfelseif val(#qGetHostLead.hostid#)>
+                                  
+                                   	 #DateFormat(qGetHostInfo.applicationSent, 'mm/dd/yyyy')# @ #TimeFormat(qGetHostInfo.applicationSent, 'h:mm')#
+                                    <cfelse>
+                                    <a href="_detail.cfm?#CGI.QUERY_STRING#&startApp">Send Host App</a></td>
+                                	</cfif>
+                                </tr>
+                              
                             </table>   
                                 
                         </td>
@@ -301,10 +410,7 @@
                                         </cfif>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <th align="right">Joined Mailing List:</th>
-                                    <td>#YesNoFormat(qGetHostLead.isListSubscriber)#</td>
-                                </tr>
+                                
                                 <tr>
                                     <th align="right" style="padding-bottom:5px;">Last Updated:</th>
                                     <td style="padding-bottom:5px;">#DateFormat(qGetHostLead.dateUpdated, 'mm/dd/yyyy')# #TimeFormat(qGetHostLead.dateUpdated, 'hh:mm:tt')# EST</td>
@@ -313,6 +419,12 @@
                                     <th align="right" style="padding-bottom:5px;">Last Login:</th>
                                     <td style="padding-bottom:5px;">#DateFormat(qGetHostLead.dateLastLoggedIn, 'mm/dd/yyyy')# #TimeFormat(qGetHostLead.dateLastLoggedIn, 'hh:mm:tt')# EST</td>
                                 </tr>
+                                <cfif val(#qGetHostLead.hostID#)>
+                                <tr>
+                                    <th align="right">Host ID:</th>
+                                    <td><a href="../index.cfm?curdoc=host_fam_info&amp;hostid=#qGetHostLead.hostID#" target="_top">#qGetHostLead.hostID#</a></td>
+                                </tr>
+                                </cfif>
                             </table>    
                                                     
                         </td>
