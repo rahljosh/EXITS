@@ -369,7 +369,7 @@
             </OtherFunds>
         </FinancialInfo>
         <AddSiteOfActivity>
-            <SiteOfActivity>#TRIM(vSiteOfActivity)#</SiteOfActivity>
+            <SiteOfActivity xsi:type="SOA">#TRIM(vSiteOfActivity)#</SiteOfActivity>
         </AddSiteOfActivity>
         <cfif VAL(vSetHostID)> <!--- Residential Address Information --->
         	#oSevis.getResidentialAddressInformation(
