@@ -224,7 +224,7 @@
 						APPLICATION.CFC.CBC.insertHostCBC(
 							hostID=qGetHostFamilyInfo.hostID,
 							cbcType="father",
-							seasonID=10, // Hard coded to AYP 13/14 - Needs to be changed
+							seasonID=APPLICATION.CFC.SESSION.getHostSession().seasonID,
 							companyID=qGetHostFamilyInfo.companyID,
 							isNoSSN=vIsNoSSN,
 							dateAuthorized=NOW());
@@ -265,7 +265,7 @@
 						APPLICATION.CFC.CBC.insertHostCBC(
 							hostID=qGetHostFamilyInfo.hostID,
 							cbcType="mother",
-							seasonID=10, // Hard coded to AYP 13/14 - Needs to be changed
+							seasonID=APPLICATION.CFC.SESSION.getHostSession().seasonID,
 							companyID=qGetHostFamilyInfo.companyID,
 							isNoSSN=vIsNoSSN,
 							dateAuthorized=NOW());
@@ -309,7 +309,7 @@
 								hostID=qGetHostFamilyInfo.hostID,
 								cbcType="member",
 								familyMemberID=qGetCBCQualifiedMembers.childID[i],
-								seasonID=10, // Hard coded to AYP 13/14 - Needs to be changed
+								seasonID=APPLICATION.CFC.SESSION.getHostSession().seasonID,
 								companyID=qGetHostFamilyInfo.companyID,
 								isNoSSN=vIsNoSSN,
 								dateAuthorized=NOW());
@@ -684,7 +684,7 @@
                 <table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
                     <tr>
                         <td align="right">
-                            <input name="Submit" type="image" src="images/buttons/BlkSubmit.png" border="0">
+                            <input name="Submit" type="image" src="images/buttons/BlkSubmit.png" border="0" onClick="this.form.submit(); this.disabled=true;">
                         </td>
                     </tr>
                 </table>
