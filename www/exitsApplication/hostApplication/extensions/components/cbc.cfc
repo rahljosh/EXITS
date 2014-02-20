@@ -72,7 +72,7 @@
                     AND
                     	cbc_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.cbcType#">
                    	AND
-                    	cbcfamid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.familyMemberID)#">
+                    	familyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.familyMemberID)#">
             </cfquery>
             	
 			<cfif NOT qCheckPending.recordCount>
