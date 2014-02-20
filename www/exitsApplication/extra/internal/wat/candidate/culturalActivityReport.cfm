@@ -40,8 +40,11 @@
 		qGetPlacementInformation = APPLICATION.CFC.CANDIDATE.getCandidatePlacementInformation(candidateID=qGetCandidateInfo.candidateID);
 		
 		// Get Cultural Activity Information
-		qGetCulturalActivityInfo = APPLICATION.CFC.CANDIDATE.getCulturalActivityReport(activityID=FORM.activityID, candidateID=qGetCandidateInfo.candidateID);
+		qGetCulturalActivityInfo = APPLICATION.CFC.CANDIDATE.getCulturalActivityReport(activityID=FORM.activityID,candidateID=qGetCandidateInfo.candidateID);
     
+		// Get All Cultural Activity Information
+		qGetAllCulturalActivityInfo = APPLICATION.CFC.CANDIDATE.getCulturalActivityReport(candidateID=qGetCandidateInfo.candidateID);
+		
     	// FORM Submitted
 		if ( FORM.submitted ) {
 			
@@ -83,21 +86,21 @@
 
 </cfsilent>
 
+<cfif VAL(FORM.submitted) AND NOT SESSION.formErrors.length()>
+        
+	<script type="text/javascript">
+        // Reload Window After 1.5 Seconds
+        setTimeout(function() { window.location.reload(); }, 1500);
+    </script>
+
+</cfif>
+
 <cfoutput>
 
 	<!--- Page Header --->
     <gui:pageHeader
         headerType="extraNoHeader"
     />
-    
-        <cfif VAL(FORM.submitted) AND NOT SESSION.formErrors.length()>
-        
-            <script language="javascript">
-                // Close Window After 1.5 Seconds
-                setTimeout(function() { parent.$.fn.colorbox.close(); }, 1500);
-            </script>
-        
-        </cfif>
     
         <table width="100%" border="1" align="center" cellpadding="0" cellspacing="0" style="border-color:##CCCCCC; background-color:##f4f4f4; margin-bottom:10px;">
             <tr>
@@ -150,7 +153,21 @@
                                 </td>
                             </tr>                            
                         </table>
-                    </form>    
+                    </form> 
+                    
+                    <!--- List of cultural activities --->
+                    <table width="97%" cellpadding="3" cellspacing="0" align="center" style="padding:5px; background-color:##FFFFFF; border:1px solid ##C7CFDC; padding-bottom:10px; margin-bottom:10px;">
+                        <tr style="background-color:##E4E4E4; font-weight:bold;">
+                        	<td width="15%">Date</td>
+                            <td>Details</td>
+                        </tr>
+                        <cfloop query="qGetAllCulturalActivityInfo">
+                            <tr>
+                            	<td>#DateFormat(dateActivity,'mm/dd/yyyy')#</td>
+                                <td>#details#</td>
+                            </tr>
+                        </cfloop>
+                  	</table> 
                         
                 </td>
             </tr>
