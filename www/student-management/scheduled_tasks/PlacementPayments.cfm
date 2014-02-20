@@ -40,7 +40,7 @@ SELECT DISTINCT
 		WHEN pmtrng.fk_paymenttype =  35 AND (sppmt.receives12MOSBonus IS NULL OR sppmt.receives12MOSBonus) THEN pmtrng.paymentAmount
 		WHEN pmtrng.fk_paymenttype =  35 AND NOT sppmt.receives12MOSBonus THEN 0
 	END,
-	"Auto-processed - ISE",
+	"Auto-processed - ISE", 
 	CASE 
 		WHEN DAYOFWEEK(CURDATE()) = 3 THEN DATE_ADD(CURDATE(), INTERVAL 2 DAY)           
 		WHEN DAYOFWEEK(CURDATE()) = 4 THEN DATE_ADD(CURDATE(), INTERVAL 1 DAY)           
@@ -87,7 +87,7 @@ WHERE
 			(SELECT MAX(dep_date) FROM smg_flight_info flt WHERE st.studentID = flt.studentID) IS NOT NULL, 
 			(SELECT MAX(dep_date) FROM smg_flight_info flt WHERE st.studentID = flt.studentID) > hh.dateCreated,
 			(SELECT MAX(start_date) FROM smg_sevis_history sev where st.studentID = sev.studentID) > hh.dateCreated
-			) #if
+			)
 		)	
 	AND
 		(
@@ -107,5 +107,4 @@ WHERE
 				)
 			)
 		)
-		
 </cfquery>
