@@ -61,18 +61,13 @@
             <cfquery 
             	name="qCheckPending" 
             	datasource="#APPLICATION.DSN.Source#">
-					SELECT
-                    	hostID
-                    FROM
-                    	smg_hosts_cbc
-                    WHERE
-                    	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#">	
-            		AND
-                    	date_sent IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
-                    AND
-                    	cbc_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.cbcType#">
-                   	AND
-                    	familyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.familyMemberID)#">
+					SELECT hostID
+                    FROM smg_hosts_cbc
+                    WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#">	
+            		AND ( date_sent IS NULL OR date_expired >= CURRENT_DATE())
+                    AND cbc_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.cbcType#">
+                   	AND familyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.familyMemberID)#">
+                    AND seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.seasonID#">
             </cfquery>
             	
 			<cfif NOT qCheckPending.recordCount>
