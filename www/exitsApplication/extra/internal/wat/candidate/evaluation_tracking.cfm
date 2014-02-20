@@ -27,18 +27,13 @@
     
     <cfif VAL(FORM.submitted)>
     	<cfif FORM.action EQ "add">
-        	<cfquery datasource="#APPLICATION.DSN.Source#">
-            	INSERT INTO extra_evaluation_tracking (
-                	candidateID,
-                    evaluationNumber,
-                    date,
-                    comment )
-               	VALUES (
-                	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCandidate.candidateID)#">,
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.id)#">,
-                    <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.date#">,
-                    <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#FORM.comment#"> )
-            </cfquery>
+        	<cfscript>
+				APPLICATION.CFC.CANDIDATE.setEvaluationTracking(
+					candidateID=VAL(qGetCandidate.candidateID),
+					evaluationNumber=VAL(URL.id),
+					date=FORM.date,
+					comment=FORM.comment);
+			</cfscript>
         <cfelseif FORM.action EQ "delete">
         	<cfquery datasource="#APPLICATION.DSN.Source#">
             	DELETE FROM extra_evaluation_tracking

@@ -2287,4 +2287,24 @@
 		End of Remote Functions 
 	----- ------------------------------------------------------------------------- --->
 
+	<cffunction name="setEvaluationTracking" access="public" returntype="void" output="no">
+    	<cfargument name="candidateID" type="numeric" required="yes">
+        <cfargument name="evaluationNumber" type="numeric" required="yes">
+        <cfargument name="date" default="#NOW()#" required="no">
+        <cfargument name="comment" default="" required="no">
+        
+        <cfquery datasource="#APPLICATION.DSN.Source#">
+            INSERT INTO extra_evaluation_tracking (
+                candidateID,
+                evaluationNumber,
+                date,
+                comment )
+            VALUES (
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.evaluationNumber)#">,
+                <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.date#">,
+                <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#ARGUMENTS.comment#"> )
+        </cfquery>
+    </cffunction>
+
 </cfcomponent>
