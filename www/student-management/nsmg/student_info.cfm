@@ -584,7 +584,7 @@
 										<cfif randid NEQ 0>
 										<tr>
 											<td align="center">
-											<cfif APPLICATION.CFC.USER.isOfficeUser()>
+											<cfif APPLICATION.CFC.USER.isOfficeUser() OR CLIENT.userType EQ 5>
 												<a href="javascript:OpenApp('student_app/index.cfm?curdoc=section1&unqid=#uniqueid#&id=1');"><img src="pics/exits.jpg" border="0"></a>
 											<cfelse>
                                             	<!--- Print Version --->

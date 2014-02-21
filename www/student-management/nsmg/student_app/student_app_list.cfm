@@ -415,7 +415,7 @@
 		</table>
 
 <!--- Intl. Reps, Branches users OR Office Users when status not Submitted AND not Received --->
-<cfelseif CLIENT.usertype GTE 5 OR (URL.status NEQ 7 AND URL.status NEQ 8)>
+<cfelseif CLIENT.usertype GTE 6 OR (URL.status NEQ 7 AND URL.status NEQ 8)>
 	
 	<cfoutput>    
 
@@ -552,7 +552,7 @@
 	</table>
     
 <!--- SMG OFFICE - NEEDS TO BE PRINTED - STATUS RECEIVED = 7 --->
-<cfelseif CLIENT.usertype LTE 4 AND URL.status EQ 7>
+<cfelseif CLIENT.usertype LTE 5 AND URL.status EQ 7>
 	
 	<cfoutput>
 
