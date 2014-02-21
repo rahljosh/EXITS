@@ -44,9 +44,9 @@
 		AND ec.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                       
 		AND ec.applicationStatusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,11" list="yes"> )
 		AND (
-        	CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 19 DAY)
-            OR ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 25 DAY) AND watDateEvaluation1 IS NULL )
-            OR ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 30 DAY) AND watDateEvaluation1 IS NULL ) )
+        	CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 20 DAY)
+            OR ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 26 DAY) AND watDateEvaluation1 IS NULL )
+            OR ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 31 DAY) AND watDateEvaluation1 IS NULL ) )
         ORDER BY
 			ec.lastName,
 			ec.firstName 
@@ -83,9 +83,9 @@
 		AND ec.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                       
 		AND ec.applicationStatusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,11" list="yes"> )
 		AND (
-        	CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 49 DAY)
-			OR ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 55 DAY) AND watDateEvaluation2 IS NULL )
-			OR ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 60 DAY) AND watDateEvaluation2 IS NULL ) )
+        	CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 50 DAY)
+			OR ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 56 DAY) AND watDateEvaluation2 IS NULL )
+			OR ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 61 DAY) AND watDateEvaluation2 IS NULL ) )
         ORDER BY
 			ec.lastName,
 			ec.firstName
@@ -122,9 +122,9 @@
 		AND ec.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                       
 		AND ec.applicationStatusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,11" list="yes"> )
 		AND (
-        	CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 79 DAY)
-			OR ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 85 DAY) AND watDateEvaluation3 IS NULL )
-			OR ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 90 DAY) AND watDateEvaluation3 IS NULL ) )
+        	CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 80 DAY)
+			OR ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 86 DAY) AND watDateEvaluation3 IS NULL )
+			OR ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 91 DAY) AND watDateEvaluation3 IS NULL ) )
         ORDER BY
 			ec.lastName,
 			ec.firstName
@@ -161,9 +161,9 @@
 		AND ec.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                       
 		AND ec.applicationStatusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,11" list="yes"> )
 		AND (
-        	CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 119 DAY)
-			OR ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 115 DAY) AND watDateEvaluation4 IS NULL )
-			OR ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 120 DAY) AND watDateEvaluation4 IS NULL ) )
+        	CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 120 DAY)
+			OR ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 116 DAY) AND watDateEvaluation4 IS NULL )
+			OR ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 121 DAY) AND watDateEvaluation4 IS NULL ) )
         ORDER BY
 			ec.lastName,
 			ec.firstName
@@ -200,7 +200,7 @@
 		AND ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
 		AND ec.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                       
 		AND ec.applicationStatusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,11" list="yes"> )
-		AND ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 29 DAY) AND watDateEvaluation1 IS NULL )
+		AND ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 30 DAY) AND watDateEvaluation1 IS NULL )
         ORDER BY
 			ec.lastName,
 			ec.firstName
@@ -236,7 +236,7 @@
 		AND ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
 		AND ec.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                       
 		AND ec.applicationStatusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,11" list="yes"> )
-		AND ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 59 DAY) AND watDateEvaluation2 IS NULL )
+		AND ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 60 DAY) AND watDateEvaluation2 IS NULL )
         ORDER BY
 			ec.lastName,
 			ec.firstName
@@ -272,7 +272,7 @@
 		AND ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
 		AND ec.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                       
 		AND ec.applicationStatusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,11" list="yes"> )
-		AND ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 89 DAY) AND watDateEvaluation3 IS NULL )
+		AND ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 90 DAY) AND watDateEvaluation3 IS NULL )
         ORDER BY
 			ec.lastName,
 			ec.firstName
@@ -308,7 +308,7 @@
 		AND ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
 		AND ec.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                       
 		AND ec.applicationStatusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,11" list="yes"> )
-		AND ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 109 DAY) AND watDateEvaluation4 IS NULL )
+		AND ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 120 DAY) AND watDateEvaluation4 IS NULL )
         ORDER BY
 			ec.lastName,
 			ec.firstName
@@ -357,7 +357,7 @@
     </p>
     
     <p>
-    	This is your reminder  to  take the evaluation {evaluationID} immediately or contact CSB by email or phone in regards to your current program status.  
+    	This is your reminder  to  take the evaluation {evaluationID2} immediately or contact CSB by email or phone in regards to your current program status.  
         For your convenience,  the evaluation email was resent. Please remember to always check your Spam/Junk folders.
     </p>
    
@@ -471,6 +471,7 @@
 		vCandidateName = qEvaluation1Reminder.firstName[i] & " " & qEvaluation1Reminder.middleName[i] & " " & qEvaluation1Reminder.lastName[i];
 		vEvaluationEmailBody = ReplaceNoCase(vReminderBody, "{candidateName}", vCandidateName);
 		vEvaluationEmailBody = ReplaceNoCase(vEvaluationEmailBody, "{evaluationID}", 1);
+		vEvaluationEmailBody = ReplaceNoCase(vEvaluationEmailBody, "{evaluationID2}", 1);
 
 		if ( IsValid("email", qEvaluation1Reminder.email[i]) ) {
 			APPLICATION.CFC.EMAIL.sendEmail(
@@ -497,6 +498,7 @@
 		vCandidateName = qEvaluation2Reminder.firstName[i] & " " & qEvaluation2Reminder.middleName[i] & " " & qEvaluation2Reminder.lastName[i];
 		vEvaluationEmailBody = ReplaceNoCase(vReminderBody, "{candidateName}", vCandidateName);
 		vEvaluationEmailBody = ReplaceNoCase(vEvaluationEmailBody, "{evaluationID}", 2);
+		vEvaluationEmailBody = ReplaceNoCase(vEvaluationEmailBody, "{evaluationID2}", 2);
 
 		if ( IsValid("email", qEvaluation2Reminder.email[i]) ) {
 			APPLICATION.CFC.EMAIL.sendEmail(
@@ -523,6 +525,7 @@
 		vCandidateName = qEvaluation3Reminder.firstName[i] & " " & qEvaluation3Reminder.middleName[i] & " " & qEvaluation3Reminder.lastName[i];
 		vEvaluationEmailBody = ReplaceNoCase(vReminderBody, "{candidateName}", vCandidateName);
 		vEvaluationEmailBody = ReplaceNoCase(vEvaluationEmailBody, "{evaluationID}", 3);
+		vEvaluationEmailBody = ReplaceNoCase(vEvaluationEmailBody, "{evaluationID2}", 3);
 
 		if ( IsValid("email", qEvaluation3Reminder.email[i]) ) {
 			APPLICATION.CFC.EMAIL.sendEmail(
@@ -549,6 +552,7 @@
 		vCandidateName = qEvaluation4Reminder.firstName[i] & " " & qEvaluation4Reminder.middleName[i] & " " & qEvaluation4Reminder.lastName[i];
 		vEvaluationEmailBody = ReplaceNoCase(vReminderBody, "{candidateName}", vCandidateName);
 		vEvaluationEmailBody = ReplaceNoCase(vEvaluationEmailBody, "{evaluationID}", 4);
+		vEvaluationEmailBody = ReplaceNoCase(vEvaluationEmailBody, "{evaluationID2}", 4);
 
 		if ( IsValid("email", qEvaluation4Reminder.email[i]) ) {
 			APPLICATION.CFC.EMAIL.sendEmail(
