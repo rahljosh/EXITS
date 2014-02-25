@@ -777,12 +777,12 @@
 							  	<!--- School Acceptance --->
                               	<cfelseif qGetApprovalHistory.ID EQ 15>
                                     <cfif NOT qGetSchoolAcceptance.recordCount>
-                                        <a href="hostApplication/virtualFolderDocuments.cfm?studentID=#studentID#&documentType=47" title="Click to view item" class="jQueryModalRefresh" style="display:block;">
+                                        <a href="hostApplication/virtualFolderDocuments.cfm?studentID=#studentID#&hostID=#qGetHostInfo.hostID#&documentType=47" title="Click to view item" class="jQueryModalRefresh" style="display:block;">
                                         	[ Upload School Acceptance Letter ]
                                      	</a>
                                     <!--- Print View Default --->
                                     <cfelse>
-                                        <a href="hostApplication/virtualFolderDocuments.cfm?studentID=#studentID#&documentType=47&view=1" class="jQueryModalRefresh" style="display:block;">
+                                        <a href="hostApplication/virtualFolderDocuments.cfm?studentID=#studentID#&hostID=#qGetHostInfo.hostID#&documentType=47&view=1" class="jQueryModalRefresh" style="display:block;">
                                         	[ View School Acceptance Letter ]
                                       	</a>
                                     </cfif>
