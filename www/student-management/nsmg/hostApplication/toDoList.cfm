@@ -651,7 +651,8 @@
 									
 									qGetSchoolAcceptance = APPLICATION.CFC.UDF.getVirtualFolderDocuments(
 										documentType=47,
-										studentID=vCurrentStudent			
+										studentID=vCurrentStudent,
+										hostID=FORM.hostID
 									);
 									
 									qGetStudentOrientation = APPLICATION.CFC.UDF.getVirtualFolderDocuments(
