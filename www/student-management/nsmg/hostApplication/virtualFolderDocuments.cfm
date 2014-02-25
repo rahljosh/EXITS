@@ -51,7 +51,7 @@
 		qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(studentID=FORM.studentID);
 
 		// Get Virtual Folder Documents
-		qGetVFDocuments = APPLICATION.CFC.UDF.getVirtualFolderDocuments(documentType=FORM.documentType,studentID=FORM.studentID);
+		qGetVFDocuments = APPLICATION.CFC.UDF.getVirtualFolderDocuments(documentType=FORM.documentType,studentID=FORM.studentID,hostID=FORM.hostID);
 		
 		// Form Submitted
 		if (FORM.submitted) {
