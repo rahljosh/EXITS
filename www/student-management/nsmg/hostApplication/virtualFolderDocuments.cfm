@@ -18,12 +18,14 @@
     <!--- Param URL Variables --->
     <cfparam name="URL.view" default="0">
     <cfparam name="URL.studentID" default="0">
+    <cfparam name="URL.hostID" default="0">
     <cfparam name="URL.documentType" default="0">
 
     <!--- Param FORM Variables --->
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.studentID" default="0">
     <cfparam name="FORM.documentType" default="0">
+    <cfparam name="FORM.hostID" default="0">
     <cfparam name="FORM.fileData" default="">
     
     <cfscript>	
@@ -40,6 +42,9 @@
 		}
 		if ( NOT VAL(FORM.documentType) ) {
 			FORM.documentType = URL.documentType;
+		}
+		if ( NOT VAL(FORM.hostID) ) {
+			FORM.hostID = URL.hostID;	
 		}
 		
 		// Get Student Information
@@ -60,11 +65,14 @@
     <cfif FORM.submitted AND NOT SESSION.formErrors.length()>
     	<cfscript>
 			currentDirectory = "#APPLICATION.PATH.onlineApp.virtualFolder##FORM.studentID#";
+			if (VAL(FORM.hostID)) {
+				currentDirectory &= "/#FORM.hostID#";	
+			}
             AppCFC.UDF.createFolder(currentDirectory);
 		</cfscript>
     	<cffile action="upload" filefield="fileData" destination="#currentDirectory#" nameconflict="makeunique" mode="777">
         <cfscript>
-			APPLICATION.CFC.UDF.insertIntoVirtualFolder(documentType=FORM.documentType,studentID=FORM.studentID,fileName=FILE.ServerFile,generatedHow="manual");
+			APPLICATION.CFC.UDF.insertIntoVirtualFolder(documentType=FORM.documentType,studentID=FORM.studentID,hostID=FORM.hostID,fileName=FILE.ServerFile,generatedHow="manual");
 		</cfscript>
     </cfif>
     
@@ -135,6 +143,7 @@
                 <input type="hidden" name="submitted" value="1" />
                 <input type="hidden" name="studentID" value="#FORM.studentID#" />
                 <input type="hidden" name="documentType" value="#FORM.documentType#" />
+                <input type="hidden" name="hostID" value="#FORM.hostID#" />
                 <table width="50%" cellspacing="0" cellpadding="4" class="border" align="center">
                     <tr bgcolor="##1b99da">
                         <td align="center" colspan="2">
