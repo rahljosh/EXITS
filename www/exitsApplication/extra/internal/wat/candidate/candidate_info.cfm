@@ -1420,6 +1420,13 @@
                                                 <cfif NOT LEN(qGetCandidate.enddate)><font size="1">(mm/dd/yyyy)</font></cfif>
                                             </td>
                                         </tr>
+                                        <tr>
+                                            <td class="style1" align="right"><strong>Program Remarks:</strong></td>
+                                            <td class="style1">
+                                                <span class="readOnly">#qGetCandidate.programRemarks#</span>
+                                                <textarea name="programRemarks" class="style1 editPage largeTextArea">#qGetCandidate.programRemarks#</textarea>
+                                            </td>
+                                        </tr>
                                     </table>
                         
                                 </td>

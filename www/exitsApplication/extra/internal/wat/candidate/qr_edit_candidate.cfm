@@ -26,6 +26,7 @@
 <cfparam name="FORM.watDateEvaluation4" default="">
 <cfparam name="FORM.housingArrangedPrivately" default="0">
 <cfparam name="FORM.housingDetails" default="">
+<cfparam name="FORM.programRemarks" default="">
 <!--- Placement Information --->
 <cfparam name="FORM.jobID" default="0">
 <cfparam name="FORM.selfJobOfferStatus" default="Pending">
@@ -846,7 +847,8 @@
         watDateEvaluation3 = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDateEvaluation3#" null="#NOT IsDate(FORM.watDateEvaluation3)#">,
         watDateEvaluation4 = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDateEvaluation4#" null="#NOT IsDate(FORM.watDateEvaluation4)#">,
         housingArrangedPrivately = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.housingArrangedPrivately#">,
-        housingDetails = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housingDetails#">
+        housingDetails = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housingDetails#">,
+        programRemarks = <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#FORM.programRemarks#">
     WHERE 
     	candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.candidateID#">
 </cfquery>
