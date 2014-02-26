@@ -546,7 +546,13 @@
 	        jan_app = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.jan_app#">,
         </cfif>
 		<cfif isDefined('FORM.team_id')>companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.team_id#">, </cfif>	
-		iffschool = <cfif IsDefined('FORM.iff_check')>'#FORM.iffschool#'<cfelse> <cfqueryparam cfsqltype="cf_sql_integer" value="0"> </cfif>,		
+				date_depositReceived = <cfif IsDefined('FORM.date_depositReceived')><cfqueryparam  cfsqltype="CF_SQL_DATE" value="#FORM.date_depositReceived#"><cfelse> <cfqueryparam  cfsqltype="CF_SQL_DATE" null="yes"> </cfif>,
+        date_finalPayment = <cfif IsDefined('FORM.date_finalPayment')><cfqueryparam  cfsqltype="CF_SQL_DATE" value="#FORM.date_finalPayment#"><cfelse> <cfqueryparam  cfsqltype="CF_SQL_DATE" null="yes"> </cfif>,
+        date_checkDrawn = <cfif IsDefined('FORM.date_checkDrawn')><cfqueryparam  cfsqltype="CF_SQL_DATE" value="#FORM.date_checkDrawn#"><cfelse> <cfqueryparam  cfsqltype="CF_SQL_DATE" null="yes"> </cfif>,
+        date_checkSentSchool = <cfif IsDefined('FORM.date_checkSentSchool')><cfqueryparam  cfsqltype="CF_SQL_DATE" value="#FORM.date_checkSentSchool#"><cfelse> <cfqueryparam  cfsqltype="CF_SQL_DATE" null="yes"> </cfif>,
+         i20Sent = <cfif IsDefined('FORM.date_checkDrawn')><cfqueryparam  cfsqltype="CF_SQL_DATE" value="#FORM.date_checkDrawn#"><cfelse> <cfqueryparam  cfsqltype="CF_SQL_DATE" null="yes"> </cfif>,
+        date_checkSentSchool = <cfif IsDefined('FORM.date_checkSentSchool')><cfqueryparam  cfsqltype="CF_SQL_DATE" value="#FORM.date_checkSentSchool#"><cfelse> <cfqueryparam  cfsqltype="CF_SQL_DATE" null="yes"> </cfif>,
+        iffschool = <cfif IsDefined('FORM.iff_check')>'#FORM.iffschool#'<cfelse> <cfqueryparam cfsqltype="cf_sql_integer" value="0"> </cfif>,		
         scholarship = <cfif IsDefined('FORM.scholarship')> <cfqueryparam cfsqltype="cf_sql_integer" value="1"> <cfelse> <cfqueryparam cfsqltype="cf_sql_integer" value="0"> </cfif>,                      
 		privateschool = <cfif IsDefined('FORM.privateschool_check')>'#FORM.privateschool#'<cfelse> <cfqueryparam cfsqltype="cf_sql_integer" value="0"> </cfif>,
 		aypenglish = <cfif IsDefined("FORM.english_check")>'#FORM.ayp_englsh#'<cfelse> <cfqueryparam cfsqltype="cf_sql_integer" value="0"> </cfif>,
