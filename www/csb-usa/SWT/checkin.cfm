@@ -265,13 +265,21 @@ order by state
                     Comments: #form.comment#<br /><br />
                 </cfoutput>
             </cfsavecontent>
-      
- 			<cfmail to="info@csb-usa.com" cc="#form.email#" from="info@csb-usa.com" subject="#form.lastname#, #form.firstname# - CSB Check-in / #form.companyName#" type="html">
-    			<p>Thank you for submitting the Check-in information. Please keep this electronic copy for your records.</p>
+            
+            <cfsavecontent variable="emailText">
+            	<p>Thank you for submitting the Check-in information. Please keep this electronic copy for your records.</p>
 				<p>CSB will process the information within 48 hours (exclusive of Saturday, Sunday, and legal Holidays) and if additional information is needed, an e-mail will be sent to the e-mail address you have provided on your application.</p>
 				<p>If you should have any questions or you need assistance during your stay in the United States, please feel free to contact us by e-mail <a href="mailto:info@csb-usa.com" class="black">info@csb-usa.com</a> or by calling us at our toll-free number 1-877-779-0717 (dial 0 for the operator).</p>
+            </cfsavecontent>
+      
+ 			<cfmail to="info@csb-usa.com" cc="#form.email#" from="info@csb-usa.com" subject="#form.lastname#, #form.firstname# - CSB Check-in / #form.companyName#" type="html">
+    			#emailText#
     			#informationEntered#
          	</cfmail>
+            
+            <cfscript>
+				vSaveContent = "FROM: info@csb-usa.com<br/><br/>TO: info@csb-usa.com<br/><br/>CC: " & FORM.email & "<br/><br/>" & emailText & informationEntered;
+			</cfscript>
             
             <cfquery datasource="mysql">
             	INSERT INTO extra_evaluation (
@@ -284,7 +292,7 @@ order by state
                         WHERE email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">
                         LIMIT 1),
                   	0,
-                    <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#informationEntered#"> )
+                    <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#vSaveContent#"> )
             </cfquery>
             
    		 	<cfoutput>

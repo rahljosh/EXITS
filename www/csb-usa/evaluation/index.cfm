@@ -249,12 +249,16 @@
 			if (FORM.Q7 EQ "YES") {q7Bit = 1;}
 			if (FORM.Q8 EQ "YES") {q8Bit = 1;}
 			
+			
+			vSaveContent = "FROM: CSB Summer Work Travel<support@csb-usa.com><br/><br/>TO: support@csb-usa.com<br/><br/>CC: " & FORM.email & "<br/><br/>" & vEmailContent;
+			
         </cfscript>
         
         <cfquery datasource="mysql">
         	INSERT INTO extra_evaluation (
             	candidateID
                 ,monthEvaluation
+                ,evaluationMemo
                	,hasHousingChanged
                 ,housingChangedDetails
                 ,hasCompanyChanged
@@ -282,6 +286,7 @@
          	VALUES (
             	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.candidateID)#">
                 ,<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.evaluation)#">
+                ,<cfqueryparam cfsqltype="cf_sql_longvarchar" value="#vSaveContent#">
                 ,<cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(q5Bit)#">
                 ,<cfqueryparam cfsqltype="cf_sql_longvarchar" value="#FORM.Q5_explain#">
                 ,<cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(q6Bit)#">
