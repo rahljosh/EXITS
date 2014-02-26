@@ -55,26 +55,7 @@
         headerType="extraNoHeader"
     />
 
-	<table cellpadding=5 cellspacing=5 border=1 align="center" width="100%" bordercolor="C7CFDC" bgcolor="ffffff">
-		<tr>
-			<td bordercolor="FFFFFF">
-				<table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
-                    <tr valign=middle height=24>
-                    	<td align="right" class="title1">
-                        	<cfif URL.evaluationID EQ 0>
-                            	Check-in for <u>#firstname# #lastname#</u> (#candidateid#)
-                            <cfelse>
-                        		Evaluation #URL.evaluationID# Answers for <u>#firstname# #lastname#</u> (#candidateid#)
-                         	</cfif>
-                       	</td>
-                  	</tr>
-                    <tr><td>&nbsp;</td></tr>
-                </table>
-           	</td>
-       	</tr>
-  	</table>
-    
-    <table width="100%" border=0 cellpadding=5 cellspacing=0>
+	<table width="100%" border=0 cellpadding=5 cellspacing=0>
         <cfif NOT VAL(qGetCandidate.id)>
         	<tr>
             	<td colspan="6" align="center" class="style1">
@@ -90,34 +71,21 @@
             	<tr><td class="style2" bgcolor="8FB6C9" width="100%">Check-in</td></tr>
                 <tr bgcolor="FFFFFF"><td class="style5">#checkInMemo#</td></tr>
             <cfelse>
-        		<tr><td class="style2" bgcolor="8FB6C9" width="100%">Housing address - Have you changed your housing address since your last report to CSB?</td></tr>
-                <tr bgcolor="FFFFFF"><td class="style5">#YesNoFormat(hasHousingChanged)# - #housingChangedDetails#</td></tr>
-                
-                <tr><td class="style2" bgcolor="8FB6C9" width="100%">Main employer - Have you changed your main employer since your last report to CSB?</td></tr>
-                <tr bgcolor="FFFFFF"><td class="style5">#YesNoFormat(hasCompanyChanged)# - #companyChangedDetails#</td></tr>
-                <cfif LEN(getRelativeFileInUploads(companyChangedFile))>
-                    <tr><td><a href="#getRelativeFileInUploads(companyChangedFile)#" target="_blank">UploadedFile</a></td></tr>
+            	<tr><td class="style2" bgcolor="8FB6C9" width="100%">Check-in</td></tr>
+                <tr bgcolor="FFFFFF"><td class="style5">#evaluationMemo#</td></tr>
+				<cfif LEN(getRelativeFileInUploads(companyChangedFile))>
+                    <tr><td><a href="#getRelativeFileInUploads(companyChangedFile)#" target="_blank">Changed Host Company File</a></td></tr>
+                </cfif><cfif LEN(getRelativeFileInUploads(secondJobFile))>
+                    <tr><td><a href="#getRelativeFileInUploads(secondJobFile)#" target="_blank">Second Job File</a></td></tr>
                 </cfif>
-                
-                <tr><td class="style2" bgcolor="8FB6C9" width="100%">Second job - Do you currently have a second job?</td></tr>
-                <tr bgcolor="FFFFFF"><td class="style5">#YesNoFormat(hasSecondJob)# - #secondJobDetails#</td></tr>
-                <cfif LEN(getRelativeFileInUploads(secondJobFile))>
-                    <tr><td><a href="#getRelativeFileInUploads(secondJobFile)#" target="_blank">UploadedFile</a></td></tr>
-                </cfif>
-                
-                <tr><td class="style2" bgcolor="8FB6C9" width="100%">Do you have any current problems or concerns?</td></tr>
-                <tr bgcolor="FFFFFF"><td class="style5">#YesNoFormat(hasHostCompanyConcern)# - #hostCompanyConcernDetails#</td></tr>
-                
-                <tr><td class="style2" bgcolor="8FB6C9" width="100%">Cultural activities</td></tr>
-                <tr bgcolor="FFFFFF"><td class="style5">#culturalActivities#</td></tr>
                 <cfif LEN(getRelativeFileInUploads(culturalActivityFile1))>
-                    <tr><td><a href="#getRelativeFileInUploads(culturalActivityFile1)#" target="_blank">UploadedFile</a></td></tr>
+                    <tr><td><a href="#getRelativeFileInUploads(culturalActivityFile1)#" target="_blank">Cultural Activity File</a></td></tr>
                 </cfif>
                 <cfif LEN(getRelativeFileInUploads(culturalActivityFile2))>
-                    <tr><td><a href="#getRelativeFileInUploads(culturalActivityFile2)#" target="_blank">UploadedFile</a></td></tr>
+                    <tr><td><a href="#getRelativeFileInUploads(culturalActivityFile2)#" target="_blank">Cultural Activity File</a></td></tr>
                 </cfif>
                 <cfif LEN(getRelativeFileInUploads(culturalActivityFile3))>
-                    <tr><td><a href="#getRelativeFileInUploads(culturalActivityFile3)#" target="_blank">UploadedFile</a></td></tr>
+                    <tr><td><a href="#getRelativeFileInUploads(culturalActivityFile3)#" target="_blank">Cultural Activity File</a></td></tr>
                 </cfif>
           	</cfif>
         </cfif>
