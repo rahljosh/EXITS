@@ -131,6 +131,12 @@
 			var arrival_city = verList.DATA[i][verList.COLUMNS.findIdx('ARRIVAL_CITY')];
 			var arrival_state = verList.DATA[i][verList.COLUMNS.findIdx('ARRIVAL_STATE')];
 			var arrival_zip = verList.DATA[i][verList.COLUMNS.findIdx('ARRIVAL_ZIP')];
+			var recentTracking = verList.DATA[i][verList.COLUMNS.findIdx('COMMENT')];
+			
+			if (recentTracking == null) {
+				recentTracking = "";
+			}
+			
 			if (arrival_address == null) arrival_address = "";
 			if (arrival_city == null) arrival_city = "";
 			if (arrival_zip == null) arrival_zip = "";
@@ -204,7 +210,10 @@
 				</cfoutput>
 				tableBody += '</select>';
 				tableBody += '<td class="style5"><input type="text" size="5" maxlength="5" id="arrival_zip' + candidateID + '" value="' + arrival_zip + '" /></td>';
-				tableBody += '<td align="center" class="style5"><a href="" onClick="javascript:checkInTrackingPopup(\'' + uniqueID + '\',\'0\')" class="style4 jQueryModal">Track</a></td>';
+				tableBody += '<td align="center" class="style5">';
+				tableBody += '<a href="" onClick="javascript:checkInTrackingPopup(\'' + uniqueID + '\',\'0\')" class="style4 jQueryModal">Track</a>';
+				tableBody += '<br/>'+recentTracking;
+				tableBody += '</td>';
 				tableBody += '<td align="center" class="style5"><a href="javascript:setCheckInReceived(' + candidateID + ');" class="style4">[Received]</a></td>';
 				tableBody += '</tr>';
 				// Append table rows

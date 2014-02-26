@@ -1580,7 +1580,8 @@
                     DATE_FORMAT(ec.endDate, '%m/%e/%Y') as endDate,
                     IFNULL(u.businessName, '') AS businessName,
                     IFNULL(p.programName, '') AS programName,
-                    IFNULL(c.countryName, '') AS countryName
+                    IFNULL(c.countryName, '') AS countryName,
+                    t.comment
                 FROM 
                     extra_candidates ec
 				INNER JOIN
@@ -1592,6 +1593,13 @@
                	LEFT OUTER JOIN extra_flight_information ef ON ef.candidateID = ec.candidateID
             		AND ef.programID = p.programID
                     AND flightType = 'Arrival'
+              	LEFT OUTER JOIN extra_evaluation_tracking t ON t.id = (
+                	SELECT id 
+                    FROM extra_evaluation_tracking 
+                    WHERE candidateID = ec.candidateID AND 
+                    evaluationNumber = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
+                    ORDER BY date DESC 
+                    LIMIT 1)
                 WHERE
                     ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
                 AND
