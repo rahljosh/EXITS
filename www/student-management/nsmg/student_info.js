@@ -100,6 +100,23 @@ var PopulateCheckSentSchoolBox = function() {
 	}
 }
 
+// i20 sent
+var Populatei20SentBox = function() {	
+	if (document.studentForm.i20Sent.checked) {
+		document.studentForm.date_i20Sent.value = (month + "/" + day + "/" + year);
+	} else {
+		document.studentForm.date_i20Sent.value = '';
+	}
+}
+
+// i20 Received
+var Populatei20ReceivedBox = function() {	
+	if (document.studentForm.i20Received.checked) {
+		document.studentForm.date_i20Received.value = (month + "/" + day + "/" + year);
+	} else {
+		document.studentForm.date_i20Received.value = '';
+	}
+}
 // Program Reason
 var displayProgramReason = function(previousProgramID, selectedProgramID) {
 	// Display Reason	

@@ -1066,6 +1066,18 @@
 					<td><Cfif verification_received EQ ''><input type="checkbox" name="verification_box" value="0" onClick="PopulateDS2019Box()" <cfif FORM.edit EQ 'no'>disabled</cfif>> <cfelse> <input type="checkbox" name="verification_box" value="1" onClick="PopulateDS2019Box()" checked <cfif FORM.edit EQ 'no'>disabled</cfif>> </cfif>
 					<td>#CLIENT.DSFormName# Verification Received &nbsp; &nbsp; Date: &nbsp;<input type="text" name="verification_form" size=8 value="#DateFormat(verification_received, 'mm/dd/yyyy')#" <cfif FORM.edit EQ 'no'>readonly</cfif>></td>
 				</tr>
+                <Cfif client.companyid eq 14>
+                 <tr>
+                	<td><input type="checkbox" name="i20Received" value="0" OnClick="PopulateI20ReceivedBox();" <cfif FORM.edit EQ 'no'>disabled</cfif> <cfif isDate(date_i20Received)>checked</cfif>></td>
+                    <Td>I-20 Received</Td>
+                    <td><input type="text" name="date_i20Received" class="datePicker" value="#DateFormat(date_i20Received, 'mm/dd/yyyy')#" <cfif FORM.edit EQ 'no'>readonly</cfif> ></td>
+                </tr>
+                <tr>
+                	<td><input type="checkbox" name="i20Sent" value="0" OnClick="PopulateI20SentBox();" <cfif FORM.edit EQ 'no'>disabled</cfif> <cfif isDate(date_i20sent)>checked</cfif>></td>
+                    <Td>I-20 Sent to Agent</Td>
+                    <td><input type="text" name="date_i20sent" class="datePicker" value="#DateFormat(date_i20sent, 'mm/dd/yyyy')#" <cfif FORM.edit EQ 'no'>readonly</cfif> ></td>
+                </tr>
+                </Cfif>
 				<tr>
 					<td width="10">&nbsp;</td>
 					<td><cfif NOT LEN(qGetIntlRep.accepts_sevis_fee)>
