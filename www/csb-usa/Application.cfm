@@ -20,10 +20,17 @@
 		// Store Application.IsServerLocal - This needs be declare before the other CFC components
 		APPLICATION.IsServerLocal = APPLICATION.CFC.UDF.IsServerLocal();
 		
-		if (APPLICATION.IsServerLocal)
+		if (APPLICATION.IsServerLocal) {
 			APPLICATION.UPLOAD = 'C:\websites\www\csb-usa\uploadedfiles\';
-		else
+			APPLICATION.EXTRAUPLOAD = "C:\websites\www\exitsApplication\extra\internal\uploadedfiles\csbfiles\";
+		} else {
 			APPLICATION.UPLOAD = 'C:\websites\csb-usa\uploadedfiles\';
+			APPLICATION.EXTRAUPLOAD = "C:\websites\exitsApplication\extra\internal\uploadedfiles\csbfiles\";
+		}
+		
+		if (NOT DirectoryExists(APPLICATION.EXTRAUPLOAD)) {
+			DirectoryCreate(APPLICATION.EXTRAUPLOAD);	
+		}
 		
 	   // Page Messages
 	   SESSION.PageMessages = CreateCFC("pageMessages").Init();

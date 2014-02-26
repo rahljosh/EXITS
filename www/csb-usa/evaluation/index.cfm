@@ -6,6 +6,7 @@
     
     <!----Initialize variables---->
     <Cfparam name="url.request" default=''>
+    <cfparam name="FORM.candidateID" default="0">
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.sevis" default="">       
     <cfparam name="FORM.LastName" default="">
@@ -36,6 +37,7 @@
         
         <cfquery name="qGetCandidateInfo" datasource="MySql">
             SELECT
+            	candidateID,
                 lastName,
                 firstName,
                 email,
@@ -52,6 +54,7 @@
             FORM.email = qGetCandidateInfo.email;
             FORM.sevis = TRIM(qGetCandidateInfo.ds2019);
 			FORM.evaluation = URL.evaluation;
+			FORM.candidateID = qGetCandidateInfo.candidateID;
         </cfscript>
         
     </cfif>
@@ -154,33 +157,33 @@
 		
 		<!-----Upload Files so we can attach them---->
         <cfif LEN(FORM.Q6file)>
-            <cffile action="upload" destination="#APPLICATION.UPLOAD#" filefield="Q6file" nameconflict="overwrite" />
-            <cffile action="rename" source="#APPLICATION.UPLOAD##file.ServerFile#" destination="#APPLICATION.UPLOAD#Question6.#file.ClientFileExt#" attributes="normal">
-            <Cfset FORM.q6filename = 'Question6.#file.ClientFileExt#'>
+            <cffile action="upload" destination="#APPLICATION.EXTRAUPLOAD#" filefield="Q6file" nameconflict="overwrite" />
+            <cfset FORM.q6filename = '#FORM.candidateID#_#FORM.evaluation#_Question6.#file.ClientFileExt#'>
+            <cffile action="rename" source="#APPLICATION.EXTRAUPLOAD##file.ServerFile#" destination="#APPLICATION.EXTRAUPLOAD##FORM.q6filename#" attributes="normal">
         </cfif>
         
         <cfif LEN(FORM.Q7file)>
-            <cffile action="upload" destination="#APPLICATION.UPLOAD#" filefield="Q7file" nameconflict="overwrite"/>
-            <cffile action="rename" source="#APPLICATION.UPLOAD##file.ServerFile#" destination="#APPLICATION.UPLOAD#Question7.#file.ClientFileExt#"attributes="normal">
-            <cfset FORM.q7filename = 'Question7.#file.ClientFileExt#'>
+            <cffile action="upload" destination="#APPLICATION.EXTRAUPLOAD#" filefield="Q7file" nameconflict="overwrite"/>
+            <cfset FORM.q7filename = '#FORM.candidateID#_#FORM.evaluation#_Question7.#file.ClientFileExt#'>
+            <cffile action="rename" source="#APPLICATION.EXTRAUPLOAD##file.ServerFile#" destination="#APPLICATION.EXTRAUPLOAD##FORM.q7filename#"attributes="normal">
         </cfif>
         
         <cfif LEN(FORM.pic1file)>
-            <cffile action="upload" destination="#APPLICATION.UPLOAD#" filefield="pic1file" nameconflict="overwrite"/>
-            <cffile action="rename" source="#APPLICATION.UPLOAD##file.ServerFile#" destination="#APPLICATION.UPLOAD#pic1file.#file.ClientFileExt#"attributes="normal">
-            <cfset FORM.pic1file = 'pic1file.#file.ClientFileExt#'>
+            <cffile action="upload" destination="#APPLICATION.EXTRAUPLOAD#" filefield="pic1file" nameconflict="overwrite"/>
+            <cfset FORM.pic1file = '#FORM.candidateID#_#FORM.evaluation#_pic1.#file.ClientFileExt#'>
+            <cffile action="rename" source="#APPLICATION.EXTRAUPLOAD##file.ServerFile#" destination="#APPLICATION.EXTRAUPLOAD##FORM.pic1file#"attributes="normal">
         </cfif>
         
         <cfif LEN(FORM.pic2file)>
-            <cffile action="upload" destination="#APPLICATION.UPLOAD#" filefield="pic2file" nameconflict="overwrite"/>
-            <cffile action="rename" source="#APPLICATION.UPLOAD##file.ServerFile#" destination="#APPLICATION.UPLOAD#pic2file.#file.ClientFileExt#"attributes="normal">
-            <cfset FORM.pic2file = 'pic2file.#file.ClientFileExt#'>
+            <cffile action="upload" destination="#APPLICATION.EXTRAUPLOAD#" filefield="pic2file" nameconflict="overwrite"/>
+            <cfset FORM.pic2file = '#FORM.candidateID#_#FORM.evaluation#_pic2.#file.ClientFileExt#'>
+            <cffile action="rename" source="#APPLICATION.EXTRAUPLOAD##file.ServerFile#" destination="#APPLICATION.EXTRAUPLOAD##FORM.pic2file#"attributes="normal">
         </cfif>
         
         <cfif LEN(FORM.pic3file)>
-            <cffile action="upload" destination="#APPLICATION.UPLOAD#" filefield="pic3file" nameconflict="overwrite"/>
-            <cffile action="rename" source="#APPLICATION.UPLOAD##file.ServerFile#" destination="#APPLICATION.UPLOAD#pic3file.#file.ClientFileExt#"attributes="normal">
-            <cfset FORM.pic3file = 'pic3file.#file.ClientFileExt#'>
+            <cffile action="upload" destination="#APPLICATION.EXTRAUPLOAD#" filefield="pic3file" nameconflict="overwrite"/>
+            <cfset FORM.pic3file = '#FORM.candidateID#_#FORM.evaluation#_pic3.#file.ClientFileExt#'>
+            <cffile action="rename" source="#APPLICATION.EXTRAUPLOAD##file.ServerFile#" destination="#APPLICATION.EXTRAUPLOAD##FORM.pic3file#"attributes="normal">
         </cfif>
 
         <cfscript>
@@ -213,15 +216,15 @@
 			pic2 = '';
 			pic3 = '';
 			if (LEN(FORM.Q6file))
-				file6 = APPLICATION.UPLOAD & FORM.q6filename;
+				file6 = APPLICATION.EXTRAUPLOAD & FORM.q6filename;
 			if (LEN(FORM.Q7file))
-				file7 = APPLICATION.UPLOAD & FORM.q7filename;
+				file7 = APPLICATION.EXTRAUPLOAD & FORM.q7filename;
 			if (LEN(FORM.pic1file))
-				pic1 = APPLICATION.UPLOAD & FORM.pic1file;
+				pic1 = APPLICATION.EXTRAUPLOAD & FORM.pic1file;
 			if (LEN(FORM.pic2file))
-				pic2 = APPLICATION.UPLOAD & FORM.pic2file;
+				pic2 = APPLICATION.EXTRAUPLOAD & FORM.pic2file;
 			if (LEN(FORM.pic3file))
-				pic3 = APPLICATION.UPLOAD & FORM.pic3file;
+				pic3 = APPLICATION.EXTRAUPLOAD & FORM.pic3file;
 			
 			// Send the email
 			email.send_mail(
@@ -237,7 +240,73 @@
 				email_message=vEmailContent
 			);
 			
-        </cfscript> 
+			q5Bit = 0;
+			q6Bit = 0;
+			q7Bit = 0;
+			q8Bit = 0;
+			if (FORM.Q5 EQ "YES") {q5Bit = 1;}
+			if (FORM.Q6 EQ "YES") {q6Bit = 1;}
+			if (FORM.Q7 EQ "YES") {q7Bit = 1;}
+			if (FORM.Q8 EQ "YES") {q8Bit = 1;}
+			
+        </cfscript>
+        
+        <cfquery datasource="mysql">
+        	INSERT INTO extra_evaluation (
+            	candidateID
+                ,monthEvaluation
+               	,hasHousingChanged
+                ,housingChangedDetails
+                ,hasCompanyChanged
+               	,companyChangedDetails
+                <cfif LEN(FORM.Q6file)>
+                	,companyChangedFile
+              	</cfif>
+                ,hasSecondJob
+                ,secondJobDetails
+                <cfif LEN(FORM.Q7file)>
+                	,secondJobFile
+              	</cfif>
+                ,hasHostCompanyConcern
+                ,hostCompanyConcernDetails
+                ,culturalActivities
+                <cfif LEN(FORM.pic1file)>
+                	,culturalActivityFile1
+              	</cfif>
+                <cfif LEN(FORM.pic2file)>
+                	,culturalActivityFile2
+              	</cfif>
+                <cfif LEN(FORM.pic3file)>
+                	,culturalActivityFile3
+              	</cfif> )
+         	VALUES (
+            	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.candidateID)#">
+                ,<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.evaluation)#">
+                ,<cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(q5Bit)#">
+                ,<cfqueryparam cfsqltype="cf_sql_longvarchar" value="#FORM.Q5_explain#">
+                ,<cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(q6Bit)#">
+                ,<cfqueryparam cfsqltype="cf_sql_longvarchar" value="#FORM.Q6_explain#">
+                <cfif LEN(FORM.Q6file)>
+                	,<cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.EXTRAUPLOAD##FORM.q6filename#">
+              	</cfif>
+                ,<cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(q7Bit)#">
+                ,<cfqueryparam cfsqltype="cf_sql_longvarchar" value="#FORM.Q7_explain#">
+                <cfif LEN(FORM.Q7file)>
+                	,<cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.EXTRAUPLOAD##FORM.q7filename#">
+              	</cfif>
+                ,<cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(q8Bit)#">
+                ,<cfqueryparam cfsqltype="cf_sql_longvarchar" value="#FORM.Q8_explain#">
+                ,<cfqueryparam cfsqltype="cf_sql_longvarchar" value="#FORM.Q9_explain#">
+                <cfif LEN(FORM.pic1file)>
+                	,<cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.EXTRAUPLOAD##FORM.pic1file#">
+              	</cfif>
+                <cfif LEN(FORM.pic2file)>
+                	,<cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.EXTRAUPLOAD##FORM.pic2file#">
+              	</cfif>
+                <cfif LEN(FORM.pic3file)>
+                	,<cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.EXTRAUPLOAD##FORM.pic3file#">
+              	</cfif> )
+        </cfquery> 
   
         <meta http-equiv="refresh" content="2;url=http://www.csb-usa.com/SWT/">
             <div class="yellow" style="background-color: #CCC; font-size: 11px; padding: 20px; font-family:Arial, Helvetica, sans-serif; width: 800px;">
@@ -408,6 +477,7 @@ a:active {
 <cfform action="index.cfm" method="post" name="form" id="form" enctype="multipart/form-data">
 	<input type="hidden" name="submitted" value="1" />
     <input type="hidden" name="evaluation" id="evaluation" value="#FORM.evaluation#" />
+    <input type="hidden" name="candidateID" value="#FORM.candidateID#" />
   <table width="665" border="0" cellspacing="0" cellpadding="5">
   <tr bgcolor="##EFEFEF" >
     <td width="132" bgcolor="##EFEFEF" class="Bold">1. SEVIS Number:</td>

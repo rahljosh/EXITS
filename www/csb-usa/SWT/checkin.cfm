@@ -233,81 +233,71 @@ order by state
         
         <!--- Check if there are no errors --->
         <cfif NOT SESSION.formErrors.length()>
-      
- <cfmail to="info@csb-usa.com" cc="#form.email#" from="info@csb-usa.com" subject="#form.lastname#, #form.firstname# - CSB Check-in / #form.companyName#" type="html">
-    <p>Thank you for submitting the Check-in information. Please keep this electronic copy for your records.</p>
-<p>CSB will process the information within 48 hours (exclusive of Saturday, Sunday, and legal Holidays) and if additional information is needed, an e-mail will be sent to the e-mail address you have provided on your application.</p>
-<p>If you should have any questions or you need assistance during your stay in the United States, please feel free to contact us by e-mail <a href="mailto:info@csb-usa.com" class="black">info@csb-usa.com</a> or by calling us at our toll-free number 1-877-779-0717 (dial 0 for the operator).</p>
-    
-    <strong> The following Information was submitted from the check-in Form on the CSB site #dateformat(Now(), 'mm/dd/yyyy')#.</strong><br />
-    Sevis##: #form.sevis#<br />
-    Program ID##: #form.programID#<br />
-    Last Name: #form.lastname#<br />
-    First Name: #form.firstname#<br />
-    Middle Name: #form.middlename#<br />
-    E-Mail Address: #form.email#<br /><br />
-    <br />
-    <strong>Employer Information</strong><br />
-    Company Name: #form.companyName#<br />
-    Street Address: #form.companyAddress#<br />
-    City: #form.companyCity#<br />
-    State: #form.companyState#<br />
-    Zip Code: #form.companyZip#<br />
-    Supervisors Full Name: #form.superName#<br />
-    Supervisor Phone Number: #form.companyPhone#<br />
-    Supervisor Email: #form.superEmail#<br />
-    Comments: #form.companyComment#<br />
-    <br />
-  <strong> Housing Information</strong><br />
-    Address: #form.address#<br />
-    Apt##: #form.apt#<br />
-    City: #form.city#<br />
-    State: #form.state#<br />
-    Zip Code: #form.zip#<br />
-    Phone in the U.S.: #form.phone#<br />
-    Comments: #form.comment#<br /><br />
-
-</cfmail>
-    <!---Comments: anca--->
-   		 <cfoutput>
-                              <table width=90% align="center" border="1">
-                      <tr>
-                            <td >
-    <strong> The following Information was submitted from the check-in Form on the CSB site #dateformat(Now(), 'mm/dd/yyyy')#.</strong><br />
-    Sevis##: #form.sevis#<br />
-    Program ID##: #form.programID#<br />
-    Last Name: #form.lastname#<br />
-    First Name: #form.firstname#<br />
-    Middle Name: #form.middlename#<br />
-    E-Mail Address: #form.email#<br /><br />
-    <br />
-    <strong>Employer Information</strong><br />
-    Company Name: #form.companyName#<br />
-    Street Address: #form.companyAddress#<br />
-    City: #form.companyCity#<br />
-    State: #form.companyState#<br />
-    Zip Code: #form.companyZip#<br />
-    Supervisors Full Name: #form.superName#<br />
-    Supervisor Phone Number: #form.companyPhone#<br />
-    Supervisor Email: #form.superEmail#<br />
-    Comments: #form.companyComment#<br />
-    <br />
-  <strong> Housing Information</strong><br />
-    Address: #form.address#<br />
-    Apt##: #form.apt#<br />
-    City: #form.city#<br />
-    State: #form.state#<br />
-    Zip Code: #form.zip#<br />
-    Phone in the U.S.: #form.phone#<br />
-    Comments: #form.comment#<br /><br />
-   
-  </td>
-                        </tr>
-                  </table></div>
+        
+            <cfsavecontent variable="informationEntered">
+                <cfoutput>
+                	<strong> The following Information was submitted from the check-in Form on the CSB site #dateformat(Now(), 'mm/dd/yyyy')#.</strong><br />
+                    Sevis##: #form.sevis#<br />
+                    Program ID##: #form.programID#<br />
+                    Last Name: #form.lastname#<br />
+                    First Name: #form.firstname#<br />
+                    Middle Name: #form.middlename#<br />
+                    E-Mail Address: #form.email#<br /><br />
+                    <br />
+                    <strong>Employer Information</strong><br />
+                    Company Name: #form.companyName#<br />
+                    Street Address: #form.companyAddress#<br />
+                    City: #form.companyCity#<br />
+                    State: #form.companyState#<br />
+                    Zip Code: #form.companyZip#<br />
+                    Supervisors Full Name: #form.superName#<br />
+                    Supervisor Phone Number: #form.companyPhone#<br />
+                    Supervisor Email: #form.superEmail#<br />
+                    Comments: #form.companyComment#<br />
+                    <br />
+                    <strong> Housing Information</strong><br />
+                    Address: #form.address#<br />
+                    Apt##: #form.apt#<br />
+                    City: #form.city#<br />
+                    State: #form.state#<br />
+                    Zip Code: #form.zip#<br />
+                    Phone in the U.S.: #form.phone#<br />
+                    Comments: #form.comment#<br /><br />
                 </cfoutput>
-    
- 
-     <cfabort>
+            </cfsavecontent>
+      
+ 			<cfmail to="info@csb-usa.com" cc="#form.email#" from="info@csb-usa.com" subject="#form.lastname#, #form.firstname# - CSB Check-in / #form.companyName#" type="html">
+    			<p>Thank you for submitting the Check-in information. Please keep this electronic copy for your records.</p>
+				<p>CSB will process the information within 48 hours (exclusive of Saturday, Sunday, and legal Holidays) and if additional information is needed, an e-mail will be sent to the e-mail address you have provided on your application.</p>
+				<p>If you should have any questions or you need assistance during your stay in the United States, please feel free to contact us by e-mail <a href="mailto:info@csb-usa.com" class="black">info@csb-usa.com</a> or by calling us at our toll-free number 1-877-779-0717 (dial 0 for the operator).</p>
+    			#informationEntered#
+         	</cfmail>
+            
+            <cfquery datasource="mysql">
+            	INSERT INTO extra_evaluation (
+                	candidateID,
+                    monthEvaluation,
+                    checkInMemo )
+              	VALUES (
+                	(SELECT candidateID 
+                        FROM extra_candidates 
+                        WHERE email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">
+                        LIMIT 1),
+                  	0,
+                    <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#informationEntered#"> )
+            </cfquery>
+            
+   		 	<cfoutput>
+				<table width=90% align="center" border="1">
+           			<tr>
+                    	<td>
+                        	#informationEntered#
+                     	</td>
+                	</tr>
+           		</table>
+			</cfoutput>
+            
+            <cfabort>
         </cfif>
 	 
 </Cfif>
