@@ -687,7 +687,7 @@
                 </tr>
 				<tr><td>Program :</td>
 					<td>		
-						<cfif qCheckForExpiredProgram.recordcount EQ 1>
+						<cfif qCheckForExpiredProgram.recordcount EQ 1 AND client.companyid neq 14>
 							#qCheckForExpiredProgram.programname#
 							<input type="hidden" name="program" value="#qCheckForExpiredProgram.programID#">
 						<cfelse>
@@ -843,7 +843,36 @@
 <table width="770" border=0 cellpadding=0 cellspacing=0 align="center">	
 	<tr>
 		<td width="49%" valign="top">
-			<table cellpadding="2" width="100%">
+		<Cfif client.companyid eq 14>
+        
+          <table cellpadding="2" width="100%">
+				<tr bgcolor="##EAE8E8"><td colspan="3"><span class="get_attention"><b>:: </b></span>Payment Information</td></tr>
+                <tr>
+                	<td><input type="checkbox" name="depositReceived" value="0" OnClick="PopulateDepositReceivedBox();" <cfif FORM.edit EQ 'no'>disabled</cfif> <cfif isDate(date_depositReceived)>checked</cfif>></td>
+                    <Td>Deposit Received</Td>
+                    <td><input type="text" name="date_depositReceived" class="datePicker" value="#DateFormat(date_depositReceived, 'mm/dd/yyyy')#" <cfif FORM.edit EQ 'no'>readonly</cfif> ></td>
+                </tr>
+                <tr>
+                	<td><input type="checkbox" name="finalPayment" value="0" OnClick="PopulateFinalPaymentBox();"  <cfif FORM.edit EQ 'no'>disabled</cfif> <cfif isDate(date_finalPayment)>checked</cfif>></td>
+                    <Td>Final Payment Received</Td>
+                    <td><input type="text" name="date_finalPayment" class="datePicker" value="#DateFormat(date_finalPayment, 'mm/dd/yyyy')#" <cfif FORM.edit EQ 'no'>readonly</cfif>></td>
+                </tr>
+                <tr>
+                	<td><input type="checkbox" name="checkDrawn" value="0" OnClick="PopulateCheckDrawnBox();" <cfif FORM.edit EQ 'no'>disabled</cfif>  <cfif isDate(date_checkDrawn)>checked</cfif>></td>
+                    <Td>Check Drawn</Td>
+                     <td><input type="text" name="date_checkDrawn" class="datePicker" value="#DateFormat(date_checkDrawn, 'mm/dd/yyyy')#" <cfif FORM.edit EQ 'no'>readonly</cfif>></td>
+                </tr>
+                <tr>
+                	<td><input type="checkbox" name="checkSentSchool" value="0" OnClick="PopulateCheckSentSchoolBox();" <cfif FORM.edit EQ 'no'>disabled</cfif> <cfif isDate(date_checkSentSchool)>checked</cfif>></td>
+                    <Td>Check Sent to School</Td>
+                     <td><input type="text" name="date_checkSentSchool" class="datePicker" value="#DateFormat(date_checkSentSchool, 'mm/dd/yyyy')#" <cfif FORM.edit EQ 'no'>readonly</cfif>></td>
+                </tr>
+          </table>
+       
+        <cfelse>
+			
+            
+            <table cellpadding="2" width="100%">
 				<tr bgcolor="##EAE8E8"><td colspan="3"><span class="get_attention"><b>:: </b></span>Pre-AYP / Private School</td></tr>
 				<tr>
 					<td><cfif scholarship EQ 0><input type="checkbox" name="scholarship" value="0" <cfif FORM.edit EQ 'no'>disabled</cfif>><cfelse><input type="checkbox" name="scholarship" value="1" checked <cfif FORM.edit EQ 'no'>disabled</cfif>></cfif></td>
@@ -894,6 +923,7 @@
 					</td>
 				</tr>
 			</table>
+        </Cfif>
 		</td>
 		<td width="2%" valign="top">&nbsp;</td>
 		<td width="49%" valign="top">
