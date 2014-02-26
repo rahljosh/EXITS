@@ -34,7 +34,11 @@
 			DATE_FORMAT(ec.endDate, '%m/%e/%Y') AS endDate,
 			IFNULL(u.businessName, '') AS businessName,
 			IFNULL(p.programName, '') AS programName,
-			IFNULL(eh.name, '') AS hostCompanyName
+			IFNULL(eh.name, '') AS hostCompanyName,
+            CASE
+            	WHEN CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 20 DAY) THEN "sent"
+                ELSE "resent"
+          	END AS sentType
 		FROM extra_candidates ec
 		INNER JOIN smg_users u ON u.userID = ec.intRep
 		LEFT OUTER JOIN extra_hostCompany eh ON eh.hostCompanyID = ec.hostCompanyID
@@ -73,7 +77,11 @@
 			DATE_FORMAT(ec.endDate, '%m/%e/%Y') AS endDate,
 			IFNULL(u.businessName, '') AS businessName,
 			IFNULL(p.programName, '') AS programName,
-			IFNULL(eh.name, '') AS hostCompanyName
+			IFNULL(eh.name, '') AS hostCompanyName,
+            CASE
+            	WHEN CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 50 DAY) THEN "sent"
+                ELSE "resent"
+          	END AS sentType
 		FROM extra_candidates ec
 		INNER JOIN smg_users u ON u.userID = ec.intRep
 		LEFT OUTER JOIN extra_hostCompany eh ON eh.hostCompanyID = ec.hostCompanyID
@@ -112,7 +120,11 @@
 			DATE_FORMAT(ec.endDate, '%m/%e/%Y') AS endDate,
 			IFNULL(u.businessName, '') AS businessName,
 			IFNULL(p.programName, '') AS programName,
-			IFNULL(eh.name, '') AS hostCompanyName
+			IFNULL(eh.name, '') AS hostCompanyName,
+            CASE
+            	WHEN CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 80 DAY) THEN "sent"
+                ELSE "resent"
+          	END AS sentType
 		FROM extra_candidates ec
 		INNER JOIN smg_users u ON u.userID = ec.intRep
 		LEFT OUTER JOIN extra_hostCompany eh ON eh.hostCompanyID = ec.hostCompanyID
@@ -151,7 +163,11 @@
 			DATE_FORMAT(ec.endDate, '%m/%e/%Y') AS endDate,
 			IFNULL(u.businessName, '') AS businessName,
 			IFNULL(p.programName, '') AS programName,
-			IFNULL(eh.name, '') AS hostCompanyName
+			IFNULL(eh.name, '') AS hostCompanyName,
+            CASE
+            	WHEN CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 120 DAY) THEN "sent"
+                ELSE "resent"
+          	END AS sentType
 		FROM extra_candidates ec
 		INNER JOIN smg_users u ON u.userID = ec.intRep
 		LEFT OUTER JOIN extra_hostCompany eh ON eh.hostCompanyID = ec.hostCompanyID
@@ -390,7 +406,7 @@
 			candidateID=VAL(qEvaluation1.candidateID[i]),
 			evaluationNumber=1,
 			date=NOW(),
-			comment="System - Evaluation sent on " & DateFormat(NOW(),'mm/dd/yyyy') & ".");
+			comment="System - Evaluation " & qEvaluation1.sentType[i] & " on " & DateFormat(NOW(),'mm/dd/yyyy') & ".");
 	}
 
 	// Evaluation 2
@@ -414,7 +430,7 @@
 			candidateID=VAL(qEvaluation2.candidateID[i]),
 			evaluationNumber=2,
 			date=NOW(),
-			comment="System - Evaluation sent on " & DateFormat(NOW(),'mm/dd/yyyy') & ".");
+			comment="System - Evaluation " & qEvaluation2.sentType[i] & " on " & DateFormat(NOW(),'mm/dd/yyyy') & ".");
 	}
 	
 	// Evaluation 3
@@ -438,7 +454,7 @@
 			candidateID=VAL(qEvaluation3.candidateID[i]),
 			evaluationNumber=3,
 			date=NOW(),
-			comment="System - Evaluation sent on " & DateFormat(NOW(),'mm/dd/yyyy') & ".");
+			comment="System - Evaluation " & qEvaluation3.sentType[i] & " on " & DateFormat(NOW(),'mm/dd/yyyy') & ".");
 	}
 	
 	// Evaluation 4
@@ -462,7 +478,7 @@
 			candidateID=VAL(qEvaluation4.candidateID[i]),
 			evaluationNumber=4,
 			date=NOW(),
-			comment="System - Evaluation sent on " & DateFormat(NOW(),'mm/dd/yyyy') & ".");
+			comment="System - Evaluation " & qEvaluation4.sentType[i] & " on " & DateFormat(NOW(),'mm/dd/yyyy') & ".");
 	}
 	
 	// Evaluation 1 Reminder

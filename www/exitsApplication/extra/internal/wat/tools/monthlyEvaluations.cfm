@@ -141,6 +141,11 @@
 			var evaluation2 = verList.DATA[i][verList.COLUMNS.findIdx('WATDATEEVALUATION2')];
 			var evaluation3 = verList.DATA[i][verList.COLUMNS.findIdx('WATDATEEVALUATION3')];
 			var evaluation4 = verList.DATA[i][verList.COLUMNS.findIdx('WATDATEEVALUATION4')];
+			var recentTracking = verList.DATA[i][verList.COLUMNS.findIdx('COMMENT')];
+			
+			if (recentTracking == null) {
+				recentTracking = "";
+			}
 			
 			// These are for comparing the evaluation dates in order to show alerts
 			var cIn = new Date(checkIn);
@@ -195,7 +200,10 @@
 					tableBody += '<td class="style5" style="text-align:center;">' + dateDiff + '</td>';
 				}
 				tableBody += '<td align="center" class="style5"><a href="" onClick="javascript:culturalActivityPopup(\'' + uniqueID + '\')" class="style4 jQueryModal">Add</a>';
-				tableBody += '<td align="center" class="style5"><a href="" onClick="javascript:evaluationTrackingPopup(\'' + uniqueID + '\',\'' + evaluationID + '\')" class="style4 jQueryModal">Track</a>';
+				tableBody += '<td align="center" class="style5">';
+				tableBody += '<a href="" onClick="javascript:evaluationTrackingPopup(\'' + uniqueID + '\',\'' + evaluationID + '\')" class="style4 jQueryModal">Track</a>';
+				tableBody += '<br/>'+recentTracking;
+				tableBody += '</td>';
 				if (evaluationID == 1) {
 					tableBody += '<td align="center" class="style5"><a href="javascript:setEvaluationReceived(' + candidateID + ',1);" class="style4">Received</a></td>';
 				} else if (evaluationID == 2) {

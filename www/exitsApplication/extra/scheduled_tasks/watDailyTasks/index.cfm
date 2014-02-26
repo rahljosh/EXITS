@@ -39,6 +39,10 @@
 <cfinclude template="evaluationEmail.cfm">
 <h1>Evaluation Email Task</h1>
 
+<!--- Check in reminder and warning emails. --->
+<cfinclude template="checkInWarning.cfm">
+<h1>Check-in Warning Task</h1>
+
 
 <!--- Document Expiration --->
 <cfinclude template="documentExpiration.cfm">
