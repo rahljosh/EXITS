@@ -2753,6 +2753,11 @@
                                                 <span class="readOnly">#dateFormat(qGetCandidate.watDateCheckedIn, 'mm/dd/yyyy')#</span>
                                                 <input type="text" name="watDateCheckedIn" id="watDateCheckedIn" class="datePicker style1 editPage" value="#dateFormat(qGetCandidate.watDateCheckedIn, 'mm/dd/yyyy')#" maxlength="10">
                                         		<cfif NOT LEN(qGetCandidate.watDateCheckedIn)><font size="1">(mm/dd/yyyy)</font></cfif>
+                                                <cfif ListFind("1,2,3,4",CLIENT.userType)>
+                                                	<font size="1" style="float:right">
+                                                    	<a href="candidate/evaluation_tracking.cfm?uniqueID=#URL.uniqueid#&id=0" class="style1 jQueryModal">[ Tracking ]</a>
+                                                    </font>
+                                                </cfif>
                                             </td>
                                         </tr>
                                         <tr>

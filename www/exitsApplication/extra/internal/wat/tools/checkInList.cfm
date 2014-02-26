@@ -99,6 +99,7 @@
 			tableHeader += '<td class="listTitle style2">City</td>';
 			tableHeader += '<td class="listTitle style2">State</td>';
 			tableHeader += '<td class="listTitle style2">Zip</td>';
+			tableHeader += '<td class="listTitle style2" align="center">Track</td>';
             tableHeader += '<td class="listTitle style2" align="center">Actions</td>';                                                          
 		tableHeader += '</tr>';
 		
@@ -203,6 +204,7 @@
 				</cfoutput>
 				tableBody += '</select>';
 				tableBody += '<td class="style5"><input type="text" size="5" maxlength="5" id="arrival_zip' + candidateID + '" value="' + arrival_zip + '" /></td>';
+				tableBody += '<td align="center" class="style5"><a href="" onClick="javascript:checkInTrackingPopup(\'' + uniqueID + '\',\'0\')" class="style4 jQueryModal">Track</a></td>';
 				tableBody += '<td align="center" class="style5"><a href="javascript:setCheckInReceived(' + candidateID + ');" class="style4">[Received]</a></td>';
 				tableBody += '</tr>';
 				// Append table rows
@@ -246,6 +248,19 @@
 		
 	}
 	// --- END OF VERICATION RECEIVED --- //
+	
+	var checkInTrackingPopup = function(unqID, trackID) {
+		var url = "candidate/evaluation_tracking.cfm?uniqueID=" + unqID + "&id=" + trackID;
+		$(".jQueryModal").colorbox( {
+			width:"50%", 
+			height:"60%", 
+			iframe:true,
+			overlayClose:false,
+			escKey:false,
+			href:url,
+			onClosed:function(){}
+		});	
+	}
 
 	// Error handler for the asynchronous functions. 
 	var myErrorHandler = function(statusCode, statusMsg) { 

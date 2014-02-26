@@ -75,7 +75,15 @@
 		<tr>
 			<td bordercolor="FFFFFF">
 				<table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
-                    <tr valign=middle height=24><td align="right" class="title1">Evaluation #URL.id# Tracking for <u>#firstname# #lastname#</u> (#candidateid#)</td></tr>
+                    <tr valign=middle height=24>
+                    	<td align="right" class="title1">
+                        	<cfif URL.id EQ 0>
+                            	Check-in Tracking for <u>#firstname# #lastname#</u> (#candidateid#)
+                            <cfelse>
+                    			Evaluation #URL.id# Tracking for <u>#firstname# #lastname#</u> (#candidateid#)
+                         	</cfif>
+                       	</td>
+                  	</tr>
                     <tr><td>&nbsp;</td></tr>
                 </table>
            	</td>
@@ -89,7 +97,15 @@
             <td class="style2" bgcolor="8FB6C9" width="10%"></td>
         </tr>
         <cfif NOT VAL(qGetTracking.recordcount)>
-        	<tr><td colspan="6" align="center" class="style1">There is no Tracking for this evaluation and student.</td></tr>
+        	<tr>
+            	<td colspan="6" align="center" class="style1">
+                	<cfif URL.id EQ 0>
+                    	There is no Tracking for the check-in.
+                    <cfelse>
+                		There is no Tracking for this evaluation and student.
+                  	</cfif>
+              	</td>
+            </tr>
         <cfelse>
         	<cfloop query="qGetTracking">
             	<tr bgcolor="#iif(currentrow MOD 2 ,DE("ffffff") ,DE("F7F7F7") )#">
