@@ -64,6 +64,42 @@ var PopulateCancelBox = function() {
 	}
 }
 
+// depositReceived
+var PopulateDepositReceivedBox = function() {	
+	if (document.studentForm.date_depositReceived.checked) {
+		document.studentForm.date_depositReceived.value = (month + "/" + day + "/" + year);
+	} else {
+		document.studentForm.date_depositReceived.value = '';
+	}
+}
+
+// Payment Received 
+var PopulateFinalPaymentBox = function() {	
+	if (document.studentForm.date_finalPayment.checked) {
+		document.studentForm.date_finalPayment.value = (month + "/" + day + "/" + year);
+	} else {
+		document.studentForm.date_finalPayment.value = '';
+	}
+}
+
+// check Drawn
+var PopulateCheckDrawnBox = function() {	
+	if (document.studentForm.date_checkDrawn.checked) {
+		document.studentForm.date_checkDrawn.value = (month + "/" + day + "/" + year);
+	} else {
+		document.studentForm.date_checkDrawn.value = '';
+	}
+}
+
+// check sent to school
+var PopulateCheckSentSchoolBox = function() {	
+	if (document.studentForm.date_checkSentSchool.checked) {
+		document.studentForm.date_checkSentSchool.value = (month + "/" + day + "/" + year);
+	} else {
+		document.studentForm.date_checkSentSchool.value = '';
+	}
+}
+
 // Program Reason
 var displayProgramReason = function(previousProgramID, selectedProgramID) {
 	// Display Reason	
