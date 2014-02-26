@@ -37,7 +37,7 @@
     
 </cfsilent>
 
-<cfsavecontent variable="vEmailBody">
+<cfsavecontent variable="vEmailBodyTemplate">
 	<p>   
     	Dear {candidateName},
 	</p>
@@ -63,7 +63,7 @@
 	
 	For ( i=1;i LTE qGetCandidates.Recordcount; i=i+1 ) {
 		vFullName = qGetCandidates.firstName[i] & " " & qGetCandidates.middleName[i] & " " & qGetCandidates.lastName[i];
-		vEmailBody = ReplaceNoCase(vEmailBody, "{candidateName}", vFullName);
+		vEmailBody = ReplaceNoCase(vEmailBodyTemplate, "{candidateName}", vFullName);
 		
 		if (qGetCandidates.compliantStatus[i] EQ "WARNING") {
 			
