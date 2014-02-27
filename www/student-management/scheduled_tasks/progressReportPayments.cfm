@@ -12,7 +12,7 @@
 </cfif>
 
 <cfquery datasource="#APPLICATION.DSN#">
-insert into smg_users_payments (agentID,companyID,studentID,programID,old_programID,hostID,paymenttype,
+insert into smg_users_payments (agentID,companyID,studentID,programID,oldID,hostID,paymenttype,
 								transtype,amount,comment,date,inputby,ispaid)
 
 select distinct
@@ -100,7 +100,7 @@ and (
 </cfquery>
 
 <cfquery datasource="#APPLICATION.DSN#">
-insert into smg_users_payments (agentID,companyID,studentID,programID,old_programID,hostID,paymenttype,transtype,amount,comment,date,inputby,ispaid)
+insert into smg_users_payments (agentID,companyID,studentID,programID,oldID,hostID,paymenttype,transtype,amount,comment,date,inputby,ispaid)
 
 select distinct
 pr.fk_sr_user,
