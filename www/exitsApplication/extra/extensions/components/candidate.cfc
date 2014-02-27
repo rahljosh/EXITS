@@ -1870,6 +1870,26 @@
         </cfif>
 
 	</cffunction>
+    
+    <cffunction name="getEvaluationAnswers" access="public" returntype="query" output="no" hint="Returns Evaluation answers based on the candidate and month (0 for check in)">
+    	<cfargument name="candidateID" default="0">
+        <cfargument name="evaluationID" default="-1">
+        
+        <cfquery name="qGetEvaluations" datasource="#APPLICATION.DSN.Source#">
+        	SELECT *
+            FROM extra_evaluation
+            WHERE 1=1
+            <cfif VAL(ARGUMENTS.candidateID)>
+            	AND candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.candidateID#">
+          	</cfif>
+            <cfif ARGUMENTS.evaluationID GTE 0>
+            	AND monthEvaluation = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.evaluationID#">
+          	</cfif>
+        </cfquery>
+        
+        <cfreturn qGetEvaluations>
+        
+    </cffunction>
 	<!------------------------------------------------------------ 
 		End of Monthly Evaluation Tool
 	------------------------------------------------------------->

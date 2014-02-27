@@ -100,6 +100,13 @@
 		for ( i=1; i LTE qGetAnswersSection3.recordCount; i=i+1 ) {
 			FORM[qGetAnswersSection3.fieldKey[i]] = qGetAnswersSection3.answer[i];
 		}
+		
+		// Get check in and evaluations
+		qGetCheckIn = APPLICATION.CFC.CANDIDATE.getEvaluationAnswers(candidateID=qGetCandidate.candidateID,evaluationID=0);
+		qGetEvaluation1 = APPLICATION.CFC.CANDIDATE.getEvaluationAnswers(candidateID=qGetCandidate.candidateID,evaluationID=1);
+		qGetEvaluation2 = APPLICATION.CFC.CANDIDATE.getEvaluationAnswers(candidateID=qGetCandidate.candidateID,evaluationID=2);
+		qGetEvaluation3 = APPLICATION.CFC.CANDIDATE.getEvaluationAnswers(candidateID=qGetCandidate.candidateID,evaluationID=3);
+		qGetEvaluation4 = APPLICATION.CFC.CANDIDATE.getEvaluationAnswers(candidateID=qGetCandidate.candidateID,evaluationID=4);
 	</cfscript>
 		
     <cfinclude template="../querys/fieldstudy.cfm">
@@ -2762,7 +2769,7 @@
                                         		<cfif NOT LEN(qGetCandidate.watDateCheckedIn)><font size="1">(mm/dd/yyyy)</font></cfif>
                                                 <cfif ListFind("1,2,3,4",CLIENT.userType)>
                                                 	<font size="1" style="float:right">
-                                                    	<a href="candidate/evaluation_answers.cfm?uniqueID=#URL.uniqueid#&evaluationID=0" class="style1 jQueryModal">[ Answers ]</a>
+                                                    	<a href="candidate/evaluation_answers.cfm?uniqueID=#URL.uniqueid#&evaluationID=0" class="style1 jQueryModal" <cfif NOT VAL(qGetCheckIn.recordCount)>style="color:gray;"</cfif>>[ Answers ]</a>
                                                     	<a href="candidate/evaluation_tracking.cfm?uniqueID=#URL.uniqueid#&id=0" class="style1 jQueryModal">[ Tracking ]</a>
                                                     </font>
                                                 </cfif>
@@ -2846,7 +2853,7 @@
                                                 
                                                 <cfif ListFind("1,2,3,4",CLIENT.userType)>
                                                 	<font size="1" style="float:right">
-                                                    	<a href="candidate/evaluation_answers.cfm?uniqueID=#URL.uniqueid#&evaluationID=1" class="style1 jQueryModal">[ Answers ]</a>
+                                                    	<a href="candidate/evaluation_answers.cfm?uniqueID=#URL.uniqueid#&evaluationID=1" class="style1 jQueryModal" <cfif NOT VAL(qGetEvaluation1.recordCount)>style="color:gray;"</cfif>>[ Answers ]</a>
                                                     	<a href="candidate/evaluation_tracking.cfm?uniqueID=#URL.uniqueid#&id=1" class="style1 jQueryModal">[ Tracking ]</a>
                                                     </font>
                                                 </cfif>
@@ -2867,7 +2874,7 @@
                                                 
                                                 <cfif ListFind("1,2,3,4",CLIENT.userType)>
                                                 	<font size="1" style="float:right">
-                                                    	<a href="candidate/evaluation_answers.cfm?uniqueID=#URL.uniqueid#&evaluationID=2" class="style1 jQueryModal">[ Answers ]</a>
+                                                    	<a href="candidate/evaluation_answers.cfm?uniqueID=#URL.uniqueid#&evaluationID=2" class="style1 jQueryModal" <cfif NOT VAL(qGetEvaluation2.recordCount)>style="color:gray;"</cfif>>[ Answers ]</a>
                                                     	<a href="candidate/evaluation_tracking.cfm?uniqueID=#URL.uniqueid#&id=2" class="style1 jQueryModal">[ Tracking ]</a>
                                                     </font>
                                                 </cfif>
@@ -2888,7 +2895,7 @@
                                                 
                                                 <cfif ListFind("1,2,3,4",CLIENT.userType)>
                                                 	<font size="1" style="float:right">
-                                                    	<a href="candidate/evaluation_answers.cfm?uniqueID=#URL.uniqueid#&evaluationID=3" class="style1 jQueryModal">[ Answers ]</a>
+                                                    	<a href="candidate/evaluation_answers.cfm?uniqueID=#URL.uniqueid#&evaluationID=3" class="style1 jQueryModal" <cfif NOT VAL(qGetEvaluation3.recordCount)>style="color:gray;"</cfif>>[ Answers ]</a>
                                                     	<a href="candidate/evaluation_tracking.cfm?uniqueID=#URL.uniqueid#&id=3" class="style1 jQueryModal">[ Tracking ]</a>
                                                     </font>
                                                 </cfif>
@@ -2909,7 +2916,7 @@
                                                 
                                                 <cfif ListFind("1,2,3,4",CLIENT.userType)>
                                                 	<font size="1" style="float:right">
-                                                    	<a href="candidate/evaluation_answers.cfm?uniqueID=#URL.uniqueid#&evaluationID=4" class="style1 jQueryModal">[ Answers ]</a>
+                                                    	<a href="candidate/evaluation_answers.cfm?uniqueID=#URL.uniqueid#&evaluationID=4" class="style1 jQueryModal" <cfif NOT VAL(qGetEvaluation4.recordCount)>style="color:gray;"</cfif>>[ Answers ]</a>
                                                     	<a href="candidate/evaluation_tracking.cfm?uniqueID=#URL.uniqueid#&id=4" class="style1 jQueryModal">[ Tracking ]</a>
                                                     </font>
                                                 </cfif>
