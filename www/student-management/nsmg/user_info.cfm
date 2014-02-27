@@ -1252,7 +1252,7 @@
         
         </cfif>
  <!----SMG Media Access---->
- <cfif client.userid eq 12313 or client.userid eq 1>
+ <cfif client.userid eq 12313 or client.userid eq 1 or client.userid = 20748>
          <div class="rdholder" style="width:100%;float:right;"> 
 				<div class="rdtop"> 
                 <span class="rdtitle">SMG Media Access</span> 
