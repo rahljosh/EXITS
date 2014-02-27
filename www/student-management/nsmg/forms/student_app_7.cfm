@@ -38,7 +38,12 @@
 				<td><cfinput type="text" name="estgpa" size=10 value="#estgpa#"></td></tr>
 			<tr><td align="right">Years of English:</td>
 				<td><cfinput type="text" name="yearsenglish" size=10 value="#yearsenglish#"></td></tr>
-			<tr><td align="right">SLEP Test Score:</td>
+			<tr><td align="right">
+            	<select name="test_type">
+                    <option value="SLEP">SLEP</option>
+                    <option value="ELTIS">ELTIS</option>
+                </select>
+                 Test Score:</td>
 				<td><cfinput type="text" name="slep_score" size=10 value="#slep_score#"></td></tr>
 		</table>
 	</td>
