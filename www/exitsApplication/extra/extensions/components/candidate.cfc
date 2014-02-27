@@ -1236,33 +1236,28 @@
                     eir.userID,
                     eir.dateIncident,
                     eir.subject,
+                    eir.reportedBy,
+                    eir.relationshipToParticipant,
                     eir.notes,
                     eir.isSolved,
                     eir.dateCreated,
                     eir.dateUpdated,
                     eh.name AS hostCompanyName
-                FROM 
-                    extra_incident_report eir
-                INNER JOIN
-                	extra_candidates ec ON ec.candidateID = eir.candidateID
-				LEFT OUTER JOIN
-                	extra_hostCompany eh ON eh.hostCompanyID = eir.hostCompanyID                    
-                WHERE
-                	1 = 1 
+                FROM extra_incident_report eir
+                INNER JOIN extra_candidates ec ON ec.candidateID = eir.candidateID
+				LEFT OUTER JOIN extra_hostCompany eh ON eh.hostCompanyID = eir.hostCompanyID                    
+                WHERE 1 = 1 
 
 				<cfif LEN(ARGUMENTS.incidentID)>
-                    AND
-                        eir.ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.incidentID)#">
+                    AND eir.ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.incidentID)#">
                 </cfif>
                     
 				<cfif LEN(ARGUMENTS.candidateID)>
-                    AND
-                        ec.candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#">
+                    AND ec.candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#">
                 </cfif>
                 
                 <cfif LEN(ARGUMENTS.uniqueID)>
-                    AND
-                        ec.uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.uniqueID)#">
+                    AND ec.uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.uniqueID)#">
                 </cfif>
 			
             ORDER BY
@@ -1272,92 +1267,107 @@
 		<cfreturn qGetIncidentReport>
 	</cffunction>
     
-
+    <cffunction name="getIncidentNotes" access="public" returntype="query" output="no" hint="Gets notes for a given incident">
+    	<cfargument name="incidentID" required="yes">
+        
+        <cfquery name="qGetIncidents" datasource="#APPLICATION.DSN.Source#">
+        	SELECT n.*, u.firstName, u.lastName
+            FROM extra_incident_report_notes n
+            LEFT OUTER JOIN smg_users u ON u.userID = n.addedBy
+            WHERE n.reportID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.incidentID)#">
+            ORDER BY n.date DESC
+        </cfquery>
+        
+        <cfreturn qGetIncidents>
+        
+    </cffunction>
+    
 	<cffunction name="insertUpdateIncident" access="public" returntype="void" output="false" hint="Insert/Update Incident Information">
-		<cfargument name="incidentID" default="0" hint="Incident ID" />
+		<cfargument name="incidentID" default="0" hint="Incident ID">
 		<cfargument name="candidateID" required="yes" hint="Candidate ID is required">
         <cfargument name="hostCompanyID" required="yes" hint="hostCompany ID is required">
-        <cfargument name="userID" required="yes" hint="User entering/updating information">
         <cfargument name="dateIncident" default="" hint="dateIncident">
         <cfargument name="subject" default="" hint="subject">
+        <cfargument name="reportedBy" default="">
+        <cfargument name="relationshipToParticipant" default="">
+        <cfargument name="previousNotes" default="">
         <cfargument name="notes" default="" hint="notes">
-        <cfargument name="previousNotes" default="" hint="if nothing is passed in will use previous notes in the database.">
-        <cfargument name="isSolved" default="" hint="Set to 0 or 1">
+        <cfargument name="isSolved" default="0" hint="Set to 0 or 1">
 		
-        <cfscript>
-			// Get Current User
-			qGetUserInfo = APPLICATION.CFC.USER.getUserByID(userID=ARGUMENTS.userID);
-			
-			// Get Current Notes
-			qGetPreviousNotes = getIncidentReport(incidentID=ARGUMENTS.incidentID, candidateID=ARGUMENTS.candidateID);
-			
-			if ( NOT LEN(ARGUMENTS.previousNotes) ) {
-				// Sets this to the previous notes in the database
-				ARGUMENTS.previousNotes = qGetPreviousNotes.notes;
-			}
-			
-			if ( LEN(ARGUMENTS.notes) ) {
-				// Add User Time Stamp to notes
-				ARGUMENTS.notes = ARGUMENTS.previousNotes & Chr(13) & "<p><strong>" & ARGUMENTS.notes & "</strong> <br / > Added by #qGetUserInfo.firstName# #qGetUserInfo.lastName# on #DateFormat(now(), 'mm/dd/yyyy')# at #TimeFormat(now(), 'hh:mm tt')# EST </p>";
-			} else {
-				ARGUMENTS.notes = ARGUMENTS.previousNotes;	
-			}
-			
-        </cfscript>
-        
-        <!--- Update --->
-        <cfif VAL(ARGUMENTS.incidentID)>
-        	
-            <cfquery 
-                datasource="#APPLICATION.DSN.Source#">
-                    UPDATE
-                        extra_incident_report
-                    SET
-                    	hostCompanyID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(ARGUMENTS.hostCompanyID)#">,
-                        userID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(ARGUMENTS.userID)#">,
-                        dateIncident = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateIncident#" null="#NOT IsDate(ARGUMENTS.dateIncident)#">,
-                        subject = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.subject#">,  
-                   		notes = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.notes#">,
-                        isSolved = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isSolved)#">
-                    WHERE
-                        ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.incidentID#">
-                    AND
-                    	candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#">
+		<cfif VAL(ARGUMENTS.incidentID)>
+        	<cfquery datasource="#APPLICATION.DSN.Source#">
+            	UPDATE extra_incident_report
+                SET
+                	hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostCompanyID)#">,
+                    dateIncident = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateIncident#">,
+                    subject = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.subject#">,
+                    reportedBy = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.reportedBy#">,
+                    relationshipToParticipant = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.relationshipToParticipant#">,
+                    isSolved = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isSolved)#">
+              	WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.incidentID)#">
             </cfquery>
-		
-        <!--- Insert --->
+            <cfscript>
+				if (LEN(TRIM(ARGUMENTS.notes))) {
+					insertUpdateIncidentNotes(reportID=ARGUMENTS.incidentID,note=ARGUMENTS.notes);
+				}
+				for(i=1; i LTE ArrayLen(ARGUMENTS.previousNotes); i=i+1) {
+					insertUpdateIncidentNotes(id=ARGUMENTS.previousNotes[i][1],note=ARGUMENTS.previousNotes[i][2]);
+				}
+			</cfscript>
         <cfelse>
-        
-            <cfquery 
-                datasource="#APPLICATION.DSN.Source#">
-                    INSERT INTO
-                        extra_incident_report
-                    (
-						candidateID,
-                        hostCompanyID,
-                        userID,
-                        dateIncident,
-                        subject,
-                        notes,
-                        isSolved,
-                        dateCreated                    
-                    )
-                    VALUES
-                    (
-                    	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(ARGUMENTS.hostCompanyID)#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(ARGUMENTS.userID)#">,
-                    	<cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateIncident#" null="#NOT IsDate(ARGUMENTS.dateIncident)#">,
-                    	<cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.subject#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.notes#">,
-                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isSolved)#">,
-                        <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
-                    )
+        	<cfquery result="qInsertIncident" datasource="#APPLICATION.DSN.Source#">
+            	INSERT INTO extra_incident_report (
+                	candidateID,
+                    hostCompanyID,
+                    userID,
+                    dateIncident,
+                    subject,
+                    reportedBy,
+                    relationshipToParticipant,
+                    isSolved )
+               	VALUES (
+                	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostCompanyID)#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
+                    <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateIncident#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.subject#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.reportedBy#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.relationshipToParticipant#">,
+                    <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isSolved)#"> )
             </cfquery>
-        
+            <cfscript>
+				insertUpdateIncidentNotes(reportID=qInsertIncident.GENERATEDKEY,note=ARGUMENTS.notes);
+			</cfscript>
         </cfif>
-        	
 	</cffunction>
+    
+    <cffunction name="insertUpdateIncidentNotes" access="public" returntype="void" output="no" hint="Inserts or updates an incident note">
+    	<cfargument name="id" default="0" required="no" hint="if nothing is passed in will insert, otherwise will update">
+        <cfargument name="reportID" default="0" required="no" hint="needed if id is not passed in to insert">
+        <cfargument name="note" default="" required="no">
+        
+        <cfif VAL(ARGUMENTS.id)>
+        	<cfquery datasource="#APPLICATION.DSN.Source#">
+            	UPDATE extra_incident_report_notes
+                SET note = <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#ARGUMENTS.note#">
+               	WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.id#">
+            </cfquery>
+        <cfelse>
+        	<cfquery datasource="#APPLICATION.DSN.Source#">
+            	INSERT INTO extra_incident_report_notes (
+                	reportID,
+                    addedBy,
+                    date,
+                    note )
+              	VALUES (
+                	<cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.reportID#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
+                    <cfqueryparam cfsqltype="cf_sql_timestamp" value="#NOW()#">,
+                    <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#ARGUMENTS.note#"> )
+            </cfquery>
+        </cfif>
+        
+    </cffunction>
     
     <cffunction name="getIncidentSubjects" access="public" returntype="query" output="no" hint="Gets the possible subjects for an incident.">
     	<cfargument name="incidentID" default="0" required="no" hint="incidentID is not required">
