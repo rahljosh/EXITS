@@ -24,6 +24,8 @@
     <cfparam name="FORM.hostCompanyID" default="0">
     <cfparam name="FORM.dateIncident" default="">
 	<cfparam name="FORM.subject" default="">
+    <cfparam name="FORM.reportedBy" default="">
+    <cfparam name="FORM.relationshipToParticipant" default="">
 	<cfparam name="FORM.notes" default="">
     <cfparam name="FORM.previousNotes" default="">
     <cfparam name="FORM.isSolved" default="0">
@@ -46,6 +48,9 @@
 		// Get Incident Information
 		qGetIncidentInfo = APPLICATION.CFC.CANDIDATE.getIncidentReport(incidentID=FORM.incidentID, candidateID=qGetCandidateInfo.candidateID);
 		
+		// Get Incident Notes
+		qGetIncidentNotes = APPLICATION.CFC.CANDIDATE.getIncidentNotes(incidentID=FORM.incidentID);
+		
 		// Get The Incident Subjects
 		qGetIncidentSubjects = APPLICATION.CFC.CANDIDATE.getIncidentSubjects();
     
@@ -66,18 +71,28 @@
 			}
 			
 			// Check if there are no errors
-			if ( NOT SESSION.formErrors.length() ) {				
-
+			if ( NOT SESSION.formErrors.length() ) {
+				
+				// Create struct with previous notes to update if neccessary
+				previousNotes = ArrayNew(2);
+				for (i = 1; i <= qGetIncidentNotes.recordCount; i = i + 1) {
+					note = ArrayNew(1);
+					note[1] = qGetIncidentNotes.id[i];
+					note[2] = FORM['#qGetIncidentNotes.id[i]#'];
+					previousNotes[i] = note;
+				}
+				
 				// Add | Update Incident
 				APPLICATION.CFC.CANDIDATE.insertUpdateIncident(
 					incidentID = FORM.incidentID,
 					candidateID = qGetCandidateInfo.candidateID,
 					hostCompanyID = FORM.hostCompanyID,
-					userID = CLIENT.userID,
 					dateIncident = FORM.dateIncident,
 					subject = FORM.subject,
+					reportedBy = FORM.reportedBy,
+					relationshipToParticipant = FORM.relationshipToParticipant,
+					previousNotes=previousNotes,
 					notes = FORM.notes,
-					previousNotes = FORM.previousNotes,
 					isSolved = FORM.isSolved
 				);
 
@@ -93,6 +108,8 @@
 			FORM.hostCompanyID = VAL(qGetIncidentInfo.hostCompanyID);
 			FORM.dateIncident = qGetIncidentInfo.dateIncident;
 			FORM.subject = qGetIncidentInfo.subject;
+			FORM.reportedBy = qGetIncidentInfo.reportedBy;
+			FORM.relationshipToParticipant = qGetIncidentInfo.relationshipToParticipant;
 			if ( NOT VAL(qGetIncidentInfo.recordCount) ) {
 				FORM.notes = FORM.notes;
 			}
@@ -150,7 +167,7 @@
                             messageType="tableSection"
                             width="97%"
                             />
-                            
+                         
                         <table width="97%" cellpadding="3" cellspacing="0" align="center" style="padding:5px; background-color:##FFFFFF; border:1px solid ##C7CFDC; padding-bottom:10px; margin-bottom:10px;">
                             <tr>
                                 <td width="25%" class="style2" style="background-color:##8FB6C9; border-bottom:1px solid ##C7CFDC; text-align:right; padding-right:10px;">Host Company</td>
@@ -180,46 +197,40 @@
                                     </select>
                                 </td>
                             </tr>
-                            <cfif VAL(qGetIncidentInfo.recordCount)>
-                            	<script type="text/javascript">
-									var commentsArray = null;
-									$(document).ready(function() {
-										var incidentComments = $("##previousNotes").val();
-										var comments = incidentComments.split("<p>");
-										commentsArray = new Array((comments.length-1)*2);
-										for (var i=1; i<comments.length; i++) {
-											commentsArray[(i-1)*2] = comments[i].substring(8,comments[i].indexOf("</strong>"));
-											commentsArray[((i-1)*2)+1] = comments[i].substring(comments[i].indexOf("</strong>")+17,comments[i].indexOf("</p>"));
-										}
-										for (var j=0; j<commentsArray.length; j+=2) {
-											$("##previousNotesDiv").html(
-												$("##previousNotesDiv").html() + 
-												"<strong><div contenteditable='true' id='comment" + j + "'>" + commentsArray[j] + "</div></strong>" +
-												commentsArray[j+1] + "<br/><br/>");	
-										}
-									});
-									
-									function updatePreviousNotes() {
-										var newPreviousNotes = "";
-										for (var i=0; i<commentsArray.length; i+=2) {
-											// Do not include empty comments
-											if ($("##comment" + i).html() != "<br>" && $("##comment" + i).html() != "") {
-												newPreviousNotes = newPreviousNotes + "<p><strong>" + $("##comment" + i).html() + "</strong> <br / >" + commentsArray[i+1] + "</p>";
-											}
-										}
-										$("##previousNotes").val(newPreviousNotes);
-									}
-								</script>
-                            	<input type="hidden" name="previousNotes" id="previousNotes" value="#FORM.previousNotes#"/>
+                            <tr>
+                                <td class="style2" style="background-color:##8FB6C9; border-bottom:1px solid ##C7CFDC; text-align:right; padding-right:10px;">Reported By</td>
+                                <td style="border-bottom:1px solid ##C7CFDC;">
+                                	<input type="text" name="reportedBy" value="#FORM.reportedBy#" class="xLargeField"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="style2" style="background-color:##8FB6C9; border-bottom:1px solid ##C7CFDC; text-align:right; padding-right:10px;">Relationship to Participant</td>
+                                <td style="border-bottom:1px solid ##C7CFDC;">
+                                	<select name="relationshipToParticipant" id="relationshipToParticipant" class="xLargeField">
+                                    	<option value="Self">Self</option>
+                                        <option value="Friend">Friend</option>
+                                        <option value="Intl. Rep.">Intl. Rep.</option>
+                                        <option value="Host Company">Host Company</option>
+                                        <option value="DOS">DOS</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <cfif VAL(qGetIncidentNotes.recordCount)>
                                 <tr>
-                                    <td class="style2" style="background-color:##8FB6C9; border-bottom:1px solid ##C7CFDC; text-align:right; padding-right:10px; vertical-align:top;">Previous Notes</td>
+                                    <td class="style2" style="background-color:##8FB6C9; border-bottom:1px solid ##C7CFDC; text-align:right; padding-right:10px; vertical-align:top;">Notes</td>
                                     <td style="border-bottom:1px solid ##C7CFDC;" valign="top">
-                                        <div id="previousNotesDiv"></div>
+                                        <cfloop query="qGetIncidentNotes">
+                                            <b>On #DateFormat(date,'mm/dd/yyyy')# at #TimeFormat(date,'HH:MM')# by #firstName# #lastName#</b>
+                                            <br/>
+                                            <textarea name="#id#" class="xLargeTextArea" style="height:36px;">#note#</textarea>
+                                            <br/>
+                                        </cfloop>
                                     </td>
                                 </tr>
                             </cfif>
                             <tr>
-                                <td class="style2" style="background-color:##8FB6C9; border-bottom:1px solid ##C7CFDC; text-align:right; padding-right:10px; vertical-align:top;">Notes</td>
+                                <td class="style2" style="background-color:##8FB6C9; border-bottom:1px solid ##C7CFDC; text-align:right; padding-right:10px; vertical-align:top;">New Notes</td>
                                 <td style="border-bottom:1px solid ##C7CFDC;">
                                     <textarea name="notes" id="notes" class="xLargeTextArea">#FORM.notes#</textarea>
                                 </td>
