@@ -221,7 +221,7 @@
                                     <td class="style2" style="background-color:##8FB6C9; border-bottom:1px solid ##C7CFDC; text-align:right; padding-right:10px; vertical-align:top;">Notes</td>
                                     <td style="border-bottom:1px solid ##C7CFDC;" valign="top">
                                         <cfloop query="qGetIncidentNotes">
-                                            <b>On #DateFormat(date,'mm/dd/yyyy')# at #TimeFormat(date,'HH:MM')# by #firstName# #lastName#</b>
+                                            <b>On #DateFormat(date,'mm/dd/yyyy')# at #TimeFormat(date,'h:mm tt')# by #firstName# #lastName#</b>
                                             <br/>
                                             <textarea name="#id#" class="xLargeTextArea" style="height:36px;">#note#</textarea>
                                             <br/>
