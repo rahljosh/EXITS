@@ -9,7 +9,8 @@
 		</cfif>			
         estgpa = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.estgpa#">,
         yearsenglish = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.yearsenglish#">,
-        slep_score = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.slep_score#">
+        slep_score = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.slep_score#">,
+        test_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.test_type#">
 	WHERE 
     	studentid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.studentid#">	
 </cfquery>
