@@ -1,3 +1,5 @@
+<cfsetting requesttimeout="9999">
+
 <cfscript>
 	qGetIncidents = APPLICATION.CFC.CANDIDATE.getIncidentReport();
 </cfscript>
