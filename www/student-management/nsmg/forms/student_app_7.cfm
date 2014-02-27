@@ -40,8 +40,8 @@
 				<td><cfinput type="text" name="yearsenglish" size=10 value="#yearsenglish#"></td></tr>
 			<tr><td align="right">
             	<select name="test_type">
-                    <option value="SLEP">SLEP</option>
-                    <option value="ELTIS">ELTIS</option>
+                    <option value="SLEP" <cfif #test_type# is 'SLEP'>selected</cfif>>SLEP</option>
+                    <option value="ELTIS" <cfif #test_type# is 'ELTIS'>selected</cfif>>ELTIS</option>
                 </select>
                  Test Score:</td>
 				<td><cfinput type="text" name="slep_score" size=10 value="#slep_score#"></td></tr>
