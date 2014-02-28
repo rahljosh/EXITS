@@ -849,7 +849,7 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                 </div>
                 <!--- End of Case Management --->      
                 </cfif>             
-                <cfif client.companyid neq 14>   
+                  
                 <!--- Marketing Material --->
                 <div class="rdholder" style="width:100%; float:right;"> 
                 
@@ -881,10 +881,16 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                             
                             <!--- ESI ONLY Docs --->
                             <cfif ListFind("14", CLIENT.companyID) >
+                            	<tr>
+                                    <td><img src="pics/icons/marketing.png" /></td><td><a href="marketing/ESI_host_flier/HF-Flyer.html" target="_blank">Host Family Flier</a></td>
+                                    <td></td>
+                                </tr>
+                                <!----
                                 <tr>
                                     <td><img src="pics/icons/marketing.png" /></td><td><a href="marketing/bookmark.cfm" target="_blank">Enrich Your Life Bookmarks</a></td>
                                     <td><img src="pics/icons/marketing.png" /></td><td><a href="marketing/difference.cfm" target="_blank">Make A Difference</a></td>
                                 </tr>
+								---->
                             </cfif>
                             
                         </table>
@@ -894,7 +900,7 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                     <div class="rdbottom"></div> <!-- end bottom --> 
                     
                 </div>
-               </cfif>
+               
                 <!--- End of Marketing Material --->
             
             
