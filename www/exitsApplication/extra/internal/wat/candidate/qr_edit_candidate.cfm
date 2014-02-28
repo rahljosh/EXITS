@@ -224,41 +224,6 @@
 <cfloop query="qGetAllPlacements">
 	<cfif qGetAllPlacements.isSecondary EQ "1">
     
-    	<!--- Check if the job offer status is confirmed, if it is save the print file --->
-        <cfquery name="qGetJobOfferStatus" datasource="#APPLICATION.DSN.Source#">
-            SELECT selfJobOfferStatus
-            FROM extra_candidate_place_company
-            WHERE candcompid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetAllPlacements.candCompID#">
-        </cfquery>
-        
-        <cfif qGetJobOfferStatus.selfJobOfferStatus NEQ "confirmed" AND FORM['selfJobOfferStatus_' & qGetAllPlacements.candCompID] EQ "confirmed">
-            <cfset filename="placementVetting_#qGetCandidate.candidateID#_#qGetAllPlacements.candCompID#_#DateFormat(NOW(),'mm-dd-yyyy')#">
-            <cfdocument format="pdf" filename="#filename#.pdf" overwrite="yes" localurl="yes">
-                <cfset URL.candCompID = qGetAllPlacements.candCompID>
-                <cfset URL.uniqueID = qGetCandidate.uniqueid>
-                <cfset URL.saving = 1>
-                <cfinclude template="placementVettingPrint.cfm">
-            </cfdocument>
-            
-            <cfif NOT DirectoryExists("#APPLICATION.PATH.uploadedFiles#candidate/#qGetCandidate.candidateID#")>
-                <cfdirectory action="create" directory="#APPLICATION.PATH.uploadedFiles#candidate/#qGetCandidate.candidateID#">
-            </cfif>
-            <cffile result="cffile" action="move" destination="#APPLICATION.PATH.uploadedFiles#candidate/#qGetCandidate.candidateID#/#filename#.pdf" source="#getDirectoryFromPath(getCurrentTemplatePath())##filename#.pdf">
-            
-            <cfscript>
-                APPLICATION.CFC.DOCUMENT.insertDocument(
-                    ForeignTable="extra_candidate_place_company",
-                    ForeignID=qGetAllPlacements.candCompID,
-                    documentTypeID=41,
-                    serverExtension="pdf",
-                    serverName=filename,
-                    clientExtension="pdf",
-                    clientName=filename,
-                    filesize=APPLICATION.CFC.UDF.displayFileSize(GetFileInfo('#APPLICATION.PATH.uploadedFiles#candidate/#qGetCandidate.candidateID#/#filename#.pdf').size),
-                    uploadPath="#APPLICATION.PATH.uploadedFiles#candidate/#qGetCandidate.candidateID#/");
-            </cfscript>
-        </cfif>
-    
     	<!--- REMOVE SECONDARY PLACEMENT --->
     	<cfif FORM['cancelStatus_#qGetAllPlacements.candCompID#'] EQ "1">
         
@@ -449,6 +414,41 @@
             
         </cfif>
         
+        <!--- Check if the job offer status is confirmed, if it is save the print file --->
+        <cfquery name="qGetJobOfferStatus" datasource="#APPLICATION.DSN.Source#">
+            SELECT selfJobOfferStatus
+            FROM extra_candidate_place_company
+            WHERE candcompid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetAllPlacements.candCompID#">
+        </cfquery>
+        
+        <cfif qGetJobOfferStatus.selfJobOfferStatus NEQ "confirmed" AND FORM['selfJobOfferStatus_' & qGetAllPlacements.candCompID] EQ "confirmed">
+            <cfset filename="placementVetting_#qGetCandidate.candidateID#_#qGetAllPlacements.candCompID#_#DateFormat(NOW(),'mm-dd-yyyy')#">
+            <cfdocument format="pdf" filename="#filename#.pdf" overwrite="yes" localurl="yes">
+                <cfset URL.candCompID = qGetAllPlacements.candCompID>
+                <cfset URL.uniqueID = qGetCandidate.uniqueid>
+                <cfset URL.saving = 1>
+                <cfinclude template="placementVettingPrint.cfm">
+            </cfdocument>
+            
+            <cfif NOT DirectoryExists("#APPLICATION.PATH.uploadedFiles#candidate/#qGetCandidate.candidateID#")>
+                <cfdirectory action="create" directory="#APPLICATION.PATH.uploadedFiles#candidate/#qGetCandidate.candidateID#">
+            </cfif>
+            <cffile result="cffile" action="move" destination="#APPLICATION.PATH.uploadedFiles#candidate/#qGetCandidate.candidateID#/#filename#.pdf" source="#getDirectoryFromPath(getCurrentTemplatePath())##filename#.pdf">
+            
+            <cfscript>
+                APPLICATION.CFC.DOCUMENT.insertDocument(
+                    ForeignTable="extra_candidate_place_company",
+                    ForeignID=qGetAllPlacements.candCompID,
+                    documentTypeID=41,
+                    serverExtension="pdf",
+                    serverName=filename,
+                    clientExtension="pdf",
+                    clientName=filename,
+                    filesize=APPLICATION.CFC.UDF.displayFileSize(GetFileInfo('#APPLICATION.PATH.uploadedFiles#candidate/#qGetCandidate.candidateID#/#filename#.pdf').size),
+                    uploadPath="#APPLICATION.PATH.uploadedFiles#candidate/#qGetCandidate.candidateID#/");
+            </cfscript>
+        </cfif>
+        
     </cfif>
     
 </cfloop>
@@ -456,41 +456,6 @@
 
 <!---- HOST COMPANY INFORMATION ---->
 <cfif VAL(FORM.hostcompanyID)>
-
-	<!--- Check if the job offer status is confirmed, if it is save the print file --->
-    <cfquery name="qGetJobOfferStatus" datasource="#APPLICATION.DSN.Source#">
-    	SELECT selfJobOfferStatus
-        FROM extra_candidate_place_company
-        WHERE candcompid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCurrentPlacement.candCompID#">
-    </cfquery>
-    
-    <cfif qGetJobOfferStatus.selfJobOfferStatus NEQ "confirmed" AND FORM.selfJobOfferStatus EQ "confirmed">
-   		<cfset filename="placementVetting_#qGetCandidate.candidateID#_#qGetCurrentPlacement.candCompID#_#DateFormat(NOW(),'mm-dd-yyyy')#">
-        <cfdocument format="pdf" filename="#filename#.pdf" overwrite="yes" localurl="yes">
-            <cfset URL.candCompID = qGetCurrentPlacement.candCompID>
-            <cfset URL.uniqueID = qGetCandidate.uniqueid>
-            <cfset URL.saving = 1>
-            <cfinclude template="placementVettingPrint.cfm">
-        </cfdocument>
-        
-        <cfif NOT DirectoryExists("#APPLICATION.PATH.uploadedFiles#candidate/#qGetCandidate.candidateID#")>
-            <cfdirectory action="create" directory="#APPLICATION.PATH.uploadedFiles#candidate/#qGetCandidate.candidateID#">
-        </cfif>
-        <cffile result="cffile" action="move" destination="#APPLICATION.PATH.uploadedFiles#candidate/#qGetCandidate.candidateID#/#filename#.pdf" source="#getDirectoryFromPath(getCurrentTemplatePath())##filename#.pdf">
-        
-        <cfscript>
-            APPLICATION.CFC.DOCUMENT.insertDocument(
-                ForeignTable="extra_candidate_place_company",
-                ForeignID=qGetCurrentPlacement.candCompID,
-                documentTypeID=41,
-                serverExtension="pdf",
-                serverName=filename,
-                clientExtension="pdf",
-                clientName=filename,
-                filesize=APPLICATION.CFC.UDF.displayFileSize(GetFileInfo('#APPLICATION.PATH.uploadedFiles#candidate/#qGetCandidate.candidateID#/#filename#.pdf').size),
-                uploadPath="#APPLICATION.PATH.uploadedFiles#candidate/#qGetCandidate.candidateID#/");
-        </cfscript>
-    </cfif>
 
 	<!--- Update EIN on Host Company Table --->
     <cfif LEN(FORM.EIN)>
@@ -809,6 +774,41 @@
         </cfquery>
    	</cfloop>
     <!--- End Insert Season History --->
+    
+    <!--- Check if the job offer status is confirmed, if it is save the print file --->
+    <cfquery name="qGetJobOfferStatus" datasource="#APPLICATION.DSN.Source#">
+    	SELECT selfJobOfferStatus
+        FROM extra_candidate_place_company
+        WHERE candcompid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCurrentPlacement.candCompID#">
+    </cfquery>
+    
+    <cfif qGetJobOfferStatus.selfJobOfferStatus NEQ "confirmed" AND FORM.selfJobOfferStatus EQ "confirmed">
+   		<cfset filename="placementVetting_#qGetCandidate.candidateID#_#qGetCurrentPlacement.candCompID#_#DateFormat(NOW(),'mm-dd-yyyy')#">
+        <cfdocument format="pdf" filename="#filename#.pdf" overwrite="yes" localurl="yes">
+            <cfset URL.candCompID = qGetCurrentPlacement.candCompID>
+            <cfset URL.uniqueID = qGetCandidate.uniqueid>
+            <cfset URL.saving = 1>
+            <cfinclude template="placementVettingPrint.cfm">
+        </cfdocument>
+        
+        <cfif NOT DirectoryExists("#APPLICATION.PATH.uploadedFiles#candidate/#qGetCandidate.candidateID#")>
+            <cfdirectory action="create" directory="#APPLICATION.PATH.uploadedFiles#candidate/#qGetCandidate.candidateID#">
+        </cfif>
+        <cffile result="cffile" action="move" destination="#APPLICATION.PATH.uploadedFiles#candidate/#qGetCandidate.candidateID#/#filename#.pdf" source="#getDirectoryFromPath(getCurrentTemplatePath())##filename#.pdf">
+        
+        <cfscript>
+            APPLICATION.CFC.DOCUMENT.insertDocument(
+                ForeignTable="extra_candidate_place_company",
+                ForeignID=qGetCurrentPlacement.candCompID,
+                documentTypeID=41,
+                serverExtension="pdf",
+                serverName=filename,
+                clientExtension="pdf",
+                clientName=filename,
+                filesize=APPLICATION.CFC.UDF.displayFileSize(GetFileInfo('#APPLICATION.PATH.uploadedFiles#candidate/#qGetCandidate.candidateID#/#filename#.pdf').size),
+                uploadPath="#APPLICATION.PATH.uploadedFiles#candidate/#qGetCandidate.candidateID#/");
+        </cfscript>
+    </cfif>
     
 <!--- Not a valid Host Company Assigned --->
 <cfelseif VAL(qGetCurrentPlacement.candcompid)>
