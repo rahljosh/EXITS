@@ -68,7 +68,7 @@
                                 	<cfset directoryUp = "../">
                                 </cfif>
                                 
-                                <cfif FileExists(expandPath("../../uploadedfiles/web-candidates/#qGetCandidate.candidateID#.jpg"))>
+                                <cfif FileExists(expandPath("#directoryUp#../uploadedfiles/web-candidates/#qGetCandidate.candidateID#.jpg"))>
                                     <img src="#directoryUp#../uploadedfiles/web-candidates/#qGetCandidate.candidateID#.jpg" width="135">
                                 <cfelse>
                                     <img src="#directoryUp#../pics/no_stupicture.jpg" width="137" height="137">
