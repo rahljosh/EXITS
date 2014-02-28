@@ -156,33 +156,50 @@
                                 <table width="70%" align="center" style="border:1px solid black;">
                                     <tr>
                                         <td align="right" class="right" width="50%">Business License:</td>
-                                        <td align="left" class="left">#YesNoFormat(qCandidatePlaceCompany.authentication_secretaryOfState)#</td>
+                                        <td align="left" class="left">
+                                        	#YesNoFormat(qCandidatePlaceCompany.authentication_secretaryOfState)#&nbsp;
+                                            #DateFormat(qCandidatePlaceCompany.authentication_secretaryOfStateExpiration,'mm/dd/yyyy')#
+                                     	</td>
                                     </tr>
                                     <cfif VAL(qCandidatePlaceCompany.authentication_businessLicenseNotAvailable)>
                                         <tr>
                                             <td align="right" class="right">Incorporation:</td>
-                                            <td align="left" class="left">#YesNoFormat(qCandidatePlaceCompany.authentication_incorporation)#</td>
+                                            <td align="left" class="left">
+                                            	#YesNoFormat(qCandidatePlaceCompany.authentication_incorporation)#&nbsp;
+                                          	</td>
                                         </tr>
                                         <tr>
                                             <td align="right" class="right">Certificate of Existence:</td>
-                                            <td align="left" class="left">#YesNoFormat(qCandidatePlaceCompany.authentication_certificateOfExistence)#</td>
+                                            <td align="left" class="left">
+                                            	#YesNoFormat(qCandidatePlaceCompany.authentication_certificateOfExistence)#&nbsp;
+                                         	</td>
                                         </tr>
                                         <tr>
                                             <td align="right" class="right">Certificate of Reinstatement:</td>
-                                            <td align="left" class="left">#YesNoFormat(qCandidatePlaceCompany.authentication_certificateOfReinstatement)#</td>
+                                            <td align="left" class="left">
+                                            	#YesNoFormat(qCandidatePlaceCompany.authentication_certificateOfReinstatement)#&nbsp;
+                                         	</td>
                                         </tr>
                                         <tr>
                                             <td align="right" class="right">Department of State:</td>
-                                            <td align="left" class="left">#YesNoFormat(qCandidatePlaceCompany.authentication_departmentOfState)#</td>
+                                            <td align="left" class="left">
+                                            	#YesNoFormat(qCandidatePlaceCompany.authentication_departmentOfState)#&nbsp;
+                                       		</td>
                                         </tr>
                                     </cfif>
                                     <tr>
                                         <td align="right" class="right">Department of Labor:</td>
-                                        <td align="left" class="left">#YesNoFormat(qCandidatePlaceCompany.authentication_departmentOfLabor)#</td>
+                                        <td align="left" class="left">
+                                        	#YesNoFormat(qCandidatePlaceCompany.authentication_departmentOfLabor)#&nbsp;
+                                            #DateFormat(qCandidatePlaceCompany.authentication_departmentOfLaborExpiration,'mm/dd/yyyy')#
+                                      	</td>
                                     </tr>
                                     <tr>
                                         <td align="right" class="right">Google Earth:</td>
-                                        <td align="left" class="left">#YesNoFormat(qCandidatePlaceCompany.authentication_googleEarth)#</td>
+                                        <td align="left" class="left">
+                                        	#YesNoFormat(qCandidatePlaceCompany.authentication_googleEarth)#&nbsp;
+                                            #DateFormat(qCandidatePlaceCompany.authentication_googleEarthExpiration,'mm/dd/yyyy')#
+                                      	</td>
                                     </tr>
                                 </table>
                             </td>
