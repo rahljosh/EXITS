@@ -224,6 +224,13 @@
 <cfloop query="qGetAllPlacements">
 	<cfif qGetAllPlacements.isSecondary EQ "1">
     
+    	<!--- Check if the job offer status is confirmed, if it is save the print file --->
+        <cfquery name="qGetJobOfferStatus" datasource="#APPLICATION.DSN.Source#">
+            SELECT selfJobOfferStatus
+            FROM extra_candidate_place_company
+            WHERE candcompid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetAllPlacements.candCompID#">
+        </cfquery>
+    
     	<!--- REMOVE SECONDARY PLACEMENT --->
     	<cfif FORM['cancelStatus_#qGetAllPlacements.candCompID#'] EQ "1">
         
@@ -414,13 +421,7 @@
             
         </cfif>
         
-        <!--- Check if the job offer status is confirmed, if it is save the print file --->
-        <cfquery name="qGetJobOfferStatus" datasource="#APPLICATION.DSN.Source#">
-            SELECT selfJobOfferStatus
-            FROM extra_candidate_place_company
-            WHERE candcompid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetAllPlacements.candCompID#">
-        </cfquery>
-        
+        <!--- Add placement vetting file if the status has changed to confirmed --->
         <cfif qGetJobOfferStatus.selfJobOfferStatus NEQ "confirmed" AND FORM['selfJobOfferStatus_' & qGetAllPlacements.candCompID] EQ "confirmed">
             <cfset filename="placementVetting_#qGetCandidate.candidateID#_#qGetAllPlacements.candCompID#_#DateFormat(NOW(),'mm-dd-yyyy')#">
             <cfdocument format="pdf" filename="#filename#.pdf" overwrite="yes" localurl="yes">
@@ -456,6 +457,13 @@
 
 <!---- HOST COMPANY INFORMATION ---->
 <cfif VAL(FORM.hostcompanyID)>
+
+	<!--- Check if the job offer status is confirmed, if it is save the print file --->
+    <cfquery name="qGetJobOfferStatus" datasource="#APPLICATION.DSN.Source#">
+    	SELECT selfJobOfferStatus
+        FROM extra_candidate_place_company
+        WHERE candcompid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCurrentPlacement.candCompID#">
+    </cfquery>
 
 	<!--- Update EIN on Host Company Table --->
     <cfif LEN(FORM.EIN)>
@@ -775,13 +783,7 @@
    	</cfloop>
     <!--- End Insert Season History --->
     
-    <!--- Check if the job offer status is confirmed, if it is save the print file --->
-    <cfquery name="qGetJobOfferStatus" datasource="#APPLICATION.DSN.Source#">
-    	SELECT selfJobOfferStatus
-        FROM extra_candidate_place_company
-        WHERE candcompid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCurrentPlacement.candCompID#">
-    </cfquery>
-    
+    <!--- Add placement vetting file if the status has changed to confirmed --->
     <cfif qGetJobOfferStatus.selfJobOfferStatus NEQ "confirmed" AND FORM.selfJobOfferStatus EQ "confirmed">
    		<cfset filename="placementVetting_#qGetCandidate.candidateID#_#qGetCurrentPlacement.candCompID#_#DateFormat(NOW(),'mm-dd-yyyy')#">
         <cfdocument format="pdf" filename="#filename#.pdf" overwrite="yes" localurl="yes">
