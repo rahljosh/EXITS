@@ -149,6 +149,14 @@
                             <td align="left" class="left">#qCandidatePlaceCompany.selfConfirmationName#</td>
                         </tr>
                         <tr>
+                            <td align="right" class="right">Confirmation of Terms:</td>
+                            <td align="left" class="left">#YesNoFormat(qCandidatePlaceCompany.confirmed)#</td>
+                        </tr>
+                        <tr>
+                            <td align="right" class="right">Available J1 Positions:</td>
+                            <td align="left" class="left">#qCandidatePlaceCompany.numberPositions#</td>
+                        </tr>
+                        <tr>
                             <td colspan="2" align="center"><b><u>Authentications</u></b></td>
                         </tr>
                         <tr>
