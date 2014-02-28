@@ -326,50 +326,18 @@
 		<!--- Check to see if we can upload the file --->
 		<cfif acceptFile>
 			<!--- The file has been uploaded and accepted --->
-			
-			<!--- Insert the document into the database --->
-			<cfquery 
-            	datasource="#APPLICATION.DSN.Source#"
-                result="newRecord">
-				INSERT INTO 
-                	document
-				(
-                    foreignTable,
-                    foreignID,
-                    documentTypeID,
-					serverExt,
-					serverName,
-					clientExt,
-					clientName,
-					fileSize,
-                    location,
-                    dateCreated
-				)
-				VALUES
-				(
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.foreignTable#" />,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.foreignID#" />,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.documentTypeID#" />,
-                  	<cfqueryparam cfsqltype="cf_sql_varchar" value="#LCase(CFFILE.ServerFileExt)#" />,
-					<cfqueryparam cfsqltype="cf_sql_varchar" value="#CFFILE.ServerFileName#" />,
-					<cfqueryparam cfsqltype="cf_sql_varchar" value="#LCase(CFFILE.ClientFileExt)#" />,
-					<cfqueryparam cfsqltype="cf_sql_varchar" value="#CFFILE.ClientFileName#" />,
-					<cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.displayFileSize(CFFILE.FileSize)#" />,
-                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.uploadPath#" />,
-                    <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
-				)
-			</cfquery>
-			
-            <!--- Insert hashID based on the document ID --->
-			<cfquery 
-            	datasource="#APPLICATION.DSN.Source#">
-				UPDATE
-                	document
-				SET
-                	hashID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#hashID(newRecord.GENERATED_KEY)#">
-                WHERE
-                	ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#newRecord.GENERATED_KEY#">
-			</cfquery>
+			<cfscript>
+				insertDocument(
+					ForeignTable=ARGUMENTS.ForeignTable,
+					ForeignID=ARGUMENTS.ForeignID,
+					documentTypeID=ARGUMENTS.documentTypeID,
+					serverExtension=LCase(CFFILE.ServerFileExt),
+					serverName=CFFILE.ServerFileName,
+					clientExtension=LCase(CFFILE.ClientFileExt),
+					clientName=CFFILE.ClientFileName,
+					filesize=APPLICATION.CFC.UDF.displayFileSize(CFFILE.FileSize),
+					filepath=ARGUMENTS.uploadPath);
+			</cfscript>
                         
         <cfelse>
         	
@@ -379,6 +347,62 @@
 		</cfif>
 
 	</cffunction>
+    
+    <cffunction name="insertDocument" access="public" returntype="void" output="no" hint="Inserts a new document">
+    	<cfargument name="ForeignTable" type="string" required="no" default="" />
+		<cfargument name="ForeignID" type="numeric" required="no" default="0" />
+		<cfargument name="documentTypeID" type="numeric" required="no" default="0" />
+		<cfargument name="serverExtension" type="any" required="yes" />
+        <cfargument name="serverName" type="any" required="yes" />
+        <cfargument name="clientExtension" type="any" required="yes" />
+        <cfargument name="clientName" type="any" required="yes" />
+        <cfargument name="filesize" type="any" required="yes" />
+        <cfargument name="uploadPath" type="any" required="yes" />
+		
+		<!--- Insert the document into the database --->
+        <cfquery 
+            datasource="#APPLICATION.DSN.Source#"
+            result="newRecord">
+            INSERT INTO 
+                document
+            (
+                foreignTable,
+                foreignID,
+                documentTypeID,
+                serverExt,
+                serverName,
+                clientExt,
+                clientName,
+                fileSize,
+                location,
+                dateCreated
+            )
+            VALUES
+            (
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.foreignTable#" />,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.foreignID#" />,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.documentTypeID#" />,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.serverExtension#" />,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.serverName#" />,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.clientExtension#" />,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.clientName#" />,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.filesize#" />,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.uploadPath#" />,
+                <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+            )
+        </cfquery>
+        
+        <!--- Insert hashID based on the document ID --->
+        <cfquery 
+            datasource="#APPLICATION.DSN.Source#">
+            UPDATE
+                document
+            SET
+                hashID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#hashID(newRecord.GENERATED_KEY)#">
+            WHERE
+                ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#newRecord.GENERATED_KEY#">
+        </cfquery>
+    </cffunction>
 
 
     <!--- Function to get a document list for a candidate --->

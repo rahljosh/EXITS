@@ -9,12 +9,15 @@
 
 <cfparam name="FORM.candCompID" default="0">
 <cfparam name="FORM.uniqueID" default="0">
+<cfparam name="FORM.saving" default="0">
+<cfparam name="URL.saving" default="0">
 
 <cfscript>
 
 	// Set variables from the url
 	FORM.candCompID = URL.candCompID;
 	FORM.uniqueID = URL.uniqueID;
+	FORM.saving = URL.saving;
 	
 	// Get Candidate Information
 	qGetCandidate = APPLICATION.CFC.CANDIDATE.getCandidateByID(uniqueID=URL.uniqueID);
@@ -39,20 +42,19 @@
         u.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidate.intrep#">
 </cfquery>
 
-<cfdocument format="pdf" orientation="portrait" backgroundvisible="yes" overwrite="no" fontembed="yes">
-    
-	<cfoutput>
-    
-    	<style type="text/css">
-			.right {
-				font-size: 14px;
-				font-weight: bold;
-			}
-			.left {
-				font-size:14px;
-			}
-		</style>
+<cfoutput>
 
+	<cfsavecontent variable="view">
+		<style type="text/css">
+            .right {
+                font-size: 14px;
+                font-weight: bold;
+            }
+            .left {
+                font-size:14px;
+            }
+        </style>
+    
         <table width="90%" border="1" align="center" cellpadding="6" cellspacing="6">	
             <tr>
                 <td valign="top">
@@ -60,15 +62,21 @@
                     <table width="20%" align="left" cellpadding="2">
                         <tr>
                             <td valign="top">
+                            	<!--- When it is being saved it is at a different directory level --->
+                            	<cfset directoryUp = "">
+                                <cfif NOT VAL(FORM.saving)>
+                                	<cfset directoryUp = "../">
+                                </cfif>
+                                
                                 <cfif FileExists(expandPath("../../uploadedfiles/web-candidates/#qGetCandidate.candidateID#.jpg"))>
-                                    <img src="../../uploadedfiles/web-candidates/#qGetCandidate.candidateID#.jpg" width="135">
+                                    <img src="#directoryUp#../uploadedfiles/web-candidates/#qGetCandidate.candidateID#.jpg" width="135">
                                 <cfelse>
-                                    <img src="../../pics/no_stupicture.jpg" width="137" height="137">
+                                    <img src="#directoryUp#../pics/no_stupicture.jpg" width="137" height="137">
                                 </cfif>
                             </td>
                         </tr>
                     </table>
-
+    
                     <table width="75%" align="left" cellpadding="2" class="readOnly" style="margin-left:10px;">
                         <tr>
                             <td align="left" colspan="2" class="title1"><strong>#qGetCandidate.firstname# #qGetCandidate.middlename# #qGetCandidate.lastname# (###qGetCandidate.candidateID#)</strong></td>
@@ -141,12 +149,12 @@
                             <td align="left" class="left">#qCandidatePlaceCompany.selfConfirmationName#</td>
                         </tr>
                         <tr>
-                        	<td colspan="2" align="center"><b><u>Authentications</u></b></td>
+                            <td colspan="2" align="center"><b><u>Authentications</u></b></td>
                         </tr>
                         <tr>
-                        	<td colspan="2">
-                            	<table width="70%" align="center" style="border:1px solid black;">
-                                	<tr>
+                            <td colspan="2">
+                                <table width="70%" align="center" style="border:1px solid black;">
+                                    <tr>
                                         <td align="right" class="right" width="50%">Business License:</td>
                                         <td align="left" class="left">#YesNoFormat(qCandidatePlaceCompany.authentication_secretaryOfState)#</td>
                                     </tr>
@@ -217,12 +225,12 @@
                                 </cfif>
                             </td>
                         </tr>
-						<cfif qCandidatePlaceCompany.isTransfer EQ 0 AND qCandidatePlaceCompany.isSecondary EQ 0>                        
+                        <cfif qCandidatePlaceCompany.isTransfer EQ 0 AND qCandidatePlaceCompany.isSecondary EQ 0>                        
                             <tr>
                                 <td align="right" class="right">Email Confirmation:</td>
                                 <td align="left" class="left">#DateFormat(qCandidatePlaceCompany.selfEmailConfirmationDate, 'mm/dd/yyyy')#</td>
                             </tr>
-                      	</cfif>
+                        </cfif>
                         <tr>
                             <td align="right" class="right">Phone Confirmation:</td>
                             <td align="left" class="left">#DateFormat(qCandidatePlaceCompany.confirmation_phone, 'mm/dd/yyyy')#</td>
@@ -232,7 +240,14 @@
                 </td>
             </tr>
         </table>
-            
-	</cfoutput>
-    
-</cfdocument>
+    </cfsavecontent>
+
+	<cfif VAL(FORM.saving)>
+        <cfoutput>#view#</cfoutput>
+    <cfelse>
+        <cfdocument format="pdf" orientation="portrait" backgroundvisible="yes" overwrite="no" fontembed="yes">
+            #view#
+        </cfdocument>
+    </cfif>
+
+</cfoutput>
