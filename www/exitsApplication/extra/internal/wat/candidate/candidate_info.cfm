@@ -1825,7 +1825,14 @@
                                             	<!--- Office View Only ---> 
                                             	<cfif ListFind("1,2,3,4", CLIENT.userType)>
 		                                            <span class="readOnly" style="float:right; padding-right:20px;">
-                                                    	<a 
+                                                    	<cfif LEN(qCandidatePlaceCompany.savedPlacementVetting)>
+                                                    		<a 
+                                                            	href="javascript:openWindow('../uploadedFiles/candidate/#qGetCandidate.candidateID#/#qCandidatePlaceCompany.savedPlacementVetting#',800,900);" 											
+                                                                class="style2">
+                                                                	[ Saved Vetting - #DateFormat(qCandidatePlaceCompany.dateCreated,'mm/dd/yyyy')# ]
+                                                          	</a>
+                                                      	</cfif>
+                                                        <a 
                                                         	href="
                                                             	javascript:openWindow('candidate/placementVettingPrint.cfm?uniqueid=#qGetCandidate.uniqueid#&candCompID=#qCandidatePlaceCompany.candCompID#',
                                                             	800,
@@ -2251,6 +2258,13 @@
                                                         <!--- Office View Only ---> 
 														<cfif ListFind("1,2,3,4", CLIENT.userType)>
                                                             <span class="readOnly" style="float:right; padding-right:20px;">
+                                                            	<cfif LEN(qGetAllPlacements.savedPlacementVetting)>
+                                                                    <a 
+                                                                        href="javascript:openWindow('../uploadedFiles/candidate/#qGetCandidate.candidateID#/#qGetAllPlacements.savedPlacementVetting#',800,900);" 											
+                                                                        class="style2">
+                                                                            [ Saved Vetting - #DateFormat(qGetAllPlacements.dateCreated,'mm/dd/yyyy')# ]
+                                                                    </a>
+                                                                </cfif>
                                                                 <a href="javascript:openWindow('candidate/placementVettingPrint.cfm?uniqueid=#qGetCandidate.uniqueid#&candCompID=#qGetAllPlacements.candCompID#', 800, 900);" class="style2">[ Print ]</a>
                                                             </span>
                                                         </cfif>

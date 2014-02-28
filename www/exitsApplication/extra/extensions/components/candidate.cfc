@@ -1171,7 +1171,9 @@
                 ec.confirmed,
                 ep.numberPositions,
                 ep.programID,
-                epc.confirmation_phone
+                epc.confirmation_phone,
+                CONCAT(d.serverName,".",d.serverExt) AS savedPlacementVetting,
+                d.dateCreated
             FROM extra_candidate_place_company ecpc
             INNER JOIN extra_hostcompany eh ON eh.hostCompanyID = ecpc.hostCompanyID
           	LEFT JOIN smg_states s ON s.id = eh.state
@@ -1182,6 +1184,10 @@
        			AND ep.programID = (SELECT programID FROM extra_candidates WHERE candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#"> LIMIT 1)
           	LEFT OUTER JOIN extra_program_confirmations epc ON epc.hostID = ecpc.hostCompanyID
          		AND epc.programID = ep.programID
+          	LEFT OUTER JOIN document d ON d.foreignID = ecpc.candCompID
+            	AND d.foreignTable = "extra_candidate_place_company"
+                AND d.documentTypeID = 41
+                AND d.isDeleted = 0
             WHERE 
                 ecpc.candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#">
             
