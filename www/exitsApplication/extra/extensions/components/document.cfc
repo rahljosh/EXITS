@@ -325,8 +325,9 @@
 
 		<!--- Check to see if we can upload the file --->
 		<cfif acceptFile>
+        
 			<!--- The file has been uploaded and accepted --->
-			<cfscript>
+            <cfscript>
 				insertDocument(
 					ForeignTable=ARGUMENTS.ForeignTable,
 					ForeignID=ARGUMENTS.ForeignID,
@@ -336,7 +337,7 @@
 					clientExtension=LCase(CFFILE.ClientFileExt),
 					clientName=CFFILE.ClientFileName,
 					filesize=APPLICATION.CFC.UDF.displayFileSize(CFFILE.FileSize),
-					filepath=ARGUMENTS.uploadPath);
+					uploadPath=ARGUMENTS.uploadPath);
 			</cfscript>
                         
         <cfelse>
