@@ -41,6 +41,10 @@
 	<cfparam name="FORM.housingProvidedInstructions" default="">    
     <cfparam name="FORM.housing_options" default="">
     <cfparam name="FORM.housing_cost" default="">
+    <cfparam name="FORM.housingAddress" default="">
+    <cfparam name="FORM.housingCity" default="">
+    <cfparam name="FORM.housingState" default="">
+    <cfparam name="FORM.housingZip" default="">
 	<!--- Primary Contact --->    
     <cfparam name="FORM.supervisor" default="">
     <cfparam name="FORM.phone" default="">
@@ -114,6 +118,10 @@
             eh.hqCity, 
             eh.hqState, 
             eh.hqZip,
+            eh.housingAddress, 
+            eh.housingCity, 
+            eh.housingState, 
+            eh.housingZip,
             eh.phone, 
             eh.cellPhone, 
             eh.fax, 
@@ -168,10 +176,12 @@
             et.business_type as typeBusiness, 
             s.stateName,
             workSiteS.stateName as hqStateName,
+            housingS.stateName as housingStateName,
             airportS.stateName as arrivalAirportStateName            
         FROM extra_hostcompany eh
         LEFT OUTER JOIN smg_states s ON eh.state = s.ID
         LEFT OUTER JOIN smg_states workSiteS ON eh.hqState = workSiteS.ID
+        LEFT OUTER JOIN smg_states housingS ON eh.housingState = housingS.ID
         LEFT OUTER JOIN smg_states airportS ON eh.arrivalAirportState = airportS.ID
         LEFT OUTER JOIN extra_typebusiness et ON et.business_typeID = eh.business_typeID
         WHERE eh.hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostCompanyID#">
@@ -232,7 +242,7 @@
     </cfquery>
     
     <cfquery name="qGetProgramParticipation" datasource="MySql">
-    	SELECT p.programName
+    	SELECT p.programID, p.programName
         FROM smg_programs p, extra_candidate_place_company ecpc, extra_candidates c
         WHERE p.programID = c.programID
         AND c.candidateID = ecpc.candidateID
@@ -408,6 +418,10 @@
                         housingProvidedInstructions = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housingProvidedInstructions#">,
                         housing_options = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housing_options#">,
                         housing_cost = <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(FORM.housing_cost)#">,
+                        housingAddress = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.housingAddress)#">,
+                        housingCity = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.housingCity)#">,
+                        housingState = <cfqueryparam cfsqltype="cf_sql_integer" value="#TRIM(FORM.housingState)#">,
+                        housingZip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.housingZip)#">,
                         <!--- Contact --->
                         supervisor = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor#">,
                         phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#">,
@@ -815,6 +829,10 @@
                         housingProvidedInstructions,
                         housing_options,
                         housing_cost,
+                        housingAddress,
+                        housingCity,
+                        housingState,
+                        housingZip,
                         <!--- Contact --->
                         supervisor,
                         phone,
@@ -887,6 +905,10 @@
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housingProvidedInstructions#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housing_options#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(FORM.housing_cost)#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.housingAddress)#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.housingCity)#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#TRIM(FORM.housingState)#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.housingZip)#">,
                         <!--- Contact --->
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#">,
@@ -1101,6 +1123,10 @@
 			FORM.housingProvidedInstructions = qGetHostCompanyInfo.housingProvidedInstructions;
 			FORM.housing_options = qGetHostCompanyInfo.housing_options;
 			FORM.housing_cost = qGetHostCompanyInfo.housing_cost;
+			FORM.housingAddress = qGetHostCompanyInfo.housingAddress;
+			FORM.housingCity = qGetHostCompanyInfo.housingCity;
+			FORM.housingState = qGetHostCompanyInfo.housingState;
+			FORM.housingZip = qGetHostCompanyInfo.housingZip;
 			// Primary Contact
 			FORM.supervisor = qGetHostCompanyInfo.supervisor;
 			FORM.phone = qGetHostCompanyInfo.phone;
@@ -1989,6 +2015,69 @@
                                             </td>
                                         </tr>
                                         <tr>
+                                            <td class="style1" align="right" valign="top"><strong>Type:</strong></td>
+                                            <td>
+                                            	<table>
+                                                	<cfloop query="qGetHousing">
+														<cfif qGetHousing.currentrow MOD 2 EQ 1><tr></cfif>
+                                                        <td width="20px" class="style1"> 
+                                                            <input 
+                                                                type="checkbox" 
+                                                                name="housing_options" 
+                                                                id="housing_options#qGetHousing.id#" 
+                                                                value="#qGetHousing.id#" 
+                                                                class="formField" 
+                                                                disabled 
+                                                                <cfif ListFind(FORM.housing_options, qGetHousing.id)>checked</cfif> /> 
+                                                        </td>
+                                                        <td class="style1"><label for="housing_options#qGetHousing.id#">#qGetHousing.type#</label></td>
+                                                        <cfif qGetHousing.currentrow MOD 2 EQ 0></tr></cfif>
+                                                    </cfloop>
+                                                </table>
+                                            </td>
+                                      	</tr>
+                                        <tr>
+                                            <td width="35%" class="style1" align="right"><strong>Address:</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                            	<span class="readOnly">#FORM.housingAddress#</span>
+                                                <input type="text" name="housingAddress" id="housingAddress" value="#FORM.housingAddress#" class="style1 editPage" size="35" maxlength="100">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="style1" align="right"><strong>City</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                                <span class="readOnly">#FORM.housingCity#</span>
+                                                <input type="text" name="housingCity" id="housingCity" value="#FORM.housingCity#" class="style1 editPage" size="35" maxlength="100">
+                                            </td>
+                                        </tr>		
+                                        <tr>
+                                            <td class="style1" align="right"><strong>State:</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                                <span class="readOnly">#qGetHostCompanyInfo.housingStateName#</span>
+                                                <select name="housingState" id="housingState" class="style1 editPage">
+                                              		<option value="0"></option>
+                                              		<cfloop query="qGetStateList">
+		                                                <option value="#qGetStateList.id#" <cfif qGetStateList.id eq FORM.housingState>selected</cfif>>#qGetStateList.stateName#</option>
+        	                                      	</cfloop>
+	                                            </select>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="style1" align="right"><strong>Zip:</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                                <span class="readOnly">#FORM.housingZip#</span>
+                                                <input 
+                                                	type="text" 
+                                                    name="housingZip" 
+                                                    id="housingZip" 
+                                                    value="#FORM.housingZip#" 
+                                                    class="style1 editPage" 
+                                                    size="10" 
+                                                    maxlength="5" 
+                                                    onblur="getLocationByZipCode(this.id);">
+                                            </td>
+                                        </tr>
+                                        <tr>
                                             <td class="style1" align="right" valign="top"><strong>Housing Instructions:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                                 <span class="readOnly">#FORM.housingProvidedInstructions#</span>
@@ -1996,24 +2085,6 @@
                                             </td>
                                         </tr>
 									</table>
-                        
-                                    <table width="100%" cellpadding="3" cellspacing="3" border="0">
-                                        <cfloop query="qGetHousing">
-                                            <cfif qGetHousing.currentrow MOD 2 EQ 1><tr></cfif>
-                                            <td width="20px" class="style1"> 
-                                                <input 
-                                                	type="checkbox" 
-                                                    name="housing_options" 
-                                                    id="housing_options#qGetHousing.id#" 
-                                                    value="#qGetHousing.id#" 
-                                                    class="formField" 
-                                                    disabled 
-													<cfif ListFind(FORM.housing_options, qGetHousing.id)>checked</cfif> /> 
-                                            </td>
-                                            <td class="style1"><label for="housing_options#qGetHousing.id#">#qGetHousing.type#</label></td>
-											<cfif qGetHousing.currentrow MOD 2 EQ 0></tr></cfif>
-                                        </cfloop>                                         
-                                    </table>
 
                                     <table width="100%" cellpadding="3" cellspacing="3" border="0">
                                         <tr>
@@ -2158,7 +2229,7 @@
 
                                     <table width="100%" cellpadding="3" cellspacing="3" border="0">
                                         <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
-                                            <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Contact Information</td>
+                                            <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Owner/Manager Information</td>
                                         </tr>
                                         <tr>
                                             <td width="35%" class="style1" align="right"><strong>Primary Contact:&nbsp;</strong></td>
@@ -2224,7 +2295,7 @@
                                             </td>                                            
                                         </tr>
                                         <tr>
-                                            <td class="style1" align="right"><strong>Cell Phone:&nbsp;</strong></td>
+                                            <td class="style1" align="right"><strong>Mobile Phone:&nbsp;</strong></td>
                                             <td class="style1">
                                                 <span class="readOnly">#FORM.supervisor_cellPhone#</span>
                                                 <input type="text" name="supervisor_cellPhone" id="supervisor_cellPhone" value="#FORM.supervisor_cellPhone#" class="style1 editPage" size="35" maxlength="100">
@@ -3125,8 +3196,37 @@
                                             <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Program Participation</td>
                                         </tr>
                                         <cfloop query="qGetProgramParticipation">
+                                        	<cfquery name="qGetIncidents" datasource="#APPLICATION.DSN.Source#">
+                                            	SELECT i.*
+                                                FROM extra_incident_report i
+                                                INNER JOIN extra_candidates c ON c.candidateID = i.candidateID
+                                                INNER JOIN smg_programs p ON p.programID = c.programID
+                                                	AND p.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetProgramParticipation.programID#">
+                                                WHERE i.hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostCompanyInfo.hostCompanyID#">
+                                            </cfquery>
+                                            <cfquery name="qGetIncidentsGrouped" datasource="#APPLICATION.DSN.Source#">
+                                            	SELECT i.*
+                                                FROM extra_incident_report i
+                                                INNER JOIN extra_candidates c ON c.candidateID = i.candidateID
+                                                INNER JOIN smg_programs p ON p.programID = c.programID
+                                                	AND p.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetProgramParticipation.programID#">
+                                                WHERE i.hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostCompanyInfo.hostCompanyID#">
+                                                GROUP BY i.subject
+                                                ORDER BY i.subject
+                                            </cfquery>
                                         	<tr>
                                             	<td class="style1" valign="top">#programName#</td>
+                                                <td class="style1" valign="top">
+                                                	<b>Incidents: </b>#VAL(qGetIncidents.recordCount)#<br/>
+                                                	<cfloop query="qGetIncidentsGrouped">
+                                                    	<cfquery name="qGetIncidentsPerSubject" dbtype="query">
+                                                        	SELECT *
+                                                            FROM qGetIncidents
+                                                            WHERE subject = <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetIncidentsGrouped.subject#">
+                                                        </cfquery>
+                                                    	#qGetIncidentsGrouped.subject#: #VAL(qGetIncidentsPerSubject.recordCount)#<br/>
+                                                    </cfloop>
+                                                </td>
                                             </tr>
                                         </cfloop>
                                   	</table>
