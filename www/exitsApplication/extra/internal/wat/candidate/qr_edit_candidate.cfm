@@ -611,8 +611,11 @@
             )
         </cfquery>
         
-        <!--- Insert program related confirmations --->
 		<cfscript>
+			// Change current placement to reflect the newly added placement.
+			qGetCurrentPlacement = APPLICATION.CFC.CANDIDATE.getCandidatePlacementInformation(candidateID=qGetCandidateInfo.candidateID);
+		
+			// Insert program related confirmations
             APPLICATION.CFC.HOSTCOMPANY.updateInsertProgramConfirmations(
                 hostID=FORM.hostCompanyID,
                 programID=FORM.programID,
