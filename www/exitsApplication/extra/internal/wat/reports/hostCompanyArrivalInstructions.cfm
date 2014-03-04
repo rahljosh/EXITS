@@ -37,6 +37,10 @@
                 eh.pickUpContactPhone,
                 eh.pickUpContactEmail,
                 eh.pickUpContactHours,
+                eh.housingAddress,
+                eh.housingCity,
+                housingS.stateName AS housingStateName,
+                eh.housingZip,
                 s.stateName, 
                 airportS.state as arrivalAirportStateCode 
             FROM 
@@ -55,6 +59,8 @@
                 smg_states s ON eh.state = s.ID
             LEFT OUTER JOIN 
                 smg_states airportS ON eh.arrivalAirportState = airportS.ID
+          	LEFT OUTER JOIN
+            	smg_states housingS ON eh.housingState = housingS.ID
             WHERE 
                 1 = 1
 			<cfif VAL(FORM.hostcompanyID)> 
@@ -208,25 +214,35 @@
                         </cfif>
                     </td>
                 </tr>
-				<tr>               
-                    <td class="tableTitleView greyRow" valign="top">Pick-Up:</td>
-                    <td class="greyRow tableDataView">#YesNoFormat(VAL(qGetHostCompany.isPickUpProvided))#</td>
-                </tr>
-				<tr>               
-                    <td class="tableTitleView" valign="top">Arrival Airport:</td>
-                    <td class="tableDataView">#qGetHostCompany.arrivalAirport#</td>
-                </tr>
-				<tr>               
-                    <td class="tableTitleView greyRow" valign="top">Arrival City:</td>
-                    <td class="greyRow tableDataView">#qGetHostCompany.arrivalAirportCity#<cfif LEN(qGetHostCompany.arrivalAirportStateCode)>,#qGetHostCompany.arrivalAirportStateCode#</cfif></td>
-                </tr>
-				<tr>               
-                    <td class="tableTitleView" valign="top">Hours:</td>
-                    <td class="tableDataView">#qGetHostCompany.arrivalPickUpHours#</td>
-                </tr>
-				<tr>               
-                    <td class="tableTitleView greyRow" valign="top">Pick-Up Instructions:</td>
+                <tr>               
+                    <td class="tableTitleView greyRow" valign="top">Housing Address :</td>
                     <td class="greyRow tableDataView">
+                    	<cfif qGetHostCompany.isHousingProvided EQ 1>
+                            #qGetHostCompany.housingAddress#, #qGetHostCompany.housingCity#, #qGetHostCompany.housingStateName# #qGetHostCompany.housingZip#
+                        <cfelse>
+                            n/a
+                        </cfif>
+                  	</td>
+                </tr>
+				<tr>               
+                    <td class="tableTitleView" valign="top">Pick-Up:</td>
+                    <td class="tableDataView">#YesNoFormat(VAL(qGetHostCompany.isPickUpProvided))#</td>
+                </tr>
+				<tr>               
+                    <td class="tableTitleView greyRow" valign="top">Arrival Airport:</td>
+                    <td class="tableDataView greyRow">#qGetHostCompany.arrivalAirport#</td>
+                </tr>
+				<tr>               
+                    <td class="tableTitleView" valign="top">Arrival City:</td>
+                    <td class="tableDataView">#qGetHostCompany.arrivalAirportCity#<cfif LEN(qGetHostCompany.arrivalAirportStateCode)>,#qGetHostCompany.arrivalAirportStateCode#</cfif></td>
+                </tr>
+				<tr>               
+                    <td class="tableTitleView greyRow" valign="top">Hours:</td>
+                    <td class="tableDataView greyRow">#qGetHostCompany.arrivalPickUpHours#</td>
+                </tr>
+				<tr>               
+                    <td class="tableTitleView" valign="top">Pick-Up Instructions:</td>
+                    <td class="tableDataView">
                         <cfif LEN(qGetHostCompany.arrivalInstructions)>
                             #qGetHostCompany.arrivalInstructions#
                         <cfelse>
@@ -235,20 +251,20 @@
                     </td>
                 </tr>
 				<tr>               
-                    <td class="tableTitleView" valign="top">Contact Name:</td>
-                    <td class="tableDataView">#qGetHostCompany.pickUpContactName#</td>
+                    <td class="tableTitleView greyRow" valign="top">Contact Name:</td>
+                    <td class="tableDataView greyRow">#qGetHostCompany.pickUpContactName#</td>
                 </tr>
 				<tr>               
-                    <td class="tableTitleView greyRow" valign="top">Contact Phone:</td>
-                    <td class="greyRow tableDataView">#qGetHostCompany.pickUpContactPhone#</td>
+                    <td class="tableTitleView" valign="top">Contact Phone:</td>
+                    <td class="tableDataView">#qGetHostCompany.pickUpContactPhone#</td>
                 </tr>
 				<tr>               
-                    <td class="tableTitleView" valign="top">Contact Email:</td>
-                    <td class="tableDataView">#qGetHostCompany.pickUpContactEmail#</td>
+                    <td class="tableTitleView greyRow" valign="top">Contact Email:</td>
+                    <td class="tableDataView greyRow">#qGetHostCompany.pickUpContactEmail#</td>
                 </tr>
 				<tr>               
-                    <td class="tableTitleView greyRow" valign="top">Hours of contact:</td>
-                    <td class="greyRow tableDataView">#qGetHostCompany.pickUpContactHours#</td>
+                    <td class="tableTitleView" valign="top">Hours of contact:</td>
+                    <td class="tableDataView">#qGetHostCompany.pickUpContactHours#</td>
                 </tr>
             </table>
             
