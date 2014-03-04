@@ -68,7 +68,7 @@
             u.businessname
         FROM 
         	smg_students s
-        INNER JOIN 
+        LEFT OUTER JOIN 
         	smg_users u ON u.userID = s.intrep
         WHERE 
         <cfif LEN(URL.unqID)>	
