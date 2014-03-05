@@ -33,6 +33,8 @@
                 eh.arrivalAirportState,
                 eh.arrivalPickUpHours,
                 eh.arrivalInstructions,
+                eh.arrivalPickUpDays,
+                eh.arrivalPickUpCost,
                 eh.pickUpContactName,
                 eh.pickUpContactPhone,
                 eh.pickUpContactEmail,
@@ -236,19 +238,27 @@
                     <td class="tableTitleView" valign="top">Arrival City:</td>
                     <td class="tableDataView">#qGetHostCompany.arrivalAirportCity#<cfif LEN(qGetHostCompany.arrivalAirportStateCode)>,#qGetHostCompany.arrivalAirportStateCode#</cfif></td>
                 </tr>
-				<tr>               
-                    <td class="tableTitleView greyRow" valign="top">Hours:</td>
-                    <td class="tableDataView greyRow">#qGetHostCompany.arrivalPickUpHours#</td>
+                <tr>               
+                    <td class="tableTitleView greyRow" valign="top">Days:</td>
+                    <td class="tableDataView greyRow">#qGetHostCompany.arrivalPickUpDays#</td>
                 </tr>
 				<tr>               
-                    <td class="tableTitleView" valign="top">Pick-Up Instructions:</td>
-                    <td class="tableDataView">
+                    <td class="tableTitleView" valign="top">Hours:</td>
+                    <td class="tableDataView">#qGetHostCompany.arrivalPickUpHours#</td>
+                </tr>
+				<tr>               
+                    <td class="tableTitleView greyRow" valign="top">Pick-Up Instructions:</td>
+                    <td class="tableDataView greyRow">
                         <cfif LEN(qGetHostCompany.arrivalInstructions)>
                             #qGetHostCompany.arrivalInstructions#
                         <cfelse>
                             n/a
                         </cfif>
                     </td>
+                </tr>
+                <tr>               
+                    <td class="tableTitleView" valign="top">Cost:</td>
+                    <td class="tableDataView">#DollarFormat(VAL(qGetHostCompany.arrivalPickUpCost))#</td>
                 </tr>
 				<tr>               
                     <td class="tableTitleView greyRow" valign="top">Contact Name:</td>

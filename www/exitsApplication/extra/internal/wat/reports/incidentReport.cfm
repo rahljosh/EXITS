@@ -17,10 +17,20 @@
     <cfparam name="FORM.printOption" default="1">
     <cfparam name="FORM.isSolved" default="">
     <cfparam name="FORM.studentStatus" default="All">
+    <cfparam name="URL.hostCompanyID" default="0">
+    <cfparam name="URL.programID" default="0">
 
     <cfscript>
 		// Get Program List
 		qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(companyID=CLIENT.companyID);
+		
+		// Set FORM variables to URL variables if they exist
+		if (FORM.hostCompanyID EQ 0 AND VAL(URL.hostCompanyID)) {
+			FORM.hostCompanyID = URL.hostCompanyID;	
+		}
+		if (FORM.programID EQ 0 AND VAL(URL.programID)) {
+			FORM.programID = URL.programID;	
+		}
 	</cfscript>
 
     <cfquery name="qGetHostCompanyList" datasource="#APPLICATION.DSN.Source#">
