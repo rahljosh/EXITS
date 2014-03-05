@@ -11,18 +11,19 @@
 </cfif>
 
 <cfquery datasource="#APPLICATION.DSN#">
+
 INSERT INTO smg_users_payments (agentID,companyID,studentID,programID,oldID,hostID,reportID,
 						paymenttype,transtype,amount,comment,date,inputby,dateCreated,dateUpdated,isPaid)
 
 SELECT DISTINCT
 	st.placerepID,
-	st.companyID,
-	st.studentID,
+	st.companyID, 
+	st.studentID, 
 	st.programID,
+	0, 
+	st.hostID, 
 	0,
-	st.hostID,
-	0,
-	pmtrng.fk_paymentType,
+	pmtrng.fk_paymentType, 
 	"Placement", 
 	CASE 
 		WHEN pmtrng.fk_paymenttype = 1 and sppmt.specialPaymentID is Null or sppmt.receivesPlacementFee then pmtrng.paymentAmount
@@ -30,7 +31,7 @@ SELECT DISTINCT
 		WHEN pmtrng.fk_paymenttype IN (18,19,20) AND (sppmt.specialPaymentId IS NULL OR sppmt.receivesPreAYPBonus) THEN pmtrng.paymentAmount
 		WHEN pmtrng.fk_paymenttype IN (18,19,20) AND NOT sppmt.receivesPreAYPBonus THEN 0
 		WHEN pmtrng.fk_paymenttype =  24 AND (sppmt.specialPaymentId IS NULL OR sppmt.receivesPreAYPBonus) THEN pmtrng.paymentAmount
-		WHEN pmtrng.fk_paymenttype =  24 AND NOT sppmt.receivesPreAYPBonus THEN 0
+		WHEN pmtrng.fk_paymenttype =  24 AND NOT sppmt.receivesPreAYPBonus THEN 0 
 		WHEN pmtrng.fk_paymenttype =  14 AND (sppmt.specialPaymentId IS NULL OR sppmt.receivesStateGuarantee) THEN pmtrng.paymentAmount
 		WHEN pmtrng.fk_paymenttype =  14 AND NOT sppmt.receivesStateGuarantee THEN 0
 		WHEN pmtrng.fk_paymenttype =  23 AND (sppmt.specialPaymentId IS NULL OR sppmt.receivesCEOBonus) THEN pmtrng.paymentAmount
@@ -69,9 +70,9 @@ FROM
 WHERE
 	st.programID > 365 
 	AND st.companyid IN (1,2,3,4,5,12)
+	AND pmtrng.companyID = 1
 	AND NOT EXISTS(SELECT * FROM smg_users_payments pmt2 WHERE pmt2.studentID = st.studentID AND pmt2.paymenttype = pmtrng.fk_paymentType
-					AND pmt2.isdeleted = 0
-					AND (pmt2.agentID = st.placerepID or pmt2.hostID = st.hostID))
+					AND pmt2.isdeleted = 0 AND (pmt2.agentID = st.placerepID or pmt2.hostID = st.hostID))
 	AND hh.compliance_review IS NOT NULL
 	AND hh.isActive
 	AND st.canceldate IS NULL
@@ -88,24 +89,25 @@ WHERE
 			(SELECT MAX(dep_date) FROM smg_flight_info flt WHERE st.studentID = flt.studentID and flt.flight_type = "Arrival") IS NOT NULL, 
 			(SELECT MAX(dep_date) FROM smg_flight_info flt WHERE st.studentID = flt.studentID and flt.flight_type = "Arrival") > hh.dateCreated, 
 			(SELECT MAX(start_date) FROM smg_sevis_history sev where st.studentID = sev.studentID) > hh.dateCreated 
-			)
+			) 
 		)	
 	AND
 		(
 			pmtrng.fk_paymentType = 1
 			OR	
 			(
-			(hh.iswelcomeFamily = 0 and (pmtrng.paymentEndDate is null or (hh.datePISEMailed <= DATE_ADD(pmtrng.paymentEndDate, INTERVAL 7 DAY)))) 
+			(hh.iswelcomeFamily = 0 AND hh.dateplaced IS NOT NULL AND 
+				(pmtrng.paymentEndDate IS NULL OR hh.datePISEMailed <= pmtrng.paymentEndDate))
+				
 				AND 
 				(
-					(st.aypEnglish > 0 AND pmtrng.fk_paymentType IN (18,19,20) AND 
-					hh.datePISEmailed >= pmtrng.paymentStartDate AND hh.datePISEmailed <= pmtrng.paymentEndDate) 
-					OR (st.aypEnglish > 0 AND st.intrep = 11878 AND pmtrng.fk_paymentType = 24 AND hh.datePISEmailed <= pmtrng.paymentEndDate) 
-					OR (states.state = hst.state and pmtrng.fk_paymentType = 14)
-					OR (pmtrng.fk_paymenttype = 23 AND hh.dateCreated >= pmtrng.paymentStartDate AND hh.datePlaced <= pmtrng.paymentEndDate) 
-					OR (pmtrng.fk_paymenttype = 25 AND hh.dateCreated >= pmtrng.paymentStartDate AND hh.datePlaced <= pmtrng.paymentEndDate) 
-					OR (pmtrng.fk_paymenttype = 35 AND hh.dateCreated >= pmtrng.paymentStartDate AND hh.datePlaced <= pmtrng.paymentEndDate) 
-				) 
-			) 
+					(st.aypEnglish > 0 AND pmtrng.fk_paymentType IN (18,19,20) AND hh.datePISEmailed >= pmtrng.paymentStartDate) 
+					OR (st.aypEnglish > 0 AND st.intrep = 11878 AND pmtrng.fk_paymentType = 24)
+					OR (states.state = hst.state and pmtrng.fk_paymentType = 14) 
+					OR (pmtrng.fk_paymenttype = 23 AND hh.dateCreated >= pmtrng.paymentStartDate) 
+					OR (pmtrng.fk_paymenttype = 25 AND hh.dateCreated >= pmtrng.paymentStartDate)
+					OR (pmtrng.fk_paymenttype = 35 AND hh.dateCreated >= pmtrng.paymentStartDate)
+				)
+			)
 		)
 </cfquery>
