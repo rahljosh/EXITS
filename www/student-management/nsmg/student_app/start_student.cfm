@@ -25,6 +25,7 @@
     <cfparam name="FORM.app_indicated_program" default="0">
     <cfparam name="FORM.app_canada_area" default="0">
     <cfparam name="FORM.app_additional_program" default="0">
+    <cfparam name="FORM.internalprogram" default="0">
     <cfparam name="FORM.extdeadline" default="0">    
     <cfparam name="FORM.programID" default="0">  
    
@@ -247,9 +248,9 @@
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(FORM.middlename)#">, 
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email1#">, 
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#">,
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.app_indicated_program#">, 
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.internalProgram#">, 
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.app_indicated_program#">,
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.app_additional_program#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.internalProgram#">, 
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.app_canada_area)#">,
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#randid#">, 
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#setIntRepID#">, 
