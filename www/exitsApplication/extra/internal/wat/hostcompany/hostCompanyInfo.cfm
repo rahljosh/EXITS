@@ -41,19 +41,24 @@
 	<cfparam name="FORM.housingProvidedInstructions" default="">    
     <cfparam name="FORM.housing_options" default="">
     <cfparam name="FORM.housing_cost" default="">
+    <cfparam name="FORM.housing_deposit" default="">
     <cfparam name="FORM.housingAddress" default="">
     <cfparam name="FORM.housingCity" default="">
     <cfparam name="FORM.housingState" default="">
     <cfparam name="FORM.housingZip" default="">
-	<!--- Primary Contact --->    
+	<!--- Primary Contact --->  
+    <cfparam name="FORM.owner" default="">  
     <cfparam name="FORM.supervisor" default="">
     <cfparam name="FORM.phone" default="">
+    <cfparam name="FORM.phoneExt" default="">
     <cfparam name="FORM.cellPhone" default="">
     <cfparam name="FORM.fax" default="">
     <cfparam name="FORM.email" default="">
-    <!--- Supervisor --->    
+    <!--- Supervisor --->
+    <cfparam name="FORM.isSupervisorShown" default="0"> 
     <cfparam name="FORM.supervisor_name" default="">
     <cfparam name="FORM.supervisor_phone" default="">
+    <cfparam name="FORM.supervisor_phoneExt" default="">
     <cfparam name="FORM.supervisor_cellPhone" default="">
     <cfparam name="FORM.supervisor_email" default="">
     <!--- Other Information --->    
@@ -94,6 +99,9 @@
     <cfparam name="FORM.pickUpContactPhone" default="">    
     <cfparam name="FORM.pickUpContactEmail" default="">
     <cfparam name="FORM.pickUpContactHours" default="">
+    <cfparam name="FORM.arrivalPickUpDays" default="">
+    <cfparam name="FORM.arrivalPickUpCost" default="">
+    <cfparam name="FORM.pickUpNotes" default="">
     
     <!--- Fields to check if file has been uploaded / deleted (to display message instead of reloading) --->
     <cfparam name="FORM.authentication_secretaryOfStateFileChange" default="0">
@@ -122,13 +130,17 @@
             eh.housingCity, 
             eh.housingState, 
             eh.housingZip,
-            eh.phone, 
+            eh.phone,
+            eh.phoneExt,
             eh.cellPhone, 
             eh.fax, 
-            eh.email, 
+            eh.email,
+            eh.owner, 
             eh.supervisor,
+            eh.isSupervisorShown,
             eh.supervisor_name, 
             eh.supervisor_phone, 
+            eh.supervisor_phoneExt,
             eh.supervisor_cellPhone, 
             eh.supervisor_email, 
             eh.homepage, 
@@ -158,6 +170,7 @@
             eh.observations,
             eh.housing_options, 
             eh.housing_cost, 
+            eh.housing_deposit,
             eh.picture_type,
             eh.enteredBy, 
             eh.entryDate, 
@@ -173,6 +186,9 @@
             eh.pickUpContactPhone, 
             eh.pickUpContactEmail, 
             eh.pickUpContactHours,
+            eh.arrivalPickUpDays,
+            eh.arrivalPickUpCost,
+            eh.pickUpNotes,
             et.business_type as typeBusiness, 
             s.stateName,
             workSiteS.stateName as hqStateName,
@@ -418,19 +434,24 @@
                         housingProvidedInstructions = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housingProvidedInstructions#">,
                         housing_options = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housing_options#">,
                         housing_cost = <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(FORM.housing_cost)#">,
+                        housing_deposit = <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(FORM.housing_deposit)#">,
                         housingAddress = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.housingAddress)#">,
                         housingCity = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.housingCity)#">,
                         housingState = <cfqueryparam cfsqltype="cf_sql_integer" value="#TRIM(FORM.housingState)#">,
                         housingZip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.housingZip)#">,
                         <!--- Contact --->
+                        owner = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.owner#">,
                         supervisor = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor#">,
                         phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#">,
+                        phoneExt = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phoneExt#">,
                         cellPhone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.cellPhone#">,
                         fax = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fax#">,
                         email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">,
                         <!--- Supervisor --->
+                        isSupervisorShown = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isSupervisorShown)#">,
                         supervisor_name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor_name#">,
                         supervisor_phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor_phone#">,
+                        supervisor_phoneExt = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor_phoneExt#">,
                         supervisor_cellPhone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor_cellPhone#">,
                         supervisor_email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor_email#">,
                         <!--- Other Information --->
@@ -469,7 +490,10 @@
                         pickUpContactName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pickUpContactName#">,
                         pickUpContactPhone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pickUpContactPhone#">,
                         pickUpContactEmail = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pickUpContactEmail#">,
-                        pickUpContactHours = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pickUpContactHours#">
+                        pickUpContactHours = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pickUpContactHours#">,
+                        arrivalPickUpDays = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.arrivalPickUpDays#">,
+                        arrivalPickUpCost = <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(FORM.arrivalPickUpCost)#">,
+                        pickUpNotes = <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#FORM.pickUpNotes#">
                     WHERE
                         hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostCompanyID#">
                 </cfquery>
@@ -829,6 +853,7 @@
                         housingProvidedInstructions,
                         housing_options,
                         housing_cost,
+                        housing_deposit,
                         housingAddress,
                         housingCity,
                         housingState,
@@ -836,12 +861,16 @@
                         <!--- Contact --->
                         supervisor,
                         phone,
+                        phoneExt,
                         cellPhone,
                         fax,
                         email,
                         <!--- Supervisor --->
+                        owner,
+                        isSupervisorShown,
                         supervisor_name,
                         supervisor_phone,
+                        supervisor_phoneExt,
                         supervisor_cellPhone,
                         supervisor_email,
                         <!--- Other Information --->
@@ -881,6 +910,9 @@
                         pickUpContactPhone,
                         pickUpContactEmail,
                         pickUpContactHours,
+                        arrivalPickUpDays,
+                        arrivalPickUpCost,
+                        pickUpNotes,
                         <!--- Record Information --->
                         entryDate,
                         enteredBy
@@ -905,6 +937,7 @@
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housingProvidedInstructions#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housing_options#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(FORM.housing_cost)#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(FORM.housing_deposit)#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.housingAddress)#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.housingCity)#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#TRIM(FORM.housingState)#">,
@@ -912,12 +945,16 @@
                         <!--- Contact --->
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phoneExt#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.cellPhone#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fax#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">,
                         <!--- Supervisor --->
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.owner#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isSupervisorShown)#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor_name#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor_phone#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor_phoneExt#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor_cellPhone#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor_email#">,
 						<!--- Other Information --->
@@ -957,6 +994,9 @@
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pickUpContactPhone#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pickUpContactEmail#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pickUpContactHours#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.arrivalPickUpDays#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(FORM.arrivalPickUpCost)#">,
+                        <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#FORM.pickUpNotes#">,
                         <!--- Record Information --->
                         <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
@@ -1123,19 +1163,24 @@
 			FORM.housingProvidedInstructions = qGetHostCompanyInfo.housingProvidedInstructions;
 			FORM.housing_options = qGetHostCompanyInfo.housing_options;
 			FORM.housing_cost = qGetHostCompanyInfo.housing_cost;
+			FORM.housing_deposit = qGetHostCompanyInfo.housing_deposit;
 			FORM.housingAddress = qGetHostCompanyInfo.housingAddress;
 			FORM.housingCity = qGetHostCompanyInfo.housingCity;
 			FORM.housingState = qGetHostCompanyInfo.housingState;
 			FORM.housingZip = qGetHostCompanyInfo.housingZip;
 			// Primary Contact
+			FORM.owner = qGetHostCompanyInfo.owner;
 			FORM.supervisor = qGetHostCompanyInfo.supervisor;
 			FORM.phone = qGetHostCompanyInfo.phone;
+			FORM.phoneExt = qGetHostCompanyInfo.phoneExt;
 			FORM.cellPhone = qGetHostCompanyInfo.cellPhone;
 			FORM.fax = qGetHostCompanyInfo.fax;
 			FORM.email = qGetHostCompanyInfo.email;
 			// Supervisor
+			FORM.isSupervisorShown = qGetHostCompanyInfo.isSupervisorShown;
 			FORM.supervisor_name = qGetHostCompanyInfo.supervisor_name;
 			FORM.supervisor_phone = qGetHostCompanyInfo.supervisor_phone;
+			FORM.supervisor_phoneExt = qGetHostCompanyInfo.supervisor_phoneExt;
 			FORM.supervisor_cellPhone = qGetHostCompanyInfo.supervisor_cellPhone;
 			FORM.supervisor_email = qGetHostCompanyInfo.supervisor_email;
 			// Other Information
@@ -1175,6 +1220,9 @@
 			FORM.pickUpContactPhone = qGetHostCompanyInfo.pickUpContactPhone;    
 			FORM.pickUpContactEmail = qGetHostCompanyInfo.pickUpContactEmail;
 			FORM.pickUpContactHours = qGetHostCompanyInfo.pickUpContactHours;
+			FORM.arrivalPickUpDays = qGetHostCompanyInfo.arrivalPickUpDays;
+			FORM.arrivalPickUpCost = qGetHostCompanyInfo.arrivalPickUpCost;
+			FORM.pickUpNotes = qGetHostCompanyInfo.pickUpNotes;
 		</cfscript>
 
 		<cfscript>
@@ -1216,6 +1264,7 @@
 		
 		showHideBusinessTypeOther();
 		displayPickUpInfo();
+		showSupervisor();
 		
 		// Get Host Company Value // If 0, we are inserting a new host company // Set page to add/edit mode
 		if ( $("#hostCompanyID").val() == 0 ) {
@@ -1682,6 +1731,17 @@
 		}
 	}
 	
+	// show or hide the supervisor information
+	function showSupervisor() {
+		if ($('#showSupervisorBox').is(":checked")) {
+			$(".supervisorInfo").show();
+			$("#isSupervisorShown").val(1);
+		} else {
+			$(".supervisorInfo").hide();
+			$("#isSupervisorShown").val(0);
+		}
+	}
+	
 </script>
 
 <cfoutput>
@@ -2084,9 +2144,6 @@
                                                 <textarea name="housingProvidedInstructions" id="housingProvidedInstructions" class="style1 editPage" cols="35" rows="4">#Trim(FORM.housingProvidedInstructions)#</textarea>
                                             </td>
                                         </tr>
-									</table>
-
-                                    <table width="100%" cellpadding="3" cellspacing="3" border="0">
                                         <tr>
                                             <td width="35%" class="style1" align="right"><strong>Cost/Week:</strong></td>
                                             <td class="style1">
@@ -2095,7 +2152,16 @@
                                                 </span>
                                                 <input type="text" name="housing_cost" value="#FORM.housing_cost#" class="style1 editPage" size="35" maxlength="10">
                                             </td>
-										</tr>                                        
+										</tr>
+                                        <tr>
+                                            <td width="35%" class="style1" align="right"><strong>Deposit:</strong></td>
+                                            <td class="style1">
+                                                <span class="readOnly">
+                                                    #DollarFormat(VAL(qGetHostCompanyInfo.housing_deposit))#
+                                                </span>
+                                                <input type="text" name="housing_deposit" value="#FORM.housing_deposit#" class="style1 editPage" size="35" maxlength="10">
+                                            </td>
+										</tr>                                      
                                     </table>
 
                                 </td>
@@ -2114,21 +2180,21 @@
                                             <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Arrival Information</td>
                                         </tr>
                                         <tr>
-                                            <td width="35%" class="style1" align="right"><strong>Aiport/Station Code:</strong></td>
+                                            <td width="37%" class="style1" align="right"><strong>Airport/Station Code:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                             	<span class="readOnly">#FORM.arrivalAirport#</span>
                                                 <input type="text" name="arrivalAirport" id="arrivalAirport" value="#FORM.arrivalAirport#" class="style1 editPage" size="35" maxlength="100">
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td width="35%" class="style1" align="right"><strong>Aiport/Station City:</strong></td>
+                                            <td width="37%" class="style1" align="right"><strong>Airport/Station City:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                             	<span class="readOnly">#FORM.arrivalAirportCity#</span>
                                                 <input type="text" name="arrivalAirportCity" id="arrivalAirportCity" value="#FORM.arrivalAirportCity#" class="style1 editPage" size="35" maxlength="100">
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td width="35%" class="style1" align="right"><strong>Aiport/Station State:</strong></td>
+                                            <td width="37%" class="style1" align="right"><strong>Airport/Station State:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                             	<span class="readOnly">#qGetHostCompanyInfo.arrivalAirportStateName#</span>
                                                 <select name="arrivalAirportState" id="arrivalAirportState" class="style1 editPage">
@@ -2140,7 +2206,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td width="35%" class="style1" align="right"><strong>Is pick-up available?</strong></td>
+                                            <td width="37%" class="style1" align="right"><strong>Is pick-up available?</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                             	<span class="readOnly">#YesNoFormat(VAL(FORM.isPickUpProvided))#</span>
                                                 <input 
@@ -2164,10 +2230,24 @@
                                             </td>
                                         </tr>
                                         <tr class="hiddenField pickUpInfo">
-                                            <td width="35%" class="style1" align="right"><strong>Pick Up Hours:</strong></td>
+                                            <td width="37%" class="style1" align="right"><strong>Pick Up Days:</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                            	<span class="readOnly">#FORM.arrivalPickUpDays#</span>
+                                                <textarea name="arrivalPickUpDays" id="arrivalPickUpDays" class="style1 editPage" cols="35" rows="4">#FORM.arrivalPickUpDays#</textarea>
+                                            </td>
+                                        </tr>
+                                        <tr class="hiddenField pickUpInfo">
+                                            <td width="37%" class="style1" align="right"><strong>Pick Up Hours:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                             	<span class="readOnly">#FORM.arrivalPickUpHours#</span>
                                                 <textarea name="arrivalPickUpHours" id="arrivalPickUpHours" class="style1 editPage" cols="35" rows="4">#FORM.arrivalPickUpHours#</textarea>
+                                            </td>
+                                        </tr>
+                                        <tr class="hiddenField pickUpInfo">
+                                            <td width="37%" class="style1" align="right"><strong>Cost:</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                            	<span class="readOnly">#DollarFormat(VAL(FORM.arrivalPickUpCost))#</span>
+                                                <input type="text" name="arrivalPickUpCost" id="arrivalPickUpCost" class="style1 editPage" size="35" maxlength="100" value="#DollarFormat(VAL(FORM.arrivalPickUpCost))#"/>
                                             </td>
                                         </tr>
                                         <tr class="hiddenField pickUpInfo">
@@ -2178,31 +2258,38 @@
                                             </td>
                                         </tr>
                                         <tr class="hiddenField pickUpInfo">
-                                            <td width="35%" class="style1" align="right"><strong>Contact Name:</strong></td>
+                                            <td width="37%" class="style1" align="right"><strong>Contact Name:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                             	<span class="readOnly">#FORM.pickUpContactName#</span>
                                                 <input type="text" name="pickUpContactName" id="pickUpContactName" value="#FORM.pickUpContactName#" class="style1 editPage" size="35" maxlength="100">
                                             </td>
                                         </tr>
                                         <tr class="hiddenField pickUpInfo">
-                                            <td width="35%" class="style1" align="right"><strong>Contact Phone:</strong></td>
+                                            <td width="37%" class="style1" align="right"><strong>Contact Phone:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                             	<span class="readOnly">#FORM.pickUpContactPhone#</span>
                                                 <input type="text" name="pickUpContactPhone" id="pickUpContactPhone" value="#FORM.pickUpContactPhone#" class="style1 editPage" size="35" maxlength="100">
                                             </td>
                                         </tr>
                                         <tr class="hiddenField pickUpInfo">
-                                            <td width="35%" class="style1" align="right"><strong>Contact Email:</strong></td>
+                                            <td width="37%" class="style1" align="right"><strong>Contact Email:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                             	<span class="readOnly">#FORM.pickUpContactEmail#</span>
                                                 <input type="text" name="pickUpContactEmail" id="pickUpContactEmail" value="#FORM.pickUpContactEmail#" class="style1 editPage" size="35" maxlength="100">
                                             </td>
                                         </tr>
                                         <tr class="hiddenField pickUpInfo">
-                                            <td width="35%" class="style1" align="right"><strong>Hours of Contact:</strong></td>
+                                            <td width="37%" class="style1" align="right"><strong>Hours of Contact:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                             	<span class="readOnly">#FORM.pickUpContactHours#</span>
                                                 <textarea name="pickUpContactHours" id="pickUpContactHours" class="style1 editPage" cols="35" rows="4">#FORM.pickUpContactHours#</textarea>
+                                            </td>
+                                        </tr>
+                                        <tr class="hiddenField pickUpInfo">
+                                            <td width="37%" class="style1" align="right"><strong>Notes:</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                            	<span class="readOnly">#FORM.pickUpNotes#</span>
+                                                <textarea name="pickUpNotes" id="pickUpNotes" class="style1 editPage" cols="35" rows="4">#FORM.pickUpNotes#</textarea>
                                             </td>
                                         </tr>
                                     </table>
@@ -2229,7 +2316,14 @@
 
                                     <table width="100%" cellpadding="3" cellspacing="3" border="0">
                                         <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
-                                            <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Owner/Manager Information</td>
+                                            <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Contact Information</td>
+                                        </tr>
+                                        <tr>
+                                            <td width="35%" class="style1" align="right"><strong>Owner/General Manger:&nbsp;</strong></td>
+                                            <td class="style1">
+                                                <span class="readOnly">#FORM.owner#</span>
+                                                <input type="text" name="owner" id="owner" value="#FORM.owner#" class="style1 editPage" size="35" maxlength="100">
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td width="35%" class="style1" align="right"><strong>Primary Contact:&nbsp;</strong></td>
@@ -2242,7 +2336,10 @@
                                             <td class="style1" align="right"><strong>Office Phone:&nbsp;</strong></td>
                                             <td class="style1">
                                                 <span class="readOnly">#FORM.phone#</span>
-                                                <input type="text" name="phone" id="phone" value="#FORM.phone#" class="style1 editPage" size="35" maxlength="50">
+                                                <input type="text" name="phone" id="phone" value="#FORM.phone#" class="style1 editPage" size="20" maxlength="50">
+                                                ext.
+                                                <span class="readOnly">#FORM.phoneExt#</span>
+                                                <input type="text" name="phoneExt" id="phoneExt" value="#FORM.phoneExt#" class="style1 editPage" size="5" maxlength="10">
                                             </td>
                                         </tr>
                                         <tr>
@@ -2271,37 +2368,57 @@
                                                 <input type="text" name="email" id="email" value="#FORM.email#" class="style1 editPage" size="35" maxlength="100">
                                             </td>
                                         </tr>
+                                        <tr class="editPage">
+                                        	<td class="style1" align="right"><strong>Supervisor Information:&nbsp;</strong></td>
+                                            <td class="style1">
+                                                <input type="hidden" name="isSupervisorShown" id="isSupervisorShown" value="#FORM.isSupervisorShown#" />
+                                                <input 
+                                                    type="checkbox" 
+                                                    name="showSupervisorBox" 
+                                                    id="showSupervisorBox" 
+                                                    class="style1 editPage" 
+                                                    onclick="showSupervisor()"
+                                                    <cfif FORM.isSupervisorShown EQ 1>checked="checked"</cfif> />
+                                            </td>
+                                        </tr>
                                         
                                         <!--- Supervisor --->
-                                        <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
-                                            <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Supervisor Information</td>
+                                        <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF" class="supervisorInfo">
+                                            <td colspan="2" class="style2" bgcolor="##8FB6C9">
+                                                &nbsp;:: Supervisor Information
+                                            </td>
                                         </tr>
-                                        <tr class="editPage">
-                                        	<td class="style1" align="right"><input type="checkbox" name="copyContact" id="copyContact" class="style1 editPage" onclick="jsCopyContact();" /></td>
-                                            <td class="style1"><strong><label for="copyContact">Same as Above</label></strong></td>
+                                        <tr class="supervisorInfo">
+                                            <td class="style1 editPage" align="center" colspan="2">
+                                            	<input type="checkbox" name="copyContact" id="copyContact" class="style1 editPage" onclick="jsCopyContact();" />
+                                            	<strong class="editPage">Same as Above</strong>
+                                          	</td>
                                         </tr>
-                                        <tr>
+                                        <tr class="supervisorInfo">
                                             <td class="style1" align="right"><strong>Supervisor:&nbsp;</strong></td>
                                             <td class="style1">
                                                 <span class="readOnly">#FORM.supervisor_name#</span>
                                                 <input type="text" name="supervisor_name" id="supervisor_name" value="#FORM.supervisor_name#" class="style1 editPage" size="35" maxlength="100">
                                             </td>                                            
                                         </tr>
-                                        <tr>
+                                        <tr class="supervisorInfo">
                                             <td class="style1" align="right"><strong>Office Phone:&nbsp;</strong></td>
                                             <td class="style1">
                                                 <span class="readOnly">#FORM.supervisor_phone#</span>
-                                                <input type="text" name="supervisor_phone" id="supervisor_phone" value="#FORM.supervisor_phone#" class="style1 editPage" size="35" maxlength="100">
+                                                <input type="text" name="supervisor_phone" id="supervisor_phone" value="#FORM.supervisor_phone#" class="style1 editPage" size="20" maxlength="100">
+                                                ext.
+                                                <span class="readOnly">#FORM.supervisor_phoneExt#</span>
+                                                <input type="text" name="supervisor_phoneExt" id="supervisor_phoneExt" value="#FORM.supervisor_phoneExt#" class="style1 editPage" size="5" maxlength="10">
                                             </td>                                            
                                         </tr>
-                                        <tr>
+                                        <tr class="supervisorInfo">
                                             <td class="style1" align="right"><strong>Mobile Phone:&nbsp;</strong></td>
                                             <td class="style1">
                                                 <span class="readOnly">#FORM.supervisor_cellPhone#</span>
                                                 <input type="text" name="supervisor_cellPhone" id="supervisor_cellPhone" value="#FORM.supervisor_cellPhone#" class="style1 editPage" size="35" maxlength="100">
                                             </td>                                            
                                         </tr>
-                                        <tr>
+                                        <tr class="supervisorInfo">
                                             <td class="style1" align="right"><strong>Email:&nbsp;</strong></td>
                                             <td class="style1">
                                                 <span class="readOnly">#FORM.supervisor_email#</span>
@@ -3217,7 +3334,10 @@
                                         	<tr>
                                             	<td class="style1" valign="top">#programName#</td>
                                                 <td class="style1" valign="top">
-                                                	<b>Incidents: </b>#VAL(qGetIncidents.recordCount)#<br/>
+                                                	<a href="index.cfm?curdoc=reports/incidentReport&hostCompanyID=#qGetHostCompanyInfo.hostCompanyID#&programID=#programID#">
+                                                    	Incidents: #VAL(qGetIncidents.recordCount)#
+                                                 	</a>
+                                                    <br/>
                                                 	<cfloop query="qGetIncidentsGrouped">
                                                     	<cfquery name="qGetIncidentsPerSubject" dbtype="query">
                                                         	SELECT *
