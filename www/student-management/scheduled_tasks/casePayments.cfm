@@ -74,8 +74,8 @@
     
     WHERE
         st.programID > 365 
-        AND st.companyid IN (14)
-        AND pmtrng.companyID = 14
+        AND st.companyid IN (10)
+        AND pmtrng.companyID = 10
         AND NOT EXISTS(SELECT * FROM smg_users_payments pmt2 WHERE pmt2.studentID = st.studentID AND pmt2.paymenttype = pmtrng.fk_paymentType
                         AND pmt2.isdeleted = 0 AND (pmt2.agentID = st.placerepID or pmt2.hostID = st.hostID))
         AND hh.compliance_review IS NOT NULL
@@ -152,7 +152,7 @@
     
     where hh.isActive = 1
     and st.programID >339
-    and st.companyid in (14)
+    and st.companyid in (10)
     and hh.isactive
     and not EXISTS(select * from smg_users_payments pmt 
                     where pmt.paymenttype = 22 and st.studentID = pmt.studentID and hh.hostID = pmt.hostID)
@@ -218,7 +218,7 @@ LEFT OUTER JOIN smg_user_payment_special sppmt on pr.fk_sr_user = sppmt.fk_userI
 
 where 
 st.programID >339
-and st.companyid in (14)
+and st.companyid in (10)
 and pr.pr_ny_approved_date is not null
 and pr.fk_reportType = 1
 and hh.isactive
