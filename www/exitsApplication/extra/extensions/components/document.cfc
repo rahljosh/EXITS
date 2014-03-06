@@ -271,6 +271,17 @@
 		   
 		<cfreturn qGetDocumentsByFilter>
 	</cffunction>
+    
+    
+    <cffunction name="delete" access="public" returntype="void" output="no" hint="Sets a document to deleted status">
+    	<cfargument name="documentID" required="yes">
+        
+        <cfquery datasource="#APPLICATION.DSN.Source#">
+        	UPDATE document
+            SET isDeleted = 1
+            WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.documentID#">
+        </cfquery>
+    </cffunction>
 
 
 	<!--- Uploads a document into the system --->
@@ -278,7 +289,6 @@
 		<cfargument name="ForeignTable" type="string" required="no" default="" />
 		<cfargument name="ForeignID" type="numeric" required="no" default="0" />
 		<cfargument name="documentTypeID" type="numeric" required="no" default="0" />
-		<cfargument name="FormField" type="string" required="yes" />
 		<cfargument name="uploadPath" type="string" required="yes" />
         <cfargument name="AllowedExt" type="string" required="no" default="" />
 		<cfargument name="BlockedExt" type="string" required="no" default="" />

@@ -10,10 +10,20 @@
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.placementType" default="All">
     <cfparam name="FORM.studentStatus" default="All">
+    
+    <cfparam name="URL.programID" default="0">
+    <cfparam name="URL.hostCompanyID" default="0">
 
     <cfscript>
 		qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(companyID=CLIENT.companyID);
 		qGetHostCompanyList = APPLICATION.CFC.HOSTCOMPANY.getHostCompanies(companyID=CLIENT.companyID);
+		
+		if (VAL(URL.programID) AND NOT VAL(FORM.programID)) {
+			FORM.programID = URL.programID;	
+		}
+		if (VAL(URL.hostCompanyID) AND NOT VAL(FORM.hostCompanyID)) {
+			FORM.hostCompanyID = URL.hostCompanyID;
+		}
 	</cfscript>
 
     <!--- FORM submitted --->

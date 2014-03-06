@@ -36,7 +36,6 @@
         APPLICATION.CFC.DOCUMENT.upload(
             foreignTable=URL.foreignTable,
             foreignID=URL.foreignID,
-            formField=FORM.fileData,
             uploadPath=URL.uploadPath
         );
     
