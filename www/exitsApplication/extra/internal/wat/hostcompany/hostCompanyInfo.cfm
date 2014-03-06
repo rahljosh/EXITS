@@ -324,6 +324,15 @@
         WHERE authenticationType = <cfqueryparam cfsqltype="cf_sql_varchar" value="departmentOfState">
     </cfquery>
     <!--- End of get database records for authentication files --->
+    
+    <cfquery name="qGetAdditonalDocuments" datasource="#APPLICATION.DSN.Source#">
+    	SELECT *
+        FROM document
+        WHERE foreignTable = "extra_hostCompany"
+        AND foreignID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.hostCompanyID)#">
+        AND documentTypeID = 42
+        AND isDeleted = 0
+    </cfquery>
                 
     <!--- FORM Submitted --->
     <cfif FORM.submitted>
@@ -1627,6 +1636,7 @@
 	var myErrorHandler = function(statusCode, statusMsg) { 
 		alert('Status: ' + statusCode + ', ' + statusMsg); 
 	}
+	
 	$().ready(function() {
 		var hostCompanyID = $('#hostCompanyID').val();
 		var secretaryOfState = $('#authentication_secretaryOfStateExpiration').attr('value');
@@ -1669,11 +1679,24 @@
 			action: '../wat/hostCompany/imageUploadPrint.cfm?option=upload&type=departmentOfState&hostCompanyID='+hostCompanyID+'&expirationDate='+departmentOfState,
 			name: 'image'
   		});
+		new AjaxUpload('additional_document', {
+			action: '../wat/hostCompany/addViewRemoveDocuments.cfm?option=upload&hostCompanyID='+hostCompanyID,
+			name: 'image',
+			onComplete: function() {
+				window.location.reload();	
+			}
+  		});
 	});
 	
 	// Popup to print image that is referenced by the input file type.
 	var printAuthenticationFile = function(id) {
 		var printURL = document.URL.substring(0, document.URL.indexOf("/index.cfm")) + "/hostcompany/imageUploadPrint.cfm?option=print&fileID="+id;
+		window.open(printURL, "File", "width=800, height=600").print();
+	}
+	
+	// Popup to print a document that has been uploaded
+	var printDocument = function(id) {
+		var printURL = document.URL.substring(0, document.URL.indexOf("/index.cfm")) + "/hostcompany/addViewRemoveDocuments.cfm?option=view&documentID="+id;
 		window.open(printURL, "File", "width=800, height=600").print();
 	}
 	
@@ -1699,6 +1722,16 @@
 			var deleteURL = document.URL;
 			deleteURL = deleteURL.substring(0, deleteURL.indexOf("/index.cfm"));
 			deleteURL += "/hostcompany/imageUploadPrint.cfm?option=delete&fileID="+id;
+			window.open(deleteURL, id, "width=10, height=10");
+		}
+	}
+	
+	// Delete the document that has been uploaded
+	var deleteDocument = function(id) {
+		if (confirm("Are you sure you want to delete this file?")) {
+			var deleteURL = document.URL;
+			deleteURL = deleteURL.substring(0, deleteURL.indexOf("/index.cfm"));
+			deleteURL += "/hostcompany/addViewRemoveDocuments.cfm?option=delete&documentID="+id;
 			window.open(deleteURL, id, "width=10, height=10");
 		}
 	}
@@ -3353,7 +3386,11 @@
                                                 AND c.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetProgramParticipation.programID#">
                                             </cfquery>
                                         	<tr>
-                                            	<td class="style1" valign="top">#programName# - #qGetPlacementType.placementType#</td>
+                                            	<td class="style1" valign="top">
+                                                	<a href="index.cfm?curdoc=reports/students_hired_per_company_wt&hostCompanyID=#qGetHostCompanyInfo.hostCompanyID#&programID=#programID#">#programName#</a>
+                                             		<br/>
+                                                    #qGetPlacementType.placementType#
+                                              	</td>
                                                 <td class="style1" valign="top">
                                                 	<a href="index.cfm?curdoc=reports/incidentReport&hostCompanyID=#qGetHostCompanyInfo.hostCompanyID#&programID=#programID#">
                                                     	Incidents: #VAL(qGetIncidents.recordCount)#
@@ -3376,6 +3413,45 @@
                         </table>
                         
                         <br />
+                        
+                      	<!--- ADDITIONAL DOCUMENTS --->
+                        <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
+                    		<tr>
+                       			<td>
+                           			<table width="100%" cellpadding="3" cellspacing="3" border="0">
+                                        <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
+                                            <td class="style2" bgcolor="##8FB6C9">&nbsp;:: Additional Documents</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="style1" valign="top" align="center">
+                                                <cfif VAL(URL.hostCompanyID)>
+                                                	<a href="##" class="editPage" value="Upload" name="additional_document" id="additional_document" style="cursor:pointer">
+                                                    	UPLOAD NEW FILE
+                                                	</a>
+                                                <cfelse>
+                                                    <input type="hidden" id="additional_document"/><!--- This is to prevent errors with ajaxUpload --->
+                                                </cfif>
+                                           	</td>
+                                      	</tr>
+                                        <cfloop query="qGetAdditonalDocuments">
+                                        	<tr>
+                                            	<td class="style1" valign="top" align="left">
+                                                	<a href="##" onclick="printDocument('#id#')" style="cursor:pointer;">
+                                                  		#clientName#
+                                                    </a>
+                                                	<a href="##" class="editPage" onclick="deleteDocument('#id#')" style="float:right; cursor:pointer">
+                                                        DELETE
+                                                    </a>
+                                                	<input type="hidden" id="additional_document"/><!--- This is to prevent errors with ajaxUpload --->
+                                                </td>
+                                            </tr>
+                                        </cfloop>
+                                  	</table>
+                            	</td>
+                         	</tr>
+                      	</table>
+                                        
+          				<br />
                         
     				</td>
 				</tr>
