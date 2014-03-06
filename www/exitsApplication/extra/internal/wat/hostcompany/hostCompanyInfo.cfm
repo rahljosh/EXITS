@@ -257,7 +257,7 @@
         GROUP BY p.programID
     </cfquery>
     
-    <cfquery name="qGetProgramParticipation" datasource="MySql">
+    <cfquery name="qGetProgramParticipation" datasource="#APPLICATION.DSN.Source#">
     	SELECT p.programID, p.programName
         FROM smg_programs p, extra_candidate_place_company ecpc, extra_candidates c
         WHERE p.programID = c.programID
@@ -1732,7 +1732,7 @@
 	}
 	
 	// show or hide the supervisor information
-	function showSupervisor() {
+	<!---function showSupervisor() {
 		if ($('#showSupervisorBox').is(":checked")) {
 			$(".supervisorInfo").show();
 			$("#isSupervisorShown").val(1);
@@ -1740,7 +1740,7 @@
 			$(".supervisorInfo").hide();
 			$("#isSupervisorShown").val(0);
 		}
-	}
+	}--->
 	
 </script>
 
@@ -2372,13 +2372,13 @@
                                         	<td class="style1" align="right"><strong>Supervisor Information:&nbsp;</strong></td>
                                             <td class="style1">
                                                 <input type="hidden" name="isSupervisorShown" id="isSupervisorShown" value="#FORM.isSupervisorShown#" />
-                                                <input 
+                                                <!---<input 
                                                     type="checkbox" 
                                                     name="showSupervisorBox" 
                                                     id="showSupervisorBox" 
                                                     class="style1 editPage" 
                                                     onclick="showSupervisor()"
-                                                    <cfif FORM.isSupervisorShown EQ 1>checked="checked"</cfif> />
+                                                    <cfif FORM.isSupervisorShown EQ 1>checked="checked"</cfif> />--->
                                             </td>
                                         </tr>
                                         
@@ -3331,8 +3331,21 @@
                                                 GROUP BY i.subject
                                                 ORDER BY i.subject
                                             </cfquery>
+                                            <!--- Determines if this host company was a primary, secondary, or both placement types for this program. --->
+                                            <cfquery name="qGetPlacementType" datasource="#APPLICATION.DSN.Source#">
+                                      			SELECT 
+                                           			CASE 
+                                              			WHEN SUM(ecpc.isSecondary) = 0 THEN "Primary Placement Type"            
+                                                        WHEN SUM(ecpc.isSecondary) = COUNT(ecpc.candidateID) THEN "Secondary Placement Type"            
+                                                        ELSE "Both Placement Types"            
+                                                   	END AS "placementType"
+                                            	FROM extra_candidate_place_company ecpc
+                                                INNER JOIN extra_candidates c ON c.candidateID = ecpc.candidateID
+                                                WHERE ecpc.hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostCompanyInfo.hostCompanyID#">
+                                                AND c.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetProgramParticipation.programID#">
+                                            </cfquery>
                                         	<tr>
-                                            	<td class="style1" valign="top">#programName#</td>
+                                            	<td class="style1" valign="top">#programName# - #qGetPlacementType.placementType#</td>
                                                 <td class="style1" valign="top">
                                                 	<a href="index.cfm?curdoc=reports/incidentReport&hostCompanyID=#qGetHostCompanyInfo.hostCompanyID#&programID=#programID#">
                                                     	Incidents: #VAL(qGetIncidents.recordCount)#
