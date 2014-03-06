@@ -1264,7 +1264,7 @@
 		
 		showHideBusinessTypeOther();
 		displayPickUpInfo();
-		showSupervisor();
+		//showSupervisor();
 		
 		// Get Host Company Value // If 0, we are inserting a new host company // Set page to add/edit mode
 		if ( $("#hostCompanyID").val() == 0 ) {
@@ -2177,7 +2177,15 @@
 
                                     <table width="100%" cellpadding="3" cellspacing="3" border="0">
                                         <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
-                                            <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Arrival Information</td>
+                                            <td colspan="2" class="style2" bgcolor="##8FB6C9">
+                                            	&nbsp;:: Arrival Information
+                                          		<!--- Office View Only ---> 
+												<cfif ListFind("1,2,3,4", CLIENT.userType)>
+                                                    <span style="float:right; padding-right:20px;">
+                                                        <a href="javascript:openWindow('hostCompany/arrivalInformationPrint.cfm?hostID=#URL.hostCompanyID#',800,600);" class="style2">[ Print ]</a>
+                                                    </span>
+                                                </cfif>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <td width="37%" class="style1" align="right"><strong>Airport/Station Code:</strong></td>
