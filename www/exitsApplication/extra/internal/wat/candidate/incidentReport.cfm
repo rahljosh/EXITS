@@ -129,12 +129,20 @@
     
         <cfif VAL(FORM.submitted) AND NOT SESSION.formErrors.length()>
         
-            <script language="javascript">
+            <script type="text/javascript">
                 // Close Window After 1.5 Seconds
                 setTimeout(function() { parent.$.fn.colorbox.close(); }, 1500);
             </script>
         
         </cfif>
+        
+        <script type="text/javascript">
+			$(document).ready(function() {
+				$(".oldNotes").each(function(i) {
+					$(this).height($(this).prop('scrollHeight'));							 
+				});
+			});
+		</script>
     
         <table width="100%" border="1" align="center" cellpadding="0" cellspacing="0" style="border-color:##CCCCCC; background-color:##f4f4f4; margin-bottom:10px;">
             <tr>
@@ -223,7 +231,7 @@
                                         <cfloop query="qGetIncidentNotes">
                                             <b>On #DateFormat(date,'mm/dd/yyyy')# at #TimeFormat(date,'h:mm tt')# by #firstName# #lastName#</b>
                                             <br/>
-                                            <textarea name="#id#" class="xLargeTextArea" style="height:36px;">#note#</textarea>
+                                            <textarea name="#id#" class="xLargeTextArea oldNotes" style="height:36px;">#note#</textarea>
                                             <br/>
                                         </cfloop>
                                     </td>
