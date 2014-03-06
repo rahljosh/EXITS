@@ -71,7 +71,7 @@
             	<tr><td class="style2" bgcolor="8FB6C9" width="100%">Check-in</td></tr>
                 <tr bgcolor="FFFFFF"><td class="style5">#checkInMemo#</td></tr>
             <cfelse>
-            	<tr><td class="style2" bgcolor="8FB6C9" width="100%">Evaluation #URL.evaluationID#</td></tr>
+            	<tr><td class="style2" bgcolor="8FB6C9" width="100%">Monthly Evaluation #URL.evaluationID#</td></tr>
                 <tr bgcolor="FFFFFF"><td class="style5">#evaluationMemo#</td></tr>
 				<cfif LEN(getRelativeFileInUploads(companyChangedFile))>
                     <tr><td><a href="#getRelativeFileInUploads(companyChangedFile)#" target="_blank">Changed Host Company File</a></td></tr>
