@@ -1334,6 +1334,7 @@
 		getPickUpInfo = $('input:radio[name=isPickUpProvided]:checked').val();
 		if ( getPickUpInfo == 1 ) {
 			$(".pickUpInfo").fadeIn("fast");
+			$(".readOnly").hide();
 		} else {
 			//erase data
 			$("#arrivalPickUpHours").val("");
