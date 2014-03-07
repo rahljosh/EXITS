@@ -72,6 +72,8 @@
     <cfparam name="FORM.WCDateExpired" default="">
     <cfparam name="FORM.homepage" default="">
     <cfparam name="FORM.observations" default="">
+    <cfparam name="FORM.warningStatus" default="0">
+    <cfparam name="FORM.warningNotes" default="">
     <!--- Authentications --->
     <cfparam name="FORM.authentication_secretaryOfState" default="0">
     <cfparam name="FORM.authentication_departmentOfLabor" default="0">
@@ -189,6 +191,8 @@
             eh.arrivalPickUpDays,
             eh.arrivalPickUpCost,
             eh.pickUpNotes,
+            eh.warningStatus,
+            eh.warningNotes,
             et.business_type as typeBusiness, 
             s.stateName,
             workSiteS.stateName as hqStateName,
@@ -502,7 +506,9 @@
                         pickUpContactHours = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pickUpContactHours#">,
                         arrivalPickUpDays = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.arrivalPickUpDays#">,
                         arrivalPickUpCost = <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(FORM.arrivalPickUpCost)#">,
-                        pickUpNotes = <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#FORM.pickUpNotes#">
+                        pickUpNotes = <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#FORM.pickUpNotes#">,
+                        warningStatus = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.warningStatus)#">,
+                        warningNotes = <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#FORM.warningNotes#">
                     WHERE
                         hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostCompanyID#">
                 </cfquery>
@@ -908,6 +914,8 @@
                         WCDateExpired,
                         homepage,
                         observations,
+                        warningStatus,
+                        warningNotes,
                         <!--- Arrival Information --->
                         isPickUpProvided,
                         arrivalAirport,
@@ -992,6 +1000,8 @@
                         <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.WCDateExpired#" null="#NOT IsDate(FORM.WCDateExpired)#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.homepage#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.observations#">,
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.warningStatus)#">,
+                        <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#FORM.warningNotes#">,
                         <!--- Arrival Information --->
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isPickUpProvided)#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.arrivalAirport#">,
@@ -1218,6 +1228,8 @@
 			FORM.WCDateExpired = qGetHostCompanyInfo.WCDateExpired;
 			FORM.homepage = qGetHostCompanyInfo.homepage;
 			FORM.observations = qGetHostCompanyInfo.observations;
+			FORM.warningStatus = qGetHostCompanyInfo.warningStatus;
+			FORM.warningNotes = qGetHostCompanyInfo.warningNotes;
 			// Arrival Information
 			FORM.isPickUpProvided = qGetHostCompanyInfo.isPickUpProvided;
 			FORM.arrivalAirport = qGetHostCompanyInfo.arrivalAirport;
@@ -2409,19 +2421,19 @@
                                                 <input type="text" name="email" id="email" value="#FORM.email#" class="style1 editPage" size="35" maxlength="100">
                                             </td>
                                         </tr>
-                                        <tr class="editPage">
+                                        <!---<tr class="editPage">
                                         	<td class="style1" align="right"><strong>Supervisor Information:&nbsp;</strong></td>
                                             <td class="style1">
                                                 <input type="hidden" name="isSupervisorShown" id="isSupervisorShown" value="#FORM.isSupervisorShown#" />
-                                                <!---<input 
+                                                <input 
                                                     type="checkbox" 
                                                     name="showSupervisorBox" 
                                                     id="showSupervisorBox" 
                                                     class="style1 editPage" 
                                                     onclick="showSupervisor()"
-                                                    <cfif FORM.isSupervisorShown EQ 1>checked="checked"</cfif> />--->
+                                                    <cfif FORM.isSupervisorShown EQ 1>checked="checked"</cfif> />
                                             </td>
-                                        </tr>
+                                        </tr>--->
                                         
                                         <!--- Supervisor --->
                                         <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF" class="supervisorInfo">
@@ -3376,9 +3388,15 @@
                                             <cfquery name="qGetPlacementType" datasource="#APPLICATION.DSN.Source#">
                                       			SELECT 
                                            			CASE 
-                                              			WHEN SUM(ecpc.isSecondary) = 0 THEN "Primary Placement Type"            
-                                                        WHEN SUM(ecpc.isSecondary) = COUNT(ecpc.candidateID) THEN "Secondary Placement Type"            
-                                                        ELSE "Both Placement Types"            
+                                              			WHEN SUM(ecpc.isSecondary) = 0 AND SUM(ecpc.status) = 0 THEN "Primary Placement (Inactive)"
+                                                        WHEN SUM(ecpc.isSecondary) = 0 AND SUM(ecpc.status) = COUNT(ecpc.candidateID) THEN "Primary Placement (Active)"
+                                                        WHEN SUM(ecpc.isSecondary) = 0 AND SUM(ecpc.status) != 0 AND SUM(ecpc.status) != COUNT(ecpc.candidateID) THEN "Primary Placement (Both)"      
+                                                        WHEN SUM(ecpc.isSecondary) = COUNT(ecpc.candidateID) AND SUM(ecpc.status) = 0 THEN "Secondary Placement (Inactive)"
+                                                        WHEN SUM(ecpc.isSecondary) = COUNT(ecpc.candidateID) AND SUM(ecpc.status) = COUNT(ecpc.candidateID) THEN "Secondary Placement (Active)"
+                                                        WHEN SUM(ecpc.isSecondary) = COUNT(ecpc.candidateID) AND SUM(ecpc.status) != 0 AND SUM(ecpc.status) != COUNT(ecpc.candidateID) THEN "Secondary Placement (Both)"
+                                                        WHEN SUM(ecpc.isSecondary) != 0 AND SUM(ecpc.isSecondary) != COUNT(ecpc.candidateID) AND SUM(ecpc.status) = 0 THEN "Primary/Secondary Placement (Inactive)"
+                                                        WHEN SUM(ecpc.isSecondary) != 0 AND SUM(ecpc.isSecondary) != COUNT(ecpc.candidateID) AND SUM(ecpc.status) = COUNT(ecpc.candidateID) THEN "Primary/Secondary Placement (Active)"
+                                                        ELSE "Primary/Secondary Placement (Both)"            
                                                    	END AS "placementType"
                                             	FROM extra_candidate_place_company ecpc
                                                 INNER JOIN extra_candidates c ON c.candidateID = ecpc.candidateID
@@ -3446,6 +3464,31 @@
                                                 </td>
                                             </tr>
                                         </cfloop>
+                                  	</table>
+                            	</td>
+                         	</tr>
+                      	</table>
+                                        
+          				<br />
+                        
+                        <!--- Host Company Warning --->
+                        <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
+                    		<tr>
+                       			<td>
+                           			<table width="100%" cellpadding="3" cellspacing="3" border="0">
+                                        <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
+                                            <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Warning</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="style1" valign="top" align="left">
+                                                <span class="readOnly">#YesNoFormat(FORM.warningStatus)#</span>
+                                                <input type="checkbox" name="warningStatus" class="style1 editPage" value="1" <cfif FORM.warningStatus EQ 1>checked="checked"</cfif> />
+                                           	</td>
+                                            <td class="style1" valign="top" align="left">
+                                                <span class="readOnly">#FORM.warningNotes#</span>
+                                   				<textarea name="warningNotes" class="style1 editPage" cols="35" rows="4">#FORM.warningNotes#</textarea>
+                                           	</td>
+                                      	</tr>
                                   	</table>
                             	</td>
                          	</tr>

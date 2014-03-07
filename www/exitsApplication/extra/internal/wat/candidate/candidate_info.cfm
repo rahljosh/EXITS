@@ -500,6 +500,15 @@
 			var confirmed = companyInfo.CONFIRMED;
 			var numberPositions = companyInfo.POSITIONS;
 			var phoneConfirmation = companyInfo.PHONECONFIRMATION;
+			var warningStatus = companyInfo.WARNINGSTATUS;
+			var warningNotes = companyInfo.WARNINGNOTES;
+			
+			$("#warningNotes").html("Warning: " + warningNotes);
+			if (warningStatus) {
+				$("#warningStatus").show();	
+			} else {
+				$("#warningStatus").hide();		
+			}
 			
 			if (authSecretaryOfState == 1)
 				$("#authentication_secretaryOfState").attr("checked", "checked");
@@ -1593,6 +1602,10 @@
                                                         </option>
                                                     </cfloop>
                                                 </select>
+                                                <span class="editPage" id="warningStatus" style="background-color:red; font-weight:bold; display:none;">
+                                                	<br/>
+                                                	<span id="warningNotes"></span>
+                                                </span>
                                             </td>
                                         </tr>
                                         <tr class="readOnly">
@@ -1626,7 +1639,7 @@
                                                     display="title"
                                                     selected="#qCandidatePlaceCompany.jobID#"
                                                     bind="cfc:extensions.components.hostCompany.getJobTitle({hostCompanyID})"
-                                                    bindonload="true" /> 
+                                                    bindonload="true" />
                                             </td>
                                         </tr>
                                         <!--- Housing --->
@@ -2297,7 +2310,7 @@
                                                             display="title"
                                                             selected="#qGetAllPlacements.jobID#"
                                                             bind="cfc:extensions.components.hostCompany.getJobTitle({hostCompanyID_#qGetAllPlacements.candCompID#})"
-                                                            bindonload="true" /> 
+                                                            bindonload="true" />
                                                     </td>
                                                 </tr>
                                                 <tr class="editPage">

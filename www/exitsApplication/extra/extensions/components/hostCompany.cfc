@@ -133,6 +133,8 @@
 			result.CONFIRMED = 0;
 			result.POSITIONS = 0;
 			result.PHONECONFIRMATION = "";
+			result.WARNINGSTATUS = 0;
+			result.WARNINGNOTES = "";
 			
 			if (qGetHCInfo.recordCount) {
 				result.hasCompany = 1;
@@ -160,6 +162,8 @@
 				result.CONFIRMED = qGetHCInfo.confirmed;
 				result.POSITIONS = qGetHCInfo.numberPositions;
 				result.PHONECONFIRMATION = DateFormat(qGetHCInfo.confirmation_phone, 'mm/dd/yyyy');
+				result.WARNINGSTATUS = qGetHCInfo.warningStatus;
+				result.WARNINGNOTES = qGetHCInfo.warningNotes;
 			}
 			return result;
 		</cfscript>
