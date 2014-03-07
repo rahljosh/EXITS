@@ -705,10 +705,6 @@
                         <p>The application process can take any where from 15-60 minutes to complete depending on the information needed and number of pictures you submit.</p> 
                         <p>You can always come back to the  application at a later time to complete it or change any information  that you want.  Please keep in mind though, 
                         that once the application is  submitted, you will no longer be able to change any information on the  application. </p>
-                        <p><em> We have just launched this electronic  host family application, and you are one of the first families to use  this new tool.  Please bear with 
-                        us as we work out the final bugs. Should you get any errors or feel  that something is confusing, please feel free to let us know how we can  improve 
-                        the process.  There is a live chat and email support available  through the application if you need immediate assistance while filling  out the application. 
-                        Any and all feedback would be greatly appreciated.</em></p>
                         <div style="display: block; float: left; width: 250px;  padding: 10px;  font-family:Arial, Helvetica, sans-serif; font-size: .80em">
                             <strong>
                                 <em>
