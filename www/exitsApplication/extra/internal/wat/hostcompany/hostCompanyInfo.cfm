@@ -122,7 +122,7 @@
 		vGoogleMaps = '';
 	</cfscript>
     
-    <cfquery name="qGetHostCompanyInfo" datasource="MySql">
+    <cfquery name="qGetHostCompanyInfo" datasource="#APPLICATION.DSN.Source#">
         SELECT 
         	eh.hostCompanyID, 
             eh.business_typeID, 
@@ -214,32 +214,32 @@
         WHERE eh.hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostCompanyID#">
     </cfquery>
 	
-    <cfquery name="qGetenteredBy" datasource="MySql">
+    <cfquery name="qGetenteredBy" datasource="#APPLICATION.DSN.Source#">
         SELECT firstname, lastname
         FROM smg_users
         WHERE userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostCompanyInfo.enteredBy)#"> 
     </cfquery>
     
-    <cfquery name="qGetJobs" datasource="MySql">
+    <cfquery name="qGetJobs" datasource="#APPLICATION.DSN.Source#">
     	SELECT id, title, hours, description, wage, wage_type
         FROM extra_jobs
         WHERE hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostCompanyInfo.hostCompanyID)#">
     </cfquery> 
     
-    <cfquery name="qGetHousing" datasource="MySql">
+    <cfquery name="qGetHousing" datasource="#APPLICATION.DSN.Source#">
     	SELECT ID, type
         FROM extra_housing
         WHERE isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
         ORDER BY type					
     </cfquery>
 
-    <cfquery name="qGetBusinessType" datasource="MySql">
+    <cfquery name="qGetBusinessType" datasource="#APPLICATION.DSN.Source#">
         SELECT business_typeID, business_type
         FROM extra_typebusiness
 		ORDER BY business_type            
     </cfquery>
 
-    <cfquery name="qGetStateList" datasource="MySql">
+    <cfquery name="qGetStateList" datasource="#APPLICATION.DSN.Source#">
         SELECT id, state, stateName
         FROM smg_states
       	ORDER BY stateName
@@ -251,7 +251,7 @@
       	WHERE ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostCompanyInfo.state)#">
     </cfquery>
     
-    <cfquery name="qGetActivePrograms" datasource="MySql">
+    <cfquery name="qGetActivePrograms" datasource="#APPLICATION.DSN.Source#">
     	SELECT p.programID, p.startDate, p.programName,
         	j.numberPositions, j.verifiedDate,
             conf.confirmed, conf.confirmedDate
@@ -279,7 +279,7 @@
     </cfquery>
     
     <!--- Get database records for authentication files --->
-    <cfquery name="qGetAuthenticationFile" datasource="MySql">
+    <cfquery name="qGetAuthenticationFile" datasource="#APPLICATION.DSN.Source#">
     	SELECT *
         FROM extra_hostauthenticationfiles
         WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostCompanyID#">
@@ -356,7 +356,7 @@
     <!--- FORM Submitted --->
     <cfif FORM.submitted>
     
-        <cfquery name="qCheckForDuplicates" datasource="MySql">
+        <cfquery name="qCheckForDuplicates" datasource="#APPLICATION.DSN.Source#">
             SELECT hostCompanyID, name
             FROM extra_hostcompany
             WHERE name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.name#">
@@ -398,7 +398,7 @@
 		<!--- Check if we need to insert business type --->
         <cfif LEN(FORM.businessTypeOther) AND FORM.business_typeID EQ 'Other'>
             
-            <cfquery name="qCheckBusinessType" datasource="MySql">
+            <cfquery name="qCheckBusinessType" datasource="#APPLICATION.DSN.Source#">
                 SELECT business_typeID, business_type 
                 FROM extra_typebusiness
                 WHERE business_type LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.businessTypeOther#">
@@ -414,7 +414,7 @@
             
             <cfelse>
             
-                <cfquery result="newBusinessType" datasource="MySql">
+                <cfquery result="newBusinessType" datasource="#APPLICATION.DSN.Source#">
                     INSERT INTO
                         extra_typebusiness 
                     (
@@ -441,7 +441,7 @@
 			<cfif VAL(FORM.hostCompanyID)>
 
                 <!--- Update --->
-                <cfquery datasource="MySql">
+                <cfquery datasource="#APPLICATION.DSN.Source#">
                     UPDATE 
                         extra_hostcompany 
                     SET 
@@ -568,7 +568,7 @@
                 <!--- These are to enable the expiration dates to be updated on items that have expired but were added within the past day.
 				This is helpful because the expiration date is set on upload and if it is shown as expired it could not otherwise be updated. --->
                 <cfif NOT VAL(qGetSecretaryOfStateFile.recordCount)>
-                	<cfquery name="qGetSecretaryOfStateFile" datasource="MySql">
+                	<cfquery name="qGetSecretaryOfStateFile" datasource="#APPLICATION.DSN.Source#">
                     	SELECT id
                         FROM extra_hostauthenticationfiles
                         WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostCompanyID#">
@@ -577,7 +577,7 @@
                     </cfquery>
                 </cfif>
                 <cfif NOT VAL(qGetDepartmentOfLaborFile.recordCount)>
-                	<cfquery name="qGetDepartmentOfLaborFile" datasource="MySql">
+                	<cfquery name="qGetDepartmentOfLaborFile" datasource="#APPLICATION.DSN.Source#">
                     	SELECT id
                         FROM extra_hostauthenticationfiles
                         WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostCompanyID#">
@@ -586,7 +586,7 @@
                     </cfquery>
                 </cfif>
                 <cfif NOT VAL(qGetGoogleEarthFile.recordCount)>
-                	<cfquery name="qGetGoogleEarthFile" datasource="MySql">
+                	<cfquery name="qGetGoogleEarthFile" datasource="#APPLICATION.DSN.Source#">
                     	SELECT id
                         FROM extra_hostauthenticationfiles
                         WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostCompanyID#">
@@ -595,7 +595,7 @@
                     </cfquery>
                 </cfif>
                 <cfif NOT VAL(qGetWorkmensCompensationFile.recordCount)>
-                	<cfquery name="qGetWorkmensCompensationFile" datasource="MySql">
+                	<cfquery name="qGetWorkmensCompensationFile" datasource="#APPLICATION.DSN.Source#">
                     	SELECT id
                         FROM extra_hostauthenticationfiles
                         WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostCompanyID#">
@@ -604,7 +604,7 @@
                     </cfquery>
                 </cfif>
                 <cfif NOT VAL(qGetIncorporationFile.recordCount)>
-                	<cfquery name="qGetIncorporationFile" datasource="MySql">
+                	<cfquery name="qGetIncorporationFile" datasource="#APPLICATION.DSN.Source#">
                     	SELECT id
                         FROM extra_hostauthenticationfiles
                         WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostCompanyID#">
@@ -613,7 +613,7 @@
                     </cfquery>
                 </cfif>
                 <cfif NOT VAL(qGetCertificateOfExistenceFile.recordCount)>
-                	<cfquery name="qGetCertificateOfExistenceFile" datasource="MySql">
+                	<cfquery name="qGetCertificateOfExistenceFile" datasource="#APPLICATION.DSN.Source#">
                     	SELECT id
                         FROM extra_hostauthenticationfiles
                         WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostCompanyID#">
@@ -622,7 +622,7 @@
                     </cfquery>
                 </cfif>
                 <cfif NOT VAL(qGetCertificateOfReinstatementFile.recordCount)>
-                	<cfquery name="qGetCertificateOfReinstatementFile" datasource="MySql">
+                	<cfquery name="qGetCertificateOfReinstatementFile" datasource="#APPLICATION.DSN.Source#">
                     	SELECT id
                         FROM extra_hostauthenticationfiles
                         WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostCompanyID#">
@@ -631,7 +631,7 @@
                     </cfquery>
                 </cfif>
                 <cfif NOT VAL(qGetDepartmentOfStateFile.recordCount)>
-                	<cfquery name="qGetDepartmentOfStateFile" datasource="MySql">
+                	<cfquery name="qGetDepartmentOfStateFile" datasource="#APPLICATION.DSN.Source#">
                     	SELECT id
                         FROM extra_hostauthenticationfiles
                         WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostCompanyID#">
@@ -641,42 +641,42 @@
                 </cfif>
                 
                 <!--- These are the actual updates --->
-                <cfquery datasource="MySql">
+                <cfquery datasource="#APPLICATION.DSN.Source#">
                 	UPDATE extra_hostauthenticationfiles
                     SET dateExpires = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_secretaryOfStateExpiration#">
                     WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetSecretaryOfStateFile.id)#">
                 </cfquery>
-                <cfquery datasource="MySql">
+                <cfquery datasource="#APPLICATION.DSN.Source#">
                 	UPDATE extra_hostauthenticationfiles
                     SET dateExpires = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_departmentOfLaborExpiration#">
                     WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetDepartmentOfLaborFile.id)#">
                 </cfquery>
-                <cfquery datasource="MySql">
+                <cfquery datasource="#APPLICATION.DSN.Source#">
                 	UPDATE extra_hostauthenticationfiles
                     SET dateExpires = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_googleEarthExpiration#">
                     WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetGoogleEarthFile.id)#">
                 </cfquery>
-                <cfquery datasource="MySql">
+                <cfquery datasource="#APPLICATION.DSN.Source#">
                 	UPDATE extra_hostauthenticationfiles
                     SET dateExpires = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.WCDateExpired#">
                     WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetWorkmensCompensationFile.id)#">
                 </cfquery>
-                <cfquery datasource="MySql">
+                <cfquery datasource="#APPLICATION.DSN.Source#">
                 	UPDATE extra_hostauthenticationfiles
                     SET dateExpires = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_incorporationExpiration#">
                     WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetIncorporationFile.id)#">
                 </cfquery>
-                <cfquery datasource="MySql">
+                <cfquery datasource="#APPLICATION.DSN.Source#">
                 	UPDATE extra_hostauthenticationfiles
                     SET dateExpires = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_certificateOfExistenceExpiration#">
                     WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCertificateOfExistenceFile.id)#">
                 </cfquery>
-                <cfquery datasource="MySql">
+                <cfquery datasource="#APPLICATION.DSN.Source#">
                 	UPDATE extra_hostauthenticationfiles
                     SET dateExpires = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_certificateOfReinstatementExpiration#">
                     WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCertificateOfReinstatementFile.id)#">
                 </cfquery>
-                <cfquery datasource="MySql">
+                <cfquery datasource="#APPLICATION.DSN.Source#">
                 	UPDATE extra_hostauthenticationfiles
                     SET dateExpires = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_departmentOfStateExpiration#">
                     WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetDepartmentOfStateFile.id)#">
@@ -687,7 +687,7 @@
                 <!--- Update/Insert J1 Positions --->
                 <cfloop query="qGetActivePrograms">
                     
-                    <cfquery name="qCheckRecords" datasource="MySql">
+                    <cfquery name="qCheckRecords" datasource="#APPLICATION.DSN.Source#">
                     	SELECT *
                        	FROM extra_j1_positions
                        	WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostCompanyInfo.hostCompanyID#">
@@ -700,7 +700,7 @@
 					</cfscript>
                     
                     <cfif qCheckRecords.recordCount>
-                    	<cfquery datasource="MySql">
+                    	<cfquery datasource="#APPLICATION.DSN.Source#">
                         	UPDATE extra_j1_positions
                            	SET
                             	numberPositions = <cfqueryparam cfsqltype="cf_sql_integer" value="#number#">
@@ -713,7 +713,7 @@
                             AND programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetActivePrograms.programID#">
                         </cfquery>
                    	<cfelse>
-                    	<cfquery datasource="MySql">
+                    	<cfquery datasource="#APPLICATION.DSN.Source#">
                         	INSERT INTO
                             	extra_j1_positions
                            		(
@@ -742,7 +742,7 @@
                 <!--- Update / Insert Confirmations --->
                 <cfloop query="qGetActivePrograms">
                     
-                    <cfquery name="qCheckRecords" datasource="MySql">
+                    <cfquery name="qCheckRecords" datasource="#APPLICATION.DSN.Source#">
                     	SELECT *
                        	FROM extra_confirmations
                        	WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostCompanyInfo.hostCompanyID#">
@@ -755,7 +755,7 @@
 					</cfscript>
                     
                     <cfif qCheckRecords.recordCount>
-                    	<cfquery datasource="MySql">
+                    	<cfquery datasource="#APPLICATION.DSN.Source#">
                         	UPDATE extra_confirmations
                            	SET
                             	confirmed = <cfqueryparam cfsqltype="cf_sql_integer" value="#number#">
@@ -768,7 +768,7 @@
                             AND programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetActivePrograms.programID#">
                         </cfquery>
                    	<cfelse>
-                    	<cfquery datasource="MySql">
+                    	<cfquery datasource="#APPLICATION.DSN.Source#">
                         	INSERT INTO
                             	extra_confirmations
                            		(
@@ -795,7 +795,7 @@
                 <!--- End Update / Insert Confirmations --->
                 
                 <!--- Add History Record --->
-                <cfquery datasource="MySql">
+                <cfquery datasource="#APPLICATION.DSN.Source#">
                     INSERT INTO extra_hostinfohistory (
                         hostID,
                         changedBy,
@@ -856,7 +856,7 @@
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.authentication_businessLicenseNotAvailable#"> )
                 </cfquery>
                 
-                <cfquery name="qGetNewHistoryID" datasource="MySql">
+                <cfquery name="qGetNewHistoryID" datasource="#APPLICATION.DSN.Source#">
                 	SELECT historyID
                     FROM extra_hostinfohistory
                     WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostCompanyID#">
@@ -873,7 +873,7 @@
 						j1NewDate = evaluate("##FORM.j1Date_" & programID & "##");
 					</cfscript>
                 
-                	<cfquery datasource="MySql">
+                	<cfquery datasource="#APPLICATION.DSN.Source#">
                         INSERT INTO extra_hostseasonhistory (
                             hostHistoryID,
                             programID,
@@ -896,7 +896,7 @@
             <cfelse>
 
 				<!--- Insert Host Company --->                  
-                <cfquery result="newRecord" datasource="MySql">
+                <cfquery result="newRecord" datasource="#APPLICATION.DSN.Source#">
                     INSERT INTO 
                         extra_hostcompany 
                     (
@@ -1073,7 +1073,7 @@
                 </cfquery>
                 
                 <!--- Get the host company id that was just added --->
-                <cfquery name="qGetNewHost" datasource="MySql">
+                <cfquery name="qGetNewHost" datasource="#APPLICATION.DSN.Source#">
                 	SELECT hostcompanyid
                     FROM extra_hostcompany
                     ORDER BY hostcompanyid DESC
@@ -1086,7 +1086,7 @@
 						number = evaluate("##FORM.numberPositions_" & programID & "##");
 						date = evaluate("##FORM.j1Date_" & programID & "##");
 					</cfscript>
-                    <cfquery datasource="MySql">
+                    <cfquery datasource="#APPLICATION.DSN.Source#">
                			INSERT INTO extra_j1_positions (
                             hostID,
                             programID,
@@ -1111,7 +1111,7 @@
 						number = evaluate("##FORM.confirmation_" & programID & "##");
 						date = evaluate("##FORM.confirmationDate_" & programID & "##");
 					</cfscript>
-                    <cfquery datasource="MySql">
+                    <cfquery datasource="#APPLICATION.DSN.Source#">
                         INSERT INTO extra_confirmations (
                             hostID,
                             programID,
@@ -1131,7 +1131,7 @@
                 <!--- End Update / Insert Confirmations --->
                 
                 <!--- Add History Record --->
-                <cfquery datasource="MySql">
+                <cfquery datasource="#APPLICATION.DSN.Source#">
                     INSERT INTO extra_hostinfohistory (
                         hostID,
                         changedBy,
@@ -1384,7 +1384,7 @@
 		getPickUpInfo = $('input:radio[name=isPickUpProvided]:checked').val();
 		if ( getPickUpInfo == 1 ) {
 			$(".pickUpInfo").fadeIn("fast");
-			$(".readOnly").hide();
+			$(".pickupReadonly").hide();
 		} else {
 			//erase data
 			$("#arrivalPickUpHours").val("");
@@ -2341,63 +2341,63 @@
                                         <tr class="hiddenField pickUpInfo">
                                             <td width="37%" class="style1" align="right"><strong>Pick Up Days:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
-                                            	<span class="readOnly">#FORM.arrivalPickUpDays#</span>
+                                            	<span class="readOnly pickupReadonly">#FORM.arrivalPickUpDays#</span>
                                                 <textarea name="arrivalPickUpDays" id="arrivalPickUpDays" class="style1 editPage" cols="35" rows="4">#FORM.arrivalPickUpDays#</textarea>
                                             </td>
                                         </tr>
                                         <tr class="hiddenField pickUpInfo">
                                             <td width="37%" class="style1" align="right"><strong>Pick Up Hours:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
-                                            	<span class="readOnly">#FORM.arrivalPickUpHours#</span>
+                                            	<span class="readOnly pickupReadonly">#FORM.arrivalPickUpHours#</span>
                                                 <textarea name="arrivalPickUpHours" id="arrivalPickUpHours" class="style1 editPage" cols="35" rows="4">#FORM.arrivalPickUpHours#</textarea>
                                             </td>
                                         </tr>
                                         <tr class="hiddenField pickUpInfo">
                                             <td width="37%" class="style1" align="right"><strong>Cost:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
-                                            	<span class="readOnly">#DollarFormat(VAL(FORM.arrivalPickUpCost))#</span>
+                                            	<span class="readOnly pickupReadonly">#DollarFormat(VAL(FORM.arrivalPickUpCost))#</span>
                                                 <input type="text" name="arrivalPickUpCost" id="arrivalPickUpCost" class="style1 editPage" size="35" maxlength="100" value="#DollarFormat(VAL(FORM.arrivalPickUpCost))#"/>
                                             </td>
                                         </tr>
                                         <tr class="hiddenField pickUpInfo">
                                             <td class="style1" align="right" valign="top"><strong>Instructions:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
-                                                <span class="readOnly">#FORM.arrivalInstructions#</span>
+                                                <span class="readOnly pickupReadonly">#FORM.arrivalInstructions#</span>
                                                 <textarea name="arrivalInstructions" id="arrivalInstructions" class="style1 editPage" cols="35" rows="4">#FORM.arrivalInstructions#</textarea>
                                             </td>
                                         </tr>
                                         <tr class="hiddenField pickUpInfo">
                                             <td width="37%" class="style1" align="right"><strong>Contact Name:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
-                                            	<span class="readOnly">#FORM.pickUpContactName#</span>
+                                            	<span class="readOnly pickupReadonly">#FORM.pickUpContactName#</span>
                                                 <input type="text" name="pickUpContactName" id="pickUpContactName" value="#FORM.pickUpContactName#" class="style1 editPage" size="35" maxlength="100">
                                             </td>
                                         </tr>
                                         <tr class="hiddenField pickUpInfo">
                                             <td width="37%" class="style1" align="right"><strong>Contact Phone:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
-                                            	<span class="readOnly">#FORM.pickUpContactPhone#</span>
+                                            	<span class="readOnly pickupReadonly">#FORM.pickUpContactPhone#</span>
                                                 <input type="text" name="pickUpContactPhone" id="pickUpContactPhone" value="#FORM.pickUpContactPhone#" class="style1 editPage" size="35" maxlength="100">
                                             </td>
                                         </tr>
                                         <tr class="hiddenField pickUpInfo">
                                             <td width="37%" class="style1" align="right"><strong>Contact Email:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
-                                            	<span class="readOnly">#FORM.pickUpContactEmail#</span>
+                                            	<span class="readOnly pickupReadonly">#FORM.pickUpContactEmail#</span>
                                                 <input type="text" name="pickUpContactEmail" id="pickUpContactEmail" value="#FORM.pickUpContactEmail#" class="style1 editPage" size="35" maxlength="100">
                                             </td>
                                         </tr>
                                         <tr class="hiddenField pickUpInfo">
                                             <td width="37%" class="style1" align="right"><strong>Hours of Contact:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
-                                            	<span class="readOnly">#FORM.pickUpContactHours#</span>
+                                            	<span class="readOnly pickupReadonly">#FORM.pickUpContactHours#</span>
                                                 <textarea name="pickUpContactHours" id="pickUpContactHours" class="style1 editPage" cols="35" rows="4">#FORM.pickUpContactHours#</textarea>
                                             </td>
                                         </tr>
                                         <tr class="hiddenField pickUpInfo">
                                             <td width="37%" class="style1" align="right"><strong>Notes:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
-                                            	<span class="readOnly">#FORM.pickUpNotes#</span>
+                                            	<span class="readOnly pickupReadonly">#FORM.pickUpNotes#</span>
                                                 <textarea name="pickUpNotes" id="pickUpNotes" class="style1 editPage" cols="35" rows="4">#FORM.pickUpNotes#</textarea>
                                             </td>
                                         </tr>
