@@ -61,6 +61,13 @@
     <cfparam name="FORM.supervisor_phoneExt" default="">
     <cfparam name="FORM.supervisor_cellPhone" default="">
     <cfparam name="FORM.supervisor_email" default="">
+    <!--- Additional Supervisor --->
+    <cfparam name="FORM.addNewSupervisor" default="0">
+    <cfparam name="FORM.new_supervisor_name" default="">
+   	<cfparam name="FORM.new_supervisor_phone" default="">
+    <cfparam name="FORM.new_supervisor_phoneExt" default="">
+    <cfparam name="FORM.new_supervisor_cellPhone" default="">
+    <cfparam name="FORM.new_supervisor_email" default="">
     <!--- Other Information --->    
     <cfparam name="FORM.personJobOfferName" default="">
     <cfparam name="FORM.personJobOfferTitle" default="">
@@ -337,6 +344,13 @@
         AND documentTypeID = 42
         AND isDeleted = 0
     </cfquery>
+    
+    <cfquery name="qGetAdditionalSupervisors" datasource="#APPLICATION.DSN.Source#">
+    	SELECT *
+        FROM extra_hostcompany_supervisor
+        WHERE hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.hostCompanyID)#">
+        AND isDeleted = 0
+    </cfquery>
                 
     <!--- FORM Submitted --->
     <cfif FORM.submitted>
@@ -512,6 +526,41 @@
                     WHERE
                         hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostCompanyID#">
                 </cfquery>
+                
+                <!--- Update previously added supervisors --->
+                <cfloop query="qGetAdditionalSupervisors">
+                	<cfquery datasource="#APPLICATION.DSN.Source#">
+                    	UPDATE extra_hostcompany_supervisor
+                        SET
+                        	name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM['supervisor_name_' & qGetAdditionalSupervisors.ID]#">,
+                            officePhone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM['supervisor_phone_' & qGetAdditionalSupervisors.ID]#">,
+                            officePhoneExt = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM['supervisor_phoneExt_' & qGetAdditionalSupervisors.ID]#">,
+                            mobilePhone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM['supervisor_cellPhone_' & qGetAdditionalSupervisors.ID]#">,
+                            email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM['supervisor_email_' & qGetAdditionalSupervisors.ID]#">,
+                            isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM['supervisor_delete_' & qGetAdditionalSupervisors.ID]#">
+                      	WHERE ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetAdditionalSupervisors.ID#">
+                    </cfquery>
+                </cfloop>
+                
+                <!--- Add a new supervisor if there is one --->
+                <cfif VAL(FORM.addNewSupervisor)>
+                    <cfquery datasource="#APPLICATION.DSN.Source#">
+                        INSERT INTO extra_hostcompany_supervisor (
+                            hostCompanyID,
+                            name,
+                            officePhone,
+                            officePhoneExt,
+                            mobilePhone,
+                            email)
+                        VALUES (
+                            <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostCompanyID#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.new_supervisor_name#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.new_supervisor_phone#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.new_supervisor_phoneExt#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.new_supervisor_cellPhone#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.new_supervisor_email#">)
+                    </cfquery>
+                </cfif>
                 
                 <!--- Update authentication file expiration dates --->
                 
@@ -1372,6 +1421,7 @@
 	   $("#supervisor_cellPhone").mask("(999)999-9999");
 	   $("#pickUpContactPhone").mask("(999)999-9999");
 	   $("#WC_carrierPhone").mask("(999)999-9999");
+	   $(".phone").mask("(999)999-9999");
 	});	
 	// --> 
 	
@@ -1777,16 +1827,20 @@
 		}
 	}
 	
-	// show or hide the supervisor information
-	<!---function showSupervisor() {
-		if ($('#showSupervisorBox').is(":checked")) {
-			$(".supervisorInfo").show();
-			$("#isSupervisorShown").val(1);
+	// Shows or hides the new supervisor menu. It should not add one if it is hidden.
+	function showHideNewSupervisor() {
+		if ($('#addNewSupervisor').val() == 0) {
+			$('.newSupervisor').show();
+			$("#addNewSupervisor").val(1);
 		} else {
-			$(".supervisorInfo").hide();
-			$("#isSupervisorShown").val(0);
+			$('.newSupervisor').hide();
+			$("#addNewSupervisor").val(0);
 		}
-	}--->
+	}
+	
+	function alternateValue(formID) {
+		$('#'+formID).val(($('#'+formID).val()-1)*(-1));
+	}
 	
 </script>
 
@@ -2422,40 +2476,27 @@
                                                 <input type="text" name="email" id="email" value="#FORM.email#" class="style1 editPage" size="35" maxlength="100">
                                             </td>
                                         </tr>
-                                        <!---<tr class="editPage">
-                                        	<td class="style1" align="right"><strong>Supervisor Information:&nbsp;</strong></td>
-                                            <td class="style1">
-                                                <input type="hidden" name="isSupervisorShown" id="isSupervisorShown" value="#FORM.isSupervisorShown#" />
-                                                <input 
-                                                    type="checkbox" 
-                                                    name="showSupervisorBox" 
-                                                    id="showSupervisorBox" 
-                                                    class="style1 editPage" 
-                                                    onclick="showSupervisor()"
-                                                    <cfif FORM.isSupervisorShown EQ 1>checked="checked"</cfif> />
-                                            </td>
-                                        </tr>--->
                                         
                                         <!--- Supervisor --->
-                                        <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF" class="supervisorInfo">
+                                        <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
                                             <td colspan="2" class="style2" bgcolor="##8FB6C9">
                                                 &nbsp;:: Supervisor Information
                                             </td>
                                         </tr>
-                                        <tr class="supervisorInfo">
+                                        <tr>
                                             <td class="style1 editPage" align="center" colspan="2">
                                             	<input type="checkbox" name="copyContact" id="copyContact" class="style1 editPage" onclick="jsCopyContact();" />
                                             	<strong class="editPage">Same as Above</strong>
                                           	</td>
                                         </tr>
-                                        <tr class="supervisorInfo">
+                                        <tr>
                                             <td class="style1" align="right"><strong>Supervisor:&nbsp;</strong></td>
                                             <td class="style1">
                                                 <span class="readOnly">#FORM.supervisor_name#</span>
                                                 <input type="text" name="supervisor_name" id="supervisor_name" value="#FORM.supervisor_name#" class="style1 editPage" size="35" maxlength="100">
                                             </td>                                            
                                         </tr>
-                                        <tr class="supervisorInfo">
+                                        <tr>
                                             <td class="style1" align="right"><strong>Office Phone:&nbsp;</strong></td>
                                             <td class="style1">
                                                 <span class="readOnly">#FORM.supervisor_phone#</span>
@@ -2465,20 +2506,138 @@
                                                 <input type="text" name="supervisor_phoneExt" id="supervisor_phoneExt" value="#FORM.supervisor_phoneExt#" class="style1 editPage" size="5" maxlength="10">
                                             </td>                                            
                                         </tr>
-                                        <tr class="supervisorInfo">
+                                        <tr>
                                             <td class="style1" align="right"><strong>Mobile Phone:&nbsp;</strong></td>
                                             <td class="style1">
                                                 <span class="readOnly">#FORM.supervisor_cellPhone#</span>
                                                 <input type="text" name="supervisor_cellPhone" id="supervisor_cellPhone" value="#FORM.supervisor_cellPhone#" class="style1 editPage" size="35" maxlength="100">
                                             </td>                                            
                                         </tr>
-                                        <tr class="supervisorInfo">
+                                        <tr>
                                             <td class="style1" align="right"><strong>Email:&nbsp;</strong></td>
                                             <td class="style1">
                                                 <span class="readOnly">#FORM.supervisor_email#</span>
                                                 <input type="text" name="supervisor_email" id="supervisor_email" value="#FORM.supervisor_email#" class="style1 editPage" size="35" maxlength="100">
                                             </td>                                            
                                         </tr>
+                                        
+                                        <!--- Additional Supervisors --->
+                                        <cfloop query="qGetAdditionalSupervisors">
+                                            <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
+                                                <td colspan="2" class="style2" bgcolor="##8FB6C9">
+                                                    &nbsp;:: Additional Supervisor Information
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="style1" align="right"><strong>Supervisor:&nbsp;</strong></td>
+                                                <td class="style1">
+                                                    <span class="readOnly">#qGetAdditionalSupervisors.name#</span>
+                                                    <input 
+                                                    	type="text" 
+                                                        name="supervisor_name_#qGetAdditionalSupervisors.ID#"
+                                                        value="#qGetAdditionalSupervisors.name#" 
+                                                        class="style1 editPage" 
+                                                        size="35" 
+                                                        maxlength="100">
+                                                </td>                                            
+                                            </tr>
+                                            <tr>
+                                                <td class="style1" align="right"><strong>Office Phone:&nbsp;</strong></td>
+                                                <td class="style1">
+                                                    <span class="readOnly">#qGetAdditionalSupervisors.officePhone#</span>
+                                                    <input 
+                                                    	type="text" 
+                                                        name="supervisor_phone_#qGetAdditionalSupervisors.ID#" 
+                                                        value="#qGetAdditionalSupervisors.officePhone#" 
+                                                        class="style1 editPage phone" 
+                                                        size="20" 
+                                                        maxlength="100">
+                                                    ext.
+                                                    <span class="readOnly">#qGetAdditionalSupervisors.officePhoneExt#</span>
+                                                    <input 
+                                                    	type="text" 
+                                                        name="supervisor_phoneExt_#qGetAdditionalSupervisors.ID#"
+                                                        value="#qGetAdditionalSupervisors.officePhoneExt#" 
+                                                        class="style1 editPage" 
+                                                        size="5" 
+                                                        maxlength="10">
+                                                </td>                                            
+                                            </tr>
+                                            <tr>
+                                                <td class="style1" align="right"><strong>Mobile Phone:&nbsp;</strong></td>
+                                                <td class="style1">
+                                                    <span class="readOnly">#qGetAdditionalSupervisors.mobilePhone#</span>
+                                                    <input 
+                                                    	type="text" 
+                                                        name="supervisor_cellPhone_#qGetAdditionalSupervisors.ID#"
+                                                        value="#qGetAdditionalSupervisors.mobilePhone#" 
+                                                        class="style1 editPage phone" 
+                                                        size="35" 
+                                                        maxlength="100">
+                                                </td>                                            
+                                            </tr>
+                                            <tr>
+                                                <td class="style1" align="right"><strong>Email:&nbsp;</strong></td>
+                                                <td class="style1">
+                                                    <span class="readOnly">#qGetAdditionalSupervisors.email#</span>
+                                                    <input 
+                                                    	type="text" 
+                                                        name="supervisor_email_#qGetAdditionalSupervisors.ID#"
+                                                        value="#qGetAdditionalSupervisors.email#" 
+                                                        class="style1 editPage" 
+                                                        size="35" 
+                                                        maxlength="100">
+                                                </td>                                            
+                                            </tr>
+                                            <tr class="editPage">
+                                                <td class="style1" align="right"><strong>Delete:&nbsp;</strong></td>
+                                                <td class="style1">
+                                                	<input type="hidden" name="supervisor_delete_#qGetAdditionalSupervisors.ID#" id="supervisor_delete_#qGetAdditionalSupervisors.ID#" value="0" />
+                                                    <input 
+                                                    	type="checkbox" 
+                                                        class="style1 editPage" 
+                                                        onclick="alternateValue('supervisor_delete_#qGetAdditionalSupervisors.ID#')" />
+                                                </td>                                            
+                                            </tr>
+                                      	</cfloop>
+                                        
+                                        <!--- Add Additional Supervisor --->
+                                        <tr class="editPage">
+                                        	<td colspan="2" class="style1" align="center"><a href="##" onclick="showHideNewSupervisor();">[ Add Supervisor ]</a></td>
+                                        </tr>
+                                        <input type="hidden" name="addNewSupervisor" id="addNewSupervisor" value="#FORM.addNewSupervisor#" />
+                                        <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF" class="newSupervisor" style="display:none;">
+                                            <td colspan="2" class="style2" bgcolor="##8FB6C9">
+                                                &nbsp;:: New Supervisor Information
+                                            </td>
+                                        </tr>
+                                        <tr class="newSupervisor" style="display:none;">
+                                            <td class="style1" align="right"><strong>Supervisor:&nbsp;</strong></td>
+                                            <td class="style1">
+                                                <input type="text" name="new_supervisor_name" id="new_supervisor_name" class="style1 editPage" size="35" maxlength="100">
+                                            </td>                                            
+                                        </tr>
+                                        <tr class="newSupervisor" style="display:none;">
+                                            <td class="style1" align="right"><strong>Office Phone:&nbsp;</strong></td>
+                                            <td class="style1">
+                                                <input type="text" name="new_supervisor_phone" id="new_supervisor_phone"  class="style1 editPage phone" size="20" maxlength="100">
+                                                ext.
+                                                <input type="text" name="new_supervisor_phoneExt" id="new_supervisor_phoneExt" class="style1 editPage" size="5" maxlength="10">
+                                            </td>                                            
+                                        </tr>
+                                        <tr class="newSupervisor" style="display:none;">
+                                            <td class="style1" align="right"><strong>Mobile Phone:&nbsp;</strong></td>
+                                            <td class="style1">
+                                                <input type="text" name="new_supervisor_cellPhone" id="new_supervisor_cellPhone" class="style1 editPage phone" size="35" maxlength="100">
+                                            </td>                                            
+                                        </tr>
+                                        <tr class="newSupervisor" style="display:none;">
+                                            <td class="style1" align="right"><strong>Email:&nbsp;</strong></td>
+                                            <td class="style1">
+                                                <input type="text" name="new_supervisor_email" id="new_supervisor_email" class="style1 editPage" size="35" maxlength="100">
+                                            </td>                                            
+                                        </tr>
+                                        
                                     </table>
 
                                 </td>
