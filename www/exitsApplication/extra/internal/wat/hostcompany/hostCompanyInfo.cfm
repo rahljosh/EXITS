@@ -3554,10 +3554,10 @@
                                                         WHEN SUM(ecpc.isSecondary) = 0 AND SUM(ecpc.status) != 0 AND SUM(ecpc.status) != COUNT(ecpc.candidateID) THEN "Primary Placement (Both)"      
                                                         WHEN SUM(ecpc.isSecondary) = COUNT(ecpc.candidateID) AND SUM(ecpc.status) = 0 THEN "Secondary Placement (Inactive)"
                                                         WHEN SUM(ecpc.isSecondary) = COUNT(ecpc.candidateID) AND SUM(ecpc.status) = COUNT(ecpc.candidateID) THEN "Secondary Placement (Active)"
-                                                        WHEN SUM(ecpc.isSecondary) = COUNT(ecpc.candidateID) AND SUM(ecpc.status) != 0 AND SUM(ecpc.status) != COUNT(ecpc.candidateID) THEN "Secondary Placement (Both)"
+                                                        WHEN SUM(ecpc.isSecondary) = COUNT(ecpc.candidateID) AND SUM(ecpc.status) != 0 AND SUM(ecpc.status) != COUNT(ecpc.candidateID) THEN "Secondary Placement (Active/Inactive)"
                                                         WHEN SUM(ecpc.isSecondary) != 0 AND SUM(ecpc.isSecondary) != COUNT(ecpc.candidateID) AND SUM(ecpc.status) = 0 THEN "Primary/Secondary Placement (Inactive)"
                                                         WHEN SUM(ecpc.isSecondary) != 0 AND SUM(ecpc.isSecondary) != COUNT(ecpc.candidateID) AND SUM(ecpc.status) = COUNT(ecpc.candidateID) THEN "Primary/Secondary Placement (Active)"
-                                                        ELSE "Primary/Secondary Placement (Both)"            
+                                                        ELSE "Primary/Secondary Placement (Active/Inactive)"            
                                                    	END AS "placementType"
                                             	FROM extra_candidate_place_company ecpc
                                                 INNER JOIN extra_candidates c ON c.candidateID = ecpc.candidateID
