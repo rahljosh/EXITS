@@ -101,7 +101,7 @@
     <cfparam name="FORM.isPickUpProvided" default="0">
     <cfparam name="FORM.arrivalAirport" default="">
 	<cfparam name="FORM.arrivalAirportCity" default="">    
-    <cfparam name="FORM.arrivalAirportState" default="">       
+    <cfparam name="FORM.arrivalAirportState" default="">     
     <cfparam name="FORM.arrivalPickUpHours" default="">
     <cfparam name="FORM.arrivalInstructions" default="">
     <cfparam name="FORM.pickUpContactName" default="">    
@@ -1384,10 +1384,10 @@
 		getPickUpInfo = $('input:radio[name=isPickUpProvided]:checked').val();
 		if ( getPickUpInfo == 1 ) {
 			$(".pickUpInfo").fadeIn("fast");
-			$(".pickupReadonly").hide();
 		} else {
 			//erase data
 			$("#arrivalPickUpHours").val("");
+			$("#arrivalPickUpDays").val("");
 			$("#arrivalInstructions").val("");
 			$("#pickUpContactName").val("");
 			$("#pickUpContactPhone").val("");
@@ -2341,63 +2341,63 @@
                                         <tr class="hiddenField pickUpInfo">
                                             <td width="37%" class="style1" align="right"><strong>Pick Up Days:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
-                                            	<span class="readOnly pickupReadonly">#FORM.arrivalPickUpDays#</span>
+                                            	<span class="readOnly">#FORM.arrivalPickUpDays#</span>
                                                 <textarea name="arrivalPickUpDays" id="arrivalPickUpDays" class="style1 editPage" cols="35" rows="4">#FORM.arrivalPickUpDays#</textarea>
                                             </td>
                                         </tr>
                                         <tr class="hiddenField pickUpInfo">
                                             <td width="37%" class="style1" align="right"><strong>Pick Up Hours:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
-                                            	<span class="readOnly pickupReadonly">#FORM.arrivalPickUpHours#</span>
+                                            	<span class="readOnly">#FORM.arrivalPickUpHours#</span>
                                                 <textarea name="arrivalPickUpHours" id="arrivalPickUpHours" class="style1 editPage" cols="35" rows="4">#FORM.arrivalPickUpHours#</textarea>
                                             </td>
                                         </tr>
                                         <tr class="hiddenField pickUpInfo">
                                             <td width="37%" class="style1" align="right"><strong>Cost:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
-                                            	<span class="readOnly pickupReadonly">#DollarFormat(VAL(FORM.arrivalPickUpCost))#</span>
+                                            	<span class="readOnly">#DollarFormat(VAL(FORM.arrivalPickUpCost))#</span>
                                                 <input type="text" name="arrivalPickUpCost" id="arrivalPickUpCost" class="style1 editPage" size="35" maxlength="100" value="#DollarFormat(VAL(FORM.arrivalPickUpCost))#"/>
                                             </td>
                                         </tr>
                                         <tr class="hiddenField pickUpInfo">
                                             <td class="style1" align="right" valign="top"><strong>Instructions:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
-                                                <span class="readOnly pickupReadonly">#FORM.arrivalInstructions#</span>
+                                                <span class="readOnly">#FORM.arrivalInstructions#</span>
                                                 <textarea name="arrivalInstructions" id="arrivalInstructions" class="style1 editPage" cols="35" rows="4">#FORM.arrivalInstructions#</textarea>
                                             </td>
                                         </tr>
                                         <tr class="hiddenField pickUpInfo">
                                             <td width="37%" class="style1" align="right"><strong>Contact Name:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
-                                            	<span class="readOnly pickupReadonly">#FORM.pickUpContactName#</span>
+                                            	<span class="readOnly">#FORM.pickUpContactName#</span>
                                                 <input type="text" name="pickUpContactName" id="pickUpContactName" value="#FORM.pickUpContactName#" class="style1 editPage" size="35" maxlength="100">
                                             </td>
                                         </tr>
                                         <tr class="hiddenField pickUpInfo">
                                             <td width="37%" class="style1" align="right"><strong>Contact Phone:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
-                                            	<span class="readOnly pickupReadonly">#FORM.pickUpContactPhone#</span>
+                                            	<span class="readOnly">#FORM.pickUpContactPhone#</span>
                                                 <input type="text" name="pickUpContactPhone" id="pickUpContactPhone" value="#FORM.pickUpContactPhone#" class="style1 editPage" size="35" maxlength="100">
                                             </td>
                                         </tr>
                                         <tr class="hiddenField pickUpInfo">
                                             <td width="37%" class="style1" align="right"><strong>Contact Email:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
-                                            	<span class="readOnly pickupReadonly">#FORM.pickUpContactEmail#</span>
+                                            	<span class="readOnly">#FORM.pickUpContactEmail#</span>
                                                 <input type="text" name="pickUpContactEmail" id="pickUpContactEmail" value="#FORM.pickUpContactEmail#" class="style1 editPage" size="35" maxlength="100">
                                             </td>
                                         </tr>
                                         <tr class="hiddenField pickUpInfo">
                                             <td width="37%" class="style1" align="right"><strong>Hours of Contact:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
-                                            	<span class="readOnly pickupReadonly">#FORM.pickUpContactHours#</span>
+                                            	<span class="readOnly">#FORM.pickUpContactHours#</span>
                                                 <textarea name="pickUpContactHours" id="pickUpContactHours" class="style1 editPage" cols="35" rows="4">#FORM.pickUpContactHours#</textarea>
                                             </td>
                                         </tr>
                                         <tr class="hiddenField pickUpInfo">
                                             <td width="37%" class="style1" align="right"><strong>Notes:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
-                                            	<span class="readOnly pickupReadonly">#FORM.pickUpNotes#</span>
+                                            	<span class="readOnly">#FORM.pickUpNotes#</span>
                                                 <textarea name="pickUpNotes" id="pickUpNotes" class="style1 editPage" cols="35" rows="4">#FORM.pickUpNotes#</textarea>
                                             </td>
                                         </tr>
