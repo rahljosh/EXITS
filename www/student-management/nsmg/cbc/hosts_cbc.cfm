@@ -608,7 +608,7 @@
             </cfif>
             
             <!--- HOST FATHER --->
-            <cfif LEN(qGetHost.fatherfirstname) AND LEN(qGetHost.fatherlastname)>
+            <cfif LEN(qGetHost.fatherfirstname)>
                 <tr><td colspan="11" bgcolor="##e2efc7"><b>Other Host Parent - #qGetHost.fatherfirstname# #qGetHost.fatherlastname#</b></td></tr>
                 <tr>
                     <td class="columnHeader">Company</td>
