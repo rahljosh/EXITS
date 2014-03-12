@@ -1533,7 +1533,7 @@
                     
                     <!--- Class Schedule --->
                     <!----We only need this for kids prior to Jan 2013---->
-                    <cfif DateCompare(qGetStudentInfo.startDate, '2013-01-01') lt 0>
+                    <!---<cfif DateCompare(qGetStudentInfo.startDate, '2013-01-01') lt 0>
                     <tr class="mouseOverColor"> 
                         <td class="paperworkLeftColumn">
                             <input type="checkbox" name="check_doc_class_schedule" id="check_doc_class_schedule" class="editPage displayNone" onclick="setTodayDate(this.id, 'doc_class_schedule');" <cfif isDate(FORM.doc_class_schedule)>checked</cfif> >
@@ -1549,10 +1549,10 @@
                             <input type="hidden" name="compliance_class_schedule" id="compliance_class_schedule" class="datePicker editPage displayNone" value="#DateFormat(FORM.compliance_class_schedule, 'mm/dd/yyyy')#">
                         </td>                        
                     </tr>
-                    <Cfelse>
+                    <Cfelse>--->
                     <input type="hidden" name="doc_class_schedule" id="doc_class_schedule" class="datePicker editPage displayNone" value="#DateFormat(FORM.doc_class_schedule, 'mm/dd/yyyy')#">
                     <input type="hidden" name="compliance_class_schedule" id="compliance_class_schedule" class="datePicker editPage displayNone" value="#DateFormat(FORM.compliance_class_schedule, 'mm/dd/yyyy')#">
-                    </cfif>
+                    <!---</cfif>--->
                 </table>
     
 				<!--- Double Placement --->
