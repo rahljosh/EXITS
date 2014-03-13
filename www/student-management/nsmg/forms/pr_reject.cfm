@@ -68,10 +68,18 @@
                 #replaceList(form.pr_rejection_reason, '#chr(13)##chr(10)#,#chr(13)#,#chr(10)#', '<br>,<br>,<br>')#</p>
             </cfoutput>
             </cfsavecontent>
+            <cfset emailSubject = "SMG - Report Rejected">
+			<cfif get_report.fk_reportType EQ 1>
+            	<cfset emailSubject = "SMG - Progress Report Rejected">
+            <cfelseif get_report.fk_reportType EQ 2>
+            	<cfset emailSubject = "SMG - Second Visit Report Rejected">
+            <cfelse>
+            	<cfset emailSubject = "SMG - Confidential Host Family Visit Report Rejected">
+            </cfif>
             <cfinvoke component="nsmg.cfc.email" method="send_mail">
                 <cfinvokeargument name="email_to" value="#email_to#">
                 <cfinvokeargument name="email_replyto" value="#client.email#">
-                <cfinvokeargument name="email_subject" value="SMG - Progress Report Rejected">
+                <cfinvokeargument name="email_subject" value="#emailSubject#">
                 <cfinvokeargument name="email_message" value="#email_message#">
             </cfinvoke>
         </cfif>
