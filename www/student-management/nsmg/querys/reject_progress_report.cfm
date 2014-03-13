@@ -1,6 +1,6 @@
 <!----reject Report---->
 <cflock scope="application" timeout="10">
-	<cfquery name="reject_report" datasource="MySQL">
+	<cfquery name="reject_report" datasource="#APPLICATION.DSN#">
 		update smg_document_tracking
 			set date_rejected = #CreateODBCDate(now())#,
 				date_ra_approved = null,
@@ -11,37 +11,37 @@
 	</cfquery>
 </cflock>
 
-<cfquery name="insert_link" datasource="MySQL">
+<cfquery name="insert_link" datasource="#APPLICATION.DSN#">
 	insert into smg_links (link)
 		values ('#CLIENT.exits_url#/nsmg/index.cfm?curdoc=forms/view_progress_report&number=#url.number#')
 </cfquery>
 
-<cfquery name="find_link" datasource="MySQL">
+<cfquery name="find_link" datasource="#APPLICATION.DSN#">
 	Select Max(id) as id
 	from smg_links
 </cfquery>
 
-<cfquery name="get_user" datasource="mysql">
+<cfquery name="get_user" datasource="#APPLICATION.DSN#">
 	select userid from smg_prquestion_details
 	where report_number = #url.number#
 </cfquery>
 
-<cfquery name="get_email" datasource="mysql">
+<cfquery name="get_email" datasource="#APPLICATION.DSN#">
 	select email from smg_users where userid = #get_user.userid#
 </cfquery>
 
-<cfquery name="get_rejector" datasource="mysql">
+<cfquery name="get_rejector" datasource="#APPLICATION.DSN#">
 	select rejected_by, note from smg_document_tracking
 	where report_number = #url.number#
 </cfquery>
 
-<cfquery name="rejector_email" datasource="MySQL">
+<cfquery name="rejector_email" datasource="#APPLICATION.DSN#">
 	select email from smg_users where userid = #get_rejector.rejected_by#
 </cfquery>
 
 <cfoutput>
 
-<cfmail to="#get_email.email#"  FROM="""ISE Support"" <support@student-management.com>" subject="SMG - Progress Report Rejected" >
+<cfmail to="#get_email.email#"  FROM="""ISE Support"" <support@student-management.com>" subject="SMG - Report Rejected" >
 A report you submitted has been rejected.   
 
 To view the report and make necessary changes please visit #CLIENT.exits_url#/?link=#find_link.id#
@@ -61,12 +61,12 @@ support@student-management.com
 
 <cfif client.usertype eq 4>
 
-<cfquery name="student" datasource="mysql">
+<cfquery name="student" datasource="#APPLICATION.DSN#">
 	select stuid from smg_prquestion_details
 	where report_number = #url.number#
 </cfquery>
 
-<cfquery name="rdemail" datasource="MySQL">
+<cfquery name="rdemail" datasource="#APPLICATION.DSN#">
 	SELECT smg_students.regionassigned, user_access_rights.userid, smg_users.email
 	FROM smg_students
 	LEFT JOIN user_access_rights ON  user_access_rights.regionid = smg_students.regionassigned
@@ -76,7 +76,7 @@ support@student-management.com
 		AND smg_users.active = '1'
 </cfquery>
 
-<cfmail to="#rdemail.email#" failto="support@student-management.com" FROM="""ISE Support"" <support@student-management.com>" subject="SMG - Progress Report Rejected" >
+<cfmail to="#rdemail.email#" failto="support@student-management.com" FROM="""ISE Support"" <support@student-management.com>" subject="SMG - Report Rejected" >
 A report you approved to headquarters has been rejected by the facilitator.  The report is waiting for the Area Rep to make corrections.
 
 To view the report and reason it was rejected please visit #CLIENT.exits_url#/?link=#find_link.id#
