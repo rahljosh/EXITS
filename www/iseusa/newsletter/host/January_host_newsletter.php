@@ -82,7 +82,7 @@ Babylon, NY 11702</p>
 <div class="strongLine"></div>
 
 <!-- END Article2 -->
-<div style="margin-bottom: 10px;"><img src="../images/high-five-december.jpg" width="430" height="264" /></div>
+<div style="margin-bottom: 10px;"><img src="../images/howeyFamily.png" width="430" height="264" /></div>
 <h1>High-Five</h1>
 
 <h3>Giving a High-Five to the Howey Family!  They are located out of Baxter Springs, Kansas and are hosting for the first time.</h3>
@@ -111,19 +111,18 @@ Babylon, NY 11702</p>
 <div style="margin-bottom: 10px;"><img src="../images/facilitator_oct.png" width="430" height="264" /></div>
 <h1>Facilitator Square</h1>
 <p><strong>January 2014</strong></p>
-<p>Dear ISE Host Families:</p>
-<p>We hope you are all enjoying the winter months and staying warm in this year or exceptionally cold weather.  For many exchange students, this might be the first time they&rsquo;ve experienced snow and cold.  While it is certainly exciting for them, please be aware that student from the warm-weather countries might not be familiar with the issues related to cold.  I&rsquo;m sure you&rsquo;ve already been instructing your exchange student to do things like dress in layers and wear a hat and gloves.  I also may help to provide them with more information on issues like hypothermia and frostbite and the Centers for Disease Control offers an <a href="http://emergency.cdc.gov/disasters/winter/staysafe/index.asp">online guide</a> to cold-related issues.</p>
+<p>Dear ISE Host Families:<br /><br />
+We hope you are all enjoying the winter months and staying warm in this year of exceptionally cold weather.&nbsp; For many exchange students, this might be the first time they&rsquo;ve experienced snow and cold.&nbsp; While it is certainly exciting for them, please be aware that students from the warm-weather countries might not be familiar with the issues related to cold.&nbsp; I&rsquo;m sure you&rsquo;ve already been telling your exchange student to dress in layers and wear a hat and gloves when the weather turns cold.&nbsp; It also may help to provide them with more information on issues like hypothermia and frostbit.  The Centers for Disease Control offers an&nbsp;<a href="http://www.bt.cdc.gov/disasters/winter/guide.asp" target="_blank"><strong>online guide</strong></a><strong> </strong>to cold-related issues.<br /></p>
 <h2>Topics</h2>
 <p><strong>Tax Break for hosting</strong></p>
-<p>Did you know that you can claim a tax deduction for your exchange student?  For each month that you host an exchange student, you may claim a $50 tax deduction.  So if you host a student from August until June, you could claim a $250 deduction in 2013 and another $300 deduction in 2014.</p>
+<p>Did you know that you can claim a tax deduction for your exchange student?&nbsp; For each month that you host an exchange student, you may claim a $50 tax deduction.&nbsp; So if you host a student from August until June, you could claim a $250 deduction in 2013 and another $300 deduction in 2014.</p>
 <p><strong>Traveling with your Student</strong></p>
-<p>With the Spring Break coming up soon for most schools, families will often want to travel with their exchange student.  This is greatly encouraged and allows the student to experience more of the US.  Please notify your ISE Area Representative of your travel plans at least two-weeks prior to any domestic trip and one month prior to any cruise or international trip, including Canada and Mexico.  <br />
-  If you are taking a cruise or traveling out of the country students must have a signed travel authorization from ISE.  Each year we get panicked calls from families that are not able to board a cruise or are having trouble returning to the US because the student didn&rsquo;t have an approved travel authorization.<br />
-  It&rsquo;s up to the individual family, but it is OK for a host family to expect the exchange student to cover significant costs associated with a trip including airfare and their own hotel room and meals. </p>
+<p>With the Spring Break coming up soon for most schools, families will often want to travel with their exchange student.&nbsp; This is greatly encouraged and allows the student to experience more of the US.&nbsp; Please notify your ISE Area Representative of your travel plans at least two-weeks prior to any domestic trip and one month prior to any cruise or international trip, including Canada and Mexico.</p>
+<p>If you are taking a cruise or traveling out of the country<strong>,</strong> students must have a signed travel authorization from ISE.&nbsp; Each year we get panicked calls from families that are not able to board a cruise or are having trouble returning to the US because the student didn&rsquo;t have an approved travel authorization.</p>
+<p>It's up to the individual family, but it is OK for a host family to expect the exchange student to cover significant costs associated with a trip including airfare, their own hotel room and meals.</p>
 <p><strong>Visits from Natural Family</strong></p>
-<p>At this time of year, natural family members will be missing their sons and daughters and want to visit them in the US.  Natural family visits <strong><u>are not allowed during</u></strong> ISE exchange program as we feel that it disrupts the student&rsquo;s cultural acclimation and has the potential to cause problems.  Natural parents have all been notified in advance that these kinds of visits are not allowed if you are asked by your student or their parents about a visit, please notify your ISE Area Representative and we&rsquo;ll follow-up with the parent.  </p>
-<p>Natural parent visits are <strong><u>allowed at the end of the program</u></strong>, but it is up to each host family to determine whether this is acceptable and what the arrangements might be.  So for example, maybe you are OK with the natural family visiting, don&rsquo;t feel there is room in your home for two or more extra guests so you can suggest a nearby hotels or B&amp;B where the natural parents can stay.</p>
-<!-- END Article 3 -->
+<p>At this time of year, natural family members will be missing their sons and daughters and want to visit them in the US.&nbsp; Natural family <strong><u>visits are not allowed during</u></strong>&nbsp;the ISE exchange program as we feel that it disrupts the student's cultural acclimation and has the potential to cause problems.&nbsp; Natural parents have all been notified in advance that these kinds of visits are not allowed. If you are asked by your student or their parents about a visit, please notify your ISE Area Representative and we&rsquo;ll follow-up with the parent.</p>
+<p>Natural parent <strong><u>visits are&nbsp;allowed at the end of the program</u></strong>, but it is up to each host family to determine whether this is acceptable and what the arrangements might be.&nbsp; For example, maybe you are OK with the natural family visiting, but don&rsquo;t feel there is room in your home for extra guests.  In that case, it is perfectly OK to suggest nearby hotels or B&amp;Bs where the natural parents can stay</p><!-- END Article 3 -->
 
 <div class="strongLine"></div>
 

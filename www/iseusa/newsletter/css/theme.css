@@ -200,3 +200,31 @@ ul.nav a:hover, ul.nav a:active, ul.nav a:focus { /* this changes the background
 	font-size: 1px;
 	line-height: 0px;
 }
+#showHide > div {
+    display: none;
+}
+
+#showHide > div:target {
+    display: block;
+}
+.blueLink{
+	color: #17468E;
+	text-decoration: none;
+}
+
+.blueLink:link {
+	color: #17468E;	
+	text-decoration: none;
+}
+.blueLink:visited {
+	text-decoration: none;
+	color: #17468E;	
+}
+.blueLink:hover {
+	color: #666;
+	text-decoration: none;
+}
+.blueLink:active {
+	text-decoration: none;
+	color: #17468E;	
+}
