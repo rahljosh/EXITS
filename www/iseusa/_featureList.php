@@ -172,12 +172,11 @@
 
 	<div class="box visible">
     <div style="background-color: #FFF; padding: 15px;">
-		<p align="right"><small>ISE NEWS | January 23, 2014</small></p>
-          <h1><a href="press-page.cfm" target="_parent">International Student Exchange Launches a New Website</a></h1>
-<p>Babylon, NY &#8211; January 23rd, 2014 &#8211; International Student Exchange (ISE), announced the launch of its updated website, www.iseusa.com.  The new interactive site will serve as a platform for host families and students looking for information on student exchange programs.</p>  
-
-<p>ISE is one of the leaders in student exchange with placing nearly 3,000 students a year across the United States.  Their new website is designed to service the needs of multiple users.  It has social media features to keep up with real time interaction.  There are new sections including a resource center for current families.  The "study abroad" section for students looking to go overseas has been revamped. <a href="press-page.cfm">Full Story &gt;&gt;</a></p><br />
-<div class="news"><a href="press-page-ise-news.cfm">MORE ISE NEWS >></a></div>
+		<p align="right"><small>ISE NEWS | March 5, 2014</small></p>
+          <h1><a href="press-page.cfm" target="_parent">International Student Exchange (ISE) is now Accepting Applications for Host Families</a></h1>
+<p>Babylon, NY &#8211; March 5th, 2014 – International Student Exchange is accepting applications for interested families to host students for their high school exchange program.  Students will be arriving in August 2014.</p>
+<p>ISE is the leading not-for-profit sponsor and has been finding homes for international exchange students in the United States for over 30 years.  They place students from over 40 countries for either semester or academic year programs. </p><p><a href="press-page.cfm">Full Story &gt;&gt;</a></p><br />
+<div class="news"><a href="press-page.cfm">MORE ISE NEWS >></a></div>
     </div>
 	</div>
 
@@ -239,17 +238,17 @@ src="https://www.facebook.com/plugins/likebox.php?href=http%3A%2F%2Fwww.facebook
 
 <div class="box">
 <div style="background-color: #FFF; padding: 10px; margin-top: 10px; margin-bottom: 10px;">
-<p align="right"><small>ISE NEWSLETTER | November 1, 2013</small></p>
+<p align="right"><small>ISE NEWSLETTER | February 27, 2014</small></p>
 <h1>The Insider</h1>
 
-<h3>Project HELP</h3>
-<p>The holidays are the perfect time to help out. Get your exchange students to fulfill their Project HELP requirement. Tell them to help out at their local food bank, clothing drive or sign up with one of our national partners.<a href="student-project-help.cfm">Full Story &gt;&gt;</a></p>
+<h3>Next Month is Red Cross Month</strong>!</h3>
+<p>If your students haven’t done their Project HELP hours, next month there will be plenty of chances through the Red Cross. To find opportunities, direct them to our Project HELP Page: <a href="http://www.iseusa.com/student-exchange-project-help-redcross.cfm" class="blueLink">go to page</a></p>
 <div class="dotLine">&nbsp;</div>
 <br />
-<h3>Capture Your Activities</h3>
-<p>Send us pictures of your students and families on how they celebrate. We want to see Christmas, Kwanzaa and New Year's pictures. If they built a snowman, decorate a tree, made cookies or just hang out, send it all at socialmedia@iseusa.com or message us on our facebook page www.facebook.com/iseusa.</p>
+<h3>Remember, we also send students to other countries too!</h3>
+<p>If you checked out our new website, you might have noticed the enhanced “study abroad" section. It’s a great chance for a US student to see another country and learn about their culture. We have full year programs, half year programs and summer programs. Check out all the countries you can visit: <a href="http://www.iseusa.com/study-abroad.cfm" class="blueLink">Study Abroad</a></p>
 <br />
-<div class="news"><a href="?">LATEST NEWSLETTER >></a></div>
+<div class="news"><a href="newsletter/host/February_host_newsletter.cfm" target="_blank">LATEST NEWSLETTER >></a></div>
 </div>
 <!-- .end box --></div>
 
