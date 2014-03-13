@@ -97,6 +97,93 @@ Babylon, NY 11702</p>
 <h1>Press Page</h1>
  <div class="dotLine">&nbsp;</div>
  
+ 
+ <!--- March 5th Press Release #5 --->
+    
+    <div class="fltrt" style="margin-bottom: 10px; height:45px; display:block;"><table width="255" border="0" align="right">
+  <tr>
+    <td width="166" class="smSize">March 5, 2014 </td>
+    <td width="39"><a href="https://plus.google.com/106789919487817837927" target="_blank"><img src="images/socialMedia/googlePlus.png" width="40" height="40" border="0" /></a></td>
+    <td width="38"><a href="http://www.facebook.com/home.php#!/pages/International-Student-Exchange/111620902209214?ref=sgm" target="_blank"><img src="images/socialMedia/facebook.png" width="40" height="40" border="0" /></a></td>
+    <td width="39"><a href="http://twitter.com/ISE_USA" target="_blank"><img src="images/socialMedia/twitter.png" width="40" height="40" border="0" /></a></td>
+  </tr>
+</table>
+</div>
+
+ <div class="clearfloat">&nbsp;</div> 
+
+    <h3>International Student Exchange (ISE) is now Accepting Applications for Host Families</h3>
+<p>Babylon, NY &#8211; March 5th, 2014 – International Student Exchange is accepting applications for interested families to host students for their high school exchange program.  Students will be arriving in August 2014.</p>
+<p>ISE is the leading not-for-profit sponsor and has been finding homes for international exchange students in the United States for over 30 years.  They place students from over 40 countries for either semester or academic year programs. <a href="#" id="example5-show" class="showLink" onclick="showHide('example5');return false;">Read More &#187;</a></p>
+<div id="example5" class="more5">
+
+<p>“We place nearly 3,000 students each year in all 50 states”, stated Paul McLaughlin, ISE COO.  “There’s no “typical” host family.  Our host families reflect the wide diversity represented in the US.”</p>  
+<p>The students that are coming over to the US have insurance, bring spending money and speak English.  They are high school age and can attend your local school.  The students are very eager to learn about American culture.  Many students will participate in sports, student activities and volunteering in the local community.</p>
+<p>Most Families just need to provide a warm and welcoming environment for the exchange student.  Host Parents also are expected to treat the students just like they are a family member.  The students will be involved in nearly every aspect of family life including holidays, hobbies, family outings and even the occasional household chore.</p>
+<p>“The idea is the student becomes part of the family.  Students and their host families maintain lifelong bonds. Host families visit their students in their home country, they attend weddings and even exchange holiday gifts each year.” Stated Paul.</p>
+<p>Anyone interested in hosting can contact ISE through their website: www.iseusa.com or call their main number at 1.800.766.4656.</p>
+
+ <p><strong>About International Student Exchange</strong></p>
+ <p>ISE was founded in 1982. It is a non-profit organization dedicated to bringing people of the world closer together through student exchange and intercultural education.</p>
+ <p>Based on the materials submitted by ISE and reviewed by the Council on Standards for International Educational Travel (CSIET), an independent national educational organization founded in 1984, ISE has been granted a listing every year.  Indicative of its high level of professionalism and respect within the foreign exchange industry, ISE is designated by the Department of State as an official sponsor of the Exchange Visitor Program.</p>
+ <p>ISE is headquartered on Long Island, 60 minutes from Manhattan. Forty-four fully staffed Regional Offices are strategically located in the United States. ISE cooperates with over 100 independent foreign agencies in over 45 countries around the world for the recruitment and placement of students in American homes.  The company’s information is available at
+ <a href="http://www.iseusa.com">www.iseusa.com</a>.</p>
+<p><a href="#" id="example5-hide" class="hideLink" onclick="showHide('example5');return false;">HIDE ARTICLE</a></p>
+</div>
+<!--- March 5th Press Release #5 --->
+
+ <div class="clearfloat">&nbsp;</div> 
+<div class="blueLine">&nbsp;</div>
+ <div class="clearfloat">&nbsp;</div>
+
+
+<!--- February 5th Press Release #4 --->
+    
+    <div class="fltrt" style="margin-bottom: 10px; height:45px; display:block;"><table width="255" border="0" align="right">
+  <tr>
+    <td width="166" class="smSize">February 5, 2014 </td>
+    <td width="39"><a href="https://plus.google.com/106789919487817837927" target="_blank"><img src="images/socialMedia/googlePlus.png" width="40" height="40" border="0" /></a></td>
+    <td width="38"><a href="http://www.facebook.com/home.php#!/pages/International-Student-Exchange/111620902209214?ref=sgm" target="_blank"><img src="images/socialMedia/facebook.png" width="40" height="40" border="0" /></a></td>
+    <td width="39"><a href="http://twitter.com/ISE_USA" target="_blank"><img src="images/socialMedia/twitter.png" width="40" height="40" border="0" /></a></td>
+  </tr>
+</table>
+</div>
+
+ <div class="clearfloat">&nbsp;</div> 
+<div id="StudentProject1"></div>
+    <h3>An Exchange Student is a Finalist for the Scholastic Art & Writing Awards</h3>
+<p>Bunker Hill, IN &#8211; February 5th, 2014 &#8211;YeEun, an ISE exchange student, is a finalist for the nationals Scholastic Art &amp; Writing Award.  Her drawings will be displayed in Washington, DC until the announcement of the winner.</p> 
+  <div class="clearfix"></div> 
+
+<p>YeEun is from South Korea.  She came to the US to experience a new culture and to refine her English speaking skills.  She was placed with the Bourne family, who live in Bunker Hill, IN.  She currently attends Peru High School.  
+<a href="#" id="example4-show" class="showLink" onclick="showHide('example4');return false;">Read More &#187;</a></p>
+<div id="example4" class="more4">
+<div style="width: 240px; margin-right: 25px; margin-left: 10px; float: right;">
+  <div class="picIMG"><img src="images/pressKit/YeEun.jpg" width="225" height="237" alt=" &quot;Tab&quot; for Charity" /></div>
+<p class="smSize">&nbsp;</p>
+</div>
+<p>At school, YeEun decided to take an art class.  That’s where she met her teacher Mr. Applegate.  Right off, Mr. Applegate noticed her unique drawing talent.  He encouraged her to enter some of her work in the contest.</p>  
+<p>“I was surprised because I didn’t really draw very much back home.  This was all very new to me,” explained YeEun.</p>
+<p>YeEun decided to participate, but wasn’t sure what to draw.  She was over at her host grandmother’s house to make gingerbread houses.  It was there she saw the candy bowl and decided to create a picture of it.
+<p>“I loved the colors of the candy, so I thought it would be an interesting picture,” stated YeEun.</p>
+<p>YeEun then saw her host sister practice ballet.  She thought she was so beautiful.  She decided to draw her host sister on her toes.  Then she was at a friend’s house still having trouble thinking of another subject to draw.  Her friend suggested that she draw his grandpa’s old shoes.  YeEun found very funny but decided to do it.</p>
+<p>Over 4000 entries were submitted.  Three of YeEun’s entries, the Candy Bowl, the Ballet Shoes and Grandpa’s Shoes, were selected to go Washington to be displayed.  The winner for the contest will receive a scholarship.</p>  
+<p>YeEun loves living the US and thinks her host family and friends are great.  She says this whole experience has motivated her to continue her dream of being an architect.  
+</p>
+
+ <p><strong>About International Student Exchange</strong></p>
+ <p>ISE was founded in 1982. It is a non-profit organization dedicated to bringing people of the world closer together through student exchange and intercultural education.</p>
+ <p>Based on the materials submitted by ISE and reviewed by the Council on Standards for International Educational Travel (CSIET), an independent national educational organization founded in 1984, ISE has been granted a listing every year.  Indicative of its high level of professionalism and respect within the foreign exchange industry, ISE is designated by the Department of State as an official sponsor of the Exchange Visitor Program.</p>
+ <p>ISE is headquartered on Long Island, 60 minutes from Manhattan. Forty-four fully staffed Regional Offices are strategically located in the United States. ISE cooperates with over 100 independent foreign agencies in over 45 countries around the world for the recruitment and placement of students in American homes.  The company’s information is available at
+ <a href="http://www.iseusa.com">www.iseusa.com</a>.</p>
+<p><a href="#" id="example4-hide" class="hideLink" onclick="showHide('example4');return false;">HIDE ARTICLE</a></p>
+</div>
+<!--- February 5th Press Release #4 --->
+
+ <div class="clearfloat">&nbsp;</div> 
+<div class="blueLine">&nbsp;</div>
+ <div class="clearfloat">&nbsp;</div>
+ 
  <!--- January 15th Press Release #3 --->    
     <div class="fltrt" style="margin-bottom: 10px; height:45px; display:block;"><table width="255" border="0" align="right">
   <tr>
