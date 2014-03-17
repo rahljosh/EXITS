@@ -22,7 +22,7 @@
 	SELECT c.*
     FROM extra_candidates c
     INNER JOIN smg_programs p ON p.programID = c.programID
-    	AND p.startDate < <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d',5,NOW())#">
+    	AND p.startDate = <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('d',5,NOW())#">
     WHERE c.status = 1
     AND c.isDeleted = 0
     AND c.ds2019 IS NOT NULL
