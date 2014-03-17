@@ -325,7 +325,7 @@ This agent does not have any students currently active OR all students have had 
 							<input type=hidden name="#students_under_rep_not_charged.studentid#direct_placement_reg_guarnatee" value="" size=6>
 							<input type="hidden" name=#students_under_rep_not_charged.studentid#direct_placement_guarantee_disc value=''>
 							<cfelse>
-								<cfif direct_placement EQ 0 or #students_under_rep_not_charged.studentid# eq 820>
+								<cfif direct_placement NEQ 1 or #students_under_rep_not_charged.studentid# eq 820>
 								<input type=hidden name="#students_under_rep_not_charged.studentid#direct_placement" value="" size=6>
 								<input type=hidden name="#students_under_rep_not_charged.studentid#direct_placement_reg_guarnatee" value="" size=6>
 								<input type="hidden" name=#students_under_rep_not_charged.studentid#direct_placement_guarantee_disc value=''>
