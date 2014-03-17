@@ -251,14 +251,14 @@
                     extra_hostCompany
                 SET
                     EIN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM['EIN_#qGetAllPlacements.candCompID#']#">,
-                    authentication_secretaryOfState = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM['authentication_secretaryOfState_#qGetAllPlacements.candCompID#']#">,
-                    authentication_departmentOfLabor = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM['authentication_departmentOfLabor_#qGetAllPlacements.candCompID#']#">,
-                    authentication_googleEarth = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM['authentication_googleEarth_#qGetAllPlacements.candCompID#']#">,
-                    authentication_incorporation = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM['authentication_incorporation_#qGetAllPlacements.candCompID#']#">,
-                    authentication_certificateOfExistence = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM['authentication_certificateOfExistence_#qGetAllPlacements.candCompID#']#">,
-                    authentication_certificateOfReinstatement = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM['authentication_certificateOfReinstatement_#qGetAllPlacements.candCompID#']#">,
-                    authentication_departmentOfState = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM['authentication_departmentOfState_#qGetAllPlacements.candCompID#']#">,
-                    authentication_businessLicenseNotAvailable = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM['authentication_businessLicenseNotAvailable_#qGetAllPlacements.candCompID#']#">,
+                    authentication_secretaryOfState = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM['authentication_secretaryOfState_#qGetAllPlacements.candCompID#'])#">,
+                    authentication_departmentOfLabor = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM['authentication_departmentOfLabor_#qGetAllPlacements.candCompID#'])#">,
+                    authentication_googleEarth = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM['authentication_googleEarth_#qGetAllPlacements.candCompID#'])#">,
+                    authentication_incorporation = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM['authentication_incorporation_#qGetAllPlacements.candCompID#'])#">,
+                    authentication_certificateOfExistence = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM['authentication_certificateOfExistence_#qGetAllPlacements.candCompID#'])#">,
+                    authentication_certificateOfReinstatement = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM['authentication_certificateOfReinstatement_#qGetAllPlacements.candCompID#'])#">,
+                    authentication_departmentOfState = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM['authentication_departmentOfState_#qGetAllPlacements.candCompID#'])#">,
+                    authentication_businessLicenseNotAvailable = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM['authentication_businessLicenseNotAvailable_#qGetAllPlacements.candCompID#'])#">,
                     workmensCompensation = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM['workmensCompensation_#qGetAllPlacements.candCompID#']#" null="#NOT IsNumeric(FORM['workmensCompensation_#qGetAllPlacements.candCompID#'])#">,
                     WC_carrierName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM['WC_carrierName_#qGetAllPlacements.candCompID#']#">,
                     WC_carrierPhone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM['WC_carrierPhone_#qGetAllPlacements.candCompID#']#">,
@@ -889,9 +889,10 @@
         verification_received = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.verification_received#" null="#NOT IsDate(FORM.verification_received)#">,
         
 		<!--- DS2019 stuff ---> 
-        ds2019 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.ds2019#">, 
-
+        ds2019 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.ds2019#">,
         requested_placement = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.requested_placement#">,
+        dateGenericDocumentsSent = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.dateGenericDocumentsSent#" null="#NOT IsDate(FORM.dateGenericDocumentsSent)#">,
+        dateIDSent = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.dateIDSent#" null="#NOT IsDate(FORM.dateIDSent)#">,
         
 		<!--- change_requested_comment --->
         change_requested_comment = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.change_requested_comment#">,
@@ -985,6 +986,8 @@
         wat_doc_other_received,
         verification_received,
         ds2019,
+        dateGenericDocumentsSent,
+        dateIDSent,
         requested_placement,
         change_requested_comment,
         status,
@@ -1053,7 +1056,9 @@
 		<cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.wat_doc_other#">,
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.wat_doc_other_received#">,
 		<cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.verification_received#" null="#NOT IsDate(qGetCandidateInfo.verification_received)#">,
-        <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.ds2019#">, 
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.ds2019#">,
+        <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.dateGenericDocumentsSent#" null="#NOT IsDate(qGetCandidateInfo.dateGenericDocumentsSent)#">,
+        <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.dateIDSent#" null="#NOT IsDate(qGetCandidateInfo.dateIDSent)#">,
 		<cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.requested_placement#">,
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.change_requested_comment#">,
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.status#">, 

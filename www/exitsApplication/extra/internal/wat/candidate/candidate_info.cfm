@@ -822,7 +822,6 @@
                                     <cfif ListFind("1,2,3,4", CLIENT.userType)>
                                         <p><a href="candidate/candidate_profile.cfm?uniqueid=#qGetCandidate.uniqueid#" class="style4" target="_blank">[ Profile ]</a></p>
 									</cfif>
-				
                                     <cfif VAL(qGetCandidate.applicationStatusID)>
                                     	<p><a href="onlineApplication/index.cfm?action=initial&uniqueID=#qGetCandidate.uniqueID#" class="style4 popUpOnlineApplication">[ Online Application ]</a></p>
                                     </cfif>
@@ -2703,6 +2702,20 @@
                                             <td class="style1">
                                             	<span class="readOnly">#DateFormat(qGetCandidate.visaInterview,'mm/dd/yyyy')#</span>
                                                 <input type="text" name="visaInterview" class="editPage datePicker" value="#DateFormat(qGetCandidate.visaInterview,'mm/dd/yyyy')#">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                        	<td class="style1" align="right"><strong>Generic Documents Sent:</strong></td>
+                                            <td class="style1">
+                                            	<span class="readOnly">#DateFormat(qGetCandidate.dateGenericDocumentsSent,'mm/dd/yyyy')#</span>
+                                                <input type="text" name="dateGenericDocumentsSent" class="editPage datePicker" value="#DateFormat(qGetCandidate.dateGenericDocumentsSent,'mm/dd/yyyy')#">
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                        	<td class="style1" align="right"><strong>Personalized Documents Sent:</strong></td>
+                                            <td class="style1">
+                                            	<span class="readOnly">#DateFormat(qGetCandidate.dateIDSent,'mm/dd/yyyy')#</span>
+                                                <input type="text" name="dateIDSent" class="editPage datePicker" value="#DateFormat(qGetCandidate.dateIDSent,'mm/dd/yyyy')#">
                                             </td>
                                         </tr>
                                     </table>

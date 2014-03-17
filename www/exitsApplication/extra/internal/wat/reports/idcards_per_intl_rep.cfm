@@ -1,6 +1,7 @@
 <!--- Kill extra output --->
 <cfsilent>
 	
+    <cfparam name="URL.uniqueID" default="">
 	<cfparam name="FORM.programID" default="0">
     <cfparam name="FORM.intRep" default="0">
     <cfparam name="FORM.verification_received" default="">
@@ -45,18 +46,17 @@
         	JOIN extra_hostcompany h ON c.hostcompanyid = h.hostcompanyid
         INNER 
         	JOIN smg_states s ON s.id = h.state
-        WHERE 
-        	c.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-		AND
-            c.status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-        AND 
-        	c.verification_received =  <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.verification_received#">  
-        AND  
-        	c.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )  
-		<cfif VAL(FORM.intrep)>
-            AND
-            	c.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intrep#">
-        </cfif>        
+      	<cfif LEN(URL.uniqueID)>
+        	WHERE c.uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#URL.uniqueID#">
+      	<cfelse>
+       		WHERE c.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+			AND c.status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+        	AND c.verification_received =  <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.verification_received#">  
+        	AND c.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )
+			<cfif VAL(FORM.intrep)>
+                AND c.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intrep#">
+            </cfif>
+     	</cfif>      
         GROUP BY 
         	c.candidateid        
         ORDER BY 
@@ -76,7 +76,7 @@
 
 <body>
 
-<cfif NOT VAL(FORM.programID) OR NOT LEN(FORM.verification_received)>
+<cfif (NOT VAL(FORM.programID) OR NOT LEN(FORM.verification_received)) AND NOT LEN(URL.uniqueID)>
 	Please select at least one program and/or DS 2019 verification received date.
 	<cfabort>
 </cfif>
@@ -150,7 +150,11 @@
             <table border="0" width="100%">
                 <tr> 
                     <td align="center">
-                        <img src="../../../#APPLICATION.CSB[setSponsor].smallLogo#" border="0">
+                    	<cfif LEN(URL.uniqueID)>
+                        	<img src="../../../#APPLICATION.CSB.WAT.smallLogo#" border="0">
+                        <cfelse>
+                        	<img src="../../../#APPLICATION.CSB[setSponsor].smallLogo#" border="0">
+                        </cfif>
                     </td>
                     <td align="center" width="100%"> 
                         <p class="style5">&nbsp;</p>

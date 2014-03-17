@@ -148,10 +148,10 @@
 		// ***** DEVELOPMENT Server Settings *****
 
 		// Set Site URL
-		APPLICATION.SITE.URL.main = 'http://brazil/';
-		APPLICATION.SITE.URL.activation = 'http://brazil/accountActivation.cfm';
-		//APPLICATION.SITE.URL.main = 'http://smg.local/';
-		//APPLICATION.SITE.URL.activation = 'http://extra.local/accountActivation.cfm';
+		//APPLICATION.SITE.URL.main = 'http://brazil/';
+		//APPLICATION.SITE.URL.activation = 'http://brazil/accountActivation.cfm';
+		APPLICATION.SITE.URL.main = 'http://extra.local/';
+		APPLICATION.SITE.URL.activation = 'http://extra.local/accountActivation.cfm';
 		
 		// Email Settings
 		APPLICATION.EMAIL.contactUs = 'james@iseusa.com';
