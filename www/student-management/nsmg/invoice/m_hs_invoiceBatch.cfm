@@ -354,7 +354,7 @@ smg_charges
 						<cfset october = '#thisYear#-10-01'>
 					   
 						<!--- FOR AUGUST STUDENTS ONLY THAT ARE NOT DIRECT PLACEMENT!!! --->
-						<cfif getHSstud.startdate GT may AND getHSstud.startdate LT october AND getHSstud.direct_placement EQ 0>
+						<cfif getHSstud.startdate GT may AND getHSstud.startdate LT october AND getHSstud.direct_placement NEQ 1>
 						
 							<!--- discount for early apps DISCONTINUED starting for AUG10 arriving students --->
 						   <!---  <!--- If app is received before Jan 1st of previous year from Intl Home Stud--->
@@ -444,7 +444,7 @@ smg_charges
 					<!--- insert charges ONLY IF program fee and insurance cost is not zero (except for the deposit charge, which is entered whenever select --->
 					<cfif (variables.amount NEQ 0 AND getHSstud.insurance_typeid NEQ 1 AND variables.insurance NEQ 0) OR (variables.amount NEQ 0 AND getHSstud.insurance_typeid EQ 1)>
 				   
-						<cfif getHSstud.regionalguarantee GT 0 AND getHSstud.direct_placement EQ 0>
+						<cfif getHSstud.regionalguarantee GT 0 AND getHSstud.direct_placement NEQ 1>
 
                             <cfquery name="getHostState" datasource="MySQL">
                             SELECT ss.hostid, IFNULL( sst.state, 0 ) AS statePlaced
@@ -511,7 +511,7 @@ smg_charges
                             
                         </cfif>
                     
-                        <cfif getHSstud.state_guarantee GT 0 AND getHSstud.direct_placement EQ 0>
+                        <cfif getHSstud.state_guarantee GT 0 AND getHSstud.direct_placement NEQ 1>
                         
                             <cfquery name="getHostState" datasource="MySQL">
                             SELECT ss.hostid, ss.state_guarantee, sst.id AS statePlaced
