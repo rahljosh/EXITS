@@ -2705,14 +2705,14 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                        	<td class="style1" align="right"><strong>Generic Documents Sent:</strong></td>
+                                        	<td class="style1" align="right"><strong>Generic Arrival Package Sent:</strong></td>
                                             <td class="style1">
                                             	<span class="readOnly">#DateFormat(qGetCandidate.dateGenericDocumentsSent,'mm/dd/yyyy')#</span>
                                                 <input type="text" name="dateGenericDocumentsSent" class="editPage datePicker" value="#DateFormat(qGetCandidate.dateGenericDocumentsSent,'mm/dd/yyyy')#">
                                             </td>
                                         </tr>
                                         <tr>
-                                        	<td class="style1" align="right"><strong>Personalized Documents Sent:</strong></td>
+                                        	<td class="style1" align="right"><strong>Generic Arrival Package Resent:</strong></td>
                                             <td class="style1">
                                             	<span class="readOnly">#DateFormat(qGetCandidate.dateIDSent,'mm/dd/yyyy')#</span>
                                                 <input type="text" name="dateIDSent" class="editPage datePicker" value="#DateFormat(qGetCandidate.dateIDSent,'mm/dd/yyyy')#">
