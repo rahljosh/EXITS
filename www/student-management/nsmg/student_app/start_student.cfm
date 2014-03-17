@@ -541,7 +541,7 @@
 	                <em>Please select an area in Canada</em>
                 </div>
             </td>
-            <td><em>Additional Programs</em> <span class="requiredField">*</span></td>
+            <td><em>Additional Programs</em></td>
             <td>&nbsp;</td>
         </tr>
         <tr>
