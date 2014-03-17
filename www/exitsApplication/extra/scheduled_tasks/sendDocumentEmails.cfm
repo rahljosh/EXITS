@@ -15,7 +15,7 @@
     AND isDeleted = 0
     AND ds2019 IS NOT NULL
     AND (dateGenericDocumentsSent IS NULL OR dateGenericDocumentsSent = "")
-    AND programID >= 374
+    AND programID >= 378
 </cfquery>
 
 <cfquery name="qGetCandidatesMissingIDs" datasource="#APPLICATION.DSN.Source#">
@@ -27,7 +27,7 @@
     AND c.isDeleted = 0
     AND c.ds2019 IS NOT NULL
     AND (c.dateIDSent IS NULL OR c.dateIDSent = "")
-    AND c.programID >= 374
+    AND c.programID >= 378
 </cfquery>
 
 <cfscript>
