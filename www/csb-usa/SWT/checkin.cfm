@@ -382,6 +382,36 @@ order by state
                     to respond to CSB within 10 (ten) business days.  Failure to reach back to CSB on time will lead to a program termination.
             	</p>
             </cfsavecontent>
+            
+            <cfscript>
+				monthAsNumberString = "00";
+				if (FORM.BMonth EQ "January") {
+					monthAsNumberString = "01";
+				} else if (FORM.BMonth EQ "February") {
+					monthAsNumberString = "02";
+				} else if (FORM.BMonth EQ "March") {
+					monthAsNumberString = "03";
+				} else if (FORM.BMonth EQ "April") {
+					monthAsNumberString = "04";
+				} else if (FORM.BMonth EQ "May") {
+					monthAsNumberString = "05";
+				} else if (FORM.BMonth EQ "June") {
+					monthAsNumberString = "06";
+				} else if (FORM.BMonth EQ "July") {
+					monthAsNumberString = "07";
+				} else if (FORM.BMonth EQ "August") {
+					monthAsNumberString = "08";
+				} else if (FORM.BMonth EQ "September") {
+					monthAsNumberString = "09";
+				} else if (FORM.BMonth EQ "October") {
+					monthAsNumberString = "10";
+				} else if (FORM.BMonth EQ "November") {
+					monthAsNumberString = "11";
+				} else if (FORM.BMonth EQ "December") {
+					monthAsNumberString = "12";
+				}
+				fullDate = FORM.BYear & "-" & monthAsNumberString & "-" & FORM.BDate;
+			</cfscript>
         
         	<cfquery datasource="mysql">
             	INSERT INTO extra_evaluation (
@@ -393,7 +423,7 @@ order by state
                         FROM extra_candidates c
                         INNER JOIN smg_programs p ON p.programID = c.programID
                         WHERE c.lastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.lastname#">
-                        AND c.dob = <cfqueryparam cfsqltype="cf_sql_date" value="#BYear#-#BMonth#-#BDate#">
+                        AND c.dob = <cfqueryparam cfsqltype="cf_sql_date" value="#fullDate#">
                         AND YEAR(p.startDate) = YEAR(<cfqueryparam cfsqltype="cf_sql_date" value="#form.arrive#">)
                         LIMIT 1),
                   	0,
