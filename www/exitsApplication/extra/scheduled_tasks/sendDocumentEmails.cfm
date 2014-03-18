@@ -14,6 +14,7 @@
     WHERE status = 1
     AND isDeleted = 0
     AND ds2019 IS NOT NULL
+    AND ds2019 != ""
     AND (dateGenericDocumentsSent IS NULL OR dateGenericDocumentsSent = "")
     AND programID >= 378
 </cfquery>
@@ -26,6 +27,7 @@
     WHERE c.status = 1
     AND c.isDeleted = 0
     AND c.ds2019 IS NOT NULL
+    AND ds2019 != ""
     AND (c.dateIDSent IS NULL OR c.dateIDSent = "")
     AND c.programID >= 378
 </cfquery>
