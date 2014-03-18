@@ -959,6 +959,7 @@
         <cfargument name="flagCBC" default="0" hint="flagCBC is required. Values 0 or 1">
         <cfargument name="dateAuthorized" required="yes" hint="Date of Authorization">
         <cfargument name="dateApproved" default="" required="no" hint="Date of approval, either null or date approved">
+        <cfargument name="denied" default="" required="no" hint="Date of denial">
  		 <cfargument name="notes" default="" required="no" hint="notes on CBC for office to view">
 
             <cfquery 
@@ -970,7 +971,8 @@
                         flagcbc = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.flagCBC#">,
                         date_approved =  <cfif LEN(ARGUMENTS.dateApproved)><cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(ARGUMENTS.dateApproved)#"><cfelse>NULL</cfif>,
                         notes = <cfif LEN(ARGUMENTS.notes)><cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.notes#"><cfelse>NULL</cfif>,
-                        date_authorized = <cfif LEN(ARGUMENTS.dateAuthorized)><cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(ARGUMENTS.dateAuthorized)#"><cfelse>NULL</cfif>
+                        date_authorized = <cfif LEN(ARGUMENTS.dateAuthorized)><cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(ARGUMENTS.dateAuthorized)#"><cfelse>NULL</cfif>,
+                        denied = <cfif LEN(ARGUMENTS.denied)><cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(ARGUMENTS.denied)#"><cfelse>NULL</cfif>
                     WHERE 
                     	cbcid = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.cbcID#">
             </cfquery>	
