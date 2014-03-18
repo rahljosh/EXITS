@@ -434,7 +434,7 @@ order by state
                     <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#vSaveContent#"> )
             </cfquery>
       
-			<!---<cfmail to="support@csb-usa.com" cc="#form.email#" from="info@csb-usa.com" subject="#form.lastname#, #form.firstname# - CSB Check-in / #form.companyName#" type="html">
+			<cfmail to="support@csb-usa.com" cc="#form.email#" from="info@csb-usa.com" subject="#form.lastname#, #form.firstname# - CSB Check-in / #form.companyName#" type="html">
    				<p style="font-family:Verdana, Geneva, sans-serif; font-size: 11px;">
                 	Thank you for submitting the Check-in information. <strong>Please keep this electronic copy for your records.</strong> 
                     CSB will process the information within 48 hours (exclusive of Saturday, Sunday, and legal Holidays) and if additional 
@@ -452,7 +452,7 @@ order by state
                 </p>
                 
                 #vSaveContent#
-			</cfmail>--->
+			</cfmail>
     
 			<!---Comments: anca--->
    		 	<cfoutput>
