@@ -279,7 +279,6 @@
                         regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionid#">,
                         </Cfif>
                         ---->
-                        companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">,
                         email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">,
                         password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#strPassword#">,
                         active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">,
