@@ -410,27 +410,31 @@ order by state
 				} else if (FORM.BMonth EQ "December") {
 					monthAsNumberString = "12";
 				}
-				fullDate = FORM.BYear & "-" & monthAsNumberString & "-" & FORM.BDate;
+				fullDate = FORM.BYear & "-" & monthAsNumberString & "-" & FORM.BDay;
 			</cfscript>
-        
-        	<cfquery datasource="mysql">
-            	INSERT INTO extra_evaluation (
-                	candidateID,
+            
+            <cfquery name="qGetCandidate" datasource="mysql">
+            	SELECT c.candidateID 
+                FROM extra_candidates c
+                INNER JOIN smg_programs p ON p.programID = c.programID
+                WHERE c.lastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.lastname#">
+                AND c.dob = <cfqueryparam cfsqltype="cf_sql_date" value="#fullDate#">
+                AND YEAR(p.startDate) = YEAR(<cfqueryparam cfsqltype="cf_sql_date" value="#form.arrive#">)
+                LIMIT 1
+            </cfquery>
+            
+            <cfquery datasource="mysql">
+                INSERT INTO extra_evaluation (
+                    candidateID,
                     monthEvaluation,
                     checkInMemo )
-              	VALUES (
-                	(SELECT c.candidateID 
-                        FROM extra_candidates c
-                        INNER JOIN smg_programs p ON p.programID = c.programID
-                        WHERE c.lastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.lastname#">
-                        AND c.dob = <cfqueryparam cfsqltype="cf_sql_date" value="#fullDate#">
-                        AND YEAR(p.startDate) = YEAR(<cfqueryparam cfsqltype="cf_sql_date" value="#form.arrive#">)
-                        LIMIT 1),
-                  	0,
+                VALUES (
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCandidate.candidateID)#">,
+                    0,
                     <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#vSaveContent#"> )
             </cfquery>
       
-			<cfmail to="support@csb-usa.com" cc="#form.email#" from="info@csb-usa.com" subject="#form.lastname#, #form.firstname# - CSB Check-in / #form.companyName#" type="html">
+			<!---<cfmail to="support@csb-usa.com" cc="#form.email#" from="info@csb-usa.com" subject="#form.lastname#, #form.firstname# - CSB Check-in / #form.companyName#" type="html">
    				<p style="font-family:Verdana, Geneva, sans-serif; font-size: 11px;">
                 	Thank you for submitting the Check-in information. <strong>Please keep this electronic copy for your records.</strong> 
                     CSB will process the information within 48 hours (exclusive of Saturday, Sunday, and legal Holidays) and if additional 
@@ -448,7 +452,7 @@ order by state
                 </p>
                 
                 #vSaveContent#
-			</cfmail>
+			</cfmail>--->
     
 			<!---Comments: anca--->
    		 	<cfoutput>
