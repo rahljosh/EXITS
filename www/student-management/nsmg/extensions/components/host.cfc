@@ -1472,7 +1472,7 @@
                     </cfif>
              	LEFT OUTER JOIN smg_host_app_history h ON h.itemID = ap.ID                  
                     AND h.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
-                    AND h.seasonID = 10
+                    AND h.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
                     AND h.studentID = s.studentID 
                 WHERE (ap.ID = 15 OR ap.ID = 20)
                 
