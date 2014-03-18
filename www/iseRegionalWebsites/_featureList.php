@@ -16,7 +16,7 @@
 	margin-left: 20px;
 } 
 .sectionBody .section.vertical a {
-	color: #17468E;
+	color: #0068AC;
 }
 .sectionBody .section.vertical p {
 	padding-top: 7px;
@@ -78,10 +78,10 @@
 }
 .sectionBody .tabs li:hover,
 .sectionBody .vertical .tabs li:hover {
-	color: #17468E;
+	color: #0068AC;
 	padding: 0 13px;
 	background: #7CA4C9;
-	border: 1px solid #17468E;
+	border: 1px solid #0068AC;
 }
 .sectionBody .tabs li.current {
 	color: #444;
@@ -93,8 +93,8 @@
 .sectionBody .box {
 	display: none;
 	border: 1px solid #D4D4D4;
-  border-width: 0 1px 1px;
-	background: #17468E;
+	border-width: 0 1px 1px;
+	background-color: #0068AC;
 	padding: 0 12px;
 }
 .sectionBody .box.visible {
@@ -132,9 +132,9 @@
 .sectionBody .vertical .tabs li.current {
 	width: 133px;
 	color: #fff;
-	background: #17468E;
-	border: 1px solid #17468E;
-  border-right: 1px solid #17468E;
+	background: #0068AC;
+	border: 1px solid #0068AC;
+  border-right: 1px solid #0068AC;
   margin-right: -1px;
 }
 .sectionBody .vertical .box {
@@ -158,86 +158,18 @@
 	padding-bottom: 5px;
 }
 </style>
+
 <div class="sectionBody">
 <div class="section vertical">
 
 	<ul class="tabs">
-	  <li class="current">ISE NEWS</li>
-	  <li>FACEBOOK</li>
-	  <li>TWITTER</li>
-	  <li>BLOG</li>
-      <li>NEWSLETTER</li>
+	  <li class="current">NEWSLETTER</li>
+      <li>FACEBOOK</li>
       <li>WEBSTORE</li>
 	</ul>
 
 	<div class="box visible">
-    <div style="background-color: #FFF; padding: 15px;">
-		<p align="right"><small>ISE NEWS | March 5, 2014</small></p>
-          <h1><a href="press-page.cfm" target="_parent">International Student Exchange (ISE) is now Accepting Applications for Host Families</a></h1>
-<p>Babylon, NY &#8211; March 5th, 2014 – International Student Exchange is accepting applications for interested families to host students for their high school exchange program.  Students will be arriving in August 2014.</p>
-<p>ISE is the leading not-for-profit sponsor and has been finding homes for international exchange students in the United States for over 30 years.  They place students from over 40 countries for either semester or academic year programs. </p><p><a href="press-page.cfm">Full Story &gt;&gt;</a></p><br />
-<div class="news"><a href="press-page.cfm">MORE ISE NEWS >></a></div>
-    </div>
-	</div>
-
-	<div class="box">
-		<div style="background-color: #FFF; margin: 8px auto 8px auto;"><iframe
-src="https://www.facebook.com/plugins/likebox.php?href=http%3A%2F%2Fwww.facebook.com%2Fiseusa&amp;width=490&amp;colorscheme=light&amp;show_faces=false&amp;border_color&amp;stream=true&amp;header=true&amp;font=arial&amp;height=435" scrolling="yes" frameborder="0" style="border:none; overflow:hidden; width: 473px; height: 325px; background: white; float: left;" allowTransparency="true"></iframe><div class="clearfloat">&nbsp;</div>
-</div>
-
-	</div>
-
-	<div class="box">
-		<p> <a class="twitter-timeline" data-dnt="true" href="https://twitter.com/ise_usa" data-widget-id="264412125424918530">Tweets by @ise_usa</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script></p>
-<div class="clearfloat">&nbsp;</div>
-	</div>
-
-	<div class="box">
-<div style="background-color: #FFF; margin: 8px auto 8px auto; height: 350px; overflow: scroll; padding: 10px;">
-<h1>Most Recent News</h1>
-<div class="dotLine">&nbsp;</div>
-<p>&nbsp;</p>
-<?php 
-		//connection information 
-		@ $db = new mysqli('blog.iseusa.com','webAccess','Web@ccess$','blog');
-			if ($mysqli->connect_errno) {
-				echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
-			}
-		//build the query
-		  $query='SELECT post_title, post_content, post_date, guid
-					FROM  wp_posts 
-					WHERE post_status = "publish"
-					ORDER BY post_Date DESC 
-					LIMIT 2';
-			
-		//run the query
-		$result = $db->query($query);
-		
-		
-		//display results
-		$num_results = $result->num_rows;
-		
-		//set up a loop
-        for ($i=0; $i <$num_results; $i++)	{
-		$row = $result->fetch_assoc();
-		
-		//dispaly the things on screen
-		echo "<h2>".($row['post_title'])."</h2>";
-		echo "<p>".($row['post_content'])."</p>";
-		echo "<p>".($row['post_date'])."</p>";
-		echo "<p>".($row['guid'])."</p>";
-		}
-		?>
-        <div class="news"><a href="http://blog.iseusa.com/">Go To BLOG >></a></div>
-            <div class="clearfloat">&nbsp;</div>
-        </div>
-        
-
-	</div>
-
-<div class="box">
-<div style="background-color: #FFF; padding: 10px; margin-top: 10px; margin-bottom: 10px;">
+   <div style="background-color: #FFF; padding: 10px; margin-top: 10px; margin-bottom: 10px;">
 <p align="right"><small>ISE NEWSLETTER | February 27, 2014</small></p>
 <h1>The Insider</h1>
 
@@ -250,7 +182,16 @@ src="https://www.facebook.com/plugins/likebox.php?href=http%3A%2F%2Fwww.facebook
 <br />
 <div class="news"><a href="newsletter/host/February_host_newsletter.cfm" target="_blank">LATEST NEWSLETTER >></a></div>
 </div>
-<!-- .end box --></div>
+	</div>
+
+	<div class="box">
+		<div style="background-color: #FFF; margin: 8px auto 8px auto;"><iframe
+src="https://www.facebook.com/plugins/likebox.php?href=<?PHP echo $_SESSION[facebook]; ?>&amp;width=490&amp;colorscheme=light&amp;show_faces=false&amp;border_color&amp;stream=true&amp;header=true&amp;font=arial&amp;height=435" scrolling="yes" frameborder="0" style="border:none; overflow:hidden; width: 473px; height: 325px; background: white; float: left;" allowTransparency="true"></iframe>
+<div class="clearfloat">&nbsp;</div>
+</div>
+
+	</div>
+	
 
 <!-- WEBSTORE -->
 <div class="box">
@@ -259,7 +200,7 @@ src="https://www.facebook.com/plugins/likebox.php?href=http%3A%2F%2Fwww.facebook
 <h1><a href="webstore/index.php" target="_blank" class="blueLink" >Web Store</a></h1>
 <div class="dotLine">&nbsp;</div>
  <div class="clearfloat" style="height: 10px;">&nbsp;</div>
- <div class="asideImg" style="float:right; margin: 10px;"><a href="webstore/index.cfm" target="_blank"><img src="images/ISE_webstore.png" width="200" height="150" alt="ISE swag"  class="asideBrd" /></a></div>
+ <div class="asideImg" style="float:right; margin: 10px;"><a href="webstore/index.cfm" target="_blank"><img src="http://www.iseusa.com/images/ISE_webstore.png" width="200" height="150" alt="ISE swag"  class="asideBrd" /></a></div>
 <p>The ISE Webstore has many great items for you to share with friends and family</p>
      
 
