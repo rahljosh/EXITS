@@ -78,19 +78,23 @@ a.hideLink {
 
 <div class="container">
   <?php include '_header.php'; ?>
-  <div class="clearfloat">&nbsp;</div>
-  <?php include '_menu.php'; ?>
-<img src="http://www.iseusa.com/images/ready-host-family-header.jpg" alt="" width="1024" height="250" align="absbottom"/>
+ 
+<img src="images/host-header.jpg" alt="" width="1024" height="250" align="absbottom"/>
+
+ <?php include '_menu.php'; ?>
+   <div class="clearfloat">&nbsp;</div>
 <div style="width: 960px; margin: 5px auto;">
+ 
+
 <div class="dotLine">&nbsp;</div>
 <h1>Become a Host Family</h1>
 <div class="dotLine" style="margin-bottom: 0px;">&nbsp;</div>
  <div class="clearfloat">&nbsp;</div>
  </div>
-    <div class="sidebar1">
+    <div class="sidebar2">
  <aside>
    <h2>Interested in Hosting</h2> 
- <p>Fill out this form to learn more about being a host family through ISE!</p>
+   <p>Fill out this form to learn more about being a host family through ISE!</p>
 
 <?php include 'formTemplates/_ReadyHostForm.php'; ?>
 
@@ -99,14 +103,14 @@ a.hideLink {
   </aside>
   </div>
 
-<article class="content">
+<article class="contentLft">
 
    <p>Hosting  a foreign exchange student means opening your home to a teen from  another country while they attend your local public high school. ISE has  many different hosting programs available. Opportunities are available  for periods of 5 months, 10 months or a full 12 month program, with the  most common being the 10 month academic year program.</p>
    
    <div class="dotLine">&nbsp;</div>
 <div class="clearfloat">&nbsp;</div>
    <h2>Hosting Impacts You and Your Community!</h2>
-   <div class="fltrt" style="width: 320px; margin: 5px 20px;"><img src="https://www.iseusa.com/images/host-family-app.png" width="320" height="213" alt="host family app" /></div>
+   <div class="fltrt" style="width: 300px; margin: 5px 20px; padding: 6px; border: #ccc solid thin;"><img src="images/host-family-pic.jpg" width="300" height="223" alt="host family app" /></div>
    <p><strong>In Your family -</strong> You  will learn more about different culture views and how they impact life  in the U.S. by exchanging ideas with your exchange student. An exposure  to different cultures will grow a deeper appreciation for what your  family has and for the tremendous challenges facing other nations.</p>
    <p><strong>In Schools –</strong> Classes  will come alive with native accents, colloquialisms and contextual  usage. Exchange students can clearly show how language and culture are  intertwined. Your exchange student will add new dimensions to the  activities of your schools' international clubs and organizations.</p>
    <p><strong>In Your Town -</strong> Worldwide  events will take on a new significance when exchange students are in  your community and ready to share their perspectives and experiences.  Students also participate in community service.</p>
@@ -121,7 +125,7 @@ a.hideLink {
    <p><strong>Who Can Host?</strong></p>
    <p>Host  families represent the diversity of American culture. They are of  varied economic, religious and racial backgrounds and include working  parents, couples without children, singles and single parents, adoptive  parents, and empty nesters. Host families live in all 50 states of the  United States, including Alaska and Hawaii. You don't need to have  teenagers to host – you can host if you have young children, adult  children, or no children at all.<br>
      <br>
-     <strong><a href="?" class="basicBlueButton">Apply to  Host button</a></strong></p><div class="dotLine">&nbsp;</div>
+     <strong>Fill out the form on the right</strong></p><div class="dotLine">&nbsp;</div>
 <div class="clearfloat">&nbsp;</div>
 
 <div style="background-color: #FFC; padding: 20px; font-style: italic; width: 85%; margin: 5px 20px 5px 20px;">
