@@ -97,11 +97,18 @@
 
             <a href="javascript:showSelectedMenuOption('representativeManagementMenu');" title="Click for Representative Management Reports">
             	<div id="representativeManagementMenuButton" class="divButton reportButton">Representative Management</div>
-            </a>
+            </a>            
 			
             <cfif APPLICATION.CFC.USER.isOfficeUser()>
                 <a href="javascript:showSelectedMenuOption('officeManagementMenu');" title="Click for Office Management Reports">
                     <div id="officeManagementMenuButton" class="divButton reportButton">Office Management</div>
+                </a>
+            </cfif>
+            
+            <!--- The payment menu is only being used by ESI currently --->
+            <cfif CLIENT.companyID EQ 14>
+                <a href="javascript:showSelectedMenuOption('paymentManagementMenu');" title="Click for Payment Reports">
+                    <div id="paymentManagementMenuButton" class="divButton reportButton">Payment Reports</div>
                 </a>
             </cfif>
         </td>
@@ -375,6 +382,22 @@
         </td>
     </tr>
 </table> 
+
+
+<!--- Payment Management Menu --->
+<table id="paymentManagementMenu" class="reportMenuTable menuOption displayNone">
+    <tr>
+        <td class="lastRow">
+            <ul class="mainList">
+                <li onclick="loadSelectedReport('esiPayments');">ESI Payments</li>
+                <ul>
+                    <li>Generate a list of all ESI payments</li>
+                    <li>Filter by: season, program</li>
+				</ul>
+            </ul>  
+        </td>
+	</tr> 
+</table>
 
 
 <!--- Load Report Here --->

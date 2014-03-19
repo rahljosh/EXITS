@@ -78,6 +78,13 @@
 
     </cfcase>
     
+    <!--- List of Payment Management Reports --->
+    <cfcase value="esiPayments">
+
+        <cfinclude template="paymentManagement/_#action#.cfm" />
+
+    </cfcase>
+    
     <!--- Menu Options --->
     <cfdefaultcase>
     
