@@ -321,141 +321,142 @@ order by state
         
         <!--- Check if there are no errors --->
         <cfif NOT SESSION.formErrors.length()>
-        
-        	<cfsavecontent variable="vSaveContent">
-            	<p style="font-family:Verdana, Geneva, sans-serif; font-size: 11px;">
-                	<strong> The following information was submitted from the Check-in Form on the CSB site on #dateformat(Now(), 'mm/dd/yyyy')#.</strong><br />
-                    Sevis##: #form.sevis#<br />
-                    Program ID##: #form.programID#<br />
-                    Last Name: #form.lastname#<br />
-                    First Name: #form.firstname#<br />
-                    Birth Date: #BMonth#/#BDate#/#BYear#<br />
-                    Middle Name: #form.middlename#<br />
-                    E-Mail Address: #form.email#<br />
-                    Arrival date in the U.S.: #form.arrive#<br />
-                    Have you arrived at your Host Employer: #form.arriveEmployers#, Arrival Date at Host Employer: #form.arriveHost#<br /><br />
-            	</p>
-
-   				<p style="font-family:Verdana, Geneva, sans-serif; font-size: 11px;">
-                	<strong>Employer Information</strong><br />
-                    Company Name: #form.companyName#<br />
-                    Street Address: #form.companyAddress#<br />
-                    City: #form.companyCity#<br />
-                    State: #form.companyState#<br />
-                    Zip Code: #form.companyZip#<br />
-                    Supervisor Full Name: #form.superName#<br />
-                    Supervisor Phone Number: #form.companyPhone#<br />
-                    Supervisor Email: #form.superEmail#<br />
-                    Comments: #form.companyComment#<br /><br />
-                </p>
-
-  				<p style="font-family:Verdana, Geneva, sans-serif; font-size: 11px;">
-                	<strong> Housing Information</strong><br />
-                    Address: #form.address#<br />
-                    Apt##: #form.apt#<br />
-                    City: #form.city#<br />
-                    State: #form.state#<br />
-                    Zip Code: #form.zip#<br />
-                    Phone in the U.S.: #form.phone# #form.phoneType#<br />
-                    Comments: #form.comment#<br /><br />
-              	</p>
-   
-   				<p style="font-family:Verdana, Geneva, sans-serif; font-size: 11px;">
-                	(#form.agreement#): Yes, I am personally submitting the Check-in information. I am also confirming that the information 
-                    I have provided in the form is accurate according to my best knowledge and that I am in fact working and living at the 
-                    addresses I have provided above. I also confirm that I understand that by intentionally submitting false information I 
-                    will be terminated from the program.<br /><br />
-					
-                    (#form.agreement2#):I understand that during my program I must report any change in my housing address within 10 (ten) 
-                    business days of the change.  Failure to report the changes on time will lead to a program termination.<br /><br />
-
-					(#form.agreement3#): I understand that during my program I must have permission (in writing) from CSB in order to change 
-                    my primary host employer. CSB must investigate any claim before taking a decision. Failure to have permission will lead 
-                    to a program termination.<br /><br />
-
-					(#form.agreement4#): I understand that during my program CSB must confirm any new, replacement and additional (second) 
-                    job placements before I may start work. CSB will normally verify (vet) such jobs within 72 hours and will confirm the 
-                    result in writing. Starting work at unverified and unapproved jobs will lead to a program termination.<br /><br />
-
-					(#form.agreement5#): I will maintain contact with CSB for the entire duration of the program. As required by the program 
-                    regulations, I will receive a monthly evaluation request by email every 30 (thirty) days after the Check-in and I am required 
-                    to respond to CSB within 10 (ten) business days.  Failure to reach back to CSB on time will lead to a program termination.
-            	</p>
-            </cfsavecontent>
+        	
+			<cfoutput>
             
-            <cfscript>
-				monthAsNumberString = "00";
-				if (FORM.BMonth EQ "January") {
-					monthAsNumberString = "01";
-				} else if (FORM.BMonth EQ "February") {
-					monthAsNumberString = "02";
-				} else if (FORM.BMonth EQ "March") {
-					monthAsNumberString = "03";
-				} else if (FORM.BMonth EQ "April") {
-					monthAsNumberString = "04";
-				} else if (FORM.BMonth EQ "May") {
-					monthAsNumberString = "05";
-				} else if (FORM.BMonth EQ "June") {
-					monthAsNumberString = "06";
-				} else if (FORM.BMonth EQ "July") {
-					monthAsNumberString = "07";
-				} else if (FORM.BMonth EQ "August") {
-					monthAsNumberString = "08";
-				} else if (FORM.BMonth EQ "September") {
-					monthAsNumberString = "09";
-				} else if (FORM.BMonth EQ "October") {
-					monthAsNumberString = "10";
-				} else if (FORM.BMonth EQ "November") {
-					monthAsNumberString = "11";
-				} else if (FORM.BMonth EQ "December") {
-					monthAsNumberString = "12";
-				}
-				fullDate = FORM.BYear & "-" & monthAsNumberString & "-" & FORM.BDay;
-			</cfscript>
+        		<cfsavecontent variable="vSaveContent">
+                    <p style="font-family:Verdana, Geneva, sans-serif; font-size: 11px;">
+                        <strong> The following information was submitted from the Check-in Form on the CSB site on #dateformat(Now(), 'mm/dd/yyyy')#.</strong><br />
+                        Sevis##: #form.sevis#<br />
+                        Program ID##: #form.programID#<br />
+                        Last Name: #form.lastname#<br />
+                        First Name: #form.firstname#<br />
+                        Birth Date: #BMonth#/#BDate#/#BYear#<br />
+                        Middle Name: #form.middlename#<br />
+                        E-Mail Address: #form.email#<br />
+                        Arrival date in the U.S.: #form.arrive#<br />
+                        Have you arrived at your Host Employer: #form.arriveEmployers#, Arrival Date at Host Employer: #form.arriveHost#<br /><br />
+                    </p>
+    
+                    <p style="font-family:Verdana, Geneva, sans-serif; font-size: 11px;">
+                        <strong>Employer Information</strong><br />
+                        Company Name: #form.companyName#<br />
+                        Street Address: #form.companyAddress#<br />
+                        City: #form.companyCity#<br />
+                        State: #form.companyState#<br />
+                        Zip Code: #form.companyZip#<br />
+                        Supervisor Full Name: #form.superName#<br />
+                        Supervisor Phone Number: #form.companyPhone#<br />
+                        Supervisor Email: #form.superEmail#<br />
+                        Comments: #form.companyComment#<br /><br />
+                    </p>
+    
+                    <p style="font-family:Verdana, Geneva, sans-serif; font-size: 11px;">
+                        <strong> Housing Information</strong><br />
+                        Address: #form.address#<br />
+                        Apt##: #form.apt#<br />
+                        City: #form.city#<br />
+                        State: #form.state#<br />
+                        Zip Code: #form.zip#<br />
+                        Phone in the U.S.: #form.phone# #form.phoneType#<br />
+                        Comments: #form.comment#<br /><br />
+                    </p>
+       
+                    <p style="font-family:Verdana, Geneva, sans-serif; font-size: 11px;">
+                        (#form.agreement#): Yes, I am personally submitting the Check-in information. I am also confirming that the information 
+                        I have provided in the form is accurate according to my best knowledge and that I am in fact working and living at the 
+                        addresses I have provided above. I also confirm that I understand that by intentionally submitting false information I 
+                        will be terminated from the program.<br /><br />
+                        
+                        (#form.agreement2#):I understand that during my program I must report any change in my housing address within 10 (ten) 
+                        business days of the change.  Failure to report the changes on time will lead to a program termination.<br /><br />
+    
+                        (#form.agreement3#): I understand that during my program I must have permission (in writing) from CSB in order to change 
+                        my primary host employer. CSB must investigate any claim before taking a decision. Failure to have permission will lead 
+                        to a program termination.<br /><br />
+    
+                        (#form.agreement4#): I understand that during my program CSB must confirm any new, replacement and additional (second) 
+                        job placements before I may start work. CSB will normally verify (vet) such jobs within 72 hours and will confirm the 
+                        result in writing. Starting work at unverified and unapproved jobs will lead to a program termination.<br /><br />
+    
+                        (#form.agreement5#): I will maintain contact with CSB for the entire duration of the program. As required by the program 
+                        regulations, I will receive a monthly evaluation request by email every 30 (thirty) days after the Check-in and I am required 
+                        to respond to CSB within 10 (ten) business days.  Failure to reach back to CSB on time will lead to a program termination.
+                    </p>
+            	</cfsavecontent>
             
-            <cfquery name="qGetCandidate" datasource="mysql">
-            	SELECT c.candidateID 
-                FROM extra_candidates c
-                INNER JOIN smg_programs p ON p.programID = c.programID
-                WHERE c.lastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.lastname#">
-                AND c.dob = <cfqueryparam cfsqltype="cf_sql_date" value="#fullDate#">
-                AND YEAR(p.startDate) = YEAR(<cfqueryparam cfsqltype="cf_sql_date" value="#form.arrive#">)
-                LIMIT 1
-            </cfquery>
+				<cfscript>
+                    monthAsNumberString = "00";
+                    if (FORM.BMonth EQ "January") {
+                        monthAsNumberString = "01";
+                    } else if (FORM.BMonth EQ "February") {
+                        monthAsNumberString = "02";
+                    } else if (FORM.BMonth EQ "March") {
+                        monthAsNumberString = "03";
+                    } else if (FORM.BMonth EQ "April") {
+                        monthAsNumberString = "04";
+                    } else if (FORM.BMonth EQ "May") {
+                        monthAsNumberString = "05";
+                    } else if (FORM.BMonth EQ "June") {
+                        monthAsNumberString = "06";
+                    } else if (FORM.BMonth EQ "July") {
+                        monthAsNumberString = "07";
+                    } else if (FORM.BMonth EQ "August") {
+                        monthAsNumberString = "08";
+                    } else if (FORM.BMonth EQ "September") {
+                        monthAsNumberString = "09";
+                    } else if (FORM.BMonth EQ "October") {
+                        monthAsNumberString = "10";
+                    } else if (FORM.BMonth EQ "November") {
+                        monthAsNumberString = "11";
+                    } else if (FORM.BMonth EQ "December") {
+                        monthAsNumberString = "12";
+                    }
+                    fullDate = FORM.BYear & "-" & monthAsNumberString & "-" & FORM.BDay;
+                </cfscript>
             
-            <cfquery datasource="mysql">
-                INSERT INTO extra_evaluation (
-                    candidateID,
-                    monthEvaluation,
-                    checkInMemo )
-                VALUES (
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCandidate.candidateID)#">,
-                    0,
-                    <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#vSaveContent#"> )
-            </cfquery>
-      
-			<cfmail to="support@csb-usa.com" cc="#form.email#" from="info@csb-usa.com" subject="#form.lastname#, #form.firstname# - CSB Check-in / #form.companyName#" type="html">
-   				<p style="font-family:Verdana, Geneva, sans-serif; font-size: 11px;">
-                	Thank you for submitting the Check-in information. <strong>Please keep this electronic copy for your records.</strong> 
-                    CSB will process the information within 48 hours (exclusive of Saturday, Sunday, and legal Holidays) and if additional 
-                    information is needed, an email will be sent to the email address you have provided on your application.<br /><br />
-					
-                    Summer Work Travel Program is a cultural exchange program. As a reminder, for a successful completion of the program, 
-                    we encourage you to <strong>take the opportunity to familiarize yourself with important features of the American culture 
-                    and/or history</strong> by engaging in your local community and travelling in your free time. <br /><br />
-
-					Please also remember to <strong>respect the rules of the program</strong> at all times. Failure to follow them will result 
-                    in a program termination and you will be required to return home within 48 (forty-eight) hours.<br /><br />
-
-					If you should have any questions or you need assistance during your stay, please feel free to always <strong>contact us</strong> 
-                    by emailing support@csb-usa.com or by calling our toll-free number 1-877-779-0717 (dial 0 for the operator).
-                </p>
+                <cfquery name="qGetCandidate" datasource="mysql">
+                    SELECT c.candidateID 
+                    FROM extra_candidates c
+                    INNER JOIN smg_programs p ON p.programID = c.programID
+                    WHERE c.lastname = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.lastname#">
+                    AND c.dob = <cfqueryparam cfsqltype="cf_sql_date" value="#fullDate#">
+                    AND YEAR(p.startDate) = YEAR(<cfqueryparam cfsqltype="cf_sql_date" value="#form.arrive#">)
+                    LIMIT 1
+                </cfquery>
                 
-                #vSaveContent#
-			</cfmail>
+                <cfquery datasource="mysql">
+                    INSERT INTO extra_evaluation (
+                        candidateID,
+                        monthEvaluation,
+                        checkInMemo )
+                    VALUES (
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCandidate.candidateID)#">,
+                        0,
+                        <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#vSaveContent#"> )
+                </cfquery>
+      
+                <cfmail to="support@csb-usa.com" cc="#form.email#" from="info@csb-usa.com" subject="#form.lastname#, #form.firstname# - CSB Check-in / #form.companyName#" type="html">
+                    <p style="font-family:Verdana, Geneva, sans-serif; font-size: 11px;">
+                        Thank you for submitting the Check-in information. <strong>Please keep this electronic copy for your records.</strong> 
+                        CSB will process the information within 48 hours (exclusive of Saturday, Sunday, and legal Holidays) and if additional 
+                        information is needed, an email will be sent to the email address you have provided on your application.<br /><br />
+                        
+                        Summer Work Travel Program is a cultural exchange program. As a reminder, for a successful completion of the program, 
+                        we encourage you to <strong>take the opportunity to familiarize yourself with important features of the American culture 
+                        and/or history</strong> by engaging in your local community and travelling in your free time. <br /><br />
+    
+                        Please also remember to <strong>respect the rules of the program</strong> at all times. Failure to follow them will result 
+                        in a program termination and you will be required to return home within 48 (forty-eight) hours.<br /><br />
+    
+                        If you should have any questions or you need assistance during your stay, please feel free to always <strong>contact us</strong> 
+                        by emailing support@csb-usa.com or by calling our toll-free number 1-877-779-0717 (dial 0 for the operator).
+                    </p>
+                    
+                    #vSaveContent#
+                </cfmail>
     
 			<!---Comments: anca--->
-   		 	<cfoutput>
          		<meta http-equiv="refresh" content="4;url=http://www.csb-usa.com/SWT/">
 				<table width=90% align="center" border="0" cellpadding="8">
              		<tr>
