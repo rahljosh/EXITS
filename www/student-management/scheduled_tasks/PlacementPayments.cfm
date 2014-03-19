@@ -11,21 +11,20 @@
 </cfif>
 
 <cfquery datasource="#APPLICATION.DSN#">
-
 INSERT INTO smg_users_payments (agentID,companyID,studentID,programID,oldID,hostID,reportID,
 						paymenttype,transtype,amount,comment,date,inputby,dateCreated,dateUpdated,isPaid)
 
 SELECT DISTINCT
 	st.placerepID,
-	st.companyID, 
-	st.studentID, 
+	st.companyID,
+	st.studentID,
 	st.programID,
-	0, 
-	st.hostID, 
 	0,
-	pmtrng.fk_paymentType, 
-	"Placement", 
-	CASE 
+	st.hostID,
+	0,
+	pmtrng.fk_paymentType,
+	"Placement",
+	CASE
 		WHEN pmtrng.fk_paymenttype = 1 and sppmt.specialPaymentID is Null or sppmt.receivesPlacementFee then pmtrng.paymentAmount
 		WHEN pmtrng.fk_paymenttype = 1 and sppmt.receivesPlacementFee = 0 then 0
 		WHEN pmtrng.fk_paymenttype IN (18,19,20) AND (sppmt.specialPaymentId IS NULL OR sppmt.receivesPreAYPBonus) THEN pmtrng.paymentAmount
@@ -40,8 +39,8 @@ SELECT DISTINCT
 		WHEN pmtrng.fk_paymenttype =  25 AND NOT sppmt.receivesCEOBonus THEN 0
 		WHEN pmtrng.fk_paymenttype =  35 AND (sppmt.receives12MOSBonus IS NULL OR sppmt.receives12MOSBonus) THEN pmtrng.paymentAmount
 		WHEN pmtrng.fk_paymenttype =  35 AND NOT sppmt.receives12MOSBonus THEN 0
-	END, 
-	"Auto-processed - ISE", 
+	END,
+	"Auto-processed - ISE",
 	CASE 
 		WHEN DAYOFWEEK(CURDATE()) = 3 THEN DATE_ADD(CURDATE(), INTERVAL 2 DAY)           
 		WHEN DAYOFWEEK(CURDATE()) = 4 THEN DATE_ADD(CURDATE(), INTERVAL 1 DAY)           
@@ -50,11 +49,11 @@ SELECT DISTINCT
 		WHEN DAYOFWEEK(CURDATE()) = 7 THEN DATE_ADD(CURDATE(), INTERVAL 2 DAY)  
 		WHEN DAYOFWEEK(CURDATE()) = 1 THEN DATE_ADD(CURDATE(), INTERVAL 1 DAY)  
 		WHEN DAYOFWEEK(CURDATE()) = 2 THEN DATE_ADD(CURDATE(), INTERVAL 0 DAY)
-	END, 
-	"9999999", 
-	CURRENT_DATE, 
-	CURRENT_DATE, 
-	1 
+	END,
+	"9999999",
+	CURRENT_DATE,
+	CURRENT_DATE,
+	1
 	
 
 FROM
@@ -68,7 +67,7 @@ FROM
 		LEFT OUTER JOIN smg_states states ON st.state_guarantee = states.id AND st.state_guarantee > 0
 
 WHERE
-	st.programID > 365 
+	st.programID > 365
 	AND st.companyid IN (1,2,3,4,5,12)
 	AND pmtrng.companyID = 1
 	AND NOT EXISTS(SELECT * FROM smg_users_payments pmt2 WHERE pmt2.studentID = st.studentID AND pmt2.paymenttype = pmtrng.fk_paymentType
@@ -78,33 +77,26 @@ WHERE
 	AND st.canceldate IS NULL
 	AND hh.datePISEmailed IS NOT NULL
 	AND (
-		((hst.motherlastname <> "" AND fatherlastname <> "") OR (ctch.numChildren IS NOT NULL)) 
+		((hst.motherlastname <> "" AND fatherlastname <> "") OR (ctch.numChildren IS NOT NULL))
 		OR ((hh.doc_single_parents_sign_date IS NOT NULL) AND (hh.doc_single_student_sign_date IS NOT NULL) 
-		AND (hh.dateplaced IS NOT NULL)) 
+		AND (hh.dateplaced IS NOT NULL))
 		)
 	AND st.programID = pmtrng.fk_programID
-	AND (
-			(ds2019_no IS NULL or ds2019_no = "") 
-			OR IF (
-			(SELECT MAX(dep_date) FROM smg_flight_info flt WHERE st.studentID = flt.studentID and flt.flight_type = "Arrival") IS NOT NULL, 
-			(SELECT MAX(dep_date) FROM smg_flight_info flt WHERE st.studentID = flt.studentID and flt.flight_type = "Arrival") > hh.dateCreated, 
-			(SELECT MAX(start_date) FROM smg_sevis_history sev where st.studentID = sev.studentID) > hh.dateCreated 
-			) 
-		)	
+	AND NOT hh.isrelocation
 	AND
 		(
 			pmtrng.fk_paymentType = 1
-			OR	
+			OR
 			(
-			(hh.iswelcomeFamily = 0 AND hh.dateplaced IS NOT NULL AND 
-				(pmtrng.paymentEndDate IS NULL OR hh.datePISEMailed <= pmtrng.paymentEndDate))
-				
+				(hh.iswelcomeFamily = 0 AND hh.dateplaced IS NOT NULL
+				AND (pmtrng.paymentEndDate IS NULL OR hh.datePISEMailed <= pmtrng.paymentEndDate)
+				AND st.direct_placement = 0)
 				AND 
 				(
-					(st.aypEnglish > 0 AND pmtrng.fk_paymentType IN (18,19,20) AND hh.datePISEmailed >= pmtrng.paymentStartDate) 
+					(st.aypEnglish > 0 AND pmtrng.fk_paymentType IN (18,19,20) AND hh.datePISEmailed >= pmtrng.paymentStartDate)
 					OR (st.aypEnglish > 0 AND st.intrep = 11878 AND pmtrng.fk_paymentType = 24)
-					OR (states.state = hst.state and pmtrng.fk_paymentType = 14) 
-					OR (pmtrng.fk_paymenttype = 23 AND hh.dateCreated >= pmtrng.paymentStartDate) 
+					OR (states.state = hst.state and pmtrng.fk_paymentType = 14)
+					OR (pmtrng.fk_paymenttype = 23 AND hh.dateCreated >= pmtrng.paymentStartDate)
 					OR (pmtrng.fk_paymenttype = 25 AND hh.dateCreated >= pmtrng.paymentStartDate)
 					OR (pmtrng.fk_paymenttype = 35 AND hh.dateCreated >= pmtrng.paymentStartDate)
 				)
