@@ -133,7 +133,7 @@
         LEFT JOIN smg_users u on u.userid = vf.uploadedBy
         LEFT JOIN smg_hosts h on h.hostid = vf.fk_hostID
         WHERE vf.fk_studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.studentID#">
-       <cfif val(url.placement)> AND vf.fk_hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.placement#"></cfif>
+       <cfif val(url.hostID)> AND vf.fk_hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostID#"></cfif>
        and isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.isDeleted#">
         ORDER by categoryName
     </cfquery>
@@ -155,8 +155,8 @@
         LEFT JOIN virtualFolderCategory vfc on vfc.categoryID = vfd.fk_category
         LEFT JOIN smg_users u on u.userID = v.uploadedBy
         WHERE v.fk_studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.studentID#">
-        <cfif VAL(URL.placement)>
-        	AND v.fk_hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.placement#">
+        <cfif VAL(URL.hostID)>
+        	AND v.fk_hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostID#">
         </cfif>
         AND <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userType)#"> IN (SELECT categoryAccessList FROM virtualfoldercategory WHERE categoryID = v.fk_categoryID)
     </cfquery>
@@ -233,7 +233,7 @@
             	<option value="0&unqid=#url.unqid#">All</option>
                 
                 <cfloop query="qGetStudentPlacements">
-                    <option value="#historyID#&unqid=#url.unqid#" <cfif url.placement eq hostid>selected</cfif>>#familylastname# (#hostid#)</option>
+                    <option value="#historyID#&hostID=#hostID#&unqid=#url.unqid#" <cfif url.placement eq hostid>selected</cfif>>#familylastname# (#hostid#)</option>
                 </cfloop>
            	   </select>
                </td>
