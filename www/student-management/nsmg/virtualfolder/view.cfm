@@ -351,13 +351,13 @@
             </tr>
             
             <!--- School Acceptance Letter --->
-            <tr>
+            <!---<tr>
             	<td>School Acceptance Letter</td>
                 <td><a href="reports/school_acceptance.cfm?studentid=#qGetStudentInfo.studentid#&hostID=#qGetSelectedPlacementDetails.hostID#" target="_blank">Dynamicaly Generated</a></td>
                 <td>N/A</td>
             	<td>System</td>
                 <td>Auto</td>
-            </tr>
+            </tr>--->
             <cfelse>
             <tr>
             	<Td colspan=6>Select Host Family above</Td>
