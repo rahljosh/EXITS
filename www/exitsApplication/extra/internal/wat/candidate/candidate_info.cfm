@@ -2299,7 +2299,7 @@
                                                  <tr>
                                                     <td class="style1" align="right" width="30%"><strong>Job Title:</strong></td>
                                                     <td class="style1" align="left" width="70%">
-                                                        <span>#qGetAllPlacements.jobTitle#</span>
+                                                        <span>#qGetAllPlacements.jobTitle# POC: #qGetAllPlacements.supervisor#, POC Phone: #qGetAllPlacements.phone#</span>
                                                         <cfselect 
                                                             name="jobID_#qGetAllPlacements.candCompID#"
                                                             id="jobID_#qGetAllPlacements.candCompID#"
