@@ -86,7 +86,7 @@ tr, td {
 <cfparam name="form.lastname" default="">
 <cfparam name="form.firstname" default="">
 <cfparam name="form.BMonth" default="">
-<cfparam name="form.BDate" default="">
+<cfparam name="form.BDay" default="">
 <cfparam name="form.BYear" default="">
 <cfparam name="form.middlename" default="">
 <cfparam name="form.email" default="">
@@ -331,7 +331,7 @@ order by state
                         Program ID##: #form.programID#<br />
                         Last Name: #form.lastname#<br />
                         First Name: #form.firstname#<br />
-                        Birth Date: #BMonth#/#BDate#/#BYear#<br />
+                        Birth Date: #BMonth#/#BDay#/#BYear#<br />
                         Middle Name: #form.middlename#<br />
                         E-Mail Address: #form.email#<br />
                         Arrival date in the U.S.: #form.arrive#<br />
@@ -466,7 +466,7 @@ order by state
     Program ID##: #form.programID#<br />
     Last Name: #form.lastname#<br />
     First Name: #form.firstname#<br />
-    Birth Date: #BMonth#/#BDate#/#BYear#<br />
+    Birth Date: #BMonth#/#BDay#/#BYear#<br />
     Middle Name: #form.middlename#<br />
     E-Mail Address: #form.email#<br />
     Arrival date in the U.S.: #form.arrive#<br />
