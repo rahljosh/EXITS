@@ -478,7 +478,8 @@
 		AND qGetStudentInfoPrint.master_accountid NEQ 10115 
 		AND qGetStudentInfoPrint.intrep NEQ 10115 
 		AND qGetStudentInfoPrint.intrep NEQ 8318
-		AND CLIENT.companyID NEQ 14>
+		AND CLIENT.companyID NEQ 14
+		AND CLIENT.companyID NEQ 13>
         <cfif FileExists(ExpandPath('../uploadedfiles/online_app/page20/#CLIENT.studentID#.pdf'))>
         	<cftry>
                 <cfpdf action="merge" source="#fileName#,#ExpandPath('../uploadedfiles/online_app/')#page20/#CLIENT.studentID#.pdf" destination="#fileName#" overwrite="yes">
@@ -500,7 +501,8 @@
 		AND client.usertype NEQ 10 
 		AND qGetStudentInfoPrint.master_accountid NEQ 10115 
 		AND qGetStudentInfoPrint.intrep NEQ 10115 
-		AND qGetStudentInfoPrint.intrep NEQ 8318>
+		AND qGetStudentInfoPrint.intrep NEQ 8318
+		AND CLIENT.companyID NEQ 13>
         <cfif FileExists(ExpandPath('../uploadedfiles/online_app/page21/#CLIENT.studentID#.pdf'))>
         	<cftry>
                 <cfpdf action="merge" source="#fileName#,#ExpandPath('../uploadedfiles/online_app/')#page21/#CLIENT.studentID#.pdf" destination="#fileName#" overwrite="yes">
