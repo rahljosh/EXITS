@@ -6,13 +6,14 @@ update smg_regions
 		set regionfacilitator = #form.facilitator#,
 			regional_guarantee = #form.regional_guarantee#,
 			active = #form.status#,
-            url = '#form.website#',
+            url = '#form.website#.iseusa.org',
             twitter = '#form.twitter#',
             facebook = '#form.facebook#',
             googleplus = '#form.googleplus#',
             pintrest = '#form.pintrest#',
             youtube = '#form.youtube#',
-            tumblr = '#form.tumblr#'
+            tumblr = '#form.tumblr#',
+            regionalEmail = '#form.email#@iseusa.org'
 		where regionid = #form.regionid#
 </cfquery>
 
