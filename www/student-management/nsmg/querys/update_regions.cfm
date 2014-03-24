@@ -5,7 +5,14 @@
 update smg_regions
 		set regionfacilitator = #form.facilitator#,
 			regional_guarantee = #form.regional_guarantee#,
-			active = #form.status#
+			active = #form.status#,
+            url = '#form.url#',
+            twitter = '#form.twitter#',
+            facebook = '#form.facebook#',
+            googleplus = '#form.googleplus#',
+            pintrest = '#form.pintrest#',
+            youtube = '#form.youtube#',
+            tumblr = '#form.tumblr#'
 		where regionid = #form.regionid#
 </cfquery>
 
