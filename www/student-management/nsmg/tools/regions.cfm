@@ -8,6 +8,13 @@
         r.regionfacilitator, 
         r.company, 
         r.regional_guarantee,
+        r.url,
+        r.tumblr,
+        r.facebook,
+        r.pintrest,
+        r.googleplus,
+        r.twitter,
+        r.regionalEmail,
 		u.firstname, 
         u.lastname
 	FROM 
@@ -63,6 +70,31 @@
 	<table border=0 cellpadding=4 cellspacing=2 width=100% class="section">
 	<tr><td>
 		#regionname# - #firstname# #lastname# [ <a href="?curdoc=tools/edit_region&id=#regionid#">edit</a> ] <br> 
+        <table cellpadding=4 cellspacing=0>
+        	<tr>
+            	<Td>Website:</Td><td>#qGetRegionInfo.url#</td>
+             </tr>
+             <tr>
+            	<Td>Email:</Td><td>#qGetRegionInfo.regionalEmail#</td>
+             </tr>
+           <tr>
+            	<Td>Facebook:</Td><td>#qGetRegionInfo.facebook#</td>
+            </tr> 
+            <tr>
+            	<Td>Twitter:</Td><td>#qGetRegionInfo.twitter#</td>
+            </tr> 
+            <tr>
+            	<Td>Tumblr:</Td><td>#qGetRegionInfo.tumblr#</td>
+            </tr> 
+            <tr>
+            	<Td>Pintrest:</Td><td>#qGetRegionInfo.pintrest#</td>
+            </tr> 
+            <tr>
+            	<Td> Google +:</Td><td>#qGetRegionInfo.googleplus#</td>
+            </tr> 
+		</table>
+      
+       
 		Status: <cfif qGetRegionInfo.active is 1><font color="3333FF">Active</font><cfelse><font color="red">Inactive</font></cfif><br>
 		Region Preference: $#regional_guarantee#<br>
 		<cfquery name="subregions" datasource="MySQL">
