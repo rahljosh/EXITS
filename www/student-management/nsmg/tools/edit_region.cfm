@@ -51,13 +51,13 @@
 	</tr>
     <tr>
 		<td><h3>Website: </h3></td><td>
-			<input type="text" size=25 name="website" value="#get_Region_info.url#" />.iseusa.org
+			<input type="text" size=25 name="website" value="#get_Region_info.url#" />
             </h3>
 		</td>
 	</tr>
       <tr>
 		<td><h3>Email: </h3></td><td>
-			<input type="text" size=25 name="email" value="#get_Region_info.regionalEmail#" />@iseusa.org
+			<input type="text" size=25 name="email" value="#get_Region_info.regionalEmail#" />
             </h3>
 		</td>
 	</tr>
