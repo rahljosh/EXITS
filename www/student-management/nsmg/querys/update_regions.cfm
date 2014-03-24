@@ -6,7 +6,7 @@ update smg_regions
 		set regionfacilitator = #form.facilitator#,
 			regional_guarantee = #form.regional_guarantee#,
 			active = #form.status#,
-            url = '#form.url#',
+            url = '#form.website#',
             twitter = '#form.twitter#',
             facebook = '#form.facebook#',
             googleplus = '#form.googleplus#',
