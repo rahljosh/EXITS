@@ -1571,7 +1571,7 @@
         <cfquery 
 			name="qGetCheckInToolStudentList" 
 			datasource="#APPLICATION.DSN.Source#">
-                SELECT
+                SELECT DISTINCT
 					ec.uniqueID,
                     ec.candidateID,
                     ec.firstName,
