@@ -2819,7 +2819,7 @@
                                         	<td class="style1" width="30%" align="right"><label for="usPhone"><strong>U.S. Phone:</strong></label></td>
                                         	<td class="style1" width="70%">
                                             	<span class="readOnly">#qGetCandidate.us_phone#</span>
-                                                <input type="text" name="usPhone" id="usPhone" class="style1 editPage" value="#qGetCandidate.us_phone#" maxlength="10">
+                                                <input type="text" name="usPhone" id="usPhone" class="style1 editPage" value="#qGetCandidate.us_phone#">
                                             </td>
                                         </tr>
                                         <tr>
