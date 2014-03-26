@@ -34,7 +34,7 @@
     <cfparam name="FORM.zipLookup" default="">
 	
     <cfscript>
-		field_list = 'firstname,middlename,lastname,occupation,businessname,address,address2,city,state,zip,country,drivers_license,dob,sex,phone,phone_ext,work_phone,work_ext,cell_phone,fax,email,email2,skype_id,username,changepass,invoice_access,bypass_checklist,date_contract_received,date_2nd_visit_contract_received,active,dateCancelled,datecreated,usebilling,billing_company,billing_contact,billing_address,billing_address2,billing_city,billing_country,billing_zip,billing_phone,billing_fax,billing_email,comments';
+		field_list = 'firstname,middlename,lastname,occupation,businessname,address,address2,city,state,zip,country,drivers_license,dob,sex,phone,phone_ext,work_phone,work_ext,cell_phone,emergency_phone,fax,email,email2,skype_id,username,changepass,invoice_access,bypass_checklist,date_contract_received,date_2nd_visit_contract_received,active,dateCancelled,datecreated,usebilling,billing_company,billing_contact,billing_address,billing_address2,billing_city,billing_country,billing_zip,billing_phone,billing_fax,billing_email,comments';
 
 		// Set new default value
 		if ( LEN(URL.userID) ) {
@@ -268,6 +268,8 @@
 		<cfset errorMsg = "Please enter a valid SSN.">
 	<cfelseif trim(FORM.phone) EQ '' and trim(FORM.work_phone) EQ '' and trim(FORM.cell_phone) EQ ''>
 		<cfset errorMsg = "Please enter one of the Phone fields.">
+    <cfelseif FORM.usertype EQ 8 and trim(FORM.emergency_phone) EQ ''>
+		<cfset errorMsg = "Please enter an emergency phone.">
     <!---    
 	<cfelseif FORM.usertype NEQ 8 and trim(FORM.phone) NEQ '' and not isValid("telephone", trim(FORM.phone))> 
 		<cfset errorMsg = "Please enter a valid Home Phone.">
@@ -352,6 +354,7 @@
                         work_phone, 
                         work_ext, 
                         cell_phone, 
+                        emergency_phone,
                         fax, 
                         email, 
                         email2, 
@@ -438,6 +441,7 @@
                             <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_phone#" null="#yesNoFormat(trim(FORM.billing_phone) EQ '')#">,
                             <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_fax#" null="#yesNoFormat(trim(FORM.billing_fax) EQ '')#">,
                             <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_email#" null="#yesNoFormat(trim(FORM.billing_email) EQ '')#">,
+                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.emergency_phone#" null="#yesNoFormat(trim(FORM.emergency_phone) EQ '')#">,
                         </cfif>
                         
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.comments#" null="#yesNoFormat(trim(FORM.comments) EQ '')#">, 
@@ -646,6 +650,7 @@
                         billing_phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_phone#" null="#yesNoFormat(trim(FORM.billing_phone) EQ '')#">,
                         billing_fax = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_fax#" null="#yesNoFormat(trim(FORM.billing_fax) EQ '')#">,
                         billing_email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_email#" null="#yesNoFormat(trim(FORM.billing_email) EQ '')#">,
+                        emergency_phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.emergency_phone#" null="#yesNoFormat(trim(FORM.emergency_phone) EQ '')#">,
                     </cfif>
                     
                     <cfif isDefined("FORM.comments")>
@@ -1225,6 +1230,17 @@
                         </cfif>
                     </td>
 				</tr>
+                <cfif FORM.usertype EQ 8>
+                <tr>
+					<td align="right">Emergency Phone: <span class="redtext">*</span></td>
+					<td>
+						<!---- Int. Reps ---->
+                        
+                            <cfinput type="text" name="cell_phone" id="cell_phone" value="#FORM.emergency_phone#" size="20" maxlength="25">
+                    
+                    </td>
+				</tr>
+                </cfif>
 				<tr>
 					<td align="right">Fax:</td>
 					<td>
