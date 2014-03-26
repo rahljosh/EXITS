@@ -168,7 +168,7 @@
 	        <td><em>What grade level will student have completed upon arrival in the USA?</em></td>
         </cfif>	
 		<td>
-			<cfif companyID EQ 6>
+			<cfif companyID EQ 6 OR companyID EQ 14>
 				<input type="radio" name="grades" id="grade8" value="8" onchange="DataChanged();" style="margin:2px;" <cfif grades EQ 8> checked="yes" </cfif>> <label for="grade8">8<sup>th</sup></label>
 			</cfif>
         	<input type="radio" name="grades" id="grade9" value="9" onchange="DataChanged();" style="margin:2px;" <cfif grades EQ 9> checked="yes" </cfif>> <label for="grade9">9<sup>th</sup></label>
