@@ -151,7 +151,13 @@
         WHERE 
         	messagetype = <cfqueryparam cfsqltype="cf_sql_varchar" value="update">
     </cfquery>
-
+    <cfif client.usertype eq 1>
+        <cfquery name="checkEmergencyNumber" datasource="#application.dsn#">
+        select emergency_phone
+        from smg_users
+        where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+        </cfquery>
+    </cfif>
 </cfsilent>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -448,3 +454,16 @@
 </table>
 </cfoutput>
 <br>
+<!----Force emergency number---->
+<cfif client.userid eq 1 or client.userid eq 18602>
+	
+    <cfif checkEmergencyNumber.emergency_phone is ''>
+        <script language="javascript">
+            // JQuery ColorBox Modal
+            $(document).ready(function(){ 
+                $.fn.colorbox( {href:'forms/emergencyNumber.cfm', iframe:true,width:'60%',height:'40%',onLoad: function() { }} );
+            });
+        </script>
+    </cfif>
+ 
+</cfif>
