@@ -1236,7 +1236,7 @@
 					<td>
 						<!---- Int. Reps ---->
                         
-                            <cfinput type="text" name="cell_phone" id="cell_phone" value="#FORM.emergency_phone#" size="20" maxlength="25">
+                            <cfinput type="text" name="emergency_phone" id="cell_phone" value="#FORM.emergency_phone#" size="20" maxlength="25">
                     
                     </td>
 				</tr>
