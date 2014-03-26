@@ -1,3 +1,5 @@
+
+
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
@@ -23,18 +25,38 @@
     </div> <!-- end top --> 
     
     <div class="rdbox">
+    <cfif isDefined('form.addNumber')>
+	<cfquery datasource="#application.dsn#">
+    update smg_users
+    set emergency_phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.emergency_phone#">
+    where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+    </cfquery>
+	 <table width="90%" align="center" cellpadding="4">
+            <tr>
+                <td rowspan=3 valign="middle"><img src="../pics/icons/emergency-icon.png" height="100"></td><td colspan=2 align="left"><Strong> Thank You!</strong> Your records have been updated.<br><br>
+                Close this window to continue.
+               </td>
+            </tr>
+           
+           
+        </table>
+    <cfelse>
+    <form method="post" action="emergencyNumber.cfm">
+    <input type="hidden" name="AddNumber" value=1>
         <table width="90%" align="center" cellpadding="4">
             <tr>
-                <td colspan=2 align="Center"> We are now requiring all International Agents to have an emergency contact number on file.<br>This number should have someone available 24 hours a day.</td>
+                <td rowspan=3 valign="middle"><img src="../pics/icons/emergency-icon.png" height="100"></td><td colspan=2 align="left"> We are now requiring all International Agents to have an emergency contact number on file.<br>This number should have someone available 24 hours a day.</td>
             </tr>
             <tr>
-                <td align="right">Your Emergency Number:</td>
-                <td><input type="text" name="emergency_phone" size=25 /></td>
+                <td><strong>Your Emergency Number:</strong> <input type="text" name="emergency_phone" size=25 placeholder="No number on file"/></td>
+                <td></td>
             </tr>
             <tr>
                 <td align="center" colspan=2><input type="submit" value="Update" class="basicOrangeButton"></td>
             </tr>
         </table>
+    </form>
+    </cfif>
     </div>
     
     <div class="rdbottom"></div> <!-- end bottom --> 
