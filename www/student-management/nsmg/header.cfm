@@ -455,7 +455,7 @@
 </cfoutput>
 <br>
 <!----Force emergency number---->
-<cfif client.userid eq 1 or client.userid eq 18602>
+<cfif client.userid eq 1 or client.userid eq 18602 or client.userid eq 12313 or client.userid eq 19422>
 	
     <cfif checkEmergencyNumber.emergency_phone is ''>
         <script language="javascript">
