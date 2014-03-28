@@ -123,7 +123,7 @@
 			}
 			
 			// Number of students
-			if ( NOT LEN(TRIM(FORM.numberofstudentsNotNew)) ) {
+			if ( NOT LEN(TRIM(FORM.numberofstudentsNotNew)) AND NOT VAL(FORM.newSchool) ) {
 				SESSION.formErrors.Add("Please indicate the size of this school.");
 			}
 			
