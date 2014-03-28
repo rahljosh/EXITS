@@ -55,6 +55,12 @@
             </h3>
 		</td>
 	</tr>
+    <tr>
+		<td><h3>Website Blurb: </h3></td><td>
+			<textarea cols=40 rows=5 name="websiteBlurb">#get_Region_info.websiteBlurb#</textarea>
+            </h3>
+		</td>
+	</tr>
       <tr>
 		<td><h3>Email: </h3></td><td>
 			<input type="text" size=25 name="email" value="#get_Region_info.regionalEmail#" />
