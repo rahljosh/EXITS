@@ -133,10 +133,6 @@
 			if ( LEN(TRIM(FORM.fax)) AND NOT isValid("telephone", TRIM(FORM.fax)) ) {
 				FORM.errorMsg = FORM.errorMsg & "Please enter a valid Fax. \n";
             }
-
-			if ( LEN(FORM.url) AND NOT isValid("url", TRIM(FORM.url)) ) {
-				FORM.errorMsg = FORM.errorMsg & "Please enter a valid Web Site starting with http:// \n";
-            }
 		</cfscript>
         
         <!--- // Check if there are no errors --->
@@ -589,7 +585,7 @@
         </tr>
         <tr>
             <td class="label">Web Site:</td>
-            <td colspan="3"><cfinput type="text" name="url" value="#FORM.url#" size="40" maxlength="200" validate="url" message="Please enter a valid Web Site starting with http://"></td>
+            <td colspan="3"><cfinput type="text" name="url" value="#FORM.url#" size="40" maxlength="200"></td>
         </tr>
 		<tr>
             <td class="label">Number of Students:</td>
