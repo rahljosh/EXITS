@@ -56,7 +56,7 @@
 		</td>
 	</tr>
     <tr>
-		<td><h3>Website Blurb: </h3></td><td>
+		<td valign="top"><h3>Website Blurb: </h3></td><td>
 			<textarea cols=40 rows=5 name="websiteBlurb">#get_Region_info.websiteBlurb#</textarea>
             </h3>
 		</td>
