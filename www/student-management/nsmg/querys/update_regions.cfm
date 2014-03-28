@@ -7,6 +7,7 @@ update smg_regions
 			regional_guarantee = #form.regional_guarantee#,
 			active = #form.status#,
             url = '#form.website#',
+            websiteBlurb = '#form.websiteBlurb#',
             twitter = '#form.twitter#',
             facebook = '#form.facebook#',
             googleplus = '#form.googleplus#',
