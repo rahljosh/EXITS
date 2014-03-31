@@ -61,6 +61,7 @@
                 ec.wat_placement,
                 ec.startDate,
                 u.businessname,
+                eir.ID AS reportID,
                 eir.dateIncident,
                 eir.subject,
                 eir.notes,
@@ -209,6 +210,9 @@
                 <cfoutput>
                     <cfscript>
                         vRowCount = vRowCount + 1;
+						
+						// Get Incident Notes
+						qGetIncidentNotes = APPLICATION.CFC.CANDIDATE.getIncidentNotes(incidentID=qGetCandidates.reportID);
                     </cfscript>
                     
                     <tr bgcolor="###IIf(vRowCount MOD 2 ,DE("FFFFFF") ,DE("E4E4E4") )#" style="font-size:11px;">
@@ -223,7 +227,22 @@
                         <td valign="top">#qGetCandidates.businessName#</td>
                         <td valign="top">#DateFormat(qGetCandidates.dateIncident, 'mm/dd/yyyy')#</td>
                         <td valign="top">#qGetCandidates.subject#</td>
-                        <td valign="top">#qGetCandidates.notes#</td>
+                        <td valign="top">
+                        	 <cfif VAL(qGetIncidentNotes.recordCount)>
+                                <table>
+                                	<tr>
+                                        <td>
+                                            <cfloop query="qGetIncidentNotes">
+                                                <b>On #DateFormat(date,'mm/dd/yyyy')# at #TimeFormat(date,'h:mm tt')# by #firstName# #lastName#</b>
+                                                <br/>
+                                                #note#
+                                                <br/>
+                                            </cfloop>
+                                        </td>
+                                    </tr>
+                              	</table>
+                            </cfif>
+                        </td>
                         <td valign="top">#YesNoFormat(VAL(qGetCandidates.isSolved))#</td>
                     </tr>
                 </cfoutput>
