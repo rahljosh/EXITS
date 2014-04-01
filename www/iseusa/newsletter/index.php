@@ -153,16 +153,16 @@ Babylon, NY 11702</p>
 <p class="grey"><em> <strong>A:</strong> I was born in Queens New York and moved to Long Island when I was six years old.  I started working for a company while I attended night school.  Once I graduated, I attended Adelphi University to get my Paralegal degree.  I found out I had a flair for the law.  I decided to attend St. Johns University and get my Associate Degree in Criminal Justice</em></p>
 <div class="hrLine"></div>
 <p><strong>Q: What is your job function in ISE?</strong></p>
-<p class="grey"><em><strong>A: </strong>My job functions as a Compliance Coordinator is to: Proofread and analyze host family applications, Review Second Visit reports, Review Host family and Student orientations for accuracy and update placement management, monitor and process compliance emails daily, and assist with any other additional tasks that are needed.</em></p>
+<p class="grey"><em><strong>A: </strong>My job functions as a Compliance Coordinator is to: Review Second Visit reports, Review Host family and Student orientations for accuracy and update placement management, monitor and process compliance emails daily, and assist with any other additional tasks that are needed.</em></p>
 <div class="hrLine"></div>
 <p><strong>Q: What is it about your work that is the most challenging/satisfying? </strong></p>
-<p class="grey"><em><strong>A: </strong>The most challenging part of my job is making sure every student that comes into our country is being placed with the best possible Host Family.  I want them to get the best experience through our program and feel happy to study at our schools here in the United States.</em></p>
+<p class="grey"><em><strong>A: </strong>The most challenging part of my job is ensuring we meet the criteria of the Department of State regulations.  We go over every detail to make sure we are compliant.</em></p>
 <div class="hrLine"></div>
 <p><strong>Q: Tell us something we don't know about you. </strong></p>
 <p class="grey"><em><strong>A: </strong>My dream is to move to Taormina Sicily which is where my father was born and buy a home there and live there..</em></p>
 <div class="hrLine"></div>
 <p><strong>Q: What new projects are you going to be working on this year?</strong></p>
-<p class="grey"><em><strong>A: </strong>I will be assisting the Representatives in the field to understand the Compliance rules regarding the Host Family Orientations and Student Orientations.  I also hope to personally improve my performance with our procedures and online applications.</em></p>
+<p class="grey"><em><strong>A: </strong>Being on the Compliance Team only five months, I now have the knowledge and experience to increase productivity, enabling me time to start reviewing and approving online applications.</em></p>
 <!-- end DIV5 --></div>
 
 <div id="div6">
