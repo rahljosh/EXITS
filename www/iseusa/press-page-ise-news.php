@@ -106,6 +106,44 @@ Babylon, NY 11702</p>
     <div class="smSize" style="float:right; width: 120px; margin: 10px 0 0 0;"><a href="press-page-ise-news.cfm"><strong>2014</strong></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="press-page-ise-news-2013.cfm">2013</a></div>
 <h1>ISE News and Stories</h1>
  <div class="dotLine">&nbsp;</div>
+  <!---- Article April 2 ------->  
+<div class="iseNewsImg">
+  <div class="picIMG"><img src="images/pressKit/carousel.jpg" width="228" height="228" alt="Wahkiakum County Eagle"></div>
+<p class="smItalic"></p>
+</div>
+
+<div class="iseNews">
+
+<h2>Aitkin High School Choir present 'The Boyfriend'</h2>
+<p class="smSize">Posted: April 2, 2014</p>
+
+  <p>Matt campos is an ISE student from Brazil. He lives with Heather and Eric Anderson from Aitkin MN.</p>
+ 
+<p><a href="pdfs/presskit/TheboyFriend.pdf" target="_blank">View Article</a></p>
+</div>
+<!---- Article April 2 ------->
+ <div class="clearfloat">&nbsp;</div>
+    <div class="blueLine">&nbsp;</div>
+
+ 
+  <!---- Article March 20 ------->  
+<div class="iseNewsImg">
+  <div class="picIMG"><script type='text/javascript' src='http://WVTM.images.worldnow.com/interface/js/WNVideo.js?rnd=400463;hostDomain=www.alabamas13.com;playerWidth=228;playerHeight=144;isShowIcon=true;clipId=9858587;flvUri=;partnerclipid=;adTag=Entertainment;advertisingZone=;enableAds=true;landingPage=;islandingPageoverride=false;playerType=STANDARD_EMBEDDEDscript;controlsType=fixed'></script></div>
+<p class="smItalic"></p>
+</div>
+
+<div class="iseNews">
+
+<h2>Host families sought for foreign exchange students</h2>
+<p class="smSize">Posted: March 20th, 2014</p>
+
+  <p>Foreign exchange students are looking for families to take them in for the 2014-15 school year. </p>
+  <p><a href="http://medinagazette.northcoastnow.com/2014/03/20/host-families-sought-foreign-exchange-students/" target="new"> Go to Article</a></p>
+</div>
+
+<!---- Article March 20 ------->
+ <div class="clearfloat">&nbsp;</div>
+    <div class="blueLine">&nbsp;</div>
  
   <!---- Article March 7 ------->  
 <div class="iseNewsImg">
