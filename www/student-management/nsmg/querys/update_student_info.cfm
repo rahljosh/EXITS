@@ -444,7 +444,11 @@
             // Replace ';' with a <br />
             emailList = ReplaceNoCase(emailList, ';', '<br />', "ALL");
         </cfscript>
-    
+    	<cfquery name="cancelDateHost" datasource="#application.dsn#">
+            select max(datePlaced)
+            from smg_hosthistory
+            where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qStudentInfo.studentID#">
+        </cfquery>
         <cfoutput>
             <cfsavecontent variable="email_message">
                 <p>#qStudentInfo.FirstName# #qStudentInfo.FamilyLastName# has been cancelled.</p>
@@ -460,10 +464,10 @@
                 Reason: <strong>#FORM.cancelreason#</strong><br />
                 
                 Placement Approved: 
-                <cfif IsDate(qStudentInfo.date_host_fam_approved)>
-                    <strong>#DateFormat(qStudentInfo.date_host_fam_approved, 'mm/dd/yyyy')# @ #TimeFormat(qStudentInfo.date_host_fam_approved, 'h:mm tt')#</strong>
+                <cfif cancelDateHost.datePlaced is ''>
+                    <strong>Unplaced / Unapproved</strong> 
                 <cfelse>
-                    <strong>Unplaced</strong>
+                   	<strong>#DateFormat(cancelDateHost.datePlaced, 'mm/dd/yyyy')#</strong>
                 </cfif> <br />
     
                 SEVIS No.: 
