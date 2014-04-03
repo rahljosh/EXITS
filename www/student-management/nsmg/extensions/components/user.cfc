@@ -1722,6 +1722,7 @@ setUserSessionPaperwork
 	<cffunction name="getRepTotalPayments" access="public" returntype="query" output="false" hint="Gets reps total payment by program">
     	<cfargument name="userID" hint="UserID is required">
         <cfargument name="companyID" hint="companyID is required">
+        <cfargument name="groupBySeason" default="1">
               
             <cfquery 
                 name="qGetRepTotalPayments" 
@@ -1729,7 +1730,7 @@ setUserSessionPaperwork
                 SELECT                     
                     s.seasonID,
                     SUM(rep.amount) as totalPerProgram,
-                    s.season           
+                    s.season          
                 FROM 
                     smg_users_payments rep
                 LEFT JOIN
@@ -1748,13 +1749,97 @@ setUserSessionPaperwork
                 </cfif>
                 
                 GROUP BY
-                    s.seasonID            
+                    <cfif VAL(ARGUMENTS.groupBySeason)>
+                    	s.seasonID 
+                    <cfelse>
+                    	rep.agentID
+                   	</cfif>    
                 ORDER BY 
                     s.seasonID DESC
             </cfquery>
 		   
 		<cfreturn qGetRepTotalPayments>
 	</cffunction>
+    
+    <cffunction name="getRepPayments" access="public" returntype="query" output="false">
+    	<cfargument name="companyID" hint="companyID is required">
+        <cfargument name="userID" default="0">
+        <cfargument name="studentID" default="0">
+        <cfargument name="paymentID" default="0">
+        <cfargument name="creditStatus" default="" hint="Set to a credit status to only get that type">
+        <cfargument name="onlyPayments" default="0">
+        <cfargument name="orderFor" default="paymentReport">
+        <cfargument name="limit" default="0">
+        <cfargument name="offset" default="0">
+        
+        <cfquery name="qGetPayments" datasource="#APPLICATION.DSN#">
+        	SELECT 
+                rep.*,
+                CASE
+                	WHEN (isPaid = 0 OR isPaid IS NULL) AND creditStatus != 3 THEN NULL
+                    ELSE rep.date
+                    END AS paidDate,
+              	CASE 
+                    WHEN s.middleName != "" THEN CONCAT(s.firstName, " ", s.middleName, " ", s.familyLastName)
+                    ELSE CONCAT(s.firstName, " ", s.familyLastName)
+                    END AS studentName,
+                CASE
+                    WHEN u.middleName != "" THEN CONCAT(u.firstName, " ", u.middleName, " ", u.lastName)
+                    ELSE CONCAT(u.firstName, " ", u.lastName)
+                    END AS agentName,
+                s.studentid,
+                s.firstname, 
+                s.familylastname,
+                host.hostID,
+                host.fatherFirstName,
+                host.motherFirstName,
+                host.familyLastName AS hostFamilyLastName,             
+                c.team_id,
+                type.type,
+                p.programName
+            FROM smg_users_payments rep
+            LEFT JOIN smg_students s ON s.studentid = rep.studentid
+            LEFT JOIN smg_hosts host ON host.hostID = rep.hostID
+            LEFT JOIN smg_programs p ON p.programID = rep.programID
+            LEFT JOIN smg_users_payments_type type ON type.id = rep.paymenttype
+            LEFT JOIN smg_companies c ON c.companyID = rep.companyID
+            LEFT JOIN smg_users u ON u.userID = rep.agentID
+            WHERE rep.isDeleted = 0
+            <cfif VAL(ARGUMENTS.onlyPayments)>
+            	AND rep.paymentType = 37 AND rep.transtype = "Payment" AND rep.creditStatus = 3
+            </cfif>
+            <cfif LEN(ARGUMENTS.creditStatus)>
+            	AND rep.creditStatus = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.creditStatus)#">
+            </cfif>
+            <cfif VAL(ARGUMENTS.userID)>
+                AND rep.agentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
+            </cfif>
+            <cfif VAL(ARGUMENTS.studentID)>
+                AND rep.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.studentID#">
+            </cfif>
+            <cfif VAL(ARGUMENTS.paymentID)>
+                AND rep.ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.paymentID#">
+            </cfif>
+            <cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, ARGUMENTS.companyID)>
+                AND rep.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+            <cfelseif VAL(ARGUMENTS.companyID)>
+                AND rep.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+            </cfif>
+            <cfif ARGUMENTS.orderFor EQ "paymentReport">
+            	ORDER BY paidDate IS NOT NULL, paidDate DESC, dateCreated DESC, rep.transtype
+          	<cfelseif ARGUMENTS.orderFor EQ "credits">
+            	ORDER BY paidDate DESC, dateCreated DESC, rep.transtype, type.type
+            </cfif>
+            <cfif VAL(ARGUMENTS.limit)>
+            	LIMIT <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.limit)#">
+            </cfif>
+            <cfif VAL(ARGUMENTS.offset)>
+            	OFFSET <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.offset)#">
+            </cfif>
+        </cfquery>
+        
+        <cfreturn qGetPayments>
+    </cffunction>
 
     
 	<cffunction name="getRepPaymentsBySeasonID" access="public" returntype="query" output="false" hint="Gets rep payments by a programID">

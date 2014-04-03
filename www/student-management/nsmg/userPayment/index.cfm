@@ -87,7 +87,7 @@
 
     <cfswitch expression="#action#">
     
-        <cfcase value="initial,searchRepresentative,listStudentRepresentatives,selectPayment,searchStudent,incentiveTripPayment,maintenance,paymentHistory,processPayment,studentPaymentHistory,hostPaymentHistory,paymentReport,bonusReport,thankYouBonus" delimiters=",">
+        <cfcase value="initial,searchRepresentative,listStudentRepresentatives,selectPayment,searchStudent,incentiveTripPayment,maintenance,paymentHistory,processPayment,studentPaymentHistory,hostPaymentHistory,paymentReport,bonusReport,thankYouBonus,credits,payReps,potentialCredits" delimiters=",">
     
             <!--- Include template --->
             <cfinclude template="_#action#.cfm" />
