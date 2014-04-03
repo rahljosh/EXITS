@@ -423,6 +423,8 @@
                                 <ul>
                                     <li><a href="index.cfm?curdoc=userPayment/index&action=bonusReport">Bonus Report</a></li>
                                     <li><a href="#CGI.SCRIPT_NAME#?curdoc=userPayment/index&action=maintenance">Fee Maintenance</a></li>
+                                    <li><a href="#CGI.SCRIPT_NAME#?curdoc=userPayment/index&action=potentialCredits">Potential Credits</a></li>
+                                    <li><a href="#CGI.SCRIPT_NAME#?curdoc=userPayment/index&action=payReps">Pay Representatives</a></li>
                                 </ul>
                             </li>
                         </cfif>

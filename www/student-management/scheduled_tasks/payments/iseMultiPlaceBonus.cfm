@@ -89,7 +89,7 @@ SELECT distinct
 	pmtrng.fk_paymenttype,
 	"Placement", 
 	pmtrng.paymentAmount,
-	"Auto processed - ISE",
+	"Auto-processed - ISE",
 	CASE 
 		WHEN DAYOFWEEK(CURDATE()) = 3 THEN DATE_ADD(CURDATE(), INTERVAL 2 DAY)           
 		WHEN DAYOFWEEK(CURDATE()) = 4 THEN DATE_ADD(CURDATE(), INTERVAL 1 DAY)           
@@ -102,7 +102,7 @@ SELECT distinct
 	"9999999", 
 	CURRENT_DATE,
 	CURRENT_DATE,
-	1 
+	0 
 
 FROM 
 	numberedBonusReps nbr

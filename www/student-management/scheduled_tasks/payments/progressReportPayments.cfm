@@ -33,7 +33,7 @@ st.hostID,
 end),
 "Supervision",
 if(prog.type = 1,40,if(prog.type = 2,42.5,50)),
-"Auto-created psm",
+"Auto-processed - ISE",
 (CASE 
 	WHEN DAYOFWEEK(CURDATE()) = 3 THEN DATE_ADD(CURDATE(), INTERVAL 2 DAY)           
     WHEN DAYOFWEEK(CURDATE()) = 4 THEN DATE_ADD(CURDATE(), INTERVAL 1 DAY)           
@@ -44,7 +44,7 @@ if(prog.type = 1,40,if(prog.type = 2,42.5,50)),
     WHEN DAYOFWEEK(CURDATE()) = 2 THEN DATE_ADD(CURDATE(), INTERVAL 0 DAY)
 END),
 "999999",
-1
+0
 
 from smg_students st
 INNER JOIN progress_reports pr ON st.studentID = pr.fk_student AND pr.fk_reporttype = 1
@@ -120,7 +120,7 @@ st.hostID,
 end),
 "Supervision",
 if(prog.type = 1,80,if(prog.type = 2,85,100)),
-"Auto-created psm",
+"Auto-processed - ISE",
 (CASE 
 	WHEN DAYOFWEEK(CURDATE()) = 3 THEN DATE_ADD(CURDATE(), INTERVAL 2 DAY)           
     WHEN DAYOFWEEK(CURDATE()) = 4 THEN DATE_ADD(CURDATE(), INTERVAL 1 DAY)           
@@ -131,7 +131,7 @@ if(prog.type = 1,80,if(prog.type = 2,85,100)),
     WHEN DAYOFWEEK(CURDATE()) = 2 THEN DATE_ADD(CURDATE(), INTERVAL 0 DAY)
 END),
 "999999",
-1
+0
 
 from smg_students st
 inner join progress_reports pr on st.studentID = pr.fk_student and pr.fk_reporttype = 1

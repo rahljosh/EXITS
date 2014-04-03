@@ -521,6 +521,56 @@
 </form>
 <!--- End of Incentive Trip --->
 
+<!--- Credits --->
+<form method="post" action="#CGI.SCRIPT_NAME#?curdoc=userPayment/index&action=credits">
+    <table width="100%" cellpadding="4" cellspacing="0" style="border:1px solid ##010066; margin-top:20px;">
+        <tr>
+            <td colspan="2" style="background-color:##010066; color:##FFFFFF; font-weight:bold;">Credits</td>
+        </tr>	
+		<!--- Display Error Message --->
+        <cfif URL.errorSection EQ 'credits'> 
+            <tr>
+                <td colspan="2">
+                    <!--- Form Errors --->
+                    <gui:displayFormErrors 
+                        formErrors="#SESSION.formErrors.GetCollection()#"
+                        messageType="divOnly"
+                        width="95%"
+                        />
+                </td>
+            </tr>                        
+        </cfif>
+        <tr>		
+            <td align="center"><br>
+            	Representative: 
+                <select name="agentID" class="xLargeField">
+                    <option value="0"></option>
+                    <cfloop query="qGetSplitPaymentReps">
+                        <option value="#qGetSplitPaymentReps.userid#">#qGetSplitPaymentReps.lastname#, #qGetSplitPaymentReps.firstName# (###qGetSplitPaymentReps.userid#)</option>
+                    </cfloop>
+                </select>
+                &nbsp;&nbsp;&nbsp;<strong>- OR -</strong>&nbsp;&nbsp;&nbsp; 
+                Student: 
+                <select name="studentID" class="xLargeField">
+                    <option value="0"></option>
+                    <cfloop query="qGetPlacedStudents">
+                        <option value="#qGetPlacedStudents.studentID#">#qGetPlacedStudents.familyLastName#, #qGetPlacedStudents.firstName# (###qGetPlacedStudents.studentID#)</option>
+                    </cfloop>
+                </select>
+                &nbsp;&nbsp;&nbsp;<strong>- OR -</strong>&nbsp;&nbsp;&nbsp; 
+                Payment ID: <input type="text" name="paymentID" size="4" class="smallField">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="checkbox" name="payments" value="1" />Credit Payments
+                <br><br>
+            </td>
+        </tr>
+        <tr style="background-color:##E2EFC7;">
+            <td align="center" colspan="2"><input name="submit" type="image" src="pics/next.gif" align="center" border="0" alt="Next"></td>
+        </tr>
+    </table>
+</form>
+<!--- End of Credits --->
+
 <table width="100%" cellpadding="4" cellspacing="0" style="border:1px solid ##010066; margin-top:20px;">
 	<tr>
 		<td colspan="2"><strong><a href="#CGI.SCRIPT_NAME#?curdoc=userPayment/index&action=maintenance">Supervising Payment Maintenance</a></strong></font></td>

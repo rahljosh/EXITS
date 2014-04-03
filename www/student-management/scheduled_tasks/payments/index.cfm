@@ -32,7 +32,7 @@
 			vErrors = vErrors & "*ISE Progress Report Payments*" & e.message;;	
 		}
 		try {
-			include "secondVisitPayments.cfm";
+			include "iseSecondVisitPayments.cfm";
 		} catch(any e) {
 			vErrors = vErrors & "*ISE Second Visit Payments*" & e.message;;	
 		}

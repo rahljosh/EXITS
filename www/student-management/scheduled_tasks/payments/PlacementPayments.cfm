@@ -18,7 +18,7 @@ SELECT DISTINCT
 	st.hostID,
 	0,
 	pmtrng.fk_paymentType,
-	"Placement",
+	"Auto-processed - ISE",
 	CASE
 		WHEN pmtrng.fk_paymenttype = 1 and sppmt.specialPaymentID is Null or sppmt.receivesPlacementFee then pmtrng.paymentAmount
 		WHEN pmtrng.fk_paymenttype = 1 and sppmt.receivesPlacementFee = 0 then 0
@@ -48,7 +48,7 @@ SELECT DISTINCT
 	"9999999",
 	CURRENT_DATE,
 	CURRENT_DATE,
-	1
+	0
 	
 
 FROM
