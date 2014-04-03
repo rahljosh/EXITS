@@ -20,8 +20,8 @@
             c.email AS candidateEmail,
             i.email AS intRepEmail,
             CASE 
-            	WHEN ADDDATE(p.startDate, INTERVAL 5 DAY) = CURDATE() THEN "WARNING"         
-                WHEN ADDDATE(p.startDate, INTERVAL 10 DAY) = CURDATE() THEN "NON-COMPLIANT"
+            	WHEN ADDDATE(c.startDate, INTERVAL 5 DAY) = CURDATE() THEN "WARNING"         
+                WHEN ADDDATE(c.startDate, INTERVAL 10 DAY) = CURDATE() THEN "NON-COMPLIANT"
                 ELSE ""        
             	END AS compliantStatus
      	FROM extra_candidates c
@@ -32,7 +32,7 @@
         AND c.watDateCheckedIn IS NULL
         AND c.applicationStatusID IN (0,11)
         AND c.companyID = 8
-        AND (ADDDATE(p.startDate, INTERVAL 5 DAY) = CURDATE() OR ADDDATE(p.startDate, INTERVAL 10 DAY) = CURDATE())
+        AND (ADDDATE(c.startDate, INTERVAL 5 DAY) = CURDATE() OR ADDDATE(c.startDate, INTERVAL 10 DAY) = CURDATE())
     </cfquery>
     
 </cfsilent>
