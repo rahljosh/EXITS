@@ -441,13 +441,38 @@
             </cfquery> 
             
             <cfquery name="getCurrStudInfo" datasource="MySQL">
-            SELECT ss.studentid AS stuid, ss.firstname, ss.familylastname AS lastname, ss.active AS stud_active, ss.hostID, ss.date_host_fam_approved, ss.host_fam_approved, ss.sevis_fee_paid_date, ss.intrep AS agentid, ss.programid, ss.companyid, ss.canceldate, ss.cancelreason, sp.programname, sp.type AS progType, sh.state AS hostState, sr.regionname, shist.datePISEmailed
-            FROM smg_students ss
-            LEFT JOIN smg_programs sp ON sp.programid = ss.programid
-            LEFT JOIN smg_hosts sh ON ss.hostid = sh.hostid
-            LEFT JOIN smg_regions sr ON sh.regionid = sr.regionid
-            LEFT JOIN smg_hostHistory shist ON shist.studentID = ss.studentID AND isActive = 1
-            WHERE ss.studentid =#student#
+            SELECT
+            	ss.studentid AS stuid, 
+                ss.firstname, 
+                ss.familylastname AS lastname, 
+                ss.active AS stud_active, 
+                ss.hostID, 
+                ss.date_host_fam_approved, 
+                ss.host_fam_approved, 
+                ss.sevis_fee_paid_date, 
+                ss.intrep AS agentid, 
+                ss.programid, 
+                ss.companyid, 
+                ss.canceldate, 
+                ss.cancelreason, 
+                sp.programname, 
+                sp.type AS progType, 
+                sh.state AS hostState, 
+                sr.regionname, 
+                shist.datePISEmailed,
+                shist.datePlaced
+            FROM
+            	smg_students ss
+            LEFT JOIN
+            	smg_programs sp ON sp.programid = ss.programid
+            LEFT JOIN
+            	smg_hosts sh ON ss.hostid = sh.hostid
+            LEFT JOIN
+            	smg_regions sr ON sh.regionid = sr.regionid
+            LEFT JOIN
+            	smg_hostHistory shist ON shist.studentID = ss.studentID AND isActive = 1
+            WHERE
+            	ss.studentid =#student#
             </cfquery>          
         </cfcase>
         <cfcase value="Work Program">
@@ -622,8 +647,8 @@
                 <td></td>
                 <td>
                 <strong>Placement status: </strong>
-                <cfif getCurrStudInfo.hostID GT 0>
-                    Placement approved on #DateFormat(getCurrStudInfo.date_host_fam_approved, 'mm/dd/yyyy')#.
+                <cfif getCurrStudInfo.datePlaced IS NOT ''>
+                    Placement approved on #DateFormat(getCurrStudInfo.datePlaced, 'mm/dd/yyyy')#.
     <cfelse>
                     Unplaced
                 </cfif></td>
@@ -637,7 +662,7 @@
                 <td></td>
                 <td>
                 <strong>Placed in <em>(State/ Region)</em>: </strong>
-                <cfif getCurrStudInfo.hostID GT 0>
+                <cfif getCurrStudInfo.datePlaced IS NOT ''>
                     #getCurrStudInfo.hostState# / #variables.regionPlaced#
     <cfelse>
                     Unplaced
@@ -791,7 +816,7 @@
             <cfparam name="studPlaced" default="">
             <cfparam name="sevisPaid" default="">
             <cfif form.chooseProgram EQ "High School">
-                <cfif getCurrStudInfo.datePISEmailed IS NOT "">
+                <cfif getCurrStudInfo.datePlaced IS NOT ''>
                     <cfset studPlaced = "Placed.">
                     <cfelse>
                         <cfset studPlaced = "Unplaced.">
@@ -848,7 +873,7 @@
         
     <cfswitch expression="#form.chooseProgram#">
         <cfcase value="High School">  
-            <cfif getCurrStudInfo.hostID GT 0>
+            <cfif getCurrStudInfo.datePlaced IS NOT ''>
             
             	<!--- smg vietnam gets charged 200 for visa denials --->
             	<cfif getCurrStudInfo.agentid EQ 123 AND getCurrStudInfo.cancelreason IS 'visa denial'>

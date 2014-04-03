@@ -185,7 +185,8 @@ smg_charges
 		su.12_month_ins,
 		su.10_month_ins,
 		su.5_month_ins,
-		su.accepts_sevis_fee
+		su.accepts_sevis_fee,
+        shist.datePlaced
     FROM
 		smg_students ss
     LEFT JOIN
@@ -196,13 +197,15 @@ smg_charges
 		smg_states sst ON ss.state_guarantee = sst.id
     LEFT JOIN
 		smg_users su ON ss.intrep = su.userid
+    LEFT JOIN
+        smg_hostHistory shist ON shist.studentID = ss.studentID AND isActive = 1
     WHERE
 		ss.active = 1
     AND
     	intrep != 0
     <cfif form.placed EQ 1>
     AND
-    	ss.hostID > 0
+    	shist.datePlaced != ''
     </cfif>
     AND
     	ss.app_current_status = 11
@@ -234,7 +237,7 @@ smg_charges
     ORDER BY
 		studentid
     </cfquery>
-   
+
     <cfloop query="getHSstud">
 		
 		<!--- check if programid charges have already been created and are still active --->
