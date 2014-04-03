@@ -3,6 +3,8 @@
 	<cfabort>
 </cfif>
 
+<cfsetting requesttimeout="99999">
+
 <cfquery datasource="#APPLICATION.DSN#">
 CREATE TEMPORARY TABLE IF NOT EXISTS bonusReps (
        SELECT bonus.placerepID, hhx.studentid, hhx.datePISEmailed, st.programID, hhx.hostID
