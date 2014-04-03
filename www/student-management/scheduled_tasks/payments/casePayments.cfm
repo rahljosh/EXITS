@@ -1,8 +1,3 @@
-<!--- Only run on thursday --->
-<cfif NOT ListFind("5", DayOfWeek(Now()))>
-	<cfabort>
-</cfif>
-
 <!---
 	Placement payments query
 	

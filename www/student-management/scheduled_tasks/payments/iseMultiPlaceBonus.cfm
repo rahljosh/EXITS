@@ -1,10 +1,3 @@
-<!--- Do not run on a weekend --->
-<cfif ListFind("1,7", DayOfWeek(Now()))>
-	<cfabort>
-</cfif>
-
-<cfsetting requesttimeout="99999">
-
 <cfquery datasource="#APPLICATION.DSN#">
 CREATE TEMPORARY TABLE IF NOT EXISTS bonusReps (
        SELECT bonus.placerepID, hhx.studentid, hhx.datePISEmailed, st.programID, hhx.hostID
