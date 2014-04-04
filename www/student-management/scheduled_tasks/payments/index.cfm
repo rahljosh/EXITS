@@ -24,22 +24,22 @@
 		try {
 			include "PlacementPayments.cfm";
 		} catch(any e) {
-			vErrors = vErrors & "*ISE Placement Payments*" & e.message;	
+			vErrors = vErrors & "<b>*ISE Placement Payments - " & e.message & ":</b> " & e.detail & "<br/>";	
 		}
 		try {
 			include "progressReportPayments.cfm";
 		} catch(any e) {
-			vErrors = vErrors & "*ISE Progress Report Payments*" & e.message;;	
+			vErrors = vErrors & "<b>*ISE Progress Report Payments - " & e.message & ":</b> " & e.detail & "<br/>";	
 		}
 		try {
 			include "iseSecondVisitPayments.cfm";
 		} catch(any e) {
-			vErrors = vErrors & "*ISE Second Visit Payments*" & e.message;;	
+			vErrors = vErrors & "<b>*ISE Second Visit Payments - " & e.message & ":</b> " & e.detail & "<br/>";
 		}
 		try {
 			include "iseMultiPlaceBonus.cfm";
 		} catch(any e) {
-			vErrors = vErrors & "*ISE Multi Placement Bonus Payments*" & e.message;;	
+			vErrors = vErrors & "<b>*ISE Multi Placement Bonus Payments - " & e.message & ":</b> " & e.detail & "<br/>";	
 		}
 	}
 	
@@ -48,24 +48,26 @@
 		try {
 			include "casePayments.cfm";
 		} catch(any e) {
-			vErrors = vErrors & "*CASE Payments*" & e.message;;	
+			vErrors = vErrors & "<b>*CASE Payments - " & e.message & ":</b> " & e.detail & "<br/>";
 		}
 		try {
 			include "caseMultiPlaceBonus.cfm";
 		} catch(any e) {
-			vErrors = vErrors & "*CASE Multi Placement Bonus Payments* & e.message;";	
+			vErrors = vErrors & "<b>*CASE Multi Placement Bonus Payments - " & e.message & ":</b> " & e.detail & "<br/>";	
 		}
+	}
+	
+	if (NOT LEN(vErrors)) {
+		vErrors = "All of the payment queries ran properly";	
 	}
 	
 </cfscript>
 
-<cfif LEN(vErrors)>
-	<cfinvoke component="nsmg.cfc.email" method="send_mail">
-        <cfinvokeargument name="email_to" value="jim@iseusa.org">
-        <cfinvokeargument name="email_subject" value="Payments Queries Errors">
-        <cfinvokeargument name="email_message" value="#vErrors#">
-        <cfinvokeargument name="email_from" value="support@iseusa.com">
-    </cfinvoke>
-</cfif>
+<cfinvoke component="nsmg.cfc.email" method="send_mail">
+    <cfinvokeargument name="email_to" value="jim@iseusa.org">
+    <cfinvokeargument name="email_subject" value="Payments Queries Errors">
+    <cfinvokeargument name="email_message" value="#vErrors#">
+    <cfinvokeargument name="email_from" value="support@iseusa.com">
+</cfinvoke>
 
 <p>Payments Scheduled task completed!</p>
