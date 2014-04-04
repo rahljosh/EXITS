@@ -340,7 +340,7 @@
                                             Alert Arrival Missing (Self-Placement) - Program Start Date: #DateFormat(qTotalPerIntlRep.startDate, 'mm/dd/yy')#                                                           
                                         </span>
                                     <cfelse>
-                                        n/a
+                                        Arrival Missing
                                     </cfif> 
                                 </span>
                             </td>
