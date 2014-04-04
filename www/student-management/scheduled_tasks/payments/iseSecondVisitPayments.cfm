@@ -13,7 +13,7 @@
         date,
         inputby,
         ispaid)
-	SELECT
+	SELECT DISTINCT
     	pr.fk_secondVisitrep,
     	st.companyID,
     	st.studentID,
