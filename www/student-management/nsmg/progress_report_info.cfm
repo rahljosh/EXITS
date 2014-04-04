@@ -649,10 +649,6 @@ function OpenLetter(url) {
     <td>#get_program.programname# (#get_program.programid#)</td>
   </tr>
   <tr>
-    <th align="right">Placing Representative:</th>
-    <td>#get_place_rep.firstname# #get_place_rep.lastname# (#get_place_rep.userid#)</td>
-  </tr>
-  <tr>
     <th align="right">Supervising Representative:</th>
     <td>#get_rep.firstname# #get_rep.lastname# (#get_rep.userid#)</td>
   </tr>
