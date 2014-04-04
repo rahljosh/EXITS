@@ -628,7 +628,6 @@
             <p>
                 <strong>Second Visit Representative::</strong> #get_second_rep.firstname# #get_second_rep.lastname# (###get_second_rep.userid#)<br />
                 <strong>Supervising Representative::</strong> #get_rep.firstname# #get_rep.lastname# (###get_rep.userid#)<br />
-                <strong>Placing Representative::</strong> #get_place_rep.firstname# #get_place_rep.lastname# (###get_place_rep.userid#)<br />
                 <strong>Regional Advisor:</strong> 
 					<cfif get_report.fk_ra_user EQ ''>
                         Reports Directly to Regional Director
