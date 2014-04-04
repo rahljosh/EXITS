@@ -1019,9 +1019,7 @@
                         <span class="note">(#vSetHostStatus#)</span>
                     </td>
                     <td align="center" #vSetRemainingDayCSS#>
-                        <cfif NOT isDate(ARGUMENTS.setQuery.datePlaced)>
-                        	Pending Placement Approval
-						<cfelseif NOT isDate(ARGUMENTS.setQuery.dateArrived)>
+                        <cfif NOT isDate(ARGUMENTS.setQuery.dateArrived)>
                             Missing Flight Information
 						<cfelseif ARGUMENTS.setQuery.dateArrived GT now()>
 							Not In Country - Arrives on #DateFormat(ARGUMENTS.setQuery.dateArrived, 'mm/dd/yy')#
@@ -1085,7 +1083,10 @@
                                     <input name="Submit" type="image" src="pics/plus.png" height="20" alt="Add New Report" border="0">
                                 </form>
                                 
-                            <cfelseif NOT VAL(ARGUMENTS.setQuery.hideReportID) AND isDate(ARGUMENTS.setQuery.dateStartWindowCompliance) AND isDate(ARGUMENTS.setQuery.datePlaced) AND ARGUMENTS.setQuery.dateStartWindowCompliance LT now()>
+                            <cfelseif 
+								NOT VAL(ARGUMENTS.setQuery.hideReportID) 
+								AND isDate(ARGUMENTS.setQuery.dateStartWindowCompliance)
+								AND ARGUMENTS.setQuery.dateStartWindowCompliance LT now()>
                             
                                 <!--- Add Report --->
                                 <form action="index.cfm?curdoc=forms/pr_add" method="post" style="display:inline;margin-right:10px;">

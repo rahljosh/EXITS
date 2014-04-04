@@ -2031,8 +2031,6 @@
                 </table>
                 
                 <!----****end student info---->
-             	
-                <p>* Approved Placements Only</p>
               
                 <!----footer of  student table---->
                 </div>
