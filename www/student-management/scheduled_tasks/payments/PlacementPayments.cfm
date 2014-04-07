@@ -6,8 +6,23 @@
 --->
 
 <cfquery datasource="#APPLICATION.DSN#">
-INSERT INTO smg_users_payments (agentID,companyID,studentID,programID,oldID,hostID,reportID,
-						paymenttype,transtype,amount,comment,date,inputby,dateCreated,dateUpdated,isPaid)
+	INSERT INTO smg_users_payments (
+    	agentID,
+        companyID,
+        studentID,
+        programID,
+        oldID,
+        hostID,
+        reportID,
+		paymenttype,
+        transtype,
+        amount,
+        comment,
+        date,
+        inputby,
+        dateCreated,
+        dateUpdated,
+        isPaid)
 
 SELECT DISTINCT
 	st.placerepID,
@@ -18,7 +33,7 @@ SELECT DISTINCT
 	st.hostID,
 	0,
 	pmtrng.fk_paymentType,
-	"Auto-processed - ISE",
+	"Placement",
 	CASE
 		WHEN pmtrng.fk_paymenttype = 1 and sppmt.specialPaymentID is Null or sppmt.receivesPlacementFee then pmtrng.paymentAmount
 		WHEN pmtrng.fk_paymenttype = 1 and sppmt.receivesPlacementFee = 0 then 0
