@@ -154,7 +154,7 @@
                     <td><b>Program</b></td>
                     <td><b>Type</b></td>
                     <td><b>Checks / Credits</b></td>
-                    <td><b>Credit</b></td>
+                    <td><b>Fees Earned</b></td>
                     <td><b>Balance</b></td>
                     <td><b>Comment</b></td>
                 </tr>
