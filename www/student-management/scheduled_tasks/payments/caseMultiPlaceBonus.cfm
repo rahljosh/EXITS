@@ -1,6 +1,5 @@
-<cfquery datasource="#APPLICATION.DSN#">
-CREATE TEMPORARY TABLE IF NOT EXISTS bonusReps (
-       SELECT bonus.placerepID, hhx.studentid, hhx.datePISEmailed, st.programID, hhx.hostID
+<cfquery name="bonusReps" datasource="#APPLICATION.DSN#">
+	SELECT bonus.placerepID, hhx.studentid, hhx.datePISEmailed, st.programID, hhx.hostID, 0 AS repCount
        FROM (
          SELECT DISTINCT hh.placerepID
          FROM smg_students st 
@@ -53,73 +52,82 @@ CREATE TEMPORARY TABLE IF NOT EXISTS bonusReps (
               
               ) AS hhX ON bonus.placerepID = hhX.placerepID
 	INNER JOIN smg_students st on hhX.studentID = st.studentID and hhX.isactive
-      ORDER BY bonus.placerepID, hhx.datePISEmailed)
+      ORDER BY bonus.placerepID, hhx.datePISEmailed
 </cfquery>
 
-<cfquery datasource="#APPLICATION.DSN#">
-SET @i = 0
-</cfquery>
+<cfscript>
+	i = 0;
+	previousRep = 0;
+	
+	for(j=1; j LTE bonusReps.recordCount; j = j + 1) {
+		if (bonusReps.placeRepID[j] EQ previousRep OR previousRep EQ 0) {
+			i = i + 1;
+			t = QuerySetCell(bonusReps,'repCount',i,j);
+		} else {
+			i = 1;
+			t = QuerySetCell(bonusReps,'repCount',i,j);
+		}
+		previousRep = bonusReps.placeRepID[j];
+	}
+</cfscript>
 
-<cfquery datasource="#APPLICATION.DSN#">
-SET @previousRep = 0
-</cfquery>
-
-<cfquery datasource="#APPLICATION.DSN#">
-CREATE TEMPORARY TABLE IF NOT EXISTS numberedBonusReps (
-SELECT br.*, CASE WHEN br.placerepID = @previousRep OR @previousRep = 0 THEN @i := @i+1 ELSE @i := 1 END AS repCount, @previousRep := br.placerepID
-FROM bonusReps br )
-</cfquery>
-
-<cfquery datasource="#APPLICATION.DSN#">
-CREATE TEMPORARY TABLE IF NOT EXISTS PISDate (
-SELECT placerepID,max(datePISEmailed) AS maxPISDate from numberedBonusReps where repCount < 6 group by placeRepID)
-</cfquery>
-
-<cfquery datasource="#APPLICATION.DSN#">
-INSERT INTO smg_users_payments (agentID,companyID,studentID,programID,oldID,hostID,
-						paymenttype,transtype,amount,comment,date,inputby,dateCreated,dateUpdated,isPaid)
-
-SELECT distinct
-	nbr.placerepID,
-	10,
-	nbr.studentID,
-	nbr.programID,
-	0,
-	nbr.hostID,
-	pmtrng.fk_paymenttype,
-	"Placement",
-	pmtrng.paymentAmount,
-	"Auto processed - CASE",
-	CASE 
-		WHEN DAYOFWEEK(CURDATE()) = 3 THEN DATE_ADD(CURDATE(), INTERVAL 2 DAY)           
-		WHEN DAYOFWEEK(CURDATE()) = 4 THEN DATE_ADD(CURDATE(), INTERVAL 1 DAY)           
-		WHEN DAYOFWEEK(CURDATE()) = 5 THEN DATE_ADD(CURDATE(), INTERVAL 0 DAY)
-		WHEN DAYOFWEEK(CURDATE()) = 6 THEN DATE_ADD(CURDATE(), INTERVAL 3 DAY)  
-		WHEN DAYOFWEEK(CURDATE()) = 7 THEN DATE_ADD(CURDATE(), INTERVAL 2 DAY)  
-		WHEN DAYOFWEEK(CURDATE()) = 1 THEN DATE_ADD(CURDATE(), INTERVAL 1 DAY)  
-		WHEN DAYOFWEEK(CURDATE()) = 2 THEN DATE_ADD(CURDATE(), INTERVAL 0 DAY)
-	END,
-	"9999999",
-	CURRENT_DATE,
-	CURRENT_DATE,
-	0 
-
-FROM 
-	numberedBonusReps nbr
-	INNER JOIN PISDate PIS ON nbr.placerepID = PIS.placeRepID
-	INNER JOIN smg_users_payments_ranges pmtrng ON nbr.programID = pmtrng.fk_programID and pmtrng.fk_paymenttype in (9,15,17)
-WHERE nbr.repcount < 6
-	  and PIS.maxPISDate >= pmtrng.paymentStartDate and PIS.maxPISDate <= pmtrng.paymentEndDate
-</cfquery>
-
-<cfquery datasource="#APPLICATION.DSN#">
-DROP TEMPORARY TABLE IF EXISTS bonusReps
-</cfquery>
-
-<cfquery datasource="#APPLICATION.DSN#">
-DROP TEMPORARY TABLE IF EXISTS numberedBonusReps
-</cfquery>
-
-<cfquery datasource="#APPLICATION.DSN#">
-DROP TEMPORARY TABLE IF EXISTS PISDate
-</cfquery>
+<cfloop query="bonusReps">
+	<cfquery name="PISDate" dbtype="query">
+        SELECT placerepID,max(datePISEmailed) AS maxPISDate 
+        FROM bonusReps 
+        WHERE repCount < 6
+        AND placeRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#placeRepID#">
+        GROUP BY placeRepID
+    </cfquery>
+	<cfif bonusReps.repCount LT 6 AND VAL(PISDate.recordCount)>
+    
+        <cfquery name="results" datasource="#APPLICATION.DSN#">
+        	INSERT INTO smg_users_payments(
+            	agentID,
+                companyID,
+                studentID,
+                programID,
+                oldID,
+                hostID,
+                paymenttype,
+                transtype,
+                amount,
+                comment,
+                date,
+                inputby,
+                dateCreated,
+                dateUpdated,
+                isPaid)
+     		SELECT DISTINCT
+            	<cfqueryparam cfsqltype="cf_sql_integer" value="#placerepID#">,
+				10, 
+				<cfqueryparam cfsqltype="cf_sql_integer" value="#studentID#">,
+				<cfqueryparam cfsqltype="cf_sql_integer" value="#programID#">,
+				0, 
+				<cfqueryparam cfsqltype="cf_sql_integer" value="#hostID#">,
+				pmtrng.fk_paymenttype,
+				"Placement", 
+				pmtrng.paymentAmount,
+				"Auto-processed - CASE",
+                CASE 
+                    WHEN DAYOFWEEK(CURDATE()) = 3 THEN DATE_ADD(CURDATE(), INTERVAL 2 DAY)           
+                    WHEN DAYOFWEEK(CURDATE()) = 4 THEN DATE_ADD(CURDATE(), INTERVAL 1 DAY)           
+                    WHEN DAYOFWEEK(CURDATE()) = 5 THEN DATE_ADD(CURDATE(), INTERVAL 0 DAY)
+                    WHEN DAYOFWEEK(CURDATE()) = 6 THEN DATE_ADD(CURDATE(), INTERVAL 3 DAY)  
+                    WHEN DAYOFWEEK(CURDATE()) = 7 THEN DATE_ADD(CURDATE(), INTERVAL 2 DAY)  
+                    WHEN DAYOFWEEK(CURDATE()) = 1 THEN DATE_ADD(CURDATE(), INTERVAL 1 DAY)  
+                    WHEN DAYOFWEEK(CURDATE()) = 2 THEN DATE_ADD(CURDATE(), INTERVAL 0 DAY)
+                	END, 
+                "9999999", 
+                CURRENT_DATE,
+                CURRENT_DATE,
+                0
+         	FROM smg_users_payments_ranges pmtrng
+            WHERE pmtrng.fk_programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#programID#">
+            AND pmtrng.fk_paymenttype IN (9,15,17)
+            AND pmtrng.paymentStartDate < <cfqueryparam cfsqltype="cf_sql_date" value="#PISDate.maxPISDate#">
+            AND pmtrng.paymentEndDate > <cfqueryparam cfsqltype="cf_sql_date" value="#PISDate.maxPISDate#">
+        </cfquery>
+        
+    </cfif>
+</cfloop>
