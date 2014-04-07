@@ -24,7 +24,7 @@ SELECT DISTINCT
 	st.hostID, 
 	0,
 	pmtrng.fk_paymentType, 
-	"Auto-processed - CASE", 
+	"Placement", 
 	CASE 
 		WHEN pmtrng.fk_paymenttype = 1 and sppmt.specialPaymentID is Null or sppmt.receivesPlacementFee then pmtrng.paymentAmount
 		WHEN pmtrng.fk_paymenttype = 1 and sppmt.receivesPlacementFee = 0 then 0
