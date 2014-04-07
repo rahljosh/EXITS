@@ -67,9 +67,7 @@
         	* 
         FROM 
         	smg_schools
-        WHERE 
-        	state = <cfqueryparam cfsqltype="cf_sql_varchar" value= "#qGetHostFamilyInfo.state#"> 
-        AND	
+        WHERE 	
         	city != <cfqueryparam cfsqltype="cf_sql_varchar" value= "#qGetHostFamilyInfo.city#">
         ORDER BY 
         	city, 
