@@ -17,6 +17,7 @@
 
     <!--- Param URL Variables --->
     <cfparam name="URL.view" default="0">
+    <cfparam name="URL.delete" default="0">
     <cfparam name="URL.studentID" default="0">
     <cfparam name="URL.hostID" default="0">
     <cfparam name="URL.documentType" default="0">
@@ -58,6 +59,10 @@
 			if ( NOT LEN(FORM.fileData) ) {
                 SESSION.formErrors.Add("Please select a file to upload.");
             }
+		}
+		
+		if (VAL(URL.delete)) {
+			APPLICATION.CFC.UDF.deleteFromVirtualFolder(ID=VAL(qGetVFDocuments.vfID));	
 		}
 		
 	</cfscript>
@@ -130,13 +135,16 @@
 
 			<!--- Close Window --->
             <cfif VAL(FORM.submitted) AND NOT SESSION.formErrors.length()>
-            
                 <script language="javascript">
                     // Close Window After 1.5 Seconds
                     setTimeout(function() { parent.$.fn.colorbox.close(); }, 1500);
                 </script>
-            
-            </cfif>
+            <cfelseif VAL(URL.delete)>
+				<script type="text/javascript">
+                    // Close Window After immediately
+                    setTimeout(function() { parent.$.fn.colorbox.close(); }, 1);
+                </script> 
+            </cfif> 
 
 			<!--- Upload Form --->        
 			<form action="#CGI.SCRIPT_NAME#" enctype="multipart/form-data" method="post">        
