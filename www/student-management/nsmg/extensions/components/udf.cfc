@@ -1112,6 +1112,18 @@
         
     </cffunction>
     
+    <!--- Delete from virtual folder --->
+    <cffunction name="deleteFromVirtualFolder" access="public" returntype="void">
+    	<cfargument name="ID" required="yes" hint="ID is required">
+        
+        <cfquery datasource="#APPLICATION.DSN#">
+        	UPDATE virtualFolder
+            SET isDeleted = 1
+            WHERE vfID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.ID)#">
+        </cfquery>
+        
+    </cffunction>
+    
     
     <!--- Send Compliance Log Email --->
     <cffunction name="sendComplianceLog" access="public" returntype="string">

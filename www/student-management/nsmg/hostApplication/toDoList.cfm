@@ -766,38 +766,59 @@
                                         	This section can be uploaded after the application has been approved by Headquarters.
                                         <cfelse>
                                             <a href="hostApplication/hostOrientation.cfm?hostID=#qGetHostInfo.hostID#&seasonID=#vSelectedSeason#" class="jQueryModalRefresh" style="display:block;">
-                                                [ Upload Host Orientation ]
+                                                [ Upload ]
                                             </a>
                                        	</cfif>
                                     <cfelse>
-                                        <a href="hostApplication/hostOrientation.cfm?hostID=#qGetHostInfo.hostID#&seasonID=#vSelectedSeason#&view=1" class="jQueryModalRefresh" style="display:block;">
-                                            [ View Host Orientation ]
-                                        </a>
+                                    	<div>
+                                            <a href="hostApplication/hostOrientation.cfm?hostID=#qGetHostInfo.hostID#&seasonID=#vSelectedSeason#&view=1" class="jQueryModalRefresh">
+                                                [ View ]
+                                            </a>
+                                            <cfif CLIENT.userType LTE 4>
+                                                <a href="hostApplication/hostOrientation.cfm?hostID=#qGetHostInfo.hostID#&seasonID=#vSelectedSeason#&delete=1" class="jQueryModalRefresh">
+                                                    [ Delete ]
+                                                </a>
+                                            </cfif>
+                                        </div>
                                     </cfif>  
 
 							  	<!--- School Acceptance --->
                               	<cfelseif qGetApprovalHistory.ID EQ 15>
                                     <cfif NOT qGetSchoolAcceptance.recordCount>
                                         <a href="hostApplication/virtualFolderDocuments.cfm?studentID=#studentID#&hostID=#qGetHostInfo.hostID#&documentType=47" title="Click to view item" class="jQueryModalRefresh" style="display:block;">
-                                        	[ Upload School Acceptance Letter ]
+                                        	[ Upload ]
                                      	</a>
                                     <!--- Print View Default --->
                                     <cfelse>
-                                        <a href="hostApplication/virtualFolderDocuments.cfm?studentID=#studentID#&hostID=#qGetHostInfo.hostID#&documentType=47&view=1" class="jQueryModalRefresh" style="display:block;">
-                                        	[ View School Acceptance Letter ]
-                                      	</a>
+                                    	<div>
+                                            <a href="hostApplication/virtualFolderDocuments.cfm?studentID=#studentID#&hostID=#qGetHostInfo.hostID#&documentType=47&view=1" class="jQueryModalRefresh">
+                                                [ View ]
+                                            </a>
+                                            <cfif CLIENT.userType LTE 4>
+                                                <a href="hostApplication/virtualFolderDocuments.cfm?studentID=#studentID#&hostID=#qGetHostInfo.hostID#&documentType=47&delete=1" class="jQueryModalRefresh">
+                                                    [ Delete ]
+                                                </a>
+                                          	</cfif>
+                                      	</div>
                                     </cfif>
                                 
                                 <!--- Student Orientation --->
                               	<cfelseif qGetApprovalHistory.ID EQ 20>
                                 	<cfif NOT qGetStudentOrientation.recordCount>
                                         <a href="hostApplication/virtualFolderDocuments.cfm?studentID=#studentID#&documentType=49" class="jQueryModalRefresh" style="display:block;">
-                                            [ Upload Student Orientation ]
+                                            [ Upload ]
                                         </a>
                                     <cfelse>
-                                        <a href="hostApplication/virtualFolderDocuments.cfm?studentID=#studentID#&documentType=49&view=1" class="jQueryModalRefresh" style="display:block;">
-                                            [ View Student Orientation ]
-                                        </a>
+                                    	<div>
+                                            <a href="hostApplication/virtualFolderDocuments.cfm?studentID=#studentID#&documentType=49&view=1" class="jQueryModalRefresh">
+                                                [ View ]
+                                            </a>
+                                            <cfif CLIENT.userType LTE 4>
+                                                <a href="hostApplication/virtualFolderDocuments.cfm?studentID=#studentID#&documentType=49&delete=1" class="jQueryModalRefresh">
+                                                    [ Delete ]
+                                                </a>
+                                          	</cfif>
+                                      	</div>
                                     </cfif>
                                     
                               	</cfif>
