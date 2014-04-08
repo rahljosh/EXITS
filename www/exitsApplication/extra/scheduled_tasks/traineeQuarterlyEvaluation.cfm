@@ -121,9 +121,9 @@
             
         <!--- Include candidates that have started the program for at least 2 months --->
         AND
-        	CURDATE() >= DATE_ADD(ec.ds2019_startDate, INTERVAL 2 MONTH) 
+        	<cfqueryparam cfsqltype="cf_sql_integer" value="#vMonthEvaluation#"> >= MONTH(DATE_ADD(ec.ds2019_startDate, INTERVAL 2 MONTH))
         AND 
-            CURDATE() <= DATE_ADD(ec.ds2019_endDate, INTERVAL 2 MONTH)
+            <cfqueryparam cfsqltype="cf_sql_integer" value="#vMonthEvaluation#"> <= MONTH(DATE_ADD(ec.ds2019_startDate, INTERVAL 2 MONTH))
             
 		<!--- Evaluation not received --->
         AND
