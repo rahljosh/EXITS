@@ -12,7 +12,8 @@
         comment,
         date,
         inputby,
-        ispaid)
+        ispaid,
+        dateCreated)
 	SELECT DISTINCT
     	pr.fk_secondVisitrep,
     	st.companyID,
@@ -34,7 +35,8 @@
             WHEN DAYOFWEEK(CURDATE()) = 2 THEN DATE_ADD(CURDATE(), INTERVAL 0 DAY)
         END, 
         "999999", 
-        0 
+        0,
+        CURRENT_DATE
    	FROM smg_students st
     INNER JOIN smg_hosthistory hh on st.studentID = hh.studentID
     INNER JOIN smg_hosts hst on hh.hostID = hst.hostID
