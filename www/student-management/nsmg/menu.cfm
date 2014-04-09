@@ -336,6 +336,7 @@
                             <li><a href="index.cfm?curdoc=tours/mpdtours">Students</a></li>
                             <li><a href="index.cfm?curdoc=tours/student-tours/index">Tours</a></li>
                             <li><a href="index.cfm?curdoc=tours/MPDReports/index">Reports</a></li>
+                            <li><a href="index.cfm?curdoc=tours/permissionForm">Permission</a></li>
                         </ul>
                     </li>
                 </cfif>
