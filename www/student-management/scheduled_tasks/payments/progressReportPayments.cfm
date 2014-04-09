@@ -8,7 +8,7 @@
 
 <cfquery datasource="#APPLICATION.DSN#">
 insert into smg_users_payments (agentID,companyID,studentID,programID,oldID,hostID,paymenttype,
-								transtype,amount,comment,date,inputby,ispaid)
+								transtype,amount,comment,date,inputby,ispaid,dateCreated)
 
 select distinct
 pr.fk_sr_user,
@@ -44,7 +44,8 @@ if(prog.type = 1,40,if(prog.type = 2,42.5,50)),
     WHEN DAYOFWEEK(CURDATE()) = 2 THEN DATE_ADD(CURDATE(), INTERVAL 0 DAY)
 END),
 "999999",
-0
+0,
+CURRENT_DATE
 
 from smg_students st
 INNER JOIN progress_reports pr ON st.studentID = pr.fk_student AND pr.fk_reporttype = 1
@@ -95,7 +96,7 @@ and (
 </cfquery>
 
 <cfquery datasource="#APPLICATION.DSN#">
-insert into smg_users_payments (agentID,companyID,studentID,programID,oldID,hostID,paymenttype,transtype,amount,comment,date,inputby,ispaid)
+insert into smg_users_payments (agentID,companyID,studentID,programID,oldID,hostID,paymenttype,transtype,amount,comment,date,inputby,ispaid,dateCreated)
 
 select distinct
 pr.fk_sr_user,
@@ -131,7 +132,8 @@ if(prog.type = 1,80,if(prog.type = 2,85,100)),
     WHEN DAYOFWEEK(CURDATE()) = 2 THEN DATE_ADD(CURDATE(), INTERVAL 0 DAY)
 END),
 "999999",
-0
+0,
+CURRENT_DATE
 
 from smg_students st
 inner join progress_reports pr on st.studentID = pr.fk_student and pr.fk_reporttype = 1
