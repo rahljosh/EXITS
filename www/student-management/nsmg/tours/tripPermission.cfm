@@ -535,7 +535,7 @@
                         <td>
                         	<cfif VAL(FORM.blank)>
                             	<cfif VAL(FORM.tour_ID)>
-                                	#qGetTour(qGetRegistrationInfo.tour_price)#
+                                	#DollarFormat(qGetTour.tour_price)#
                                 <cfelse>
                                 	<cfif LEN(FORM.customTourPrice)>#DollarFormat(FORM.customTourPrice)#</cfif>
                               	</cfif>
