@@ -106,7 +106,7 @@
                 INNER JOIN
                 	extra_flight_information efi ON ec.candidateID = efi.candidateID
                     	AND
-                        	efi.dateUpdated >= DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL -25 HOUR)    
+                        	efi.dateUpdated >= DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL -1450 MINUTE)    
 				INNER JOIN
                 	smg_users u ON u.userID = ec.intRep
 				LEFT JOIN                 

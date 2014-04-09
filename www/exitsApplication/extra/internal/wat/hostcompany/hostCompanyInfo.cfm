@@ -520,7 +520,7 @@
                         pickUpContactEmail = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pickUpContactEmail#">,
                         pickUpContactHours = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pickUpContactHours#">,
                         arrivalPickUpDays = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.arrivalPickUpDays#">,
-                        arrivalPickUpCost = <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(FORM.arrivalPickUpCost)#">,
+                        arrivalPickUpCost = <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(ReReplace(FORM.arrivalPickUpCost, '[^\d.]', '','ALL'))#">,
                         pickUpNotes = <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#FORM.pickUpNotes#">,
                         warningStatus = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.warningStatus)#">,
                         warningNotes = <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#FORM.warningNotes#">
@@ -1064,7 +1064,7 @@
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pickUpContactEmail#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pickUpContactHours#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.arrivalPickUpDays#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(FORM.arrivalPickUpCost)#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(ReReplace(FORM.arrivalPickUpCost, '[^\d.]', '','ALL'))#">,
                         <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#FORM.pickUpNotes#">,
                         <!--- Record Information --->
                         <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
