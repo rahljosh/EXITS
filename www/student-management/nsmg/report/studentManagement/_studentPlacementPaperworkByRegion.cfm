@@ -139,7 +139,7 @@
                 	*
                 FROM
                 	( 
-                        SELECT 
+                        SELECT DISTINCT
                             s.studentID,
                             s.firstName,
                             s.familyLastName,
