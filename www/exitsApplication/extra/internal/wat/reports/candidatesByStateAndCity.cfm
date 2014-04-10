@@ -67,7 +67,7 @@
             AND
                 eir.subject = "Terminated"
       	WHERE
-        	c.status != <cfqueryparam cfsqltype="cf_sql_varchar" value="cancelled">
+        	c.status != <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
         <cfif FORM.studentStatus NEQ 'All'>
         	AND
             	c.status = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentStatus#">
