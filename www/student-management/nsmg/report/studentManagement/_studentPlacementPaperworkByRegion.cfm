@@ -189,6 +189,7 @@
                             h.familyLastName as hostFamilyLastName,
                             h.fatherFirstName,
                             h.motherFirstName,
+                            shas.applicationStatusID,
                             <!--- Get Total of Children at home --->
                             (
                                 SELECT 
@@ -232,6 +233,8 @@
                                 p.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> ) 
                         INNER JOIN
                             smg_hosts h ON h.hostID = sh.hostID
+                      	LEFT JOIN smg_host_app_season shas ON shas.hostID = h.hostID
+                            AND shas.seasonID >= (SELECT seasonID FROM smg_programs WHERE programID = s.programID LIMIT 1)
                         INNER JOIN
                             smg_regions r ON r.regionID = s.regionAssigned
                             <!--- Region --->
@@ -883,124 +886,6 @@
                         </cfscript>
                         
                         
-                        <!----
-						
-                                // Required for Single Parents 
-                                if ( vTotalFamilyMembers EQ 1 ) {  
-                                    
-									// Single Person Placement Verification
-									if ( NOT isDate(qGetStudentsInRegion.doc_single_place_auth) ) {
-                                    	vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Single Person Placement Verification &nbsp; &nbsp;", " &nbsp; &nbsp;");
-                                	}
-									
-									// Date of S.P. Reference Check 1
-									if ( NOT isDate(qGetStudentsInRegion.doc_single_ref_check1) ) {
-										vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Ref Check (Single) &nbsp; &nbsp;", " &nbsp; &nbsp;");
-									}
-
-									// Date of S.P. Reference Check 2
-                                    if ( NOT isDate(qGetStudentsInRegion.doc_single_ref_check2) ) {
-                                        vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "2nd Ref Check (Single) &nbsp; &nbsp;", " &nbsp; &nbsp;");
-                                    }
-									
-                                }
-
-                                // Host App Page 1
-                                if ( NOT isDate(qGetStudentsInRegion.doc_host_app_page1_date) ) {
-                                    vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Host App Page 1 &nbsp; &nbsp;", " &nbsp; &nbsp;");
-                                }
-
-                                // Host App Page 2
-                                if ( NOT isDate(qGetStudentsInRegion.doc_host_app_page2_date) ) {
-                                    vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Host App Page 2 &nbsp; &nbsp;", " &nbsp; &nbsp;");
-                                }
-								
-                                // Host Family Letter
-                                if ( NOT isDate(qGetStudentsInRegion.doc_letter_rec_date) ) {
-                                    vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "HF Letter &nbsp; &nbsp;", " &nbsp; &nbsp;");
-                                }
-								
-                                // Host Family Rules Form
-                                if ( NOT isDate(qGetStudentsInRegion.doc_rules_rec_date) ) {
-                                    vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "HF Rules &nbsp; &nbsp;", " &nbsp; &nbsp;");
-                                }
-								
-                                // Host Family Rules Date Signed
-                                if ( NOT isDate(qGetStudentsInRegion.doc_rules_sign_date) ) {
-                                    vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "HF Rules Date Signed &nbsp; &nbsp;", " &nbsp; &nbsp;");
-                                }		
-								
-                                // Family Photo
-                                if ( NOT isDate(qGetStudentsInRegion.doc_photos_rec_date) ) {
-                                    vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Family Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
-                                }
-
-								// Student Bedroom Photo
-								if ( NOT isDate(qGetStudentsInRegion.doc_bedroom_photo) ) {
-									vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Student Bedroom Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
-								}
-
-								// Student Bathroom Photo
-								if ( NOT isDate(qGetStudentsInRegion.doc_bathroom_photo) ) {
-									vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Student Bathroom Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
-								}
-
-								// Kitchen Photo
-								if ( NOT isDate(qGetStudentsInRegion.doc_kitchen_photo) ) {
-									vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Kitchen Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
-								}
-
-								// Living Room Photo
-								if ( NOT isDate(qGetStudentsInRegion.doc_living_room_photo) ) {
-									vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Living Room Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
-								}
-								
-								// Outside Photo
-								if ( NOT isDate(qGetStudentsInRegion.doc_outside_photo) ) {
-									vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Outside Photo &nbsp; &nbsp;", " &nbsp; &nbsp;");
-								}
-
-                                // School & Community Profile Form
-                                if ( NOT isDate(qGetStudentsInRegion.doc_school_profile_rec) ) {
-                                    vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "School & Community Profile &nbsp; &nbsp;", " &nbsp; &nbsp;");
-                                }
-								
-                                // Confidential Host Family Visit Form
-                                if ( NOT isDate(qGetStudentsInRegion.doc_conf_host_rec) ) {
-                                    vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Visit Form &nbsp; &nbsp;", " &nbsp; &nbsp;");
-                                }
-								
-                                // Confidential Host Family Visit Form - Date of Visit
-                                if ( NOT isDate(qGetStudentsInRegion.doc_date_of_visit) ) {
-                                    vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Date of Visit &nbsp; &nbsp;", " &nbsp; &nbsp;");
-                                }
-								
-                                // Reference Form 1
-                                if ( NOT isDate(qGetStudentsInRegion.doc_ref_form_1) ) {
-                                    vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Ref. 1 &nbsp; &nbsp;", " &nbsp; &nbsp;");
-                                }
-								
-                                // Reference Form 2
-                                if ( NOT isDate(qGetStudentsInRegion.doc_ref_form_2) ) {
-                                    vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Ref. 2 &nbsp; &nbsp;", " &nbsp; &nbsp;");
-                                }
-								
-								// Income Verification Form
-								if ( NOT isDate(qGetStudentsInRegion.doc_income_ver_date) ) {
-									vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "Income Verification &nbsp; &nbsp;", " &nbsp; &nbsp;");
-								}
-								
-								// 2nd Confidential Host Family Visit Form
-								if ( NOT isDate(qGetStudentsInRegion.pr_ny_approved_date) ) { 
-									vHostAppsDocsMessage = ListAppend(vHostAppsDocsMessage, "2nd Conf. Host Visit &nbsp; &nbsp;", " &nbsp; &nbsp;");
-								}
-								// Class Schedule
-                                if ( NOT isDate(qGetStudentsInRegion.doc_class_schedule) ) {
-                                    vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Class Schedule &nbsp; &nbsp;", " &nbsp; &nbsp;");
-                                }
-								---->
-                        
-                        
                         <!--- Loop Through Query --->
                         <cfoutput>
                             
@@ -1031,7 +916,7 @@
                                 
                                 vTotalFamilyMembers = vIsFatherHome + vIsMotherHome + qGetStudentsInRegion.totalChildrenAtHome;
 								// Date Host App Received
-                                if ( NOT isDate(qGetStudentsInRegion.dateReceived) ) {
+                                if ( qGetStudentsInRegion.applicationStatusID GT 3 ) {
                                     vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Host Application &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }	
 								
