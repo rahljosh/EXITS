@@ -235,7 +235,7 @@
                             smg_hosts h ON h.hostID = sh.hostID
                       	LEFT JOIN smg_host_app_season shas ON shas.hostID = h.hostID
                             AND shas.seasonID >= (SELECT seasonID FROM smg_programs WHERE programID = s.programID LIMIT 1)
-                            AND applicationStatusID <= 3
+                            AND shas.applicationStatusID <= 3
                         INNER JOIN
                             smg_regions r ON r.regionID = s.regionAssigned
                             <!--- Region --->
