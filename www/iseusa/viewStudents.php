@@ -139,6 +139,7 @@ if(!isset($_COOKIE['iseLead']))
 		echo '<td>';
 		echo '<span class="picIMG" style="float:right; margin:10px;"><img src="http://ise.exitsapplication.com/nsmg/pics/flags/'.$fieldData->countryresident.'.jpg" width="133"></span>';
 		echo '<strong>Name: </strong>'.$fieldData->firstname.'<br>';
+		echo '<strong>ID: </strong>'.$fieldData->studentid.'-01<br>';
 		echo '<strong>Birthday: </strong> '.date("M j, Y", strtotime($fieldData->dob)).'<br />';
 		echo '<strong>Home Country: </strong>'.$fieldData->countryname.'<br />';
 		echo '<strong>Religion: </strong>'.$fieldData->religionname.'<br /><br />';
