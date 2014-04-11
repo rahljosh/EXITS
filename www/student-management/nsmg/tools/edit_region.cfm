@@ -43,6 +43,16 @@
 			</cfloop>
 		</select></td>
 	</tr>
+    	<Tr>
+        	<td>
+    <h3>Title: </h3></td><td>
+		<select name="title">
+		
+			
+				<option value="Manager" <cfif get_region_info.title EQ 'Manager'>selected</cfif>>Manager</option>
+			<option value="Director" <cfif get_region_info.title EQ 'Director'>selected</cfif>>Director</option>
+		</select></td>
+	</tr>
 	<tr>
 		<td><h3>Status: </h3></td><td>
 			<cfif get_Region_info.active is '1'><input type="radio" name="status" value="1" checked>Active<cfelse><input type="radio" name="status" value="1">Active</cfif>&nbsp; &nbsp;
