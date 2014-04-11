@@ -4,6 +4,7 @@
 <cfquery name="update_companies" datasource="MySQL">
 update smg_regions
 		set regionfacilitator = #form.facilitator#,
+        title = '#form.title#',
 			regional_guarantee = #form.regional_guarantee#,
 			active = #form.status#,
             url = '#form.website#',
