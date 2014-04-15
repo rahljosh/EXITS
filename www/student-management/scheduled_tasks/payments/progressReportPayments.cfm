@@ -7,45 +7,58 @@
 --->
 
 <cfquery datasource="#APPLICATION.DSN#">
-insert into smg_users_payments (agentID,companyID,studentID,programID,oldID,hostID,paymenttype,
-								transtype,amount,comment,date,inputby,ispaid,dateCreated)
-
-select distinct
-pr.fk_sr_user,
-st.companyID,
-st.studentID,
-st.programID,
-0,
-st.hostID,
-(CASE
-	when pr.pr_month_of_report = 1 then 31
-	when pr.pr_month_of_report = 2 then 5
-	when pr.pr_month_of_report = 3 then 32
-	when pr.pr_month_of_report = 4 then 6
-	when pr.pr_month_of_report = 5 then 33
-	when pr.pr_month_of_report = 6 then 7
-	when pr.pr_month_of_report = 7 then 34
-	when pr.pr_month_of_report = 8 then 8
-	when pr.pr_month_of_report = 9 then 29
-	when pr.pr_month_of_report = 10 then 3
-	when pr.pr_month_of_report = 11 then 30
-	when pr.pr_month_of_report = 12 then 4
-end),
-"Supervision",
-if(prog.type = 1,40,if(prog.type = 2,42.5,50)),
-"Auto-processed - ISE",
-(CASE 
-	WHEN DAYOFWEEK(CURDATE()) = 3 THEN DATE_ADD(CURDATE(), INTERVAL 2 DAY)           
-    WHEN DAYOFWEEK(CURDATE()) = 4 THEN DATE_ADD(CURDATE(), INTERVAL 1 DAY)           
-    WHEN DAYOFWEEK(CURDATE()) = 5 THEN DATE_ADD(CURDATE(), INTERVAL 0 DAY)
-    WHEN DAYOFWEEK(CURDATE()) = 6 THEN DATE_ADD(CURDATE(), INTERVAL 3 DAY)  
-    WHEN DAYOFWEEK(CURDATE()) = 7 THEN DATE_ADD(CURDATE(), INTERVAL 2 DAY)  
-    WHEN DAYOFWEEK(CURDATE()) = 1 THEN DATE_ADD(CURDATE(), INTERVAL 1 DAY)  
-    WHEN DAYOFWEEK(CURDATE()) = 2 THEN DATE_ADD(CURDATE(), INTERVAL 0 DAY)
-END),
-"999999",
-0,
-CURRENT_DATE
+	INSERT INTO smg_users_payments (
+    	agentID,
+        compnayID,
+        studentID,
+        programID,
+        oldID,
+        hostID,
+        paymenttype,
+        transtype,
+        amount,
+        comment,
+        date,
+        inputBy,
+        isPaid,
+        dateCreated)
+        
+    SELECT DISTINCT
+        pr.fk_sr_user,
+        st.companyID,
+        st.studentID,
+        st.programID,
+        0,
+        st.hostID,
+        (CASE
+            when pr.pr_month_of_report = 1 then 31
+            when pr.pr_month_of_report = 2 then 5
+            when pr.pr_month_of_report = 3 then 32
+            when pr.pr_month_of_report = 4 then 6
+            when pr.pr_month_of_report = 5 then 33
+            when pr.pr_month_of_report = 6 then 7
+            when pr.pr_month_of_report = 7 then 34
+            when pr.pr_month_of_report = 8 then 8
+            when pr.pr_month_of_report = 9 then 29
+            when pr.pr_month_of_report = 10 then 3
+            when pr.pr_month_of_report = 11 then 30
+            when pr.pr_month_of_report = 12 then 4
+        end),
+        "Supervision",
+        if(prog.type = 1,40,if(prog.type = 2,42.5,50)),
+        "Auto-processed - ISE",
+        (CASE 
+            WHEN DAYOFWEEK(CURDATE()) = 3 THEN DATE_ADD(CURDATE(), INTERVAL 2 DAY)           
+            WHEN DAYOFWEEK(CURDATE()) = 4 THEN DATE_ADD(CURDATE(), INTERVAL 1 DAY)           
+            WHEN DAYOFWEEK(CURDATE()) = 5 THEN DATE_ADD(CURDATE(), INTERVAL 0 DAY)
+            WHEN DAYOFWEEK(CURDATE()) = 6 THEN DATE_ADD(CURDATE(), INTERVAL 3 DAY)  
+            WHEN DAYOFWEEK(CURDATE()) = 7 THEN DATE_ADD(CURDATE(), INTERVAL 2 DAY)  
+            WHEN DAYOFWEEK(CURDATE()) = 1 THEN DATE_ADD(CURDATE(), INTERVAL 1 DAY)  
+            WHEN DAYOFWEEK(CURDATE()) = 2 THEN DATE_ADD(CURDATE(), INTERVAL 0 DAY)
+        END),
+        "999999",
+        0,
+        CURRENT_DATE
 
 from smg_students st
 INNER JOIN progress_reports pr ON st.studentID = pr.fk_student AND pr.fk_reporttype = 1
@@ -66,8 +79,6 @@ and hh.dateplaced is not null
 and hh.stu_arrival_orientation is not null
 and hh.host_arrival_orientation is not null
 and sppmt.specialPaymentID is null
-and ((flarr.arrival_date < date_add(prog.preayp_date, INTERVAL 31 DAY))
-	or (EXISTS (select * from smg_users_payments pmt where st.studentID = pmt.studentID and transtype = "supervision")))
 and (
 	(pr.pr_month_of_report in (1,2) and (not EXISTS(select * from smg_users_payments pmt where pmt.paymenttype = 5 and st.studentID = pmt.studentID)) and
 	EXISTS(select * from progress_reports pr where st.studentID = pr.fk_student and pr.pr_month_of_report = 1 and pr.fk_reporttype = 1 and pr.pr_ny_approved_date is not null) and
