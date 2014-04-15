@@ -415,18 +415,19 @@
         </cfquery>
         
         <cfquery name="qGetStudents" datasource="#APPLICATION.DSN#">
-            SELECT *
-            FROM smg_students
-            WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
+            SELECT s.*
+            FROM smg_students s
+            WHERE s.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
             <cfif VAL(ARGUMENTS.seasonID)>
             	<cfif NOT VAL(qGetPreviousHostApp.recordCount)>
-                	AND programID IN (SELECT programID FROM smg_programs WHERE seasonID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.seasonID#,#ARGUMENTS.seasonID - 1#" list="yes">) )
+                	AND s.programID IN (SELECT programID FROM smg_programs WHERE seasonID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.seasonID#,#ARGUMENTS.seasonID - 1#" list="yes">) )
+                    AND s.studentID IN (SELECT studentID FROM smg_hosthistory WHERE studentID = s.studentID AND dateCreated >= "2013-09-01")
                 <cfelse>
-            		AND programID IN (SELECT programID FROM smg_programs WHERE seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.seasonID#">)
+            		AND s.programID IN (SELECT programID FROM smg_programs WHERE seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.seasonID#">)
               	</cfif>
             </cfif>
-            AND active = 1
-            ORDER BY familylastname
+            AND s.active = 1
+            ORDER BY s.familylastname
         </cfquery>
         
         <cfreturn qGetStudents>

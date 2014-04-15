@@ -1466,9 +1466,10 @@
                 INNER JOIN smg_students s ON s.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
                      AND s.active = 1 
                      <cfif NOT VAL(qGetPreviousHostApp.recordCount)>
-                        AND programID IN (SELECT programID FROM smg_programs WHERE seasonID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.seasonID#,#vPreviousSeasonID#" list="yes">) )
+                        AND s.programID IN (SELECT programID FROM smg_programs WHERE seasonID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.seasonID#,#vPreviousSeasonID#" list="yes">) )
+                        AND s.studentID IN (SELECT studentID FROM smg_hosthistory WHERE studentID = s.studentID AND dateCreated >= "2013-09-01")
                     <cfelse>
-                        AND programID IN (SELECT programID FROM smg_programs WHERE seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.seasonID#">)
+                        AND s.programID IN (SELECT programID FROM smg_programs WHERE seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.seasonID#">)
                     </cfif>
              	LEFT OUTER JOIN smg_host_app_history h ON h.itemID = ap.ID                  
                     AND h.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
