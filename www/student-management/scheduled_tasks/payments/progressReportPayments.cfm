@@ -9,7 +9,7 @@
 <cfquery datasource="#APPLICATION.DSN#">
 	INSERT INTO smg_users_payments (
     	agentID,
-        compnayID,
+        companyID,
         studentID,
         programID,
         oldID,
