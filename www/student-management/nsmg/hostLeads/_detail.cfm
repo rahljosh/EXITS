@@ -410,6 +410,17 @@
                                         </cfif>
                                     </td>
                                 </tr>
+                                <tr>
+                                    <th align="right" valign="top">Have been talking with:</th>
+                                    <td>
+                                        
+                                        <cfif LEN(qGetHostLead.contactWithRepName)>
+                                           #qGetHostLead.contactWithRepName#
+                                        <cfelse>
+                                        Nobody
+                                        </cfif>
+                                    </td>
+                                </tr>
                                 
                                 <tr>
                                     <th align="right" style="padding-bottom:5px;">Last Updated:</th>
