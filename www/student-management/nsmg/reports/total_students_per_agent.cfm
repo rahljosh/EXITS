@@ -160,7 +160,7 @@
                             <!--- Apps that are not approved have no companyID ( = 0 ) --->                  
 							<cfif CLIENT.companyID EQ 5>
                                 AND
-                                    s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )        
+                                    s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,5,#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )        
                             <cfelse>
                                 AND
                                     s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">        
