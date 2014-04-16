@@ -2918,7 +2918,7 @@
                     hl.dateLastLoggedIn,
                     hl.dateCreated,
                     hl.dateUpdated,
-                    h1.contactwithrepname,
+                    hl.contactwithrepname,
                     <!--- Follow Up Representative --->
                     CONCAT(fu.firstName, ' ', fu.lastName) AS followUpAssigned,
 					<!--- State --->
