@@ -96,7 +96,44 @@ Babylon, NY 11702</p>
     <div class="smSize" style="float:right; width: 120px; margin: 10px 0 0 0;"><a href="press-page.cfm"><strong>2014</strong></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="press-page-2013.cfm">2013</a></div>
 <h1>Press Page</h1>
  <div class="dotLine">&nbsp;</div>
- 
+ <!--- April 17th Press Release #5 --->
+    
+    <div class="fltrt" style="margin-bottom: 10px; height:45px; display:block;"><table width="255" border="0" align="right">
+  <tr>
+    <td width="166" class="smSize">March 31, 2014 </td>
+    <td width="39"><a href="https://plus.google.com/106789919487817837927" target="_blank"><img src="images/socialMedia/googlePlus.png" width="40" height="40" border="0" /></a></td>
+    <td width="38"><a href="http://www.facebook.com/home.php#!/pages/International-Student-Exchange/111620902209214?ref=sgm" target="_blank"><img src="images/socialMedia/facebook.png" width="40" height="40" border="0" /></a></td>
+    <td width="39"><a href="http://twitter.com/ISE_USA" target="_blank"><img src="images/socialMedia/twitter.png" width="40" height="40" border="0" /></a></td>
+  </tr>
+</table>
+</div>
+
+ <div class="clearfloat">&nbsp;</div> 
+
+    <h3>Michigan City High School is given the Partnership Achievement Award from 
+International Student Exchange (ISE)
+</h3>
+<p>Michigan City, IN &#8211; March 31st, 2014 – Michigan City High School (MCHS) was given the Partnership Achievement Award from International Student Exchange. This award is given to high schools that showcase outstanding effort and dedication to their student exchange program.  </p>
+<p>ISE, a student exchange program, has been working with Michigan City High School for several years.  Over that time, students that have been placed in this high school have had wonderful experiences. <a href="#" id="example6-show" class="showLink" onclick="showHide('example6');return false;">Read More &#187;</a></p>
+<div id="example6" class="more6">
+
+<p>"Michigan City High School goes above and beyond what’s expected.  They make the students feel comfortable and assist them with any issues while adjusting to MCHS." Stated Jamie LeDonne, Area Rep for ISE.</p>  
+<p>Michigan City itself is a great atmosphere for an exchange program. Many exchange students that choose to study in the US want that “All American” experience.  MCHS offers many sports, clubs and community service events for the students to participate in.  These aren’t usually available to students in other countries.</p>
+<p>“The community and school can be just as important to the experience as the host family.  Many times exchange students develop real friendships with fellow peers they meet at school or in clubs.  We find when students get involved, their host family too, experiences a deeper connection to their community.” Explained Jamie.</p>
+<p>Michigan City High School will also be hosting an International Day with ISE on April 22nd from 6-8 pm.  There you can meet the current exchange students ask them questions about their home country.  There will be different types of food available to sample and even prizes for those who go “Around the World” at the event.  International Day is free for the whole community.  For more information on this event please call Jamie Le Donne at 219-229-0271.</p>
+ <p><strong>About International Student Exchange</strong></p>
+ <p>ISE was founded in 1982. It is a non-profit organization dedicated to bringing people of the world closer together through student exchange and intercultural education.</p>
+ <p>Based on the materials submitted by ISE and reviewed by the Council on Standards for International Educational Travel (CSIET), an independent national educational organization founded in 1984, ISE has been granted a listing every year.  Indicative of its high level of professionalism and respect within the foreign exchange industry, ISE is designated by the Department of State as an official sponsor of the Exchange Visitor Program.</p>
+ <p>ISE is headquartered on Long Island, 60 minutes from Manhattan. Forty-four fully staffed Regional Offices are strategically located in the United States. ISE cooperates with over 100 independent foreign agencies in over 45 countries around the world for the recruitment and placement of students in American homes.  The company’s information is available at
+ <a href="http://www.iseusa.com">www.iseusa.com</a>.</p>
+<p><a href="#" id="example6-hide" class="hideLink" onclick="showHide('example6');return false;">HIDE ARTICLE</a></p>
+</div>
+<!--- April 17th Press Release #5 --->
+
+ <div class="clearfloat">&nbsp;</div> 
+<div class="blueLine">&nbsp;</div>
+ <div class="clearfloat">&nbsp;</div>
+
  
  <!--- March 5th Press Release #5 --->
     
