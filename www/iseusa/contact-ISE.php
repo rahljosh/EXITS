@@ -66,7 +66,7 @@ Babylon NY, 11702<br />
 Toll free: 800.766.4656<br />
 Local: 631.893.4540<br />
 Fax: 631.893.4550</p>
-<div align="center"><a href="mailto:contact@iseusa.com" class="basicBlueButton">Send Email</a></div><br>
+<div align="center"><a href="mailto:contact@iseusa.org" class="basicBlueButton">Send Email</a></div><br>
 <div class="dotLine">&nbsp;</div>
 
 <h2>Host a Student</h2>
