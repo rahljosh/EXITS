@@ -49,6 +49,11 @@
         AND p.transtype = "Payment"
         AND p.paymenttype = 37
         AND p.date = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.checkDate#">
+        <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+        	AND p.companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes">)
+        <cfelse>
+        	AND p.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        </cfif>
         ORDER BY p.date DESC, r.firstName, r.lastName
     </cfquery>
     
