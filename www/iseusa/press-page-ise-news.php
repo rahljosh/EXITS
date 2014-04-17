@@ -108,7 +108,27 @@ Babylon, NY 11702</p>
  <div class="dotLine">&nbsp;</div>
   <!---- Article April 2 ------->  
 <div class="iseNewsImg">
-  <div class="picIMG"><img src="images/pressKit/carousel.jpg" width="228" height="228" alt="Wahkiakum County Eagle"></div>
+  <div class="picIMG"><img src="images/pressKit/April14th.jpg" width="228" height="228" alt="Wahkiakum County Eagle"></div>
+<p class="smItalic"></p>
+</div>
+
+<div class="iseNews">
+
+<h2>Michigan City High School is Given the Partnership Achievement Award from International Student Exchange (ISE)</h2>
+<p class="smSize">Posted: April 15, 2014</p>
+
+  <p>Michigan City High School (MCHS) was given the Partnership Achievement Award from International Student Exchange. This award is given to high schools that showcase outstanding effort and dedication to their student exchange program.</p>
+ 
+<p><a href="http://www.laportecountylife.com/community/education/41042-michigan-city-high-school-is-given-the-partnership-achievement-award-from-international-student-exchange-ise" target="_blank">View Article</a></p>
+</div>
+<!---- Article April 2 ------->
+ <div class="clearfloat">&nbsp;</div>
+    <div class="blueLine">&nbsp;</div>
+
+ 
+  <!---- Article April 2 ------->  
+<div class="iseNewsImg">
+  <div class="picIMG"><img src="images/pressKit/TheboyFriend.jpg" width="228" height="228" alt="Wahkiakum County Eagle"></div>
 <p class="smItalic"></p>
 </div>
 
@@ -128,7 +148,7 @@ Babylon, NY 11702</p>
  
   <!---- Article March 20 ------->  
 <div class="iseNewsImg">
-  <div class="picIMG"><script type='text/javascript' src='http://WVTM.images.worldnow.com/interface/js/WNVideo.js?rnd=400463;hostDomain=www.alabamas13.com;playerWidth=228;playerHeight=144;isShowIcon=true;clipId=9858587;flvUri=;partnerclipid=;adTag=Entertainment;advertisingZone=;enableAds=true;landingPage=;islandingPageoverride=false;playerType=STANDARD_EMBEDDEDscript;controlsType=fixed'></script></div>
+  <div class="picIMG"><img src="images/pressKit/noPhoto.jpg" width="228" height="228" alt=""/></div>
 <p class="smItalic"></p>
 </div>
 

@@ -172,10 +172,12 @@
 
 	<div class="box visible">
     <div style="background-color: #FFF; padding: 15px;">
-		<p align="right"><small>ISE NEWS | March 5, 2014</small></p>
-          <h1><a href="press-page.cfm" target="_parent">International Student Exchange (ISE) is now Accepting Applications for Host Families</a></h1>
-<p>Babylon, NY &#8211; March 5th, 2014 – International Student Exchange is accepting applications for interested families to host students for their high school exchange program.  Students will be arriving in August 2014.</p>
-<p>ISE is the leading not-for-profit sponsor and has been finding homes for international exchange students in the United States for over 30 years.  They place students from over 40 countries for either semester or academic year programs. </p><p><a href="press-page.cfm">Full Story &gt;&gt;</a></p><br />
+		<p align="right"><small>ISE NEWS | March 31, 2014</small></p>
+          <h1><a href="press-page.cfm" target="_parent">Michigan City High School is given the Partnership Achievement Award from 
+International Student Exchange (ISE)
+</a></h1>
+<p>Michigan City, IN  &#8211; March 31st, 2014 – Michigan City High School (MCHS) was given the Partnership Achievement Award from International Student Exchange.  This award is given to high schools that showcase outstanding effort and dedication to their student exchange program</p>
+<p>ISE, a student exchange program, has been working with Michigan City High School for several years.  Over that time, students that have been placed in this high school have had wonderful experiences.</p><p><a href="press-page.cfm">Full Story &gt;&gt;</a></p><br />
 <div class="news"><a href="press-page.cfm">MORE ISE NEWS >></a></div>
     </div>
 	</div>
@@ -238,17 +240,17 @@ src="https://www.facebook.com/plugins/likebox.php?href=http%3A%2F%2Fwww.facebook
 
 <div class="box">
 <div style="background-color: #FFF; padding: 10px; margin-top: 10px; margin-bottom: 10px;">
-<p align="right"><small>ISE NEWSLETTER | February 27, 2014</small></p>
+<p align="right"><small>ISE NEWSLETTER | March 14, 2014</small></p>
 <h1>The Insider</h1>
 
-<h3>Next Month is Red Cross Month</strong>!</h3>
-<p>If your students haven’t done their Project HELP hours, next month there will be plenty of chances through the Red Cross. To find opportunities, direct them to our Project HELP Page: <a href="http://www.iseusa.com/student-exchange-project-help-redcross.cfm" class="blueLink">go to page</a></p>
+<h3>March is the time to sign up to host again!</strong>!</h3>
+<p>This is a great time to sign up for to host next year. There are still plenty of students looking for a host family. Remember, the earlier you sign up, the better you get to know your student.</p>
 <div class="dotLine">&nbsp;</div>
 <br />
-<h3>Remember, we also send students to other countries too!</h3>
-<p>If you checked out our new website, you might have noticed the enhanced “study abroad" section. It’s a great chance for a US student to see another country and learn about their culture. We have full year programs, half year programs and summer programs. Check out all the countries you can visit: <a href="http://www.iseusa.com/study-abroad.cfm" class="blueLink">Study Abroad</a></p>
+<h3>Red Cross Month</h3>
+<p>Now that the weather is warmer, there are many Project HELP opportunities.  We are still in the middle of Red Cross month.  Go out and tell your students to sign up today.  To find opportunities, direct them to our Project HELP Page: <a href="https://www.iseusa.com/student-project-help.cfm" class="blueLink">click here</a></p>
 <br />
-<div class="news"><a href="newsletter/host/February_host_newsletter.cfm" target="_blank">LATEST NEWSLETTER >></a></div>
+<div class="news"><a href="newsletter/host/march_host_newsletter.cfm" target="_blank">LATEST NEWSLETTER >></a></div>
 </div>
 <!-- .end box --></div>
 
