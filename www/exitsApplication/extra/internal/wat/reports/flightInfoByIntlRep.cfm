@@ -333,14 +333,16 @@
                                     <!--- Alert Arrival Missing --->
                                     <cfelseif qTotalPerIntlRep.wat_placement EQ 'CSB-Placement' AND DateAdd("d", -14, qTotalPerIntlRep.startDate) LTE now() AND FORM.flightType EQ 'arrival'>
                                         <span style="color:##F00; font-weight:bold;">
-                                            Alert Arrival Missing (CSB-Placement) - Program Start Date: #DateFormat(qTotalPerIntlRep.startDate, 'mm/dd/yy')#                                                           
+                                            Alert Arrival Missing (CSB-Placement) - Program Start Date: #DateFormat(qTotalPerIntlRep.startDate, 'mm/dd/yy')#
                                         </span>
                                     <cfelseif qTotalPerIntlRep.wat_placement EQ 'Self-Placement' AND DateAdd("d", -14, qTotalPerIntlRep.startDate) LTE now() AND FORM.flightType EQ 'arrival'>
                                         <span style="color:##F90; font-weight:bold;">
-                                            Alert Arrival Missing (Self-Placement) - Program Start Date: #DateFormat(qTotalPerIntlRep.startDate, 'mm/dd/yy')#                                                           
+                                            Alert Arrival Missing (Self-Placement) - Program Start Date: #DateFormat(qTotalPerIntlRep.startDate, 'mm/dd/yy')#
                                         </span>
                                     <cfelse>
-                                        Arrival Missing
+                                    	<span style="color:##444; font-weight:bold;">
+                                        	Arrival Missing
+                                       	</span>
                                     </cfif> 
                                 </span>
                             </td>
