@@ -4620,7 +4620,7 @@
 				
 				// Public Student - Email Regional Manager and send a copy to the current user
 				flightEmailTo = vRMEmailAddress;
-				flightEmailCC = vCurrentUserEmailAddress;
+				//flightEmailCC = vCurrentUserEmailAddress;
 
 			} else {
 				
