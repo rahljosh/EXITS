@@ -25,9 +25,10 @@
   <div class="sidebar1">
   <div style="margin: 8px; background-color: #154690; color: #fff;">
     <h1>Important Dates</h1>
-<p style="text-align: center; padding-bottom: 15px;"><strong>April Fool's Day<br />
-  </strong><em>April 1st</em><br /><br /><strong>Easter<br />
-  </strong><em>April 20th</em></p>
+<p style="text-align: center; padding-bottom: 15px;"><strong>Earth Day <br />
+  </strong><em>April 22nd</em><br /><br />
+ <strong>Mother's Day<br />
+  </strong><em>May 11th</em></p>
   </div>
     <ul class="nav">
       <li><a href="#div1">The Latest</a></li>
@@ -66,42 +67,41 @@ Babylon, NY 11702</p>
   <div class="content">
 <div id="showHide">
     <div id="div1">
-    <div style="width: 150px; float: right; margin: 10px;"><a href="http://www.iseusa.com"><img src="images/march-news.png" width="150"></a></div>
+    <div style="width: 150px; float: right; margin: 10px;"><a href="http://www.iseusa.com"><img src="images/region-sites.jpg" width="150"></a></div>
 <h1>The Latest....</h1>
 
-<h2>March is a Great Month to Find Host Families</h2>
+<h2>The new websites are here</h2>
 
-<p>March is one of the biggest months for placements.  This is a great time of year to ask families if they want to host.  The holidays are now over and it’s not yet the end of the school year.  Families have time to think about hosting.</p>  
-<p>Repeating families have the advantage of signing up early and getting to know their new student even better.  New families will have the extra time to plan their schedule and adjust to the exciting experience they are about to enter.</p>
-
-<div class="hrLine"></div>
-
-<h2>Red Cross Month</h2>
-
-<p>Now that the weather is warmer, there are many Project HELP opportunities.  We are still in the middle of Red Cross month.  Go out and tell your students to sign up today.  To find opportunities, direct them to our Project HELP Page: 
-
-</p>
-<p align="center"><a href="https://www.iseusa.com/student-project-help.cfm" class="basicOrangeButton" style="font-size: 80%;">Go to page</a></p>
+<p>Each region has been given a new website.  Each website has a simple name - (region name).iseusa.org.<br />
+  <span class="blueLink">Example: west.ise.org (no more www)</span> </p>  
+<p>Your regional website will feature only students that are available in your area.  It will also provide one central location for your local families to go.</p>
+<p>Contact your regional manager with any questions.</p>
 
 <div class="hrLine"></div>
 
+<h2>Project HELP Hours</h2>
+
+<p>With the end of the year coming soon, it’s time to get the Project HELP hours in.  For those students who went above the 20 hour mark are eligible for a free tee-shirt</p>
+<!---<p align="center"><a href="https://www.iseusa.com/student-project-help.cfm" class="basicOrangeButton" style="font-size: 80%;">Go to page</a></p>--->
+
+<div class="hrLine"></div>
+<!--
 <h2>Capture the Moments</h2>
 
-<p>Remember, send us pictures of what your students are up to.  Sports, clubs, vacations, spring break, family time . . . . the list goes on and we want to see it! Send it all at <a href="#">socialmedia@iseusa.com</a> or message us on our facebook page <a href="http://www.facebook.com/iseusa">www.facebook.com/iseusa</a>.</p>
+<p>Remember, send us pictures of what your students are up to.  Sports, clubs, vacations, spring break, family time . . . . the list goes on and we want to see it! Send it all at <a href="#">socialmedia@iseusa.com</a> or message us on our facebook page <a href="http://www.facebook.com/iseusa">www.facebook.com/iseusa</a>.</p>--->
 <!-- end DIV1 --></div>
 
 <div id="div2">
 
 <h1>What about Bob!</h1>
-<h3>BONUSES &nbsp;&nbsp;&nbsp;BONUSES &nbsp;&nbsp;&nbsp;BONUSES</h3>
-<div style="width: 225px; float: right; margin: 10px;"><img src="images/bob-news.png" width="225" height="150" alt="Happy Holidays from ISE" /></div>
 
-<p>Congratulations to all of you who earned the Special Winter Bonus! Many of you placed more than one student in the month of February, therefore earning multiple bonuses!</p> 
-<p>Please keep in mind that you can earn bonuses right up until the last day of the placing season! At this time the &ldquo;Fast Track&rdquo; bonus is in effect.</p>
-<p>  <strong>Fast Track Bonus - </strong>Place five August students before <u>April 28th</u> and earn a $1500 bonus!</p> 
-<p>In addition to the Fast Track Bonus, you can earn additional money by placing a Pre AYP student and if the Pre AYP student is one of Brian Feng&rsquo;s (our comedic agent from China whose company is named LAB) students earn an extra $50!  Best of all, while earning these bonuses, you are getting points toward the incentive trip to London!</p>
-<p>Please consult the website for all the bonuses and details.</p>
-<p>Happy placing! As always, thank you for all you do for student exchange!</p>
+<div style="width: 225px; float: right; margin: 10px;"><img src="images/bob-news.png" width="225" height="150" alt="Happy Holidays from ISE" /></div>
+<h3>Likes and Leads</h3>
+<p>Our communications Department has been working very hard in developing new methods of help you garner leads and placements, particularly with regard to social media. With each region now having their own website and Facebook page, the amount of likes and leads has increased substantially and will continue to do so as we move forward.</p> 
+<p>The regions that are following up on their “likes” are finding new host families and in many cases signing on new reps. If they took the time to “like” what you are doing, it is certainly worth a few moments to follow up. A simple message, “If you like us why not become part of the ISE family and host a student or become an ISE representative.”</p>
+<p>The latest data from the Communications Department tells us that one in three of our prescreened host family leads become an ISE host family. That is a fact you cannot ignore.</p>
+<p>So please make it your business to follow up on your likes and leads....you will be glad you did!</p> 
+
 <p>Sincerely,</p>
 <h2 style="font-family: 'Yesteryear', cursive;">Bob Keegan</h2>
 <!-- end DIV2 --></div>
@@ -111,58 +111,73 @@ Babylon, NY 11702</p>
 <div style="margin-bottom: 10px;"><img src="images/compliance-names.png" width="430" height="264" /></div>
 
 <h1>Compliance Corner</h1>
-<p>Congratulations to all the reps that were able to take advantage of last month's bonus.  We appreciate your patience with the time factor for the Compliance Team to review the many host family applications and school acceptances submitted.</p>
-<h3>HOST FAMILY APPLICATION:</h3>
-<p>When submitting a host family application for HQ approval, please be sure the photos are clear and the rooms in the home are tidy.  We will be sending apps back to reps that do not meet this criteria.</p>
+<p>With the end of the school year near, I would like to go over three main points to keep in mind:</p>
 
-<h3>SCHOOL ACCEPTANCE:</h3>
+<h3>1)	Host Family Orientations</h3>
 
-<p>We are still receiving school acceptances with missing information.  It is crucial the acceptances are accurate and complete.  This not only holds up a student receiving notification of his/her placement, but your placement payment as well.</p>
-<h3>SECOND VISITS</h3>
-<p>We are still experiencing a 20% denial rate for second visit reports.  Although the percentage rate has gone down tremendously, that 20% needs to be addressed.   Mainly the reason for denial has been the number of rooms listed on the first visit report compared to the number of rooms listed on the second visit report.  This holds up the second visit rep payment and the Compliance Team has to review these reports twice, utilizing time needed in another area.</p>
+<p>We have been receiving host family orientations for families hosting 14/15 school year students.  Host families should not have an orientation until a few weeks prior to the student arrival.  This way the information provided during the orientation is fresh in their mind and paperwork provided will not be lost is misplaced. The orientation information is an intricate part of the hosting experience.</p>
 
-<h3>&nbsp;</h3>
+<h3>2)	School Acceptances</h3>
+
+<p>30 % of the school acceptances received by the Compliance Department are not compliant.  Missing information continues to be a problem. As stated by the Department of State during one of our audits, "If there is a question, there has to be an answer.  Please be more diligent in completing this document.  This will hold up a placement payment to the area representative.
+3) Reviewing Host Family Applications
+When reviewing a host family application, always repeat to yourself:<br /><br />
+ <em>"would I put my son or daughter in this home?"</em></p>  
+
+<p>If the answer is no, don't pass the application onto HQ for approval.  It is important to remember there is a natural parent and student waiting anxiously to review and see where the student will be residing for their program duration.  Tidy room photos are a vital part of the host family application; not to mention the professionalism of the application provided by ISE.</p>
+
 <!-- end DIV3 --></div>
 
 <div id="div4">
 <div style="margin-bottom: 10px;"><img src="images/Facilitator-names.png" width="430" height="264" /></div>
 <h1>Facilitator Square</h1>
-<p>As the end of the program nears, we&rsquo;d like to send a warm thank you to all our ISE host families.  You&rsquo;ve opened up your homes and hearts and given a young person an experience that will shape who they will become as an adult.  While we&rsquo;re sure that there have been the occasional bumps in the road, we hope that the experience for you and your family has been a very positive one.</p>
-<p>After a brutal winter, we’re starting to see signs of Spring.  With the warmer weather, students and their host families start getting even busier.  Students will begin playing spring sports, getting ready for prom season and keeping busy with their school work.  This is also the time students start to think about their return home. </p>
-<p>Prom season and the end of the school year can prompt a celebration.   While it is certainly a time to celebrate your student’s success, these celebrations can lead to temptations for students to engage in behaviors that are inappropriate (perhaps illegal), and a violation of ISE program rules.  Chief among these is drinking. </p> 
-<p>Now would be a good time to remind students that they are not allowed to consume alcohol or be in the presence of other students doing the same.  We’d hate to see a student have to return home because of a momentary lapse of judgment.</p>
-<p>With school soon coming to a close, it’s important to make sure your student maintains a focus on their studies.  For most students, their grades in the US affect their schooling back in their home countries.  Your student may just need a little encouragement to finish the year with good marks.</p>
+<p>We’re on the homestretch and headed toward the finish line.</p> 
+<p>This can often be one of the best times of the year for you and your exchange student.  By this point, they are likely very comfortable with their English skill and have truly become part of your family.  It’s a great time for family trips, visits to relatives and lots of outdoor activities.  Take advantage of the remaining weeks.  Make sure your student also uses their short time remaining on the program most efficiently.  Keep them busy and involved in family activities. </p>
 
-<h3>Payment Questions</h3>
-<p>At this time of year, we&rsquo;re paying supervision fees, 2nd visit payments, placement fees and placement bonuses.  While most payments are sent out within a couple days of receipt of documentation, occasionally there are delays because of missing, incomplete paperwork, non-compliant paperwork or internal processing delays.</p> 
-  <p>To help ensure that you understand why a payment has been delayed, here are some things to review:<br />
-  All payments are viewable in EXITS under the Users  My Information.  Please note that the payment date is the &ldquo;date&rdquo; the check was cut.  Usually checks are sent the following day.  It will typically take 4-7 additional days for the check to arrive at your home.</p>
- <p> <strong>Placement fees:</strong>  Placement fees are paid when the host family application is fully approved, the student is placed with the family and we&rsquo;ve received and approved the school acceptance form.  For single person placements, placement fees are not paid until the student has approved the placement.</p>
-  <p><strong>Placement bonuses:</strong> Pre-AYP, CEO, state guarantee, Fast Track, Early Placement, On Time and any other bonuses will be paid upon approval for &ldquo;standard&rdquo; placements.  However, for double placements and single person placements, the bonuses will only be paid after the home office has received the approval from the host family and the student&rsquo;s natural family.  Please note that for bonuses with a cut-off date (e.g. CEO, Pre-AYP, etc.) we lock-in the date the placement was approved.  Even if the natural family approval comes later, the bonus will be paid if the original approval was prior to the deadline.</p>
-  <p><strong>Supervision fees:</strong>  Please remember that supervision fees are paid after your RA, RM and facilitator approve the application.  Also, supervision fees are only paid if the application is fully compliant.</p>
- <p> <strong>2nd Visit Fees:</strong>  Second visit fees are paid after the second visit has been reviewed by your RA, RM and Compliance.  Please also keep in mind that second visit reports need to match up with the first visit report.   Compliance will notify your manager of any disrepency.</p>
-<p>If you&rsquo;ve checked all these items and still do not understand why something hasn&rsquo;t been paid, please contact your regional managers or regional advisor.  They should be able to quickly resolve any issue you may have.</p>
+<p>While this is one of the best moments of the program, it’s also a time that presents many temptations to students that can cause problems.  To help make sure your student finishes the program successfully, here are some pointers:</p>
+<p><strong>Keep them focused on the present.</strong> As students get closer to going home, some might start to think ahead to their return home.  This can cause a “lack of focus” on their responsibilities to their host family, schoolwork and activities.  Make sure your exchange student doesn’t start to dramatically increase their communication with their natural family and friends from their home country.  It’s OK for them to start to make some preparations.  You just need to gently remind them that they are still on the program and to continue to follow their progress in school.</p>
+<p><strong>Address any “acting up” issues immediately.</strong> Some student’s think they can take advantage of the fact that they are going home.  They might start acting out and being disobedient.  Some of this might just be typical teenage behavior.  If your student does suddenly becomes defiant or starts engaging in behavior that is causing problems in your home, you should address these behaviors immediately.  Make it known that they still need to follow host family rules until the day they depart.  If issues don’t get better quickly, make sure you notify your ISE area representative.</p>
+<p><strong>Be wary of temptations</strong>.  As we mentioned in last month’s newsletter, spring is also a time for celebrations, family gatherings, proms and going away parties.  Sometimes these parties can present temptations for students to drink or use drugs.  When your student is going to a party or event, please make sure there will be adult supervision at the event.  Please remind your student that they cannot drink on the program.  Each year we have the unfortunate task of sending a handful of students home weeks from program completion because of drinking incident</p>
+<p>If you haven’t already done so, please review out some of the previous month’s detail on Convalidations and Natural Family visits.</p>
+<h3>A/R update</h3>
+<p><strong>Update to payment information displayed in EXITS</strong></p>
+<p>Please note that there will be a small update to the payment information shown in EXITS.  This new detail should help make it easier for you to see which checks have been cut and for which students and payments.</p>  
+<p>Fees earned will now be grouped by date without regard to program season so that you can see both your 14/15 placement payments and your 13/14 supervision payments on one screen.</p> 
+<img src="images/april-facilitysq.png" width="430px" alt=""/>
+<p><strong>A few things to point out below:</strong></p>
+<ul>
+  <li>Payments and the Fees earned will be grouped together by the date the check is cut</li>
+<li>Checks (and any credits) will show in the column on the left (Checks/Credits) and placement fees, bonuses and supervision fees will show in the column on the right (Fees Earned).</li>
+<li>A running balance will keep track of your current balance</li>
+<li>When a check is sent out, the comments field will reflect the anticipated arrival time of the check.  Please do not call the office about a check you are expecting until that window of time has passed.</li></ul>
+
+
 <!-- end DIV4 --></div>
 
 <div id="div5">
 <h1>Employee Spotlight</h1>
 
-<h3><strong>Jessica Mannino </strong>&#8211; <strong>Compliance Coordinator</strong></h3>
-<div style="margin: 10px; width: 225px; float: right;"><img src="images/employee-march.png" width="225" alt=""/></div>
+<h3><strong>Rose Hawkins </strong>&#8211; <strong>Regional Director for the North Central Region</strong></h3>
+<div style="margin: 10px; width: 225px; float: right;"><img src="images/april-employee.png" width="225" alt=""/></div>
 <p><strong>Q: Tell everyone about yourself. What is your background, interests and hobbies.</strong></p>
-<p class="grey"><em> <strong>A:</strong> I was born in Queens New York and moved to Long Island when I was six years old.  I started working for a company while I attended night school.  Once I graduated, I attended Adelphi University to get my Paralegal degree.  I found out I had a flair for the law.  I decided to attend St. Johns University and get my Associate Degree in Criminal Justice</em></p>
+<p class="grey"><em> <strong>A:</strong> Before student exchange I was in Law Enforcement (Deputy).  My family is my world and I love doing things while traveling with my kids (Even though they tease me with me no mercy).  Anyone who really knows me knows Student Exchange and ISE are my passion.  I love to cook, entertain and feed people (Everyone knows my love of bacon).  I just started water aerobics again and love it.  The music I listen to the most is 60's and 70's, but our yearly girls weekend is centered around country music.</em></p>
 <div class="hrLine"></div>
 <p><strong>Q: What is your job function in ISE?</strong></p>
-<p class="grey"><em><strong>A: </strong>My job functions as a Compliance Coordinator is to: Review Second Visit reports, Review Host family and Student orientations for accuracy and update placement management, monitor and process compliance emails daily, and assist with any other additional tasks that are needed.</em></p>
+<p class="grey"><em><strong>A: </strong>I am the Regional Director for the North Central Region.</em></p>
 <div class="hrLine"></div>
 <p><strong>Q: What is it about your work that is the most challenging/satisfying? </strong></p>
-<p class="grey"><em><strong>A: </strong>The most challenging part of my job is ensuring we meet the criteria of the Department of State regulations.  We go over every detail to make sure we are compliant.</em></p>
+<p class="grey"><em><strong>A: Challenging:</strong><br /> -	Thinking up new things to keep my reps motivated.<br /><br />
+<strong>Satisfying:</strong><br />
+-	When I get emails, phone calls, letters, text, stating a student or a family had a life changing experience. <br /> 
+-	A teen will go into a home a stranger, but leave being loved as a family member.<br /> 
+-	I love it when kids come back to visit. <br /> 
+-	When a student that struggles in the beginning finishes their program with flying colors!!</em></p>
 <div class="hrLine"></div>
 <p><strong>Q: Tell us something we don't know about you. </strong></p>
-<p class="grey"><em><strong>A: </strong>My dream is to move to Taormina Sicily which is where my father was born and buy a home there and live there..</em></p>
+<p class="grey"><em><strong>A: </strong>I sky dived on a dare, I love doing the polar plunge for Special Olympics and I love a challenge.  I am a cancer survivor!</em></p>
 <div class="hrLine"></div>
 <p><strong>Q: What new projects are you going to be working on this year?</strong></p>
-<p class="grey"><em><strong>A: </strong>Being on the Compliance Team only five months, I now have the knowledge and experience to increase productivity, enabling me time to start reviewing and approving online applications.</em></p>
+<p class="grey"><em><strong>A: </strong>We'll be doing more nontraditional booths along with the school fairs and expos.</em></p>
 <!-- end DIV5 --></div>
 
 <div id="div6">
@@ -181,6 +196,8 @@ Babylon, NY 11702</p>
 <ul>
 <li><a href="ARCHIVES/January_2014.cfm">January 2014</a></li>
 <li><a href="ARCHIVES/February_2014.cfm">February 2014</a></li>
+<li><a href="ARCHIVES/March_2014.cfm">March 2014</a></li>
+
 </ul>
 <!-- end DIV6 --></div> 
    
