@@ -9,6 +9,7 @@
 				
 ----- ------------------------------------------------------------------------- --->
 
+<cfparam name="URL.printPage" default="0">
 <cfparam name="FORM.submitted" default="0">
 
 <cfquery name="qGetPayments" datasource="#APPLICATION.DSN#">
@@ -112,10 +113,20 @@
     </cfloop>
     
     <cflocation url="#CGI.SCRIPT_NAME#?curdoc=userPayment/index&action=payReps">
-
+        
 </cfif>
 
 <cfoutput>
+
+	<cfif VAL(URL.printPage)>
+		
+		<script type="text/javascript">
+            window.onload = function() {
+				window.print();
+			}
+        </script>
+    
+    </cfif>
 
 	<form name="updatePaidReps" method="post" action="#CGI.SCRIPT_NAME#?curdoc=userPayment/index&action=payReps">
     	<input type="hidden" name="submitted" value="1" /> 
@@ -131,9 +142,11 @@
                 <td width="20%">Representative</td>
                 <td width="80%">
                 	Payments 
-                    <span style="float:right;">
-                    	<input type="checkbox" onclick="if ($(this).prop('checked')) {$(':checkbox').prop('checked',true);} else {$(':checkbox').prop('checked',false);}" />Select All
-                  	</span>
+                    <cfif NOT VAL(URL.printPage)>
+                    	<span style="float:right;">
+                            <input type="checkbox" onclick="if ($(this).prop('checked')) {$(':checkbox').prop('checked',true);} else {$(':checkbox').prop('checked',false);}" />Select All
+                        </span>
+                  	</cfif>
              	</td>
             </tr>
         
@@ -163,7 +176,14 @@
                             </cfloop>
                             <tr>
                             	<td colspan="2">&nbsp;</td>
-                                <td colspan="2" align="right"><b><input type="checkbox" name="payRep" value="#agentID#" />Pay Representative #DollarFormat(total)#</b></td>
+                                <td colspan="2" align="right">
+                                	<b>
+                                    	<cfif NOT VAL(URL.printPage)>
+                                        	<input type="checkbox" name="payRep" value="#agentID#" />
+                                      	</cfif>
+                                        Pay Representative #DollarFormat(total)#
+                               		</b>
+                           		</td>
                             </tr>
                         </table>
                     </td>
@@ -178,9 +198,14 @@
              	</td>
             </tr>
             
-            <tr>
-            	<td colspan="2" style="text-align:center;"><input type="submit" value="Update" /></td>
-            </tr>
+            <cfif NOT VAL(URL.printPage)>
+                <tr>
+                    <td colspan="2" style="text-align:center;">
+                    	<input type="submit" value="Update" />
+                    	<input type="button" value="Print" onclick="window.location = 'userPayment/_payReps.cfm?printPage=1';" />
+                 	</td>
+                </tr>
+          	</cfif>
         
         </table>
         

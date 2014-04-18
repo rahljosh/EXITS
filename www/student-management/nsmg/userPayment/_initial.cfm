@@ -550,15 +550,9 @@
                     </cfloop>
                 </select>
                 &nbsp;&nbsp;&nbsp;<strong>- OR -</strong>&nbsp;&nbsp;&nbsp; 
-                Student: 
-                <select name="studentID" class="xLargeField">
-                    <option value="0"></option>
-                    <cfloop query="qGetPlacedStudents">
-                        <option value="#qGetPlacedStudents.studentID#">#qGetPlacedStudents.familyLastName#, #qGetPlacedStudents.firstName# (###qGetPlacedStudents.studentID#)</option>
-                    </cfloop>
-                </select>
+                Student ID: <input type="text" name="studentID" size="6" class="smallField">
                 &nbsp;&nbsp;&nbsp;<strong>- OR -</strong>&nbsp;&nbsp;&nbsp; 
-                Payment ID: <input type="text" name="paymentID" size="4" class="smallField">
+                Payment ID: <input type="text" name="paymentID" size="6" class="smallField">
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <input type="checkbox" name="payments" value="1" />Credit Payments
                 <br><br>

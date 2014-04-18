@@ -122,7 +122,8 @@
 <cfif CLIENT.userType LTE 4>
 
     <table width="100%" border="0" cellpadding="8" cellspacing="" class="section">
-        <tr>
+        <!---Removed as per Paul on 4/17/14
+		<tr>
             <td><b>Total</b></td>
             <td>
                 <b>#LSCurrencyFormat(vTotal, 'local')#</b>
@@ -133,7 +134,7 @@
             <td>
                 <b>#LSCurrencyFormat(vPaid, 'local')#</b>
             </td>
-        </tr>
+        </tr>--->
         <tr>
             <td><b>Balance</b></td>
             <td>
@@ -176,7 +177,21 @@
                         <cfelse>
                             <cfset previousPayment = 0>
                         </cfif>
-                        <tr bgcolor="#iif(currentrow MOD 2 ,DE("EEEEEE") ,DE("FFFFFF") )#">
+                        
+                        <cfscript>
+							vCheckSent = APPLICATION.CFC.UDF.addBusinessDays(inputDate=paidDate,numDays=1);
+							vExpectReceiptBegin = APPLICATION.CFC.UDF.addBusinessDays(inputDate=paidDate,numDays=3);
+							vExpectReceiptEnd = APPLICATION.CFC.UDF.addBusinessDays(inputDate=paidDate,numDays=6);
+							
+							vBackgroundColor = "FFFFFF";
+							if (currentrow MOD 2) {
+								vBackgroundColor = "EEEEEE";	
+							}
+							if (transtype EQ "Payment") {
+								vBackgroundColor = "lightgreen";	
+							}
+						</cfscript>
+                        <tr bgcolor="#vBackgroundColor#">
                             <td>
                                 <cfif IsDate(paidDate)>
                                     #DateFormat(paidDate, 'mm/dd/yyyy')#
@@ -185,11 +200,15 @@
                                 </cfif>
                             </td>
                             <td>#id#</Td>
-                            <td><cfif NOT VAL(studentID)> n/a <cfelse> #firstName# #familyLastName# (#studentID#) </cfif></td>
                             <td>
-                                <cfif NOT VAL(hostID)> 
-                                    n/a 
-                                <cfelse> 
+                            	<cfif transtype EQ "Payment">
+                                	Check for all fees #DateFormat(paidDate,'mm/dd/yyyy')#
+								<cfelseif VAL(studentID)>
+                                	#firstName# #familyLastName# (#studentID#)
+                               	</cfif>
+                         	</td>
+                            <td>
+                                <cfif VAL(hostID)> 
                                     #fatherFirstName#
                                     <cfif LEN(fatherFirstName) AND LEN(motherFirstName)> &</cfif>
                                      #motherFirstName# #hostFamilyLastName# (#hostID#) 
@@ -212,7 +231,14 @@
                                     #LSCurrencyFormat(vBalance, 'local')#
                                 </cfif>
                             </td>
-                            <td>#comment#</td>
+                            <td>
+                            	<cfif transtype EQ "Payment">
+                                    Check Sent On: #DateFormat(vCheckSent,'mm/dd/yyyy')#
+                                    <br/>Expect receipt between: #DateFormat(vExpectReceiptBegin,'mm/dd/yyyy')# and #DateFormat(vExpectReceiptEnd,'mm/dd/yyyy')#
+                            	<cfelse>
+                                	#comment#
+                              	</cfif>
+                            </td>
                         </tr>
                         <cfscript>
                             vBalance = vBalance - amount;
