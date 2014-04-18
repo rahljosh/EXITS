@@ -1571,7 +1571,7 @@
         <cfquery 
 			name="qGetCheckInToolStudentList" 
 			datasource="#APPLICATION.DSN.Source#">
-                SELECT DISTINCT
+                SELECT
 					ec.uniqueID,
                     ec.candidateID,
                     ec.firstName,
@@ -1598,14 +1598,10 @@
                     IFNULL(p.programName, '') AS programName,
                     IFNULL(c.countryName, '') AS countryName,
                     t.comment
-                FROM 
-                    extra_candidates ec
-				INNER JOIN
-                	smg_users u ON u.userID = ec.intRep
-                LEFT OUTER JOIN
-                	smg_programs p ON p.programID = ec.programID
-				LEFT OUTER JOIN
-                    smg_countrylist c ON c.countryid = ec.residence_country  
+                FROM extra_candidates ec
+				INNER JOIN smg_users u ON u.userID = ec.intRep
+                LEFT OUTER JOIN smg_programs p ON p.programID = ec.programID
+				LEFT OUTER JOIN smg_countrylist c ON c.countryid = ec.residence_country  
                	LEFT OUTER JOIN extra_flight_information ef ON ef.candidateID = ec.candidateID
             		AND ef.programID = p.programID
                     AND flightType = 'Arrival'
@@ -1616,33 +1612,25 @@
                     evaluationNumber = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
                     ORDER BY date DESC 
                     LIMIT 1)
-                WHERE
-                    ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-                AND
-                	ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-                AND    
-                    ec.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                       
-				AND
-                	ec.watDateCheckedIn IS <cfqueryparam cfsqltype="cf_sql_date" null="yes"> 
-                AND
-		        	ec.applicationStatusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,11" list="yes"> )
+                WHERE ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+                AND ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                AND ec.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                       
+				AND ec.watDateCheckedIn IS <cfqueryparam cfsqltype="cf_sql_date" null="yes"> 
+                AND ec.applicationStatusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,11" list="yes"> )
                 
 				<cfif VAL(ARGUMENTS.intRep)>
-                    AND
-                        ec.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.intRep#">
+                    AND ec.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.intRep#">
                 </cfif>
 
 				<cfif VAL(ARGUMENTS.programID)>
-                    AND
-                        ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#">
+                    AND ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#">
                 </cfif>
                 
                 <!--- For Trainee only get records with a DS2019 start date after 9/1/2013 --->
                 <cfif CLIENT.companyID EQ 7>
-                	AND
-                    	ec.ds2019_startdate >= <cfqueryparam cfsqltype="cf_sql_date" value="2013-09-01">
+                	AND ec.ds2019_startdate >= <cfqueryparam cfsqltype="cf_sql_date" value="2013-09-01">
                 </cfif>
-                
+            GROUP BY ec.candidateID    
 			ORDER BY
             	ec.lastName,
                 ec.firstName
