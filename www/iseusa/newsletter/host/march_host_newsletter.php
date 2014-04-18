@@ -88,7 +88,7 @@ Babylon, NY 11702</p>
 <div style="margin-bottom: 10px;"><img src="../images/michelleFamily.png" width="430" height="264" /></div>
 <h1>High-Five</h1>
 
-<h3>Giving a High-Five to the <strong>Juarbe Family!&nbsp; They are located out of Cleveland, OH.</strong></h3>
+<h3>Giving a High-Five to the <strong>Jacques Family!&nbsp; They are located out of Cecil, WI.</strong></h3>
 <p><strong>Q1: What made you want to be a Host Family?</strong></p>
 <p class="grey"><em><strong>A: </strong>We wanted to be a host family to expose ourselves to a different culture and learn about other countries lifestyles, education and philosophies.</em></p>
 <div class="hrLine"></div>
@@ -98,10 +98,10 @@ Babylon, NY 11702</p>
 <p><strong>Q3: What do you usually do with your student(s) for fun?</strong></p>
 <p class="grey"><em><strong>A:</strong><em> We enjoy playing video games, playing cards, watching tv together and traveling. We are headed on spring break this week and plan to spend lots of time together walking on the beach and swimming in the ocean.</em></p>
 <div class="hrLine"></div>
-<p><strong>Q4: Any great stories you want to share?</strong></p>
+<!---<p><strong>Q4: Any great stories you want to share?</strong></p>
 <p class="grey"><em><strong>A: </strong>need this</em></p>
-<div class="hrLine"></div>
-<p><strong>Q5: Any Advice for other host families?</strong></p>
+<div class="hrLine"></div>---->
+<p><strong>Q4: Any Advice for other host families?</strong></p>
 <p class="grey"><em><strong>A: </strong> Best advice. I didn't realize how much Niels family trusted me until he was here for a few days, unpacked and settled. I went in to his bedroom to say goodnight and saw his little stuffed animals and his small blanket. It hit me like a ton of bricks. I then knew that we were called to be a host family because we were open and willing to love and care for this young man, as if he were our own. Be open, be trustworthy and be respectful. If you are, you will get it back tenfold.</em></p>
 
 <!-- END Article 2 --> 
