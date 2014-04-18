@@ -106,7 +106,7 @@
 		}
 		vTotalColumns = 10;
 		if (VAL(FORM.payments)) {
-			vTotalColumns = 6;	
+			vTotalColumns = 8;	
 		}
 	</cfscript>
     
@@ -159,7 +159,11 @@
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(reportID)#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(paymenttype)#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="Credit">,
-                        <cfqueryparam cfsqltype="cf_sql_decimal" value="#FORM['creditAmount_' & ID] - (2 * FORM['creditAmount_' & ID])#">,
+                        <cfif VAL(FORM.payments)>
+                        	<cfqueryparam cfsqltype="cf_sql_decimal" value="#FORM['creditAmount_' & ID]#">,
+                        <cfelse>
+                        	<cfqueryparam cfsqltype="cf_sql_decimal" value="#FORM['creditAmount_' & ID] - (2 * FORM['creditAmount_' & ID])#">,
+                       	</cfif>
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM['comment_' & ID]#">,
                         <cfif VAL(FORM.payments)>
                         	<cfqueryparam cfsqltype="cf_sql_date" value="#FORM['date_' & ID]#">,
@@ -201,7 +205,7 @@
         <table width="100%" cellpadding="4" cellspacing="0" style="border:1px solid ##010066; margin-top:20px;">
             <tr>
                 <td colspan="#vTotalColumns-3#" style="background-color:##010066; color:##FFFFFF; font-weight:bold;">Credits</td>
-                <td colspan="3" style="background-color:##010066; color:##FFFFFF; font-weight:bold; text-align:right; padding-right:10px;">
+                <td colspan="5" style="background-color:##010066; color:##FFFFFF; font-weight:bold; text-align:right; padding-right:10px;">
                     Records #vStartRecord# to #vEndRecord# of #vTotalRecords# record(s)
                 </td>
             </tr>
@@ -213,11 +217,10 @@
                 <td width="#100/vTotalColumns#%">Payment Type</td>
                 <td width="#100/vTotalColumns#%">Payment Date</td>
                 <td width="#100/vTotalColumns#%">Amount</td>
-                <cfif NOT VAL(FORM.payments)>
-                	<td width="#100/vTotalColumns#%">Is Paid</td>
-                	<td width="#100/vTotalColumns#%">Comment</td>
-                	<td width="#100/vTotalColumns#%">Credit Comment</td>
-                </cfif>
+                <cfif NOT VAL(FORM.payments)><td width="#100/vTotalColumns#%">Is Paid</td></cfif>
+                <td width="#100/vTotalColumns#%">Comment</td>
+                <td width="#100/vTotalColumns#%">Credit Comment</td>
+                
             </tr>
         
             <cfloop query="qGetPayments">
@@ -235,19 +238,11 @@
                     <td>#type#</td>
                     <td>#DateFormat(date,'mm/dd/yyyy')# <input type="hidden" name="date_#ID#" value="#date#" /></td>
                     <td>
-                    	<cfif VAL(FORM.payments)>
-                        	$#-amount# <input type="hidden" name="creditAmount_#ID#" value="#amount#" />
-                        <cfelse>
-                    		$<input type="text" name="creditAmount_#ID#" value="#amount#" size="10" />
-                      	</cfif>
+						$<input type="text" name="creditAmount_#ID#" value="#ABS(amount)#" size="10" />
                   	</td>
-                    <cfif NOT VAL(FORM.payments)>
-                    	<td>#YesNoFormat(isPaid)#</td>
-                        <td>#comment#</td>
-                        <td><textarea name="comment_#ID#"></textarea></td>
-                   	<cfelse>
-                    	<input type="hidden" name="comment_#ID#" value="VOID" />
-                  	</cfif>
+                    <cfif NOT VAL(FORM.payments)><td>#YesNoFormat(isPaid)#</td></cfif>
+                    <td>#comment#</td>
+                    <td><textarea name="comment_#ID#"></textarea></td>
                 </tr>
             </cfloop>
             

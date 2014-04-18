@@ -3026,4 +3026,43 @@
         
 	</cffunction>
     
+    <!--- Function to add business days to a specified date --->
+    <cffunction name="addBusinessDays" access="public" returntype="date" output="no" hint="Returns a date the specified number of business days after a specified date">
+        <cfargument name="inputDate" type="date" required="yes">
+        <cfargument name="numDays" type="numeric" required="yes">
+        
+        <cfscript>
+            vNewDate = inputDate;
+            x = numDays;
+            while(x GT 0) {
+                vNewDate = DateAdd('d',1,vNewDate);
+                vBusinessDay = 1;
+                
+                // Don't count Saturday, Sunday, or holidays
+                if (
+                    ListFind('1,7',DayOfWeek(vNewDate)) // Saturday and Sunday
+                    OR (MONTH(vNewDate) EQ 1 AND DAY(vNewDate) EQ 1) // New Years Day
+                    OR (MONTH(vNewDate) EQ 1 AND DayOfWeek(vNewDate) EQ 2 AND DAY(vNewDate) GTE 15) // MLK Day
+                    OR (MONTH(vNewDate) EQ 2 AND DayOfWeek(vNewDate) EQ 2 AND DAY(vNewDate) GTE 15) // President's Day
+                    OR (MONTH(vNewDate) EQ 5 AND DayOfWeek(vNewDate) EQ 2 AND DAY(vNewDate) GTE 25) // Memorial Day
+                    OR (MONTH(vNewDate) EQ 7 AND DAY(vNewDate) EQ 4) // Independence Day
+                    OR (MONTH(vNewDate) EQ 9 AND DayOfWeek(vNewDate) EQ 2 AND DAY(vNewDate) LTE 7) // Labor Day
+                    OR (MONTH(vNewDate) EQ 10 AND DayOfWeek(vNewDate) EQ 2 AND DAY(vNewDate) GTE 8) // Columbus Day
+                    OR (MONTH(vNewDate) EQ 11 AND DAY(vNewDate) EQ 11) // Veteren's Day
+                    OR (MONTH(vNewDate) EQ 11 AND DayOfWeek(vNewDate) EQ 5 AND DAY(vNewDate) GTE 22) // Thanksgiving
+                    OR (MONTH(vNewDate) EQ 12 AND ListFind('24,25,31',DAY(vNewDate))) // Christmas Eve, Christmas, and New Years Eve
+                    ) {
+                    vBusinessDay = 0;	
+                }
+                
+                // Count down the day if it is a business Day
+                if (vBusinessDay) {
+                    x--;
+                }
+            }
+            return vNewDate;
+        </cfscript>
+        
+    </cffunction>
+    
 </cfcomponent>
