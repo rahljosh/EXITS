@@ -119,238 +119,141 @@
 	}
 </cfscript>
 
-<cfif CLIENT.userType LTE 4>
+<table width="100%" border="0" cellpadding="8" cellspacing="" class="section">
+	<!---Removed as per Paul on 4/17/14
+    <tr>
+        <td><b>Total</b></td>
+        <td>
+            <b>#LSCurrencyFormat(vTotal, 'local')#</b>
+        </td>
+    </tr>
+    <tr>
+        <td><b>Payments</b></td>
+        <td>
+            <b>#LSCurrencyFormat(vPaid, 'local')#</b>
+        </td>
+    </tr>--->
+    <tr>
+        <td><b>Balance</b></td>
+        <td>
+            <b>#LSCurrencyFormat(vBalance, 'local')#</b>
+        </td>
+    </tr>
 
-    <table width="100%" border="0" cellpadding="8" cellspacing="" class="section">
-        <!---Removed as per Paul on 4/17/14
-		<tr>
-            <td><b>Total</b></td>
-            <td>
-                <b>#LSCurrencyFormat(vTotal, 'local')#</b>
-            </td>
-        </tr>
+    <cfif NOT VAL(qGetRepPayments.recordcount)>
         <tr>
-            <td><b>Payments</b></td>
-            <td>
-                <b>#LSCurrencyFormat(vPaid, 'local')#</b>
-            </td>
-        </tr>--->
-        <tr>
-            <td><b>Balance</b></td>
-            <td>
-                <b>#LSCurrencyFormat(vBalance, 'local')#</b>
-            </td>
+            <td colspan="3">No payments have been submitted for this user.</td>
         </tr>
+    </cfif>
     
-        <cfif NOT VAL(qGetRepPayments.recordcount)>
-            <tr>
-                <td colspan="3">No payments have been submitted for this user.</td>
-            </tr>
-        </cfif>
-        
-        <tr class="programList">
-            <td>&nbsp;</td>
-            <td colspan="2">
-                <table width="100%" border="0" cellpadding="4" cellspacing="0">
-                    <tr>
-                        <td><b>Date</b></td>
-                        <td><b>ID</b></Td>
-                        <td><b>Student</b></td>
-                        <td><b>Host</b></td>
-                        <td><b>Program</b></td>
-                        <td><b>Type</b></td>
-                        <td><b>Checks / Credits</b></td>
-                        <td><b>Fees Earned</b></td>
-                        <td><b>Balance</b></td>
-                        <td><b>Comment</b></td>
-                    </tr>
+    <tr class="programList">
+        <td>&nbsp;</td>
+        <td colspan="2">
+            <table width="100%" border="0" cellpadding="4" cellspacing="0">
+                <tr>
+                    <td><b>Date</b></td>
+                    <td><b>ID</b></Td>
+                    <td><b>Student</b></td>
+                    <td><b>Host</b></td>
+                    <td><b>Program</b></td>
+                    <td><b>Type</b></td>
+                    <td><b>Checks / Credits</b></td>
+                    <td><b>Fees Earned</b></td>
+                    <td><b>Balance</b></td>
+                    <td><b>Comment</b></td>
+                </tr>
+                
+                <cfloop query="qGetRepPayments">
+                    <cfif (paidDate LT "2014-04-04" AND IsDate(paidDate) AND seperationDisplayed EQ 0) OR (paymentType EQ 37 AND previousPayment EQ 0)>
+                        <cfif paymenttype NEQ 37>
+                            <cfset seperationDisplayed = 1>
+                        </cfif>
+                        <tr><td colspan="10"><hr /></td></tr>
+                    </cfif>
+                    <cfif paymenttype EQ 37>
+                        <cfset previousPayment = 1>
+                    <cfelse>
+                        <cfset previousPayment = 0>
+                    </cfif>
                     
-                    <cfloop query="qGetRepPayments">
-                        <cfif (paidDate LT "2014-04-04" AND IsDate(paidDate) AND seperationDisplayed EQ 0) OR (paymentType EQ 37 AND previousPayment EQ 0)>
-                            <cfif paymenttype NEQ 37>
-                                <cfset seperationDisplayed = 1>
-                            </cfif>
-                            <tr><td colspan="10"><hr /></td></tr>
-                        </cfif>
-                        <cfif paymenttype EQ 37>
-                            <cfset previousPayment = 1>
-                        <cfelse>
-                            <cfset previousPayment = 0>
-                        </cfif>
-                        
-                        <cfscript>
-							vCheckSent = APPLICATION.CFC.UDF.addBusinessDays(inputDate=paidDate,numDays=1);
-							vExpectReceiptBegin = APPLICATION.CFC.UDF.addBusinessDays(inputDate=paidDate,numDays=3);
-							vExpectReceiptEnd = APPLICATION.CFC.UDF.addBusinessDays(inputDate=paidDate,numDays=6);
-							
-							vBackgroundColor = "FFFFFF";
-							if (currentrow MOD 2) {
-								vBackgroundColor = "EEEEEE";	
-							}
-							if (transtype EQ "Payment") {
-								vBackgroundColor = "lightgreen";	
-							}
-						</cfscript>
-                        <tr bgcolor="#vBackgroundColor#">
-                            <td>
-                                <cfif IsDate(paidDate)>
-                                    #DateFormat(paidDate, 'mm/dd/yyyy')#
-                                <cfelse>
-                                    Pending    
-                                </cfif>
-                            </td>
-                            <td>#id#</Td>
-                            <td>
-                            	<cfif transtype EQ "Payment">
-                                	Check for all fees #DateFormat(paidDate,'mm/dd/yyyy')#
-								<cfelseif VAL(studentID)>
-                                	#firstName# #familyLastName# (#studentID#)
-                               	</cfif>
-                         	</td>
-                            <td>
-                                <cfif VAL(hostID)> 
-                                    #fatherFirstName#
-                                    <cfif LEN(fatherFirstName) AND LEN(motherFirstName)> &</cfif>
-                                     #motherFirstName# #hostFamilyLastName# (#hostID#) 
-                                </cfif>
-                            </td>
-                            <td>#programName#</Td> 
-                            <td>#type#</Td>
-                            <cfif amount GTE 0 AND paymenttype NEQ 37>
-                                <td></td>
-                                <td>#LSCurrencyFormat(amount, 'local')#</td>
+                    <cfscript>
+                        vBackgroundColor = "FFFFFF";
+                        if (currentrow MOD 2) {
+                            vBackgroundColor = "EEEEEE";	
+                        }
+                        if (transtype EQ "Payment") {
+                            vBackgroundColor = "lightgreen";	
+                        }
+                    </cfscript>
+                    <tr bgcolor="#vBackgroundColor#">
+                        <td>
+                            <cfif IsDate(paidDate)>
+                                #DateFormat(paidDate, 'mm/dd/yyyy')#
                             <cfelse>
-                                <cfscript>
-                                    vAmount = -amount;
-                                </cfscript>
-                                <td>#LSCurrencyFormat(vAmount, 'local')#</td>
-                                <td></td>
+                                Pending    
                             </cfif>
-                            <td>
-                                <cfif paidDate GTE "2014-04-04" OR NOT IsDate(paidDate)>
-                                    #LSCurrencyFormat(vBalance, 'local')#
-                                </cfif>
-                            </td>
-                            <td>
-                            	<cfif transtype EQ "Payment">
+                        </td>
+                        <td>#id#</Td>
+                        <td>
+                            <cfif transtype EQ "Payment">
+                                Check for all fees #DateFormat(paidDate,'mm/dd/yyyy')#
+                            <cfelseif VAL(studentID)>
+                                #firstName# #familyLastName# (#studentID#)
+                            </cfif>
+                        </td>
+                        <td>
+                            <cfif VAL(hostID)> 
+                                #fatherFirstName#
+                                <cfif LEN(fatherFirstName) AND LEN(motherFirstName)> &</cfif>
+                                 #motherFirstName# #hostFamilyLastName# (#hostID#) 
+                            </cfif>
+                        </td>
+                        <td>#programName#</Td> 
+                        <td>#type#</Td>
+                        <cfif amount GTE 0 AND paymenttype NEQ 37>
+                            <td></td>
+                            <td>#LSCurrencyFormat(amount, 'local')#</td>
+                        <cfelse>
+                            <cfscript>
+                                vAmount = -amount;
+                            </cfscript>
+                            <td>#LSCurrencyFormat(vAmount, 'local')#</td>
+                            <td></td>
+                        </cfif>
+                        <td>
+                            <cfif paidDate GTE "2014-04-04" OR NOT IsDate(paidDate)>
+                                #LSCurrencyFormat(vBalance, 'local')#
+                            </cfif>
+                        </td>
+                        <td>
+                            <cfif transtype EQ "Payment">
+                                <cfif IsDate(paidDate)>
+                                    <cfscript>
+                                        vCheckSent = APPLICATION.CFC.UDF.addBusinessDays(inputDate=paidDate,numDays=1);
+                                        vExpectReceiptBegin = APPLICATION.CFC.UDF.addBusinessDays(inputDate=paidDate,numDays=3);
+                                        vExpectReceiptEnd = APPLICATION.CFC.UDF.addBusinessDays(inputDate=paidDate,numDays=6);
+                                    </cfscript>
                                     Check Sent On: #DateFormat(vCheckSent,'mm/dd/yyyy')#
                                     <br/>Expect receipt between: #DateFormat(vExpectReceiptBegin,'mm/dd/yyyy')# and #DateFormat(vExpectReceiptEnd,'mm/dd/yyyy')#
-                            	<cfelse>
-                                	#comment#
-                              	</cfif>
-                            </td>
-                        </tr>
-                        <cfscript>
-                            vBalance = vBalance - amount;
-                        </cfscript>
-                    </cfloop>
-        
-                </table>
-            </td>
-        </tr>
-        
-        <tr>
-            <td colspan="8">&nbsp;</td>
-        </tr>            
-    </table>
+                                </cfif>
+                            <cfelse>
+                                #comment#
+                            </cfif>
+                        </td>
+                    </tr>
+                    <cfscript>
+                        vBalance = vBalance - amount;
+                    </cfscript>
+                </cfloop>
     
-<cfelse>
-
-	<table width="100%" border="0" cellpadding="8" cellspacing="" class="section">
-        <tr>
-            <td width="80px">
-                <a href="javascript:expandAll();">[ View All ]</a>
-            </td>            
-            <td width="300px">
-                <b>Season</b>  
-            </td>
-            <td><b>Total</b></td>
-        </tr>
+            </table>
+        </td>
+    </tr>
     
-        <cfif NOT VAL(qGetRepTotalPayments.recordcount)>
-            <tr>
-                <td colspan="3">No payments have been submitted for this user.</td>
-            </tr>
-        </cfif>
-        
-        <cfloop query="qGetRepTotalPayments">
-            <tr bgcolor="#iif(qGetRepTotalPayments.currentrow MOD 2 ,DE("EEEEEE") ,DE("FFFFFF") )#">
-                <td>
-                    <a href="javascript:displayPaymentDetails('programList#qGetRepTotalPayments.seasonID#');">[ View Details ]</a>
-                </td>            
-                <td>
-                    <b>#qGetRepTotalPayments.season#</b> 
-                </td>
-                <td>
-                    <b>#LSCurrencyFormat(qGetRepTotalPayments.totalPerProgram, 'local')#</b>
-                </td>
-            </tr>
-            
-            <cfscript>
-                // Get Payment List for current programID
-                qPaymentList = APPLICATION.CFC.USER.getRepPaymentsBySeasonID(userID=URL.userID, seasonID=qGetRepTotalPayments.seasonID, companyID=CLIENT.companyID);		
-            </cfscript>
-            
-            <tr id="programList#qGetRepTotalPayments.seasonID#" class="programList" style="display:none">
-                <td>&nbsp;</td>
-                <td colspan="2">
-           
-                    <!--- Detail Table --->
-                    <table width="100%" border="0" cellpadding="4" cellspacing="0">
-                        <tr>
-                            <td><b>Date</b></td>
-                            <td><b>ID</b></Td>
-                            <td><b>Student</b></td>
-                            <td><b>Host</b></td>
-                            <td><b>Program</b></td>
-                            <td><b>Type</b></td>
-                            <td><b>Amount</b></td>
-                            <td><b>Comment</b></td>
-                            <td><b>Trans. Type</b></td>
-                            <td><b>Prog. Manager</b></td>
-                        </tr>
-    
-                        <cfif NOT VAL(qPaymentList.recordcount)>
-                            <tr>
-                                <td colspan="8" style="padding-left:40px;">No payments submitted for this season.</td>
-                            </tr>
-                        </cfif>
-    
-                        <cfloop query="qPaymentList">
-                            <tr bgcolor="#iif(qPaymentList.currentrow MOD 2 ,DE("EEEEEE") ,DE("FFFFFF") )#">
-                                <td>#DateFormat(qPaymentList.date, 'mm/dd/yyyy')#</td>
-                                <td>#qPaymentList.id#</Td>
-                                <td><cfif NOT VAL(qPaymentList.studentID)> n/a <cfelse> #qPaymentList.firstName# #qPaymentList.familyLastName# (#qPaymentList.studentID#) </cfif></td>
-                                <td>
-                                    <cfif NOT VAL(qPaymentList.hostID)> 
-                                        n/a 
-                                    <cfelse> 
-                                        #qPaymentList.fatherFirstName#
-                                        <cfif LEN(qPaymentList.fatherFirstName) AND LEN(qPaymentList.motherFirstName)> &</cfif>
-                                         #qPaymentList.motherFirstName# #qPaymentList.hostFamilyLastName# (#qPaymentList.hostID#) 
-                                    </cfif>
-                                </td>
-                                <td>#qPaymentList.programName#</Td> 
-                                <td>#qPaymentList.type#</Td>  
-                                <td>#LSCurrencyFormat(qPaymentList.amount, 'local')#</td>
-                                <td>#qPaymentList.comment#</td>
-                                <td>#qPaymentList.transtype#</td>
-                                <td>#qPaymentList.team_id#</td>
-                            </tr>
-                        </cfloop>
-    
-                    </table>
-                    
-                </td>
-            </tr>            
-        </cfloop>     
-        
-        <tr>
-            <td colspan="8">&nbsp;</td>
-        </tr>            
-    </table>
-
-</cfif>  
+    <tr>
+        <td colspan="8">&nbsp;</td>
+    </tr>            
+</table>
 
 <table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
 	<tr><td align="center" width="50%">&nbsp;<input type="image" value="Back" src="pics/back.gif" onClick="javascript:history.back()"></td></tr>
