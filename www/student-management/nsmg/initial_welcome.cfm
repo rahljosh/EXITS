@@ -795,8 +795,14 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                     <div class="rdbox" >
                     
                        <table width=90% align="center" cellpadding=4 cellspacing="0">
-                        	
+                        	<Tr>
+                            	<tr>
+                                	<td colspan="3" align="right" valign="middle"><img src="pics/icons/N_icons/1_Desktop_Icons/icon_016.png"  border=0 /> New case</td>
+                                   <td colspan="3" valign="middle"><img src="pics/icons/Up_icons/1_Desktop_Icons/icon_016.png"  border=0 /> Updated case</td>
+                                </tr>
+                            </Tr>
                             <tr bgcolor="##90b2d5">
+                            	<th></th>
                             	<th align="left">Student</th> 
                                 <th align="left">Subject</th>
                                 <th align="left">Status</th>
@@ -806,13 +812,35 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                             </tr>
                         <Cfif qYourCasesInitial.recordcount eq 0>
                         	<tr>
-                            	<td colspan=4>You have no open cases.</td>
+                            	<td colspan=5>You have no open cases.</td>
                             </tr>
                         <cfelse>    
                             
                             <cfloop query="qYourCasesInitial">
+                            	<!----Get all the messages from the case---->
+                                <Cfquery name="allMessages" datasource="#application.dsn#">
+                                select count(id) as allMessages
+                                from smg_casemgmt_case_items
+                                where caseid = <cfqueryparam cfsqltype="cf_sql_integer" value="#caseID#">
+								</Cfquery>                               
+                                <!----Check if the case has been viewed---->
+                                <cfquery name="checkViewed" datasource="#application.dsn#">
+                                select id
+                                from smg_casemgmt_case_views
+                                where fk_userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+                                and fk_caseid = <cfqueryparam cfsqltype="cf_sql_integer" value="#caseID#">
+                                </cfquery>
+                                <!----check how many of the messages you have read---->
+                                <cfquery name="checkUnreadMessage" datasource="#application.dsn#">
+                                select count(fk_messageID) as readMessage
+                                from smg_casemgmt_case_views
+                                 where fk_userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+                                 and fk_caseid = <cfqueryparam cfsqltype="cf_sql_integer" value="#caseID#">
+                                </cfquery>
                             
-                                <tr class='clickableRow' style="cursor: pointer;" href='index.cfm?curdoc=caseMgmt/index&action=viewCase&caseID=#caseID#'  <cfif currentrow mod 2>bgcolor="##ccc"</cfif> >
+                                <tr class='clickableRow' style="cursor: pointer;" href='index.cfm?curdoc=caseMgmt/index&action=viewCase&caseID=#caseID#'  <cfif currentrow mod 2>bgcolor="##ccc"</cfif> >			<td><cfif checkViewed.recordcount eq 0><img src="pics/icons/N_icons/1_Desktop_Icons/icon_016.png"  border=0 /></cfif>
+                                	    <cfif (checkUnreadMessage.readMessage neq allMessages.allMessages) AND checkViewed.recordcount neq 0><img src="pics/icons/Up_icons/1_Desktop_Icons/icon_016.png"  border=0 /></cfif>
+                                	</td>
                                     <td>#firstname# #familylastname# (#studentid#)</td>
                                     <td>#Left(caseSubject,8)#...</td>
                                     <td>#caseStatus#</td>
@@ -826,12 +854,30 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
 						</Cfif>
    <cfif val(qYourLoopedCasesInitial.recordcount)>
                             <tr bgcolor="##90b2d5">
-                            	<th align="left" colspan="6"><em>Looped In</em></th>
+                            	<th align="left" colspan="7"><em>Looped In</em></th>
                             </tr>
                             </cfif>
                             <cfloop query="qYourLoopedCasesInitial">
-                            
-                                <tr class='clickableRow' style="cursor: pointer;" href='index.cfm?curdoc=caseMgmt/index&action=viewCase&caseID=#caseID#' <cfif currentrow mod 2>bgcolor="##ccc"</cfif>>
+                            <!----Get all the messages from the case---->
+                                <Cfquery name="allMessagesLooped" datasource="#application.dsn#">
+                                select count(id) as allMessages
+                                from smg_casemgmt_case_items
+                                where caseid = <cfqueryparam cfsqltype="cf_sql_integer" value="#caseID#">
+								</Cfquery>     
+                            <cfquery name="checkViewedLoop" datasource="#application.dsn#">
+                                select id
+                                from smg_casemgmt_case_views
+                                where fk_userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+                                and fk_caseid = <cfqueryparam cfsqltype="cf_sql_integer" value="#caseID#">
+                                </cfquery>
+                                 <cfquery name="checkUnreadMessageLooped" datasource="#application.dsn#">
+                                select count(fk_messageID) as readMessage
+                                from smg_casemgmt_case_views
+                                 where fk_userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+                                 and fk_caseid = <cfqueryparam cfsqltype="cf_sql_integer" value="#caseID#">
+                                </cfquery>
+                                <tr class='clickableRow' style="cursor: pointer;" href='index.cfm?curdoc=caseMgmt/index&action=viewCase&caseID=#caseID#' <cfif currentrow mod 2>bgcolor="##ccc"</cfif>>					<td><cfif checkViewedLoop.recordcount eq 0><img src="pics/icons/N_icons/1_Desktop_Icons/icon_016.png"  border=0 /></cfif>
+                                <cfif (checkUnreadMessageLooped.readMessage neq allMessagesLooped.allMessages) AND checkViewedLoop.recordcount neq 0><img src="pics/icons/Up_icons/1_Desktop_Icons/icon_016.png"  border=0 /></cfif></td>
                                     <td>#firstname# #familylastname# (#studentid#)</td>
                                     <td>#Left(caseSubject,8)#...</td>
                                     <td>#caseStatus#</td>
