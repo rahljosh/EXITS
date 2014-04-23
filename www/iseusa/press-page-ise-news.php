@@ -106,6 +106,66 @@ Babylon, NY 11702</p>
     <div class="smSize" style="float:right; width: 120px; margin: 10px 0 0 0;"><a href="press-page-ise-news.cfm"><strong>2014</strong></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="press-page-ise-news-2013.cfm">2013</a></div>
 <h1>ISE News and Stories</h1>
  <div class="dotLine">&nbsp;</div>
+ 
+ 
+   <!---- Article April 23 ------->  
+<div class="iseNewsImg">
+  <div class="picIMG"><img src="images/pressKit/Interested-ISE.jpg" width="228" height="228" alt=""/></div>
+<p class="smItalic">Belgian Charles Becalard and Pam Hekerman of Netherlands are spending their senior high school year as Velma-Alma students.</p>
+</div>
+
+<div class="iseNews">
+
+<h2>Interested in learning more about ISE?</h2>
+<p class="smSize">Posted: Apirl 23rd, 2014</p>
+
+  <p>To learn more about International Student Exchange, visit its website at www.iseusa.com. </p>
+  <p>If you are considering becoming a host family and have questions, call Pam Nichols.</p>
+  <p><a href="pdfs/presskit/Interested-ISE.pdf" target="new"> Go to Article</a></p>
+</div>
+
+<!---- Article April 23 ------->
+ <div class="clearfloat">&nbsp;</div>
+    <div class="blueLine">&nbsp;</div>
+      <!---- Article April 23 ------->  
+<div class="iseNewsImg">
+  <div class="picIMG"><img src="images/pressKit/noPhoto.jpg" width="228" height="228" alt=""/></div>
+<p class="smItalic"></p>
+</div>
+
+<div class="iseNews">
+
+<h2>Exchange students embrace lifestyle of small-town southern Oklahoma</h2>
+<p class="smSize">Posted: April 23, 2014</p>
+
+  <p>&quot;It's all about world peace.&quot;</p>
+  <p>Pam Nichols was talking about why she is passionate about the International Student Exchange (ISE). She is a regional manager for the not-for-profit organization.</p>
+  <p>&quot;Opening our hearts and homes to a young person sends a message overseas that we care about other countries,&quot; Nicols said.</p>
+  <p><a href="pdfs/presskit/atHomeOK.pdf" target="new"> Go to Article</a></p>
+</div>
+
+<!---- Article April 23 ------->
+ <div class="clearfloat">&nbsp;</div>
+    <div class="blueLine">&nbsp;</div>
+      <!---- Article April 23 ------->  
+<div class="iseNewsImg">
+  <div class="picIMG"><img src="images/pressKit/projectHELP-Apri.jpg" width="228" height="228" alt=""/></div>
+<p class="smItalic"></p>
+</div>
+
+<div class="iseNews">
+
+<h2>Exchange Students give back to host community</h2>
+<p class="smSize">Posted: April 20th, 2014</p>
+
+  <p>In recognition of Red Cross Month, exchange student from International Student Exchange (ISE) participated in a group volunteer project at the Lawrence County Red Cross Building, doing landscaping and planting flowers.</p>
+  <p><a href="pdfs/presskit/exchange-students-give-back.pdf" target="new"> read more</a></p>
+</div>
+
+<!---- Article April 23 ------->
+ <div class="clearfloat">&nbsp;</div>
+    <div class="blueLine">&nbsp;</div>
+    
   <!---- Article April 2 ------->  
 <div class="iseNewsImg">
   <div class="picIMG"><img src="images/pressKit/April14th.jpg" width="228" height="228" alt="Wahkiakum County Eagle"></div>
