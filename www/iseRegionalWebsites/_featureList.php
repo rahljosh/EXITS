@@ -163,33 +163,32 @@
 <div class="section vertical">
 
 	<ul class="tabs">
-	  <li class="current">NEWSLETTER</li>
-      <li>FACEBOOK</li>
+	  <li class="current">FACEBOOK</li>
+      <li>NEWSLETTER</li>
       <li>WEBSTORE</li>
 	</ul>
 
 	<div class="box visible">
-   <div style="background-color: #FFF; padding: 10px; margin-top: 10px; margin-bottom: 10px;">
-<p align="right"><small>ISE NEWSLETTER | February 27, 2014</small></p>
-<h1>The Insider</h1>
-
-<h3>Next Month is Red Cross Month</strong>!</h3>
-<p>If your students haven’t done their Project HELP hours, next month there will be plenty of chances through the Red Cross. To find opportunities, direct them to our Project HELP Page: <a href="http://www.iseusa.com/student-exchange-project-help-redcross.cfm" class="blueLink">go to page</a></p>
-<div class="dotLine">&nbsp;</div>
-<br />
-<h3>Remember, we also send students to other countries too!</h3>
-<p>If you checked out our new website, you might have noticed the enhanced “study abroad" section. It’s a great chance for a US student to see another country and learn about their culture. We have full year programs, half year programs and summer programs. Check out all the countries you can visit: <a href="http://www.iseusa.com/study-abroad.cfm" class="blueLink">Study Abroad</a></p>
-<br />
-<div class="news"><a href="newsletter/host/February_host_newsletter.cfm" target="_blank">LATEST NEWSLETTER >></a></div>
+ <div style="background-color: #FFF; margin: 8px auto 8px auto;"><iframe
+src="https://www.facebook.com/plugins/likebox.php?href=<?PHP echo $_SESSION[facebook]; ?>&amp;width=490&amp;colorscheme=light&amp;show_faces=false&amp;border_color&amp;stream=true&amp;header=true&amp;font=arial&amp;height=435" scrolling="yes" frameborder="0" style="border:none; overflow:hidden; width: 473px; height: 325px; background: white; float: left;" allowTransparency="true"></iframe>
+<div class="clearfloat">&nbsp;</div>
 </div>
 	</div>
 
 	<div class="box">
-		<div style="background-color: #FFF; margin: 8px auto 8px auto;"><iframe
-src="https://www.facebook.com/plugins/likebox.php?href=<?PHP echo $_SESSION[facebook]; ?>&amp;width=490&amp;colorscheme=light&amp;show_faces=false&amp;border_color&amp;stream=true&amp;header=true&amp;font=arial&amp;height=435" scrolling="yes" frameborder="0" style="border:none; overflow:hidden; width: 473px; height: 325px; background: white; float: left;" allowTransparency="true"></iframe>
-<div class="clearfloat">&nbsp;</div>
-</div>
+  <div style="background-color: #FFF; padding: 10px; margin-top: 10px; margin-bottom: 10px;">
+<p align="right"><small>ISE NEWSLETTER | April 21, 2014</small></p>
+<h1>The Insider</h1>
 
+<h3>Sign up to host again now!</h3>
+<p>Before the school year gets out, now is actually the best time to sign up to host again. We know most of you have summer vacations, travel plans and weddings to go to . . . so sign up now before “your” busy season starts.</p>
+<div class="dotLine">&nbsp;</div>
+<br />
+<h3>Project HELP Hours</h3>
+<p>With the end of the year coming soon, it’s time to get the Project HELP hours in. For those students who went above the 20 hour mark, you are eligible for a free tee-shirt.<!-- <a href="https://www.iseusa.com/student-project-help.cfm" class="blueLink">Go to page &gt;&gt;</a>--></p>
+<br />
+<div class="news"><a href="https://www.iseusa.com/newsletter/host/april_host_newsletter.cfm" target="_blank">LATEST NEWSLETTER >></a></div>
+</div>
 	</div>
 	
 
