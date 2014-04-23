@@ -1,3 +1,5 @@
+<cfsetting requesttimeout="99999">
+
 <!--- CHECK INVOICE RIGHTS ---->
 <cfinclude template="check_rights.cfm">
 
