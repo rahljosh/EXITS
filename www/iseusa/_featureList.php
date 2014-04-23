@@ -240,17 +240,17 @@ src="https://www.facebook.com/plugins/likebox.php?href=http%3A%2F%2Fwww.facebook
 
 <div class="box">
 <div style="background-color: #FFF; padding: 10px; margin-top: 10px; margin-bottom: 10px;">
-<p align="right"><small>ISE NEWSLETTER | March 14, 2014</small></p>
+<p align="right"><small>ISE NEWSLETTER | April 21, 2014</small></p>
 <h1>The Insider</h1>
 
-<h3>March is the time to sign up to host again!</strong>!</h3>
-<p>This is a great time to sign up for to host next year. There are still plenty of students looking for a host family. Remember, the earlier you sign up, the better you get to know your student.</p>
+<h3>Sign up to host again now!</strong>!</h3>
+<p>Before the school year gets out, now is actually the best time to sign up to host again. We know most of you have summer vacations, travel plans and weddings to go to . . . so sign up now before “your” busy season starts.</p>
 <div class="dotLine">&nbsp;</div>
 <br />
-<h3>Red Cross Month</h3>
-<p>Now that the weather is warmer, there are many Project HELP opportunities.  We are still in the middle of Red Cross month.  Go out and tell your students to sign up today.  To find opportunities, direct them to our Project HELP Page: <a href="https://www.iseusa.com/student-project-help.cfm" class="blueLink">click here</a></p>
+<h3>Project HELP Hours</h3>
+<p>With the end of the year coming soon, it’s time to get the Project HELP hours in. For those students who went above the 20 hour mark, you are eligible for a free tee-shirt.<!-- <a href="https://www.iseusa.com/student-project-help.cfm" class="blueLink">click here</a>--></p>
 <br />
-<div class="news"><a href="newsletter/host/march_host_newsletter.cfm" target="_blank">LATEST NEWSLETTER >></a></div>
+<div class="news"><a href="newsletter/host/april_host_newsletter.cfm" target="_blank">LATEST NEWSLETTER >></a></div>
 </div>
 <!-- .end box --></div>
 
