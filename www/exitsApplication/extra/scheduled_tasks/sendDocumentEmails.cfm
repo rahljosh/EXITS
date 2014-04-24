@@ -35,6 +35,7 @@
 <cfscript>
 	// Get List of Documents - Download Forms = Type 2
 	qDocumentList = APPLICATION.CFC.DOCUMENT.getDocumentsByFilter(documentTypeID=43);
+	vErrors = "";
 </cfscript>
 
 <cfoutput query="qGetCandidatesMissingGenericDocuments">
@@ -107,20 +108,28 @@
         </p>
     </cfsavecontent>
     
-    <cfscript>
-		APPLICATION.CFC.EMAIL.sendEmail(
-			emailFrom="support@csb-usa.com",
-			emailTo=email,
-			emailBCC="jim@iseusa.org",
-			emailSubject="CSB Summer Work Travel – Arrival Package",
-			emailMessage=candidateEmail);
-	</cfscript>
+    <cftry>
     
-    <cfquery datasource="#APPLICATION.DSN.Source#">
-    	UPDATE extra_candidates
-        SET dateGenericDocumentsSent = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
-        WHERE candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#candidateID#">
-    </cfquery>
+		<cfscript>
+            APPLICATION.CFC.EMAIL.sendEmail(
+                emailFrom="support@csb-usa.com",
+                emailTo=email,
+                emailBCC="jim@iseusa.org",
+                emailSubject="CSB Summer Work Travel – Arrival Package",
+                emailMessage=candidateEmail);
+        </cfscript>
+        
+        <cfquery datasource="#APPLICATION.DSN.Source#">
+            UPDATE extra_candidates
+            SET dateGenericDocumentsSent = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
+            WHERE candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#candidateID#">
+        </cfquery>
+        
+        <cfcatch type="any">
+        	<cfset vErrors = vErrors & "<b>EXTRA Document sending error - " & candidateID & " - " & CFCATCH.Message & " - " & CFCATCH.Detail & "<br/>">	
+        </cfcatch>
+        
+ 	</cftry>
 </cfoutput>
 
 <cfoutput query="qGetCandidatesMissingIDs">
@@ -171,18 +180,36 @@
         </p>
     </cfsavecontent>
     
-    <cfscript>
+    <cftry>
+    
+		<cfscript>
+            APPLICATION.CFC.EMAIL.sendEmail(
+                emailFrom="support@csb-usa.com",
+                emailTo=email,
+                emailBCC="jim@iseusa.org",
+                emailSubject="Reminder: CSB Summer Work Travel – Arrival Package",
+                emailMessage=candidateEmail);
+        </cfscript>
+        
+        <cfquery datasource="#APPLICATION.DSN.Source#">
+            UPDATE extra_candidates
+            SET dateIDSent = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
+            WHERE candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#candidateID#">
+        </cfquery>
+    
+    	<cfcatch type="any">
+        	<cfset vErrors = vErrors & "<b>EXTRA Document sending error - " & candidateID & " - " & CFCATCH.Message & " - " & CFCATCH.Detail & "<br/>">	
+        </cfcatch>
+        
+  	</cftry>
+</cfoutput>
+
+<cfif LEN(vErrors)>
+	<cfscript>
 		APPLICATION.CFC.EMAIL.sendEmail(
 			emailFrom="support@csb-usa.com",
-			emailTo=email,
-			emailBCC="jim@iseusa.org",
-			emailSubject="Reminder: CSB Summer Work Travel – Arrival Package",
-			emailMessage=candidateEmail);
+			emailTo="jim@iseusa.org",
+			emailSubject="Errors - Arrival Package",
+			emailMessage=vErrors);
 	</cfscript>
-    
-    <cfquery datasource="#APPLICATION.DSN.Source#">
-    	UPDATE extra_candidates
-        SET dateIDSent = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
-        WHERE candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#candidateID#">
-    </cfquery>
-</cfoutput>
+</cfif>
