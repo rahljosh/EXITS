@@ -44,7 +44,7 @@
 	}
 	
 	// CASE Payments
-	if ( ListFind("5", DayOfWeek(Now())) ) {
+	if ( NOT ListFind("1,7", DayOfWeek(Now())) ) {
 		try {
 			include "casePayments.cfm";
 		} catch(any e) {
