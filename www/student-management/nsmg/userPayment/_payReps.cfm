@@ -11,10 +11,12 @@
 
 <cfparam name="URL.printPage" default="0">
 <cfparam name="FORM.submitted" default="0">
+<cfparam name="FORM.payRep" default="0">
 
 <cfquery name="qGetPayments" datasource="#APPLICATION.DSN#">
 	SELECT 
     	p.*,
+        p.ID,
         t.type,
         CASE 
             WHEN s.middleName != "" THEN CONCAT(s.firstName, " ", s.middleName, " ", s.familyLastName)
@@ -74,13 +76,15 @@
                 FROM qGetPayments
                 WHERE agentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(agentID)#">
             </cfquery>
-            <cfquery datasource="#APPLICATION.DSN#">
-            	UPDATE smg_users_payments
-                SET
-                	isPaid = 1,
-            		date = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
-        		WHERE ID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ValueList(qGetRepPayments.ID)#" list="yes"> )
-            </cfquery>
+            <cfif VAL(qGetRepPayments.recordCount)>
+                <cfquery datasource="#APPLICATION.DSN#">
+                    UPDATE smg_users_payments
+                    SET
+                        isPaid = 1,
+                        date = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
+                    WHERE ID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ValueList(qGetRepPayments.ID)#" list="yes"> )
+                </cfquery>
+            </cfif>
             <cfquery datasource="#APPLICATION.DSN#">
                 INSERT INTO smg_users_payments(
                     agentID,
