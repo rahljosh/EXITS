@@ -33,7 +33,7 @@
 	
 		// Get Category List - do not require pictures for second room unless double placement is selected
 		if (qGetHostFamilyInfo.acceptDoublePlacement EQ 1 AND qGetHostFamilyInfo.sharingBedroom NEQ "EachOther") {
-			qGetCategoryList = APPLICATION.CFC.DOCUMENT.getDocumentType(documentGroup="familyAlbum");
+			qGetCategoryList = APPLICATION.CFC.DOCUMENT.getDocumentType(documentGroup="familyAlbum",ignoreIDs="39");
 		} else {
 			qGetCategoryList = APPLICATION.CFC.DOCUMENT.getDocumentType(documentGroup="familyAlbum",ignoreIDs="38,39");
 		}
