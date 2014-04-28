@@ -114,7 +114,6 @@
             APPLICATION.CFC.EMAIL.sendEmail(
                 emailFrom="support@csb-usa.com",
                 emailTo=email,
-                emailBCC="jim@iseusa.org",
                 emailSubject="CSB Summer Work Travel – Arrival Package",
                 emailMessage=candidateEmail);
         </cfscript>
@@ -186,7 +185,6 @@
             APPLICATION.CFC.EMAIL.sendEmail(
                 emailFrom="support@csb-usa.com",
                 emailTo=email,
-                emailBCC="jim@iseusa.org",
                 emailSubject="Reminder: CSB Summer Work Travel – Arrival Package",
                 emailMessage=candidateEmail);
         </cfscript>
