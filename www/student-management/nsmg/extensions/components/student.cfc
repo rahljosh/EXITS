@@ -4729,6 +4729,7 @@
                 <cfinvoke component="nsmg.cfc.email" method="send_mail">
                     <cfinvokeargument name="email_to" value="#flightEmailTo#">
                     <cfinvokeargument name="email_cc" value="#flightEmailCC#">
+                    <cfinvokeargument name="email_replyto" value="">
                     <cfinvokeargument name="email_subject" value="Flight Information for #qGetStudentFullInformation.firstname# #qGetStudentFullInformation.familylastname# (###qGetStudentFullInformation.studentID#)">
                     <cfinvokeargument name="email_message" value="#flightEmailBody#">
                     <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
@@ -4741,6 +4742,7 @@
                     <cfinvoke component="nsmg.cfc.email" method="send_mail">
                         <cfinvokeargument name="email_to" value="#flightEmailTo#">
                         <cfinvokeargument name="email_cc" value="#flightEmailCC#">
+                        <cfinvokeargument name="email_replyto" value="">
                         <cfinvokeargument name="email_subject" value="Flight Information for #qGetStudentFullInformation.firstname# #qGetStudentFullInformation.familylastname# (###qGetStudentFullInformation.studentID#)">
                         <cfinvokeargument name="email_message" value="#flightInfoReport#">
                         <cfinvokeargument name="email_from" value="#CLIENT.support_email#">
