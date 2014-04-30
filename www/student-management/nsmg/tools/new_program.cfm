@@ -132,7 +132,7 @@ if (document.new_program.smg_trip.value == '0') {
 			<tr><td></td><td><font color="FF6600"><u><b>Incentive Trip</b></u></font></td></tr>
 			<tr><td align="right">Incentive Trip:</td>
 				<td><cfselect name="smg_trip" required="yes" message="You must select an incentive trip for the program">
-					<option value="0"></option>
+					<option value="0">None</option>
 					<cfloop query="qGetTripList">
 					<option value="#tripid#">#trip_place#</option>
 					</cfloop>

@@ -1,30 +1,45 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title>Untitled Document</title>
-</head>
-
-<body>
-
-<cftransaction action="begin" isolation="serializable"> = 
-	 <cfquery name="add_program" datasource="mysql">
-		insert into smg_programs (programname, type , startdate, enddate, companyid, insurance_startdate, insurance_enddate, seasonid, smgseasonid, tripid, hold, fk_smg_student_app_programID)
-			values('#form.programname#', #form.type#, #CreateODBCDate(form.startdate)#, #CreateODBCDate(form.enddate)#, 
-				#client.companyid#, 
-				<cfif form.insurance_startdate is not ''>#CreateODBCDate(form.insurance_startdate)#<cfelse>null</cfif>,
-				<cfif form.insurance_enddate is not ''>#CreateODBCDate(form.insurance_enddate)#<cfelse>null</cfif>,
-				'#form.seasonid#', '#form.smgseasonid#', '#form.smg_trip#', 1, #form.studentAppType#)
+<cftransaction action="begin" isolation="serializable">
+	<cfquery name="add_program" datasource="#APPLICATION.DSN#">
+		INSERT INTO smg_programs (
+        	programname, 
+            type, 
+            startdate, 
+            enddate, 
+            companyid, 
+            insurance_startdate, 
+            insurance_enddate, 
+            seasonid, 
+            smgseasonid, 
+            tripid, 
+            hold, 
+            fk_smg_student_app_programID)
+		VALUES (
+        	<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.programName#">,
+            <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.type#">,
+            <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.startdate)#">, 
+            <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.enddate)#">, 
+			<cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">, 
+			<cfif LEN(FORM.insurance_startdate)>
+            	<cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.insurance_startdate)#">
+          	<cfelse>
+            	NULL
+          	</cfif>,
+			<cfif LEN(FORM.insurance_enddate)>
+            	<cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(FORM.insurance_enddate)#">
+          	<cfelse>
+            	NULL
+           	</cfif>,
+            <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#">,
+            <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.smgseasonID#">,
+            <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.smg_trip#">,
+            <cfqueryparam cfsqltype="cf_sql_integer" value="1">,
+            <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentAppType#">)
 	</cfquery>
-	<cfquery name="prog_id" datasource="MySQL">
-		select MAX(programid) as newid
-		from smg_programs
+	<cfquery name="prog_id" datasource="#APPLICATION.DSN#">
+		SELECT MAX(programid) as newid
+		FROM smg_programs
 	</cfquery>
-
 </cftransaction>
 <cfoutput>
-<cflocation url="index.cfm?curdoc=tools/change_programs&progid=#prog_id.newid#" addtoken="no">
+	<cflocation url="index.cfm?curdoc=tools/change_programs&progid=#prog_id.newid#" addtoken="no">
 </cfoutput>
-
-</body>
-</html>
