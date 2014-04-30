@@ -4,12 +4,7 @@ function CheckData() {
 if (document.new_program.seasonid.value == '0') {
 	alert("You must select an insurance type.");
 	document.new_program.seasonid.focus();
-	return false; }  	
-if (document.new_program.smg_trip.value == '0') {
-	alert("You must select an incentive trip for the program.");
-	document.new_program.smg_trip.focus();
 	return false; }
-}
 //-->
 </script>
 
