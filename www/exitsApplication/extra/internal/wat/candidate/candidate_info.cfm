@@ -2358,7 +2358,7 @@
                                                     <td class="style1" align="right"><strong>Job Offer Status:</strong></td>
                                                     <td class="style1">
                                                         <span class="readOnly selfPlacementReadOnly">#qGetAllPlacements.selfJobOfferStatus#</span>
-                                                        <select name="selfJobOfferStatus_#qGetAllPlacements.candCompID#" id="selfJobOfferStatus_#qGetAllPlacements.candCompID#" class="style1 editPage selfPlacementField mediumField"> 
+                                                        <select name="selfJobOfferStatus_#qGetAllPlacements.candCompID#" id="selfJobOfferStatus_#qGetAllPlacements.candCompID#" class="style1 editPage mediumField"> 
                                                             <option value="" <cfif NOT LEN(qGetAllPlacements.selfJobOfferStatus)>selected</cfif> ></option>
                                                             <option value="Pending" <cfif qGetAllPlacements.selfJobOfferStatus EQ 'Pending'>selected</cfif> >Pending</option>
                                                             <option value="Confirmed" <cfif qGetAllPlacements.selfJobOfferStatus EQ 'Confirmed'>selected</cfif> >Confirmed</option>
@@ -2370,7 +2370,7 @@
                                                     <td class="style1" align="right"><strong>Name:</strong></td>
                                                     <td class="style1">
                                                         <span class="readOnly selfPlacementReadOnly">#qGetAllPlacements.selfConfirmationName#</span>
-                                                        <input type="text" name="selfConfirmationName_#qGetAllPlacements.candCompID#" id="selfConfirmationName_#qGetAllPlacements.candCompID#" value="#qGetAllPlacements.selfConfirmationName#" class="style1 editPage selfPlacementField xLargeField">
+                                                        <input type="text" name="selfConfirmationName_#qGetAllPlacements.candCompID#" id="selfConfirmationName_#qGetAllPlacements.candCompID#" value="#qGetAllPlacements.selfConfirmationName#" class="style1 editPage xLargeField">
                                                     </td>
                                                 </tr>
                                                 <tr class="hiddenField selfPlacementInfo">
@@ -2549,7 +2549,7 @@
                                                     <td class="style1" align="right"><strong>EIN:</strong></td>
                                                     <td class="style1">
                                                         <span class="readOnly selfPlacementReadOnly">#qGetAllPlacements.EIN#</span>
-                                                        <input type="text" name="EIN_#qGetAllPlacements.candCompID#" id="EIN_#qGetAllPlacements.candCompID#" value="#qGetAllPlacements.EIN#" class="style1 editPage selfPlacementField mediumField">
+                                                        <input type="text" name="EIN_#qGetAllPlacements.candCompID#" id="EIN_#qGetAllPlacements.candCompID#" value="#qGetAllPlacements.EIN#" class="style1 editPage mediumField">
                                                     </td>
                                                 </tr>
                                                 <tr class="hiddenField selfPlacementInfo">
@@ -2564,7 +2564,7 @@
                                                                 N/A
                                                             </cfif>
                                                         </span>
-                                                        <select name="workmensCompensation_#qGetAllPlacements.candCompID#" id="workmensCompensation_#qGetAllPlacements.candCompID#" class="style1 editPage selfPlacementField smallField"> 
+                                                        <select name="workmensCompensation_#qGetAllPlacements.candCompID#" id="workmensCompensation_#qGetAllPlacements.candCompID#" class="style1 editPage smallField"> 
                                                             <option value="" <cfif NOT LEN(qGetAllPlacements.workmensCompensation)>selected</cfif> ></option>
                                                             <option value="0" <cfif qGetAllPlacements.workmensCompensation EQ 0>selected</cfif> >No</option>
                                                             <option value="1" <cfif qGetAllPlacements.workmensCompensation EQ 1>selected</cfif> >Yes</option>                                                    
@@ -2584,7 +2584,7 @@
                                                                 name="WC_carrierName_#qGetAllPlacements.candCompID#" 
                                                                 id="WC_carrierName_#qGetAllPlacements.candCompID#" 
                                                                 value="#qGetAllPlacements.WC_carrierName#" 
-                                                                class="style1 editPage selfPlacementField"
+                                                                class="style1 editPage"
                                                                 size="40" />
                                                         </td>
                                                     </tr>
@@ -2599,7 +2599,7 @@
                                                                 name="WC_carrierPhone_#qGetAllPlacements.candCompID#" 
                                                                 id="WC_carrierPhone_#qGetAllPlacements.candCompID#" 
                                                                 value="#qGetAllPlacements.WC_carrierPhone#" 
-                                                                class="style1 editPage selfPlacementField"
+                                                                class="style1 editPage"
                                                                 size="40" />
                                                         </td>
                                                     </tr>
@@ -2614,7 +2614,7 @@
                                                                 name="WC_policyNumber_#qGetAllPlacements.candCompID#" 
                                                                 id="WC_policyNumber_#qGetAllPlacements.candCompID#" 
                                                                 value="#qGetAllPlacements.WC_policyNumber#" 
-                                                                class="style1 editPage selfPlacementField"
+                                                                class="style1 editPage"
                                                                 size="40" />
                                                         </td>
                                                     </tr>
@@ -2631,14 +2631,14 @@
                                                                 Workmen's compensation is missing.
                                                             </cfif>
                                                         </span>
-                                                            <input type="text" name="WCDateExpired_#qGetAllPlacements.candCompID#" id="WCDateExpired_#qGetAllPlacements.candCompID#" value="#DateFormat(qGetAllPlacements.WCDateExpired, 'mm/dd/yyyy')#" class="style1 datePicker editPage selfPlacementField" maxlength="10">
+                                                            <input type="text" name="WCDateExpired_#qGetAllPlacements.candCompID#" id="WCDateExpired_#qGetAllPlacements.candCompID#" value="#DateFormat(qGetAllPlacements.WCDateExpired, 'mm/dd/yyyy')#" class="style1 datePicker editPage" maxlength="10">
                                                     </td>
                                                 </tr>
                                                 <tr class="hiddenField selfPlacementInfo">
                                                     <td class="style1" align="right"><strong>Phone Confirmation:</strong></td>
                                                     <td class="style1" colspan="3">
                                                         <span class="readOnly selfPlacementReadOnly">#DateFormat(qGetAllPlacements.confirmation_phone, 'mm/dd/yyyy')#</span>
-                                                        <input type="text" name="confirmation_phone_#qGetAllPlacements.candCompID#" id="confirmation_phone_#qGetAllPlacements.candCompID#" class="style1 datePicker editPage selfPlacementField" value="#DateFormat(qGetAllPlacements.confirmation_phone, 'mm/dd/yyyy')#" maxlength="10">
+                                                        <input type="text" name="confirmation_phone_#qGetAllPlacements.candCompID#" id="confirmation_phone_#qGetAllPlacements.candCompID#" class="style1 datePicker editPage" value="#DateFormat(qGetAllPlacements.confirmation_phone, 'mm/dd/yyyy')#" maxlength="10">
                                                         <cfif NOT LEN(qGetAllPlacements.confirmation_phone)><font size="1">(mm/dd/yyyy)</font></cfif>
                                                     </td>
                                                 </tr>
@@ -2646,7 +2646,7 @@
                                            			<td class="style1" align="right"><strong>Notes:</strong></td>
                                                     <td class="style1" colspan="3">
                                                         <span class="readOnly selfPlacementReadOnly">#qGetAllPlacements.selfConfirmationNotes#</span>
-                                                        <textarea name="selfConfirmationNotes_#qGetAllPlacements.candCompID#" id="selfConfirmationNotes_#qGetAllPlacements.candCompID#" class="style1 editPage selfPlacementField largeTextArea">#qGetAllPlacements.selfConfirmationNotes#</textarea>
+                                                        <textarea name="selfConfirmationNotes_#qGetAllPlacements.candCompID#" id="selfConfirmationNotes_#qGetAllPlacements.candCompID#" class="style1 editPage largeTextArea">#qGetAllPlacements.selfConfirmationNotes#</textarea>
                                                     </td>
                                                 </tr>
                                           	</table>
