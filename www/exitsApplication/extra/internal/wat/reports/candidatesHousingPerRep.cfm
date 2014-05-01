@@ -67,7 +67,8 @@
                 candidate.firstName, 
                 candidate.sex, 
                 candidate.email, 
-                candidate.wat_placement, 
+                candidate.wat_placement,
+                candidate.wat_vacation_start,
                 candidate.housingArrangedPrivately,
                 candidate.housingDetails,
                 candidate.ds2019,
@@ -75,8 +76,6 @@
                 host.city,
                 host.name AS hostCompanyName,
                 host.hostCompanyID,
-                program.startDate,
-                program.endDate,
                 state.stateName,
                 CASE
                     WHEN candidateID IN (SELECT candidateID FROM extra_incident_report WHERE isSolved = 0 AND subject = "Terminated") THEN "1"
@@ -412,15 +411,15 @@
                                 <td class="style1">#email#</td>
                                 <cfif NOT LEN(ds2019)>
                                     <td class="style1" colspan="2">Awaiting DS-2019</td>
-                                <cfelseif isHousingProvided NEQ 1 AND NOT VAL(housingArrangedPrivately) AND DateAdd("d",15,NOW()) GTE startDate>
-                               		<cfif DateAdd("d",9,NOW()) GTE startDate>
-                                        <td class="style1" colspan="2"><font color="red">Alert - program start date: #DateFormat(startdate, 'mm/dd/yyyy')#</font></td>
+                                <cfelseif isHousingProvided NEQ 1 AND NOT VAL(housingArrangedPrivately) AND DateAdd("d",15,NOW()) GTE wat_vacation_start>
+                               		<cfif DateAdd("d",9,NOW()) GTE wat_vacation_start>
+                                        <td class="style1" colspan="2"><font color="red">Alert - program start date: #DateFormat(wat_vacation_start, 'mm/dd/yyyy')#</font></td>
                                     <cfelse>
-                                        <td class="style1" colspan="2"><font color="yellow">Alert - program start date: #DateFormat(startdate, 'mm/dd/yyyy')#</font></td>
+                                        <td class="style1" colspan="2"><font color="yellow">Alert - program start date: #DateFormat(wat_vacation_start, 'mm/dd/yyyy')#</font></td>
                                     </cfif>
                                 <cfelse>
-                                    <td class="style1">#DateFormat(startdate, 'mm/dd/yyyy')#</td>
-                                    <td class="style1">#DateFormat(enddate, 'mm/dd/yyyy')#</td>
+                                    <td class="style1">#DateFormat(wat_vacation_start, 'mm/dd/yyyy')#</td>
+                                    <td class="style1">#DateFormat(wat_vacation_start, 'mm/dd/yyyy')#</td>
                                 </cfif>
                                 <td class="style1"><a href="index.cfm?curdoc=hostCompany/hostCompanyInfo&hostCompanyID=#hostCompanyID#" class="style4">#hostCompanyName#</a></td>
                                 <td class="style1">#city#</td>
