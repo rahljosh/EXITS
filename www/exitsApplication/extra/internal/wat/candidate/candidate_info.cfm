@@ -2421,7 +2421,7 @@
                                                                         name="authentication_secretaryOfState_#qGetAllPlacements.candCompID#" 
                                                                         id="authentication_secretaryOfState_#qGetAllPlacements.candCompID#" 
                                                                         value="1" 
-                                                                        class="formField hostCheckBox" 
+                                                                        class="formField" 
                                                                         disabled 
 																		<cfif VAL(qGetAllPlacements.authentication_secretaryOfState)> checked </cfif> />
                                                                   	<span style="padding-left:3px;<cfif qGetAllPlacements.authentication_secretaryOfStateExpiration LT NOW()>color:red;</cfif>">
@@ -2442,7 +2442,7 @@
                                                                         name="authentication_incorporation_#qGetAllPlacements.candCompID#" 
                                                                         id="authentication_departmentOfLabor_#qGetAllPlacements.candCompID#" 
                                                                         value="1" 
-                                                                        class="formField hostCheckBox" 
+                                                                        class="formField" 
                                                                         disabled <cfif VAL(qGetAllPlacements.authentication_incorporation)> checked </cfif> />
                                                                   	<span style="padding-left:3px;<cfif qGetAllPlacements.authentication_incorporationExpiration LT NOW()>color:red;</cfif>">
                                                                         #DateFormat(qGetAllPlacements.authentication_incorporationExpiration,'mm/dd/yyyy')#
@@ -2461,7 +2461,7 @@
                                                                         name="authentication_certificateOfExistence_#qGetAllPlacements.candCompID#" 
                                                                         id="authentication_certificateOfExistence_#qGetAllPlacements.candCompID#" 
                                                                         value="1" 
-                                                                        class="formField hostCheckBox" 
+                                                                        class="formField" 
                                                                         disabled 
 																		<cfif VAL(qGetAllPlacements.authentication_certificateOfExistence)> checked </cfif> />
                                                                    	<span style="padding-left:3px;<cfif qGetAllPlacements.authentication_certificateOfExistenceExpiration LT NOW()>color:red;</cfif>">
@@ -2481,7 +2481,7 @@
                                                                         name="authentication_certificateOfReinstatement_#qGetAllPlacements.candCompID#" 
                                                                         id="authentication_certificateOfReinstatement_#qGetAllPlacements.candCompID#" 
                                                                         value="1" 
-                                                                        class="formField hostCheckBox" 
+                                                                        class="formField" 
                                                                         disabled 
 																		<cfif VAL(qGetAllPlacements.authentication_certificateOfReinstatement)> checked </cfif> />
                                                                 	<span style="padding-left:3px;<cfif qGetAllPlacements.authentication_certificateOfReinstatementExpiration LT NOW()>color:red;</cfif>">
@@ -2501,7 +2501,7 @@
                                                                         name="authentication_departmentOfState_#qGetAllPlacements.candCompID#" 
                                                                         id="authentication_departmentOfState_#qGetAllPlacements.candCompID#" 
                                                                         value="1" 
-                                                                        class="formField hostCheckBox" 
+                                                                        class="formField" 
                                                                         disabled 
 																		<cfif VAL(qGetAllPlacements.authentication_departmentOfState)> checked </cfif> />
                                                                   	<span style="padding-left:3px;<cfif qGetAllPlacements.authentication_departmentOfStateExpiration LT NOW()>color:red;</cfif>">
@@ -2518,7 +2518,7 @@
                                                                         name="authentication_departmentOfLabor_#qGetAllPlacements.candCompID#" 
                                                                         id="authentication_departmentOfLabor_#qGetAllPlacements.candCompID#" 
                                                                         value="1" 
-                                                                        class="formField hostCheckBox" 
+                                                                        class="formField" 
                                                                         disabled 
 																		<cfif VAL(qGetAllPlacements.authentication_departmentOfLabor)> checked </cfif> />
                                                                     <span style="padding-left:3px;<cfif qGetAllPlacements.authentication_departmentOfLaborExpiration LT NOW()>color:red;</cfif>">
@@ -2533,7 +2533,7 @@
                                                                     	type="checkbox" 
                                                                         name="authentication_googleEarth_#qGetAllPlacements.candCompID#" 
                                                                         id="authentication_googleEarth_#qGetAllPlacements.candCompID#" 
-                                                                        value="1" class="formField hostCheckBox" 
+                                                                        value="1" class="formField" 
                                                                         disabled 
 																		<cfif VAL(qGetAllPlacements.authentication_googleEarth)> checked </cfif> />
                                                                     <span style="padding-left:3px;<cfif qGetAllPlacements.authentication_googleEarthExpiration LT NOW()>color:red;</cfif>">
