@@ -415,7 +415,7 @@
                                		<cfif DateAdd("d",9,NOW()) GTE wat_vacation_start>
                                         <td class="style1" colspan="2"><font color="red">Alert - program start date: #DateFormat(wat_vacation_start, 'mm/dd/yyyy')#</font></td>
                                     <cfelse>
-                                        <td class="style1" colspan="2"><font color="yellow">Alert - program start date: #DateFormat(wat_vacation_start, 'mm/dd/yyyy')#</font></td>
+                                        <td class="style1" colspan="2"><font color="orange">Alert - program start date: #DateFormat(wat_vacation_start, 'mm/dd/yyyy')#</font></td>
                                     </cfif>
                                 <cfelse>
                                     <td class="style1">#DateFormat(wat_vacation_start, 'mm/dd/yyyy')#</td>
