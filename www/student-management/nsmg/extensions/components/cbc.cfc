@@ -516,6 +516,7 @@
         <cfargument name="notes" default="" hint="any notes on the CBC">
         <cfargument name="date_approved" default="" hint="date the cbc was approved">
         <cfargument name="denied" default="" hint="date of denial">
+        <cfargument name="userName" default="" hint="who updated record">
         
         <cfquery 
 			datasource="#APPLICATION.DSN#">
@@ -526,7 +527,8 @@
                     flagcbc = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.flagCBC#">,
                     notes  = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.notes#">,
                     date_approved = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.date_approved#" null="#NOT isDate(ARGUMENTS.date_approved)#">,
-                    denied = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.denied#" null="#NOT isDate(ARGUMENTS.denied)#">
+                    denied = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.denied#" null="#NOT isDate(ARGUMENTS.denied)#">,
+                    approvedDeniedBy = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.userName#">
                 WHERE 
                     cbcFamID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.cbcFamID#">
         </cfquery>	
