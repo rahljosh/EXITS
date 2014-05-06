@@ -22,7 +22,7 @@ function areYouSure() {
 </cfquery>
 
 <cfquery name="get_charges" datasource="#APPLICATION.DSN#">
-	SELECT rep.id, rep.agentid, rep.amount, rep.comment, rep.date, rep.inputby, rep.companyID, rep.transtype, rep.studentID,
+	SELECT rep.id, rep.agentid, rep.amount, rep.comment, rep.date, rep.inputby, rep.companyID, rep.transtype, rep.studentID, rep.isPaid,
 		   u.firstName, u.lastname, u.userid,
 		   type.type,
 		   p.programName, p.programID
@@ -53,7 +53,7 @@ function areYouSure() {
 			<cfset total = '0'>
 			<cfloop query="get_charges">
 			<tr bgcolor="#iif(get_charges.currentrow MOD 2 ,DE("ffffe6") ,DE("e2efc7") )#">
-				<td>#DateFormat(date, 'mm/dd/yyyy')#</td>
+				<td><cfif VAL(isPaid)>#DateFormat(date, 'mm/dd/yyyy')#<cfelse>Pending</cfif></td>
 				<Td>#id#</Td>
 				<td>#firstName# #lastname# (#userid#)</td>
 				<Td>#type#</Td> 
