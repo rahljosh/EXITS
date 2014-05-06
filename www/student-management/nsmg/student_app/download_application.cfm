@@ -1,6 +1,5 @@
-<cfset SESSION.downloadReady = 0>
-
 <cfsetting requesttimeout="300">
+<cfparam name="URL.photos" default="1">
 
 <!--- FROM PHP - AXIS --->
 <cfif IsDefined('URL.user')>
@@ -104,14 +103,16 @@
     <tr>
         <td valign="top">				
             <cfinclude template="section1/page3print.cfm">
-            <div style="page-break-after:always;"></div>
+            <cfif VAL(URL.photos)><div style="page-break-after:always;"></div></cfif>
         </td>
     </tr>
-    <tr>
-        <td valign="top">				
-            <cfinclude template="section1/page4print.cfm">
-        </td>
-    </tr>
+    <cfif VAL(URL.photos)>
+        <tr>
+            <td valign="top">				
+                <cfinclude template="section1/page4print.cfm">
+            </td>
+        </tr>
+    </cfif>
 </cfsavecontent>
 
 <cfsavecontent variable="page5">
@@ -292,37 +293,39 @@
 </cfsavecontent>
 
 <!--- Pages 25 - 27 use these variables for displaying images if there are any --->
-<cfscript>
-	param name="vStudentAppRelativePath" default="../";
-	param name="vUploadedFilesRelativePath" default="../../";
-</cfscript>
-
-<cfsavecontent variable="page25">
-	<tr>
-    	<td valign="top">
-        	<cfset doc="page25">
-        	<cfinclude template="print_include_file.cfm">
-        </td>
-    </tr>
-</cfsavecontent>
-
-<cfsavecontent variable="page26">
-	<tr>
-    	<td valign="top">
-        	<cfset doc="page26">
-        	<cfinclude template="print_include_file.cfm">
-        </td>
-    </tr>
-</cfsavecontent>
-
-<cfsavecontent variable="page27">
-	<tr>
-    	<td valign="top">
-        	<cfset doc="page27">
-        	<cfinclude template="print_include_file.cfm">
-        </td>
-    </tr>
-</cfsavecontent>
+<cfif VAL(URL.photos)>
+	<cfscript>
+		param name="vStudentAppRelativePath" default="../";
+		param name="vUploadedFilesRelativePath" default="../../";
+	</cfscript>
+	
+	<cfsavecontent variable="page25">
+		<tr>
+			<td valign="top">
+				<cfset doc="page25">
+				<cfinclude template="print_include_file.cfm">
+			</td>
+		</tr>
+	</cfsavecontent>
+	
+	<cfsavecontent variable="page26">
+		<tr>
+			<td valign="top">
+				<cfset doc="page26">
+				<cfinclude template="print_include_file.cfm">
+			</td>
+		</tr>
+	</cfsavecontent>
+	
+	<cfsavecontent variable="page27">
+		<tr>
+			<td valign="top">
+				<cfset doc="page27">
+				<cfinclude template="print_include_file.cfm">
+			</td>
+		</tr>
+	</cfsavecontent>
+</cfif>
 
 <cfoutput>
 
@@ -548,7 +551,12 @@
 	<cfif CLIENT.companyID EQ 13>
 		<cfset start = 25>
 	</cfif>
-    <cfloop from="#start#" to="27" index="i">
+    <cfif VAL(URL.photos)>
+    	<cfset end = 27>
+    <cfelse>
+    	<cfset end = 24>
+    </cfif>
+    <cfloop from="#start#" to="#end#" index="i">
     	<cfset page = Evaluate('page' & #i#)>
         <cfif FileExists(ExpandPath('../uploadedfiles/online_app/page#i#/#CLIENT.studentID#.pdf'))>
         	<cftry>
@@ -565,9 +573,7 @@
         </cfif>
     </cfloop>
     
-    <!--- List files that had an error --->
-    <cfset SESSION.errorFiles = #errorFiles#>
-    <cfset SESSION.downloadReady = 1>
+    <cfcookie name="DOWNLOADREADY" value="1" expires="#DATEADD('s',1,NOW())#">
     
     <cfheader name="Content-Disposition" value="attachment; filename=#CLIENT.studentID#-Complete-Application.pdf">
     <cfcontent type="application/pdf" file="#fileName#">
