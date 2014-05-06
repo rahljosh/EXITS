@@ -106,35 +106,22 @@
             hc.hostCompanyID,
             hc.name AS hostBusinessName,
             hc.email AS hostEmail
-        FROM 
-			extra_candidates ec
-		INNER JOIN
-        	smg_programs p ON p.programID = ec.programID
-        INNER JOIN	
-        	extra_hostCompany hc ON hc.hostCompanyID = ec.hostCompanyID            
-		WHERE
-        	ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-		AND
-        	ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="7">
-        AND 
-            ec.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vProgramList#" list="yes"> )
+        FROM extra_candidates ec
+		INNER JOIN smg_programs p ON p.programID = ec.programID
+        INNER JOIN extra_hostCompany hc ON hc.hostCompanyID = ec.hostCompanyID            
+		WHERE ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+		AND ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="7">
+        AND ec.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vProgramList#" list="yes"> )
             
-        <!--- Include candidates that have started the program for at least 2 months --->
-        AND
-        	<cfqueryparam cfsqltype="cf_sql_integer" value="#vMonthEvaluation#"> >= MONTH(DATE_ADD(ec.ds2019_startDate, INTERVAL 2 MONTH))
-        AND 
-            <cfqueryparam cfsqltype="cf_sql_integer" value="#vMonthEvaluation#"> <= MONTH(DATE_ADD(ec.ds2019_startDate, INTERVAL 2 MONTH))
+        <!--- Include candidates that have started the program for at least 2 months (adding years * 12 to properly calculate based on previous years) --->
+        AND (<cfqueryparam cfsqltype="cf_sql_integer" value="#vMonthEvaluation#"> + (YEAR(NOW())*12)) >= (MONTH(DATE_ADD(ec.ds2019_startDate, INTERVAL 2 MONTH)) + (YEAR(ec.ds2019_startDate)*12))
             
 		<!--- Evaluation not received --->
-        AND
-        	ec.candidateID NOT IN (
-            	SELECT
-                	candidateID
-                FROM
-                	extra_evaluation
-                WHERE
-                	monthEvaluation = <cfqueryparam cfsqltype="cf_sql_integer" value="#vMonthEvaluation#">            
-            )
+        AND ec.candidateID NOT IN (
+            SELECT candidateID
+            FROM extra_evaluation
+            WHERE monthEvaluation = <cfqueryparam cfsqltype="cf_sql_integer" value="#vMonthEvaluation#">            
+       	)
                    
 		ORDER BY
         	p.programID,
