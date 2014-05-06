@@ -32,6 +32,8 @@
         AND c.watDateCheckedIn IS NULL
         AND c.applicationStatusID IN (0,11)
         AND c.companyID = 8
+        AND c.ds2019 != ""        
+        AND c.ds2019 IS NOT NULL
         AND (ADDDATE(c.startDate, INTERVAL 5 DAY) = CURDATE() OR ADDDATE(c.startDate, INTERVAL 10 DAY) = CURDATE())
     </cfquery>
     
