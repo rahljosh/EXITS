@@ -79,10 +79,10 @@ $(document).ready(function($){
     var deviceAgent = navigator.userAgent.toLowerCase();
     var agentID = deviceAgent.match(/(iphone|ipod|ipad)/);
     if (agentID) {
-        $('#myLink2').attr('href', 'https://www.youtube.com/watch?v=-ScNJmjdlGo');
+        $('#myLink2').attr('href', 'https://youtube.googleapis.com/v/-ScNJmjdlGo');
     }else
      { 
-         $('#myLink2').attr('href', 'https://www.youtube.com/watch?v=-ScNJmjdlGo');
+         $('#myLink2').attr('href', 'https://youtube.googleapis.com/v/-ScNJmjdlGo');
      }
 });</script><a id="myLink2" href="" target="_blank"><img src="images/maries-journey-video.jpg" width="200" height="150" alt="Be a Host Family" class="asideBrd" /></a></div>
 
