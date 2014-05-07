@@ -330,7 +330,7 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ededed', end
 	padding: 0px;
 	height: 150px;
 	width: 620px;
-	border: 2px solid #F7941E;
+	border: 2px solid #ccc;
 	display: block;
 	overflow: hidden;
 	margin-top: 20px;
