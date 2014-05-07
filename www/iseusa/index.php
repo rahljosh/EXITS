@@ -55,12 +55,12 @@ closer together is what motivates both our national and regional offices on a da
  
  
  <div class="promotionBorder">
-  <a href="student-project-help.php"><img src="images/Promo/Promo_Banner_1.jpg" width="620" height="150" /> </a></div>
+  <?php include '_promoBanner.php'; ?>
+ <!-- <a href="student-project-help.php"><img src="images/Promo/Promo_Banner_1.jpg" width="620" height="150" /> </a>---></div>
     <div class="sidebar1">
  <aside>
     <h2 style="margin-left: -5px;"><a href="become-a-host-family.cfm" target="_blank" class="blueLink" >Be a Host Family</a></h2>
-    <p style="font-size: 95%; margin-left: -5px;">Hosting a foreign exchange student is a life changing experience that brings the world closer together.   ISE students are excited about their upcoming exchange program in the United States.  Will you be the loving host family that opens the door for an international student?</p><br /> 
-     <div class="asideImg"><script>
+<!---<div class="asideImg"><script>
 $(document).ready(function($){
     var deviceAgent = navigator.userAgent.toLowerCase();
     var agentID = deviceAgent.match(/(iphone|ipod|ipad)/);
@@ -70,10 +70,23 @@ $(document).ready(function($){
      { 
          $('#myLink').attr('href', 'https://youtube.googleapis.com/v/U9D4yQms9Bs');
      }
-});</script><a id="myLink" href="" target="_blank"><img src="images/be-Host-family-video.png" width="200" height="150" alt="Be a Host Family" class="asideBrd" /></a></div>
-   
-  <!--  <h2><a href="webstore/index.cfm" target="_blank" class="blueLink" >Web Store</a></h2>
-      <div class="asideImg"><a href="webstore/index.cfm" target="_blank"><img src="images/ISE_webstore.png" width="200" height="150" alt="ISE swag"  class="asideBrd" /></a></div>--->
+});</script><a id="myLink" href="" target="_blank"><img src="images/be-Host-family-video.png" width="200" height="150" alt="Be a Host Family" class="asideBrd" /></a></div>--->
+     <p style="font-size: 95%; margin-left: -5px;">We followed one of our exchange students for an entire semester.  She played sports, went to her homecoming, made friends . . . and most importantly, she became a family member.</p>
+
+<p style="font-size: 95%; margin-left: -5px;">Watch the video below and see what it's like to host an exchange student.</p>
+      <div class="asideImg" style="margin-bottom: 15px;"><script>
+$(document).ready(function($){
+    var deviceAgent = navigator.userAgent.toLowerCase();
+    var agentID = deviceAgent.match(/(iphone|ipod|ipad)/);
+    if (agentID) {
+        $('#myLink2').attr('href', 'https://www.youtube.com/watch?v=-ScNJmjdlGo');
+    }else
+     { 
+         $('#myLink2').attr('href', 'https://www.youtube.com/watch?v=-ScNJmjdlGo');
+     }
+});</script><a id="myLink2" href="" target="_blank"><img src="images/maries-journey-video.jpg" width="200" height="150" alt="Be a Host Family" class="asideBrd" /></a></div>
+
+<p style="font-size: 95%; margin-left: -5px;">Hosting a foreign exchange student is a life changing experience that brings the world closer together.   ISE students are excited about their upcoming exchange program in the United States.  Will you be the loving host family that opens the door for an international student?</p> 
   </aside>
   </div>
 <article>

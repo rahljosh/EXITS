@@ -1,4 +1,4 @@
-<script language="JavaScript1.1">
+ <script language="JavaScript1.1">
 <!--
 
 /*
@@ -32,14 +32,13 @@ winslide.focus()
 //-->
 </script>
 
-<a href="javascript:gotoshow()"><img src="images/Promo/harborBeachCleanup.jpg" name="slide" width="620" height="150" alt="ISE News Banner"></a>
+<a href="javascript:gotoshow()"><img src="images/Promo/Promo_Banner_2.jpg" name="slide" width="620" height="150" alt="ISE News Banner"></a>
   <script>
 <!--
 
 //configure the paths of the images, plus corresponding target links
-slideshowimages("images/Promo/harborBeachCleanup.jpg","images/Promo/Promo_Banner_1.jpg")
-slideshowlinks("http://www.iseusa.com/pdfs/promo/HarborBeachCleanup.pdf","student-project-help.cfm")
-
+slideshowimages("images/Promo/Promo_Banner_2.jpg","images/Promo/Promo_Banner_3.jpg", "images/Promo/Promo_Banner_1.jpg")
+slideshowlinks("https://www.facebook.com/iseusa?ref=sgm", "https://www.youtube.com/watch?v=-ScNJmjdlGo", "student-project-help.cfm")
 
 //configure the speed of the slideshow, in miliseconds
 var slideshowspeed=5000
