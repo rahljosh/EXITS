@@ -106,6 +106,45 @@ Babylon, NY 11702</p>
     <div class="smSize" style="float:right; width: 120px; margin: 10px 0 0 0;"><a href="press-page-ise-news.cfm"><strong>2014</strong></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="press-page-ise-news-2013.cfm">2013</a></div>
 <h1>ISE News and Stories</h1>
  <div class="dotLine">&nbsp;</div>
+  <!---- Article May 2nd ------->  
+<div class="iseNewsImg">
+  <div class="picIMG"><img src="images/pressKit/american-experience.jpg" width="228" height="228" alt=""/></div>
+<p class="smItalic">From left, foreign exchange students Maxime Dutrieux and Kolos Kerekgyarto take in a Badger game with host parents RJ and Gina Newell.</p>
+</div>
+
+<div class="iseNews">
+
+<h2>The American Experience</h2>
+<p class="smSize">Posted: May 2, 2014</p>
+
+  <p>As the school year gets down to the final six weeks, high school students are preparing for some of the traditional end of the year activities – prom and graduation. For three seniors, it also marks the end of nearly 10 months living in McFarland.</p>
+  <p>Maxime Dutrieux, Kolos Kerekgyarto and Anne Rube arrived in the community in late August and in June, their time as foreign exchange students will end.</p>
+<p>Kerekgyarto, 18, is from Budapest, Hungary; Dutrieux, 19, is from Brussels, Belgium; and Rube, 17, is from Rathenow, Germany, which is about 70 kilometers from Berlin.</p>
+  <p><a href="http://www.hngnews.com/mcfarland_thistle/news/school/article_9ed676d0-d0ab-11e3-9646-001a4bcf6878.html" target="new"> Go to Article</a></p>
+</div>
+
+<!---- Article May 2nd ------->
+ <div class="clearfloat">&nbsp;</div>
+    <div class="blueLine">&nbsp;</div>
+  <!---- Article May 2nd ------->  
+<div class="iseNewsImg">
+  <div class="picIMG"><img src="images/pressKit/noPhoto.jpg" width="228" height="228" alt=""/></div>
+<p class="smItalic"></p>
+</div>
+
+<div class="iseNews">
+
+<h2>MLive Jackson Team of the Week: Foreign exchange athletes fit in with Leslie golf team</h2>
+<p class="smSize">Posted: May 2, 2014</p>
+
+  <p>LESLIE, MI &#8211; For the past couple of seasons, the Leslie High School boys golf team has had an international flair.</p>
+  <p>A season ago, the Blackhawks were aided by Paisilp Kanil, a foreign exchange student from Thailand. This year, Martin Mikeska, visiting the school from the Czech Republic, has joined the team.</p>
+  <p><a href="http://highschoolsports.mlive.com/news/article/-8905474719546026519/mlive-jackson-team-of-the-week-foreign-exchange-athletes-fit-in-with-leslie-golf-team/" target="new"> Go to Article</a></p>
+</div>
+
+<!---- Article May 2nd ------->
+ <div class="clearfloat">&nbsp;</div>
+    <div class="blueLine">&nbsp;</div>
  
  
    <!---- Article April 23 ------->  
