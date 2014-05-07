@@ -2727,6 +2727,7 @@
                     hl.hearAboutUs,
                     hl.hearAboutUsDetail,
                     hl.isListSubscriber,
+                    hl.contactWithRepName,
                     hl.dateCreated,
                     hl.dateUpdated,
                     r.regionName AS regionAssigned,
