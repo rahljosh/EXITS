@@ -9,8 +9,8 @@
 <div class="clearfix"></div>
 <table width="754" border="0">
   <tr>
-    <td width="249" scope="row" align="center"><a href="pdf/2012/ISE-Host-Company-Manual_2012.pdf" class="grey"><img src="HostCompany/images/manual.jpg" width="200" height="257" alt="trainee application" border="1" /><br />
-      Host Company Manual</a></td>
+    <td width="249" scope="row" align="center"><a href="../../pdf/2014/ISE-Host-Company-Manual.pdf" target="_blank" class="grey"><img src="images/HostCompanyHandbook.jpg" width="200" height="260" alt="trainee application" border="1" /><br />
+      Host Company Handbook</a></td>
     <td width="257" align="center"><a href="pdf/2012/HostCompanyQuestionaire(R).pdf" class="grey"><img src="HostCompany/images/question.jpg" width="200" height="260" alt="midterm evaluation" border="1"/><br />
     Questionaire &amp; Trainee Offer</a></td>
     <td width="234" align="center"><a href="pdf/2012/RESPONSIBILITIES-OBLIGATIONS-HOST ORGANIZATION.pdf" class="grey"><img src="HostCompany/images/response.jpg" width="200" height="257" alt="final Evaluation" border="1" /><br />
@@ -20,13 +20,15 @@
 <br />
 <hr />
 <br />
-<table width="754" border="0">
+<table width="725" border="0">
   <tr>
-    <td width="248" scope="row" align="center"><a href="pdf/HC/TrainingPlan(DS 7002).pdf" class="grey"><img src="HostCompany/images/TrainingPlan.jpg" width="200" height="257" alt="trainee application" border="1" /><br />
+    <td width="171" scope="row" align="center"><a href="pdf/2013/ISE_Training_Plan_DS7002.pdf" class="grey"><img src="HostCompany/images/TrainingPlan.jpg" width="158" height="203" alt="trainee application" border="1" /><br />
       Training Plan</a></td>
-    <td width="256" align="center"><a href="pdf/HC/ISE Midterm Evaluation.pdf" class="grey"><img src="HostCompany/images/midEval.jpg" width="200" height="260" alt="midterm evaluation" border="1"/><br />midterm evaluation</a></td>
-    <td width="203" align="center"><a href="pdf/HC/ISE_Summative_Evaluation.pdf" class="grey"><img src="HostCompany/images/summativeEval.jpg" width="200" height="257" alt="final Evaluation" border="1" /><br />
+    <td width="182" align="center"><a href="pdf/2013/ISE_Midterm_Evaluation.pdf" class="grey"><img src="HostCompany/images/midEval.jpg" width="158" height="205" alt="midterm evaluation" border="1"/><br />midterm evaluation</a></td>
+    <td width="182" align="center"><a href="pdf/2013/ISE_Summative_Evaluation.pdf" class="grey"><img src="HostCompany/images/summativeEval.jpg" width="158" height="203" alt="final Evaluation" border="1" /><br />
     summative evaluation</a></td>
+    <td width="201" align="center"><a href="../../pdf/2014/Host Company Information.pdf" class="grey"><img src="images/hostCompany.png" width="158" height="203" alt="final Evaluation" border="1" /><br />
+    Host Company Information</a></td>
   </tr>
 </table>
 </div>
