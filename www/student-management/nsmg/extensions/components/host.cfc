@@ -2111,7 +2111,7 @@
 				emailTemplate = vSetEmailTemplate,
 				submittedBy = vSubmittedBy,
 				hostFamily = qGetHostInfo.displayHostFamily,
-				hostFamilyLastName = qGetHostInfo.familyLastName,
+				hostFamilyLastName = qGetHostInfo.familyLastName & " (##" & qGetHostInfo.hostID & ")",
 				hostFamilyUsername = qGetHostInfo.email,
 				hostFamilyPassword = qGetHostInfo.password,
 				areaRepresentative = qGetHostInfo.areaRepresentative,
