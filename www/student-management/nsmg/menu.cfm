@@ -22,7 +22,42 @@
 
 </cfsilent>
 
-<script src="/nsmg/SpryAssets/SpryMenuBar.js" type="text/javascript"></script>
+<!--- Only changing menu type for some users --->
+<cfswitch expression="#CLIENT.userType#">
+
+    <cfcase value="5,6,7,9">
+		<script type="text/javascript">
+			function clickHeader(header) {
+				var elem = header.parentNode.getElementsByTagName('ul').item(0);
+				if (hasClass(elem,"MenuBarSubmenuVisible")) {
+					elem.className = elem.className.replace(/\bMenuBarSubmenuVisible\b/,'');
+				} else {
+					$(".MenuBarSubmenuVisible").removeClass("MenuBarSubmenuVisible");
+					elem.className = elem.className + " MenuBarSubmenuVisible";
+				}
+			}
+			
+			function clickInnerMenu(section) {
+				var elem = section.parentNode.getElementsByTagName('ul').item(0);
+				if (hasClass(elem,"MenuBarSubmenuVisible")) {
+					elem.className = elem.className.replace(/\bMenuBarSubmenuVisible\b/,'');
+				} else {
+					elem.className = elem.className + " MenuBarSubmenuVisible";
+				}
+			}
+			
+			function hasClass(element, cls) {
+				return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
+			}
+		</script>
+	</cfcase>
+    
+    <cfdefaultcase>
+    	<script src="/nsmg/SpryAssets/SpryMenuBar.js" type="text/javascript"></script>
+    </cfdefaultcase>
+
+</cfswitch>
+
 <link href="/nsmg/SpryAssets/SpryMenuBarHorizontal.css" rel="stylesheet" type="text/css" />
 
 <cfoutput>
@@ -223,25 +258,25 @@
         <cfcase value="5,6,7,9">
             <ul id="MenuBar1" class="MenuBarHorizontal">
             
-                <li>
-                    <a href="index.cfm?curdoc=students">Students</a>
-                </li>
+                <li><a href="index.cfm?curdoc=students">Students</a></li>
                 
                 <li>
-                	<a href="index.cfm?curdoc=host_fam">Host Families</a>
-                    <!--- Host Leads - ISE Only --->
-					<cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID) AND ListFind("5,6,7", CLIENT.userType)>
-                        <ul>
-                            <li><a href="index.cfm?curdoc=hostLeads/index">Host Family Leads</a></li>                
-                        </ul>            
-                    </cfif>
+                	<span class="menuHeader" onclick="clickHeader(this);">Host Families</span>
+                	<ul>
+                    	<li><a href="index.cfm?curdoc=host_fam">Host Families</a></li>
+						<!--- Host Leads - ISE Only --->
+                        <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID) AND ListFind("5,6,7", CLIENT.userType)>
+                            <li><a href="index.cfm?curdoc=hostLeads/index">Host Family Leads</a></li>           
+                        </cfif>
+                  	</ul>
                 </li>
                 
                 <li><a href="index.cfm?curdoc=schools">Schools</a></li>
                 
                 <li>
-                    <a href="index.cfm?curdoc=users">Users</a>
+                	<span class="menuHeader" onclick="clickHeader(this);">Users</span>
                     <ul>
+                    	<li><a href="index.cfm?curdoc=users">Users</a></li>
                         <li><a href="index.cfm?curdoc=user_info&userID=#CLIENT.userID#">My Information</a></li>
                     </ul>
                 </li>

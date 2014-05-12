@@ -86,7 +86,7 @@ ul.MenuBarHorizontal ul
 	border: 1px solid #CCC;
 }
 /* Menu items are a light gray block with padding and no text decoration */
-ul.MenuBarHorizontal a
+ul.MenuBarHorizontal a, .menuHeader
 {
 	display: block;
 	cursor: pointer;
@@ -97,7 +97,7 @@ ul.MenuBarHorizontal a
 	
 }
 /* Menu items that have mouse over or focus have a blue background and white text */
-ul.MenuBarHorizontal a:hover, ul.MenuBarHorizontal a:focus
+ul.MenuBarHorizontal a:hover, ul.MenuBarHorizontal a:focus, ul.MenuBarHorizontal .menuHeader:hover
 {
 	background-color: #33C;
 	color: #FFF;
@@ -117,7 +117,7 @@ ul.MenuBarHorizontal a.MenuBarItemHover, ul.MenuBarHorizontal a.MenuBarItemSubme
  *******************************************************************************/
 
 /* Menu items that have a submenu have the class designation MenuBarItemSubmenu and are set to use a background image positioned on the far left (95%) and centered vertically (50%) */
-ul.MenuBarHorizontal a.MenuBarItemSubmenu
+ul.MenuBarHorizontal a.MenuBarItemSubmenu, .menuHeader
 {
 	background-image: url(/nsmg/SpryAssets/SpryMenuBarDown.gif);
 	background-repeat: no-repeat;
@@ -131,7 +131,7 @@ ul.MenuBarHorizontal ul a.MenuBarItemSubmenu
 	background-position: 95% 50%;
 }
 /* Menu items that are open with submenus have the class designation MenuBarItemSubmenuHover and are set to use a "hover" background image positioned on the far left (95%) and centered vertically (50%) */
-ul.MenuBarHorizontal a.MenuBarItemSubmenuHover
+ul.MenuBarHorizontal a.MenuBarItemSubmenuHover, .menuHeader:hover
 {
 	background-image: url(/nsmg/SpryAssets/SpryMenuBarDownHover.gif);
 	background-repeat: no-repeat;
