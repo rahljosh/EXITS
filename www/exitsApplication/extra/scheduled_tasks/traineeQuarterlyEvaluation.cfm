@@ -139,7 +139,7 @@
 			if ( IsValid("email", qGetActiveCandidates.email[i]) ) {
 		
 				// Change variable on email to display correct evaluation link
-				vQuarterlyEvaluationLink = ReplaceNoCase(vQuarterlyEvaluationEmailBody, "{vQuarterlyEvaluationLink}", "http://www.csb-usa.com/trainee/quarterly-evaluation/?uniqueID=#qGetActiveCandidates.uniqueID[i]#", "All");
+				vQuarterlyEvaluationLink = ReplaceNoCase(vQuarterlyEvaluationEmailBody, "{vQuarterlyEvaluationLink}", "http://www.isetraining.org/quarterly-evaluation/?uniqueID=#qGetActiveCandidates.uniqueID[i]#", "All");
 		
 				// Email
 				APPLICATION.CFC.EMAIL.sendEmail(
