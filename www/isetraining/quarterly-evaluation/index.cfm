@@ -27,8 +27,10 @@
     <cfparam name="FORM.hasHousingChanged" default="">
     <cfparam name="FORM.housingChangedDetails" default="">
     <cfparam name="FORM.hostCompanyEvaluation" default="">
+    <cfparam name="FORM.phaseAssessment" default="">
     <cfparam name="FORM.hasHostCompanyConcern" default="">
     <cfparam name="FORM.hostCompanyConcernDetails" default="">
+    <cfparam name="FORM.culturalActivities" default="">
 	
     <cfscript>
 		// Set Current Month Evaluation
@@ -144,17 +146,29 @@
                 // Get all the missing items in a list
                 SESSION.formErrors.Add("Please answer the Yes/No question: Have you changed your employer since your last report to ISE?");
             }
+			
+			// Q7
+            if ( NOT LEN(TRIM(FORM.phaseAssessment)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please answer the question: Please provide a short description/assessment of this phase in training.");
+            }
             
-            // Q7
+            // Q8
             if ( NOT LEN(TRIM(FORM.hasHostCompanyConcern)) ) {
                 // Get all the missing items in a list
                 SESSION.formErrors.Add("Please answer the Yes/No question: Do you have any current problems or concerns?");
             }
             
-            // Q7 Expalin if Yes
+            // Q8 Expalin if Yes
             if ( VAL(FORM.hasHostCompanyConcern) AND NOT LEN(TRIM(FORM.hostCompanyConcernDetails) ) ) {
                 // Get all the missing items in a list
                 SESSION.formErrors.Add("You answered Yes to: Do you have any current problems or concerns? but did not provide any details.  Please let us know your concerns.");
+            }
+			
+			// Q9
+            if ( NOT LEN(TRIM(FORM.culturalActivities)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please answer the question: Name/list cultural activities participated in outside of training.");
             }
         </cfscript>
         
@@ -220,6 +234,8 @@
                     hostCompanyEvaluation,
                     hasHostCompanyConcern,
                     hostCompanyConcernDetails,
+                    phaseAssessment,
+                    culturalActivities,
                     dateCreated
                 )
                 	VALUES 
@@ -231,6 +247,8 @@
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hostCompanyEvaluation#">,
                     <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.hasHostCompanyConcern)#">,
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hostCompanyConcernDetails#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phaseAssessment#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.culturalActivities#">,
                     <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
                 )  
             </cfquery>
@@ -263,7 +281,12 @@
                     </p>
                     
                     <p>
-                        7. Do you have any current problems or concerns about the program or your host company? <br />
+                        7. Please provide a short description/assessment of this phase in training <br />
+                        <strong>#FORM.phaseAssessment#</strong> 
+                    </p>
+                    
+                    <p>
+                        8. Do you have any current problems or concerns about the program or your host company? <br />
                         <strong>#YesNoFormat(VAL(FORM.hasHostCompanyConcern))#</strong> 
                     </p>
                     
@@ -271,11 +294,16 @@
                         <i>If Yes, please list and provide full details (where/what/who/why):</i> <br />
                         <strong>#FORM.hostCompanyConcernDetails# </strong>
                     </p>
+                    
+                    <p>
+                        9. Name/list cultural activities participated in outside of training <br />
+                        <strong>#FORM.culturalActivities#</strong> 
+                    </p>
                 </cfoutput>            
             </cfsavecontent>
             
             <cfmail 
-            	to="sergei@iseusa.com" 
+            	to="ryan@iseusa.com" 
                 <!--- cc="#FORM.email#"  --->
                 from="info@csb-usa.com" 
                 subject="#FORM.lastName# #FORM.firstName# (###qLookUpCandidate.candidateID#) - ISE Trainee #MonthAsString(vMonthEvaluation)# Quarterly Questionnaire Submitted" type="html">
@@ -501,7 +529,20 @@
                         
                         <tr>
                             <td colspan="2" class="bold">
-                                7. Do you have any current problems or concerns about the program or your host company?
+                                <label for="phaseAssessment">7. Please provide a short description/assessment of this phase in training</label> 
+                                <span class="required">*</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td><textarea name="phaseAssessment" id="phaseAssessment" class="largeTextArea">#FORM.phaseAssessment#</textarea></td>
+                        </tr>
+                        
+                        <tr><td colspan="2"><hr /></td></tr>
+                        
+                        <tr>
+                            <td colspan="2" class="bold">
+                                8. Do you have any current problems or concerns about the program or your host company?
                                 <span class="required">*</span>
                             </td>
                         </tr>
@@ -523,6 +564,19 @@
                             <td>
                                 <textarea name="hostCompanyConcernDetails" id="hostCompanyConcernDetails" class="largeTextArea">#FORM.hostCompanyConcernDetails#</textarea>
                             </td>
+                        </tr>
+                        
+                        <tr><td colspan="2"><hr /></td></tr>
+                        
+                        <tr>
+                            <td colspan="2" class="bold">
+                                <label for="culturalActivities">9. Name/list cultural activities participated in outside of training</label> 
+                                <span class="required">*</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>&nbsp;</td>
+                            <td><textarea name="culturalActivities" id="culturalActivities" class="largeTextArea">#FORM.culturalActivities#</textarea></td>
                         </tr>
                         
                         <tr><td colspan="2"><hr /></td></tr>
@@ -551,7 +605,7 @@
                 
                 &nbsp;&nbsp;|&nbsp;&nbsp;
                 
-                <a href="mailto:sergei@iseusa.com" shape="rect" target="_blank">sergei@iseusa.com</a>
+                <a href="mailto:ryan@iseusa.com" shape="rect" target="_blank">ryan@iseusa.com</a>
                 
                 &nbsp;&nbsp;|&nbsp;&nbsp;
                 
