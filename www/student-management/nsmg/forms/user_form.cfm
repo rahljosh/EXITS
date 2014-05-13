@@ -248,19 +248,19 @@
 		<cfset errorMsg = "Please enter the First Name.">
 	<cfelseif trim(FORM.lastname) EQ ''>
 		<cfset errorMsg = "Please enter the Last Name.">
-	<cfelseif FORM.usertype EQ 8 and trim(FORM.address) EQ ''>
+	<cfelseif (FORM.usertype EQ 8 OR CLIENT.companyid NEQ 13) and trim(FORM.address) EQ ''>
 		<cfset errorMsg = "Please enter the Address.">
-	<cfelseif FORM.usertype EQ 8 and trim(FORM.city) EQ ''>
+	<cfelseif (FORM.usertype EQ 8 OR CLIENT.companyid NEQ 13)  and trim(FORM.city) EQ ''>
 		<cfset errorMsg = "Please enter the City.">
-	<cfelseif FORM.usertype EQ 8 and trim(FORM.country) EQ ''>
+	<cfelseif (FORM.usertype EQ 8 OR CLIENT.companyid EQ 13)  and trim(FORM.country) EQ ''>
 		<cfset errorMsg = "Please select the Country.">
-	<cfelseif FORM.usertype NEQ 8 and application.address_lookup NEQ 2 and trim(FORM.address) EQ ''>
+	<cfelseif (FORM.usertype EQ 8 OR CLIENT.companyid NEQ 13)  and application.address_lookup NEQ 2 and trim(FORM.address) EQ ''>
 		<cfset errorMsg = "Please enter the Address.">
-	<cfelseif FORM.usertype NEQ 8 and application.address_lookup NEQ 2 and trim(FORM.city) EQ ''>
+	<cfelseif (FORM.usertype EQ 8 OR CLIENT.companyid NEQ 13)  and application.address_lookup NEQ 2 and trim(FORM.city) EQ ''>
 		<cfset errorMsg = "Please enter the City.">
-	<cfelseif FORM.usertype NEQ 8 and application.address_lookup NEQ 2 and trim(FORM.state) EQ ''>
+	<cfelseif (FORM.usertype EQ 8 OR CLIENT.companyid NEQ 13)  and application.address_lookup NEQ 2 and trim(FORM.state) EQ ''>
 		<cfset errorMsg = "Please select the State.">
-	<cfelseif FORM.usertype NEQ 8 and application.address_lookup NEQ 2 and not isValid("zipcode", trim(FORM.zip))>
+	<cfelseif (FORM.usertype EQ 8 OR CLIENT.companyid NEQ 13) and application.address_lookup NEQ 2 and not isValid("zipcode", trim(FORM.zip))>
 		<cfset errorMsg = "Please enter a valid Zip.">
 	<cfelseif trim(FORM.dob) NEQ '' and not isValid("date", trim(FORM.dob))>
 		<cfset errorMsg = "Please enter a valid Birthdate.">
@@ -354,7 +354,7 @@
                         work_phone, 
                         work_ext, 
                         cell_phone, 
-                        emergency_phone,
+                        
                         fax, 
                         email, 
                         email2, 
@@ -370,6 +370,7 @@
                         dateCancelled,
                         
 						<cfif FORM.usertype EQ 8>
+                        
 							usertype, 
                             usebilling, 
                             billing_company, 
@@ -382,6 +383,7 @@
                             billing_phone, 
                             billing_fax, 
                             billing_email,
+                            emergency_phone,
                         </cfif>
                         comments, 
                         whocreated 
@@ -457,7 +459,7 @@
                 </cfquery>
                 
             </cflock>
-            
+           
             <cfif FORM.usertype EQ 8>
 
 				<!--- add company & regional access record only for usertype 8. --->
@@ -694,7 +696,7 @@
     <!----If Regional Manager/Advisor is creating account, set active to NO.  Once approved, account will be set to active.---->
 	<cfset FORM.active = 1>
     <!--- International users don't have the lookup. --->
-    <cfif FORM.usertype EQ 8>
+    <cfif FORM.usertype EQ 8 or CLIENT.companyid eq 13>
 		<cfset FORM.lookup_success = 1>
 	<cfelse>
 		<!--- lookup_success must be 0 to require lookup on add. --->
@@ -716,7 +718,7 @@
     </cfinvoke>
 
     <!--- International users don't have the lookup. --->
-    <cfif FORM.usertype EQ 8>
+    <cfif FORM.usertype EQ 8 or CLIENT.companyid eq 13>
 		<cfset FORM.lookup_success = 1>
 	<cfelse>
 		<!--- lookup_success may be set to 1 to not require lookup on edit. --->
@@ -804,14 +806,16 @@
 		if ($("#city").val() == "") {
 			errorMessage += 'Please enter a city. \n';
 		}
-		<cfif FORM.usertype NEQ 8>
+		<cfif FORM.usertype NEQ 8 and CLIENT.companyid NEQ 13>
 		if ($("#state").val() == "") {
 			errorMessage += 'Please selecet a state. \n';
 		}
 		</cfif>
+		<cfif CLIENT.companyid NEQ 13>
 		if ($("#zip").val() == "") {
 			errorMessage += 'Please enter a zip. \n';
-		}		
+		}	
+		</cfif>	
 		<cfif FORM.usertype EQ 8>
 			if ($("#country").val() == "") {
 				errorMessage += 'Please select a country. \n';
@@ -1026,7 +1030,7 @@
             </tr>
 
 		<!---- Int. Reps ---->
-        <cfif FORM.usertype EQ 8>
+        <cfif FORM.usertype EQ 8 OR CLIENT.companyid eq 13>
 
             <cfquery name="country_list" datasource="#APPLICATION.DSN#">
                 select countryname, countryid
@@ -1035,7 +1039,7 @@
             </cfquery>
 
             <tr>
-            	<td align="right">Address: <span class="redtext">*</span></td>
+            	<td align="right"> Address: <span class="redtext">*</span></td>
                 <td><cfinput type="text" name="address" id="address" value="#FORM.address#" size="40" maxlength="150" required="yes" validate="noblanks" message="Please enter the Address."></td>
             </tr>
             <tr>
@@ -1199,7 +1203,7 @@
 					<td align="right">Home Phone: <span class="redtext">+</span></td>
 					<td>
 						<!---- Int. Reps ---->
-                        <cfif FORM.usertype EQ 8>
+                        <cfif FORM.usertype EQ 8 or CLIENT.companyid eq 13>
                     		<cfinput type="text" name="phone" id="phone" value="#FORM.phone#" size="20" maxlength="25">
                     	<cfelse>
 							<cfinput type="text" name="phone" id="phone" value="#FORM.phone#" size="14" maxlength="14" mask="(999) 999-9999"> <!--- validate="telephone" message="Please enter a valid Home Phone." --->
