@@ -354,11 +354,11 @@
 				SESSION.formErrors.Add("You must select a school from the list");
 			}			
 
-			if ( NOT VAL(FORM.placeRepID) ) {
+			if (CLIENT.companyid NEQ 13 and  ( NOT VAL(FORM.placeRepID)) ) {
 				SESSION.formErrors.Add("You must select a placing representative from the list");
 			}			
 
-			if ( NOT VAL(FORM.areaRepID) ) { 
+			if (CLIENT.companyid NEQ 13 and  ( NOT VAL(FORM.areaRepID) ) ) { 
 				SESSION.formErrors.Add("You must select a supervising representative from the list");
 			}	
 			
@@ -1520,7 +1520,7 @@
         <table width="90%" border="0" cellpadding="2" cellspacing="0" class="sectionBorderOnly" align="center">                            				
             <tr class="reportTitleLeftClean">
                 <td width="50%">
-                    <label for="placeRepID">Placing Representative <em>*</em> </label>
+                    <label for="placeRepID">Placing Representative <cfif client.companyid neq 13><em>*</em></cfif> </label>
                     
                     <cfif VAL(qGetPlacementHistoryByID.placeRepID)>
                         <div class="placementMgmtLinks">
@@ -1535,7 +1535,7 @@
                     </cfif>
                 </td>
                 <td width="50%" style="padding-left:10px;">
-                    <label for="areaRepID">Supervising Representative <em>*</em> </label>
+                    <label for="areaRepID">Supervising Representative <cfif client.companyid neq 13><em>*</em></cfif> </label>
                     
                     <cfif VAL(qGetPlacementHistoryByID.areaRepID)>
                         <div class="placementMgmtLinks">
