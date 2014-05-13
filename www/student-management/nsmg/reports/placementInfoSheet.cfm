@@ -367,10 +367,28 @@
 							<!---Host Family Information---->
                             <table>
                             
-								<cfif LEN(qGetHostFamily.fatherfirstname)>
-	                                <tr>
-                                    	<td width="100"><span class="title">Host Father:</span></td>
-                                        <td width="250">
+                            	<!--- Primary host parent information --->
+                                <cfif LEN(qGetHostFamily.motherFirstName)>
+                                    <tr>
+                                        <td width="120"><span class="title">Primary Host Parent:</span></td>
+                                        <td width="230">
+                                            #qGetHostFamily.motherfirstname# #qGetHostFamily.motherlastname#, 
+                                            <cfif IsDate(qGetHostFamily.motherDOB)>
+                                                (#DateDiff('yyyy', qGetHostFamily.motherDOB, now())#)
+                                            </cfif>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="title">Occupation:</span></td>
+                                        <td>#qGetHostFamily.motherworktype#</td>
+                                    </tr>
+                             	</cfif>
+                            	
+                                <!--- Other host parent information --->
+                            	<cfif qGetHostFamily.otherHostParent NEQ "none" AND LEN(qGetHostFamily.fatherFirstName)>
+                                	<tr>
+                                    	<td width="120"><span class="title">Other Host Parent:</span></td>
+                                        <td width="230">
                                             #qGetHostFamily.fatherfirstname# #qGetHostFamily.fatherlastname#, 
                                             <cfif IsDate(qGetHostFamily.fatherDOB)>
                                                 (#DateDiff('yyyy', qGetHostFamily.fatherDOB, now())#)
@@ -382,23 +400,8 @@
                                         <td>#qGetHostFamily.fatherworktype#</td>
                                     </tr>
                                     <tr><td>&nbsp;</td></tr>
-								</cfif>
+                                </cfif>
                                 
-                                <cfif LEN(qGetHostFamily.motherfirstname)>
-	                                <tr>
-                                    	<td width="100"><span class="title">Host Mother:</span></td>
-    	                            	<td width="250">
-                                        	#qGetHostFamily.motherfirstname# #qGetHostFamily.motherlastname#, 
-											<cfif IsDate(qGetHostFamily.motherDOB)>
-                                                (#DateDiff('yyyy', qGetHostFamily.motherDOB, now())#)
-                                            </cfif>
-                                        </td>
-									</tr>
-                                	<tr>
-                                    	<td><span class="title">Occupation:</span></td>
-		                                <td>#qGetHostFamily.motherworktype#</td>
-                                    </tr>
-								</cfif>
                             </table>
     				
                     	</td>
