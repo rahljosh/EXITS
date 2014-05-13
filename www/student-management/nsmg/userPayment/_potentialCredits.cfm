@@ -47,7 +47,8 @@
     AND p.creditStatus = 0
     AND p.isDeleted = 0
     AND p.agentID != 0
-    AND p.date >= "2014-04-04"
+    AND p.programID >= 368
+    AND t.paymentType NOT IN ("SecondVisit","Supervision")
     <cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
         AND p.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
     <cfelse>
