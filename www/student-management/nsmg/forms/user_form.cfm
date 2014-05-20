@@ -493,7 +493,7 @@
 			
 				<!--- send email --->
                 <cfinvoke component="nsmg.cfc.email" method="send_mail">
-                    <cfinvokeargument name="email_to" value="ellen@iseusa.com,marcel@iseusa.com,bhause@iseusa.com">
+                    <cfinvokeargument name="email_to" value="ellen@iseusa.com,marcel@iseusa.org,bhause@iseusa.com">
                     <cfinvokeargument name="email_subject" value="New Agent Profile">
                     <cfinvokeargument name="email_message" value="#email_message#">
                     <cfinvokeargument name="email_from" value="#CLIENT.emailfrom#">
