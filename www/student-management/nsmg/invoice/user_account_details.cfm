@@ -1255,7 +1255,7 @@ WHERE su.userid = #url.userid#
 	</cfcase>
 	<cfcase value="5">
 		<cfset compName = "smg">
-		<cfset emailFrom = 'marcel@iseusa.com'>
+		<cfset emailFrom = 'marcel@iseusa.org'>
 	</cfcase>	
 	<cfcase value="14">
 		<cfset compName = "esi">
@@ -1263,7 +1263,7 @@ WHERE su.userid = #url.userid#
 	</cfcase>
 	<cfdefaultcase>
 		<cfset compName = "ise">
-		<cfset emailFrom = 'marcel@iseusa.com'>
+		<cfset emailFrom = 'marcel@iseusa.org'>
 	</cfdefaultcase>
 </cfswitch>
 
@@ -1337,7 +1337,7 @@ Payments by check should be mailed directly to our office address (Do not mail c
             800-766-4656-Toll Free<br/>
             631-893-4540-Phone<br/>
             631-893-4550-Fax<br/>
-            marcel@student-management.com<br/><br/>
+            marcel@iseusa.org<br/><br/>
             
             visit our web site at #CLIENT.exits_url#</small> 
         </cfif>
@@ -1369,7 +1369,7 @@ These confirmations are one more effort to keep both, yours and our records in t
             800-766-4656-Toll Free<br/>
             631-893-4540-Phone<br/>
             631-893-4550-Fax<br/>
-            marcel@student-management.com<br/><br/>
+            marcel@iseusa.org<br/><br/>
             
             visit our web site at #CLIENT.exits_url#</small> 
         </cfif>
