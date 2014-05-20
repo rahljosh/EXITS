@@ -67,7 +67,7 @@
     <cfinvokeargument name="email_to" value="jim@iseusa.org">
     <cfinvokeargument name="email_subject" value="Payments Queries Errors">
     <cfinvokeargument name="email_message" value="#vErrors#">
-    <cfinvokeargument name="email_from" value="support@iseusa.com">
+    <cfinvokeargument name="email_from" value="support@iseusa.org">
 </cfinvoke>
 
 <p>Payments Scheduled task completed!</p>

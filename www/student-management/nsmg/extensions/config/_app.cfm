@@ -58,7 +58,7 @@
 	// Email Settings - Support Account
 	APPLICATION.SETTINGS.EMAIL.SUPPORT = StructNew();
 	APPLICATION.SETTINGS.EMAIL.SUPPORT.server = 'smtp.gmail.com';	
-	APPLICATION.SETTINGS.EMAIL.SUPPORT.username = 'support@iseusa.com';		
+	APPLICATION.SETTINGS.EMAIL.SUPPORT.username = 'support@iseusa.org';		
 	APPLICATION.SETTINGS.EMAIL.SUPPORT.password = 'support123';	 
 	
 
@@ -88,11 +88,11 @@
 	AppEmail = APPLICATION.EMAIL;
 	APPLICATION.EMAIL.errors = 'errors@student-management.com';
 	APPLICATION.EMAIL.finance = 'marcel@iseusa.com';	
-	APPLICATION.EMAIL.cbcNotifications = 'support@iseusa.com;bill@iseusa.com;gary@iseusa.com;merri@iseusa.com;tal@iseusa.com;bhause@iseusa.com;jan@iseusa.com;stephen@iseusa.com';
+	APPLICATION.EMAIL.cbcNotifications = 'support@iseusa.org;bill@iseusa.com;gary@iseusa.com;merri@iseusa.com;tal@iseusa.com;bhause@iseusa.com;jan@iseusa.com;stephen@iseusa.com';
 	APPLICATION.EMAIL.cbcCaseNotifications = 'support@student-management.com;jana@case-usa.org';
 	APPLICATION.EMAIL.hostLeadNotifications = 'lamonica@iseusa.com';
 	
-	APPLICATION.EMAIL.ISESchoolNotification = 'lisa@iseusa.com;merri@iseusa.com;support@iseusa.com';
+	APPLICATION.EMAIL.ISESchoolNotification = 'lisa@iseusa.com;merri@iseusa.com;support@iseusa.org';
 	APPLICATION.EMAIL.ISEComplianceFrom = 'merri@iseusa.com (Merri Deluca)';
 	APPLICATION.EMAIL.ISEComplianceTo = 'merri@iseusa.com';
 	

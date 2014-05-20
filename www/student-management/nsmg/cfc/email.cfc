@@ -59,7 +59,7 @@
 				if ( ListFind("1,2,3", CLIENT.userType) ) {
 					ARGUMENTS.email_to = CLIENT.email;	  
 				} else {
-					ARGUMENTS.email_to = 'support@iseusa.com';
+					ARGUMENTS.email_to = 'support@iseusa.org';
 				}
 				
 				if ( LEN(ARGUMENTS.email_cc) ) {

@@ -287,7 +287,7 @@ setUserSessionPaperwork
 				SESSION.USER.companyURL = "http://smg.local/";
 				SESSION.USER.hostApplicationURL = 'http://host.local/';
 				SESSION.USER.emailSupport = 'support@student-management.com';
-				SESSION.USER.emailCompliance = 'support@iseusa.com';
+				SESSION.USER.emailCompliance = 'support@iseusa.org';
 				
 			} else { 
 			
@@ -299,7 +299,7 @@ setUserSessionPaperwork
 					SESSION.USER.emailCompliance = 'jana@case-usa.org';
 				} else {
 					SESSION.USER.hostApplicationURL = 'https://www.iseusa.com/hostApplication/';
-					SESSION.USER.emailSupport = 'support@iseusa.com';
+					SESSION.USER.emailSupport = 'support@iseusa.org';
 					SESSION.USER.emailCompliance = 'merri@iseusa.com';
 				}
 				

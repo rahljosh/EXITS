@@ -97,7 +97,7 @@
 					email_from=APPLICATION.EMAIL.ISEComplianceFrom,
 					email_to=qGetIseExpiredTraining.email,
 					email_cc=qGetRegionalManagerEmail,
-					//email_bcc="support@iseusa.com",
+					//email_bcc="support@iseusa.org",
 					email_replyto=APPLICATION.EMAIL.ISEComplianceTo,
 					email_subject="Department of State Annual Certification deadline is approaching!",
 					email_message=vIseEmailMessage	

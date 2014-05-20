@@ -42,7 +42,7 @@
     <cfelse>
         <cfset CLIENT.companyid = 0>
         <cfset CLIENT.companyname = 'EXIT Group'>
-        <cfset CLIENT.emailFrom = 'support@iseusa.com'>
+        <cfset CLIENT.emailFrom = 'support@iseusa.org'>
         <cfset CLIENT.site_url = 'ise.exitsapplication.com'>
     </cfif>
 
