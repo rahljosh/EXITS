@@ -849,7 +849,7 @@ GROUP BY agentid, testCompid
         <!--- CSB --->
 		<cfcase value="7,8,9">
 			<cfset compName = "csb">
-			<cfset emailFrom = 'marcel@student-management.com'>
+			<cfset emailFrom = 'marcel@iseusa.org'>
 		</cfcase>
 
 		<!--- Case --->
@@ -861,7 +861,7 @@ GROUP BY agentid, testCompid
         <!--- ISE --->        
 		<cfdefaultcase>
 			<cfset compName = "ise">
-			<cfset emailFrom = 'marcel@iseusa.com'>
+			<cfset emailFrom = 'marcel@iseusa.org'>
 		</cfdefaultcase>
         
 	</cfswitch>
@@ -883,7 +883,7 @@ GROUP BY agentid, testCompid
 		
 	<cfif APPLICATION.isServerLocal>
 		<!--- Dev Server --->
-		<cfset emailTo = 'marcel@iseusa.com'>
+		<cfset emailTo = 'marcel@iseusa.org'>
 	<cfelse>
 		<!--- Production Server  --->
 		<cfset emailTo = #getAgentInfo.billing_email#>
@@ -910,7 +910,7 @@ Babylon, NY 11702
 631-893-4540-Phone
 631-893-4550-Fax
 
-marcel@iseusa.com
+marcel@iseusa.org
 
 </small>
 		
