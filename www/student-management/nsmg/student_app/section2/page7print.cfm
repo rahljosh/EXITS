@@ -3,6 +3,7 @@
 	// Param Variables
 	param name="vStudentAppRelativePath" default="../";
 	param name="vUploadedFilesRelativePath" default="../../";
+	param name="URL.photos" default="1";
 	
 	if ( LEN(URL.curdoc) ) {
 		vStudentAppRelativePath = "";
@@ -227,7 +228,7 @@
 
 </cfoutput>
 
-<cfif NOT LEN(URL.curdoc)>
+<cfif NOT LEN(URL.curdoc) AND VAL(URL.photos)>
 </td></tr>
 </table>
 <cfinclude template="../print_include_file.cfm">
