@@ -179,6 +179,7 @@
             AND
                 s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
         </cfif>
+        and s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
         ORDER BY 
         	c.companyshort, 
             p.programname, 
@@ -232,6 +233,7 @@
             AND
                 s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
         </cfif>	
+        and s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
         ORDER BY 
         	c.companyshort, 
         	p.programname, 
