@@ -73,7 +73,7 @@
       	</tr>
         <tr>
             <td valign="top" width="49%" align="center">
-            	<a class="item2" href="?curdoc=download_application" onClick="checkForDownload();">
+            	<a class="item2" href="download_application.cfm" onClick="checkForDownload();">
                 	<img src="pics/download_completed_app_pdf.gif" border="0">
             	</a>
                 <br>
@@ -81,7 +81,7 @@
          	</td>
             <td valign="top" width="2%">&nbsp;</td>
             <td valign="top" width="49%" align="center">
-            	<a class="item2" href="?curdoc=download_application&photos=0" onClick="checkForDownload();">
+            	<a class="item2" href="download_application.cfm?photos=0" onClick="checkForDownload();">
                 	<img src="pics/download_completed_app_pdf.gif" border="0">
             	</a>
                 <br>
