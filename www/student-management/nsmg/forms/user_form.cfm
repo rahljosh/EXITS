@@ -258,9 +258,9 @@
 		<cfset errorMsg = "Please enter the Address.">
 	<cfelseif (FORM.usertype EQ 8 OR CLIENT.companyid NEQ 13)  and application.address_lookup NEQ 2 and trim(FORM.city) EQ ''>
 		<cfset errorMsg = "Please enter the City.">
-	<cfelseif (FORM.usertype EQ 8 OR CLIENT.companyid NEQ 13)  and application.address_lookup NEQ 2 and trim(FORM.state) EQ ''>
+	<cfelseif (FORM.usertype NEQ 8 AND CLIENT.companyid NEQ 13)  and application.address_lookup NEQ 2 and trim(FORM.state) EQ ''>
 		<cfset errorMsg = "Please select the State.">
-	<cfelseif (FORM.usertype EQ 8 OR CLIENT.companyid NEQ 13) and application.address_lookup NEQ 2 and not isValid("zipcode", trim(FORM.zip))>
+	<cfelseif (FORM.usertype NEQ 8 AND CLIENT.companyid NEQ 13) and application.address_lookup NEQ 2 and not isValid("zipcode", trim(FORM.zip))>
 		<cfset errorMsg = "Please enter a valid Zip.">
 	<cfelseif trim(FORM.dob) NEQ '' and not isValid("date", trim(FORM.dob))>
 		<cfset errorMsg = "Please enter a valid Birthdate.">
@@ -808,7 +808,7 @@
 		}
 		<cfif FORM.usertype NEQ 8 AND CLIENT.companyid NEQ 13>
 			if ($("#state").val() == "") {
-				errorMessage += 'Please selecet a state. \n';
+				errorMessage += 'Please select a state. \n';
 			}
 			if ($("#zip").val() == "") {
 				errorMessage += 'Please enter a zip. \n';
