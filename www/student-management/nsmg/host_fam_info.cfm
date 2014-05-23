@@ -421,20 +421,6 @@ div.scroll2 {
                 <cfif #cgi.REMOTE_ADDR# eq '184.155.136.106'>
                 #qGetHostInfo.primaryHostParent#
                 </cfif>
-                <cfif qGetHostInfo.primaryHostParent is 'father'>
-                <tr>
-                	<td>Name:</td>
-                    <td>#qGetHostInfo.fatherfirstname# #qGetHostInfo.fatherlastname#</td>
-                    <td>Age:</td>
-                    <td><cfif qGetHostInfo.fatherdob NEQ ''>#dateDiff('yyyy', qGetHostInfo.fatherdob, now())#</cfif></td>
-             	</tr>
-                <tr>
-                	<td>Occupation:</td>
-                    <td><cfif qGetHostInfo.fatherworktype is ''>n/a<cfelse>#qGetHostInfo.fatherworktype#</cfif></td>
-                    <td>Cell Phone:</td>
-                    <td>#qGetHostInfo.father_cell#</td>
-             	</tr>
-                <cfelse>
                 <tr>
                 	<td>Name:</td>
                     <td>#qGetHostInfo.motherfirstname# #qGetHostInfo.motherlastname#</td>
@@ -447,39 +433,23 @@ div.scroll2 {
                     <td>Cell Phone:</td>
                     <td>#qGetHostInfo.mother_cell#</td>
              	</tr>
-                </cfif>
                 
                 <tr><th colspan="2" align="left">Other Host Parent</th></tr>
                 <cfif qGetHostInfo.otherHostParent EQ "none">
                 	<tr><td>None</td></tr>
               	<cfelse>
-                	<cfif qGetHostInfo.primaryHostParent is not 'father'>
-                        <tr>
-                            <td>Name:</td>
-                            <td>#qGetHostInfo.fatherfirstname# #qGetHostInfo.fatherlastname#</td>
-                            <td>Age:</td>
-                            <td><cfif qGetHostInfo.fatherdob NEQ ''>#dateDiff('yyyy', qGetHostInfo.fatherdob, now())#</cfif></td>
-                        </tr>
-                        <tr>
-                            <td>Occupation:</td>
-                            <td><cfif qGetHostInfo.fatherworktype is ''>n/a<cfelse>#qGetHostInfo.fatherworktype#</cfif></td>
-                            <td>Cell Phone:</td>
-                            <td>#qGetHostInfo.father_cell#</td>
-                        </tr>
-                        <cfelse>
-                        <tr>
-                            <td>Name:</td>
-                            <td>#qGetHostInfo.motherfirstname# #qGetHostInfo.motherlastname#</td>
-                            <td>Age:</td>
-                            <td><cfif qGetHostInfo.motherdob NEQ ''>#dateDiff('yyyy', qGetHostInfo.motherdob, now())#</cfif></td>
-                        </tr>
-                        <tr>
-                            <td>Occupation:</td>
-                            <td><cfif qGetHostInfo.motherworktype is ''>n/a<cfelse>#qGetHostInfo.motherworktype#</cfif></td>
-                            <td>Cell Phone:</td>
-                            <td>#qGetHostInfo.mother_cell#</td>
-                        </tr>
-                        </cfif>
+                    <tr>
+                        <td>Name:</td>
+                        <td>#qGetHostInfo.fatherfirstname# #qGetHostInfo.fatherlastname#</td>
+                        <td>Age:</td>
+                        <td><cfif qGetHostInfo.fatherdob NEQ ''>#dateDiff('yyyy', qGetHostInfo.fatherdob, now())#</cfif></td>
+                    </tr>
+                    <tr>
+                        <td>Occupation:</td>
+                        <td><cfif qGetHostInfo.fatherworktype is ''>n/a<cfelse>#qGetHostInfo.fatherworktype#</cfif></td>
+                        <td>Cell Phone:</td>
+                        <td>#qGetHostInfo.father_cell#</td>
+                    </tr>
                 </cfif>
             </table>
             <table width=100% cellpadding=0 cellspacing=0 border=0>
