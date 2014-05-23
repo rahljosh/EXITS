@@ -806,15 +806,13 @@
 		if ($("#city").val() == "") {
 			errorMessage += 'Please enter a city. \n';
 		}
-		<cfif FORM.usertype NEQ 8 and CLIENT.companyid NEQ 13>
-		if ($("#state").val() == "") {
-			errorMessage += 'Please selecet a state. \n';
-		}
-		</cfif>
-		<cfif CLIENT.companyid NEQ 13>
-		if ($("#zip").val() == "") {
-			errorMessage += 'Please enter a zip. \n';
-		}	
+		<cfif FORM.usertype NEQ 8 AND CLIENT.companyid NEQ 13>
+			if ($("#state").val() == "") {
+				errorMessage += 'Please selecet a state. \n';
+			}
+			if ($("#zip").val() == "") {
+				errorMessage += 'Please enter a zip. \n';
+			}	
 		</cfif>	
 		<cfif FORM.usertype EQ 8>
 			if ($("#country").val() == "") {
