@@ -43,6 +43,15 @@
 		}
 	}
 	
+	// ISE Payment - only run on Tuesdays
+	if ( DayOfWeek(Now()) EQ 3 ) {
+		try {
+			include "iseDeparturePayments.cfm";
+		} catch(any e) {
+			vErrors = vErrors & "<b>*ISE Departure Payments - " & e.message & ":</b> " & e.detail & "<br/>";	
+		}
+	}
+	
 	// CASE Payments
 	if ( NOT ListFind("1,7", DayOfWeek(Now())) ) {
 		try {
