@@ -66,6 +66,15 @@
 		}
 	}
 	
+	// CASE Payment - only run on Tuesdays
+	if ( DayOfWeek(Now()) EQ 3 ) {
+		try {
+			include "caseDeparturePayments.cfm";
+		} catch(any e) {
+			vErrors = vErrors & "<b>*CASE Departure Payments - " & e.message & ":</b> " & e.detail & "<br/>";	
+		}
+	}
+	
 	if (NOT LEN(vErrors)) {
 		vErrors = "All of the payment queries ran properly";	
 	}
