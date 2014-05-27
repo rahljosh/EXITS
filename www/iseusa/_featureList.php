@@ -172,12 +172,12 @@
 
 	<div class="box visible">
     <div style="background-color: #FFF; padding: 15px;">
-		<p align="right"><small>ISE NEWS | March 31, 2014</small></p>
-          <h1><a href="press-page.cfm" target="_parent">Michigan City High School is given the Partnership Achievement Award from 
-International Student Exchange (ISE)
-</a></h1>
-<p>Michigan City, IN  &#8211; March 31st, 2014 – Michigan City High School (MCHS) was given the Partnership Achievement Award from International Student Exchange.  This award is given to high schools that showcase outstanding effort and dedication to their student exchange program</p>
-<p>ISE, a student exchange program, has been working with Michigan City High School for several years.  Over that time, students that have been placed in this high school have had wonderful experiences.</p><p><a href="press-page.cfm">Full Story &gt;&gt;</a></p><br />
+		<p align="right"><small>ISE NEWS | May 28, 2014</small></p>
+          <h1><a href="press-page.cfm" target="_parent">International Student Exchange Students Completed Over 25,000 Community Service Hours</a></h1>
+          
+<p>Hauppauge, NY &#8211; May 28th, 2014 – The International Student Exchange (ISE), which places almost 3,000 foreign exchange students a year, completed over an estimated 25,000 community service hours through their program, Project HELP.</p>
+<p>ISE started a volunteer student program called “Project HELP” back in 2006.  The program is designed to increase community service for their foreign exchange students.  Each student completes a minimum of five hours.  Most students surpass their minimum requirement.</p>
+<p><a href="press-page.cfm">Full Story &gt;&gt;</a></p><br />
 <div class="news"><a href="press-page.cfm">MORE ISE NEWS >></a></div>
     </div>
 	</div>
@@ -240,17 +240,18 @@ src="https://www.facebook.com/plugins/likebox.php?href=http%3A%2F%2Fwww.facebook
 
 <div class="box">
 <div style="background-color: #FFF; padding: 10px; margin-top: 10px; margin-bottom: 10px;">
-<p align="right"><small>ISE NEWSLETTER | April 21, 2014</small></p>
+<p align="right"><small>ISE NEWSLETTER | May 27, 2014</small></p>
 <h1>The Insider</h1>
 
-<h3>Sign up to host again now!</strong>!</h3>
-<p>Before the school year gets out, now is actually the best time to sign up to host again. We know most of you have summer vacations, travel plans and weddings to go to . . . so sign up now before “your” busy season starts.</p>
+<h3>Check out our new Mini-Documentary</h3>
+<p>We followed a student and her host family for an entire semester. The video showcases the experience of hosting. <a href="https://www.youtube.com/watch?v=-ScNJmjdlGo" target="_blank" class="blueLink">click here >></a></p>
 <div class="dotLine">&nbsp;</div>
 <br />
 <h3>Project HELP Hours</h3>
-<p>With the end of the year coming soon, it’s time to get the Project HELP hours in. For those students who went above the 20 hour mark, you are eligible for a free tee-shirt.<!-- <a href="https://www.iseusa.com/student-project-help.cfm" class="blueLink">click here</a>--></p>
+<p>We sent out certificates to all of the students that registered hours. We had an estimated 25,000 hours this year of community service. If you have any pictures, send them our way.<!-- <a href="https://www.iseusa.com/student-project-help.cfm" class="blueLink">click here >></a>--></p>
+<p><strong>Great Job!</strong></p>
 <br />
-<div class="news"><a href="newsletter/host/april_host_newsletter.cfm" target="_blank">LATEST NEWSLETTER >></a></div>
+<div class="news"><a href="newsletter/host/may_host_newsletter.cfm" target="_blank">LATEST NEWSLETTER >></a></div>
 </div>
 <!-- .end box --></div>
 

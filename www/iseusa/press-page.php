@@ -96,6 +96,45 @@ Babylon, NY 11702</p>
     <div class="smSize" style="float:right; width: 120px; margin: 10px 0 0 0;"><a href="press-page.cfm"><strong>2014</strong></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="press-page-2013.cfm">2013</a></div>
 <h1>Press Page</h1>
  <div class="dotLine">&nbsp;</div>
+ 
+ 
+ <!--- May 28th Press Release #7 --->
+    
+    <div class="fltrt" style="margin-bottom: 10px; height:45px; display:block;"><table width="255" border="0" align="right">
+  <tr>
+    <td width="166" class="smSize">May 28, 2014 </td>
+    <td width="39"><a href="https://plus.google.com/106789919487817837927" target="_blank"><img src="images/socialMedia/googlePlus.png" width="40" height="40" border="0" /></a></td>
+    <td width="38"><a href="http://www.facebook.com/home.php#!/pages/International-Student-Exchange/111620902209214?ref=sgm" target="_blank"><img src="images/socialMedia/facebook.png" width="40" height="40" border="0" /></a></td>
+    <td width="39"><a href="http://twitter.com/ISE_USA" target="_blank"><img src="images/socialMedia/twitter.png" width="40" height="40" border="0" /></a></td>
+  </tr>
+</table>
+</div>
+
+ <div class="clearfloat">&nbsp;</div> 
+
+    <h3>International Student Exchange Students Completed Over 25,000 Community Service Hours</h3>
+<p>Hauppauge, NY &#8211; May 28th, 2014 – The International Student Exchange (ISE), which places almost 3,000 foreign exchange students a year, completed over an estimated 25,000 community service hours through their program, Project HELP.</p>
+<p>ISE started a volunteer student program called “Project HELP” back in 2006.  The program is designed to increase community service for their foreign exchange students.  Each student completes a minimum of five hours.  Most students surpass their minimum requirement. <a href="#" id="example7-show" class="showLink" onclick="showHide('example7');return false;">Read More &#187;</a></p>
+<div id="example7" class="more7">
+
+<p>“Project HELP seems to be getting bigger every year.  The past couple of years we noticed our students do more and more for their community.  Last year we completed 20,000 community service hours, this year we jumped to 25,000!” Stated Gary Lubrat, Project Help Co-Chair.</p>  
+<p>ISE doesn’t focus on just one type of community service.  They want the student to participate in activities that are important to their community or their own passion.  This year students got involved in community cleanup projects, food banks, clothing drives and even some students helped in the Colorado Floods.</p>
+<p>In addition, ISE partnered up with the Red Cross and Ronald McDonald House Charities (RMHC) to give exchange students a chance to work within in their community and nationally.</p>
+<p>“For students that weren’t sure what groups or activities to get involved with, the Red Cross and RMHC partnership solved that issue.  Both organizations provided great community service opportunities throughout our communities.” Explained Gary.    </p>
+ <p><strong>About International Student Exchange</strong></p>
+ <p>ISE was founded in 1982. It is a non-profit organization dedicated to bringing people of the world closer together through student exchange and intercultural education.</p>
+ <p>Based on the materials submitted by ISE and reviewed by the Council on Standards for International Educational Travel (CSIET), an independent national educational organization founded in 1984, ISE has been granted a listing every year. Indicative of its high level of professionalism and respect within the foreign exchange industry, ISE is designated by the Department of State as an official sponsor of the Exchange Visitor Program.</p>
+ <p>ISE is headquartered on Long Island, 60 minutes from Manhattan. Forty-four fully staffed Regional Offices are strategically located in the United States. ISE cooperates with over 100 independent foreign agencies in over 45 countries around the world for the recruitment and placement of students in American homes.  The company’s information is available at
+ <a href="http://www.iseusa.com">www.iseusa.com</a>.</p>
+<p><a href="#" id="example7-hide" class="hideLink" onclick="showHide('example7');return false;">HIDE ARTICLE</a></p>
+</div>
+<!--- May 28th Press Release #7 --->
+
+ <div class="clearfloat">&nbsp;</div> 
+<div class="blueLine">&nbsp;</div>
+ <div class="clearfloat">&nbsp;</div>
+ 
+ 
  <!--- April 17th Press Release #5 --->
     
     <div class="fltrt" style="margin-bottom: 10px; height:45px; display:block;"><table width="255" border="0" align="right">
