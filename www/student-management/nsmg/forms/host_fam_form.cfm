@@ -771,51 +771,12 @@
                 </td>
             </tr>
         </table>
-		
-        <!--- Father Information --->
-        <table width="95%" align="center" class="section" border="0" cellpadding="4" cellspacing="0">
-            <tr bgcolor="##e2efc7">
-                
-                <th align="left">Father's Information</th>
-                 <td>&nbsp;</td>
-            </tr>
-            <tr>
-                <td class="label">Last Name:</td>
-                <td><input type="text" name="fatherLastName" id="fatherLastName" value="#FORM.fatherLastName#" size="20" class="largeField"></td>
-            </tr>
-            <tr>
-                <td class="label">First Name:</td>
-                <td><input type="text" name="fatherFirstName" value="#FORM.fatherFirstName#" size="20" class="largeField"></td>
-            </tr>
-            <tr>
-                <td class="label">Middle Name:</td>
-                <td><input type="text" name="fatherMiddleName" value="#FORM.fatherMiddleName#" size="20" class="largeField"></td>
-            </tr>
-            <tr>
-                <td class="label">Date of Birth:</td>
-                <td><input type="text" name="fatherDOB" id="fatherDOB" value="#dateFormat(FORM.fatherDOB, 'mm/dd/yyyy')#" class="mediumField" maxlength="10"> mm/dd/yyyy</td>
-            </tr>
-			<cfif vDisplayFatherSSN>
-                <tr>
-                    <td class="label">SSN:</td>
-                    <td><input type="text" name="fatherSSN" id="fatherSSN" value="#FORM.fatherSSN#" class="mediumField" maxlength="11"></td>
-                </tr>	
-            </cfif>
-            <tr>
-                <td class="label">Occupation:</td>
-                <td><input type="text" name="fatherWorkType" value="#FORM.fatherWorkType#" class="largeField" maxlength="200"></td>
-            </tr>
-            <tr>
-                <td class="label">Cell Phone:</td>
-                <td><input type="text" name="father_cell" id="father_cell" value="#FORM.father_cell#" class="largeField" maxlength="14"></td>
-            </tr>
-        </table>
 
-		<!--- Mother Information --->
+		<!--- Primary Host Parent's Information --->
         <table width="95%" align="center" class="section" border="0" cellpadding="4" cellspacing="0">
             <tr bgcolor="##e2efc7">
             	
-                <th align="left">Mother's Information</th>
+                <th align="left">Primary Host Parent's Information</th>
                   <td>&nbsp;</td>
             </tr>
             <tr>
@@ -848,7 +809,46 @@
                 <td class="label">Cell Phone:</td>
                 <td><input type="text" name="mother_cell" id="mother_cell" value="#FORM.mother_cell#" class="largeField" maxlength="14"></td>
             </tr>
-		</table> 		
+		</table> 
+        
+        <!--- Other Host Parent's Information --->
+        <table width="95%" align="center" class="section" border="0" cellpadding="4" cellspacing="0">
+            <tr bgcolor="##e2efc7">
+                
+                <th align="left">Other Host Parent's Information</th>
+                 <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td class="label">Last Name:</td>
+                <td><input type="text" name="fatherLastName" id="fatherLastName" value="#FORM.fatherLastName#" size="20" class="largeField"></td>
+            </tr>
+            <tr>
+                <td class="label">First Name:</td>
+                <td><input type="text" name="fatherFirstName" value="#FORM.fatherFirstName#" size="20" class="largeField"></td>
+            </tr>
+            <tr>
+                <td class="label">Middle Name:</td>
+                <td><input type="text" name="fatherMiddleName" value="#FORM.fatherMiddleName#" size="20" class="largeField"></td>
+            </tr>
+            <tr>
+                <td class="label">Date of Birth:</td>
+                <td><input type="text" name="fatherDOB" id="fatherDOB" value="#dateFormat(FORM.fatherDOB, 'mm/dd/yyyy')#" class="mediumField" maxlength="10"> mm/dd/yyyy</td>
+            </tr>
+			<cfif vDisplayFatherSSN>
+                <tr>
+                    <td class="label">SSN:</td>
+                    <td><input type="text" name="fatherSSN" id="fatherSSN" value="#FORM.fatherSSN#" class="mediumField" maxlength="11"></td>
+                </tr>	
+            </cfif>
+            <tr>
+                <td class="label">Occupation:</td>
+                <td><input type="text" name="fatherWorkType" value="#FORM.fatherWorkType#" class="largeField" maxlength="200"></td>
+            </tr>
+            <tr>
+                <td class="label">Cell Phone:</td>
+                <td><input type="text" name="father_cell" id="father_cell" value="#FORM.father_cell#" class="largeField" maxlength="14"></td>
+            </tr>
+        </table>		
 
 		<!--- Region Information | New Host Family Only --->
         <cfif NOT qGetHostFamilyInfo.recordCount>
