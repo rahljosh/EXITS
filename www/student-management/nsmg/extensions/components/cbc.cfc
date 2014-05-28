@@ -1704,7 +1704,15 @@
                     
                     <tr bgcolor="##CCCCCC">
                         <th colspan="2">
-                            *** Search Results for #setCBCType# #ARGUMENTS.usertype# - #setfirstName# #setLastName# 
+                            *** Search Results for 
+                            <cfif setCBCType EQ "Host" AND ARGUMENTS.userType EQ "mother">
+                            	Primary Host Parent
+                            <cfelseif setCBCType EQ "Host" AND ARGUMENTS.userType EQ "father">
+                            	Other Host Parent
+                            <cfelse>
+                            	#setCBCType# #ARGUMENTS.usertype#
+                          	</cfif>
+                             - #setfirstName# #setLastName# 
                             <cfif VAL(ARGUMENTS.hostID)>
                                 (###ARGUMENTS.hostID#)
                             <cfelseif VAL(ARGUMENTS.userID)>
