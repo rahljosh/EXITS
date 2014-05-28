@@ -13,16 +13,12 @@ where companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.org_co
 
 <div align="justify">
 <Cfif CLIENT.companyID NEQ 14>
-    Starting with students arriving in January 2006, students can choose a state choice.
-    Any state in the union, except for Hawaii and Alaska, can now be requested.  As always, Florida and California can still be requested.  If the state requested is not available, the International Representative will be informed
-    at the time of acceptance.<br>
-    <br>
-    The student exchange company reserves the right in August, if a placement is not forthcoming, to place a student out of their State Choice area. No extra fee is then collected.
-    <br>
-    <br>
-    Both state and regional choices are available for all students, both semester, and academic year students.<br><br>
-    If you would like to specify states, select yes at the bottom of this page, select three states of choice and print this page,
-    sign it and upload it back into the system with original signatures.<br><br>
+  <p>Students may select state preferences for an additional fee.  You may select any three states, except Alaska or Hawaii.</p>
+  <p>A good-faith effort will be made to place the student in any one of their three choices, but makes no guarantee that the student will be placed in one of the three selected states. </p>
+  <p>If a placement is not available in the selected states, the student will be placed in another state and ISE will notify the student's international representative.  The student may not reject a placement because it is not in one of their preferred states. </p>
+  <p>The state preference fee will also be waived if the student is not placed in a preferred state. </p>
+  <p>Please enter you three state preferences below, sign and upload the form.</p>
+  <br>
 <Cfelse>
 	Due to student enrollment limitations placed upon the schools by the district, we, the organization, cannot guarantee 100% placement of student in the  chosen school.  Therefore, we ask that the student select multiple areas in which they wish to study.<br /><br />
 </Cfif>

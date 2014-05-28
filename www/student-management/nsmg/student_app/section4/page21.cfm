@@ -209,7 +209,8 @@
 	<tr height="33">
 		<td width="8" class="tableside"><img src="pics/p_topleft.gif" width="8"></td>
 		<td width="26" class="tablecenter"><img src="../pics/students.gif"></td>
-		<td class="tablecenter"><h2>Page [21] - <cfif CLIENT.companyID NEQ 14>State<cfelse>District</cfif> Choice </h2></td>
+		<td class="tablecenter"><h2>Page [21] - <cfif CLIENT.companyID NEQ 14>State<cfelse>District</cfif>
+         Preference </h2></td>
 		<!--- Do not display for Canada Application --->
         <cfif NOT ListFind("14,15,16", get_student_info.app_indicated_program)> 
 	        <td align="right" class="tablecenter"><a href="" onClick="javascript: win=window.open('section4/page21print.cfm', 'Reports', 'height=600, width=800, location=no, scrollbars=yes, menubars=no, toolbars=yes, resizable=yes'); win.opener=self; return false;"><img src="pics/printhispage.gif" border="0" alt="Click here to print this page"></img></A>&nbsp; &nbsp;</td>
@@ -279,12 +280,6 @@
                     <cfif CLIENT.companyID NEQ 14>
                         <!--- Regular State Guarantee Choice --->
                         
-                        <table>
-                            <tr>
-                                <td>State Choice Price:</td>
-                                <td>Please contact your rep for current prices for state guarantees.</td>
-                            </tr>
-                        </table>
                         <img src="pics/usa-map.gif" width="642" height="331" align="middle"><br>
                         
                         <input type="radio" name="state_select" id="stateSelectYes" value="yes" onClick="hideAll(); changeDiv('1','block'); DataChanged();" <cfif check_state.recordcount GT '0' AND check_state.state1 GT '0'>checked</cfif> >
