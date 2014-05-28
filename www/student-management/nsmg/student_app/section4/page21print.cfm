@@ -100,7 +100,8 @@
 		<tr height="33">
 			<td width="8" class="tableside"><img src="#vStudentAppRelativePath#pics/p_topleft.gif" width="8"></td>
 			<td width="26" class="tablecenter"><img src="#vStudentAppRelativePath#pics/students.gif"></td>
-			<td class="tablecenter"><h2>Page [21] - <cfif CLIENT.companyID NEQ 14>State<cfelse>District</cfif> Choice </h2></td>
+			<td class="tablecenter"><h2>Page [21] - <cfif CLIENT.companyID NEQ 14>State<cfelse>District</cfif>
+	         Preference </h2></td>
 			<cfif LEN(URL.curdoc)>
 			<td align="right" class="tablecenter"><a href="" onClick="javascript: win=window.open('section4/page21print.cfm', 'Reports', 'height=600, width=800, location=no, scrollbars=yes, menubars=no, toolbars=yes, resizable=yes'); win.opener=self; return false;"><img src="pics/printhispage.gif" border="0" alt="Click here to print this page"></img></A>&nbsp; &nbsp;</td>
 			</cfif>
@@ -124,7 +125,7 @@
 		<div class="section"><br><br>
 		<table width="670" cellpadding=2 cellspacing=0 align="center">
 			<tr>
-				<td>Currently, you are unable to request a State Choice online.  You are still able to request them, you just need to contact your
+				<td>Currently, you are unable to request a State Preference online.  You are still able to request them, you just need to contact your
 				#int_agent.businessname# Representative.  Contact information is listed above.  
 				</td>
 			</tr>
@@ -162,12 +163,7 @@
 				<cfif CLIENT.companyID NEQ 14>
 					<!--- Regular State Guarantee Choice --->
                     
-                    <table>
-                        <tr>
-                            <td>State Choice Price:</td>
-                            <td>Please contact your rep for current prices for state guarantees.</td>
-                        </tr>
-                    </table>
+                
                     
                     <img src="#vStudentAppRelativePath#pics/usa-map.gif" width="642" height="331" align="middle"><br>
 
@@ -178,7 +174,7 @@
 					</cfif> 
                     Yes, submit my choices as indicated below. 
                     
-					<cfif states_requested.recordcount OR states_requested.state1 EQ 0>
+					<cfif states_requested.recordcount eq 0 OR states_requested.state1 EQ 0>
                     	<img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0">
 					<cfelse>
                     	<img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0">
