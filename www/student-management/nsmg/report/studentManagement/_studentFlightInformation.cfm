@@ -167,8 +167,7 @@
                                     AND
                                         flight.isCompleted = <cfqueryparam cfsqltype="cf_sql_bit" value="1">	                                               
                                 )
-                                AND
-                                    s.aypEnglish != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                                <!---AND s.aypEnglish != <cfqueryparam cfsqltype="cf_sql_integer" value="0">--->
                                     
                         <cfelse>
                         
