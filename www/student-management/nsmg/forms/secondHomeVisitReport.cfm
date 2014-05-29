@@ -94,8 +94,6 @@
         where fk_reportID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">
     </cfquery>
     
-
-    
     <cfquery name="reportDates" datasource="#application.dsn#">
         select *
         from progress_reports
@@ -635,7 +633,8 @@
                         #get_advisor_for_rep.firstname# #get_advisor_for_rep.lastname# (###get_advisor_for_rep.userid#)
                     </cfif><br />
                 <strong>Regional Director:</strong> #get_regional_director.firstname# #get_regional_director.lastname# (###get_regional_director.userid#)<br />
-                <strong>Facilitator:</strong> #get_facilitator.firstname# #get_facilitator.lastname# (###get_facilitator.userid#)
+                <strong>Facilitator:</strong> #get_facilitator.firstname# #get_facilitator.lastname# (###get_facilitator.userid#)<br />
+                <strong>Placing Representative:</strong> #get_place_rep.firstname# #get_place_rep.lastname# (###get_place_rep.userid#)
           </p>
         
 			<!--- Form Errors --->
