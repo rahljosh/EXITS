@@ -16,18 +16,12 @@ if (document.new_program.seasonid.value == '0') {
 	ORDER BY programtype
 </cfquery>
 
-<cfquery name="qGetStudentAppProgramTypeList" datasource="mysql">
-	SELECT 
-    	app_programid, 
-        app_program 
-	FROM 
-    	smg_student_app_programs
-	WHERE  
-        companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> )
-    AND 
-    	isActive = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-	ORDER BY 
-    	app_program
+<cfquery name="qGetStudentAppProgramTypeList" datasource="#APPLICATION.DSN#">
+	SELECT app_programid, app_program 
+	FROM smg_student_app_programs
+	WHERE isActive = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+    AND FIND_IN_SET(<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyID)#">, companyID)
+	ORDER BY app_program
 </cfquery>
 
 <cfquery name="qGetTripList" datasource="MySql">
