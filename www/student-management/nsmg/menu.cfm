@@ -300,7 +300,7 @@
                     <cfswitch expression="#CLIENT.companyid#">
                         
                         <cfcase value="1,2,3,4,12">
-                            <li><a href="http://webmail.iseusa.com/" target="_blank">Webmail</a></li>
+                            <li><a href="http://webmail.iseusa.org/" target="_blank">Webmail</a></li>
                         </cfcase>
                         
                         <cfcase value="5">
@@ -494,7 +494,7 @@
                     <cfswitch expression="#CLIENT.companyid#">
                         
                         <cfcase value="1,2,3,4,5,12">
-                            <li><a href="http://webmail.iseusa.com/" target="_blank">Webmail</a></li>
+                            <li><a href="http://webmail.iseusa.org/" target="_blank">Webmail</a></li>
                         </cfcase>
             
                         <cfcase value="10">
@@ -531,7 +531,7 @@
                     <cfswitch expression="#CLIENT.companyid#">
                         
                         <cfcase value="1,2,3,4,5,12">
-                            <li><a href="http://webmail.iseusa.com/" target="_blank">Webmail</a></li>
+                            <li><a href="http://webmail.iseusa.org/" target="_blank">Webmail</a></li>
                         </cfcase>
             
                         <cfcase value="10">
