@@ -13,6 +13,19 @@ INSERT INTO smg_users_payments (
        inputBy,       
        dateCreated )
 
+SELECT DISTINCT
+       s.placeRepID,       
+       s.companyID,       
+       s.studentID,       
+       s.programID,       
+       s.hostID,       
+       27,       
+       "Placement",      
+       175,       
+       "Auto Uploaded",     
+       CURDATE(),       
+       99999999,       
+       CURDATE()
 FROM smg_students s
 INNER JOIN smg_hosts h ON s.hostID = h.hostID
 INNER JOIN smg_hosthistory hh ON s.studentID = hh.studentID
@@ -28,7 +41,7 @@ AND (
     CURDATE() > (SELECT MAX(dep_date) FROM smg_flight_info WHERE studentID = s.studentID AND isDeleted = 0 AND flight_type = "departure")
     OR (s.schoolID IN (SELECT schoolID FROM smg_school_dates WHERE seasonID IN (SELECT seasonID FROM smg_programs WHERE programID = s.programID) AND year_ends <= CURDATE()) AND p.type = 1)
     OR (s.schoolID IN (SELECT schoolID FROM smg_school_dates WHERE seasonID IN (SELECT seasonID FROM smg_programs WHERE programID = s.programID) AND semester_ends <= CURDATE()) AND p.type = 2) )    
-AND s.placeRepID NOT IN (SELECT agentID FROM smg_users_payments WHERE studentID = s.studentID AND hostID = s.hostID AND paymentType = 27)
+AND s.placeRepID NOT IN (SELECT agentID FROM smg_users_payments WHERE studentID = s.studentID AND paymentType IN (12,27))
 AND ( 
     (p.type = 1 AND MONTH(CURDATE()) IN (4,5,6,7,8)) 
     OR ( p.type = 2 AND ( (MONTH(CURDATE()) IN (1,2,3,4)) OR (MONTH(CURDATE()) = 12 AND DAY(CURDATE()) >= 15) ) )
