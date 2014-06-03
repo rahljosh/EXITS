@@ -48,7 +48,7 @@ function areYouSure() {
 	<cfloop query="DirList">
 	<cfset newsize = #size# / '1024'>
 	<tr bgcolor="#iif(DirList.currentrow MOD 2 ,DE("cfcfcf") ,DE("white") )#">
-		<Td>&nbsp; <a href="http://www.student-management.com/nsmg/uploadedfiles/pdf_docs/#companyshort.companyshort#/#name#" target="_blank">#name#</a></td>
+		<Td>&nbsp; <a href="http://ise.exitsapplication.com/nsmg/uploadedfiles/pdf_docs/#companyshort.companyshort#/#name#" target="_blank">#name#</a></td>
 		<td align="">#DateFormat(datelastmodified, 'mm/dd/yyyy')#</td>
 		<td align="">#Round(newsize)# kb</td>
 		<cfif client.usertype LTE '3'>
