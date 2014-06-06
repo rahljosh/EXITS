@@ -81,7 +81,7 @@
             
 			<cfif ListFind("1,2,3,4", CLIENT.userType)>
                 <div align="center" style="margin-top:10px;">
-	          		<a href="index.cfm?curdoc=intRep/intrep_info"><img src="../pics/add-intrep.gif" border="0" align="middle" alt="Add a Intl. Rep."></a>
+	          		<a href="index.cfm?curdoc=intRep/new_intrep"><img src="../pics/add-intrep.gif" border="0" align="middle" alt="Add a Intl. Rep."></a>
                 </div>
             </cfif>
             
