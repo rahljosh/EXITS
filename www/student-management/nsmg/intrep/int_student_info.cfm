@@ -317,9 +317,13 @@
 			<table cellpadding="3" width="100%">
 				<tr bgcolor="e2efc7"><td colspan="2"><span class="get_attention"><b>:: </b></span>Region</td></tr>
 				<tr><td>Assigned to Region :</td><td><cfif qGetRegionInfo.recordcount NEQ '0'><b>#qGetRegionInfo.regionname#</b><cfelse> Unassigned </cfif></td></tr>
-				<tr><td>Region / State Preference :</td>
-					<td><cfif qGetStudentInfo.regionguar is 'yes' and qGetStudentInfo.regionassigned is not 0><input type="radio" name="regionguar" value="yes" checked disabled>Yes <input type="radio" name="regionguar" value="no" disabled>No 
-						<cfelse><input type="radio" name="regionguar" value="yes" disabled>Yes <input type="radio" name="regionguar" value="no" checked disabled>No</cfif></td></tr>
+				<tr>
+                	<td>Region / State Preference :</td>
+					<td>
+						<input type="radio" name="regionguar" value="yes" disabled="disabled" <cfif regionguar EQ 'yes' OR state_guarantee GT 0>checked="checked"</cfif>>Yes 
+                        <input type="radio" name="regionguar" value="no" disabled <cfif regionguar EQ 'no' AND state_guarantee EQ 0>checked="checked"</cfif>>No 
+					</td>
+              	</tr>
 				<tr><td>Region Preference :</td><td><cfif qGetRegionGuarantee.recordcount EQ '0'> n/a <cfelse> #qGetRegionGuarantee.regionname# </cfif></td></tr>
 				<tr><td>State Preference :</td><td><cfif qGetStateGuarantee.recordcount EQ '0'> n/a <cfelse> #qGetStateGuarantee.statename# </cfif></td></tr>				
 			</table>	
