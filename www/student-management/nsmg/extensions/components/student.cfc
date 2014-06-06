@@ -223,6 +223,7 @@
                     s.flight_info_notes,
                     s.AYPOrientation,
                     s.AYPEnglish,
+                    s.unblockFlight,
                     <!--- PHP --->
                     php.assignedID, 
                     php.companyID, 
