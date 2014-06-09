@@ -787,8 +787,12 @@
         	
             <cfswitch expression="#orderBy#">
             
-            	<cfcase value="studentID,familyLastName,firstName,sex,country,regionName,programID,hostID,companyShort">
+            	<cfcase value="studentID,familyLastName,firstName,sex,regionName,programID,hostID,companyShort">
                 	#orderby#	
+                </cfcase>
+                
+                <cfcase value="country">
+                	s.countryresident
                 </cfcase>
                 
                 <cfdefaultcase>
