@@ -71,10 +71,13 @@
 		
 		// Get Host Family Application Info
 		qGetApplicationInfo = APPLICATION.CFC.HOST.getApplicationList(hostID=FORM.hostID);
-		
-		// Get State List
-		qGetStateList = APPLICATION.CFC.LOOKUPTABLES.getState();
-
+		if (CLIENT.companyid eq 13){
+			// Get Province List
+			qGetStateList = APPLICATION.CFC.LOOKUPTABLES.getState(country='CA');
+		}else{
+			// Get State List
+			qGetStateList = APPLICATION.CFC.LOOKUPTABLES.getState();
+		}
 		// Get Regions
 		qGetRegionList = APPLICATION.CFC.REGION.getUserRegions(companyID=CLIENT.companyID, userID=CLIENT.userID, usertype=CLIENT.usertype);
 		
@@ -116,15 +119,20 @@
 			if ( NOT LEN(FORM.city) ) {
 				SESSION.formErrors.Add("Please enter a City.");
 			}
-			
+			if client.companyid neq 13 {
 			if ( NOT LEN(FORM.state) ) {
 				SESSION.formErrors.Add("Please select a State.");
+			}else{
+			if ( NOT LEN(FORM.state) ) {
+				SESSION.formErrors.Add("Please select a Province.");	
 			}
-			
-			if ( NOT isValid("zipcode", Trim(FORM.zip)) ) {
-				SESSION.formErrors.Add("Please enter a valid Zip.");     
+			if client.companyid neq 13 {
+				if ( NOT isValid("zipcode", Trim(FORM.zip)) ) {
+					SESSION.formErrors.Add("Please enter a valid Zip.");     
+				}else {
+				if ( NOT len(Trim(FORM.zip)) ) {
+					SESSION.formErrors.Add("Please enter a Postal.");     
 			}
-			
 			if ( NOT LEN(FORM.phone) AND NOT LEN(FORM.father_cell) AND NOT LEN(FORM.mother_cell) ) {
 				SESSION.formErrors.Add("Please enter one of the Phone fields.");
 			}    
@@ -734,16 +742,19 @@
                 <td></td>
                 <td><input type="text" name="address2" id="address2" value="#FORM.address2#" size="40" class="largeField"></td>
             </tr>
+            <cfif client.companyid neq 13>
             <tr id="zipLookupRow">
                 <td class="zip">Zip Lookup: </td>
+                
                 <td><input type="text" name="zipLookup" id="zipLookup" value="#FORM.zipLookup#" class="smallField" maxlength="5" onblur="getLocationByZip()"></td>
             </tr>
+            </cfif>
             <tr>			 
                 <td class="label">City <span class="required">*</span></td>
                 <td><input type="text" name="city" id="city" value="#FORM.city#" size="20" class="largeField"></td>
             </tr>
             <tr>
-                <td class="label">State: <span class="required">*</span></td>
+                <td class="label"><cfif client.companyid eq 13>Province:<cfelse>State:</cfif> <span class="required">*</span></td>
                 <td>
                     <select name="state" id="state" class="largeField">
                         <option value=""></option>
@@ -754,7 +765,7 @@
                 </td>
             </tr>
             <tr>
-                <td class="zip">Zip: <span class="required">*</span></td>
+                <td class="zip"><cfif client.companyid eq 13>Postal Code<cfelse>Zip</cfif>: <span class="required">*</span></td>
                 <td><input type="text" name="zip" id="zip" value="#FORM.zip#" class="smallField" maxlength="10"></td>
             </tr>
         <tr>
@@ -884,7 +895,12 @@
                      </td>
                	</cfif>
                     <td valing="top" align="center">
-                        <input name="subAction" id="submiteHost" type="submit" value="eHost"  alt="Start E-App" border="0" class="buttonBlue" onclick="verifyAddress('submiteHost'); return false;" /> <br />
+                    <cfif client.companyid neq 13>
+                        <input name="subAction" id="submiteHost" type="submit" value="eHost"  alt="Start E-App" border="0" class="buttonBlue" onclick="verifyAddress('submiteHost'); return false;" />
+                        <cfelse>
+                         <input name="subAction" id="submiteHost" type="submit" value="eHost"  alt="Start E-App" border="0" class="buttonBlue" />
+                        </cfif>
+                         <br />
                         <cfif VAL(FORM.hostID)>
                             (Convert this family to an eHost - Host Family fills out application)
                         <cfelse>
@@ -892,13 +908,24 @@
                         </cfif>
                     </td>
                 <cfif VAL(FORM.hostID)>
-                    <td align="Center">   
-                        <input name="subAction" id="submitUpdate" type="submit" value="Update"  alt="Update Information" border="0" class="buttonGreen" onclick="verifyAddress('submitUpdate'); return false;" /><br />
+                    <td align="Center">  
+                    <cfif client.companyid neq 13> 
+                        <input name="subAction" id="submitUpdate" type="submit" value="Update"  alt="Update Information" border="0" class="buttonGreen" onclick="verifyAddress('submitUpdate'); return false;" />
+                        <cfelse>
+                         <input name="subAction" id="submitUpdate" type="submit" value="Update"  alt="Update Information" border="0" class="buttonGreen"/>
+                        </cfif>
+                        <br />
                         (Just Update Info)
                     </td>
                 <cfelse>
                     <td align="Center">   
-                        <input name="subAction" id="submitStandard" type="submit" value="Submit"  alt="Submit Paper Application" border="0" class="buttonRed" onclick="verifyAddress('submitStandard'); return false;" /><br />
+                    <cfif client.companyid neq 13> 
+                        <input name="subAction" id="submitStandard" type="submit" value="Submit"  alt="Submit Paper Application" border="0" class="buttonRed" onclick="verifyAddress('submitStandard'); return false;" />
+                    <cfelse>
+                    <input name="subAction" id="submitStandard" type="submit" value="Submit"  alt="Submit Paper Application" border="0" class="buttonRed" />
+                    </cfif>
+                        
+                        <br />
                         <!--- (Office User Fills Out App) --->
                     </td>
                 </cfif>
