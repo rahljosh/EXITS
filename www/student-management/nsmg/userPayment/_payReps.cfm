@@ -104,7 +104,7 @@
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(companyID)#">,
                     <cfqueryparam cfsqltype="cf_sql_integer" value="37">,
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="Payment">,
-                    <cfqueryparam cfsqltype="cf_sql_decimal" value="-#total#">,
+                    <cfqueryparam cfsqltype="cf_sql_float" value="-#total#">,
                     <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
                     <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
