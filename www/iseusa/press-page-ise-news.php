@@ -106,6 +106,85 @@ Babylon, NY 11702</p>
     <div class="smSize" style="float:right; width: 120px; margin: 10px 0 0 0;"><a href="press-page-ise-news.cfm"><strong>2014</strong></a>&nbsp;&nbsp;|&nbsp;&nbsp;<a href="press-page-ise-news-2013.cfm">2013</a></div>
 <h1>ISE News and Stories</h1>
  <div class="dotLine">&nbsp;</div>
+ 
+ 
+  <!---- Article May 31st ------->  
+<div class="iseNewsImg">
+  <div class="picIMG"><img src="images/pressKit/June-tennis-player.jpg" width="228" height="228" alt=""/></div>
+<p class="smItalic"></p>
+</div>
+
+<div class="iseNews">
+
+<h2>High School Tennis: Dark Horse? WMR Exchange Student Takes Unbeaten Record Into State Tourney
+</h2>
+<p class="smSize">Posted: May 31, 2014</p>
+
+  <p>LANCASTER, N.H. &#8211; Lisa Windeler arrived from Germany last fall as a foreign exchange student at White Mountains Regional High School.</p>
+  <p>Unknown to many at the time, the native of Cologne also brought along her tennis racket. And that's proved to be as much of a bonus for the Spartans' tennis program, as it's been bad news for her unsuspecting opponents. <a href="#" id="example2-show" class="showLink" onclick="showHide('example2');return false;">Read More &#187;</a></p>
+  <div id="example2" class="more2">
+
+<p>Even as Windeler's reputation has spread over the course of the season, her opponents have been powerless to prepare for the 5-foot-9 junior's array of two-fisted backhands and well-struck forehands. The evidence? An undefeated season in singles play.</p>
+<p>"Undefeated" may be too mild of a term, however; in 14 matches this season, she gave up a total of three games -- not sets, games.</p>
+<p>It adds up to an intriguing scenario with the state tournament coming up. Having not found in Division III competition up to her level, how will she fare against D-I or II opposition? That question will be answered at the June 7 tournament at Pinkerton Academy in Manchester, N.H. </p>
+<p>An unknown commodity when she joined the team this spring, Windeler didn't stay that way for long. "I knew she was interested in tennis, but I didn't have any idea, any inkling about the kind of level she was," said Spartans coach Dr. Walter Voigt during a May 28 practice at the Colonel Town courts. "When I saw how consistent she was and how hard she hit the ball -- after one practice I thought, this girl could make some noise in the state tournament."</p>
+<p>He wasn't about to base anything on one practice though. "D-III isn't that strong, so I wasn't really sure what I had in Lisa until a few more practices," he said. Soon enough she was practicing with the boys team as well as the girls and proving to be the Spartans' top player. "I knew Lisa would be good, but I didn't expect her to be as dominant as she's been." That's not the case across the board in terms of D-III players, he emphasized; indeed, the 2013 state champion, Sunday Swett, represented D-III's Bow High School.</p>
+<p>High school sports differ in Germany from America in that students play on outside club teams, not for the school, Lisa explained. Athletes also participate in their sport-of-choice year-round, as opposed to the more seasonal situation in America. She was the fifth-seeded player on her club team team as a high school sophomore. Club teams can include athletes of 20 years old and older as well as high school students, she added.</p>
+<p>How it all unfolds at the June 7 tournament makes for great speculation. How will a player who's run rampant in D-III stack up against players from bigger schools? Even with as dominant a season as she had, "it's still a bit of a mystery how it'll go," Dr. Voigt said.</p>
+<p>What remains undetermined as well is where Windeler will be seeded. The deadline for seedings was Friday and won't be released until next week. When they are, Windeler will be listed in doubles too, along with her partner, sophomore Emma Ainsworth. The doubles tournament is set for June 8, also at Pinkerton Academy. Windeler and Ainsworth went undefeated in 11 matches upon being paired up three matches into the season, coach Voigt said.</p>
+<p>One way or another, it will conclude what the 16-year-old Cologne, Germany resident chalks up as an enjoyable school year in her new country. "I wanted to be a participant in high school -- in Germany you hear about school spirit and playing sports in school, and I wanted to do that," she said. "I also wanted to improve my English, and it was kind of an adventure to come here.</p>
+<p>"I like it so much," she said. "Going to school, then having practices after classes, it's so cool. During basketball season everyone was cheering for our school at the games."</p>
+<p>There will be a lot of cheering in the North Country for Windeler as she gets ready to see what she can do next Saturday against the stiffest competition of the season. "It'll be exciting -- I'm looking forward to it," she said. She will return to Germany for her senior year, and seeks to continue playing at the college level and beyond.</p>
+<p>NOTE: The Spartans are also making a return trip to the boys doubles tournament. Also set for June 7 in Manchester, N.H., boys states are being held at Derryfield School. WMR will be represented by junior Tim Voigt and senior Ryan Wilkinson, who also competed in the 2013 tournament.
+<a href="http://www.iseusa.com">www.iseusa.com</a>.</p>
+<p><a href="#" id="example2-hide" class="hideLink" onclick="showHide('example2');return false;">HIDE ARTICLE</a></p>
+</div>
+</div>
+
+<!---- Article May 31st ------->
+ <div class="clearfloat">&nbsp;</div>
+    <div class="blueLine">&nbsp;</div>
+  <!---- Article May 2nd ------->  
+ 
+  <!---- Article May 22nd ------->  
+<div class="iseNewsImg">
+  <div class="picIMG"><img src="images/pressKit/may-22-news.jpg" width="228" height="228" alt=""/></div>
+<p class="smItalic">Photo By:<br>
+  Story By: RICK CHALIFOUX, reporter</p>
+</div>
+
+<div class="iseNews">
+
+<h2>Living An Enriched Life<br>
+</h2>
+<p class="smSize">Posted: May 22, 2014</p>
+
+  <p>SAYVILLE &#8211; For the past year, a Sayville family has hosted a special exchange student from Thailand as part of the International Student Exchange (ISE) Organization. Ploy Srisupavanich, a 17-year old girl from Bangkok, is now wrapping up her junior year at Sayville High School. She has experienced a great deal since coming to the United States, and has touched the hearts of many while enriching her own life in the process.</p>
+  <p>Since September, Ploy (whose nickname in Thai means “jewelry”) has been a member of the Ulloa household with her host parents, Sergio and Jamie, and sister Gabi. In addition to joining the Golden Flashes JV basketball team, Ploy has spent many hours volunteering her time with the Salvation Army, reading to children, fundraising for her school, participating in a food drive, tutoring, and helping her host mother and sister with a wide range of volunteering ventures. <a href="#" id="example1-show" class="showLink" onclick="showHide('example1');return false;">Read More &#187;</a></p>
+  <div id="example1" class="more1">
+
+<p>“Ploy has been more involved than most of the kids that live here permanently,” said Jamie, who graduated from Sayville in ’82 and whose mother graduated in ’64. “She is a wonderful example for our local children.”
+Ploy’s long list of activities include selling candy for cancer charities with the basketball team, serving Christmas dinner to the needy at the high school, assisting her classmates in building a float over Homecoming weekend, and even a visit to Disneyworld. She also helps younger school children with homework at Cherry Avenue Elementary School.</p>
+<p>“I wanted to get as involved as I possibly could,” said Ploy. “I’m glad I did because I was able to learn a lot, help others, and make friends along the way.”
+The Ulloa family comes from a line of immigrants, and currently has relatives living in Ecuador. Jamie said that she felt it would be a positive experience for them to showcase their shared heritage and lifestyle with someone from another part of the world. In fact, Ploy accompanied the family on a trip to Ecuador earlier in the year.</p>
+ <p>Ploy’s host sister Gabi has also joined Ploy and her mother for many of their community-oriented endeavors. She said that her favorite aspect of volunteering is seeing the smiles on the faces of those they help.
+“It’s been really cool to have Ploy stay with us,” said Gabi, who is a 7th grader at Sayville Middle School and has two older siblings who graduated in 2005 and 2006. “It’s great to have someone to spend time with while I’m in the house and when we’re out doing activities. We’ve learned a lot from each other and had a lot of great times.”</p>
+<p>Jamie is an Area Representative for the Babylon-based ISE, which was founded in 1982 as a non-profit organization dedicated to the mission of “Educating Tomorrow’s Leaders.” It draws about 2,100 students per year across the country, including 50 on Long Island. She has coordinated gatherings with other exchange students from the region, which drew 20-30 students and their families each time. </p>
+<p>“We’re ambassadors for our community and our country,” said Jamie, who noted that the family will host a new student named Heather from China next year. “It’s a great give-and-take program where both sides can enjoy the experience and learn a lot about both the wider world and themselves.”</p>
+<p>One such event will take place on June 7, where kids and their host families will have the opportunity to participate in the “Birthday in a Bag Project” – a collaborative effort with the Patchogue Club of the New Vision Pioneers Chapter 85. Attendees can contribute birthday bags containing a cake, party supplies, and a gift to children in Suffolk County’s Family Homeless Shelters and Community Outreach Centers who can’t afford to celebrate their birthdays.</p>
+<p>“You see how some people live in other parts of the world and it helps you feel thankful for what you do have,” said Jamie regarding the family’s volunteer efforts. “It’s important to have that awareness. We don’t have much, but what we do have, we share.”</p>
+<p>Ploy is scheduled to go back to Thailand on July 1 – her 18th birthday. As a result of her experience in the United States, she hopes to develop a career in the field of international relations and return back to the country someday in the future. With just over a month left, she reflected on how much her time here has influenced her personal character and outlook on the world.</p>
+<p>“This year has changed my life,” said Ploy, who has two older brothers back in Thailand. “I have felt a lot of feelings along the way, including homesick, sad, depressed, as well as happy, joy, and fun. I have to learned how to deal with people, how to live by myself without my family in Thailand, and how to help people. I worked very hard, and now feel more responsible and grown up.</p> 
+<p>“It has been one of the best years of my life, and I will never forget the experiences I’ve had,” continued Ploy. “I am so lucky that I met a nice host family as well as great friends and teachers at the high school. I am so happy that I am here, and will never regret that I made the decision to come. Thank you so much to my mom and my dad for all that they have done for me.”
+For more information on the ISE, visit www.iseusa.com or email Jamie Ulloa at ulloas5@hotmail.com. To learn more about the Birthday in a Bag Project, contact Ulloa at: 664-0268 or Karen Steinhaus – President of the Patchogue Club at: 757-1150.
+ <a href="http://www.iseusa.com">www.iseusa.com</a>.</p>
+<p><a href="#" id="example1-hide" class="hideLink" onclick="showHide('example1');return false;">HIDE ARTICLE</a></p>
+</div>
+</div>
+
+<!---- Article May 22nd ------->
+ <div class="clearfloat">&nbsp;</div>
+    <div class="blueLine">&nbsp;</div>
   <!---- Article May 2nd ------->  
 <div class="iseNewsImg">
   <div class="picIMG"><img src="images/pressKit/american-experience.jpg" width="228" height="228" alt=""/></div>
