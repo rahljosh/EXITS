@@ -193,7 +193,7 @@
                                     </td>
                                     <td>
                                     	<cfif CLIENT.userType LTE 4> 
-                                            <a class="jQueryModal" href="hostApplication/viewPDF.cfm?hostID=#qGetHostApplications.hostID#&pdf&reportType=office" title="Print Application">
+                                            <a class="jQueryModal" href="hostApplication/viewPDF.cfm?hostID=#qGetHostApplications.hostID#&pdf&reportType=office&seasonID=URL.seasonID" title="Print Application">
                                                 <img src="pics/buttons/printOffice.png">
                                             </a>
                                         </cfif>
@@ -220,7 +220,7 @@
                                         </form>
                                     </td>
                                     <td>
-                                    	<a class="jQueryModal" href="hostApplication/viewPDF.cfm?hostID=#qGetHostApplications.hostID#&pdf&reportType=agent" title="Print Application">
+                                    	<a class="jQueryModal" href="hostApplication/viewPDF.cfm?hostID=#qGetHostApplications.hostID#&pdf&reportType=agent&seasonID=URL.seasonID" title="Print Application">
                                             <img src="pics/buttons/printAgent.png">
                                         </a>
                                     </td>
