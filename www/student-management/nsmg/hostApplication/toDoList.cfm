@@ -520,12 +520,12 @@
                         <a class="jQueryModal" href="/hostApplication/index.cfm?uniqueID=#qGetHostInfo.uniqueID#&season=#vSelectedSeason#&userID=#CLIENT.userID#" title="View Complete Application"><img src="pics/buttons/openApplication.png" border="0"></a>
                         <br/>
                         <cfif CLIENT.userType LTE 4> 
-                            <a class="jQueryModal" href="hostApplication/viewPDF.cfm?hostID=#qGetHostInfo.hostID#&pdf&reportType=office" title="Print Application">
+                            <a class="jQueryModal" href="hostApplication/viewPDF.cfm?hostID=#qGetHostInfo.hostID#&pdf&reportType=office&seasonID=#vSelectedSeason#" title="Print Application">
                                 <img src="pics/buttons/printOffice.png">
                             </a>
                             <br/>
                         </cfif>
-                        <a class="jQueryModal" href="hostApplication/viewPDF.cfm?hostID=#qGetHostInfo.hostID#&pdf&reportType=agent" title="Print Application">
+                        <a class="jQueryModal" href="hostApplication/viewPDF.cfm?hostID=#qGetHostInfo.hostID#&pdf&reportType=agent&seasonID=#vSelectedSeason#" title="Print Application">
                             <img src="pics/buttons/printAgent.png">
                         </a>
                     </td>
