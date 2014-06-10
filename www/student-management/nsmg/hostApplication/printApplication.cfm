@@ -23,6 +23,7 @@
     <!--- Param URL Variables --->
     <cfparam name="URL.hostID" default="0">
     <cfparam name="URL.reportType" default="agent">
+    <cfparam name="URL.seasonID" default="0">
     
     <cfif CLIENT.userType GTE 5>
     	<cfset URL.reportType = "agent">
@@ -38,7 +39,11 @@
 		}
 		
 		// Get Host Application Information
-		qGetHostInfo = APPLICATION.CFC.HOST.getApplicationList(hostID=FORM.hostID);	
+		if (VAL(URL.seasonID)) {
+			qGetHostInfo = APPLICATION.CFC.HOST.getApplicationList(hostID=FORM.hostID,seasonID=URL.seasonID);
+		} else {
+			qGetHostInfo = APPLICATION.CFC.HOST.getApplicationList(hostID=FORM.hostID);		
+		}
 	</cfscript>
     
     <cfhtmlhead text='<link rel="stylesheet" href="../linked/css/hostApp.css" type="text/css">'>

@@ -18,6 +18,7 @@
 
 	<!--- Parameter for the folder locations of images --->
     <cfparam name="relative" default="../">
+    <cfparam name="URL.seasonID" default="">
 
 	<!--- Import CustomTag Used for Page Messages and Form Errors --->
     <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
@@ -27,7 +28,8 @@
 		qGetUploadedImages = APPLICATION.CFC.DOCUMENT.getDocuments(
 			foreignTable="smg_hosts",	
 			foreignID=VAL(qGetHostInfo.hostID), 			
-			documentGroup="familyAlbum"
+			documentGroup="familyAlbum",
+			seasonID=URL.seasonID
 		);
 	</cfscript>
     
