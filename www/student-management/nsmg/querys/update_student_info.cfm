@@ -418,7 +418,7 @@
     
 	<!--- Send Cancelation Email to finance, program manager, others | Only Send if student is current active --->
 	<cfif NOT LEN(qStudentInfo.canceldate)>
-	
+		
 		<cfscript>
 			// Update datePlacedEnded on smg_hostHistory
 			APPLICATION.CFC.STUDENT.setDatePlacedEnded(studentID=qStudentInfo.studentID, datePlacedEnded=FORM.date_canceled);
@@ -444,10 +444,11 @@
             // Replace ';' with a <br />
             emailList = ReplaceNoCase(emailList, ';', '<br />', "ALL");
         </cfscript>
-    	<cfquery name="cancelDateHost" datasource="#application.dsn#">
-            select max(datePlaced)
+    	<cfquery name="placementApproved" datasource="#application.dsn#">
+        	select datePlaced, hostid
             from smg_hosthistory
             where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qStudentInfo.studentID#">
+            and datePlaced != NULL
         </cfquery>
         <cfoutput>
             <cfsavecontent variable="email_message">
@@ -464,10 +465,11 @@
                 Reason: <strong>#FORM.cancelreason#</strong><br />
                 
                 Placement Approved: 
-                <cfif cancelDateHost.datePlaced is ''>
-                    <strong>Unplaced / Unapproved</strong> 
+                <cfif val(placementApproved.recordcount)>
+                <cfloop query="placementApproved">
+                    <strong>#DateFormat(placementApproved.datePlaced, 'mm/dd/yyyy')# - #familyLastName# Family</strong>
                 <cfelse>
-                   	<strong>#DateFormat(cancelDateHost.datePlaced, 'mm/dd/yyyy')#</strong>
+                    <strong>Unplaced</strong>
                 </cfif> <br />
     
                 SEVIS No.: 
