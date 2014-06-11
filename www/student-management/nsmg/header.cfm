@@ -14,6 +14,8 @@
     <cfparam name="FORM.quickSearchUserID" default="">
     <cfparam name="FORM.quickSearchAutoSuggestHostID" default="">
     <cfparam name="FORM.quickSearchHostID" default="">
+    
+    <cfparam name="client.alreadySawEmergency" default="0">
 
     <cfscript>
 		// check to make sure we have a valid companyID
@@ -151,7 +153,7 @@
         WHERE 
         	messagetype = <cfqueryparam cfsqltype="cf_sql_varchar" value="update">
     </cfquery>
-    <cfif client.usertype eq 1>
+    <cfif client.usertype eq 8>
         <cfquery name="checkEmergencyNumber" datasource="#application.dsn#">
         select emergency_phone
         from smg_users
@@ -180,7 +182,7 @@
     <script type="text/javascript" src="linked/js/basescript.js "></script> <!-- BaseScript -->
 </head>
 <body>
-<cfinclude template="analytics.cfm">
+<!----<cfinclude template="analytics.cfm">---->
 <script type="text/javascript">
 	// Avoid two selections on quick search
 	var quickSearchValidation = function() {		
@@ -455,14 +457,18 @@
 </cfoutput>
 <br>
 <!----Force emergency number---->
-<cfif client.userid eq 1 or client.userid eq 18602 or client.userid eq 12313 or client.userid eq 19422>
+<cfif client.usertype eq 8 and not val(client.alreadySawEmergency)>
 	
-    <cfif checkEmergencyNumber.emergency_phone is ''>
+    <cfif checkEmergencyNumber.emergency_phone is  ''>
         <script language="javascript">
             // JQuery ColorBox Modal
             $(document).ready(function(){ 
-                $.fn.colorbox( {href:'forms/emergencyNumber.cfm', iframe:true,width:'60%',height:'40%',onLoad: function() { }} );
+                $.fn.colorbox( {href:'forms/emergencyNumber.cfm', iframe:true,width:'60%',height:'40%',onLoad: function() {  }} );
             });
+			
+			//$('#cboxClose').remove()  put this in the brackets of the function
+			//escKey: false, overlayClose: false,  put this in the with other functions.
+			
         </script>
     </cfif>
  
