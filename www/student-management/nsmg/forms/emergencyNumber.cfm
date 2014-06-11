@@ -15,9 +15,10 @@
 	<script type="text/javascript" src="../linked/js/jquery.tools.min.js"></script> <!-- JQuery Tools Includes: Modal tooltip, colorBox, MaskedInput, TimePicker -->
 	<script type="text/javascript" src="../linked/js/jquery.cfjs.js"></script> <!-- Coldfusion functions for jquery -->
     <script type="text/javascript" src="../linked/js/basescript.js "></script> <!-- BaseScript -->
+
 </head>
 <body>
-
+	<Cfset client.alreadySawEmergency = 1>
   <div class="rdholder" style="width:90%; margin:30px; float:left;"> 
     
     <div class="emergencyTop"> 
@@ -31,13 +32,16 @@
     set emergency_phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#form.emergency_phone#">
     where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
     </cfquery>
+
 	 <table width="90%" align="center" cellpadding="4">
             <tr>
-                <td rowspan=3 valign="middle"><img src="../pics/icons/emergency-icon.png" height="100"></td><td colspan=2 align="left"><Strong> Thank You!</strong> Your records have been updated.<br><br>
-                Close this window to continue.
+                <td rowspan=3 valign="middle"><img src="../pics/icons/emergency-icon.png" height="100"></td><td colspan=2 align="left"><h2> Thank You!</h2><br><br> Your records have been updated.<br><br>
+             
                </td>
             </tr>
-           
+            <tr>
+                <td align="center" colspan=2><input type="submit" value="Close " class="basicOrangeButton" onClick='parent.jQuery.fn.colorbox.close();'></td>
+            </tr>
            
         </table>
     <cfelse>
