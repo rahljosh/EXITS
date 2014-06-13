@@ -178,6 +178,7 @@
 	APPLICATION.PATH.hostApp = APPLICATION.PATH.uploadedFiles & "hostApp/";
 	APPLICATION.PATH.studentServices = APPLICATION.PATH.uploadedFiles & "student-services/";
 	APPLICATION.PATH.caseMgmt = APPLICATION.PATH.uploadedFiles & "caseMgmt/";
+	APPLICATION.PATH.schoolLetters = APPLICATION.PATH.uploadedFiles & "schoolLetters/";
 
 	// These are used in the student online application
 	APPLICATION.PATH.onlineApp = StructNew();
@@ -195,6 +196,7 @@
 	APPLICATION.PATH.onlineApp.virtualFolder = APPLICATION.PATH.uploadedFiles & "virtualfolder/";
 	APPLICATION.PATH.onlineApp.internalVirtualFolder = APPLICATION.PATH.uploadedFiles & "internalVirtualFolder/";
 	APPLICATION.PATH.onlineApp.xmlApp = APPLICATION.PATH.uploadedFiles & "xml_app/";
+	
 
 
 	/* 
