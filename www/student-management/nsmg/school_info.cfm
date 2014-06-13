@@ -1,3 +1,15 @@
+<script src="linked/js/jquery.colorbox.js"></script>
+	<!----open window details---->
+	<script>
+        $(document).ready(function(){
+            //Examples of how to assign the ColorBox event to elements
+            
+            $(".iframe").colorbox({width:"60%", height:"60%", iframe:true, 
+            
+               onClosed:function(){ location.reload(true); } });
+
+        });
+    </script>
 <!--- delete school date. --->
 <cfif isDefined("url.delete_date")>
     <cfquery datasource="#application.dsn#">
@@ -82,7 +94,7 @@
 <td>
 
     <cfquery name="get_school_dates" datasource="#application.dsn#">
-        SELECT schooldateid, enrollment, year_begins, semester_ends, semester_begins, year_ends, smg_seasons.season
+        SELECT schooldateid, enrollment, year_begins, semester_ends, semester_begins, year_ends, fiveStudentAssigned,smg_seasons.season, smg_school_dates.seasonid
         FROM smg_school_dates INNER JOIN smg_seasons ON smg_seasons.seasonid = smg_school_dates.seasonid
         WHERE schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_school.schoolid#">
         AND smg_seasons.active = '1'
@@ -105,25 +117,37 @@
             <td>&nbsp;</td>
             <td>&nbsp;</td>
             <td><u>Season</u></td>
-            <td><u>Enrollment/Orientation</u></td>
+            <td><u>Enroll/Orient.</u></td>
             <td><u>Year Begins</u></td>
-            <td><u>1st Semester Ends</u></td>
-            <td><u>2nd Semester Begins</u></td>
+            <td><u>1st Sem. Ends</u></td>
+            <td><u>2nd Sem. Begins</u></td>
             <td><u>Year Ends</u></td>
+            <td><u>5th Student</u></td>
         </tr>
         <cfif get_school_dates.recordcount is 0>
             <tr><td colspan="8" align="center">There are no dates for this school.</td></tr>
         <cfelse>		
             <cfoutput query="get_school_dates">
+			   <cfscript>	
+                    // Get the letter info
+                    qGetSchoolDocs = APPCFC.DOCUMENT.getDocuments(foreignTable='school_info',foreignid=get_school.schoolid,seasonid=get_school_dates.seasonid);
+              </cfscript>
+            
                 <tr <cfif currentRow MOD 2 EQ 0>bgcolor="EAE8E8"</cfif>>
                     <td><a href="index.cfm?curdoc=school_info&delete_date=#schooldateid#&schoolid=#get_school.schoolid#" onClick="return confirm('Are you sure you want to delete this School Date?')"><img src="pics/deletex.gif" border="0" alt="Delete"></a></td>
                     <td><a href="index.cfm?curdoc=forms/school_date_form&schooldateid=#schooldateid#"><img src="pics/edit.png" border="0" alt="Edit"></a></td>
                     <td>#season#</td>
-                    <td>#DateFormat(enrollment, 'mm/dd/yyyy')#</td>
+                    <td >#DateFormat(enrollment, 'mm/dd/yyyy')#</td>
                     <td>#DateFormat(year_begins, 'mm/dd/yyyy')#</td>
                     <td>#DateFormat(semester_ends, 'mm/dd/yyyy')#</td>
                     <td>#DateFormat(semester_begins, 'mm/dd/yyyy')#</td>
                     <td>#DateFormat(year_ends, 'mm/dd/yyyy')#</td>
+                    <td <Cfif isDate(fiveStudentAssigned) AND qGetSchoolDocs.recordcount eq 0>bgcolor="##FFFF99"</cfif>>
+						<!---If a date is showen, but no file, dispaly upload dialog---->
+						<Cfif isDate(fiveStudentAssigned)>
+                    		<a class='iframe' href="schoolInfo/fifthStudentLetter.cfm?schoolid=#get_school.schoolid#&season=#seasonid#&seasonLabel=#season#&letterDate=#DateFormat(fiveStudentAssigned, 'mm/dd/yyyy')#">#DateFormat(fiveStudentAssigned, 'mm/dd/yyyy')#</a>
+                        </Cfif>
+                    </td>
                 </tr>
             </cfoutput>
         </cfif>

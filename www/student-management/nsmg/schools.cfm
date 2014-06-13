@@ -9,7 +9,29 @@
 <cfparam name="school_dates" default="">
 <cfparam name="orderBy" default="schoolname">
 <cfparam name="recordsToShow" default="25">
+<script src="linked/js/jquery.colorbox.js"></script>
+	<!----open window details---->
+	<script>
+        $(document).ready(function(){
+            //Examples of how to assign the ColorBox event to elements
+            
+            $(".iframe").colorbox({width:"60%", height:"60%", iframe:true, 
+            
+               onClosed:function(){ location.reload(true); } });
 
+        });
+    </script>
+<Cfscript>
+
+if (CLIENT.companyid eq 13){
+			// Get Province List
+			qGetStateList = APPLICATION.CFC.LOOKUPTABLES.getState(country='CA');
+		}else{
+			// Get State List
+			qGetStateList = APPLICATION.CFC.LOOKUPTABLES.getState();
+		}
+</cfscript>		
+<!----
 <cfquery name="qGetStateList" datasource="#APPLICATION.dsn#">
     SELECT DISTINCT 
     	state
@@ -18,9 +40,9 @@
     ORDER BY 
     	state
 </cfquery>
-
+---->
 <!--- default state to user's state. --->
-<cfif NOT LEN(stateShort)>
+<cfif NOT LEN(stateShort) AND client.companyid NEQ 13>
 
     <cfquery name="qGetUserState" datasource="#APPLICATION.dsn#">
         SELECT 
@@ -40,7 +62,11 @@
 	</cfscript>
 
 </cfif>
-
+<cfquery name="currentSeason" datasource="#APPLICATION.dsn#">
+select seasonID, season
+from smg_Seasons
+where #now()# between startDate and ADDDATE(endDate, 31)
+</cfquery>
 <table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
     <tr height=24>
         <td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
@@ -61,7 +87,7 @@
         <td>
             State<br />
 			<select name="stateShort" id="stateShort">
-            	<option value="" <cfif NOT LEN(stateShort)> selected="selected" </cfif>>All</option>
+            	<option value="ALL" <cfif NOT LEN(stateShort) OR stateShort is 'ALL'> selected="selected" </cfif>>All</option>
             	<cfloop query="qGetStateList">
                     <option value="#qGetStateList.state#" <cfif qGetStateList.state EQ stateShort> selected="selected" </cfif> >#qGetStateList.state#</option>
                 </cfloop>
@@ -86,6 +112,7 @@
                 <option value="principal" <cfif orderBy EQ 'principal'>selected</cfif>>Contact</option>
                 <option value="city" <cfif orderBy EQ 'city'>selected</cfif>>City</option>
                 <option value="state" <cfif orderBy EQ 'state'>selected</cfif>>State</option>
+                <option value="noStudents" <cfif orderBy EQ 'noStudents'>selected</cfif>>No. Students</option>
             </select>            
         </td>
         <td>
@@ -105,24 +132,40 @@
 </cfoutput>
 
 <cfif submitted>
-
+	<cfquery name="currentSeasonPrograms" datasource="#APPLICATION.dsn#">
+    select programid
+    from smg_programs where seasonid = <cfqueryparam value="#currentSeason.seasonid#" cfsqltype="cf_sql_integer">
+    and companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(APPLICATION.SETTINGS.COMPANYLIST.ISESMG)#" list="yes"> )
+    </cfquery>
+    <cfset programList = "">
+   
+   <Cfloop query="currentSeasonPrograms">
+    	<cfset programList = listAppend(programList, #programID#)>
+    </Cfloop>
+    <cfoutput>
+   
+	</cfoutput>
     <cfquery name="getResults" datasource="#APPLICATION.dsn#">
-        SELECT DISTINCT 
-			s.*
+       SELECT DISTINCT 
+			s.*, (SELECT count(studentid) as NoStudents
+					FROM smg_Students
+					WHERE schoolid = s.schoolid 
+                    AND programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(programList)#" list="yes">) )as noStudents
         FROM 
         	smg_schools s
-        LEFT JOIN 
-        	smg_school_dates scd ON s.schoolid = scd.schoolid
+       
         WHERE 
         	1=1		
-		<!----ESI Wants to see all schools, not just the ones they entered---->
-		<!--- Filter ESI Schools
-		<cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ESI, CLIENT.companyID)>
+		
+		<cfif client.companyid eq 13>
         	AND
             	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        <cfelse>
+        	AND 
+            	s.companyID != <cfqueryparam cfsqltype="cf_sql_integer" value="13"> 
         </cfif>
-		 --->
-		<cfif LEN(stateShort)>
+		
+		<cfif (LEN(stateShort) AND stateShort is not 'ALL' ) >
             AND 
             	s.state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#stateShort#">
         </cfif>
@@ -146,13 +189,18 @@
             AND 
             	scd.schoolid IS NULL
         </cfif>
-        
+     
         ORDER BY
-            <cfif ListFind("schoolid,schoolname,principal,city,state", orderBy)>
+            <cfif ListFind("schoolid,schoolname,principal,city,state,noStudents", orderBy)>
             	#orderBy#
             <cfelse>
             	s.schoolname
             </cfif>
+            <cfif orderBy is 'noStudents'>
+            desc
+            </cfif>
+           
+    
     </cfquery>
 
 	<cfif getResults.recordCount GT 0>
@@ -190,19 +238,46 @@
                 </td>
             </tr>
         </table>
- 
+
         <table width=100% class="section">
             <tr align="left" style="font-weight:bold;">
                 <td>ID</td>
                 <td>School Name</td>
+                 <td>No. Students</td>
                 <td>Contact</td>
                 <td>City</td>
                 <td>State</td>
             </tr>
             <cfloop query="getResults" startrow="#startrow#" endrow="#endrow#">
+                
+               
+                
+             
             <tr bgcolor="###iif(currentRow MOD 2 ,DE("FFFFE6") ,DE("FFFFFF") )#">
                 <td><a href="?curdoc=school_info&schoolid=#schoolid#">#schoolid#</a></td>
                 <td><a href="?curdoc=school_info&schoolid=#schoolid#">#schoolname#</a></td>
+                <td> #NoStudents# 
+               
+					<cfif noStudents gte 5>
+                    <cfquery name="dateInfo" datasource="#APPLICATION.dsn#">
+                    select fiveStudentAssigned
+                    from smg_school_dates
+                    where schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#schoolid#">
+                    and seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#currentSeason.seasonid#">
+                    </cfquery>
+                     <cfscript>	
+						// Get the letter info
+						qGetSchoolDocs = APPCFC.DOCUMENT.getDocuments(foreignTable='school_info',foreignid=schoolid,seasonid=currentSeason.seasonid);
+				 	</cfscript>
+						<cfif qGetSchoolDocs.recordcount eq 0>
+                        	<a class='iframe' href="schoolInfo/fifthStudentLetter.cfm?schoolid=#schoolid#&season=#currentSeason.seasonid#&seasonLabel=#currentSeason.season#&letterDate=#DateFormat(dateInfo.fiveStudentAssigned, 'mm/dd/yyyy')#">
+                            	<img src="pics/warning.png" height=10 border=0 /></a>
+                         <cfelse>
+                         		<img src="pics/warning.png" border=0 />
+                         </cfif>
+                     </cfif>
+					
+                </td>
                 <td>#principal#</td>
                 <td>#city#</td>
                 <td>#state#</td>
