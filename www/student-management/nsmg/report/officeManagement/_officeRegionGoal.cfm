@@ -126,7 +126,7 @@
                     AND
                     	a.regionID = r.regionID
                     AND
-                        a.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#">
+                        a.seasonID IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#FORM.seasonID#"> )
                 WHERE
                 	r.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#FORM.regionID#"> )
               	AND
@@ -157,7 +157,7 @@
                     AND
                         p.type IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vProgramTypeList#" list="yes"> )
                     AND
-                        p.smgSeasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#"> 
+                        p.smgSeasonID IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#FORM.seasonID#"> )
             LEFT OUTER JOIN
                 smg_hostHistory sh ON sh.studentID = s.studentID
                 AND
@@ -246,7 +246,7 @@
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Season: <span class="required">*</span></td>
                     <td>
-                        <select name="seasonID" id="seasonID" class="xLargeField" required>
+                        <select name="seasonID" id="seasonID" class="xLargeField" multiple="multiple" size="3" required>
                             <cfloop query="qGetSeasonList"><option value="#qGetSeasonList.seasonID#">#qGetSeasonList.season#</option></cfloop>
                         </select>
                     </td>		
