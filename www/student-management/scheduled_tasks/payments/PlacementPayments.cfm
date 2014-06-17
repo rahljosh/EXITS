@@ -37,8 +37,8 @@ SELECT DISTINCT
 	CASE
 		WHEN pmtrng.fk_paymenttype = 1 and sppmt.specialPaymentID is Null or sppmt.receivesPlacementFee then pmtrng.paymentAmount
 		WHEN pmtrng.fk_paymenttype = 1 and sppmt.receivesPlacementFee = 0 then 0
-		WHEN pmtrng.fk_paymenttype IN (18,19,20) AND (sppmt.specialPaymentId IS NULL OR sppmt.receivesPreAYPBonus) THEN pmtrng.paymentAmount
-		WHEN pmtrng.fk_paymenttype IN (18,19,20) AND NOT sppmt.receivesPreAYPBonus THEN 0
+		WHEN pmtrng.fk_paymenttype IN (18,19,20,38) AND (sppmt.specialPaymentId IS NULL OR sppmt.receivesPreAYPBonus) THEN pmtrng.paymentAmount
+		WHEN pmtrng.fk_paymenttype IN (18,19,20,38) AND NOT sppmt.receivesPreAYPBonus THEN 0
 		WHEN pmtrng.fk_paymenttype =  24 AND (sppmt.specialPaymentId IS NULL OR sppmt.receivesPreAYPBonus) THEN pmtrng.paymentAmount
 		WHEN pmtrng.fk_paymenttype =  24 AND NOT sppmt.receivesPreAYPBonus THEN 0 
 		WHEN pmtrng.fk_paymenttype =  14 AND (sppmt.specialPaymentId IS NULL OR sppmt.receivesStateGuarantee) THEN pmtrng.paymentAmount
@@ -103,7 +103,7 @@ WHERE
 				AND st.direct_placement = 0)
 				AND 
 				(
-					(st.aypEnglish > 0 AND pmtrng.fk_paymentType IN (18,19,20) AND hh.datePISEmailed >= pmtrng.paymentStartDate)
+					(st.aypEnglish > 0 AND pmtrng.fk_paymentType IN (18,19,20,38) AND hh.datePISEmailed >= pmtrng.paymentStartDate)
 					OR (st.aypEnglish > 0 AND st.intrep = 11878 AND pmtrng.fk_paymentType = 24)
 					OR (states.state = hst.state and pmtrng.fk_paymentType = 14)
 					OR (pmtrng.fk_paymenttype = 23 AND hh.dateCreated >= pmtrng.paymentStartDate)
