@@ -103,7 +103,7 @@ WHERE
 				AND st.direct_placement = 0)
 				AND 
 				(
-					(st.aypEnglish > 0 AND pmtrng.fk_paymentType IN (18,19,20,38) AND hh.datePISEmailed >= pmtrng.paymentStartDate)
+					(st.aypEnglish > 0 AND pmtrng.fk_paymentType IN (18,19,20,38) AND hh.dateCreated >= pmtrng.paymentStartDate)
 					OR (st.aypEnglish > 0 AND st.intrep = 11878 AND pmtrng.fk_paymentType = 24)
 					OR (states.state = hst.state and pmtrng.fk_paymentType = 14)
 					OR (pmtrng.fk_paymenttype = 23 AND hh.dateCreated >= pmtrng.paymentStartDate)
