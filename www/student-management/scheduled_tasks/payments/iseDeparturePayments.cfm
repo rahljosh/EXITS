@@ -31,8 +31,7 @@ INNER JOIN smg_hosts h ON s.hostID = h.hostID
 INNER JOIN smg_hosthistory hh ON s.studentID = hh.studentID
       AND hh.isActive = 1
 INNER JOIN smg_hosthistorytracking hht ON hh.historyID = hht.historyID     
-INNER JOIN smg_host_app_season shas ON shas.hostID = s.hostID
-      AND shas.applicationStatusID <= 3
+LEFT OUTER JOIN smg_host_app_season shas ON shas.hostID = s.hostID
 INNER JOIN smg_programs p ON p.programID = s.programID
       AND p.type IN(1,2)      
       AND p.programID >= 340
@@ -64,4 +63,5 @@ AND (
     OR (hht.isDoublePlacementPaperworkRequired = 1 AND hht.doublePlacementStudentDateCompliance IS NOT NULL AND hht.doublePlacementHostFamilyDateCompliance IS NOT NULL)
     )
 AND s.studentID NOT IN (SELECT `student ID` FROM v_all_missing_progress_reports)
+AND (shas.applicationStatusID IS NULL OR shas.applicationStatusID <= 3)
 </cfquery>
