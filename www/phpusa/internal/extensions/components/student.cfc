@@ -1598,7 +1598,7 @@
                        
         	<cfinvoke component="internal.extensions.components.email" method="send_mail">
             	<cfinvokeargument name="email_from" value="#APPLICATION.EMAIL.support#">
-                <cfinvokeargument name="email_to" value="luke@phpusa.com,joanna@phpusa.com,tina@phpusa.com,bmccready@iseusa.com">
+                <cfinvokeargument name="email_to" value="luke@phpusa.com,joanna@phpusa.com,tina@phpusa.com,bmccready@iseusa.org">
                 <cfinvokeargument name="email_subject" value="PHP Student Relocation - #qGetStudentInfo.firstName# #qGetStudentInfo.familyLastName# (###qGetStudentInfo.studentID#) - #qGetPlacementHistory.schoolName#">
                 <cfinvokeargument name="email_message" value="#emailMessage#">
            	</cfinvoke>
