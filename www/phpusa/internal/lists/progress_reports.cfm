@@ -27,28 +27,14 @@
     <cfparam name="FORM.isCancelled" default="0">
     <cfparam name="FORM.isComplete" default="all">
     <cfparam name="FORM.reportMonth" default="0">
-
-    <!--- Param CLIENT Variables --->
-    <cfparam name="CLIENT.programID" default="">
-    <cfparam name="CLIENT.isCancelled" default="0">
-    <cfparam name="CLIENT.isComplete" default="all">
-    <cfparam name="CLIENT.reportMonth" default="0">
     
     <cfscript>
 		// Program List
 		qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(isActive=1,companyID=CLIENT.companyID);	
 		
 		vDateLimit = DateFormat(DateAdd('m', -2, now()),'yyyy-mm-dd');
-
-		// Set CLIENT variables
-		IF ( VAL(FORM.submitted) ) {
-			CLIENT.programID = FORM.programID;
-			CLIENT.isCancelled = FORM.isCancelled;
-			CLIENT.isComplete = FORM.isComplete;
-			CLIENT.reportMonth = FORM.reportMonth;
-		}
 		
-		if ( VAL(CLIENT.reportMonth) ) {
+		if ( VAL(FORM.reportMonth) AND VAL(FORM.programID) ) {
 			FORM.submitted = 1;	
 		}
 	</cfscript>
@@ -57,10 +43,14 @@
     <cfif VAL(FORM.submitted)>
 		
         <cfscript>    
-			// Could Not find Student
-			if ( NOT VAL(CLIENT.reportMonth) ) {
+			// Errors
+			if ( NOT VAL(FORM.reportMonth) ) {
 				// Set Page Message
 				SESSION.formErrors.Add("Please select a month");
+			}
+			if ( NOT VAL(FORM.programID) ) {
+				// Set Page Message
+				SESSION.formErrors.Add("Please select a program");
 			}
     	</cfscript>
         
@@ -113,12 +103,12 @@
                 AND 
                     p.fieldviewable = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
             
-                <cfif VAL(CLIENT.programID)>
+                <cfif VAL(FORM.programID)>
                     AND
-                        php.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.programID#">
+                        php.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
                 </cfif>
                     
-                <cfif NOT VAL(CLIENT.isCancelled)>
+                <cfif NOT VAL(FORM.isCancelled)>
                     AND 
                         php.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                 <cfelse>
@@ -158,7 +148,7 @@
     </cfif> <!--- Submitted --->
 
 	<!--- set the corresponding database field used in the output. --->
-    <cfswitch expression="#CLIENT.reportMonth#">
+    <cfswitch expression="#FORM.reportMonth#">
     
         <cfcase value="9">
             <cfset dbfield = 'sept_report'>
@@ -217,15 +207,6 @@
                 messageType="onlineApplication"
                 width="98%"
                 />
-			
-            <!---
-			<table width="100%" cellpadding="0" cellspacing="0" border="0">
-				<tr>
-					<td><font size="4"><strong>Progress Reports</strong></font></td>
-					<td align="right"><a href="index.cfm?curdoc=lists/agent_approve_list">Progress Reports submitted prior to 09/16/2009</a></td>
-				</tr>
-			</table>
-			--->
 
             <cfform action="index.cfm?curdoc=lists/progress_reports" method="post">
             	<input name="submitted" type="hidden" value="1">
@@ -233,35 +214,35 @@
                     <tr>
                         <td>
                             <strong>Program</strong><br />
-                            <cfselect name="programID" query="qGetProgramList" value="programid" display="programname" selected="#CLIENT.programID#" queryPosition="below" class="largeField">
-                            	<option value="">All</option>
+                            <cfselect name="programID" query="qGetProgramList" value="programid" display="programname" selected="#FORM.programID#" queryPosition="below" class="largeField">
+                            	<option value="">Select a Program</option>
                             </cfselect>
                         </td>
                         <td>
                             <strong>Month</strong><br />
                             <select name="reportMonth" class="largeField">
-                            	<option value="0" <cfif CLIENT.reportMonth EQ 0>selected</cfif>>Select a Month</option>
-                                <option value="9" <cfif CLIENT.reportMonth EQ 9>selected</cfif>>September</option>
-                                <option value="12" <cfif CLIENT.reportMonth EQ 12>selected</cfif>>December</option>
-                                <option value="2" <cfif CLIENT.reportMonth EQ 2>selected</cfif>>February</option>
-                                <option value="4" <cfif CLIENT.reportMonth EQ 4>selected</cfif>>April</option>
-                                <option value="6" <cfif CLIENT.reportMonth EQ 6>selected</cfif>>June</option>
+                            	<option value="0" <cfif FORM.reportMonth EQ 0>selected</cfif>>Select a Month</option>
+                                <option value="9" <cfif FORM.reportMonth EQ 9>selected</cfif>>September</option>
+                                <option value="12" <cfif FORM.reportMonth EQ 12>selected</cfif>>December</option>
+                                <option value="2" <cfif FORM.reportMonth EQ 2>selected</cfif>>February</option>
+                                <option value="4" <cfif FORM.reportMonth EQ 4>selected</cfif>>April</option>
+                                <option value="6" <cfif FORM.reportMonth EQ 6>selected</cfif>>June</option>
                             </select>            
                         </td>
                         <td>
                             <strong>Status</strong><br />
                             <select name="isCancelled" class="largeField">
-                                <option value="0" <cfif CLIENT.isCancelled EQ 0>selected</cfif>>Active</option>
-                                <option value="1" <cfif CLIENT.isCancelled EQ 1>selected</cfif>>Cancelled</option>
+                                <option value="0" <cfif FORM.isCancelled EQ 0>selected</cfif>>Active</option>
+                                <option value="1" <cfif FORM.isCancelled EQ 1>selected</cfif>>Cancelled</option>
                             </select>            
                         </td>
                         <td>
                         	<strong>Completion</strong><br/>
                             <select name="isComplete" class="largeField">
-                            	<option value="all" <cfif CLIENT.isComplete EQ "all">selected="selected"</cfif>>All</option>
-                                <option value="approved" <cfif CLIENT.isComplete EQ "approved">selected="selected"</cfif>>Approved</option>
-                                <option value="rejected" <cfif CLIENT.isComplete EQ "rejected">selected="selected"</cfif>>Rejected</option>
-                                <option value="incomplete" <cfif CLIENT.isComplete EQ "incomplete">selected="selected"</cfif>>Incomplete</option>
+                            	<option value="all" <cfif FORM.isComplete EQ "all">selected="selected"</cfif>>All</option>
+                                <option value="approved" <cfif FORM.isComplete EQ "approved">selected="selected"</cfif>>Approved</option>
+                                <option value="rejected" <cfif FORM.isComplete EQ "rejected">selected="selected"</cfif>>Rejected</option>
+                                <option value="incomplete" <cfif FORM.isComplete EQ "incomplete">selected="selected"</cfif>>Incomplete</option>
                             </select>
                         </td>
                         <td><input name="send" type="submit" value="Submit" /></td>
@@ -290,7 +271,7 @@
                                 fk_program = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
                       	</cfif>
                         AND 
-                        	pr_month_of_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.reportMonth#">
+                        	pr_month_of_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.reportMonth#">
 						<cfif FORM.isComplete EQ "approved">
                             AND NOT pr_ny_approved_date IS NULL
                         <cfelseif FORM.isComplete EQ "rejected">
@@ -421,7 +402,7 @@
                                                     vPreviousReportMonth = 0;
                                                     vIsPreviousReportApproved = 0;
                                                     
-                                                    switch(CLIENT.reportMonth) {
+                                                    switch(FORM.reportMonth) {
                                                         case "12":
                                                             vPreviousReportMonth = 9;
                                                             break;
@@ -473,17 +454,17 @@
                                                 <td>
                                                     <!--- to add a progress report, user must be the supervising rep, and the program has a report for this phase. --->
                                                     <cfif VAL(qGetPreviousReport.recordCount) AND VAL(vPreviousReportMonth) AND NOT VAL(vIsPreviousReportApproved)>
-                                                        Waiting on #MonthAsString(vPreviousReportMonth)# report approval. Once previous report is approved you will be able to create #MonthAsString(CLIENT.reportMonth)# report.				                                                    
+                                                        Waiting on #MonthAsString(vPreviousReportMonth)# report approval. Once previous report is approved you will be able to create #MonthAsString(FORM.reportMonth)# report.				                                                    
                                                     <cfelseif arearepid EQ CLIENT.userid AND EVALUATE(dbfield)> <!--- AND VAL(vIsPreviousReportApproved) --->
                                                         <form action="index.cfm?curdoc=forms/pr_add" method="post">
                                                             <input type="hidden" name="assignedid" value="#assignedid#">
-                                                            <input type="hidden" name="month_of_report" value="#CLIENT.reportMonth#">
+                                                            <input type="hidden" name="month_of_report" value="#FORM.reportMonth#">
                                                             <input name="Submit" type="image" src="pics/new.gif" alt="Add New Report" border="0">
                                                         </form>
                                                     <!---
                                                     <cfelseif VAL(vPreviousReportMonth) AND NOT VAL(qGetPreviousReport.recordCount)>
                                                         <span style="color:##F00">
-                                                            Previous report is MISSING. You must submit #MonthAsString(vPreviousReportMonth)# report prior to #MonthAsString(CLIENT.reportMonth)# report.
+                                                            Previous report is MISSING. You must submit #MonthAsString(vPreviousReportMonth)# report prior to #MonthAsString(FORM.reportMonth)# report.
                                                         </span>
                                                     --->
                                                     <cfelse>
