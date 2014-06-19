@@ -48,10 +48,6 @@
 				// Set Page Message
 				SESSION.formErrors.Add("Please select a month");
 			}
-			if ( NOT VAL(FORM.programID) ) {
-				// Set Page Message
-				SESSION.formErrors.Add("Please select a program");
-			}
     	</cfscript>
         
         <!--- No Errors --->
@@ -82,38 +78,25 @@
                     spt.feb_report, 
                     spt.april_report, 
                     spt.june_report
-                FROM 
-                    smg_students s
-                INNER JOIN 
-                    php_students_in_program php ON s.studentid = php.studentid
-                INNER JOIN
-                    smg_users rep ON php.arearepid = rep.userid
-                INNER JOIN 
-                    php_schools ON php.schoolid = php_schools.schoolid
-                LEFT JOIN 
-                    smg_users suNY ON php_schools.supervising_rep = suNY.userid
-                INNER JOIN 
-                    smg_programs p ON php.programid = p.programid
-                INNER JOIN 
-                    smg_program_type spt ON p.type = spt.programtypeid
-                WHERE 
-                    php.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
-                AND 
-                    p.progress_reports_active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-                AND 
-                    p.fieldviewable = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                FROM smg_students s
+                INNER JOIN php_students_in_program php ON s.studentid = php.studentid
+                INNER JOIN smg_users rep ON php.arearepid = rep.userid
+                INNER JOIN php_schools ON php.schoolid = php_schools.schoolid
+                LEFT JOIN smg_users suNY ON php_schools.supervising_rep = suNY.userid
+                INNER JOIN smg_programs p ON php.programid = p.programid
+                INNER JOIN smg_program_type spt ON p.type = spt.programtypeid
+                WHERE php.companyid = 6
+                AND p.progress_reports_active = 1
+                AND p.fieldviewable = 1
             
                 <cfif VAL(FORM.programID)>
-                    AND
-                        php.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
+                    AND php.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
                 </cfif>
                     
                 <cfif NOT VAL(FORM.isCancelled)>
-                    AND 
-                        php.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                    AND php.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                 <cfelse>
-                    AND 
-                        php.canceldate >= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#vDateLimit#">
+                    AND php.canceldate >= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#vDateLimit#">
                 </cfif>
                 
                 <!--- these users see only students who they are the supervising rep of, or school supervising rep. --->
@@ -215,7 +198,7 @@
                         <td>
                             <strong>Program</strong><br />
                             <cfselect name="programID" query="qGetProgramList" value="programid" display="programname" selected="#FORM.programID#" queryPosition="below" class="largeField">
-                            	<option value="">Select a Program</option>
+                            	<option value="">All</option>
                             </cfselect>
                         </td>
                         <td>
