@@ -677,7 +677,7 @@
 
 				// Set Email To
 				if ( APPLICATION.isServerLocal ) {
-					emailTo = 'james@iseusa.org';
+					emailTo = 'james@iseusa.com';
 				} else if ( listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, qGetCompany.companyID) AND VAL(ARGUMENTS.isRerun) ) {
 					// ISE - ReRun - Send email to cbcResults and Program Manager
 					emailTo = "#qGetCompany.gis_email#,#qGetCompany.pm_email#";
