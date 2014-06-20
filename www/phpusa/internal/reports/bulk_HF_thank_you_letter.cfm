@@ -150,18 +150,8 @@
 		</td>
 		<td align="right">
 			Program: #qGetStudents.programname#<br>
-            From: 
-            <cfif qGetStudents.type EQ 4>
-                #DateFormat(qGetStudents.semester_begins, 'mmm. d, yyyy')#
-            <cfelse>
-                #DateFormat(qGetStudents.year_begins, 'mmm. d, yyyy')#
-            </cfif>		
-            thru
-            <cfif qGetStudents.type EQ 3>
-                #DateFormat(qGetStudents.semester_ends, 'mmm. d, yyyy')#
-            <cfelse>
-                #DateFormat(qGetStudents.year_ends, 'mmm. d, yyyy')#
-            </cfif>						
+			<cfif qGetStudents.type EQ 3>
+		  </cfif>						
 			<br><br>
 		</td>
 	</tr>
