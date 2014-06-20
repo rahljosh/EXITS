@@ -30,7 +30,7 @@
             s.sex, 
             h.address, 
             h.address2, 
-            h.city as hostcity,         
+            h.city,         
             h.state, 
             h.zip, 
             h.familylastname as hostlastname,
@@ -179,7 +179,7 @@
 			increase their knowledge of a different culture. It is our sincerest hope that the relationship your family 
 			has developed with Javier will continue forever.</p>
 			
-			<p>Please extend our thanks to people in your community who have helped to make #qGetStudents.hostcity# a home
+			<p>Please extend our thanks to people in your community who have helped to make #qGetStudents.city# a home
             to #qGetStudents.firstname#. If there is someone special we should acknowledge, please contact us and we will be glad to do so.</p>
 			
 			<p>The DMD Private High School Program is always looking for warm and loving families to participate in 	
