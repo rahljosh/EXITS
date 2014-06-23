@@ -50,8 +50,8 @@
 				// ISE
 				vAdmissionsName = 'Brian Hause';
 				vAdmissionsEmail = 'bhause@iseusa.com';
-				vAdmissionsEmailLink = '<a href="mailto:bhause@iseusa.com">bhause@iseusa.com</a>';			
-				vAdmissionsInfo = 'Brian Hause at <a href="mailto:bhause@iseusa.com">bhause@iseusa.com</a>';
+				vAdmissionsEmailLink = '<a href="mailto:bhause@iseusa.org">bhause@iseusa.org</a>';			
+				vAdmissionsInfo = 'Brian Hause at <a href="mailto:bhause@iseusa.org">bhause@iseusa.org</a>';
 			}
 			
 			switch(ARGUMENTS.displayInfo) {

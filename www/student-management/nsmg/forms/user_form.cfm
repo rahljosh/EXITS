@@ -147,23 +147,23 @@
 		<cfswitch expression="#CLIENT.companyID#">
         
         	<cfcase value="1,2,3,4,5,12,13,14">
-            	<cfset vEmailToList = 'thea@iseusa.com;eric@iseusa.com;#CLIENT.programmanager_email#;#vRMEmailList#'>
+            	<cfset vEmailToList = 'thea@iseusa.org;eric@iseusa.org;#CLIENT.programmanager_email#;#vRMEmailList#'>
             </cfcase>
 			
         	<cfcase value="6">
-            	<cfset vEmailToList = 'luke@phpusa.com;eric@iseusa.com'>
+            	<cfset vEmailToList = 'luke@phpusa.com;eric@iseusa.org'>
             </cfcase>
 
         	<cfcase value="7">
-            	<cfset vEmailToList = 'ryan@iseusa.com;eric@iseusa.com'>
+            	<cfset vEmailToList = 'ryan@iseusa.com;eric@iseusa.org'>
             </cfcase>
 
         	<cfcase value="8">
-            	<cfset vEmailToList = 'anca@csb-usa.com;eric@iseusa.com'>
+            	<cfset vEmailToList = 'anca@csb-usa.com;eric@iseusa.org'>
             </cfcase>
             
         	<cfcase value="10">
-            	<cfset vEmailToList = 'stacy@case-usa.org;eric@iseusa.com'>
+            	<cfset vEmailToList = 'stacy@case-usa.org;eric@iseusa.org'>
             </cfcase>
             
 		</cfswitch>        
@@ -493,7 +493,7 @@
 			
 				<!--- send email --->
                 <cfinvoke component="nsmg.cfc.email" method="send_mail">
-                    <cfinvokeargument name="email_to" value="ellen@iseusa.com,marcel@iseusa.org,bhause@iseusa.com">
+                    <cfinvokeargument name="email_to" value="ellen@iseusa.org,marcel@iseusa.org,bhause@iseusa.org">
                     <cfinvokeargument name="email_subject" value="New Agent Profile">
                     <cfinvokeargument name="email_message" value="#email_message#">
                     <cfinvokeargument name="email_from" value="#CLIENT.emailfrom#">

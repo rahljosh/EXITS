@@ -199,7 +199,7 @@
         <br><br>
         </cfsavecontent>
         <cfinvoke component="nsmg.cfc.email" method="send_mail">
-                <cfinvokeargument name="email_to" value="#get_email.intrepemail#, ellen@iseusa.com, lamonica@iseusa.com">
+                <cfinvokeargument name="email_to" value="#get_email.intrepemail#, ellen@iseusa.org, lamonica@iseusa.org">
                 <cfinvokeargument name="email_subject" value="#client.companyshort# Application Denied">
                 <cfinvokeargument name="email_message" value="#email_message#">
                 <cfinvokeargument name="email_from" value="#client.support_email#">
