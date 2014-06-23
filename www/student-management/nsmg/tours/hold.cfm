@@ -115,7 +115,7 @@
     
             <cfinvoke component="nsmg.cfc.email" method="send_mail">
                 <cfinvokeargument name="email_from" value="<trips@iseusa.com> (Trip Support)">
-                <cfinvokeargument name="email_to" value="tom@iseusa.com,#qGetRegionalManager.email#,#qGetAreaRep.email#">
+                <cfinvokeargument name="email_to" value="tom@iseusa.org,#qGetRegionalManager.email#,#qGetAreaRep.email#">
                 <cfinvokeargument name="email_bcc" value="trips@iseusa.com">
                 <cfinvokeargument name="email_subject" value="#qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# - #qGetTripDetails.tour_name# - Student on Hold">
                 <cfinvokeargument name="email_message" value="#holdEmailMessage#">

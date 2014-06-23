@@ -165,7 +165,7 @@
             
             // Email CC List
             if ( ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID) ) {
-                emailCC = CLIENT.projectmanager_email & ';ellen@iseusa.com;' & CLIENT.email;
+                emailCC = CLIENT.projectmanager_email & ';ellen@iseusa.org;' & CLIENT.email;
             } else { 
                 emailCC = CLIENT.projectmanager_email & ';' & CLIENT.email;
             }
@@ -433,7 +433,7 @@
 			vGetProjectManagerEmail = APPLICATION.CFC.COMPANY.getCompanies(companyID=qStudentInfo.companyID).pm_email;
 			vGetFacilitatorEmail = APPLICATION.CFC.USER.getRegionFacilitator(regionID=qStudentInfo.regionassigned).email;
             if ( ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID) ) {
-                emailCC = "bhause@iseusa.com;ellen@iseusa.com;" & vGetProjectManagerEmail & ";" & vGetFacilitatorEmail & ";" & CLIENT.email;
+                emailCC = "bhause@iseusa.org;ellen@iseusa.org;" & vGetProjectManagerEmail & ";" & vGetFacilitatorEmail & ";" & CLIENT.email;
             } else { 
                 emailCC = CLIENT.projectmanager_email & ';' & CLIENT.email;
             }

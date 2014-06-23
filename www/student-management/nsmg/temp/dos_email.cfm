@@ -32,7 +32,7 @@ International Student Exchange
                 <cfinvokeargument name="email_subject" value="Proposed State Department regulation change">
                 <cfinvokeargument name="email_message" value="#email_message#">
                 
-                <cfinvokeargument name="email_from" value="Bob Keegan <bob@iseusa.com>">
+                <cfinvokeargument name="email_from" value="Bob Keegan <bob@iseusa.org>">
             </cfinvoke>
            
     

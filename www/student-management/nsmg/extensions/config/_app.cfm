@@ -88,13 +88,13 @@
 	AppEmail = APPLICATION.EMAIL;
 	APPLICATION.EMAIL.errors = 'errors@student-management.com';
 	APPLICATION.EMAIL.finance = 'marcel@iseusa.org';	
-	APPLICATION.EMAIL.cbcNotifications = 'support@iseusa.org;bill@iseusa.com;gary@iseusa.com;merri@iseusa.com;tal@iseusa.com;bhause@iseusa.com;jan@iseusa.com;stephen@iseusa.com';
+	APPLICATION.EMAIL.cbcNotifications = 'support@iseusa.org;bill@iseusa.org;gary@iseusa.org;merri@iseusa.org;tal@iseusa.com;bhause@iseusa.org;jan@iseusa.org;stephen@iseusa.org';
 	APPLICATION.EMAIL.cbcCaseNotifications = 'support@student-management.com;jana@case-usa.org';
-	APPLICATION.EMAIL.hostLeadNotifications = 'lamonica@iseusa.com';
+	APPLICATION.EMAIL.hostLeadNotifications = 'lamonica@iseusa.org';
 	
-	APPLICATION.EMAIL.ISESchoolNotification = 'lisa@iseusa.com;merri@iseusa.com;support@iseusa.org';
-	APPLICATION.EMAIL.ISEComplianceFrom = 'merri@iseusa.com (Merri Deluca)';
-	APPLICATION.EMAIL.ISEComplianceTo = 'merri@iseusa.com';
+	APPLICATION.EMAIL.ISESchoolNotification = 'lisa@iseusa.org;merri@iseusa.org;support@iseusa.org';
+	APPLICATION.EMAIL.ISEComplianceFrom = 'merri@iseusa.org (Merri Deluca)';
+	APPLICATION.EMAIL.ISEComplianceTo = 'merri@iseusa.org';
 	
 	APPLICATION.EMAIL.CASESchoolNotification = 'jana@case-usa.org;support@student-management.com';
 	APPLICATION.EMAIL.CASEComplianceFrom = 'jana@case-usa.org (Jana De Fillipps)';
