@@ -2252,8 +2252,7 @@
                         
                         <p> 
                             <em>
-                                We have just launched this electronic host family application, and you are one of the first families to use this new tool. 
-                                Please bear with us as we work out the final "bugs". Should you get any errors or feel that something is confusing, please feel free to let us know how we can improve the process. 
+
                                 There is a live chat and email support available through the application if you need immediate assistance while filling it out. Any and all feedback would be greatly appreciated.
                             </em>
                         </p>
