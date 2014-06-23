@@ -167,7 +167,7 @@
 			#qGetStudents.firstname# #qGetStudents.familylastname#. 
 			We hope that your experience has helped your family to 
 			increase their knowledge of a different culture. It is our sincerest hope that the relationship your family 
-			has developed with Javier will continue forever.</p>
+			has developed with #qGetStudents.firstname# will continue forever.</p>
 			
 			<p>Please extend our thanks to people in your community who have helped to make #qGetStudents.city# a home
             to #qGetStudents.firstname#. If there is someone special we should acknowledge, please contact us and we will be glad to do so.</p>
