@@ -128,7 +128,7 @@ where php_students_in_program.studentid = #get_student_unqid.studentid#
 	<td bgcolor="F3F3F3" valign="top" width=133><div align="left">
 		<cfdirectory directory="#APPLICATION.PATH.onlineApp.picture#" name="stupicture" filter="#studentid#.*">
 		<cfif stupicture.recordcount>
-			<img src="http://www.student-management.com/nsmg/uploadedfiles/web-students/#stupicture.name#" width="135" height="200">
+			<img src="http://www.ise.exitsapplication.com/nsmg/uploadedfiles/web-students/#stupicture.name#" width="135" height="200">
 		<cfelse>
 			<img src="pics/no_stupicture.jpg" width="135">
 		</cfif>
@@ -154,7 +154,7 @@ where php_students_in_program.studentid = #get_student_unqid.studentid#
 				<cfif Right(stuletter.name, 3) EQ 'jpg' OR Right(stuletter.name, 3) EQ 'gif'>
 					<a href="javascript:OpenApp('https://ise.exitsapplication.com/nsmg/student_app/print_letter_profile.cfm?studentid=#studentid#&letter=students');">Students Letter</a>
 				<cfelseif stuletter.recordcount>
-					<a href="http://www.student-management.com/nsmg/uploadedfiles/letters/students/#stuletter.name#">Students Letter</a>
+					<a href="http://www.ise.exitsapplication.com/nsmg/uploadedfiles/letters/students/#stuletter.name#">Students Letter</a>
 				<cfelseif app_current_status NEQ 0>
 					<a href="javascript:OpenApp('https://ise.exitsapplication.com/nsmg/student_app/section1/page5print.cfm?studentid=#studentid#');">Students Letter</a>
 				<cfelse>
@@ -165,7 +165,7 @@ where php_students_in_program.studentid = #get_student_unqid.studentid#
 				<cfif Right(paletter.name, 3) EQ 'jpg' OR Right(paletter.name, 3) EQ 'gif'>
 					<a href="javascript:OpenApp('https://ise.exitsapplication.com/nsmg/student_app/print_letter_profile.cfm?studentid=#studentid#&letter=parents');">Parents Letter</a>
 				<cfelseif paletter.recordcount>
-					<a href="http://www.student-management.com/nsmg/uploadedfiles/letters/parents/#paletter.name#">Students Letter</a>
+					<a href="http://www.ise.exitsapplication.com/nsmg/uploadedfiles/letters/parents/#paletter.name#">Students Letter</a>
 				<cfelseif app_current_status NEQ 0>
 					<a href="javascript:OpenApp('https://ise.exitsapplication.com/nsmg/student_app/section1/page6print.cfm?studentid=#studentid#');">Parents Letter</a>
 				<cfelse>
