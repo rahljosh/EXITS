@@ -64,7 +64,7 @@ Email: <a href="mailto:contact@smg-canada.org" class="redLink">contact@smg-canad
 Fax: 631-893-4550<br />
 <br />
 <em>For technical support with EXITS, you may send an email to:</em><br />
- <strong> <a href="mailto:Support@smg-canada.com" class="redLink">support@smg-canada.org</a></strong>
+ <strong> <a href="mailto:Support@smg-canada.org" class="redLink">support@smg-canada.org</a></strong>
 <br /><br />
 <div class="lightBox">
 
