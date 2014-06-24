@@ -18,25 +18,25 @@
   <div class="header"><!-- end .header -->
 <div id="NLdate">
 	<?php
-	echo date("F , Y");
+	echo date("F Y");
 	?>
 </div>
   </div>
   <div class="sidebar1">
   <div style="margin: 8px; background-color: #154690; color: #fff;">
     <h1>Important Dates</h1>
-<p style="text-align: center; padding-bottom: 15px;"><strong>Earth Day <br />
-  </strong><em>April 22nd</em><br /><br />
- <strong>Mother's Day<br />
-  </strong><em>May 11th</em></p>
+  <p align="center"><strong>July 4th</strong><br />
+      Independence Day</p>
+    
+          <p align="center">&nbsp;</p>
   </div>
     <ul class="nav">
       <li><a href="#div1">The Latest</a></li>
       <li><a href="#div2">What about Bob!</a></li>
       <li><a href="#div3">Compliance Corner</a></li>
       <li><a href="#div4">Facilitator Square</a></li>
-      <li><a href="#div5">Employee Spotlight</a></li>
-       <!---<li><a href="/student-project-help.cfm" target="_self">Project H.E.L.P</a></li>
+      <!---<<li><a href="#div5">Employee Spotlight</a></li>
+       li><a href="/student-project-help.cfm" target="_self">Project H.E.L.P</a></li>
        <li><a href="/press-page.cfm" target="_self">Press Page</a></li>--->
        <li><a href="#div6">ARCHIVES</a></li>
     </ul>
@@ -67,21 +67,24 @@ Babylon, NY 11702</p>
   <div class="content">
 <div id="showHide">
     <div id="div1">
-    <div style="width: 150px; float: right; margin: 10px;"><a href="http://www.iseusa.com"><img src="images/region-sites.jpg" width="150"></a></div>
+    <div style="width: 200px; float: right; margin: 10px;"><a href="https://ise.exitsapplication.com/"><img src="images/scrap-book-ad-icon.jpg" width="200"></a></div>
 <h1>The Latest....</h1>
 
-<h2>The new websites are here</h2>
+<h2><strong>New Marketing Flyers</strong></h2>
 
-<p>Each region has been given a new website.  Each website has a simple name - (region name).iseusa.org.<br />
-  <span class="blueLink">Example: west.ise.org (no more www)</span> </p>  
-<p>Your regional website will feature only students that are available in your area.  It will also provide one central location for your local families to go.</p>
-<p>Contact your regional manager with any questions.</p>
-
+<p>We have revamped our flyers to match our new branding.  They are located in EXITS under Marketing Materials to the right of the screen.  There are two versions:<br />
+  <br />
+  <strong>1. Printed Materials</strong><br />
+  These are PDF documents that will showcase your personal contact information.  These can be printed when you need to hang up signage at a fair, school, restaurant or as flyers to hand out to people.<br />
+  <br />
+  <strong>2. Social Media</strong><br />
+  These are .jpg images that you can download for Facebook, Pinterest, Twitter or to send in an email.  They aren&rsquo;t customized because you should be only using these with your &ldquo;personal&rdquo; digital media.</p>
+<p align="center"><a href="https://ise.exitsapplication.com/" class="basicOrangeButton" style="font-size: 80%;">Go to page</a></p>
 <div class="hrLine"></div>
 
-<h2>Project HELP Hours</h2>
+<h2>Placement Season</h2>
 
-<p>With the end of the year coming soon, it’s time to get the Project HELP hours in.  For those students who went above the 20 hour mark are eligible for a free tee-shirt</p>
+<p>As you know, marketing is here to help your efforts.  If you have an idea or need some assistance with a marketing flyer, send your request.  We will try to help you find placements. </p>
 <!---<p align="center"><a href="https://www.iseusa.com/student-project-help.cfm" class="basicOrangeButton" style="font-size: 80%;">Go to page</a></p>--->
 
 <div class="hrLine"></div>
@@ -93,111 +96,92 @@ Babylon, NY 11702</p>
 
 <div id="div2">
 
-<h1>What about Bob!</h1>
+<h1>What About Bob!</h1>
 
 <div style="width: 225px; float: right; margin: 10px;"><img src="images/bob-news.png" width="225" height="150" alt="Happy Holidays from ISE" /></div>
-<h3>Likes and Leads</h3>
-<p>Our communications Department has been working very hard in developing new methods of help you garner leads and placements, particularly with regard to social media. With each region now having their own website and Facebook page, the amount of likes and leads has increased substantially and will continue to do so as we move forward.</p> 
-<p>The regions that are following up on their “likes” are finding new host families and in many cases signing on new reps. If they took the time to “like” what you are doing, it is certainly worth a few moments to follow up. A simple message, “If you like us why not become part of the ISE family and host a student or become an ISE representative.”</p>
-<p>The latest data from the Communications Department tells us that one in three of our prescreened host family leads become an ISE host family. That is a fact you cannot ignore.</p>
-<p>So please make it your business to follow up on your likes and leads....you will be glad you did!</p> 
 
+<p>As we enter in to the last few months of the placing season, I cannot stress enough the importance of getting the students placed as quickly as possible. Our latest reports show us that we have close to 300 host families that have yet to start their host family applications along with 150 apps that are partially completed. Please do everything you can to move those apps along. I understand you do not want to harass your host families, but a gentle push and letting them know there is a student who is stressing out because their friends have a placement and they do not. </p>
+<p>Also, I am seeing a number of host family apps that are being rejected by the Compliance Department for various reasons, many of which can be avoided. Some of the most common reasons are:</p>
+<p>- Host family references not in the local community -Incomplete or unacceptable photos -Not enough rooms in the home to accommodate the family and student(s). A brief explanation in the note section would be helpful. </p>
+<p>- Discrepancies between the Environment section and the Confidential Visit section -Failure to list an occupation. Self-employed is not acceptable to the DOS. </p>
+<p>Remember, the sooner the apps get approved, the sooner you can link the student and get your placement payment and all bonus payments!</p>
+<p>Speaking of bonuses, don't forget the recently announced Summer Bonus Bonanza along with the Early Placement and on Time Placement bonuses. Earn additional $$$$$ for all students placed in groups of five through the balance of the placing season and even more for all PreAYP and students placed by July 7th. </p>
+<p>So get out there and place out kids and earn those $$$$$. <br />
+  Happy Placing and as always, THANK YOU FOR ALL YOU DO!!!</p>
 <p>Sincerely,</p>
 <h2 style="font-family: 'Yesteryear', cursive;">Bob Keegan</h2>
 <!-- end DIV2 --></div>
     
    
 <div id="div3">
-<div style="margin-bottom: 10px;"><img src="images/compliance-names.png" width="430" height="264" /></div>
+<div style="margin-bottom: 10px;"><img src="images/compliance-new.png" width="430" height="264" /></div>
 
 <h1>Compliance Corner</h1>
-<p>With the end of the school year near, I would like to go over three main points to keep in mind:</p>
+<h3>Compliance June Update</h3>
+<p>We know everyone is busy finding great families for our students and know that we in the compliance team are committed to keeping pace with the volume of applications.  We&rsquo;re committed to maintaining our 24-hour turn-around on all host applications and most are done more quickly than that.</p>
+<p>We&rsquo;re always looking at ways to simplify the process and the newest change is an update to the &ldquo;Host Orientation Sign-off&rdquo; form.  We&rsquo;ve removed the student information from the form so you only need to get the family to sign-off on this once per year.  Please remember that DOS regulations require that the date of the orientation <strong><u>must be after</u></strong> the date the host application was approved by compliance.  Making sure this is correct before submitting the form will help eliminate any delays in processing and payments.  This form is available in the &ldquo;Letters&rdquo; section and ISE Docs in EXITS.</p>
 
-<h3>1)	Host Family Orientations</h3>
-
-<p>We have been receiving host family orientations for families hosting 14/15 school year students.  Host families should not have an orientation until a few weeks prior to the student arrival.  This way the information provided during the orientation is fresh in their mind and paperwork provided will not be lost is misplaced. The orientation information is an intricate part of the hosting experience.</p>
-
-<h3>2)	School Acceptances</h3>
-
-<p>30 % of the school acceptances received by the Compliance Department are not compliant.  Missing information continues to be a problem. As stated by the Department of State during one of our audits, "If there is a question, there has to be an answer.  Please be more diligent in completing this document.  This will hold up a placement payment to the area representative.
-3) Reviewing Host Family Applications
-When reviewing a host family application, always repeat to yourself:<br /><br />
- <em>"would I put my son or daughter in this home?"</em></p>  
-
-<p>If the answer is no, don't pass the application onto HQ for approval.  It is important to remember there is a natural parent and student waiting anxiously to review and see where the student will be residing for their program duration.  Tidy room photos are a vital part of the host family application; not to mention the professionalism of the application provided by ISE.</p>
+<p>One other common issue relates to double placements.  The host application allows a host family to select &ldquo;Yes, I&rsquo;d like to host a second student&rdquo; when the initially fill out the app.  If they do this, you do not have to submit any more paperwork for the double placement.  However, if a family initially signs up to host one student and then decides to double-host, we will require the host family signed double placement authorization which can be emailed to the Compliance Department. &nbsp;IT is working on a change to allow the app to be sent back to the host family, but until that is implemented, we&rsquo;ll need to use the more manual process.</p>
+<p>In our review of the school acceptances, we are seeing an increased number of students being linked to the wrong school in placement management. In other words, the selection of the school in EXITS is not the same school we have a signed school acceptance for. &nbsp;This issue causes the placement (and payment) to be held up until the AR or RM corrects EXITS.  Please double check your school selection prior to saving the placement information.</p>
 
 <!-- end DIV3 --></div>
 
 <div id="div4">
 <div style="margin-bottom: 10px;"><img src="images/Facilitator-names.png" width="430" height="264" /></div>
 <h1>Facilitator Square</h1>
-<p>We’re on the homestretch and headed toward the finish line.</p> 
-<p>This can often be one of the best times of the year for you and your exchange student.  By this point, they are likely very comfortable with their English skill and have truly become part of your family.  It’s a great time for family trips, visits to relatives and lots of outdoor activities.  Take advantage of the remaining weeks.  Make sure your student also uses their short time remaining on the program most efficiently.  Keep them busy and involved in family activities. </p>
+<h3>Departure payments update</h3>
+<p>Departure payments have been going out for the at least the past month.   Payments are only made if all documentation has been completed and approved by compliance, including the final progress report.  If you are missing a departure payment, make sure that all documentation for each student has been submitted.  If you think you are missing a payment that you are due, please review the following before contacting your Regional Manager, Regional Advisor or Facilitator.</p>
 
-<p>While this is one of the best moments of the program, it’s also a time that presents many temptations to students that can cause problems.  To help make sure your student finishes the program successfully, here are some pointers:</p>
-<p><strong>Keep them focused on the present.</strong> As students get closer to going home, some might start to think ahead to their return home.  This can cause a “lack of focus” on their responsibilities to their host family, schoolwork and activities.  Make sure your exchange student doesn’t start to dramatically increase their communication with their natural family and friends from their home country.  It’s OK for them to start to make some preparations.  You just need to gently remind them that they are still on the program and to continue to follow their progress in school.</p>
-<p><strong>Address any “acting up” issues immediately.</strong> Some student’s think they can take advantage of the fact that they are going home.  They might start acting out and being disobedient.  Some of this might just be typical teenage behavior.  If your student does suddenly becomes defiant or starts engaging in behavior that is causing problems in your home, you should address these behaviors immediately.  Make it known that they still need to follow host family rules until the day they depart.  If issues don’t get better quickly, make sure you notify your ISE area representative.</p>
-<p><strong>Be wary of temptations</strong>.  As we mentioned in last month’s newsletter, spring is also a time for celebrations, family gatherings, proms and going away parties.  Sometimes these parties can present temptations for students to drink or use drugs.  When your student is going to a party or event, please make sure there will be adult supervision at the event.  Please remind your student that they cannot drink on the program.  Each year we have the unfortunate task of sending a handful of students home weeks from program completion because of drinking incident</p>
-<p>If you haven’t already done so, please review out some of the previous month’s detail on Convalidations and Natural Family visits.</p>
-<h3>A/R update</h3>
-<p><strong>Update to payment information displayed in EXITS</strong></p>
-<p>Please note that there will be a small update to the payment information shown in EXITS.  This new detail should help make it easier for you to see which checks have been cut and for which students and payments.</p>  
-<p>Fees earned will now be grouped by date without regard to program season so that you can see both your 14/15 placement payments and your 13/14 supervision payments on one screen.</p> 
-<img src="images/april-facilitysq.png" width="430px" alt=""/>
-<p><strong>A few things to point out below:</strong></p>
 <ul>
-  <li>Payments and the Fees earned will be grouped together by the date the check is cut</li>
-<li>Checks (and any credits) will show in the column on the left (Checks/Credits) and placement fees, bonuses and supervision fees will show in the column on the right (Fees Earned).</li>
-<li>A running balance will keep track of your current balance</li>
-<li>When a check is sent out, the comments field will reflect the anticipated arrival time of the check.  Please do not call the office about a check you are expecting until that window of time has passed.</li></ul>
-
-
+  <li>Have all the progress reports been completed an approved?</li>
+  <li>Are you missing any documentation, especially the student and/or host orientation signoff?</li>
+  <li>Is the student a semester student?  If so, please be aware that departure payments are only made to 10-month AYP and 12-month students.</li>
+  <li>Are there any duplicate progress reports?  You can check up pulling up the student and clicking on &ldquo;Progress Reports&rdquo; on the right side of the screen.   If you see multiple progress reports for the same month (e.g. two March reports) you should delete the one that is not approved.</li>
+</ul>
+<img src="images/june-progress-report.png" width="430" alt=""/>
+<p>&nbsp;</p>
 <!-- end DIV4 --></div>
-
+<!--
 <div id="div5">
 <h1>Employee Spotlight</h1>
 
-<h3><strong>Rose Hawkins </strong>&#8211; <strong>Regional Director for the North Central Region</strong></h3>
-<div style="margin: 10px; width: 225px; float: right;"><img src="images/april-employee.png" width="225" alt=""/></div>
-<p><strong>Q: Tell everyone about yourself. What is your background, interests and hobbies.</strong></p>
-<p class="grey"><em> <strong>A:</strong> Before student exchange I was in Law Enforcement (Deputy).  My family is my world and I love doing things while traveling with my kids (Even though they tease me with me no mercy).  Anyone who really knows me knows Student Exchange and ISE are my passion.  I love to cook, entertain and feed people (Everyone knows my love of bacon).  I just started water aerobics again and love it.  The music I listen to the most is 60's and 70's, but our yearly girls weekend is centered around country music.</em></p>
-<div class="hrLine"></div>
-<p><strong>Q: What is your job function in ISE?</strong></p>
-<p class="grey"><em><strong>A: </strong>I am the Regional Director for the North Central Region.</em></p>
-<div class="hrLine"></div>
-<p><strong>Q: What is it about your work that is the most challenging/satisfying? </strong></p>
-<p class="grey"><em><strong>A: Challenging:</strong><br /> -	Thinking up new things to keep my reps motivated.<br /><br />
-<strong>Satisfying:</strong><br />
--	When I get emails, phone calls, letters, text, stating a student or a family had a life changing experience. <br /> 
--	A teen will go into a home a stranger, but leave being loved as a family member.<br /> 
--	I love it when kids come back to visit. <br /> 
--	When a student that struggles in the beginning finishes their program with flying colors!!</em></p>
-<div class="hrLine"></div>
-<p><strong>Q: Tell us something we don't know about you. </strong></p>
-<p class="grey"><em><strong>A: </strong>I sky dived on a dare, I love doing the polar plunge for Special Olympics and I love a challenge.  I am a cancer survivor!</em></p>
-<div class="hrLine"></div>
-<p><strong>Q: What new projects are you going to be working on this year?</strong></p>
-<p class="grey"><em><strong>A: </strong>We'll be doing more nontraditional booths along with the school fairs and expos.</em></p>
-<!-- end DIV5 --></div>
+<h3><strong>Patricia Littrell </strong>&#8211; <strong>Regional Director</strong></h3>
+<div style="margin: 10px; width: 225px; float: right;"><img src="images/may-employee.png" width="225" alt=""/></div>
+<p>My name is Patricia Littrell and my family calls me Trish.  I have been involved in student exchange as a Regional Manager since 1998.  I love the work I do and truly believe that the only way we can make a difference in our world is through the young people.  Like all of you, the most challenging thing I do is locate loving families to welcome our kids and then find schools to accept them.</p>
+
+<p>I first became involved in the program when someone came to my daughter’s middle school looking for host families.  We jumped on the band wagon and have not stopped.  We currently have a wonderful young man, Antonio from Italy, living with us.  My family has hosted 16 students from Brazil, Germany, Russia, Ukraine, Uzbekistan, Pakistan, France, Belarus, Armenia, Croatia and Italy.  I can honestly say it has been a very rewarding experience.  I have learned so much about other cultures and religions, as well as a tolerance and understanding for people from all over the world.</p>  
+
+<p>I live in Loretto, Tennessee (20 minutes north of Florence, Alabama) with my husband Buster of 39 years.  We have 3 daughters, 5 grandsons and 4 granddaughters.</p>  
+
+<p>Most of our married life was spent in the Navy.  We traveled around the country, living in Pennsylvania, Delaware, Virginia and Florida.  Buster retired from the Navy and began working for TVA in Alabama.  We moved our family from the big city of Jacksonville, Florida to our home town of Loretto, a small quite town with two stop lights.  Our kids were raised “Navy Brats” and very patriotic.  We are family oriented and try to spend as much time with our kids and grandkids as possible.  We have a large extended family on both sides so our kids have always had a lot of family around.</p>
+
+<p>You would probably never guess it, but I am a “Motorcycle Mama”.  Buster has a Harley and off we go whenever possible.  Other than riding the Harley and spending time with family activities, I also enjoy gardening (flowers not vegetables), great Lifetime movies, scrap booking, canoeing, traveling, Civil War history and touring antebellum homes.  I occasionally put on another hat by heading a scholarship committee at my local high school.  Each year, we raise money and give a scholarship to a deserving graduate.</p> 
+
+<p>Most of my professional career has been spent in the medical field.  I am a Medical Transcriptionist and started out working in hospitals years ago.  I also worked as a Respiratory Therapy Technician and Ophthalmic Technician.  I have worked as an Office Manger for various specialties to include Family Medicine, Ophthalmology and Neurology.  I worked for the Mayo Clinic for many years in a management position, training Medical Secretaries and overseeing the Surgical Transcription/Dictation Departments at the Clinic and St. Luke’s Hospital.  I quit the medical field and devoted all of my time to student exchange following the death of my sister to cancer.</p>  
+
+<p>I am looking forward to many more years as part of the ISE family.  Of course, I can only say this now because it is May and not August 20th.   All jokes aside, I believe we have the best exchange program out there.  I am really proud to work with such a great group of people.</p> 
+
+<!-- end DIV5 </div>-->
 
 <div id="div6">
 <div style="margin-bottom: 10px;"><img src="images/newsletter.jpg" width="430" height="215" /></div>
 
 <h1>Newsletter Archives</h1>
+<h3>2014</h3>
+<ul>
+<li><a href="ARCHIVES/January_2014.cfm">January 2014</a></li>
+<li><a href="ARCHIVES/February_2014.cfm">February 2014</a></li>
+<li><a href="ARCHIVES/March_2014.cfm">March 2014</a></li>
+<li><a href="ARCHIVES/April_2014.cfm">April 2014</a></li>
+<li><a href="ARCHIVES/May_2014.cfm">May 2014</a></li>
 
+</ul>
 <h3>2013</h3>
 <ul>
 <li><a href="ARCHIVES/August_2013.cfm">August 2013</a></li>
 <li><a href="ARCHIVES/September_2013.cfm">September 2013</a></li>
 <li><a href="ARCHIVES/October_2013.cfm">October 2013</a></li>
 <li><a href="ARCHIVES/December_2013.cfm">December 2013</a></li>
-</ul>
-<h3>2014</h3>
-<ul>
-<li><a href="ARCHIVES/January_2014.cfm">January 2014</a></li>
-<li><a href="ARCHIVES/February_2014.cfm">February 2014</a></li>
-<li><a href="ARCHIVES/March_2014.cfm">March 2014</a></li>
-
 </ul>
 <!-- end DIV6 --></div> 
    
