@@ -193,12 +193,14 @@ body {
 			<td align="center" class="ddmx" <cfif CLIENT.companyID EQ 13>colspan="2"</cfif>><a class="item2" href="?curdoc=section4/page22&id=4&p=22" onClick="return CheckLink();">Page [22] &nbsp; Supplements </a></td>
 		</cfif>
 		<!--- Canada is not using pages 23 or 24 --->
-        <cfif CLIENT.companyID NEQ 13>
+        <cfif CLIENT.companyID NEQ 13 AND CLIENT.companyID NEQ 14>
 			<cfif url.p EQ '23'>
 				<td align="center" class="selected"><a class="item2" href="?curdoc=section4/page23&id=4&p=23" onClick="return CheckLink();"><div class="selectedlink">Page [23] &nbsp; Double Placement Authorization </div></a></td>
 			<cfelse>
 				<td align="center" class="ddmx"><a class="item2" href="?curdoc=section4/page23&id=4&p=23" onClick="return CheckLink();">Page [23] &nbsp; Double Placement Authorization </a></td>
 			</cfif>
+      	</cfif>
+        <cfif CLIENT.companyID NEQ 13>
 	        <cfif url.p EQ '24'>
 				<td align="center" class="selected"><a class="item2" href="?curdoc=section4/page24&id=4&p=24" onClick="return CheckLink();"><div class="selectedlink">Page [24] &nbsp; HIPAA Release </div></a></td>
 			<cfelse>

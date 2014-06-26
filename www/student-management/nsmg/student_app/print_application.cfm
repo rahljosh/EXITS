@@ -144,8 +144,10 @@
         <cfset URL.display = "print"> <!--- This is used for the following pages instead of an additional print page --->
         
 		<!--- Do not display for Canada --->
-		<cfif CLIENT.companyID NEQ 13>
+		<cfif CLIENT.companyID NEQ 13 AND CLIENT.companyID NEQ 14>
 	        <div style="page-break-after:always;"><br/><cfinclude template="section4/page23.cfm"></div>
+      	</cfif>
+        <cfif CLIENT.companyID NEQ 13>
 	        <div style="page-break-after:always;"></div>
 	        <div style="page-break-after:always;"><br/><cfinclude template="section4/page24.cfm"></div>
 	 	</cfif>
