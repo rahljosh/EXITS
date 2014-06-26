@@ -94,8 +94,10 @@ where companyid = #client.org_code#
 <cfset URL.printBlank = 1>
 
 <!--- Do not display for canada --->
-<cfif CLIENT.companyID NEQ 13>
+<cfif CLIENT.companyID NEQ 13 AND CLIENT.companyID NEQ 14>
 	<div style="page-break-after:always;"><cfinclude template="section4/page23.cfm"></div>
+</cfif>
+<cfif CLIENT.companyID NEQ 13>
 	<div style="page-break-after:always;"></div>
 	<cfinclude template="section4/page24.cfm">
 </cfif>
