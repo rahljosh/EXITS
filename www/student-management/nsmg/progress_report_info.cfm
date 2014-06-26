@@ -225,6 +225,10 @@ function OpenLetter(url) {
 }
 //-->
 
+document.getElementById("submitReport").onsubmit = function() {   
+    this.children[1].disabled = true;
+   
+}
 </script>
 <!----SpellCheck info---->
  <!-- 1. include jQuery ... naturally none of this works without jQuery 
@@ -821,7 +825,7 @@ function OpenLetter(url) {
   </tr>
   <tr align="center">
     <td colspan="2">
-<form action="index.cfm?curdoc=progress_report_info" method="post" onSubmit="return confirm('Your report is being saved.  If ready to submit to the next level, click on Approve.')">
+<form action="index.cfm?curdoc=progress_report_info" id="submitReport" method="post" onSubmit="return confirm('Your report is being saved.  If ready to submit to the next level, click on Approve.')">
         <table cellpadding="2">
         
         <cfloop query="get_questions">
