@@ -1472,13 +1472,13 @@
                 <table width="100%" cellpadding="4" cellspacing="0" border="0">
                     <tr>
                         <td style="line-height:20px;" valign="top">
-                            <!--- HIDE STATEMENT FOR OFFICE USERS AND LITZ AND ECSE AGENTS --->
+                            <!--- HIDE STATEMENT FOR OFFICE USERS AND LITZ, ECSE, and EXPERIMENTO AGENTS --->
                             <cfquery name="invoice_check" datasource="#APPLICATION.DSN#">
                                 select invoice_access 
                                 from smg_users
                                 where userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
                             </cfquery>
-                            <cfif (CLIENT.userID EQ 64 OR CLIENT.userID EQ 126) OR (CLIENT.usertype NEQ 8 AND invoice_check.invoice_access NEQ 1)> 
+                            <cfif (CLIENT.userID EQ 64 OR CLIENT.userID EQ 126 OR CLIENT.userID EQ 18666) OR (CLIENT.usertype NEQ 8 AND invoice_check.invoice_access NEQ 1)> 
                                 <cfswitch expression="#CLIENT.companyid#">
                                 	<cfcase value="14">
                                     	Not available. <br /> If you wish a copy of your statement please contact Stacy Brewer at stacy@exchange-service.org
