@@ -41,10 +41,6 @@
 		} catch(any e) {
 			vErrors = vErrors & "<b>*ISE Multi Placement Bonus Payments - " & e.message & ":</b> " & e.detail & "<br/>";	
 		}
-	}
-	
-	// ISE Payment - only run on Tuesdays
-	if ( DayOfWeek(Now()) EQ 3 ) {
 		try {
 			include "iseDeparturePayments.cfm";
 		} catch(any e) {
