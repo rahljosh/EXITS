@@ -753,8 +753,30 @@
                             <a href="http://en.wikipedia.org/wiki/#get_state_name.statename#" target="_blank">#family_info.state# <img src="pics/external_link.png" border=0></a></td><td>ZIP:</td><td>#family_info.zip#</td></tr>
                             <tr><td>Phone:</td><td>#family_info.phone#</td></tr>
                             <tr><td>Email:</td><td><a href="mailto:#family_info.email#">#family_info.email#</a></td></tr>
-                            <tr><td>Host Father:</td><td>#family_info.fatherfirstname# #family_info.fatherlastname# &nbsp; <cfif family_info.fatherbirth is '0'><cfelse> <cfset calc_age_father = #CreateDate(family_info.fatherbirth,01,01)#> (#DateDiff('yyyy', calc_age_father, now())#) </cfif></td><td>Occupation:</td><td><cfif family_info.fatherworkposition is ''>n/a<cfelse>#family_info.fatherworkposition#</cfif></td></tr>
-                            <tr><td>Host Mother:</td><td>#family_info.motherfirstname# #family_info.motherlastname#  &nbsp; <cfif family_info.motherbirth is '0'><cfelse> <cfset calc_age_mom = #CreateDate(family_info.motherbirth,01,01)#> (#DateDiff('yyyy', calc_age_mom, now())#) </cfif></td><td>Occupation:</td><td><cfif family_info.motherworkposition is ''>n/a<cfelse>#family_info.motherworkposition#</cfif></td></tr>
+                            <tr>
+                            	<td>Host Father:</td>
+                                <td>
+                                	#family_info.fatherfirstname# #family_info.fatherlastname# &nbsp; 
+									<cfif VAL(family_info.fatherbirth)>
+										<cfset calc_age_father = #CreateDate(family_info.fatherbirth,01,01)#>
+                                        (#DateDiff('yyyy', calc_age_father, now())#)
+                                 	</cfif>
+                              	</td>
+                                <td>Occupation:</td>
+                                <td><cfif family_info.fatherworkposition is ''>n/a<cfelse>#family_info.fatherworkposition#</cfif></td>
+                         	</tr>
+                            <tr>
+                            	<td>Host Mother:</td>
+                                <td>
+                                	#family_info.motherfirstname# #family_info.motherlastname#  &nbsp;
+									<cfif VAL(family_info.motherbirth)>
+										<cfset calc_age_mom = #CreateDate(family_info.motherbirth,01,01)#> 
+                                        (#DateDiff('yyyy', calc_age_mom, now())#)
+                                 	</cfif>
+                              	</td>
+                                <td>Occupation:</td>
+                                <td><cfif family_info.motherworkposition is ''>n/a<cfelse>#family_info.motherworkposition#</cfif></td>
+                          	</tr>
                         </table>	
                         <!--- BOTTOM OF A TABLE --->
                         <table width="100%" cellpadding="0" cellspacing="0" border="0">
