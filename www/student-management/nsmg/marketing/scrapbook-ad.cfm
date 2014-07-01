@@ -1,6 +1,6 @@
 
 <Cfquery name="repInfo" datasource="#application.dsn#">
-select firstname, lastname, email, phone
+select firstname, lastname, email,  work_phone as phone
 from smg_users
 where userid = #client.userid#
 </cfquery>
