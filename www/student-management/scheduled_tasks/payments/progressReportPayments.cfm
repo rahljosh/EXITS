@@ -164,8 +164,8 @@ and pr.pr_ny_approved_date is not null
 and pr.fk_reportType = 1  
 and hh.isactive
 and hh.dateplaced is not null
-and hh.stu_arrival_orientation is not null
-and hh.host_arrival_orientation is not null
+AND (hh.stu_arrival_orientatiON IS NOT NULL OR hh.arearepID <> hh.placerepID)
+AND (hh.host_arrival_orientatiON IS NOT NULL OR hh.arearepID <> hh.placerepID)
 and sppmt.specialPaymentID is null
 
 and (
