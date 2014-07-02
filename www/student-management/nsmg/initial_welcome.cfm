@@ -282,7 +282,7 @@
         WHERE 
         	active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
     </cfquery>
-    
+
     <cfscript>
 		//get all cases that your involved in
 		qYourCasesInitial = APPLICATION.CFC.CASEMGMT.yourCasesInitial(personid=client.userid,caseOrder=url.caseOrder); 
@@ -901,16 +901,31 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                 
                     <div class="rdtop"> 
                         <span class="rdtitle">Marketing Materials </span> 
-                        <em>Save/Print option available on preview</em>
+                        <em></em>
                     </div>
                     
                     <div class="rdbox">
                     
-                        <table width=80% align="center">
-                        
+                        <table width=95% align="center" cellpadding=6 cellspacng=0>
+                        	<tr>
+                            	<td width=50% bgcolor="##F78E1B" colspan="2" align="center"><font color="white">Social Media</td>
+                                <td bgcolor="##1f4a79" colspan="2" align="center"><font color="white">Printable Flyers</td>
+                            </tr>
                             <!---_Available for All companies --->
-                            <cfif ListFind("1,2,3,4,5,10,12", CLIENT.companyID) >
+                            <cfif ListFind("1,2,3,4,5,12", CLIENT.companyID) >
+                           
                                 <tr>
+                                	<td colspan=2 align="center">
+                                       <a href="?curdoc=marketing/index&type=sm"> <img src="marketing/social-media-2.png" /></a><Br />Click Icon to View Materials
+                                   </td>
+                                  	<td colspan=2 align="center">
+                                      <a href="?curdoc=marketing/index&type=pr">  <img src="marketing/print-2.png" /></a><Br />Click Icon to View Materials
+                					</td>
+                                </tr>
+                            
+                            </cfif>
+                            <cfif ListFind("10", CLIENT.companyID) >
+                            <tr>
                                     <td><img src="pics/icons/marketing.png" /></td><td><a href="marketing/difference.cfm" target="_blank">Make A Difference</a></td>
                                     <td><img src="pics/icons/marketing2.png" /></td><td><a href="marketing/HostFam2012/HostFamiles.cfm" target="_blank">Host Families</a></td>
                                 </tr>
@@ -924,7 +939,6 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                                     <td></td>
                                 </tr>
                             </cfif>
-                            
                             <!--- ESI ONLY Docs --->
                             <cfif ListFind("14", CLIENT.companyID) >
                             	<tr>
