@@ -71,6 +71,8 @@
             php.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
         AND
             php.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programid#" list="yes"> )
+      	AND
+        	php.return_student = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
             
         <cfif VAL(FORM.insurance_typeid)>
             AND 
