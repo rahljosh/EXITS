@@ -872,40 +872,69 @@
     </cfif>
         
     <cfswitch expression="#form.chooseProgram#">
-        <cfcase value="High School">  
-            <cfif getCurrStudInfo.datePlaced IS NOT ''>
-            
-            	<!--- smg vietnam gets charged 200 for visa denials --->
-            	<cfif getCurrStudInfo.agentid EQ 123 AND getCurrStudInfo.cancelreason IS 'visa denial'>
-                	<cfset cancFee = 200>
-                    <cfelse>
-                    	<cfset cancFee = 500>
-                </cfif>
+        <cfcase value="High School">
+        
+        	<!--- Cancellation fee --->
+            <cfset cancFee = 500>
+            <!--- General rule: Cancellation fee applies to placed students who are not visa denials --->
+            <cfif getCurrStudInfo.datePlaced IS NOT '' AND getCurrStudInfo.cancelreason IS NOT 'visa denial'>
                 
-                <tr>
-                    <td></td>
-                    <td></td>
-                    <td>
-                    <cfinput type="checkbox" id="cancelFee#student#" name="cancelFee#student#" onClick="javaScript:enabDisabCancFee();" checked="true"></td>
-                    <td class="right"></td>
-                    <td class="right">
-                    <cfif getChargesCancellations.recordCount EQ 0>
-						<cfset progrName = #getCurrStudInfo.programname#>
-						<cfelse>
-                        	<cfset #getChargesCancellations.programname#>
-					</cfif>
-                    <cfinput type="text" id="cancelProg#student#" name="cancelProg#student#" value="#variables.progrName#" size="6"></td>
-                    <td class="right">
-                    <cfinput type="text" id="cancelType#student#" name="cancelType#student#" value="Cancellation fee" size="8"></td>
-                    <td class="right">
-                    <cfinput type="text" id="cancelAmount#student#" name="cancelAmount#student#" value="#variables.cancFee#" size="4"></td>
-                    <td class="right"></td>
-                    <td class="right"></td>
-                    <td class="right"></td>
-                    <td class="right"></td>                
-                    <td class="right"></td>                   
-                </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td>
+                        <cfinput type="checkbox" id="cancelFee#student#" name="cancelFee#student#" onClick="javaScript:enabDisabCancFee();" checked="true"></td>
+                        <td class="right"></td>
+                        <td class="right">
+                        <cfif getChargesCancellations.recordCount EQ 0>
+                            <cfset progrName = #getCurrStudInfo.programname#>
+                            <cfelse>
+                                <cfset #getChargesCancellations.programname#>
+                        </cfif>
+                        <cfinput type="text" id="cancelProg#student#" name="cancelProg#student#" value="#variables.progrName#" size="6"></td>
+                        <td class="right">
+                        <cfinput type="text" id="cancelType#student#" name="cancelType#student#" value="Cancellation fee" size="8"></td>
+                        <td class="right">
+                        <cfinput type="text" id="cancelAmount#student#" name="cancelAmount#student#" value="#variables.cancFee#" size="4"></td>
+                        <td class="right"></td>
+                        <td class="right"></td>
+                        <td class="right"></td>
+                        <td class="right"></td>                
+                        <td class="right"></td>                   
+                    </tr>
+            <!--- End of: General rule: Cancellation fee applies to placed students who are not visa denials --->
+			
+            <!--- Exception to the general rule: Glint agentid = 123 (former smg vietnam) gets charged 200 for visa denials --->
+			<cfelseif getCurrStudInfo.datePlaced IS NOT '' AND getCurrStudInfo.cancelreason IS 'visa denial' AND getCurrStudInfo.agentid EQ 123>
+
+                <cfset cancFee = 200>
+                
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td>
+                        <cfinput type="checkbox" id="cancelFee#student#" name="cancelFee#student#" onClick="javaScript:enabDisabCancFee();" checked="true"></td>
+                        <td class="right"></td>
+                        <td class="right">
+                        <cfif getChargesCancellations.recordCount EQ 0>
+                            <cfset progrName = #getCurrStudInfo.programname#>
+                            <cfelse>
+                                <cfset #getChargesCancellations.programname#>
+                        </cfif>
+                        <cfinput type="text" id="cancelProg#student#" name="cancelProg#student#" value="#variables.progrName#" size="6"></td>
+                        <td class="right">
+                        <cfinput type="text" id="cancelType#student#" name="cancelType#student#" value="Cancellation fee" size="8"></td>
+                        <td class="right">
+                        <cfinput type="text" id="cancelAmount#student#" name="cancelAmount#student#" value="#variables.cancFee#" size="4"></td>
+                        <td class="right"></td>
+                        <td class="right"></td>
+                        <td class="right"></td>
+                        <td class="right"></td>                
+                        <td class="right"></td>                   
+                    </tr>
+                    
             </cfif>
+            <!--- End of: Exception to the general rule: NK Internl agentid = 123 (former smg vietnam) gets charged 200 for visa denials --->
             
             <cfif getCurrStudInfo.sevis_fee_paid_date IS NOT "">
                 <tr>
