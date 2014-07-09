@@ -445,10 +445,11 @@
             emailList = ReplaceNoCase(emailList, ';', '<br />', "ALL");
         </cfscript>
     	<cfquery name="placementApproved" datasource="#application.dsn#">
-        	select datePlaced, hostid
-            from smg_hosthistory
-            where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qStudentInfo.studentID#">
-            and datePlaced is not NULL
+        	select hh.datePlaced, hh.hostid, h.familylastname
+            from smg_hosthistory hh
+            left outer join smg_hosts h on hh.hostID = h.hostID
+            where hh.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qStudentInfo.studentID#">
+            and hh.datePlaced is not NULL
         </cfquery>
         <cfoutput>
             <cfsavecontent variable="email_message">
