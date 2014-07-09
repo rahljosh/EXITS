@@ -448,7 +448,7 @@
         	select datePlaced, hostid
             from smg_hosthistory
             where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qStudentInfo.studentID#">
-            and datePlaced != NULL
+            and datePlaced is not NULL
         </cfquery>
         <cfoutput>
             <cfsavecontent variable="email_message">
