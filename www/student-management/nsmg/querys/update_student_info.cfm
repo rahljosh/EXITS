@@ -468,7 +468,7 @@
                 <cfif val(placementApproved.recordcount)>
                 <cfloop query="placementApproved">
                     <strong>#DateFormat(placementApproved.datePlaced, 'mm/dd/yyyy')# - #familyLastName# Family</strong>
-                <cfelse>
+                </cfloop> <cfelse>
                     <strong>Unplaced</strong>
                 </cfif> <br />
     
