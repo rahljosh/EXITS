@@ -63,6 +63,12 @@
 		vCurrentSeasonStatus = APPLICATION.CFC.HOST.getApplicationList(hostID=qGetHostInfo.hostID,seasonID=qCurrentSeason.seasonID).applicationStatusID;
 		vHasEhost = APPLICATION.CFC.HOST.getSeasonsForHost(hostID=qGetHostInfo.hostID).recordCount;
     </cfscript>
+    
+    <cfquery name="qGetAirport" datasource="#APPLICATION.DSN#">
+    	SELECT *
+        FROM smg_airports
+        WHERE airCode = <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetHostInfo.major_air_code#">
+    </cfquery>
 
 
 	<!--- delete other family member. --->
@@ -489,14 +495,12 @@ div.scroll2 {
                             <tr>
                             	<td>Airport City:</td>
                                 <td colspan="3">
-									<cfif qGetHostInfo.airport_city is '' and qGetHostInfo.airport_state is ''>n/a<cfelse>#qGetHostInfo.airport_city# / #qGetHostInfo.airport_state#</cfif>
+									<cfif qGetAirport.city is '' and qGetAirport.state is ''>n/a<cfelse>#qGetAirport.city#, #qGetAirport.state#</cfif>
                               	</td>
                           	</tr>
                             <tr>
                                 <td valign="top">Interests: </td>
-                                <td colspan="3">
-                                    <cfif len(#qGetHostInfo.pert_info#) gt '100'>#Left(qGetHostInfo.pert_info,92)# <a href="?curdoc=forms/host_fam_pis_7">more...</a><cfelse>#qGetHostInfo.pert_info#</cfif>
-                                </td>
+                                <td colspan="3">#qGetHostInfo.point_interest#</td>
                           	</tr>
                         </table>				
                         <table width=100% cellpadding=0 cellspacing=0 border=0>

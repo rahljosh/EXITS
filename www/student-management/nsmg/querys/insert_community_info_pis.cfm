@@ -26,18 +26,16 @@
                 smg_hosts
             SET 
                 regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.region#">,
-                companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#vGetCompanyID#">,
+                companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(vGetCompanyID)#">,
                 nearbigCity = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.near_City#">,
                 near_City_Dist = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.near_City_Dist#">,
                 community = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.community#">,
-                pert_info = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.pert_info#">,
+                point_interest = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.point_interest#">,
                 major_air_code = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.major_air_code#">,
-                airport_city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.airport_city#">,
-                airport_state= <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.airport_state#"> ,
                 dateUpdated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
         		updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">          
             WHERE 
-                hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.hostID#">
+                hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostID#">
         </cfquery>
     
     </cftransaction>
