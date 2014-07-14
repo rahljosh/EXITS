@@ -77,14 +77,29 @@
 			WHERE studentid = <cfqueryparam value="#get_student_info.studentid#" cfsqltype="cf_sql_integer"> 
 				  AND filename = '#name#'
 		</cfquery>
+        <cfscript>
+			imageSource = vUploadedFilesRelativePath & "uploadedfiles/online_app/picture_album/" & CLIENT.studentid & "/" & name;
+			image = ImageNew(imageSource);
+			imageHeight = ImageGetHeight(image);
+			imageWidth = ImageGetWidth(image);
+			if (((imageHeight/18)*25) GT imageWidth) {
+				imageHeight = "360px";
+				imageWidth = "auto";
+			} else {
+				imageHeight = "auto";
+				imageWidth = "500px";	
+			}
+		</cfscript>
 		<table width="660" border="0" cellpadding="0" cellspacing="0" align="center" height="350">	
-			<tr><td align="center" valign="top" width="2%" height="320">
-					<img src="#vUploadedFilesRelativePath#uploadedfiles/online_app/picture_album/#client.studentid#/#name#" width="500" height="360" border="0">
+			<tr>
+            	<td align="center" valign="top" width="2%" height="320">
+					<img src="#imageSource#" style="width:#imageWidth#; height:#imageHeight#;" border="0">
 				</td>
 			</tr>
 			<tr><td><em>Describe this Picture</em></td></tr>
 			<tr><td valign="top" align="center">#Left(pic_description.description, 200)#<br><img src="#vStudentAppRelativePath#pics/line.gif" width="660" height="1" border="0" align="absmiddle"></td></tr>
-		</table><br>
+		</table>
+        <br>
 		<cfif fam_pics.currentrow MOD 2 EQ 0>
 			<cfif fam_pics.currentrow NEQ fam_pics.recordcount>
 			</div>
