@@ -380,7 +380,7 @@
 			// Declare Variables		
 			
 			// ISE
-			var vUserListISE = '7657,9719'; // Thea Brewer | Bryan McCready 
+			var vUserListISE = '7657,9719,1'; // Thea Brewer | Bryan McCready 
 			
 			// CASE
 			var vUserListCASE = '11364'; // Stacy Brewer
