@@ -23,7 +23,7 @@ where regionid = #client.regionid#
 <body>
 <Cfoutput>
 <div style="height: 3235px; width: 2500px; display: block; background-image:url(Learn-to-laugh.jpg); background-repeat:no-repeat; background-position:center; border: 1px solid ##fff;">
-<div style="width: 800px; display: block; margin-top: 2850px; margin-left: 1600px;">
+<div style="width: 800px; display: block; margin-top: 2900px; margin-left: 1600px;">
 
 <p style="font-family: sans-serif; font-size: 50px; text-align: center; color: ##fff; line-height:65px;"><strong>#repInfo.firstname# #repInfo.lastname#</strong><br />
           P: #repInfo.phone#<br />
