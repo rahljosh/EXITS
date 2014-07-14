@@ -358,7 +358,7 @@
 
         <h3>Add a Family Members</h3>
 	
-        Please include all your children, whether they are living at home or not, and <span style="background-color:##FF0; padding: 3px;"><strong> any other persons</strong></span> 
+        Please include all college age or younger children, whether they are living at home or not, and <span style="background-color:##FF0; padding: 3px;"><strong> any other persons</strong></span> 
         who live with you on a regular basis.<br /><br />
         
         <span class="required">* Required fields</span>
