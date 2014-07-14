@@ -3,10 +3,12 @@
 	// Param Variables
 	param name="vStudentAppRelativePath" default="../";
 	param name="vUploadedFilesRelativePath" default="../../";
+	param name="vImageRelativePath" default="../../../nsmg/";
 	
 	if ( LEN(URL.curdoc) ) {
 		vStudentAppRelativePath = "";
 		vUploadedFilesRelativePath = "../";
+		vImageRelativePath = "../../";
 	}
 </cfscript>
 
@@ -78,7 +80,7 @@
 				  AND filename = '#name#'
 		</cfquery>
         <cfscript>
-			imageSource = vUploadedFilesRelativePath & "uploadedfiles/online_app/picture_album/" & CLIENT.studentid & "/" & name;
+			imageSource = vImageRelativePath & "uploadedfiles/online_app/picture_album/" & CLIENT.studentid & "/" & name;
 			image = ImageNew(imageSource);
 			imageHeight = ImageGetHeight(image);
 			imageWidth = ImageGetWidth(image);
