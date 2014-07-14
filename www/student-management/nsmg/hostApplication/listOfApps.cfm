@@ -200,14 +200,7 @@
                                     </td>
                                 </tr>
                                 <tr>
-                                	<td>
-                                    	<cfif APPLICATION.CFC.USER.isAdminUser()>
-                                            <form id="frSetRecordToPaper#qGetHostApplications.hostID#" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
-                                                <input type="hidden" name="setHostIDAsPaper" value="#qGetHostApplications.hostID#" />
-                                            </form>
-                                            <a href="javascript:setRecordToPaperApplication(#qGetHostApplications.hostID#);"><img src="pics/buttons/convertPaper.png" border="0"></a>
-                                        </cfif>
-                                    </td>
+                                	<td></td>
                                     <td>
                                     	<form 
                                             action="index.cfm?curdoc=hostApplication/listOfApps&status=#URL.status#" 

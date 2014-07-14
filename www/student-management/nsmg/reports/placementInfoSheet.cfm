@@ -118,6 +118,12 @@
 
     </cfif>
     
+    <cfquery name="qGetAirport" datasource="#APPLICATION.DSN#">
+    	SELECT *
+        FROM smg_airports
+        WHERE airCode = <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetHostFamily.major_air_code#">
+    </cfquery>
+    
     <cfquery name="qGetSchoolDates" datasource="#APPLICATION.DSN#">
         SELECT 
         	schooldateid, 
@@ -560,7 +566,7 @@
                     <tr>
                         <td>
 							<cfif LEN(qGetHostFamily.community)>
-                                The community is #qGetHostFamily.community#
+                                The community is a #qGetHostFamily.community#
                             </cfif>
                                 
                             <cfif qGetHostFamily.community is 'small'>town</cfif>.
@@ -572,13 +578,13 @@
 							<cfif LEN(qGetHostFamily.major_air_code)>
                             	The Closest arrival airport is <a href="http://www.airnav.com/airport/K#qGetHostFamily.major_air_code#" target="_blank" class="airport">#qGetHostFamily.major_air_code#</A>
 	                            <cfif LEN(qGetHostFamily.airport_city)>
-                                	, in the city of  <a href="http://en.wikipedia.org/wiki/#qGetHostFamily.airport_city#" target="_blank" class="wiki">#qGetHostFamily.airport_city# </a> 
+                                	, in the city of  <a href="http://en.wikipedia.org/wiki/#qGetAirport.city#, #qGetAirport.state#" target="_blank" class="wiki">#qGetAirport.city#, #qGetAirport.state# </a> 
 								</cfif>                            
                             </cfif>
                             
                             <br /><br />
                             
-							<cfif LEN(qGetHostFamily.pert_info)>Points of interest in the community: #qGetHostFamily.pert_info#</cfif>
+							<cfif LEN(qGetHostFamily.pert_info)>Points of interest in the community: #qGetHostFamily.point_interest#</cfif>
                         </td>
                     </tr>
                 </table>

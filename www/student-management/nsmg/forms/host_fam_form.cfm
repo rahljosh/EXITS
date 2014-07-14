@@ -119,20 +119,25 @@
 			if ( NOT LEN(FORM.city) ) {
 				SESSION.formErrors.Add("Please enter a City.");
 			}
-			if client.companyid neq 13 {
+			
 			if ( NOT LEN(FORM.state) ) {
+				if (client.companyid neq 13) {
 				SESSION.formErrors.Add("Please select a State.");
-			}else{
-			if ( NOT LEN(FORM.state) ) {
+				}else{
 				SESSION.formErrors.Add("Please select a Province.");	
+				}
 			}
-			if client.companyid neq 13 {
+			
+			if (client.companyid neq 13) {
 				if ( NOT isValid("zipcode", Trim(FORM.zip)) ) {
 					SESSION.formErrors.Add("Please enter a valid Zip.");     
-				}else {
+				}
+			}else{
 				if ( NOT len(Trim(FORM.zip)) ) {
-					SESSION.formErrors.Add("Please enter a Postal.");     
+					SESSION.formErrors.Add("Please enter a valid Zip.");     
+				}
 			}
+			
 			if ( NOT LEN(FORM.phone) AND NOT LEN(FORM.father_cell) AND NOT LEN(FORM.mother_cell) ) {
 				SESSION.formErrors.Add("Please enter one of the Phone fields.");
 			}    

@@ -1,19 +1,18 @@
-<cfinclude template="../querys/family_info.cfm">
-
-<cfquery name="qGetHostLocation" datasource="MySQL">
-	SELECT 
-    	city,
-        state,
-        zip
-	FROM 
-    	smg_hosts
-	WHERE 
-    	hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.hostid#">
+<cfquery name="qGetHostInfo" datasource="#APPLICATION.DSN#">
+	SELECT h.*, a.city AS airportCity, a.state AS airportState
+    FROM smg_hosts h
+    LEFT JOIN smg_airports a ON a.airCode = h.major_air_code
+    WHERE h.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.hostid)#">
 </cfquery>
 
-<cfform action="?curdoc=querys/insert_community_info_pis" method="post">
+<cfquery name="qGetAirportList" datasource="#APPLICATION.DSN#">
+    SELECT *
+    FROM smg_airports
+</cfquery>
 
-<cfoutput query="qGetHostLocation">
+<cfoutput query="qGetHostInfo">
+
+<cfform action="?curdoc=querys/insert_community_info_pis&hostID=#URL.hostID#" method="post">
 <table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
 	<tr valign=middle height=24>
 		<td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
@@ -27,19 +26,19 @@
 <table width="100%" border=0 cellpadding=4 cellspacing=0 class="section">
 	<tr><td width="80%" valign="top">
 		<table border=0 cellpadding=4 cellspacing=0 align="left" width="100%">
-			<tr><td colspan="2"><h3>#qGetHostLocation.city# #qGetHostLocation.state#, #qGetHostLocation.zip#</h3></td></tr>
+			<tr><td colspan="2"><h3>#qGetHostInfo.city# #qGetHostInfo.state#, #qGetHostInfo.zip#</h3></td></tr>
 			<tr><Td width="20%" align="right">Region: </Td>
 				<td> 
 				<cfselect name="region" required="yes" message="Region must be selected.">
 					<cfif client.usertype LTE '4'> <!--- all regions --->
-						<cfquery name="regions" datasource="MySQl">
+						<cfquery name="regions" datasource="#APPLICATION.DSN#">
 							SELECT regionid, regionname  FROM smg_regions 
 							WHERE company = '#client.companyid#' AND subofregion = '0' 
 							ORDER BY regionname
 						</cfquery>
 						<option value="0">Select Region</option>
 					<cfelse>
-						<cfquery name="regions" datasource="MySQL">
+						<cfquery name="regions" datasource="#APPLICATION.DSN#">
 							SELECT smg_regions.regionid, smg_regions.regionname 
 							FROM smg_users
 							INNER JOIN user_access_rights ON smg_users.userid = user_access_rights.userid
@@ -50,32 +49,30 @@
 						</cfquery>
 					</cfif>
 					<cfloop query="regions">
-						<option value="#regionid#" <cfif family_info.regionid EQ regionid>selected</cfif>>#regionname# &nbsp;</option>
+						<option value="#regionid#" <cfif qGetHostInfo.regionid EQ regionid>selected</cfif>>#regionname# &nbsp;</option>
 					</cfloop>
 				</cfselect>
 				</td>
 			</tr>
 			<tr><td colspan="2">Would you describe the community as:</td></tr>
 			<tr><td colspan="2">
-				<cfif family_info.community is 'Urban'><cfinput type="radio" name="community" value="Urban" checked><cfelse><cfinput type="radio" name="community" value="Urban"> </cfif>Urban
-				<cfif family_info.community is 'suburban'><cfinput type="radio" name="community" value="suburban" checked><cfelse><cfinput type="radio" name="community" value="suburban"></cfif>Suburban
-				<cfif family_info.community is 'small'><cfinput type="radio" name="community" value="small" checked><cfelse><cfinput type="radio" name="community" value="small"></cfif>Small Town
-				<cfif family_info.community is 'rural'><cfinput type="radio" name="community" value="rural" checked><cfelse><cfinput type="radio" name="community" value="rural"></cfif>Rural
+				<cfif qGetHostInfo.community is 'Urban'><cfinput type="radio" name="community" value="Urban" checked><cfelse><cfinput type="radio" name="community" value="Urban"> </cfif>Urban
+				<cfif qGetHostInfo.community is 'suburban'><cfinput type="radio" name="community" value="suburban" checked><cfelse><cfinput type="radio" name="community" value="suburban"></cfif>Suburban
+				<cfif qGetHostInfo.community is 'small'><cfinput type="radio" name="community" value="small" checked><cfelse><cfinput type="radio" name="community" value="small"></cfif>Small Town
+				<cfif qGetHostInfo.community is 'rural'><cfinput type="radio" name="community" value="rural" checked><cfelse><cfinput type="radio" name="community" value="rural"></cfif>Rural
 				</td></tr>
-			<tr><td class="label">Closest City:</td><td class="form_text"><cfinput type="text" name="near_city" size=20 value="#family_info.nearbigcity#"></td></tr>
-			<tr><td class="label">Distance:</td><td class="form_text"> <cfinput name="near_city_dist" size=3 type="text" value="#family_info.near_City_dist#">miles</td></tr>
-			<tr><td class="label">Arrival Airport Code:</td><td class="form_text"><cfinput type="text" name="major_air_code" size=3 value="#family_info.major_air_code#" onchange="javascript:this.value=this.value.toUpperCase();"></td></tr>
-			<tr><td class="label">Arrival Airport City: </td><td class="form_text"><cfinput type="text" name="airport_city" size="20" value="#family_info.airport_city#"></td></tr>
-			<tr><td class="label" >Arrival Airport State: </td><td width=10>
-				<cfinclude template="../querys/states.cfm">
-				<select name="airport_state">
-				<option>
-					<cfloop query="states">
-						<option value="#states.state#" <Cfif family_info.airport_state is states.state>selected</cfif>>#states.state#</option>
-					</cfloop>
-				</select></td></tr>
+			<tr><td class="label">Closest City:</td><td class="form_text"><cfinput type="text" name="near_city" size=20 value="#qGetHostInfo.nearbigcity#"></td></tr>
+			<tr><td class="label">Distance:</td><td class="form_text"> <cfinput name="near_city_dist" size=3 type="text" value="#qGetHostInfo.near_City_dist#">miles</td></tr>
+			<tr><td class="label">Arrival Airport:</td><td class="form_text">
+            	<select name="major_air_code" data-placeholder="Enter City, Airport or Airport Code" class="chzn-select xxxLargeField" tabindex="2">
+                    <option value=""></option>
+                    <cfloop query="qGetAirportList">
+                        <option value="#airCode#" <cfif qGetHostInfo.major_air_code eq airCode>selected</cfif>>#aircode# - #airportName# - #city#, #state#</option>
+                    </cfloop>
+                </select>
+          	</td></tr>
 			<tr bgcolor="e2efc7"><td colspan="2">Points of interest in the community:</td></tr>
-			<tr bgcolor="e2efc7"><td colspan="2"><textarea cols="60" rows="4" name="pert_info" wrap="VIRTUAL"><cfoutput>#family_info.pert_info#</cfoutput></textarea></td></tr>					
+			<tr bgcolor="e2efc7"><td colspan="2"><textarea cols="60" rows="4" name="point_interest" wrap="VIRTUAL"><cfoutput>#qGetHostInfo.point_interest#</cfoutput></textarea></td></tr>					
 		</table>
 	</td>
 	<td width="20%" align="right" valign="top">
@@ -97,5 +94,5 @@
 		<td width=9 valign="top"><img src="pics/footer_rightcap.gif"></td>
 	</tr>
 </table>
-</cfoutput>
 </cfform>
+</cfoutput>
