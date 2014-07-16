@@ -8,7 +8,6 @@
 	if ( LEN(URL.curdoc) ) {
 		vStudentAppRelativePath = "";
 		vUploadedFilesRelativePath = "../";
-		vImageRelativePath = "../../";
 	}
 </cfscript>
 
