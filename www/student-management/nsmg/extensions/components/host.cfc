@@ -267,7 +267,7 @@
                     hostID IN (
                         SELECT hostID 
                         FROM smg_host_app_season 
-                        WHERE applicationStatusID < 4 
+                        WHERE applicationStatusID < 9 
                         AND seasonID >= <cfqueryparam cfsqltype="cf_sql_integer" value="#vSeasonID#"> )
                 </Cfif>
                 ORDER BY 
