@@ -488,23 +488,23 @@ a:active {
     <td width="132" bgcolor="##EFEFEF" class="Bold">1. SEVIS Number:</td>
     <td width="418">
       <label for="Sevis"></label>
-      <input type="text" name="Sevis" id="Sevis" value="#FORM.Sevis#" />
+      <input type="text" readonly="readonly" name="Sevis" id="Sevis" value="#FORM.Sevis#" />
     </td>
   </tr>
   <tr>
     <td class="Bold">2. Last Name:</td>
     <td><label for="Sevis"></label>
-      <input type="text" name="LastName" id="LastName"  value="#FORM.LastName#"/></td>
+      <input type="text" readonly="readonly" name="LastName" id="LastName"  value="#FORM.LastName#"/></td>
   </tr>
   <tr bgcolor="##EFEFEF" >
     <td class="Bold">3. First Name:</td>
     <td><label for="Sevis"></label>
-      <input type="text" name="FirstName" id="FirstName"  value="#FORM.FirstName#"/></td>
+      <input type="text" readonly="readonly" name="FirstName" id="FirstName"  value="#FORM.FirstName#"/></td>
   </tr>
     <tr>
     <td class="Bold">4. E-mail:</td>
     <td><label for="Sevis"></label>
-      <input type="text" name="email" id="email" value="#FORM.email#" /></td>
+      <input type="text" readonly="readonly" name="email" id="email" value="#FORM.email#" /></td>
   </tr>
   <tr bgcolor="##EFEFEF" >
     <td colspan="2" bgcolor="##EFEFEF" class="Bold">
