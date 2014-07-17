@@ -278,8 +278,8 @@
                             <td>#qGetStudentList.regionname#</td>	
                         </cfif>	
                         <td>#qGetStudentList.businessname#</td>	
-                        <td style="border-bottom:1px solid ##999; vertical-align:top;">#qGetStudentList.facFirstName# #qGetStudentList.facLastName#</td>		
-                         <td style="border-bottom:1px solid ##999; vertical-align:top;">#qGetStudentList.projectManagerName#</td>			
+                        <td>#qGetStudentList.facFirstName# #qGetStudentList.facLastName#</td>		
+                         <td>#qGetStudentList.projectManagerName#</td>			
                         <!--- Arrival to Pre-AYP --->
                         <td>
                             <cfif qGetPreAypArrival.overnight EQ 1>
