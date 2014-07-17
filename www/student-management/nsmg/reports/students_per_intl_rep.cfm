@@ -150,17 +150,15 @@
                 <th width="75%">International Representative</th>
                 <th width="25%">Total</th>
             </tr>
-        </table><br />
+        </table>
+        <br />
         
         <cfoutput query="qGetStudentList" group="intrep">
         
             <cfquery name="qGetTotal" dbtype="query">
-                SELECT 
-                    studentid
-                FROM 
-                    qGetStudentList
-                WHERE 	
-                    intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentList.intrep#">
+                SELECT studentid
+                FROM qGetStudentList
+                WHERE intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentList.intrep#">
              </cfquery>
         
             <table width="98%" cellpadding="3" cellspacing="0" align="center" style="border:1px solid ##999;">	
@@ -172,7 +170,7 @@
                 
             <table width="98%" frame="below" cellpadding="3" cellspacing="0" align="center" style="border:1px solid ##999;">
                 <tr>
-                    <td width="6%" align="center"><strong>ID</strong></th>
+                    <td width="6%" align="center"><strong>ID</strong></td>
                     <td width="18%"><strong>Student</strong></td>
                     <td width="8%" align="center"><strong>Sex</strong></td>
                     <td width="8%" align="center"><strong>DOB</strong></td>
@@ -216,74 +214,43 @@
 <cfelse>
 
 	<cfsavecontent variable="reportContent">
+    
+    	<style type="text/css">
+			#header td {
+				border-bottom: 1px solid #999;
+				font-weight: bold;
+			}
+			#body td {
+				border-bottom: 1px solid #999;
+				vertical-align:top;
+			}
+		</style>
 
 		<table width="98%" cellpadding="3" cellspacing="0" align="center" style="border:1px solid #999;"> 
-            <tr>
-                <td style="border-bottom:1px solid #999; font-weight:bold;">&nbsp;</td>
-                <td style="border-bottom:1px solid #999; font-weight:bold;">ID</td>
-                <td style="border-bottom:1px solid #999; font-weight:bold;">FLS ID</td>
-                <td style="border-bottom:1px solid #999; font-weight:bold;">Student</td>
-                <td style="border-bottom:1px solid #999; font-weight:bold;">Sex</td>
-                <td style="border-bottom:1px solid #999; font-weight:bold;">DOB</td>
-                <td style="border-bottom:1px solid #999; font-weight:bold;">Country</td>
+            <tr id="header">
+                <td>&nbsp;</td>
+                <td>ID</td>
+                <td>FLS ID</td>
+                <td>Student</td>
+                <td>Sex</td>
+                <td>DOB</td>
+                <td>Country</td>
                 <cfif FORM.status EQ 1>
-                    <td style="border-bottom:1px solid ##999; vertical-align:top;">#qGetStudentList.hostfamily#</td>	
+                    <td>Host Family</td>	
                 <cfelse>
-                    <td style="border-bottom:1px solid ##999; vertical-align:top;">#qGetStudentList.regionname#</td>	
+                    <td>Region</td>	
                 </cfif>	
-                <td style="border-bottom:1px solid ##999; vertical-align:top;">#qGetStudentList.businessname#</td>	
-                <td style="border-bottom:1px solid ##999; vertical-align:top;">#qGetStudentList.facFirstName# #qGetStudentList.facLastName#</td>		
-                 <td style="border-bottom:1px solid ##999; vertical-align:top;">#qGetStudentList.projectManagerName#</td>			
-                <!--- Arrival to Pre-AYP --->
-                <td style="border-bottom:1px solid ##999; vertical-align:top;">
-                    <cfif qGetPreAypArrival.overnight EQ 1>
-                        #DateFormat(DateAdd("d", 1, qGetPreAypArrival.dep_date), 'mm/dd/yyyy')#
-                    <cfelse>
-                        #DateFormat(qGetPreAypArrival.dep_date, 'mm/dd/yy')#
-                    </cfif>
-                </td>
-                <td style="border-bottom:1px solid ##999; vertical-align:top;">
-                    #TimeFormat(qGetPreAypArrival.arrival_time, 'hh:mm tt')#
-                </td>                    
-                <td style="border-bottom:1px solid ##999; vertical-align:top;">
-                    <cfif LEN(qGetPreAypArrival.dep_city)>
-                        From #qGetPreAypArrival.dep_city# #qGetPreAypArrival.dep_aircode#
-                    </cfif>
-                    
-                    <cfif LEN(qGetPreAypArrival.arrival_city)>
-                        to #qGetPreAypArrival.arrival_city# #qGetPreAypArrival.arrival_aircode#
-                    </cfif>
-                    
-                    <cfif LEN(qGetPreAypArrival.flight_number)>
-                       Flight #qGetPreAypArrival.flight_number#
-                    </cfif>
-                </td>
-                <!--- Departure from Camp / Arrival to HF --->
-                <td style="border-bottom:1px solid ##999; vertical-align:top;">
-                    <cfif qGetDepartureFromCamp.overnight EQ 1>
-                        #DateFormat(DateAdd("d", 1, qGetDepartureFromCamp.dep_date), 'mm/dd/yyyy')#
-                    <cfelse>
-                        #DateFormat(qGetDepartureFromCamp.dep_date, 'mm/dd/yy')#
-                    </cfif>
-                </td>
-                <td style="border-bottom:1px solid ##999; vertical-align:top;">
-                    #TimeFormat(qGetDepartureFromCamp.dep_time, 'hh:mm tt')#
-                </td>                                            
-                <td style="border-bottom:1px solid ##999; vertical-align:top;">
-                    <cfif LEN(qGetDepartureFromCamp.dep_city)>
-                        From #qGetDepartureFromCamp.dep_city# #qGetDepartureFromCamp.dep_aircode#
-                    </cfif>
-                    
-                    <cfif LEN(qGetDepartureFromCamp.arrival_city)>
-                        to #qGetDepartureFromCamp.arrival_city# #qGetDepartureFromCamp.arrival_aircode#
-                    </cfif>
-                    
-                    <cfif LEN(qGetDepartureFromCamp.flight_number)>
-                       Flight #qGetDepartureFromCamp.flight_number#
-                    </cfif>
-                </td>
-                <td style="border-bottom:1px solid ##999; vertical-align:top;">#DateFormat(qGetStudentList.schoolStartDate, 'mm/dd/yy')#</td>
-                <td style="border-bottom:1px solid ##999; vertical-align:top;">#qGetStudentList.englishcamp#</td>
+                <td>Intl. Rep</td>	
+                <td>Facilitator</td>		
+                <td>Project Manager</td>			
+                <td>Arrival To Pre-AYP Date</td>
+                <td>Arrival To Pre-AYP Time</td>                    
+                <td>Arrival To Pre-AYP Information</td>
+                <td>Departure From Pre-AYP Date</td>
+                <td>Departure From Pre-AYP Time</td>                                            
+                <td>Departure From Pre-AYP Information</td>
+                <td>School Start Date</td>
+                <td>Pre-AYP School</td>
             </tr>
     
             <cfoutput query="qGetStudentList" group="intrep">
@@ -293,39 +260,38 @@
                     <cfscript>
                         // Get Pre-AYP Arrival Flight Information
                         qGetPreAypArrival = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=qGetStudentList.studentID,flightType="preAYPArrival", programID=qGetStudentList.programID, flightLegOption="lastLeg");
-                
-                        // Get Departure from Camp - Arrival to Host Family Flight Information
+						// Get Departure from Camp - Arrival to Host Family Flight Information
                         qGetDepartureFromCamp = APPLICATION.CFC.STUDENT.getFlightInformation(studentID=qGetStudentList.studentID,flightType="arrival", programID=qGetStudentList.programID, flightLegOption="firstLeg");
                     </cfscript>
                 
-                    <tr bgcolor="###iif(qGetStudentList.currentrow MOD 2 ,DE("FFFFFF") ,DE("EDEDED") )#">
-                        <td style="border-bottom:1px solid ##999; vertical-align:top;">#qGetStudentList.currentRow#</td>
-                        <td style="border-bottom:1px solid ##999; vertical-align:top;">#qGetStudentList.studentID#</td>
-                        <td style="border-bottom:1px solid ##999; vertical-align:top;">#qGetStudentList.flsID#</td>
-                        <td style="border-bottom:1px solid ##999; vertical-align:top;">#qGetStudentList.firstname# #qGetStudentList.familylastname#</td>
-                        <td style="border-bottom:1px solid ##999; vertical-align:top;">#qGetStudentList.sex#</td>
-                        <td style="border-bottom:1px solid ##999; vertical-align:top;">#DateFormat(qGetStudentList.DOB, 'mm/dd/yy')#</td>
-                        <td style="border-bottom:1px solid ##999; vertical-align:top;">#qGetStudentList.countryname#</td>
+                    <tr id="body" bgcolor="###iif(qGetStudentList.currentrow MOD 2 ,DE("FFFFFF") ,DE("EDEDED") )#">
+                        <td>#qGetStudentList.currentRow#</td>
+                        <td>#qGetStudentList.studentID#</td>
+                        <td>#qGetStudentList.flsID#</td>
+                        <td>#qGetStudentList.firstname# #qGetStudentList.familylastname#</td>
+                        <td>#qGetStudentList.sex#</td>
+                        <td>#DateFormat(qGetStudentList.DOB, 'mm/dd/yy')#</td>
+                        <td>#qGetStudentList.countryname#</td>
                         <cfif FORM.status EQ 1>
-                            <td style="border-bottom:1px solid ##999; vertical-align:top;">#qGetStudentList.hostfamily#</td>	
+                            <td>#qGetStudentList.hostfamily#</td>	
                         <cfelse>
-                            <td style="border-bottom:1px solid ##999; vertical-align:top;">#qGetStudentList.regionname#</td>	
+                            <td>#qGetStudentList.regionname#</td>	
                         </cfif>	
-                        <td style="border-bottom:1px solid ##999; vertical-align:top;">#qGetStudentList.businessname#</td>	
+                        <td>#qGetStudentList.businessname#</td>	
                         <td style="border-bottom:1px solid ##999; vertical-align:top;">#qGetStudentList.facFirstName# #qGetStudentList.facLastName#</td>		
                          <td style="border-bottom:1px solid ##999; vertical-align:top;">#qGetStudentList.projectManagerName#</td>			
                         <!--- Arrival to Pre-AYP --->
-                        <td style="border-bottom:1px solid ##999; vertical-align:top;">
+                        <td>
                             <cfif qGetPreAypArrival.overnight EQ 1>
                                 #DateFormat(DateAdd("d", 1, qGetPreAypArrival.dep_date), 'mm/dd/yyyy')#
                             <cfelse>
                                 #DateFormat(qGetPreAypArrival.dep_date, 'mm/dd/yy')#
                             </cfif>
                         </td>
-                        <td style="border-bottom:1px solid ##999; vertical-align:top;">
+                        <td>
                             #TimeFormat(qGetPreAypArrival.arrival_time, 'hh:mm tt')#
                         </td>                    
-                        <td style="border-bottom:1px solid ##999; vertical-align:top;">
+                        <td>
                             <cfif LEN(qGetPreAypArrival.dep_city)>
                                 From #qGetPreAypArrival.dep_city# #qGetPreAypArrival.dep_aircode#
                             </cfif>
@@ -339,17 +305,17 @@
                             </cfif>
                         </td>
                         <!--- Departure from Camp / Arrival to HF --->
-                        <td style="border-bottom:1px solid ##999; vertical-align:top;">
+                        <td>
                             <cfif qGetDepartureFromCamp.overnight EQ 1>
                                 #DateFormat(DateAdd("d", 1, qGetDepartureFromCamp.dep_date), 'mm/dd/yyyy')#
                             <cfelse>
                                 #DateFormat(qGetDepartureFromCamp.dep_date, 'mm/dd/yy')#
                             </cfif>
                         </td>
-                        <td style="border-bottom:1px solid ##999; vertical-align:top;">
+                        <td>
 							#TimeFormat(qGetDepartureFromCamp.dep_time, 'hh:mm tt')#
                         </td>                                            
-                        <td style="border-bottom:1px solid ##999; vertical-align:top;">
+                        <td>
                             <cfif LEN(qGetDepartureFromCamp.dep_city)>
                                 From #qGetDepartureFromCamp.dep_city# #qGetDepartureFromCamp.dep_aircode#
                             </cfif>
@@ -362,8 +328,8 @@
                                Flight #qGetDepartureFromCamp.flight_number#
                             </cfif>
                         </td>
-                        <td style="border-bottom:1px solid ##999; vertical-align:top;">#DateFormat(qGetStudentList.schoolStartDate, 'mm/dd/yy')#</td>
-                        <td style="border-bottom:1px solid ##999; vertical-align:top;">#qGetStudentList.englishcamp#</td>
+                        <td>#DateFormat(qGetStudentList.schoolStartDate, 'mm/dd/yy')#</td>
+                        <td>#qGetStudentList.englishcamp#</td>
                     </tr>							
                 </cfoutput>	
         
