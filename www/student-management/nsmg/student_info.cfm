@@ -1153,7 +1153,7 @@
 				</tr>				
 				<tr>
 					<td width="50%">: : <a href="javascript:OpenLetter('reports/letter_student_orientation.cfm');">Student Orient. Sign Off</a></td>
-					<td width="50%">: : <a href="javascript:OpenLetter('reports/letter_host_orientation.cfm');">Family Orientation Sign Off</a></td>
+					<td width="50%">: : <a href="javascript:OpenLetter('hostApplication/hostOrientationSignOff.cfm?hostID=#qGetStudentInfo.hostID#&seasonID=#qGetSelectedProgram.seasonID#');">Family Orientation Sign Off</a></td>
 				</tr>
                 <tr>
 					<td width="50%">: : <a href="javascript:OpenLetter('reports/labels_student_idcards.cfm?studentid=#studentid#');">Student ID Card</a>
@@ -1190,7 +1190,7 @@
 				</tr>
 				<tr>
 					<td width="50%">: : <a href="javascript:OpenLetter('reports/letter_student_orientation.cfm');">Student Orient. Sign Off</a></td>
-					<td width="50%">: : <a href="javascript:OpenLetter('reports/letter_host_orientation.cfm');">Family Orientation Sign Off</a></td>
+					<td width="50%">: : <a href="javascript:OpenLetter('hostApplication/hostOrientationSignOff.cfm?hostID=#qGetStudentInfo.hostID#&seasonID=#qGetSelectedProgram.seasonID#');">Family Orientation Sign Off</a></td>
 				</tr>			
                 <tr>
 					<td width="50%">: : <a href="javascript:OpenLetter('reports/labels_student_idcards.cfm?studentid=#studentid#');">Student ID Card</a></td>
