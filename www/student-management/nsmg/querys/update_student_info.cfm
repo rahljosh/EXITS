@@ -335,8 +335,8 @@
 			// Get Current Program
 			qGetNewProgram = APPLICATION.CFC.PROGRAM.getPrograms(ProgramID=FORM.program);
 		
-			// Always send a copy of the email to Admissions
-			emailCC = APPLICATION.CFC.UDF.displayAdmissionsInformation(displayInfo='email');
+			// Always send a copy of the email to Admissions and Compliance
+			emailCC = "merri@iseusa.org" & APPLICATION.CFC.UDF.displayAdmissionsInformation(displayInfo='email');
 			
 			// If there is a valid email, send a copy to the current user
 			if ( IsValid("email", APPLICATION.CFC.USER.getUserByID(userID=CLIENT.userID).email) ) {
@@ -433,7 +433,7 @@
 			vGetProjectManagerEmail = APPLICATION.CFC.COMPANY.getCompanies(companyID=qStudentInfo.companyID).pm_email;
 			vGetFacilitatorEmail = APPLICATION.CFC.USER.getRegionFacilitator(regionID=qStudentInfo.regionassigned).email;
             if ( ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID) ) {
-                emailCC = "bhause@iseusa.org;ellen@iseusa.org;" & vGetProjectManagerEmail & ";" & vGetFacilitatorEmail & ";" & CLIENT.email;
+                emailCC = "bhause@iseusa.org;lois@iseusa.org;merri@iseusa.org" & vGetProjectManagerEmail & ";" & vGetFacilitatorEmail & ";" & CLIENT.email;
             } else { 
                 emailCC = CLIENT.projectmanager_email & ';' & CLIENT.email;
             }
