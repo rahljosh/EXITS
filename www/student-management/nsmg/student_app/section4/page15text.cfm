@@ -79,99 +79,84 @@
 <cfsavecontent variable="publicAgreement">
     <p style="padding-left:10px;">
         In the City of #cityInfo#, country of #countryInfo#, on the #dayInfo# day of #monthInfo# in the year of #yearInfo#, I/We the undersigned parents of #studentInfo# my/our #subject#, 
-        and I, the student applicant, agree to the following terms and conditions. The above-named student is applying to participate in a cultural exchange program sponsored by the exchange 
-        organization and we give our #subject# permission to participate in this program.
+        and I, the "Exchange Student", understand and agree that this agreement shall constitute a binding contract between the undersigned and "#client.companyshort#". "#client.companyshort#" is defined to include: International Student Exchange, Inc., its affiliates, and their owners, directors, officers, and employees.
     </p>
     
     <ol style="font-size:11px; padding-right:10px;">
     
         <li>
-            We understand the program is designed to increase understanding among people of the world and is not to be used for the sole purpose of foreign language training.  
-            We have discussed the importance of good behavior with our #subject# and #subjectivePronoun# understands the significance of acting in a manner which will reflect well on our family and our country. 
+          The J-1 Secondary School Program is a cultural exchange program where the Exchange Student will live with a volunteer family in the United States and attend school during the entire length of the program.  
         </li>
         
         <li>
-            We understand and agree that the enrollment of our #subject# in the exchange program is primarily for the cultural exchange and that a <b><u>diploma, graduation, athletic 
-            eligibility and/or athletic participation is not guaranteed of any student.</u></b>
+           The volunteer host families are screened by #client.companyshort# in accordance with USDOS and CSIET standard and vary in many ways including family composition, geographic location, size of the home, standard of accommodation and numerous other factors.  </u></b>
         </li>
         
         <li>
-            We understand student placements are based on compatibility with a selection by a host family.  A specific geographical area can be selected by a student in the AYP school 
-            year program or the semester program for an additional fee.  See insert / section REGIONAL GUARANTEES.
+           The Exchange Student will accept placement with a family of any race, creed, or color or family composition.  Live as a member of your host family, respect your host family and their rules and customs, and accept the responsibilities given to you. #client.companyshort#, in its sole discretion, is responsible for choosing a student’s host family placement.  Rejection of a placement or a request to be relocated from my host family after arrival without material cause, can result in termination from ISE’s exchange program.
         </li>
         
         <li>
-            Upon receipt of the Student Handbook, we all agree to read and discuss its contents.  Should we not understand any part thereof, we will contact our international representative for 
-            clarification before the program participant leaves our country.  We understand that problems are to be resolved first by discussion between the host family and the program participant, 
-            then with the assistance of the exchange organization.  The program participant is not to discuss problems of a personal nature with the members of the community or school. We understand 
-            the program participant will have responsibilities as a member of the family, including attending religious services.  Although not required, the exchange organization strongly recommends 
-            they do so as part of family life. We understand that the participant is expected to participate in 5 hours of community service sponsored by the school, church, student exchange company, 
-            or as permitted by the host family. 
+          The Exchange Student agrees to follow the regulations of the J-1 Exchange Visitor Visa and the U.S. State as well as all #CLIENT.companyshort# program rules that are detailed in the ISE student handbook.
         </li>
         
         <li>
-            We agree that the program participant will try to adjust, will obey the disciplinary rules of the host family and school, will give respect and obedience to the host family and 
-            school officials, and will keep communications open at all times.
+           The Exchange Student will abide by the federal, state, and local laws of the United States and any state, city, town, county or other jurisdictional region.
         </li>
         
         <li>
-            We understand and agree that the program participant will not take any unprescribed drugs, drink alcoholic beverages, possess false identification, drive any motorized vehicle,
-            or participate in any dangerous sports such as hang gliding, bungee jumping, etc.  If the program participant does any of the above, we understand that #subjectivePronoun# may be immediately 
-            returned home at our family's expense, and we accept full responsibility for any situation arising from #possessivePronoun# involvement with the above.
+           Under these laws, consumption of alcoholic beverages by anyone under the age of 21, and the use or possession of illegal or un-prescribed prescription drugs, and the use of tobacco product by anyone under the age of 18 is prohibited.
         </li>
         
-        <li>We understand that prolonged or inappropriate use of the internet, including email or chat rooms, may result in a first warning and then program termination.</li>
+        <li>The Exchange Student will attend the arrival orientation.</li>
         
-        <li>We agree that the program participant may not take any action that may change the nature of #possessivePronoun# life, i.e. getting married, changing religions.</li>
+        <li>The Exchange Student will read and carefully consider all materials made available that relate to safety, health, legal, environmental, political, cultural and religious conditions in your host town. Be aware of local conditions that may present health or safety risks when making daily choices and decisions.</li>
         
-        <li>
-            We understand and agree that the program participant will be subject to all the laws of the host country.  In the case of serious infraction of the rules and requirements 
-            governing the conduct of the program participant, or in the case of extreme homesickness, or poor adjustment to the host family or school, the participant may be returned 
-            home immediately at the discretion of the exchange organization's Executive Committee and at the expense of our family.
+        <li>The Exchange Student will respect the host high school’s guidelines and policies, including those with regard to conduct, delinquency, grade levels, participation in graduation ceremonies, and issuance of a high school diploma.  The exchange student will obey all lawful orders  of school officials.
         </li>
         
         <li>
-            We understand and agree that the program participant may not drive any motorized vehicle that requires an operator's license, nor be a pilot or  passenger in a private plane.  
-            A student is allowed to register for school-sponsored driver education classes.  If a license is obtained through this program, the license must be immediately given to the exchange 
-            organization's local representative.  It will be returned to the student on the day of departure for home.
+            The Exchange Student must maintain a C+ average or higher in all courses at the host high school, evaluated on a quarterly basis. Courses must include English (other than English as a second language) and an American History course and two other academic courses. Attend school every day that it is in session and follow school policies with regards to absences.
         </li>
         
         <li>
-            We understand that as natural parents we are responsible for providing funds necessary for day to day expenses for our child.  The suggested amount is approximately $300.00 a month.
+           The Exchange Student may be required to hire tutors, at their own expense, if in the opinion of #CLIENT.companyshort# and/or school officials, their language skills are inadequate for the program.
         </li>
         
         <li>
-            We agree that the program participants are not allowed to go home during the program unless under emergency conditions and only with prior approval from the exchange organization's main office.  
-            Visits from the natural parents and friends during the program are strongly discouraged and must have prior approval from the main office.  
-            Independent travel is not allowed at any time during the program.
+           The Exchange Student will travel only with adult members of the Host Family, the ISE Area Representative, on official school trips, or #CLIENT.companyshort# sponsored trips.   Travel home during the program is prohibited.  Travel with or visits from natural family members are not permitted.
         </li>
         
-        <li>We agree that the program participant is to return home within 5 days after the last day of school.</li>
+        <li>The Exchange Student understands that driving or purchasing a motorized vehicle (car, motorcycle, boat, or any other vehicle requiring a driver’s license) is prohibited. Driving is permitted with the instructor of an official driver’s education course and only during class hours. This is solely for the purpose of obtaining a driving license and does not allow the student to drive after a license is obtained.</li>
         
         <li>
-            We agree to pay for the early return of our child if it is deemed necessary for medical reasons after consultation between ourselves, 
-            program personnel, and the designated medical authorities.
+           The Exchange Student will have access to a minimum of $300 U.S. dollars per month to cover personal expenses. Do not borrow money from your host family. Do not lend money to your host family.
         </li>
         
-        <li>We agree to pay for any medical and dental bills not covered by the accident and sickness insurance.  We agree to pay for any deductible amount due that the insurance policy might not cover.</li>
+        <li>The Exchange Student will arrive no more than five days prior to the start of the school and depart no more than five days after the end of school.</li>
          
         <li>
-            We agree that the program participant is to possess a return flight ticket from the airport located nearest the host family to the participant's country.  
-            This return ticket is to be carried to the United States by the participant and is to be kept in safekeeping by the participant until time for the participant to return home.
+           Participation in extra-curricular activities or athletics is not guaranteed. Employment is not allowed on either a full or part-time basis while on the J-I visa high school program. However, students may accept sporadic or intermittent employment such as babysitting or yard work.
         </li>
         
         <li>
-            We agree to pay for any and all telephone calls made by the program participant including those calls made which might appear on the host family's telephone bill after
-            the departure of the program participant.
+           Exchange Student’s primary intention for participation in the program, and primary focus during the program, should be the cultural exchange experience.  Graduation from an American high school is uncommon and at the discretion of the school.  Students are not to ask the host family or any ISE staff for assistance in entrance to college in the US, campus visits, test preparation or change their visa or immigration status.
+
         </li>
         
         <li>
-            We give the exchange organization the right to use the participant's name and photograph for reproduction in any medium for the purposes of publication, 
-            advertising, trade, display, or editorial use.
+           The Exchange Student may not initiate any life-changing decisions or actions while on the program, including changing religions (though a student is free to explore the tenets of any religion), pregnancy, adoption or marriage. Students may not alter their body in any way while on the program (for example, with tattoos or body piercings).
         </li>
         
-        <li>We agree to attend meetings that are scheduled to prepare us for the exchange experience.</li>
-    
+        <li>The Exchange Student will be dismissed from the program if they suffer from a medical condition or psychological condition that #CLIENT.companyshort# deems to be overly burdensome to the Host Family or #CLIENT.companyshort# staff.</li>
+    	
+        <li>The Exchange Student will refrain from obscene, indecent, violent or disorderly conduct while on the program. Exchange Students shall also refrain from perpetrating any form of harassment -  including but not limited to; violent threats, physical abuse, sexual harassment, harassment based on sexual orientation, gender, race, religion or any other factor - of host family members, #CLIENT.companyshort# staff, fellow students, school staff, members of the community or any other individuals.</li>
+        <li>Exchange students shall not engage in any self-endangering behaviors. In addition, students shall refrain from any other conduct likely to bring the U.S. State Department or ISE into notoriety or disrepute.</li>
+        <li>Any material that an Exchange Student publishes on the internet (such as on social networking sites or blogs) that violates Program Rules will be grounds for student dismissal.</li>
+        <li>The Exchange Student and his Parents acknowledge that #CLIENT.companyshort# reserves the right to dismiss any student who fails to uphold any and all of the rules listed above, detailed in the student handbook, or detailed in any government or industry regulation.  #CLIENT.companyshort# also reserves the right to dismiss students for other inappropriate behaviors and/or actions not explicitly stated in the rules above or student handbook, that in #CLIENT.companyshort#’s reasonable judgment negatively impact the host family, community or program. In the event that a student is dismissed from the program, the parent or natural guardians are responsible for all additional expenses incurred above those of the regular program costs. In the case of early dismissal, program fees will not be reimbursed.</li>
+        <li>The Exchange Student and his Parents acknowledge that #CLIENT.companyshort# is not acting in the capacity of in loco parentis with respect to you, and that your natural parents still retain all of their rights and obligations and are expected to maintain regular and frequent (once or twice per month) contact with you telephonically, electronically or in person (if possible, after five months of your program start date).</li>
+      
+        
     </ol>
 </cfsavecontent>
     
