@@ -93,7 +93,7 @@
         </li>
         
         <li>
-           The Exchange Student will accept placement with a family of any race, creed, or color or family composition.  Live as a member of your host family, respect your host family and their rules and customs, and accept the responsibilities given to you. #client.companyshort#, in its sole discretion, is responsible for choosing a student’s host family placement.  Rejection of a placement or a request to be relocated from my host family after arrival without material cause, can result in termination from ISE’s exchange program.
+           The Exchange Student will accept placement with a family of any race, creed, or color or family composition.  Live as a member of your host family, respect your host family and their rules and customs, and accept the responsibilities given to you. #client.companyshort#, in its sole discretion, is responsible for choosing a student's host family placement.  Rejection of a placement or a request to be relocated from my host family after arrival without material cause, can result in termination from ISE's exchange program.
         </li>
         
         <li>
@@ -112,7 +112,7 @@
         
         <li>The Exchange Student will read and carefully consider all materials made available that relate to safety, health, legal, environmental, political, cultural and religious conditions in your host town. Be aware of local conditions that may present health or safety risks when making daily choices and decisions.</li>
         
-        <li>The Exchange Student will respect the host high school’s guidelines and policies, including those with regard to conduct, delinquency, grade levels, participation in graduation ceremonies, and issuance of a high school diploma.  The exchange student will obey all lawful orders  of school officials.
+        <li>The Exchange Student will respect the host high school's guidelines and policies, including those with regard to conduct, delinquency, grade levels, participation in graduation ceremonies, and issuance of a high school diploma.  The exchange student will obey all lawful orders  of school officials.
         </li>
         
         <li>
@@ -127,7 +127,7 @@
            The Exchange Student will travel only with adult members of the Host Family, the ISE Area Representative, on official school trips, or #CLIENT.companyshort# sponsored trips.   Travel home during the program is prohibited.  Travel with or visits from natural family members are not permitted.
         </li>
         
-        <li>The Exchange Student understands that driving or purchasing a motorized vehicle (car, motorcycle, boat, or any other vehicle requiring a driver’s license) is prohibited. Driving is permitted with the instructor of an official driver’s education course and only during class hours. This is solely for the purpose of obtaining a driving license and does not allow the student to drive after a license is obtained.</li>
+        <li>The Exchange Student understands that driving or purchasing a motorized vehicle (car, motorcycle, boat, or any other vehicle requiring a driver's license) is prohibited. Driving is permitted with the instructor of an official driver's education course and only during class hours. This is solely for the purpose of obtaining a driving license and does not allow the student to drive after a license is obtained.</li>
         
         <li>
            The Exchange Student will have access to a minimum of $300 U.S. dollars per month to cover personal expenses. Do not borrow money from your host family. Do not lend money to your host family.
@@ -140,7 +140,7 @@
         </li>
         
         <li>
-           Exchange Student’s primary intention for participation in the program, and primary focus during the program, should be the cultural exchange experience.  Graduation from an American high school is uncommon and at the discretion of the school.  Students are not to ask the host family or any ISE staff for assistance in entrance to college in the US, campus visits, test preparation or change their visa or immigration status.
+           Exchange Student's primary intention for participation in the program, and primary focus during the program, should be the cultural exchange experience.  Graduation from an American high school is uncommon and at the discretion of the school.  Students are not to ask the host family or any ISE staff for assistance in entrance to college in the US, campus visits, test preparation or change their visa or immigration status.
 
         </li>
         
@@ -153,7 +153,7 @@
         <li>The Exchange Student will refrain from obscene, indecent, violent or disorderly conduct while on the program. Exchange Students shall also refrain from perpetrating any form of harassment -  including but not limited to; violent threats, physical abuse, sexual harassment, harassment based on sexual orientation, gender, race, religion or any other factor - of host family members, #CLIENT.companyshort# staff, fellow students, school staff, members of the community or any other individuals.</li>
         <li>Exchange students shall not engage in any self-endangering behaviors. In addition, students shall refrain from any other conduct likely to bring the U.S. State Department or ISE into notoriety or disrepute.</li>
         <li>Any material that an Exchange Student publishes on the internet (such as on social networking sites or blogs) that violates Program Rules will be grounds for student dismissal.</li>
-        <li>The Exchange Student and his Parents acknowledge that #CLIENT.companyshort# reserves the right to dismiss any student who fails to uphold any and all of the rules listed above, detailed in the student handbook, or detailed in any government or industry regulation.  #CLIENT.companyshort# also reserves the right to dismiss students for other inappropriate behaviors and/or actions not explicitly stated in the rules above or student handbook, that in #CLIENT.companyshort#’s reasonable judgment negatively impact the host family, community or program. In the event that a student is dismissed from the program, the parent or natural guardians are responsible for all additional expenses incurred above those of the regular program costs. In the case of early dismissal, program fees will not be reimbursed.</li>
+        <li>The Exchange Student and his Parents acknowledge that #CLIENT.companyshort# reserves the right to dismiss any student who fails to uphold any and all of the rules listed above, detailed in the student handbook, or detailed in any government or industry regulation.  #CLIENT.companyshort# also reserves the right to dismiss students for other inappropriate behaviors and/or actions not explicitly stated in the rules above or student handbook, that in #CLIENT.companyshort#'s reasonable judgment negatively impact the host family, community or program. In the event that a student is dismissed from the program, the parent or natural guardians are responsible for all additional expenses incurred above those of the regular program costs. In the case of early dismissal, program fees will not be reimbursed.</li>
         <li>The Exchange Student and his Parents acknowledge that #CLIENT.companyshort# is not acting in the capacity of in loco parentis with respect to you, and that your natural parents still retain all of their rights and obligations and are expected to maintain regular and frequent (once or twice per month) contact with you via phone, email, social media or VOIP.</li>
       
         
@@ -238,7 +238,7 @@
     
         <li>
             We confirm that all statements made and all information in this application are true and will be relied upon by the school district and supporting organizations. Any inaccuracy in this application 
-            is grounds to terminate the agreement and send the students home (without any refund and at the parents’ expense). 
+            is grounds to terminate the agreement and send the students home (without any refund and at the parents' expense). 
         </li>
         
     </ol>    
