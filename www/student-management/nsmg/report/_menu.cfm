@@ -106,7 +106,7 @@
             </cfif>
             
             <!--- The payment menu is only being used by ESI currently --->
-            <cfif CLIENT.companyID EQ 14>
+            <cfif CLIENT.companyID EQ 14 OR APPLICATION.isServerLocal>
                 <a href="javascript:showSelectedMenuOption('paymentManagementMenu');" title="Click for Payment Reports">
                     <div id="paymentManagementMenuButton" class="divButton reportButton">Payment Reports</div>
                 </a>
@@ -377,6 +377,15 @@
                 <ul>
                     <li>Generate a total by region of new area reps</li>
                     <li>Filter by: Region, Season</li>
+                </ul>
+            </ul>
+        </td>
+        <td class="lastRow">&nbsp;
+            <ul class="mainList">
+                <li onclick="loadSelectedReport('officeIncentiveTripReport');">Incentive Trip Report</li>
+                <ul>
+                    <li>Generate a list of guests for the incentive trips</li>
+                    <li>Filter by: Season, trip</li>
                 </ul>
             </ul>
         </td>

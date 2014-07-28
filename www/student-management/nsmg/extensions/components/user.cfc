@@ -2843,6 +2843,267 @@ setUserSessionPaperwork
 	<!--- ------------------------------------------------------------------------- ----
 		End of Student Services Project
 	----- ------------------------------------------------------------------------- --->
+    
+    
+    <!--- ------------------------------------------------------------------------- ----
+		Start of Incentive Trip Guests
+	----- ------------------------------------------------------------------------- --->
+    
+    <cffunction name="getIncentiveTripGuests" access="public" returntype="query" output="no" hint="Gets all of the non-deleted guests for a given user and season">
+    	<cfargument name="userID" default="0" required="no">
+        <cfargument name="seasonID" default="0" required="no">
+    
+    	<cfquery name="qGetIncentiveTripGuests" datasource="#APPLICATION.DSN#">
+        	SELECT *
+            FROM smg_incentive_trip_guests
+            WHERE isDeleted = 0
+            <cfif VAL(ARGUMENTS.userID)>
+            	AND userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
+          	</cfif>
+            <cfif VAL(ARGUMENTS.seasonID)>
+            	AND seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
+         	</cfif>
+        </cfquery>
+        
+        <cfreturn qGetIncentiveTripGuests>
+    
+    </cffunction>
+    
+    <cffunction name="addIncentiveTripGuests" access="public" returntype="boolean" output="no" hint="Adds a new guest, returns true if successfull">
+    	<cfargument name="userID" required="yes">
+        <cfargument name="seasonID" required="yes">
+        <cfargument name="name" required="no">
+        <cfargument name="userType" default="0" required="no">
+        <cfargument name="dob" default="" required="no">
+        <cfargument name="departureAirport" default="" required="no">
+        <cfargument name="comments" default="" required="no">
+        
+        <cftry>
+        	
+            <cfquery datasource="#APPLICATION.DSN#">
+            	INSERT INTO smg_incentive_trip_guests (
+                	userID,
+                    seasonID,
+                    name,
+                    userType,
+                    dob,
+                    departureAirport,
+                    comments,
+                    dateCreated,
+                    createdBy,
+                    updatedBy )
+              	VALUES (
+                	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.name#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userType)#">,
+                    <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dob#" null="#NOT LEN(ARGUMENTS.dob) OR NOT ISDATE(ARGUMENTS.dob)#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.departureAirport#">,
+                    <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#ARGUMENTS.comments#">,
+                    <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#"> )
+            </cfquery>
+            
+            <cfcatch type="any">
+                <cfreturn false>
+            </cfcatch>
+        </cftry>
+        
+        <cfreturn true>
+        
+    </cffunction>
+    
+    <cffunction name="updateIncentiveTripGuests" access="public" returntype="boolean" output="no" hint="Updates a guest, returns true if successfull">
+    	<cfargument name="ID" required="yes">
+        <cfargument name="name" required="no">
+        <cfargument name="userType" default="" required="no">
+        <cfargument name="dob" default="" required="no">
+        <cfargument name="departureAirport" default="" required="no">
+        <cfargument name="comments" default="" required="no">
+        
+        <cftry>
+        	
+            <cfquery datasource="#APPLICATION.DSN#">
+            	UPDATE smg_incentive_trip_guests
+                SET
+                	<cfif LEN(ARGUMENTS.name)>
+                    	name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.name#">,
+                    </cfif>
+                	<cfif LEN(ARGUMENTS.userType)>
+                    	userType = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userType)#">,
+                  	</cfif>
+                    <cfif LEN(ARGUMENTS.dob)>
+                    	dob = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dob#" null="#NOT LEN(ARGUMENTS.dob) OR NOT ISDATE(ARGUMENTS.dob)#">,
+                  	</cfif>
+                    <cfif LEN(ARGUMENTS.departureAirport)>
+                    	departureAirport = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.departureAirport#">,
+                    </cfif>
+                    <cfif LEN(ARGUMENTS.comments)>
+                    	comments = <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#ARGUMENTS.comments#">,
+                    </cfif>
+                    updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
+              	WHERE ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.ID#">
+            </cfquery>
+            
+            <cfcatch type="any">
+                <cfreturn false>
+            </cfcatch>
+        </cftry>
+        
+        <cfreturn true>
+        
+    </cffunction>
+    
+    <cffunction name="removeIncentiveTripGuests" access="public" returntype="boolean" output="no" hint="Removes a guest, returns true if successfull">
+    	<cfargument name="ID" required="yes">
+        
+        <cftry>
+        	
+            <cfquery datasource="#APPLICATION.DSN#">
+            	UPDATE smg_incentive_trip_guests
+                SET isDeleted = 1
+                WHERE ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.ID)#">
+            </cfquery>
+            
+            <cfcatch type="any">
+                <cfreturn false>
+            </cfcatch>
+        </cftry>
+        
+        <cfreturn true>
+        
+    </cffunction>
+    
+    <cffunction name="getTripsEarned" access="public" returntype="numeric" output="no" hint="Gets the number of trips earned based on the number of placements">
+    	<cfargument name="numPlacements" required="yes">
+        
+        <cfscript>
+			vPlacements = ARGUMENTS.numPlacements;
+			vTotalTrips = 0;
+			x = 0;
+			for (i = 1; i LTE vPlacements; i = i + 1) {
+				x = x + 1;
+				if (vTotalTrips LT 2) {
+					if (x MOD 7 EQ 0) {
+						x = 0;
+						vTotalTrips = vTotalTrips + 1;
+					}
+				} else {
+					if (x MOD 6 EQ 0) {
+						x = 0;
+						vTotalTrips = vTotalTrips + 1;
+					}
+				}
+			}
+			return vTotalTrips;
+		</cfscript>
+        
+    </cffunction>
+    
+    <cffunction name="getAdditionalTripCost" access="public" returntype="numeric" output="no" hint="Gets the cost of an additional trip based on how many placements and previous trips earned there are">
+    	<cfargument name="numEarnedTrips" required="yes" hint="total number of completely earned trips">
+        <cfargument name="numPlacements" required="yes" hint="total number of placements">
+        
+        <cfscript>
+			vCost = 1800;
+			vTotalTrips = ARGUMENTS.numEarnedTrips;
+			vTotalPlacements = ARGUMENTS.numPlacements;
+			
+			// Number of placements towards this additional trip
+			vRemainingPlacements = vTotalPlacements;
+			for (i = 1; i LTE vTotalTrips; i = i + 1) {
+				if (i LTE 2) {
+					vRemainingPlacements = vRemainingPlacements - 7;
+				} else {
+					vRemainingPlacements = vRemainingPlacements - 6;
+				}
+			}
+			
+			// Cost of this additional trip - after 2 trips there are only 6 placements required per trip
+			if (vTotalTrips LT 2) {
+				for (j = 1; j LTE vRemainingPlacements; j = j + 1) {
+					if (ListFind("1,3,4,5",j)) {
+						vCost = vCost - 300;
+					} else {
+						vCost = vCost - 200;
+					}
+				}
+			} else {
+				for (j = 1; j LTE vRemainingPlacements; j = j + 1) {
+					if (j EQ 1) {
+						vCost = vCost - 500;
+					} else if (ListFind("2,3,4",j)) {
+						vCost = vCost - 300;
+					} else {
+						vCost = vCost - 200;
+					}
+				}
+			}
+			
+			return vCost;
+		</cfscript>
+        
+    </cffunction>
+    
+    <cffunction name="getTakingCheck" access="public" returntype="query" output="no" hint="Gets the smg_incentive_trip_payment table record.">
+    	<cfargument name="userID" required="yes">
+        <cfargument name="seasonID" required="yes">
+        
+        <cfquery name="qGetResults" datasource="#APPLICATION.DSN#">
+        	SELECT *
+            FROM smg_incentive_trip_payment
+            WHERE userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
+            AND seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.seasonID#">
+        </cfquery>
+        
+        <cfreturn qGetResults>
+    
+    </cffunction>
+    
+    <cffunction name="updateTakingCheck" access="public" returntype="void" output="no" hint="Updates the smg_incentive_trip_payment table based on if the user is taking the payment or not.">
+    	<cfargument name="userID" required="yes">
+        <cfargument name="seasonID" required="yes">
+        <cfargument name="takingCheck" required="yes">
+        
+        <cfquery name="qGetResults" datasource="#APPLICATION.DSN#">
+        	SELECT *
+            FROM smg_incentive_trip_payment
+            WHERE userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
+            AND seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.seasonID#">
+        </cfquery>
+        
+        <cfif VAL(qGetResults.recordCount)>
+        	<cfquery datasource="#APPLICATION.DSN#">
+            	UPDATE smg_incentive_trip_payment
+                SET 
+                	takingCheck = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.takingCheck#">,
+                	updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
+            </cfquery>
+        <cfelse>
+        	<cfquery datasource="#APPLICATION.DSN#">
+            	INSERT INTO smg_incentive_trip_payment (
+                	userID,
+                    seasonID,
+                    takingCheck,
+                    dateCreated,
+                    createdBy,
+                    updatedBy )
+             	VALUES (
+                	<cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.seasonID#">,
+                    <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.takingCheck#">,
+                    <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#"> )
+            </cfquery>
+        </cfif>
+    
+    </cffunction>
+    
+    <!--- ------------------------------------------------------------------------- ----
+		End of Incentive Trip Guests
+	----- ------------------------------------------------------------------------- --->
 
     
 	<!--- ------------------------------------------------------------------------- ----
