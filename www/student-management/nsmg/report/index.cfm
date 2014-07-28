@@ -72,7 +72,7 @@
 
 
     <!--- List of Office Management Reports --->
-    <cfcase value="officeRegionGoal,officeComplianceCheckPaperwork,officeDOSCertification,officeDOSRelocation,officeRecruitmentReport,officeComplianceStateCountry,officeRegionGoalByProgram">
+    <cfcase value="officeRegionGoal,officeComplianceCheckPaperwork,officeDOSCertification,officeDOSRelocation,officeRecruitmentReport,officeComplianceStateCountry,officeRegionGoalByProgram,officeIncentiveTripReport">
 
         <cfinclude template="officeManagement/_#action#.cfm" />
 
