@@ -165,7 +165,7 @@
             
             // Email CC List
             if ( ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID) ) {
-                emailCC = CLIENT.projectmanager_email & ';ellen@iseusa.org;' & CLIENT.email;
+                emailCC = CLIENT.projectmanager_email & ';lois@iseusa.org;' & CLIENT.email;
             } else { 
                 emailCC = CLIENT.projectmanager_email & ';' & CLIENT.email;
             }
@@ -336,11 +336,11 @@
 			qGetNewProgram = APPLICATION.CFC.PROGRAM.getPrograms(ProgramID=FORM.program);
 		
 			// Always send a copy of the email to Admissions and Compliance
-			emailCC = "merri@iseusa.org" & APPLICATION.CFC.UDF.displayAdmissionsInformation(displayInfo='email');
+			emailCC = APPLICATION.CFC.UDF.displayAdmissionsInformation(displayInfo='email');
 			
 			// If there is a valid email, send a copy to the current user
 			if ( IsValid("email", APPLICATION.CFC.USER.getUserByID(userID=CLIENT.userID).email) ) {
-				emailCC = emailCC & ';' & APPLICATION.CFC.USER.getUserByID(userID=CLIENT.userID).email;				
+				emailCC = emailCC & ';merri@iseusa.org;' & APPLICATION.CFC.USER.getUserByID(userID=CLIENT.userID).email;				
 			}
 			
 			// Display All Emails Involved
