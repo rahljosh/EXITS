@@ -7,6 +7,7 @@
     <cfparam name="URL.programID" default="0">
     <cfparam name="URL.schoolID" default="0">
     <cfparam name="URL.userID" default="0">
+    <cfparam name="URL.name" default="">
     
     <cfquery name="qGetStudentListBeforeFilters" datasource="#APPLICATION.DSN#">
         SELECT DISTINCT
@@ -90,6 +91,11 @@
         ORDER BY businessName
     </cfquery>
     
+    <cfscript>
+		nameAsList = Replace(UCASE(URL.name)," ",",");
+		placeInList = 1;
+	</cfscript>
+    
     <cfquery name="qGetStudentList" dbtype="query">
     	SELECT *
         FROM qGetStudentListBeforeFilters
@@ -103,6 +109,17 @@
         <cfif URL.userID GT 0>
         	AND userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.userID)#">
         </cfif>
+        <cfif ListLen(nameAsList) GTE 1>
+        	AND (
+            	<cfloop list="#nameAsList#" index="i">
+                	<cfif placeInList GT 1> OR </cfif>
+                    UPPER(firstName) LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#i#%">
+                    OR UPPER(familyLastName) LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#i#%">
+                    OR studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(i)#">
+                    <cfset placeInList = placeInList + 1>
+                </cfloop>
+          	)
+        </cfif>
     </cfquery>
     
 </cfsilent>
@@ -111,13 +128,16 @@
 
 	<script type="text/javascript">
 		function filterResultsByProgram(programID) {
-			location="?curdoc=lists/students&order=#URL.order#&placed=#url.placed#&status=#url.status#&schoolID=#URL.schoolID#&userID=#URL.userID#&programID=" + programID.value;
+			location="?curdoc=lists/students&order=#URL.order#&placed=#url.placed#&status=#url.status#&name=#URL.name#&schoolID=#URL.schoolID#&userID=#URL.userID#&programID=" + programID.value;
 		}
 		function filterResultsBySchool(schoolID) {
-			location="?curdoc=lists/students&order=#URL.order#&placed=#url.placed#&status=#url.status#&userID=#URL.userID#&programID=#URL.programID#&schoolID=" + schoolID.value;
+			location="?curdoc=lists/students&order=#URL.order#&placed=#url.placed#&status=#url.status#&name=#URL.name#&userID=#URL.userID#&programID=#URL.programID#&schoolID=" + schoolID.value;
 		}
 		function filterResultsByUser(userID) {
-			location="?curdoc=lists/students&order=#URL.order#&placed=#url.placed#&status=#url.status#&schoolID=#URL.schoolID#&programID=#URL.programID#&userID=" + userID.value;
+			location="?curdoc=lists/students&order=#URL.order#&placed=#url.placed#&status=#url.status#&name=#URL.name#&schoolID=#URL.schoolID#&programID=#URL.programID#&userID=" + userID.value;
+		}
+		function filterResultsByName(name) {
+			location="?curdoc=lists/students&order=#URL.order#&placed=#url.placed#&status=#url.status#&schoolID=#URL.schoolID#&programID=#URL.programID#&userID=#URL.userID#&name=" + name.value;
 		}
 	</script>
 
@@ -149,6 +169,9 @@
                         	<option value="#userID#" <cfif URL.userID EQ userID>selected="selected"</cfif>>#businessName#</option>
                         </cfloop>
                     </select>
+                    <br/>
+                    Name/ID:
+                    <input type="text" name="name" style="width:298px;" value="#URL.name#" onchange="filterResultsByName(this);" />
                 </b>
             </td>
             <td width="42%" align="right" valign="top" bgcolor="##e9ecf1"><br>
