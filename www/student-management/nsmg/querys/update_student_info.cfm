@@ -433,7 +433,7 @@
 			vGetProjectManagerEmail = APPLICATION.CFC.COMPANY.getCompanies(companyID=qStudentInfo.companyID).pm_email;
 			vGetFacilitatorEmail = APPLICATION.CFC.USER.getRegionFacilitator(regionID=qStudentInfo.regionassigned).email;
             if ( ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID) ) {
-                emailCC = "bhause@iseusa.org;lois@iseusa.org;merri@iseusa.org" & vGetProjectManagerEmail & ";" & vGetFacilitatorEmail & ";" & CLIENT.email;
+                emailCC = "bhause@iseusa.org;lois@iseusa.org;merri@iseusa.org;" & vGetProjectManagerEmail & ";" & vGetFacilitatorEmail & ";" & CLIENT.email;
             } else { 
                 emailCC = CLIENT.projectmanager_email & ';' & CLIENT.email;
             }
