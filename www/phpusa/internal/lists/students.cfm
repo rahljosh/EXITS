@@ -4,8 +4,11 @@
 	<cfparam name="URL.status" default="active">
 	<cfparam name="URL.order" default="familylastname">
 	<cfparam name="URL.placed" default="All">
+    <cfparam name="URL.programID" default="0">
+    <cfparam name="URL.schoolID" default="0">
+    <cfparam name="URL.userID" default="0">
     
-    <cfquery name="qGetStudentList" datasource="#APPLICATION.DSN#">
+    <cfquery name="qGetStudentListBeforeFilters" datasource="#APPLICATION.DSN#">
         SELECT DISTINCT
         	s.studentid,
             s.uniqueid,
@@ -68,13 +71,86 @@
         ORDER BY #url.order#<cfif url.order EQ 'familylastname'>, firstname</cfif>
     </cfquery>
     
+    <cfquery name="qGetPrograms" dbtype="query">
+    	SELECT DISTINCT programID, programName
+        FROM qGetStudentListBeforeFilters
+        WHERE programID != 0
+        ORDER BY programName
+    </cfquery>
+    
+    <cfquery name="qGetSchools" dbtype="query">
+    	SELECT DISTINCT schoolID, schoolName
+        FROM qGetStudentListBeforeFilters
+        ORDER BY schoolName
+    </cfquery>
+    
+    <cfquery name="qGetReps" dbtype="query">
+    	SELECT DISTINCT userID, businessName
+        FROM qGetStudentListBeforeFilters
+        ORDER BY businessName
+    </cfquery>
+    
+    <cfquery name="qGetStudentList" dbtype="query">
+    	SELECT *
+        FROM qGetStudentListBeforeFilters
+        WHERE 1=1
+        <cfif URL.programID GT 0>
+        	AND programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.programID)#">
+        </cfif>
+        <cfif URL.schoolID GT 0>
+        	AND schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.schoolID)#">
+        </cfif>
+        <cfif URL.userID GT 0>
+        	AND userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.userID)#">
+        </cfif>
+    </cfquery>
+    
 </cfsilent>
 
 <cfoutput>
 
+	<script type="text/javascript">
+		function filterResultsByProgram(programID) {
+			location="?curdoc=lists/students&order=#URL.order#&placed=#url.placed#&status=#url.status#&schoolID=#URL.schoolID#&userID=#URL.userID#&programID=" + programID.value;
+		}
+		function filterResultsBySchool(schoolID) {
+			location="?curdoc=lists/students&order=#URL.order#&placed=#url.placed#&status=#url.status#&userID=#URL.userID#&programID=#URL.programID#&schoolID=" + schoolID.value;
+		}
+		function filterResultsByUser(userID) {
+			location="?curdoc=lists/students&order=#URL.order#&placed=#url.placed#&status=#url.status#&schoolID=#URL.schoolID#&programID=#URL.programID#&userID=" + userID.value;
+		}
+	</script>
+
 	<table width=90% cellpadding=0 cellspacing=0 border=0 align="center">
         <tr valign=middle height=24>
-            <td width="57%" valign="middle" bgcolor="##e9ecf1"><h2 align="left" class="style1">S t u d e n t s - #qGetStudentList.recordcount# records</h2></td>
+            <td width="25%" valign="middle" bgcolor="##e9ecf1"><h2 align="left" class="style1">S t u d e n t s - #qGetStudentList.recordcount# records</h2></td>
+            <td width="32%" height="24">
+            	<b>
+                    Program:&nbsp;
+                   	<select name="programID" style="width:300px;" onchange="filterResultsByProgram(this);">
+                    	<option value="-1">All</option>
+                        <cfloop query="qGetPrograms">
+                        	<option value="#programID#" <cfif URL.programID EQ programID>selected="selected"</cfif>>#programName#</option>
+                        </cfloop>
+                    </select>
+                    <br/>
+                    School:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <select name="schoolID" style="width:300px;" onchange="filterResultsBySchool(this);">
+                    	<option value="-1">All</option>
+                        <cfloop query="qGetSchools">
+                        	<option value="#schoolID#" <cfif URL.schoolID EQ schoolID>selected="selected"</cfif>>#schoolName#</option>
+                        </cfloop>
+                    </select>
+                    <br/>
+                    Intl. Rep:&nbsp;
+                    <select name="userID" style="width:300px;" onchange="filterResultsByUser(this);">
+                    	<option value="-1">All</option>
+                        <cfloop query="qGetReps">
+                        	<option value="#userID#" <cfif URL.userID EQ userID>selected="selected"</cfif>>#businessName#</option>
+                        </cfloop>
+                    </select>
+                </b>
+            </td>
             <td width="42%" align="right" valign="top" bgcolor="##e9ecf1"><br>
                 Filter: &nbsp;  <a href="?curdoc=lists/students&order=#url.order#&placed=all&status=all">All</a>
                 &nbsp; | &nbsp; <a href="?curdoc=lists/students&order=#url.order#&placed=all&status=active">Active</a>
