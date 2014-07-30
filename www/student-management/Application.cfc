@@ -1,3 +1,4 @@
+
 <cfcomponent
 	displayname="Application"
 	output="true"
@@ -279,7 +280,7 @@
         <cfparam name="CLIENT.name" default="">
 
         <!--- Production - Email Error Message - Display HTML Error --->
- 		<cfif NOT APPLICATION.isServerLocal AND NOT ListFind('1,20',CLIENT.userID)> <!--- Fred from INTO needs to see the errors, josh wants to see the errors --->
+ 		<cfif NOT APPLICATION.isServerLocal AND NOT ListFind('1,20,28,6584,115,109,628,9106,15310,21,15330,21517,15130,19268',CLIENT.userID)> <!--- Fred from INTO needs to see the errors, josh wants to see the errors --->
             
 			<cfscript>
                 // Current Path to root errorMessage.cfm file
