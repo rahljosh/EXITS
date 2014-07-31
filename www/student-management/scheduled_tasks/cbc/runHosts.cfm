@@ -54,31 +54,39 @@
         <cfloop	query="qGetCBCHost">
             
             <cfscript>
+				// Set the type to primary, other, or member
+				vType = "host member";
+				if (userType EQ "mother") {
+					vType = "primary host parent";
+				} else if (userType EQ "father") {
+					vType = "other host parent";
+				}
+			
                 // Data Validation
                 // First Name
                 if ( NOT LEN(Evaluate(userType & "firstname")) ) {
-                    ArrayAppend(Errors.Messages, "#qGetCBCHost.companyShort# - Missing first name for host #userType# #Evaluate(userType & "lastname")# (###qGetCBCHost.hostid#).");			
+                    ArrayAppend(Errors.Messages, "#qGetCBCHost.companyShort# - Missing first name for #vType# #Evaluate(userType & "lastname")# (###qGetCBCHost.hostid#).");			
                     if ( NOT ListFind(skipHostIDs, qGetCBCHost.hostID) ) {
                         skipHostIDs = ListAppend(skipHostIDs, qGetCBCHost.hostID);
                     }
                 }
                 // Last Name
                 if ( NOT LEN(Evaluate(userType & "lastname")) )  {
-                    ArrayAppend(Errors.Messages, "#qGetCBCHost.companyShort# - Missing last name for host #userType# #Evaluate(userType & "firstname")# (###qGetCBCHost.hostid#).");
+                    ArrayAppend(Errors.Messages, "#qGetCBCHost.companyShort# - Missing last name for #vType# #Evaluate(userType & "firstname")# (###qGetCBCHost.hostid#).");
                     if ( NOT ListFind(skipHostIDs, qGetCBCHost.hostID) ) {
                         skipHostIDs = ListAppend(skipHostIDs, qGetCBCHost.hostID);
                     }
                 }
                 // DOB
                 if ( NOT LEN(Evaluate(userType & "dob")) OR NOT IsDate(Evaluate(userType & "dob")) )  {
-                    ArrayAppend(Errors.Messages, "#qGetCBCHost.companyShort# - DOB is missing or is not a valid date for host #userType# #Evaluate(userType & "firstname")# #Evaluate(userType & "lastname")# (###qGetCBCHost.hostid#).");
+                    ArrayAppend(Errors.Messages, "#qGetCBCHost.companyShort# - DOB is missing or is not a valid date for #vType# #Evaluate(userType & "firstname")# #Evaluate(userType & "lastname")# (###qGetCBCHost.hostid#).");
                     if ( NOT ListFind(skipHostIDs, qGetCBCHost.hostID) ) {
                         skipHostIDs = ListAppend(skipHostIDs, qGetCBCHost.hostID);
                     }
                 }
                 // SSN
                 if ( NOT LEN(Evaluate(userType & "ssn")) )  {
-                    ArrayAppend(Errors.Messages, "#qGetCBCHost.companyShort# - Missing SSN for host #userType# #Evaluate(userType & "firstname")# #Evaluate(userType & "lastname")# (###qGetCBCHost.hostid#).");
+                    ArrayAppend(Errors.Messages, "#qGetCBCHost.companyShort# - Missing SSN for #vType# #Evaluate(userType & "firstname")# #Evaluate(userType & "lastname")# (###qGetCBCHost.hostid#).");
                     if ( NOT ListFind(skipHostIDs, qGetCBCHost.hostID) ) {
                         skipHostIDs = ListAppend(skipHostIDs, qGetCBCHost.hostID);
                     }
