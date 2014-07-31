@@ -1,0 +1,271 @@
+<!--- ------------------------------------------------------------------------- ----
+	
+	File:		_esiHostFamilyPayments.cfm
+	Author:		James Griffiths
+	Date:		July 1, 2014
+	Desc:		ESI Host Family Payments
+				
+				#CGI.SCRIPT_NAME#?curdoc=report/index?action=esiHostFamilyPayments
+				
+----- ------------------------------------------------------------------------- --->
+
+<!--- Kill Extra Output --->
+<cfsilent>
+	
+    <cfsetting requesttimeout="9999">
+    
+	<!--- Import CustomTag --->
+    <cfimport taglib="../../extensions/customTags/gui/" prefix="gui" />	
+	
+    <cfscript>	
+		vCurrentSeason = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID;
+		
+		param name="FORM.submitted" default=0;
+		param name="FORM.seasonID" default=vCurrentSeason;
+		param name="FORM.month" default=9;
+		
+		qGetSeason = APPLICATION.CFC.LOOKUPTABLES.getSeason(seasonID = FORM.seasonID);
+		vStartDate = CreateDate(YEAR(qGetSeason.startDate),FORM['month'],1);
+		if (vStartDate LT DateAdd('m',-1,qGetSeason.startDate)) {
+			vStartDate = CreateDate(YEAR(qGetSeason.endDate),FORM['month'],1);
+		}
+		vNextMonth = FORM['month']+1;
+		vYear = YEAR(vStartDate);
+		if (vNextMonth EQ 13) {
+			vNextMonth = 1;	
+			vYear = vYear + 1;
+		}
+		vEndDate = DateAdd('d',-1,CreateDate(vYear,vNextMonth,1));
+	</cfscript>
+
+    <!--- FORM Submitted --->
+    <cfif VAL(FORM.submitted)>
+
+        <cfquery name="qGetAllResults" datasource="#APPLICATION.DSN#">
+        	SELECT
+            	hh.datePlacedEnded,
+                s.studentID,
+                p.programName,
+                p.startDate AS programStartDate,
+                p.endDate AS programEndDate,
+                r.regionName,
+                r.regional_stipend,
+            	CASE
+                	WHEN h.w9_for = "father" THEN CONCAT(h.fatherfirstname, " ", h.familylastname, " (##", h.hostID, ")")
+                    ELSE CONCAT(h.motherfirstname, " ", h.familylastname, " (##", h.hostID, ")")
+              		END AS hostName,
+             	CONCAT(s.firstname, " ", s.middlename, " ", s.familylastname, " (##", s.studentID, ")") AS studentName,
+                CASE
+                	WHEN hh.isRelocation = 0 AND arrival.dep_date IS NOT NULL THEN CASE WHEN arrival.overnight = 1 THEN DATE_ADD(arrival.dep_date,INTERVAL 1 DAY) ELSE arrival.dep_date END
+                    WHEN hh.isRelocation = 1 AND hh.dateRelocated IS NOT NULL THEN hh.dateRelocated
+                    ELSE hh.datePlaced
+                    END AS startDate,
+              	CASE
+                	WHEN hh.historyID = (SELECT MAX(historyID) FROM smg_hosthistory WHERE studentID = s.studentID) AND departure.dep_date IS NOT NULL THEN departure.dep_date
+                    WHEN hh.datePlacedEnded IS NOT NULL THEN hh.datePlacedEnded
+                    WHEN s.cancelDate IS NOT NULL THEN s.cancelDate
+                    ELSE p.endDate
+                    END AS endDate
+          	FROM smg_hosts h
+          	INNER JOIN smg_hosthistory hh ON hh.hostID = h.hostID
+            INNER JOIN smg_students s ON s.studentID = hh.studentID
+            	AND s.companyID = 14
+            INNER JOIN smg_programs p ON p.programID = s.programID
+            	AND p.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#">
+          	LEFT JOIN smg_regions r ON r.regionID = s.regionAssigned
+          	LEFT JOIN smg_flight_info arrival ON arrival.studentID = s.studentID
+                AND arrival.flight_type = "arrival"
+                AND arrival.isDeleted = 0
+                AND arrival.dep_date = (SELECT MAX(dep_date) FROM smg_flight_info WHERE studentID = s.studentID AND flight_type = "arrival" AND isDeleted = 0)
+                AND arrival.dep_time = (SELECT MAX(dep_time) FROM smg_flight_info WHERE studentID = s.studentID AND flight_type = "arrival" AND isDeleted = 0)
+          	LEFT JOIN smg_flight_info departure ON departure.studentID = s.studentID
+                AND departure.flight_type = "departure"
+                AND departure.isDeleted = 0
+                AND departure.dep_date = (SELECT MIN(dep_date) FROM smg_flight_info WHERE studentID = s.studentID AND flight_type = "departure" AND isDeleted = 0)
+                AND departure.dep_time = (SELECT MIN(dep_time) FROM smg_flight_info WHERE studentID = s.studentID AND flight_type = "departure" AND isDeleted = 0)
+           	ORDER BY s.familyLastName, s.firstName, startDate, h.familyLastName
+        </cfquery>
+        
+        <cfquery name="qGetResults" dbtype="query">
+        	SELECT *
+            FROM qGetAllResults
+            WHERE ((datePlacedEnded >= startDate AND datePlacedEnded >= programStartDate) OR datePlacedEnded IS NULL)
+            AND ( (<cfqueryparam cfsqltype="cf_sql_date" value="#vStartDate#"> <= startDate AND <cfqueryparam cfsqltype="cf_sql_date" value="#vEndDate#"> >= startDate)
+            	OR (<cfqueryparam cfsqltype="cf_sql_date" value="#vStartDate#"> >= startDate AND <cfqueryparam cfsqltype="cf_sql_date" value="#vEndDate#"> <= endDate)
+            	OR (<cfqueryparam cfsqltype="cf_sql_date" value="#vStartDate#"> <= endDate AND <cfqueryparam cfsqltype="cf_sql_date" value="#vEndDate#"> >= endDate) )
+        </cfquery>
+
+	</cfif>
+    
+</cfsilent>
+
+<!--- FORM NOT submitted --->
+<cfif NOT VAL(FORM.Submitted)>
+
+    <!--- Call the basescript again so it works when ajax loads this page --->
+    <script type="text/javascript" src="linked/js/basescript.js "></script> <!-- BaseScript -->
+
+	<cfoutput>
+
+        <form action="report/index.cfm?action=esiHostFamilyPayments" name="esiHostFamilyPayments" id="esiHostFamilyPayments" method="post" target="blank">
+            <input type="hidden" name="submitted" value="1" />
+            <table width="50%" cellpadding="4" cellspacing="0" class="blueThemeReportTable" align="center">
+                <tr><th colspan="2">Payment Reports - ESI Host Family Payments</th></tr>
+                <tr class="on">
+                    <td class="subTitleRightNoBorder">Season: <span class="required">*</span></td>
+                    <td>
+                        <select name="seasonID" id="seasonID" class="xLargeField" multiple required>
+                            <cfloop query="qGetSeasonList">
+                            	<option value="#qGetSeasonList.seasonID#" <cfif qGetSeasonList.seasonID EQ vCurrentSeason>selected="selected"</cfif>>#qGetSeasonList.season#</option>
+                           	</cfloop>
+                        </select>
+                    </td>		
+                </tr>
+                <tr class="on">
+                	<td class="subTitleRightNoBorder">Month: <span class="required">*</span></td>
+                    <td>
+                    	<select name="month" id="month" class="xLargeField">
+                            <option value="7" <cfif MONTH(NOW())-1 EQ 7>selected="selected"</cfif>>July</option>
+                            <option value="8" <cfif MONTH(NOW())-1 EQ 8>selected="selected"</cfif>>August</option>
+                            <option value="9" <cfif MONTH(NOW())-1 EQ 9>selected="selected"</cfif>>September</option>
+                            <option value="10" <cfif MONTH(NOW())-1 EQ 10>selected="selected"</cfif>>October</option>
+                            <option value="11" <cfif MONTH(NOW())-1 EQ 11>selected="selected"</cfif>>November</option>
+                            <option value="12" <cfif MONTH(NOW())-1 EQ 0>selected="selected"</cfif>>December</option>
+                            <option value="1" <cfif MONTH(NOW())-1 EQ 1>selected="selected"</cfif>>January</option>
+                            <option value="2" <cfif MONTH(NOW())-1 EQ 2>selected="selected"</cfif>>February</option>
+                            <option value="3" <cfif MONTH(NOW())-1 EQ 3>selected="selected"</cfif>>March</option>
+                            <option value="4" <cfif MONTH(NOW())-1 EQ 4>selected="selected"</cfif>>April</option>
+                            <option value="5" <cfif MONTH(NOW())-1 EQ 5>selected="selected"</cfif>>May</option>
+                            <option value="6" <cfif MONTH(NOW())-1 EQ 6>selected="selected"</cfif>>June</option>
+                    	</select>
+                    </td>
+                </tr>
+                <tr class="on">
+                    <td>&nbsp;</td>
+                    <td class="required noteAlert">* Required Fields</td>
+                </tr>
+                <tr class="on">
+                    <td class="subTitleRightNoBorder">Description:</td>
+                    <td>
+                        This report will provide a list of all the ESI Host Family payments.
+                    </td>		
+                </tr>
+                <tr>
+                    <th colspan="2"><input type="image" src="pics/view.gif" align="center" border="0"></th>
+                </tr>
+            </table>
+        </form>	
+
+	</cfoutput>
+    
+<!--- FORM Submitted --->
+<cfelse>
+
+	<!--- Page Header --->
+    <gui:pageHeader
+        headerType="applicationNoHeader"
+    />	
+    
+    <!--- FORM Submitted with errors --->
+    <cfif SESSION.formErrors.length()> 
+       
+        <!--- Form Errors --->
+        <gui:displayFormErrors 
+            formErrors="#SESSION.formErrors.GetCollection()#"
+            messageType="tableSection"
+            width="100%"
+            />	
+            
+		<cfabort>            
+	</cfif>
+        
+	<!--- set content type --->
+    <cfcontent type="application/msexcel">
+    
+    <!--- suggest default name for XLS file --->
+    <cfheader name="Content-Disposition" value="attachment; filename=ESI Host Family Payments Report.xls">
+    
+    <table width="98%" cellpadding="4" cellspacing="0" align="center" border="1">
+        <tr><th colspan="20">ESI Host Family Payments Report For <cfoutput>#DateFormat(vStartDate,'mm/dd/yyyy')# to #DateFormat(vEndDate,'mm/dd/yyyy')#</cfoutput></th></tr>
+        <tr style="font-weight:bold; text-decoration:underline;">
+            <td>Host Name</td>
+            <td>Student Name</td>
+            <td>Region</td>
+            <td>Placement Start</td>
+            <td>Placement End</td>
+            <td>Payment For</td>
+            <td>Amount</td>
+            <td>Program</td>
+        </tr>
+        
+        <cfscript>
+            vCurrentRow = 0;
+        </cfscript>
+    
+        <cfoutput query="qGetResults">
+        
+        	<cfquery name="qGetResultsByStudent" dbtype="query">
+            	SELECT *
+                FROM qGetResults
+                WHERE studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.studentID#">
+            </cfquery>
+        
+            <cfscript>
+                vCurrentRow++;
+            
+                vRowColor = '';	
+                if ( vCurrentRow MOD 2 ) {
+                    vRowColor = 'bgcolor="##E6E6E6"';
+                } else {
+                    vRowColor = 'bgcolor="##FFFFFF"';
+                }
+				
+				vPaymentStart = vStartDate;
+				vPaymentEnd = vEndDate;
+				if (startDate GT vPaymentStart) {
+					vPaymentStart = startDate;	
+				}
+				if (endDate LT vPaymentEnd) {
+					vPaymentEnd = endDate;	
+				}
+				
+				vNumDaysAtHost = DateDiff('d',vPaymentStart,vPaymentEnd)+1;
+				vTotalDaysAtHosts = 0;
+				for (i = 0; i LTE qGetResultsByStudent.recordCount; i = i + 1) {
+					vTempPaymentStart = vStartDate;
+					vTempPaymentEnd = vEndDate;
+					vCurrentStartDate = qGetResultsByStudent.startDate[i];
+					vCurrentEndDate = qGetResultsByStudent.endDate[i];
+					if (vCurrentStartDate GT vTempPaymentStart) {
+						vTempPaymentStart = vCurrentStartDate;	
+					}
+					if (vCurrentEndDate LT vTempPaymentEnd) {
+						vTempPaymentEnd = vCurrentEndDate;	
+					}
+					if (IsDate(vTempPaymentStart) AND IsDate(vTempPaymentEnd)) {
+						vTempNumDaysAtHost = DateDiff('d',vTempPaymentStart,vTempPaymentEnd)+1;
+						vTotalDaysAtHosts = vTotalDaysAtHosts + vTempNumDaysAtHost;
+					}
+				}
+				vPayment = DollarFormat((vNumDaysAtHost / vTotalDaysAtHosts) * regional_stipend);
+            </cfscript>
+            
+            <tr>
+                <td #vRowColor#>#toString(hostName)#</td>
+                <td #vRowColor#>#toString(studentName)#</td>
+                <td #vRowColor#>#toString(regionName)#</td>
+                <td #vRowColor#>#DateFormat(startDate,'mm/dd/yyyy')#</td>
+                <td #vRowColor#>#DateFormat(endDate,'mm/dd/yyyy')#</td>
+                <td #vRowColor#>#DateFormat(vPaymentStart,'mm/dd/yyyy')# - #DateFormat(vPaymentEnd,'mm/dd/yyyy')#</td>
+                <td #vRowColor#>#vPayment#</td>
+                <td #vRowColor#>#programName#: #DateFormat(programStartDate,'mm/dd/yyyy')# - #DateFormat(programEndDate,'mm/dd/yyyy')#</td>
+            </tr>
+            
+        </cfoutput>
+        
+    </table>
+
+    <!--- Page Header --->
+    <gui:pageFooter />	
+    
+</cfif>
