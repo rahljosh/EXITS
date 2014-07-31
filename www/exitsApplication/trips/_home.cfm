@@ -35,18 +35,26 @@
         <tr>
           <td colspan="4"> 
                 <div style="font-weight:bold; color:##be1e2d; text-align:center; font-size:1.2em;">For our partner exchange organization students ONLY!</div>
-                
+            <!----    
             <p>
                     #APPLICATION.MPD.name# and our partner exchange organizations are proud to offer this year's Student Exchange Trips of exciting adventures across America.
                     #APPLICATION.MPD.name# will be organizing 8 trips, chaperoned and supervised exclusively by our representatives for the 2013-14 season.
               </p>
-          <strong>NEW THIS SEASON: STUDENTS DO NOT PURCHASE THEIR OWN AIRFARE. Once you  are registered for a tour and receive a Confirmation of Payment, a  Blank Permission form and a Student Packet (travel packet) will be sent  via your e-mail <u>THEN YOU MAY</u> contact our travel agent at: <a href="mailto:dees626@verizon.net" target="_blank">dees626@verizon.net</a> or telephone number <u><a href="tel:626-376-1178" value="+16263761178" target="_blank">626-376-1178</a></u> for a flight but make sure you have verbal (ask for permission then get  form sent to us after all completed signatures are on form as soon as  possible). If you are on more than one tour then you need to get a form  for each individual trip!</strong><br /><br /></td>
+          <strong>NEW THIS SEASON: STUDENTS DO NOT PURCHASE THEIR OWN AIRFARE. Once you  are registered for a tour and receive a Confirmation of Payment, a  Blank Permission form and a Student Packet (travel packet) will be sent  via your e-mail <u>THEN YOU MAY</u> contact our travel agent at: <a href="mailto:dees626@verizon.net" target="_blank">dees626@verizon.net</a> or telephone number <u><a href="tel:626-376-1178" value="+16263761178" target="_blank">626-376-1178</a></u> for a flight but make sure you have verbal (ask for permission then get  form sent to us after all completed signatures are on form as soon as  possible). If you are on more than one tour then you need to get a form  for each individual trip!</strong><br /><br />
+		  ---->
+		  </td>
         </tr> 
         
         <cfif NOT VAL(qGetTourList.recordcount)>           
             <tr>
                 <td colspan="4"> 
-                    <h3><div align="center">Please check back on Sept 30th for new trip availability.</div></h3>
+                    <h3><div align="center"><p>The MPD TourAmerica website is currently under construction. We are hard at work updating our website content  to reflect available trips for the 2014-2015 season. Please check back on September 15, 2014 for information on all of our new trip offerings. Enrollment for these new trips will begin on September 15, 2014.</p>
+ 
+<p>Thank you for your patience.  We are excited for a new year of great trips!</p>
+ 
+<p> 
+Sincerely,<br />
+MPD TourAmerica</p></div></h3>
                 </td>
             </tr>
         </cfif>
