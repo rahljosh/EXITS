@@ -63,9 +63,9 @@ if (CLIENT.companyid eq 13){
 
 </cfif>
 <cfquery name="currentSeason" datasource="#APPLICATION.dsn#">
-select seasonID, season
-from smg_Seasons
-where #now()# between startDate and ADDDATE(endDate, 31)
+	SELECT seasonID, season
+    FROM smg_seasons
+    WHERE <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#"> BETWEEN startDate AND ADDDATE(endDate, 31)
 </cfquery>
 <table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
     <tr height=24>
@@ -133,9 +133,10 @@ where #now()# between startDate and ADDDATE(endDate, 31)
 
 <cfif submitted>
 	<cfquery name="currentSeasonPrograms" datasource="#APPLICATION.dsn#">
-    select programid
-    from smg_programs where seasonid = <cfqueryparam value="#currentSeason.seasonid#" cfsqltype="cf_sql_integer">
-    and companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(APPLICATION.SETTINGS.COMPANYLIST.ISESMG)#" list="yes"> )
+    	SELECT programID
+        FROM smg_programs
+        WHERE seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(currentSeason.seasonID)#">
+        AND companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(APPLICATION.SETTINGS.COMPANYLIST.ISESMG)#" list="yes"> )
     </cfquery>
     <cfset programList = "">
    
