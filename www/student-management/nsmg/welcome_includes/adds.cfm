@@ -40,7 +40,9 @@
                                 <td colspan=2 style="font-size:16px; color:##C55;">
                                     <img src="pics/warning.png" width="25px" />  You've earned a trip to 
                                     <b><a href="../uploadedFiles/Incentive_trip/incentiveTrip_#client.companyid#.pdf" target="_blank" style="color:##C55;">#incentive_trip.trip_place#!!!</a></b> 
+                                    <!---
                                     Please enter your and any guest's information by #DateFormat(vDeadline,'mm/dd/yyyy')# <b><a href="?curdoc=incentiveTripDetails" style="color:##C55;">HERE</a></b>.
+									--->
                                 </td>
                             </cfif>
                         </tr>
