@@ -49,7 +49,8 @@ where seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.seasonid#"
 </div>
 <div style="width: 95%; margin: 50px auto; font-size: 45px;">
 <p>By signing this form you are verifying that the rules of the exchange program have been explained to you during your
-host family orientation and you have received a copy of the ISE host family rules, the US DOS Secondary School
+host family orientation and you have received a copy of the 
+<cfif CLIENT.companyid eq 10> CASE <cfif CLIENT.companyid eq 14> ESI <cfelse> ISE </cfif>host family rules, the US DOS Secondary School
 Program regulations and the DOS Host Family Welcome letter.</p>
 <p>All policies are detailed in the ISE Host Family rules document and specific highlights of the program rules include:</p>
 <ul><li style="margin-bottom: 30px;">Exchange students are not allowed to possess or consume alcoholic beverages, illegal drugs or prescription
