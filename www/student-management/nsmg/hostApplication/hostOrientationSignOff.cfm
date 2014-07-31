@@ -24,7 +24,7 @@ where seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.seasonid#"
 
 <body style="font-family: sans-serif; font-size: 40px; line-height: auto;">
 <div style="width: 2500px; height: 3235px; border: 1px solid #fff; display: block;">
-<div style="background-image:url(https://ise.exitsapplication.com/nsmg/pics/form-header.png); width: 2550px; height: 500px; display: block; background-repeat: no-repeat; background-position: center;" >
+<div style="background-image:url(https://ise.exitsapplication.com/nsmg/pics/<cfif ListFind(#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#, #client.companyid#)>1-form-header.png<cfelse><cfoutput>#client.companyid#</cfoutput>-form-header.jpg</cfif>); width: 2550px; height: 500px; display: block; background-repeat: no-repeat; background-position: center;" >
 <div align="center"><h1 style="padding-top: 180px;">Host Family Orientation Sign-Off</h1></div>
 </div>
 <div style="height: 50px; background-color: #1F4A79; width: 100%; display: block; margin-bottom: 50px;"></div>
