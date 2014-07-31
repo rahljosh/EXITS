@@ -406,7 +406,6 @@
 				</ul>
             </ul>  
         </td>
-        <!---
         <td class="lastRow right">
             <ul class="mainList">
                 <li onclick="loadSelectedReport('esiHostFamilyPayments');">ESI Host Family Payments</li>
@@ -415,7 +414,7 @@
                     <li>Filter by: season, program</li>
 				</ul>
             </ul>  
-        </td>--->
+        </td>
 	</tr> 
 </table>
 
