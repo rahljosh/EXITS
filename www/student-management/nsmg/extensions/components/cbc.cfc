@@ -570,6 +570,8 @@
                     h.mothermiddlename, 
                     h.motherdob,
                     h.motherssn,
+                    h.primaryHostParent,
+                    h.otherHostParent,
                     c.companyShort,
                     c.gis_username,
                     c.gis_password,
