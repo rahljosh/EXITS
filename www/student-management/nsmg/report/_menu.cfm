@@ -380,7 +380,8 @@
                 </ul>
             </ul>
         </td>
-        <td class="lastRow">&nbsp;
+        <!---
+		<td class="lastRow">&nbsp;
             <ul class="mainList">
                 <li onclick="loadSelectedReport('officeIncentiveTripReport');">Incentive Trip Report</li>
                 <ul>
@@ -388,7 +389,7 @@
                     <li>Filter by: Season, trip</li>
                 </ul>
             </ul>
-        </td>
+        </td>--->
     </tr>
 </table> 
 
@@ -405,6 +406,16 @@
 				</ul>
             </ul>  
         </td>
+        <!---
+        <td class="lastRow right">
+            <ul class="mainList">
+                <li onclick="loadSelectedReport('esiHostFamilyPayments');">ESI Host Family Payments</li>
+                <ul>
+                    <li>Generate a list of all ESI host family payments</li>
+                    <li>Filter by: season, program</li>
+				</ul>
+            </ul>  
+        </td>--->
 	</tr> 
 </table>
 
