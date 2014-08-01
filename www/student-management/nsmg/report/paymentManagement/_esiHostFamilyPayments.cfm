@@ -58,7 +58,6 @@
                 CASE
                 	WHEN hh.isRelocation = 0 AND arrival.dep_date IS NOT NULL THEN CASE WHEN arrival.overnight = 1 THEN DATE_ADD(arrival.dep_date,INTERVAL 1 DAY) ELSE arrival.dep_date END
                     WHEN hh.isRelocation = 1 AND hh.dateRelocated IS NOT NULL THEN hh.dateRelocated
-                    ELSE hh.datePlaced
                     END AS startDate,
               	CASE
                 	WHEN hh.historyID = (SELECT MAX(historyID) FROM smg_hosthistory WHERE studentID = s.studentID) AND departure.dep_date IS NOT NULL THEN departure.dep_date
@@ -83,6 +82,7 @@
                 AND departure.isDeleted = 0
                 AND departure.dep_date = (SELECT MIN(dep_date) FROM smg_flight_info WHERE studentID = s.studentID AND flight_type = "departure" AND isDeleted = 0)
                 AND departure.dep_time = (SELECT MIN(dep_time) FROM smg_flight_info WHERE studentID = s.studentID AND flight_type = "departure" AND isDeleted = 0)
+           	WHERE (arrival.dep_date IS NOT NULL OR hh.dateRelocated IS NOT NULL)
            	ORDER BY s.familyLastName, s.firstName, startDate, h.familyLastName
         </cfquery>
         
