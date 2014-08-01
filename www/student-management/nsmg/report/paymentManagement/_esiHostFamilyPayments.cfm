@@ -15,31 +15,43 @@
     <cfsetting requesttimeout="9999">
     
 	<!--- Import CustomTag --->
-    <cfimport taglib="../../extensions/customTags/gui/" prefix="gui" />	
-	
-    <cfscript>	
-		vCurrentSeason = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID;
-		
+    <cfimport taglib="../../extensions/customTags/gui/" prefix="gui" />
+    
+    <cfscript>
 		param name="FORM.submitted" default=0;
-		param name="FORM.seasonID" default=vCurrentSeason;
+		param name="FORM.programID" default=0;
 		param name="FORM.month" default=9;
-		
-		qGetSeason = APPLICATION.CFC.LOOKUPTABLES.getSeason(seasonID = FORM.seasonID);
-		vStartDate = CreateDate(YEAR(qGetSeason.startDate),FORM['month'],1);
-		if (vStartDate LT DateAdd('m',-1,qGetSeason.startDate)) {
-			vStartDate = CreateDate(YEAR(qGetSeason.endDate),FORM['month'],1);
-		}
-		vNextMonth = FORM['month']+1;
-		vYear = YEAR(vStartDate);
-		if (vNextMonth EQ 13) {
-			vNextMonth = 1;	
-			vYear = vYear + 1;
-		}
-		vEndDate = DateAdd('d',-1,CreateDate(vYear,vNextMonth,1));
 	</cfscript>
+    
+    <cfquery name="qGetProgramList" datasource="#APPLICATION.DSN#">
+    	SELECT *
+        FROM smg_programs
+        WHERE companyID = 14
+        ORDER BY startDate
+    </cfquery>
 
     <!--- FORM Submitted --->
     <cfif VAL(FORM.submitted)>
+    	
+        <cfquery name="qGetProgram" datasource="#APPLICATION.DSN#">
+        	SELECT programID, startDate, endDate
+            FROM smg_programs
+            WHERE programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
+        </cfquery>
+    
+    	<cfscript>
+			vStartDate = CreateDate(YEAR(qGetProgram.startDate),FORM['month'],1);
+			if (vStartDate LT DateAdd('m',-1,qGetProgram.startDate)) {
+				vStartDate = CreateDate(YEAR(qGetProgram.endDate),FORM['month'],1);
+			}
+			vNextMonth = FORM['month']+1;
+			vYear = YEAR(vStartDate);
+			if (vNextMonth EQ 13) {
+				vNextMonth = 1;	
+				vYear = vYear + 1;
+			}
+			vEndDate = DateAdd('d',-1,CreateDate(vYear,vNextMonth,1));
+		</cfscript>
 
         <cfquery name="qGetAllResults" datasource="#APPLICATION.DSN#">
         	SELECT
@@ -70,19 +82,18 @@
             INNER JOIN smg_students s ON s.studentID = hh.studentID
             	AND s.companyID = 14
             INNER JOIN smg_programs p ON p.programID = s.programID
-            	AND p.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#">
+            	AND p.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
           	LEFT JOIN smg_regions r ON r.regionID = s.regionAssigned
           	LEFT JOIN smg_flight_info arrival ON arrival.studentID = s.studentID
                 AND arrival.flight_type = "arrival"
                 AND arrival.isDeleted = 0
                 AND arrival.dep_date = (SELECT MAX(dep_date) FROM smg_flight_info WHERE studentID = s.studentID AND flight_type = "arrival" AND isDeleted = 0)
-                AND arrival.dep_time = (SELECT MAX(dep_time) FROM smg_flight_info WHERE studentID = s.studentID AND flight_type = "arrival" AND isDeleted = 0)
           	LEFT JOIN smg_flight_info departure ON departure.studentID = s.studentID
                 AND departure.flight_type = "departure"
                 AND departure.isDeleted = 0
                 AND departure.dep_date = (SELECT MIN(dep_date) FROM smg_flight_info WHERE studentID = s.studentID AND flight_type = "departure" AND isDeleted = 0)
-                AND departure.dep_time = (SELECT MIN(dep_time) FROM smg_flight_info WHERE studentID = s.studentID AND flight_type = "departure" AND isDeleted = 0)
-           	WHERE (arrival.dep_date IS NOT NULL OR hh.dateRelocated IS NOT NULL)
+           	WHERE arrival.dep_date IS NOT NULL
+            GROUP BY studentName, hostName
            	ORDER BY s.familyLastName, s.firstName, startDate, h.familyLastName
         </cfquery>
         
@@ -112,11 +123,11 @@
             <table width="50%" cellpadding="4" cellspacing="0" class="blueThemeReportTable" align="center">
                 <tr><th colspan="2">Payment Reports - ESI Host Family Payments</th></tr>
                 <tr class="on">
-                    <td class="subTitleRightNoBorder">Season: <span class="required">*</span></td>
+                    <td class="subTitleRightNoBorder">Program: <span class="required">*</span></td>
                     <td>
-                        <select name="seasonID" id="seasonID" class="xLargeField" multiple required>
-                            <cfloop query="qGetSeasonList">
-                            	<option value="#qGetSeasonList.seasonID#" <cfif qGetSeasonList.seasonID EQ vCurrentSeason>selected="selected"</cfif>>#qGetSeasonList.season#</option>
+                        <select name="programID" id="programID" class="xLargeField" required>
+                            <cfloop query="qGetProgramList">
+                            	<option value="#qGetProgramList.programID#">#qGetProgramList.programName#</option>
                            	</cfloop>
                         </select>
                     </td>		
@@ -230,24 +241,8 @@
 				}
 				
 				vNumDaysAtHost = DateDiff('d',vPaymentStart,vPaymentEnd)+1;
-				vTotalDaysAtHosts = 0;
-				for (i = 0; i LTE qGetResultsByStudent.recordCount; i = i + 1) {
-					vTempPaymentStart = vStartDate;
-					vTempPaymentEnd = vEndDate;
-					vCurrentStartDate = qGetResultsByStudent.startDate[i];
-					vCurrentEndDate = qGetResultsByStudent.endDate[i];
-					if (vCurrentStartDate GT vTempPaymentStart) {
-						vTempPaymentStart = vCurrentStartDate;	
-					}
-					if (vCurrentEndDate LT vTempPaymentEnd) {
-						vTempPaymentEnd = vCurrentEndDate;	
-					}
-					if (IsDate(vTempPaymentStart) AND IsDate(vTempPaymentEnd)) {
-						vTempNumDaysAtHost = DateDiff('d',vTempPaymentStart,vTempPaymentEnd)+1;
-						vTotalDaysAtHosts = vTotalDaysAtHosts + vTempNumDaysAtHost;
-					}
-				}
-				vPayment = DollarFormat((vNumDaysAtHost / vTotalDaysAtHosts) * regional_stipend);
+				vDaysInMonth = DaysInMonth(vPaymentStart);
+				vPayment = DollarFormat((vNumDaysAtHost / vDaysInMonth) * regional_stipend);
             </cfscript>
             
             <tr>
