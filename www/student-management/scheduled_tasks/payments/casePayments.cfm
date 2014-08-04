@@ -100,6 +100,7 @@ WHERE
 					OR (pmtrng.fk_paymenttype = 23 AND hh.dateCreated >= pmtrng.paymentStartDate)
 					OR (pmtrng.fk_paymenttype = 25 AND hh.dateCreated >= pmtrng.paymentStartDate)
 					OR (pmtrng.fk_paymenttype = 35 AND hh.dateCreated >= pmtrng.paymentStartDate)
+                    OR (pmtrng.fk_paymenttype = 39 AND hh.dateCreated >= pmtrng.paymentStartDate)
 				)
 			)
 		)
