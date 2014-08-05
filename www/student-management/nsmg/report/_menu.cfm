@@ -380,7 +380,6 @@
                 </ul>
             </ul>
         </td>
-        <!---
 		<td class="lastRow">&nbsp;
             <ul class="mainList">
                 <li onclick="loadSelectedReport('officeIncentiveTripReport');">Incentive Trip Report</li>
@@ -389,7 +388,7 @@
                     <li>Filter by: Season, trip</li>
                 </ul>
             </ul>
-        </td>--->
+        </td>
     </tr>
 </table> 
 
