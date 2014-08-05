@@ -32,7 +32,7 @@
                                 </td>
                                 <td>
                                     placements away from a trip to 
-                                    <a href="../uploadedFiles/Incentive_trip/incentiveTrip_#client.companyid#.pdf" target="_blank">
+                                    <a href="uploadedFiles/Incentive_trip/incentiveTrip_#client.companyid#.pdf" target="_blank">
                                         #incentive_trip.trip_place#!
                                     </a>
                                 </td>
