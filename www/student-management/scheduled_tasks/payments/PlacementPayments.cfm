@@ -49,6 +49,8 @@ SELECT DISTINCT
 		WHEN pmtrng.fk_paymenttype =  25 AND NOT sppmt.receivesCEOBonus THEN 0
 		WHEN pmtrng.fk_paymenttype =  35 AND (sppmt.receives12MOSBonus IS NULL OR sppmt.receives12MOSBonus) THEN pmtrng.paymentAmount
 		WHEN pmtrng.fk_paymenttype =  35 AND NOT sppmt.receives12MOSBonus THEN 0
+        WHEN pmtrng.fk_paymenttype = 39 AND sppmt.receivesSpecialBonus = 1 THEN pmtrng.paymentAmount
+        WHEN pmtrng.fk_paymenttype = 39 AND (sppmt.receivesSpecialBonus = 0 OR sppmt.receivesSpecialBonus IS NULL) THEN 0
 	END,
 	"Auto-processed - ISE",
 	CASE 
