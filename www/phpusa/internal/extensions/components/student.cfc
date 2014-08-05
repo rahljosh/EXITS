@@ -1800,6 +1800,7 @@
 	<!--- Placement Paperwork --->
 	<cffunction name="updatePlacementPaperwork" access="public" returntype="void" output="false" hint="Update Placement Paperwork">
         <cfargument name="studentID" default="0" hint="studentID is not required">
+        <cfargument name="programID" default="0" hint="programID is not required">
         <cfargument name="historyID" default="0" hint="historyID is not required">
         <!--- Placement Paperwork --->
         <cfargument name="school_acceptance" default="" hint="school_acceptance is not required">
@@ -1841,8 +1842,9 @@
                     doc_ref_form_1 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_ref_form_1#" null="#NOT IsDate(ARGUMENTS.doc_ref_form_1)#">,
                     doc_ref_form_2 = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doc_ref_form_2#" null="#NOT IsDate(ARGUMENTS.doc_ref_form_2)#">,
                     orientationSignOff_student = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.orientationSignOff_student#" null="#NOT IsDate(ARGUMENTS.orientationSignOff_student)#">
-                WHERE 
-                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">                    	
+                WHERE studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
+                AND programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.programID)#">
+                                  	
 		</cfquery>
 		
         <cfscript>

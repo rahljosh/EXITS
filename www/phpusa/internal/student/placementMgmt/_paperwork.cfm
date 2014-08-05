@@ -42,6 +42,7 @@
 			// Update fields on the student table
 			APPLICATION.CFC.STUDENT.updatePlacementPaperwork(
 				studentID = FORM.studentID,
+				programID = qGetStudentInfo.programID,
 				historyID = qGetPlacementHistory.historyID,
 				// Placement Paperwork
 				school_acceptance = FORM.school_acceptance,
