@@ -210,7 +210,7 @@
 				+"<td>"
 				+"	<select name='addUserType_"+vNewGuestNumber+"' id='addUserType_"+vNewGuestNumber+"'>"
 				+"		<option value='0'>Guest</option>"
-				+"		<option value='7'>Area Representative</option>"
+				+"		<option value='7' selected='selected'>Area Representative</option>"
 				+"		<option value='6'>Regional Advisor</option>"
 				+"		<option value='5'>Regional Manager</option>"
 				+"	</select>"
@@ -219,7 +219,7 @@
 				+"<td><input type='text' class='airportClass' name='addDepartureAirport_"+vNewGuestNumber+"' id='addDepartureAirport_"+vNewGuestNumber+"' /></td>"
 				+"<td><input type='text' name='addNotes_"+vNewGuestNumber+"' id='addNotes_"+vNewGuestNumber+"' /></td>"
 				+"<td></td>"
-				+"<td><input type='button' value='Remove Guest' onclick='removeGuest("+vNewGuestNumber+");' style='width: 100px; cursor:pointer;' /></td>"
+				+"<td><input type='button' value='Remove Traveler' onclick='removeGuest("+vNewGuestNumber+");' style='width: 100px; cursor:pointer;' /></td>"
         	+"</tr>");
 		$('#addDob_'+vNewGuestNumber).datepicker({changeMonth: true, changeYear: true, yearRange: '-100y:c+nn', maxDate: '-1d'});
 		$("#noGuests").hide();
@@ -311,7 +311,7 @@
 	<!--- Table Header --->
     <gui:tableHeader
         imageName="plane.png"
-        tableTitle="Incentive Trip Guests - #qGetIncentiveTrip.trip_place# #YEAR(qGetIncentiveTrip.trip_year)#"
+        tableTitle="Incentive Trip Travelers - #qGetIncentiveTrip.trip_place# #YEAR(qGetIncentiveTrip.trip_year)#"
         tableRightTitle=''
     />
     
@@ -395,7 +395,7 @@
                     <tr>
                         <td align="center">
                         	<span id="guests" style="display:none;">
-                                <input type="button" value="Add Guest" onclick="addGuest();" style="width: 100px; cursor:pointer;" />
+                                <input type="button" value="Add Traveler" onclick="addGuest();" style="width: 100px; cursor:pointer;" />
                             </span>
                             <input type="button" value="Save Changes" onclick="saveChanges();" style="width: 100px; cursor:pointer;" />
                         </td>
