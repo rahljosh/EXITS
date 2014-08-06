@@ -103,53 +103,93 @@
         </cfscript>
         
         <!--- SECTION 1 --->				
-        <div style="page-break-after:always;"><cfinclude template="section1/page1print.cfm"></div>
-       	<div style="page-break-after:always;"><br/><cfinclude template="section1/page2print.cfm"></div>
-        <div style="page-break-after:always;"><br/><cfinclude template="section1/page3print.cfm"></div>
-        <div style="page-break-after:always;"><br/><cfinclude template="section1/page4print.cfm"></div>
-        <div style="page-break-after:always;"><br/><cfinclude template="section1/page5print.cfm"></div>
-        <div style="page-break-after:always;"><br/><cfinclude template="section1/page6print.cfm"></div>
+        <cfinclude template="section1/page1print.cfm">
+        <div style="page-break-after:always;"></div>
+                    
+        <cfinclude template="section1/page2print.cfm">
+        <div style="page-break-after:always;"></div>
+                        
+        <cfinclude template="section1/page3print.cfm">
+        <div style="page-break-after:always;"></div>
+                    
+        <cfinclude template="section1/page4print.cfm">
+        <div style="page-break-after:always;"></div>
+            
+        <cfinclude template="section1/page5print.cfm">
+        <div style="page-break-after:always;"></div>
+                    
+        <cfinclude template="section1/page6print.cfm">
+        <div style="page-break-after:always;"></div>
         
         <!--- SECTION 2 --->				
-        <div style="page-break-after:always;"><br/><cfinclude template="section2/page7print.cfm"></div>
-        <div style="page-break-after:always;"><br/><cfinclude template="section2/page8print.cfm"></div>
-        <div style="page-break-after:always;"><br/><cfinclude template="section2/page9print.cfm"></div>
-        <div style="page-break-after:always;"><br/><cfinclude template="section2/page10print.cfm"></div>
+        <cfinclude template="section2/page7print.cfm">
+        <div style="page-break-after:always;"></div>
+                    
+        <cfinclude template="section2/page8print.cfm">
+        <div style="page-break-after:always;"></div>
+                    
+        <cfinclude template="section2/page9print.cfm">
+        <div style="page-break-after:always;"></div>
+                        
+        <cfinclude template="section2/page10print.cfm">
+        <div style="page-break-after:always;"></div>
             
         <!--- SECTION 3 --->			
-        <div style="page-break-after:always;"><br/><cfinclude template="section3/page11print.cfm"></div>
+        <cfinclude template="section3/page11print.cfm">
+        <div style="page-break-after:always;"></div>
                 
         <cfif additional_info.recordcount gt 0>
-            <div style="page-break-after:always;"><br/><cfinclude template="section3/additional_info_print.cfm"></div>
+            <cfinclude template="section3/additional_info_print.cfm">
+            <div style="page-break-after:always;"></div>
         </cfif>
         			
-        <div style="page-break-after:always;"><br/><cfinclude template="section3/page12print.cfm"></div>
+        <cfinclude template="section3/page12print.cfm">
+        <div style="page-break-after:always;"></div>
                 
         <cfif additional_info.recordcount gt 0>
-            <div style="page-break-after:always;"><br/><cfinclude template="section3/allergy_info_request_print.cfm"></div>
+            <cfinclude template="section3/allergy_info_request_print.cfm">
+            <div style="page-break-after:always;"></div>
         </cfif>
         			
-        <div style="page-break-after:always;"><br/><cfinclude template="section3/page13print.cfm"></div>
-        <div style="page-break-after:always;"><br/><cfinclude template="section3/page14print.cfm"></div>
+        <cfinclude template="section3/page13print.cfm">
+        <div style="page-break-after:always;"></div>
+        
+        <cfinclude template="section3/page14print.cfm">
+        <div style="page-break-after:always;"></div>
         
         <!--- SECTION 4 --->
-        <div style="page-break-after:always;"><br/><cfinclude template="section4/page15print.cfm"></div>
-        <div style="page-break-after:always;"><br/><cfinclude template="section4/page16print.cfm"></div>
-        <div style="page-break-after:always;"><br/><cfinclude template="section4/page17print.cfm"></div>
-        <div style="page-break-after:always;"><br/><cfinclude template="section4/page18print.cfm"></div>
-        <div style="page-break-after:always;"><br/><cfinclude template="section4/page19print.cfm"></div>
-        <div style="page-break-after:always;"><br/><cfinclude template="section4/page20print.cfm"></div>
-        <div style="page-break-after:always;"><br/><cfinclude template="section4/page21print.cfm"></div>
+        <cfinclude template="section4/page15print.cfm">
+        <div style="page-break-after:always;"></div>
+        
+        <cfinclude template="section4/page16print.cfm">
+        <div style="page-break-after:always;"></div>
+        
+        <cfinclude template="section4/page17print.cfm">
+        <div style="page-break-after:always;"></div>
+        
+        <cfinclude template="section4/page18print.cfm">
+        <div style="page-break-after:always;"></div>
+        
+        <cfinclude template="section4/page19print.cfm">
+        <div style="page-break-after:always;"></div>
+        
+        <cfinclude template="section4/page20print.cfm">
+        <div style="page-break-after:always;"></div>
+        
+        <cfinclude template="section4/page21print.cfm">
+        <div style="page-break-after:always;"></div>
         
         <cfset URL.display = "print"> <!--- This is used for the following pages instead of an additional print page --->
         
 		<!--- Do not display for Canada --->
 		<cfif CLIENT.companyID NEQ 13 AND CLIENT.companyID NEQ 14>
-	        <div style="page-break-after:always;"><br/><cfinclude template="section4/page23.cfm"></div>
+	        <cfinclude template="section4/page23.cfm">
       	</cfif>
         <cfif CLIENT.companyID NEQ 13>
 	        <div style="page-break-after:always;"></div>
-	        <div style="page-break-after:always;"><br/><cfinclude template="section4/page24.cfm"></div>
+	        
+	        <cfinclude template="section4/page24.cfm">
+	        <div style="page-break-after:always;"></div>
 	 	</cfif>
         
         <cfscript>
@@ -158,14 +198,16 @@
 		</cfscript>
         
         <cfset doc="page25">
-        <div style="page-break-after:always;"><cfinclude template="print_include_file.cfm"></div>
+        <cfinclude template="print_include_file.cfm">
+        <div style="page-break-after:always;"></div>
         
         <cfset doc="page26">
-        <div style="page-break-after:always;"><cfinclude template="print_include_file.cfm"></div>
+        <cfinclude template="print_include_file.cfm">
+        <div style="page-break-after:always;"></div>
         
         <cfset doc="page27">
-        <div style="page-break-after:always;"><cfinclude template="print_include_file.cfm"></div>            
-        
+        <cfinclude template="print_include_file.cfm">
+        <div style="page-break-after:always;"></div>
 
 	</body>
 </html>
