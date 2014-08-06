@@ -1,20 +1,21 @@
-<cfparam name="URL.page" default="A">
+<cfparam name="URL.page" default="">
+<cfparam name="URL.school" default="">
 <cfparam name="URL.hosting" default="all">
 <cfparam name="URL.inactive" default="no">
 
 <cfsilent>
 
+	<cfscript>
+		if (NOT LEN(URL.page) AND NOT LEN(URL.school)) {
+			URL.page = "A";	
+		} else if (LEN(URL.page)) {
+			URL.school = "";	
+		} else {
+			URL.page = "";	
+		}
+	</cfscript>
+
 	<cfif client.usertype eq 12>
-        <cfquery name ="qGetHosts" datasource="#APPLICATION.DSN#">
-            SELECT DISTINCT h.hostid, h.familylastname, h.fatherfirstname, h.motherfirstname, h.city, h.state, h.phone,
-                psip.hostid,
-                php_schools.schoolname
-            FROM smg_hosts h 
-            LEFT JOIN php_students_in_program psip on h.hostid = psip.hostid
-            LEFT JOIN php_schools ON php_schools.schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
-            WHERE psip.schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
-            ORDER BY familyLastName
-        </cfquery>
         <cfquery name="qGetHostsByPage" datasource="#APPLICATION.DSN#">
         	SELECT DISTINCT h.hostid, h.familylastname, h.fatherfirstname, h.motherfirstname, h.city, h.state, h.phone,
                 psip.hostid,
@@ -23,27 +24,21 @@
             LEFT JOIN php_students_in_program psip on h.hostid = psip.hostid
             LEFT JOIN php_schools ON php_schools.schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
             WHERE psip.schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
-            AND 
-            	<cfif URL.page NEQ "_">
-                	familyLastName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#URL.page#%">
-              	<cfelse>
-                	familyLastName = ""
-              	</cfif>
-            ORDER BY familyLastName
+            <cfif LEN(URL.school) AND URL.school NEQ "_">
+            	AND php_schools.schoolname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#URL.school#%">
+                ORDER BY php_schools.schoolname, h.familyLastName
+            <cfelseif URL.school EQ "_">
+            	AND (php_schools.schoolname = "" OR php_schools.schoolname IS NULL)
+                ORDER BY php_schools.schoolname, h.familyLastName
+            <cfelseif URL.page NEQ "_">
+            	AND familyLastName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#URL.page#%">
+                ORDER BY h.familyLastName
+            <cfelse>
+            	AND familyLastName = ""
+                ORDER BY h.familyLastName
+            </cfif>
         </cfquery>
     <cfelse>
-        <cfquery name="qGetHosts" datasource="#APPLICATION.DSN#">
-            SELECT DISTINCT h.hostid, h.familylastname, h.fatherfirstname, h.motherfirstname, h.city, h.state, h.phone,
-                php_schools.schoolname
-            FROM smg_hosts h
-            LEFT JOIN php_schools ON php_schools.schoolid = h.schoolid
-            LEFT JOIN php_school_contacts psc ON psc.schoolid = php_schools.schoolid
-            WHERE h.companyid = 6 
-            <cfif client.usertype gte 5>
-                AND psc.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
-            </cfif>
-            ORDER BY familyLastName
-        </cfquery>
         <cfquery name="qGetHostsByPage" datasource="#APPLICATION.DSN#">
             SELECT DISTINCT h.hostid, h.familylastname, h.fatherfirstname, h.motherfirstname, h.city, h.state, h.phone,
                 php_schools.schoolname
@@ -54,13 +49,19 @@
             <cfif client.usertype gte 5>
                 AND psc.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
             </cfif>
-            AND 
-            	<cfif URL.page NEQ "_">
-                	familyLastName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#URL.page#%">
-              	<cfelse>
-                	familyLastName = ""
-              	</cfif>
-            ORDER BY familyLastName
+            <cfif LEN(URL.school) AND URL.school NEQ "_">
+            	AND php_schools.schoolname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#URL.school#%">
+                ORDER BY php_schools.schoolname, h.familyLastName
+            <cfelseif URL.school EQ "_">
+            	AND (php_schools.schoolname = "" OR php_schools.schoolname IS NULL)
+                ORDER BY php_schools.schoolname, h.familyLastName
+            <cfelseif URL.page NEQ "_">
+            	AND familyLastName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#URL.page#%">
+                ORDER BY h.familyLastName
+            <cfelse>
+            	AND familyLastName = ""
+                ORDER BY h.familyLastName
+            </cfif>
         </cfquery>
     </cfif>
     
@@ -78,6 +79,15 @@
                     	<span style="color:black; font-weight:bold;">&nbsp;&nbsp;#i#&nbsp;&nbsp;</span>
                     <cfelse>
                     	<a href="?curdoc=lists/hosts&hosting=#URL.hosting#&page=#i#" style="color:blue;">&nbsp;&nbsp;#i#&nbsp;&nbsp;</a>
+                   	</cfif>
+                </cfloop>
+                <br/>
+                School: 
+                <cfloop list="_,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z" index="j">
+                	<cfif URL.school EQ j>
+                    	<span style="color:black; font-weight:bold;">&nbsp;&nbsp;#j#&nbsp;&nbsp;</span>
+                    <cfelse>
+                    	<a href="?curdoc=lists/hosts&hosting=#URL.hosting#&school=#j#" style="color:blue;">&nbsp;&nbsp;#j#&nbsp;&nbsp;</a>
                    	</cfif>
                 </cfloop>
             </td>
