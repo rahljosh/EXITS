@@ -216,7 +216,7 @@
 	<tr><td><div align="justify"><br><img src="#path#pics/line.gif" width="665" height="1" border="0" align="absmiddle"></div></td></tr>
 	<tr><td>&nbsp;</td></tr>
 	<tr><td><em>Briefly give reasons for wanting to become an exchange student.</em></td></tr>
-	<tr><td><div align="justify"><br><br><br><img src="#path#pics/line.gif" width="665" height="1" border="0" align="absmiddle"></div></td></tr>
+	<tr><td><div align="justify"><br><br><img src="#path#pics/line.gif" width="665" height="1" border="0" align="absmiddle"></div></td></tr>
 	<tr><td>&nbsp;</td></tr>
 </table>
 </div>

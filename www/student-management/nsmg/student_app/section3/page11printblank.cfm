@@ -152,8 +152,7 @@
 	<tr><td>&nbsp;</td>
 		<td colspan="3"><em>Please Explain:</em> &nbsp; <br><img src="#path#pics/line.gif" width="500" height="1" border="0" align="absmiddle"></td>
 	</tr>	
-</table><br>
-
+</table>
 <!--- SYSTEMIC REVIEW --->
 <table width="670" border=0 cellpadding=2 cellspacing=0 align="center">
 	<tr><td colspan="4"><b>SYSTEMIC REVIEW</b> - <em>Do you have the following?</em></td></tr>
@@ -293,8 +292,7 @@
 	<tr><td>&nbsp;</td>
 		<td colspan="5"><em>If not, please explain.</em> &nbsp; <br><img src="#path#pics/line.gif" width="500" height="1" border="0" align="absmiddle"></td>
 	</tr>
-</table><br>
-
+</table>
 <!--- ALLERGIES AND SENSITIVITIES --->
 <table width="670" border=0 cellpadding=2 cellspacing=0 align="center">
 	<tr><td colspan="6"><b>ALLERGIES AND SENSITIVITIES</b> - <em>Is there a history of skin reaction or other reaction or sickness following injections or oral administration of:</em></td></tr>
@@ -376,8 +374,7 @@
 	<tr><td colspan="2"> &nbsp; <em>Please explain.</em> &nbsp; <br><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
 		<td colspan="2"> &nbsp; <em>If yes, please list: </em> &nbsp; <br><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
 	</tr>	
-</table><br>
-
+</table>
 <!--- Psychological Issues --->
 <table width="670" border=0 cellpadding=2 cellspacing=0 align="center">
 	<tr><td colspan="6"><b>PSYCHOLOGICAL ISSUES</b> - <em>Have you ever suffered from and/or received treatment for any of the following psychological issues:</em></td></tr>
@@ -491,8 +488,7 @@
             <img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle">
   		</td>
  	</tr>
-</table><br><br>
-
+</table>
 </div>
 
 <!--- FOOTER OF TABLE --->

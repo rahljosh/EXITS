@@ -90,7 +90,7 @@
                         <table width="670px" cellpadding=3 cellspacing=0 align="center">
                             <tr>
                                 <td colspan="7">
-                                    In compliance with 22 CFR 62.25 i5 - I, ________________________________________, and we, as Parents of the Undersigned Student, do hereby authorize the exchange organization to place #qGetStudent.firstName# #qGetStudent.familyLastName# in a home with one additional exchange student.
+                                    In compliance with 22 CFR 62.25 i5 - I, ________________________________________, and we, as Parents of the Undersigned Student, do hereby authorize the exchange organization to place __________________________ in a home with one additional exchange student.
                                 </td>
                             </tr>
                             <tr><td colspan="7">&nbsp;</td></tr>
