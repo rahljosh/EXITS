@@ -45,9 +45,9 @@
 </table>
 
     <div class="section"><br>
-    
-        <cfinclude template="page15text.cfm">
-
+    	
+         	<cfinclude template="page15text.cfm">
+		
 	</div>    
 
 <!--- FOOTER OF TABLE --->

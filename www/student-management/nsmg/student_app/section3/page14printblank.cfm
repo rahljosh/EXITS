@@ -50,21 +50,21 @@
 <table width="670" border=0 cellpadding=1 cellspacing=0 align="center">
 	<tr><td>
 <h3>#CLIENT.companyName# (#CLIENT.companyShort#) Authorization to Treat a Minor and HIPAA Release<br></h3>
-<p>(We) the undersigned parent(s), or legal guardian of________________________________________, (hereafter "Exchange Student"), do hereby authorize and consent to the following: </p>
-<p><strong>Authorization to Treat a Minor or Dependent</strong></p>
-<p>I do hereby state that I have legal custody of the aforementioned Minor. I grant my authorization and consent for #CLIENT.companyName# (#CLIENT.companyShort#), its officers, staff, Regional Managers, Area Representatives and Host Families (hereafter "Designated Adults") to administer general first aid treatment for any minor injuries or illnesses experienced by the Exchange Student. If the injury or illness is life threatening or in need of professional medical treatment, I authorize the Designated Adults to summon any and all professional emergency personnel to attend, transport, and treat the minor and to issue consent for any medical or psychological treatment, and to be rendered under the general supervision of, any licensed physician, surgeon, dentist, hospital, psychologist, psychiatrist, nurse practitioner or other medical professional or institution duly licensed to practice in the state in which such treatment is to occur. I agree to assume financial responsibility for all expenses of such care. 
+<p style="font-size:10px;" >(We) the undersigned parent(s), or legal guardian of________________________________________, (hereafter "Exchange Student"), do hereby authorize and consent to the following: </p>
+<p style="font-size:10px;" ><strong>Authorization to Treat a Minor or Dependent</strong></p>
+<p style="font-size:10px;" >I do hereby state that I have legal custody of the aforementioned Minor. I grant my authorization and consent for #CLIENT.companyName# (#CLIENT.companyShort#), its officers, staff, Regional Managers, Area Representatives and Host Families (hereafter "Designated Adults") to administer general first aid treatment for any minor injuries or illnesses experienced by the Exchange Student. If the injury or illness is life threatening or in need of professional medical treatment, I authorize the Designated Adults to summon any and all professional emergency personnel to attend, transport, and treat the minor and to issue consent for any medical or psychological treatment, and to be rendered under the general supervision of, any licensed physician, surgeon, dentist, hospital, psychologist, psychiatrist, nurse practitioner or other medical professional or institution duly licensed to practice in the state in which such treatment is to occur. I agree to assume financial responsibility for all expenses of such care. 
 </p>
-<p>
+<p style="font-size:10px;" >
 I also understand that certain vaccinations may be required for the Exchange Student to participate in certain schools and that the vaccination requirements vary across each state in the United States. If the documentation of these vaccinations has not been included in the student application submitted to #CLIENT.companyShort#, I authorize the Designated Adults to have the required vaccines administered to the Exchange Student. I agree to assume financial responsibility for all expenses related to the administration of these vaccines. 
 </p>
-<p>
+<p style="font-size:10px;" >
 It is understood that this authorization is given in advance of any such medical treatment, but is given to provide authority and power on the part of the Designated Adult in the exercise of his or her best judgment upon the advice of any such medical or emergency personnel.
 </p>
-<h3>HIPAA-Compliant Authorization for Release of Health Information<br></h3>
-<p>
+<h2>HIPAA-Compliant Authorization for Release of Health Information<br></h2>
+<p style="font-size:10px;" >
 I hereby authorize the protected health information for Exchange Student to be released as specified in this HIPAA compliant Authorization.
 </p>
-<ol>
+<ol style="font-size:10px;" >
 <li>Description of Information To Be Disclosed: I authorize the release of any and all records and information pertaining to the Individual's medical care, treatment, and physical and psychological condition.</li>
 <li>Entities Authorized to Disclose: I authorize any hospital, clinic or other medical facility, physician, nurse, physical or occupational therapist, chiropractor, psychiatrist, psychologist, medical practitioner, pharmacy, emergency medical service, basic life support service, advanced life support service, insurance company, the Medical Information Bureau or any other person or entity licensed to create and/or maintain protected health information for the Individual to disclose the Individual's health information as described above.</li>
 <li>Information Disclosed To: I authorize the Individual's information to be disclosed to: 
@@ -81,7 +81,7 @@ Any of ISE's Student Facilitators, Program Managers, or Corporate Officers.
 <li>My Right to a Copy: I hereby understand that I have a right to a copy of this fully-executed authorization which I can obtain from ISE’s representative in my home country
 </li>
 </ol>
-<p>I have read and understood this authorization and authorize the disclosure of the protected health information as described above.</p>
+<p style="font-size:10px;">I have read and understood this authorization and authorize the disclosure of the protected health information as described above.</p>
 
 </td></tr>
 </table><br>
@@ -95,20 +95,7 @@ Any of ISE's Student Facilitators, Program Managers, or Corporate Officers.
 			<td>&nbsp;</td>
 			<td colspan="2"><br><img src="../pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
 		</tr>
-		<tr><td width="315"><em>Address</em></td><td width="40">&nbsp;</td><td width="160"><em>City</em></td><td width="155"><em>Country</em></td></tr>
-		<tr>
-			<td><br><img src="../pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
-			<td>&nbsp;</td>
-			<td><br><img src="../pics/line.gif" width="160" height="1" border="0" align="absmiddle"></td>
-			<td><br><img src="../pics/line.gif" width="155" height="1" border="0" align="absmiddle"></td>
-		</tr>
-		<tr><td colspan="4"><em>Telephone where Parent/Guardian may be reached</em></td></tr>
-		<tr><td><em>Business</em></td><td>&nbsp;</td><td colspan="2"><em>Home</em></td></tr>
-		<tr>
-			<td><br><img src="../pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
-			<td>&nbsp;</td>
-			<td colspan="2"><br><img src="../pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
-		</tr>
+	
 	</table><br><br>
 	</div>
 

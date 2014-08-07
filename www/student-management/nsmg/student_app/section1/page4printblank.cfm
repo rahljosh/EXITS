@@ -55,13 +55,13 @@
 </table><br><br>
 
 <table width="670" border="0" cellpadding="3" cellspacing="0" align="center">	
-	<tr><td height="350" valign="middle" align="center"><img src="#path#pics/familyphoto.jpg" border="0" align="absmiddle" width="350"></td></tr>
+	<tr><td height="200" valign="middle" align="center"><img src="#path#pics/familyphoto.jpg" border="0" align="absmiddle" width="200"></td></tr>
 	<tr><td><em>Describe this Picture</em></td></tr>
-	<tr><td height="50" valign="bottom"><br><img src="#path#pics/line.gif" width="665" height="1" border="0" align="absmiddle"></div></td></tr>
+	<tr><td height="30" valign="bottom"><br><img src="#path#pics/line.gif" width="665" height="1" border="0" align="absmiddle"></div></td></tr>
 </table><br>
 
 <table width="670" border="0" cellpadding="3" cellspacing="0" align="center">	
-	<tr><td height="350" valign="middle" align="center"><img src="#path#pics/familyphoto.jpg" border="0" align="absmiddle" width="350"></td></tr>
+	<tr><td height="200" valign="middle" align="center"><img src="#path#pics/familyphoto.jpg" border="0" align="absmiddle" width="200"></td></tr>
 	<tr><td><em>Describe this Picture</em></td></tr>
 	<tr><td height="50" valign="bottom"><br><img src="#path#pics/line.gif" width="665" height="1" border="0" align="absmiddle"></div></td></tr>
 </table><br>

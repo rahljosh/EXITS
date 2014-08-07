@@ -83,7 +83,7 @@
 			
 			
 			 <table width=670 border=0 cellpadding=0 cellspacing=0 align="center">
-                        <tr><td colspan="3"><h1>Select your regions below, then click Next:</h1><br><br></td></tr>
+                        <tr><td colspan="3"><h2>Select your regions below, then click Next:</h2><br><br></td></tr>
                         <tr>
 							<td width="10%"></td>
                             <td valign="top"><input type="radio" name="region_choice" value="6">West<br><img src="https://ise.exitsapplication.com/nsmg/student_app/pics/west.jpg" width="45%"></td>
@@ -98,7 +98,7 @@
                     </table>			
 		</td>
 	</tr>
-</table><br><br>
+</table><br>
 
 <table width="670" border=0 cellpadding=0 cellspacing=0 align="center">
 	<tr>

@@ -86,7 +86,6 @@
 		<td colspan="3" width="520"><br><img src="#path#pics/line.gif" width="515" height="1" border="0" align="absmiddle"></td>
 	</tr>
 </table>
-<hr class="bar"></hr><br>
 
 <table width="670" border="0" cellpadding="3" cellspacing="0" align="center">	
 <tr><td colspan="3"><b>Complete Mailing Address</b></td></tr>
@@ -158,7 +157,7 @@
 </tr>
 </table>
 
-<hr class="bar"></hr><br>
+<br>
 
 <table width="670" border="0" cellpadding="3" cellspacing="0" align="center">	
 <tr><td colspan="2"><b>FAMILY INFORMATION</b></td></tr>
@@ -233,7 +232,7 @@
 </tr>
 </table>
 
-<hr class="bar"></hr><br>
+<br>
 
 <table width="670" border="0" cellpadding="3" cellspacing="0" align="center">	
 <tr><td colspan="2"><b>EMERGENCY CONTACT</b></td></tr>

@@ -77,12 +77,12 @@
 
 <!--- Public High School Agreement --->
 <cfsavecontent variable="publicAgreement">
-    <p style="padding-left:10px;">
+    <p style="font-size:10px; padding-left:10px;">
         In the City of #cityInfo#, country of #countryInfo#, on the #dayInfo# day of #monthInfo# in the year of #yearInfo#, I/We the undersigned parents of #studentInfo# my/our #subject#, 
         and I, the "Exchange Student", understand and agree that this agreement shall constitute a binding contract between the undersigned and "#client.companyshort#". "#client.companyshort#" is defined to include: International Student Exchange, Inc., its affiliates, and their owners, directors, officers, and employees.
     </p>
     
-    <ol style="font-size:11px; padding-right:10px;">
+    <ol style="font-size:10px; padding-right:10px;">
     
         <li>
           The J-1 Secondary School Program is a cultural exchange program where the Exchange Student will live with a volunteer family in the United States and attend school during the entire length of the program.  

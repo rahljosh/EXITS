@@ -512,7 +512,33 @@
   		</td>
  	</tr>
 </table>
-
+<br><table width="660" border=0 cellpadding=1 cellspacing=0 align="center">
+	<tr>
+		<td colspan="3"><div align="justify">We certify that the information supplied is true and complete to the best or our knowledge.</div>
+		</td>
+	</tr>
+	<tr><td>&nbsp;</td></tr>
+	<tr>
+		<td width="315"><em>Signature of Student</em></td>
+		<td width="40">&nbsp;</td>
+		<td width="315"><em>Date</em></td>
+	</tr>
+	<tr>
+		<td><br><img src="#vStudentAppRelativePath#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
+		<td>&nbsp;</td>
+		<td><br><img src="#vStudentAppRelativePath#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
+	</tr>
+	<tr>
+		<td><em>Signature of Parent</em></td>
+		<td>&nbsp;</td>
+		<td><em>Date</em></td>
+	</tr>	
+	<tr>
+		<td><br><img src="#vStudentAppRelativePath#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
+		<td>&nbsp;</td>
+		<td><br><img src="#vStudentAppRelativePath#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
+	</tr>	
+</table><br>
 </div>
 
 <!--- FOOTER OF TABLE --->
