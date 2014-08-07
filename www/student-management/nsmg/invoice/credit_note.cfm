@@ -62,7 +62,7 @@ table,tr,td{
 	<cfif credit_check.agentid NEQ client.userid> 
 		<table align="center" width="90%" frame="box">
 			<tr>
-				<td valign="top"><img src="../pics/error.gif"></td>
+				<td valign="top"><img src="../../nsmg/pics/error.gif"></td>
 				<td valign="top"><font color="##CC3300">You can only view your invoices. The invoice that you are trying to view is not yours.  <br>If you received this error from clicking directly on a link, contact the person who sent you the link.</td></tr>
 		</table>
 	<cfabort>
@@ -129,28 +129,28 @@ ORDER BY
 	<Tr>
     	<td>			
 			<cfif credit_info.credit_type IS 'Trainee'><!--- this cfif is good as long as the trainee invoices are not automated, which they will be in the future. THE CFELSE PART SHOULD IS GOOD AT ALL TIMES --->
-              <img src="../pics/logos/csb_banner.gif"/>
+              <img src="../../nsmg/pics/logos/csb_banner.gif"/>
             <cfelse>
                 <cfswitch expression="#credit_info.testCompId#">
                 
                 	<!--- Extra --->
                     <cfcase value="7,8">
-                          <img src="../pics/logos/csb_banner.gif"/>
+                          <img src="../../nsmg/pics/logos/csb_banner.gif"/>
                     </cfcase>
                     
                     <!--- CASE --->
 					<cfcase value="10">
-						<img src="../pics/case_banner.jpg" width="665" height="113" align="Center">
+						<img src="../../nsmg/pics/case_banner.jpg" width="665" height="113" align="Center">
                     </cfcase>
                     
                     <!--- ESI --->
                     <cfcase value="14">
-                        <img src="../pics/esiBanner.jpg" width="665" height="80" align="center" />
+                        <img src="../../nsmg/pics/esiBanner.jpg" width="665" height="80" align="center" />
                     </cfcase>
                     
                     <!--- ISE --->
                     <cfdefaultcase>
-						<img src="../pics/ise_banner.jpg" align="Center">
+						<img src="../../nsmg/pics/ise_banner.jpg" align="Center">
                     </cfdefaultcase>
                 </cfswitch>                        
             </cfif>
@@ -241,7 +241,7 @@ WHERE creditid = #url.creditid#
 </table>
 <br>
 
-<div align="center"><img src="../pics/detach.jpg" ></div><br>
+<div align="center"><img src="../../nsmg/pics/detach.jpg" ></div><br>
 
 </cfoutput>
 
@@ -300,16 +300,16 @@ WHERE creditid = #url.creditid#
 	<table width=100% cellspacing=0 cellpadding=2 border=0 bgcolor="FFFFFF">	
 		<tr>
 			<td width="70%" valign="top"><cfif credit_info.credit_type IS 'Trainee'><!--- this cfif is good as long as the trainee invoices are not automated, which they will be in the future. THE CFELSE PART SHOULD IS GOOD AT ALL TIMES --->
-       					<img src="../pics/logos/csb_logo_small.jpg" height="70"/>
+       					<img src="../../nsmg/pics/logos/csb_logo_small.jpg" height="70"/>
                         
                         <cfelse>
                             <cfswitch expression="#credit_info.progType#">
                                 <cfcase value="7,8,9,11,22,23">
-                                   <img src="../pics/logos/csb_logo_small.jpg" height="70"/>
+                                   <img src="../../nsmg/pics/logos/csb_logo_small.jpg" height="70"/>
                                 </cfcase>
                                 
                                 <cfdefaultcase>
-                                    <img src="../pics/logos/#client.companyid#.gif" height="70"/>
+                                    <img src="../../nsmg/pics/logos/#client.companyid#.gif" height="70"/>
                                 </cfdefaultcase>
                             </cfswitch>
                             </cfif> </td>
