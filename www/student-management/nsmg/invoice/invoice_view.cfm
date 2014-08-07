@@ -271,7 +271,7 @@
         <cfif qGetInvoiceInfo.agentID NEQ CLIENT.userID> 
             <table align="center" width="90%" frame="box">
                 <tr>
-                    <td valign="top"><img src="../pics/error.gif"></td>
+                    <td valign="top"><img src="../../nsmg/pics/error.gif"></td>
                     <td valign="top">
                     	<font color="##CC3300">
                         	You can only view your invoices. The invoice that you are trying to view does not belong to you. <br />
@@ -291,7 +291,7 @@
                 <!--- this cfif is good as long as the trainee invoices are not automated, which they will be in the future. THE CFELSE PART SHOULD BE GOOD AT ALL TIMES --->
                 <cfif qGetInvoiceInfo.type EQ 'trainee program'>
                     
-                    <img src="../pics/logos/csb_banner.gif"/>
+                    <img src="../../nsmg/pics/logos/csb_banner.gif"/>
                 
 				<cfelse>
                     
@@ -299,22 +299,22 @@
                         
                         <!--- Extra --->
                         <cfcase value="8">
-                            <img src="../pics/logos/csb_banner.jpg" width="640" height="114" align="center"/>
+                            <img src="../../nsmg/pics/logos/csb_banner.jpg" width="640" height="114" align="center"/>
                         </cfcase>
                         
                         <!--- Case --->
                         <cfcase value="10">
-                            <img src="../pics/case_banner.jpg" width="665" height="113" align="center" />
+                            <img src="../../nsmg/pics/case_banner.jpg" width="665" height="113" align="center" />
                         </cfcase>
                         
                         <!--- ESI --->
                         <cfcase value="14">
-                            <img src="../pics/esiBanner.jpg" width="665" height="80" align="center" />
+                            <img src="../../nsmg/pics/esiBanner.jpg" width="665" height="80" align="center" />
                         </cfcase>
                         
                         <!--- ISE --->   
                         <cfdefaultcase>
-                            <img src="../pics/ise_banner.jpg" align="center" />
+                            <img src="../../nsmg/pics/ise_banner.jpg" align="center" />
                         </cfdefaultcase>
                         
                     </cfswitch>  
@@ -496,7 +496,7 @@
 	<br />
 
 	<!-----Invoice with Students---->
-    <div align="center"><img src="../pics/detach.jpg" ></div><br />
+    <div align="center"><img src="../../nsmg/pics/detach.jpg" ></div><br />
 
     <table width="100%" cellspacing="0" cellpadding="2" class="thin-border" border="0"> 
         <tr bgcolor="##CCCCCC" >
@@ -642,7 +642,7 @@
 				<cfif qGetInvoiceInfo.type IS 'trainee program' OR qGetInvoiceInfo.companyid EQ 8>
 					
 					<!--- this cfif is good as long as the trainee invoices are not automated, which they will be in the future. THE CFELSE PART SHOULD IS GOOD AT ALL TIMES --->
-                    <img src="../pics/logos/csb_logo_small.jpg" height="100"/>
+                    <img src="../../nsmg/pics/logos/csb_logo_small.jpg" height="100"/>
                     
                 <cfelse>
                 
@@ -650,22 +650,22 @@
                     
                         <!--- Extra --->
                         <cfcase value="8,9,11,22,23">
-                            <img src="../pics/logos/csb_logo_small.jpg" height="100"/>
+                            <img src="../../nsmg/pics/logos/csb_logo_small.jpg" height="100"/>
                         </cfcase>
                         
                         <!--- Extra Trainee: ISE logo --->
                         <cfcase value="7">
-                            <img src="../pics/logos/1.gif" height="100"/>
+                            <img src="../../nsmg/pics/logos/1.gif" height="100"/>
                         </cfcase>
                         
                         <!--- ESI --->
                         <cfcase value="14">
-                            <img src="../pics/logos/14.gif" />
+                            <img src="../../nsmg/pics/logos/14.gif" />
                         </cfcase>
                         
                         <!--- ISE / CASE --->
                         <cfdefaultcase>
-                            <img src="../pics/logos/#qGetInvoiceInfo.companyid#.gif" height="100"/>
+                            <img src="../../nsmg/pics/logos/#qGetInvoiceInfo.companyid#.gif" height="100"/>
                         </cfdefaultcase>
                     
                     </cfswitch>                        
