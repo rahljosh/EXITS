@@ -166,6 +166,7 @@
                     sc.schoolID,
                     sh.datePlaced,
                     p.programName,
+                    p.seasonid,
                     c.companyShort,
                     r.regionName               
                 FROM
@@ -205,7 +206,14 @@
                 	sh.datePlaced DESC,
                     s.familyLastName                
             </cfquery>			            
-            
+           
+            <cfquery name="check5students" datasource="#APPLICATION.DSN#">
+           	    SELECT fiveStudentAssigned
+            	FROM smg_school_dates
+            	WHERE schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.schoolID)#">
+                AND seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentsAssignedToSchool.seasonid)#">
+            </cfquery>
+           
             <cfquery name="qGetApprovedStudents" dbtype="query">
                 SELECT
                     studentInformation,                   
@@ -220,9 +228,15 @@
                 WHERE
                     host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4" list="yes"> )    
             </cfquery>
+             <cfquery name="check5students" datasource="#APPLICATION.DSN#">
+           	   UPDATE smg_school_dates
+               SET fiveStudentAssigned = <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
+               WHERE schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.schoolID)#">
+               AND seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentsAssignedToSchool.seasonid)#">
+            </cfquery>
             
             <!--- Sent out Notification --->
-            <cfif qGetApprovedStudents.recordCount GTE 5>
+            <cfif qGetApprovedStudents.recordCount GTE 5 and not isDate(#check5students.fiveStudentAssigned#)>
 
 				<!--- Email Template --->
                 <cfsavecontent variable="vEmailSchoolNotification">
@@ -299,6 +313,9 @@
                     <cfinvokeargument name="email_subject" value="School Compliance Notification - #qGetStudentsAssignedToSchool.schoolInformation#">
                     <cfinvokeargument name="email_message" value="#vEmailSchoolNotification#">
                 </cfinvoke>
+                
+            
+            
             
             </cfif>
 	
