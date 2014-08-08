@@ -96,6 +96,8 @@ window.onload = function additionalInfo() {
 <Cfloop query="qLoopedInEmails">
 	<cfset loopedin = ListAppend(loopedIn,#loopedInInfo#)>
 </Cfloop>
+
+
 <div class="rdholder" style="width:100%; float:right;"> 
      <div align="center">
 <!--- Page Messages --->
@@ -152,7 +154,13 @@ window.onload = function additionalInfo() {
         <cfset subRowCheck = 0>
     <table align="center" width="80%" cellpadding=4 cellspacing="0" border=0 id=clickableRow>
         <Cfloop query="qFullCaseDetails">
-        
+        <cfquery datasource="#application.dsn#">
+			insert into smg_casemgmt_case_views (fk_userid, fk_caseid, fk_messageID, Viewed)
+							values(<cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">, 
+                            	   <cfqueryparam cfsqltype="cf_sql_integer" value="#url.caseid#">,
+                                   <cfqueryparam cfsqltype="cf_sql_integer" value="#id#">,
+                                   <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">)
+		</cfquery>
             <tr class='clickableRow' href='index.cfm?curdoc=caseMgmt/index&action=addDetails&caseID=#url.caseID#&item=#id#' <cfif currentrow mod 2>bgcolor="##efefef"</cfif>>
            
                 <td width=700>#Left(caseNote, 350)#<cfif len(caseNote) gt 350>...</cfif></td>
