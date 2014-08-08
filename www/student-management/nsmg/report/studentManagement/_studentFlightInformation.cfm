@@ -103,7 +103,7 @@
                     smg_students s 
                 INNER JOIN 
                     smg_programs p ON s.programid = p.programid
-                LEFT OUTER JOIN 
+                left outer JOIN 
                     smg_flight_info f ON s.studentid = f.studentid 
                         AND 
                             f.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
