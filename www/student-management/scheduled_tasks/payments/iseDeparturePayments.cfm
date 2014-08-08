@@ -62,6 +62,6 @@ AND (
     (hht.isDoublePlacementPaperworkRequired = 0 OR hht.isDoublePlacementPaperworkRequired IS NULL) 
     OR (hht.isDoublePlacementPaperworkRequired = 1 AND hht.doublePlacementStudentDateCompliance IS NOT NULL AND hht.doublePlacementHostFamilyDateCompliance IS NOT NULL)
     )
-AND s.studentID NOT IN (SELECT `student ID` FROM v_all_missing_progress_reports)
+AND s.studentID NOT IN (SELECT `student ID` FROM v_missing_progress_reports)
 AND (shas.applicationStatusID IS NULL OR shas.applicationStatusID <= 3 OR shas.applicationStatusID = 0 OR shas.applicationStatusID = 9)
 </cfquery>
