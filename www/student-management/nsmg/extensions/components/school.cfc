@@ -222,7 +222,7 @@
             </cfquery>
             
             <!--- Sent out Notification --->
-            <cfif qGetApprovedStudents.recordCount = 5>
+            <cfif qGetApprovedStudents.recordCount GTE 5>
 
 				<!--- Email Template --->
                 <cfsavecontent variable="vEmailSchoolNotification">
