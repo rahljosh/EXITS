@@ -18,7 +18,7 @@
                 
     <div class="rdtop"> 
         <span class="rdtitle">Add Details</span> 
-        <div style="float:right;"><img src="pics/betaTesting.png"></div> 
+        <div style="float:right;"></div> 
     </div>
     
     <div class="rdbox">
