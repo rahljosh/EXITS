@@ -168,6 +168,8 @@
                 s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
             AND
                 s.regionAssigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#">
+            AND
+            	s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">
         </cfquery>
         
         <cfquery name="qGetUnplaced" dbtype="query">
