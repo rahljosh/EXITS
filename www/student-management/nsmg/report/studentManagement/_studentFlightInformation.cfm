@@ -103,7 +103,7 @@
                     smg_students s 
                 INNER JOIN 
                     smg_programs p ON s.programid = p.programid
-                INNER JOIN 
+                LEFT OUTER JOIN 
                     smg_flight_info f ON s.studentid = f.studentid 
                         AND 
                             f.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
@@ -127,7 +127,7 @@
                                     flight.isCompleted = <cfqueryparam cfsqltype="cf_sql_bit" value="1">	                                               
                             )
                             AND
-                                s.aypEnglish != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                                s.aypEnglish = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
                                 
                         <cfelseif FORM.flightType EQ 'mPreAypArrival'>
                         	<cfset vMissingReport=0>
