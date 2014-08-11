@@ -33,10 +33,13 @@
     <!--- FORM Submitted --->
     <cfif VAL(FORM.submitted)>
     	
+        <!--- This will just get the first program in the list - it is used for calculating what period this payment is for --->
         <cfquery name="qGetProgram" datasource="#APPLICATION.DSN#">
         	SELECT programID, startDate, endDate
             FROM smg_programs
-            WHERE programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
+            WHERE programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )
+            ORDER BY programID
+            LIMIT 1
         </cfquery>
     
     	<cfscript>
@@ -82,7 +85,7 @@
             INNER JOIN smg_students s ON s.studentID = hh.studentID
             	AND s.companyID = 14
             INNER JOIN smg_programs p ON p.programID = s.programID
-            	AND p.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
+            	AND p.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )
           	LEFT JOIN smg_regions r ON r.regionID = s.regionAssigned
           	LEFT JOIN smg_flight_info arrival ON arrival.studentID = s.studentID
                 AND arrival.flight_type = "arrival"
@@ -125,7 +128,7 @@
                 <tr class="on">
                     <td class="subTitleRightNoBorder">Program: <span class="required">*</span></td>
                     <td>
-                        <select name="programID" id="programID" class="xLargeField" required>
+                        <select name="programID" id="programID" class="xLargeField" multiple="multiple" size="5" required>
                             <cfloop query="qGetProgramList">
                             	<option value="#qGetProgramList.programID#">#qGetProgramList.programName#</option>
                            	</cfloop>
@@ -143,7 +146,7 @@
                             <option value="11" <cfif MONTH(NOW())-1 EQ 11>selected="selected"</cfif>>November</option>
                             <option value="12" <cfif MONTH(NOW())-1 EQ 0>selected="selected"</cfif>>December</option>
                             <option value="1" <cfif MONTH(NOW())-1 EQ 1>selected="selected"</cfif>>January</option>
-                            <option value="2" <cfif MONTH(NOW())-1 EQ 2>selected="selected"</cfif>>February</option>
+                            <option value="2" <cfif MONTH(NOW())-1 EQ 2> selected="selected"</cfif>>February</option>
                             <option value="3" <cfif MONTH(NOW())-1 EQ 3>selected="selected"</cfif>>March</option>
                             <option value="4" <cfif MONTH(NOW())-1 EQ 4>selected="selected"</cfif>>April</option>
                             <option value="5" <cfif MONTH(NOW())-1 EQ 5>selected="selected"</cfif>>May</option>
@@ -159,6 +162,8 @@
                     <td class="subTitleRightNoBorder">Description:</td>
                     <td>
                         This report will provide a list of all the ESI Host Family payments.
+                        <br/>
+                        -Please note that the payment start and end dates are calculated based on the year of the earliest program chosen.
                     </td>		
                 </tr>
                 <tr>
