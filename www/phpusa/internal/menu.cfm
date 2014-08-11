@@ -54,6 +54,7 @@
             </cfif>
             
             <li><a href="index.cfm?curdoc=pdf_docs/docs_forms">PDF Docs</a></li>
+            
             <li><a href="index.cfm?curdoc=reports/reports_menu">Reports</a>
                 <ul>
                     <li><a href="index.cfm?curdoc=reports/flightMenu">Flight Reports</a></li>
@@ -61,6 +62,7 @@
                     <li><a href="index.cfm?curdoc=reports/constantContactMenu">Constant Contact</a></li>
                 </ul>
             </li>
+            
             <li><a href="##">Tools</a>
                 <ul>
                     <cfif ListFind("1,2,3", CLIENT.usertype)>
@@ -107,8 +109,6 @@
             <li><a href="index.cfm?curdoc=lists/schools">Schools</a></li>
             
             <li><a href="index.cfm?curdoc=pdf_docs/docs_forms">PDF Docs</a></li>
-            
-            <li><a href="index.cfm?curdoc=reports/flightMenu">Flight Reports</a></li>
         
         </ul>
     
