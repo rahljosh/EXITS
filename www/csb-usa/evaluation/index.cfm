@@ -212,7 +212,7 @@
 				<strong> #FORM.Q6_explain# </strong>
                 <br />#FORM.q6filename#<br /> <br /> 
                 
-                7. Second job - Do you currently have a second job?<strong> #FORM.Q7#</strong><br />#FORM.q7filename#<br /> 
+                7. Second job - Do you currently have a second job?<strong> #FORM.Q7#</strong> - #FORM.q7filename#<br /> 
                 &nbsp;&nbsp;
 				<i>
 					If Yes and you did not previously inform CSB, please provide your second employer information (name of company, address, phone number, supervisor) 
@@ -360,7 +360,7 @@
                                     CSB must confirm/approve the new job before you start work. If you start work in an unverified job, your program will be terminated.
                             	</i>
                                 <strong> #FORM.Q6_explain#</strong><br />#FORM.Q6file#<br /> <br /> 
-                                7. Second job - Do you currently have a second job?<strong> #FORM.Q7#</strong><br />#FORM.Q7file#<br /> 
+                                7. Second job - Do you currently have a second job?<strong> #FORM.Q7#</strong> - #FORM.Q7file#<br /> 
                                 &nbsp;&nbsp;
                                 <i>
                               		If Yes and you did not previously inform CSB, please provide your second employer information (name of company, address, phone number, supervisor) 
