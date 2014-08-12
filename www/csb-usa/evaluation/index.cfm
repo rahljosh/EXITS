@@ -187,25 +187,44 @@
         </cfif>
 
         <cfscript>
-            vEmailContent = '<h3> CSB - Mandatory Evaluation #FORM.evaluation# - #dateformat(Now(),'mm/dd/yyyy')#.</h3>
-                <p style="font-size: 11px; font-family:Arial, Helvetica, sans-serif;"> 
+            vEmailContent = "<h3> CSB - Mandatory Evaluation #FORM.evaluation# - #dateformat(Now(),'mm/dd/yyyy')#.</h3>
+                <p style='font-size: 11px; font-family:Arial, Helvetica, sans-serif;'> 
                 1. SEVIS Number:<strong> #FORM.Sevis#</strong> <br /> 
                 2. Last name:<strong> #FORM.LastName#</strong><br /> 
                 3. First name:<strong> #FORM.FirstName#</strong><br /> 
                 4. Email:<strong> #FORM.email#</strong><br /> <br /> 
                 5. Have you changed your housing address since your last report to CSB?<strong> #FORM.Q5#</strong><br />
-                &nbsp;&nbsp;<i>If Yes and you did not previously inform CSB, please provide your full new housing address:</i><strong> #FORM.Q5_explain#</strong><br /><br /> 
-                
+                &nbsp;&nbsp;
+				<i>
+					If Yes and you did not previously inform CSB, please provide your new housing address (street and number, city, state, zip code).<br />
+					<strong><u>Remember:</u></strong> 
+					you must report any change related to the housing address within 10 (ten) business days.
+				</i>
+				<strong> #FORM.Q5_explain#</strong><br /><br />
                 6. Main employer - Have you changed your main employer since your last report to CSB?<strong> #FORM.Q6#</strong><br /> 
-                &nbsp;&nbsp;<i>If Yes and you did not previously inform CSB, please provide your full new employer information (name, address and phone number) and a new signed job offer for verification:</i><strong> #FORM.Q6_explain# </strong>
+                &nbsp;&nbsp;
+				<i>
+					If Yes and you did not previously inform CSB, please provide your new employer information (name of company, address, phone number, supervisor)
+					and attach the signed job offer. If you don't have the job offer form, please contact CSB.<br />
+					<strong><u>Remember:</u></strong> 
+					CSB must confirm/approve the new job before you start work. If you start work in an unverified job, your program will be terminated.
+				</i>
+				<strong> #FORM.Q6_explain# </strong>
                 <br />#FORM.q6filename#<br /> <br /> 
                 
                 7. Second job - Do you currently have a second job?<strong> #FORM.Q7#</strong><br />#FORM.q7filename#<br /> 
-                &nbsp;&nbsp;<i>If Yes, please list and provide full details (where/what/who/why):</i><strong> #FORM.Q7_explain# </strong><br /><br /> 
+                &nbsp;&nbsp;
+				<i>
+					If Yes and you did not previously inform CSB, please provide your second employer information (name of company, address, phone number, supervisor) 
+					and attach the job offer. If you don't have the job offer form, please contact CSB.<br />
+					<strong><u>Remember:</u></strong> 
+					CSB must confirm/approve the second job before you start work. If you starting work in an unverified job, your program will be terminated.
+				</i>
+				<strong> #FORM.Q7_explain# </strong><br /><br /> 
                  8. Do you have any current problems or concerns?<strong> #FORM.Q8#</strong><br /> 
                 &nbsp;&nbsp;<i>If Yes, please provide full details (where, when, what, who, why):</i><strong> #FORM.Q8_explain# </strong><br /><br />
                 9. Cultural activities <strong> #FORM.Q9_explain# </strong><br /><br /></p>
-                --';
+                --";
             
             email=CreateObject("component","extensions.components.email");
         
@@ -325,11 +344,31 @@
                                 3. First name:<strong> #FORM.FirstName#</strong><br /> 
                                 4. Email:<strong> #FORM.email#</strong><br /> <br /> 
                                 5. Housing address - Have you changed your housing address since your last report to CSB?<strong> #FORM.Q5#</strong><br />
-                                &nbsp;&nbsp;<i>If Yes and you did not previously inform CSB, please provide your full new housing address:</i><strong> #FORM.Q5_explain#</strong><br /><br /> 
+                                &nbsp;&nbsp;
+                                <i>
+                                	If Yes and you did not previously inform CSB, please provide your new housing address (street and number, city, state, zip code). <br />
+                                	<strong><u>Remember:</u></strong> 
+                                    you must report any change related to the housing address within 10 (ten) business days.
+                              	</i>
+                                <strong> #FORM.Q5_explain#</strong><br /><br /> 
                                 6. Main employer - Have you changed your main employer since your last report to CSB?<strong> #FORM.Q6#</strong><br /> 
-                                &nbsp;&nbsp;<i>If Yes and you did not previously inform CSB, please provide your full new employer information (name, address and phone number) and a new signed job offer for verification:</i><strong> #FORM.Q6_explain#</strong><br />#FORM.Q6file#<br /> <br /> 
+                                &nbsp;&nbsp;
+                                <i>
+                                	If Yes and you did not previously inform CSB, please provide your new employer information (name of company, address, phone number, supervisor)
+                                    and attach the signed job offer. If you don't have the job offer form, please contact CSB.<br />
+									<strong><u>Remember:</u></strong> 
+                                    CSB must confirm/approve the new job before you start work. If you start work in an unverified job, your program will be terminated.
+                            	</i>
+                                <strong> #FORM.Q6_explain#</strong><br />#FORM.Q6file#<br /> <br /> 
                                 7. Second job - Do you currently have a second job?<strong> #FORM.Q7#</strong><br />#FORM.Q7file#<br /> 
-                                &nbsp;&nbsp;<i>If Yes, please list and provide full details (where/what/who/why):</i><strong> #FORM.Q7_explain# </strong><br /><br />
+                                &nbsp;&nbsp;
+                                <i>
+                              		If Yes and you did not previously inform CSB, please provide your second employer information (name of company, address, phone number, supervisor) 
+                                    and attach the job offer. If you don't have the job offer form, please contact CSB.<br />
+									<strong><u>Remember:</u></strong> 
+                                    CSB must confirm/approve the second job before you start work. If you starting work in an unverified job, your program will be terminated.
+                             	</i>
+                                <strong> #FORM.Q7_explain# </strong><br /><br />
                                 8. Do you have any current problems or concerns?<strong> #FORM.Q8#</strong><br /> 
                                 &nbsp;&nbsp;<i>If Yes, please provide full details (where, when, what, who, why):</i><strong> #FORM.Q8_explain# </strong><br /><br />
                                 9. Cultural activities <strong> #FORM.Q9_explain# </strong><br /><br /></p>
