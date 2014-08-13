@@ -19,7 +19,13 @@
         WHERE 
         	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.studentid#">
     </cfquery>
-
+	
+    <cfif client.companyid eq 14>
+    	<cfset progDesig = "F-1">
+    <cfelse>
+    	<cfset progDesig = "J-1">
+    </cfif>
+    
 	<cfparam name="subject" default="son/daughter">
 	<cfparam name="subjectivePronoun" default="he/she">
    	<cfparam name="possessivePronoun" default="his/her">
@@ -85,7 +91,7 @@
     <ol style="font-size:10px; padding-right:10px;">
     
         <li>
-          The J-1 Secondary School Program is a cultural exchange program where the Exchange Student will live with a volunteer family in the United States and attend school during the entire length of the program.  
+          The #progDesig# Secondary School Program is a cultural exchange program where the Exchange Student will live with a volunteer family in the United States and attend school during the entire length of the program.  
         </li>
         
         <li>
@@ -93,11 +99,11 @@
         </li>
         
         <li>
-           The Exchange Student will accept placement with a family of any race, creed, or color or family composition.  Live as a member of your host family, respect your host family and their rules and customs, and accept the responsibilities given to you. #client.companyshort#, in its sole discretion, is responsible for choosing a student's host family placement.  Rejection of a placement or a request to be relocated from my host family after arrival without material cause, can result in termination from ISE's exchange program.
+           The Exchange Student will accept placement with a family of any race, creed, or color or family composition.  Live as a member of your host family, respect your host family and their rules and customs, and accept the responsibilities given to you. #client.companyshort#, in its sole discretion, is responsible for choosing a student's host family placement.  Rejection of a placement or a request to be relocated from my host family after arrival without material cause, can result in termination from #CLIENT.companyshort#'s exchange program.
         </li>
         
         <li>
-          The Exchange Student agrees to follow the regulations of the J-1 Exchange Visitor Visa and the U.S. State as well as all #CLIENT.companyshort# program rules that are detailed in the ISE student handbook.
+          The Exchange Student agrees to follow the regulations of the #progDesig# Exchange Visitor Visa and the U.S. State as well as all #CLIENT.companyshort# program rules that are detailed in the ISE student handbook.
         </li>
         
         <li>
@@ -124,7 +130,7 @@
         </li>
         
         <li>
-           The Exchange Student will travel only with adult members of the Host Family, the ISE Area Representative, on official school trips, or #CLIENT.companyshort# sponsored trips.   Travel home during the program is prohibited.  Travel with or visits from natural family members are not permitted.
+           The Exchange Student will travel only with adult members of the Host Family, the #CLIENT.companyshort# Area Representative, on official school trips, or #CLIENT.companyshort# sponsored trips.   Travel home during the program is prohibited.  Travel with or visits from natural family members are not permitted.
         </li>
         
         <li>The Exchange Student understands that driving or purchasing a motorized vehicle (car, motorcycle, boat, or any other vehicle requiring a driver's license) is prohibited. Driving is permitted with the instructor of an official driver's education course and only during class hours. This is solely for the purpose of obtaining a driving license and does not allow the student to drive after a license is obtained.</li>
@@ -140,7 +146,7 @@
         </li>
         
         <li>
-           Exchange Student's primary intention for participation in the program, and primary focus during the program, should be the cultural exchange experience.  Graduation from an American high school is uncommon and at the discretion of the school.  Students are not to ask the host family or any ISE staff for assistance in entrance to college in the US, campus visits, test preparation or change their visa or immigration status.
+           Exchange Student's primary intention for participation in the program, and primary focus during the program, should be the cultural exchange experience.  Graduation from an American high school is uncommon and at the discretion of the school.  Students are not to ask the host family or any #CLIENT.companyshort# staff for assistance in entrance to college in the US, campus visits, test preparation or change their visa or immigration status.
 
         </li>
         
