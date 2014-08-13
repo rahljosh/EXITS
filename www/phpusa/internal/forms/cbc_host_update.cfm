@@ -43,25 +43,29 @@
    
         
     	<!--- Update all of the father's records --->
-        <cfloop query="qGetCBCFather">
-        	<cfscript>
-				APPLICATION.CFC.Host.setCBC(
-					
-					date_approved = #FORM["father_Date_approved_#cbcfamid#"]#,
-					notes = #FORM["father_notes_#cbcfamid#"]#,
-					id = #cbcfamid#);
-			</cfscript>
-        </cfloop>
+        <cfif LEN(family_info.fatherFirstName) OR LEN(family_info.fatherLastName) OR LEN(family_info.fatherSSN)>
+            <cfloop query="qGetCBCFather">
+                <cfscript>
+                    APPLICATION.CFC.Host.setCBC(
+                        
+                        date_approved = #FORM["father_Date_approved_#cbcfamid#"]#,
+                        notes = #FORM["father_notes_#cbcfamid#"]#,
+                        id = #cbcfamid#);
+                </cfscript>
+            </cfloop>
+       	</cfif>
         <!--- Update all of the mother's records --->
-        <cfloop query="qGetCBCMother">
-        	<cfscript>
-				APPLICATION.CFC.Host.setCBC(
-					
-					date_approved = #FORM["mother_Date_approved_#cbcfamid#"]#,
-					notes = #FORM["mother_notes_#cbcfamid#"]#,
-					id = #cbcfamid#);
-			</cfscript>
-        </cfloop>
+        <cfif LEN(family_info.motherFirstName) OR LEN(family_info.motherLastName) OR LEN(family_info.motherSSN)>
+            <cfloop query="qGetCBCMother">
+                <cfscript>
+                    APPLICATION.CFC.Host.setCBC(
+                        
+                        date_approved = #FORM["mother_Date_approved_#cbcfamid#"]#,
+                        notes = #FORM["mother_notes_#cbcfamid#"]#,
+                        id = #cbcfamid#);
+                </cfscript>
+            </cfloop>
+       	</cfif>
         <!--- Loop through each child and update their records --->
         <cfloop query="qGetHostChildrenForCBC">
         	<cfscript>
