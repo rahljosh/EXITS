@@ -89,14 +89,15 @@ ORDER BY
         <cfinput type="hidden" name="submitted">
     
         <select name="selectPrograms" multiple="multiple" size="10">
-            <option value="All" selected="selected">All (from Fall09 on)</option>
+            <option value="All" selected="selected">All Programs (from Fall09 on)</option>
             <option value="0">Charges not related to a program</option>
             <cfoutput query="getPrograms">
                 <option value="#programid#">#getPrograms.programname#</option>
             </cfoutput>
         </select>
         <br/>
-
+        <cfinput name="printFormat" type="checkbox" checked="yes"> <strong><small>Display print format?</small></strong>
+        <br/>
         <cfinput name="submit" type="image" src="pics/submit.gif">
 
     </cfform>
@@ -149,7 +150,6 @@ ORDER BY
 </cfloop>
 
 <cfquery name="qTotalAgentBalance" datasource="MySQL">
-
 	<!--- QUERIES OF INVOICES, PAYMENTS RELATED TO A PROGRAM --->
     select t.intl_rep, t.intrepid, t.billing_contact, t.billing_email, t.program, t.programid, sum(t.amount) as amount
     from (
@@ -229,8 +229,9 @@ ORDER BY
     
     group by t.intrepid HAVING amount > 0
     order by amount DESC
-    
 </cfquery>
+
+<br/>
 
 <cfset arrayEmailAgent = ArrayNew(1)>
 <cfloop query="qTotalAgentBalance">
@@ -258,6 +259,16 @@ ORDER BY
 
 <cfform method="post" action="invoice/m_sendEmailNotification.cfm">
 
+	<cfinput type="hidden" name="selectPrograms" value="#form.selectPrograms#">
+
+<cfif NOT ISDEFINED('form.printFormat')>
+    <div align="center">
+    	<cfinput name="submit" type="image" src="pics/send-email.gif">
+    </div>
+</cfif>
+
+<br/><br/>
+
 <strong><small><center>RECEIVABLES</center></small></strong>
 <br/>
 
@@ -267,15 +278,28 @@ ORDER BY
 <table class="frame" align="center">
 
     <tr class="darkBlue">
+    	<cfif NOT ISDEFINED('form.printFormat') AND form.selectPrograms NEQ "ALL">
+            <td align="center">
+                <cfinput name="emailAgent" id="emailAgent" type="checkbox" onClick="javaScript:checkUncheck();" checked="true">
+            </td>
+        </cfif>
         <td class="right">AGENT</td>
         <td class="right">TOTAL</td>
     </tr>
 
 <cfoutput query="qTotalAgentBalance">
 
-    <cfinput type="hidden" name="agentId" value="#qTotalAgentBalance.intrepid#">        
+    <cfinput type="hidden" name="agentId" value="#qTotalAgentBalance.intrepid#">      
     
     <tr <cfif qTotalAgentBalance.currentRow MOD 2>bgcolor="##FFFFFF"</cfif>>
+    
+		<cfif NOT ISDEFINED('form.printFormat') AND form.selectPrograms NEQ "ALL">
+        
+            <td align="center">
+                <cfinput name="email#qTotalAgentBalance.intrepid#" id="email#qTotalAgentBalance.intrepid#" type="checkbox" checked="yes" align="absmiddle">
+            </td>
+            
+        </cfif>
         
         <td class="two">#toString(qTotalAgentBalance.intl_rep)#</td> 
         <td class="two <cfif qTotalAgentBalance.amount LT 0>style1</cfif>">#LsCurrencyFormat(qTotalAgentBalance.amount)#</td>
@@ -290,6 +314,9 @@ ORDER BY
 <cfoutput>
 
     <tr class="darkBlue">
+    	<cfif NOT ISDEFINED('form.printFormat') AND form.selectPrograms NEQ "ALL">
+    		<td></td>
+        </cfif>
         
         <td class="right">TOTAL</td>
         <td class="right">#LsCurrencyFormat(variables.grandTotalBal)#</td>
@@ -303,8 +330,7 @@ ORDER BY
 
 
 <!--- FROM THIS LINE DOWN: NEGATIVE BALANCES --->
-<cfquery name="qTotalAgentNegBalance" datasource="MySQL">
-
+<cfquery name="qTotalAgentBalance" datasource="MySQL">
 	<!--- QUERIES OF INVOICES, PAYMENTS RELATED TO A PROGRAM --->
     select t.intl_rep, t.intrepid, t.billing_contact, t.billing_email, t.program, t.programid, sum(t.amount) as amount
     from (
@@ -384,7 +410,6 @@ ORDER BY
     
     group by t.intrepid HAVING amount < 0
     order by amount DESC
-    
 </cfquery>
 
 <br/>
@@ -394,35 +419,50 @@ ORDER BY
 <strong><small><center>REFUNDS DUE</center></small></strong>
 <br/>
 
-<cfif qTotalAgentNegBalance.recordCount EQ 0>
-	<small><center>There are not refunds due for the selected programs</center></small>
+<cfif qTotalAgentBalance.recordCount EQ 0>
+	<small>There are not refunds due for the selected programs</small>
 <cfelse>
 <table class="frame" align="center">
 
     <tr class="darkBlue">
+    	<cfif NOT ISDEFINED('form.printFormat') AND form.selectPrograms NEQ "ALL">
+            <td align="center">
+				<cfinput name="emailAgent" id="emailAgent" type="checkbox" onClick="javaScript:checkUncheck();" checked="true">
+            </td>
+        </cfif>
         <td class="right">AGENT</td>
         <td class="right">TOTAL</td>
     </tr>
 
-<cfoutput query="qTotalAgentNegBalance">
+<cfoutput query="qTotalAgentBalance">
 
     <cfinput type="hidden" name="agentId" value="#qTotalAgentBalance.intrepid#">        
     
-    <tr <cfif qTotalAgentNegBalance.currentRow MOD 2>bgcolor="##FFFFFF"</cfif>>
+    <tr <cfif qTotalAgentBalance.currentRow MOD 2>bgcolor="##FFFFFF"</cfif>>
+    
+		<cfif NOT ISDEFINED('form.printFormat') AND form.selectPrograms NEQ "ALL">
+        <td align="center">
+			<cfinput name="email#qTotalAgentBalance.intrepid#" id="email#qTotalAgentBalance.intrepid#" type="checkbox" checked="yes" align="absmiddle">
+        </td>
+        </cfif>
         
-        <td class="two">#toString(qTotalAgentNegBalance.intl_rep)#</td> 
-        <td class="two <cfif qTotalAgentNegBalance.amount LT 0>style1</cfif>">#LsCurrencyFormat(qTotalAgentNegBalance.amount)#</td>
+        <td class="two">#toString(qTotalAgentBalance.intl_rep)#</td> 
+        <td class="two <cfif qTotalAgentBalance.amount LT 0>style1</cfif>">#LsCurrencyFormat(qTotalAgentBalance.amount)#</td>
         
     </tr>
     
     <cfparam name="grandTotalNegBal" default="0">
-    <cfset grandTotalNegBal = grandTotalNegBal + qTotalAgentNegBalance.amount>
+    <cfset grandTotalNegBal = grandTotalNegBal + qTotalAgentBalance.amount>
 
 </cfoutput>
 
 <cfoutput>
 
-    <tr class="darkBlue">        
+    <tr class="darkBlue">
+    	<cfif NOT ISDEFINED('form.printFormat') AND form.selectPrograms NEQ "ALL">
+    		<td></td>
+        </cfif>
+        
         <td class="right">TOTAL</td>
         <td class="right">#LsCurrencyFormat(variables.grandTotalNegBal)#</td>
     </tr>
