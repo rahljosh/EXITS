@@ -35,8 +35,8 @@
     <cfquery name="qGetPoints" datasource="#APPLICATION.DSN#">
     	SELECT 
         	i.*,
-            CONCAT(u.firstName, " ", u.lastName, " (##", u.userID, ")") AS userName,
-            CONCAT(s.firstName, " ", s.familyLastName, " (##", s.studentID, ")") AS studentName
+            CONCAT(u.firstName, " ", u.lastName, " (##", CAST(u.userID AS CHAR), ")") AS userName,
+            CONCAT(s.firstName, " ", s.familyLastName, " (##", CAST(s.studentID AS CHAR), ")") AS studentName
         FROM smg_incentive_trip_points i
         INNER JOIN smg_users u ON u.userID = i.userID
         LEFT JOIN smg_students s ON s.studentID = i.studentID
@@ -230,7 +230,7 @@
             </tr>
             <cfset x = 1>
             <cfloop query="qGetPoints">
-        		<tr bgcolor="<cfif x MOD 2 EQ 0>lightgray</cfif>">
+            	<cfif x MOD 2 EQ 0><tr bgcolor="lightgray"><cfelse><tr></cfif>
                 	<td>#userName#</td>
                     <td>#studentName#</td>
                     <td>#points#</td>
