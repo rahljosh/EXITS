@@ -121,7 +121,7 @@
 	}
 </style>
 
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
 
 <script type="text/javascript">
 
@@ -185,7 +185,7 @@
 
 	var vNewGuestNumber = 0;
 	
-	changeTakeCheck = function() {
+	function changeTakeCheck() {
 		if ($("#takingCheckBox").is(":checked")) {
 			$("#takingCheck").val(1);
 			$("#guests").hide();
@@ -195,7 +195,7 @@
 		}
 	}
 	
-	addGuest = function() {
+	function addGuest() {
 		vNewGuestNumber++;
 		$("#incentiveDetailsTable tr:last").after("<tr id='row"+vNewGuestNumber+"'>"
 				+"<td><input type='text' name='addName_"+vNewGuestNumber+"' id='addName_"+vNewGuestNumber+"' /></td>"
@@ -211,13 +211,16 @@
 				+"<td><input type='text' class='airportClass' name='addDepartureAirport_"+vNewGuestNumber+"' id='addDepartureAirport_"+vNewGuestNumber+"' /></td>"
 				+"<td><input type='text' name='addNotes_"+vNewGuestNumber+"' id='addNotes_"+vNewGuestNumber+"' /></td>"
 				+"<td></td>"
-				+"<td><input type='button' value='Remove Traveler' onclick='removeGuest("+vNewGuestNumber+");' style='width: 100px; cursor:pointer;' /></td>"
+				+"<td><input type='button' value='Remove Traveler' onclick='removeGuest("+vNewGuestNumber+");' style='width: 120px; cursor:pointer;' /></td>"
         	+"</tr>");
 		$('#addDob_'+vNewGuestNumber).datepicker({changeMonth: true, changeYear: true, yearRange: '-100y:c+nn', maxDate: '-1d'});
+		$('#addName_'+vNewGuestNumber).addClass("checkField");
+		$('#addDob_'+vNewGuestNumber).addClass("checkField");
+		$('#addDepartureAirport_'+vNewGuestNumber).addClass("checkField");
 		$("#noGuests").hide();
 	}
 	
-	removeGuest = function(ID) {
+	function removeGuest(ID) {
 		if (vNewGuestNumber > 0) {
 			document.getElementById('incentiveDetailsTable').deleteRow(document.getElementById('row'+ID).rowIndex);
 		}
@@ -226,67 +229,14 @@
 		} 
 	}
 	
-	saveChanges = function() {
+	function saveChanges() {
 		vErrors = 0;
 		$(".missingInfo").removeClass("missingInfo");
-		for(i=1;i<=vNewGuestNumber;i++) {
-			if ($('#addName_'+i).length > 0) {
-				if ($('#addName_'+i).val().length == 0) {
-					$('#addName_'+i).addClass("missingInfo");
-					vErrors++;
-				}
-				if ($('#addDob_'+i).val().length == 0) {
-					$('#addDob_'+i).addClass("missingInfo");
-					vErrors++;
-				}
-				
-				vAirport = $('#addDepartureAirport_'+i);
-				if (vAirport.val().length < 3) {
-					vAirport.addClass("missingInfo");
-					vErrors++;
-				} else {
-					vAirportCode = vAirport.val().substring(0,3);
-					vAirportCodes = $("#airportCodes").val().split(',');
-					valid = vAirportCodes.indexOf(vAirportCode);
-					if (valid > -1) {
-						vAirport.val(vAirportCode);	
-					} else {
-						vAirport.addClass("missingInfo");
-						vErrors++;
-					}
-				}
-			}
-		}
-		
-		vGuestList = $("#guestList").val();
-		vGuestArray = new Array();
-		if (vGuestList.length) {
-			vGuestArray = String.split(vGuestList);	
-		}
-		for(j=0;j<vGuestArray.length;j++) {
-			if ($('#name_'+vGuestArray[j]).val().length == 0) {
-				$('#name_'+vGuestArray[j]).addClass("missingInfo");
+		var items = document.getElementsByClassName('checkField');
+		for (var i = 0; i < items.length; i++) {
+			if (items[i].value == "") {
 				vErrors++;
-			}
-			if ($('#dob_'+vGuestArray[j]).val().length == 0) {
-				$('#dob_'+vGuestArray[j]).addClass("missingInfo");
-				vErrors++;
-			}
-			
-			vAirport = $('#departureAirport_'+vGuestArray[j]);
-			if (vAirport.val().length < 3) {
-				vAirport.addClass("missingInfo");
-				vErrors++;
-			} else {
-				vAirportCode = vAirport.val().substring(0,3);
-				vAirportCodes = $("#airportCodes").val().split(',');
-				valid = vAirportCodes.indexOf(vAirportCode);
-				if (valid > -1) {
-					vAirport.val(vAirportCode);	
-				} else {
-					vAirport.addClass("missingInfo");
-					vErrors++;
-				}
+				items[i].className = items[i].className + " missingInfo";
 			}
 		}
 		
@@ -335,7 +285,7 @@
                                 }
                             </cfscript>
                             <tr>
-                                <td><input type="text" name="name_#ID#" id="name_#ID#" value="#name#" /></td>
+                                <td><input type="text" name="name_#ID#" id="name_#ID#" value="#name#" class="checkField" /></td>
                                 <td>
                                     <select name="userType_#ID#" id="userType_#ID#">
                                         <option value="0" <cfif userType EQ 0>selected="selected"</cfif>>Guest</option>
@@ -344,8 +294,8 @@
                                         <option value="5" <cfif userType EQ 5>selected="selected"</cfif>>Regional Manager</option>
                                     </select>
                                 </td>
-                                <td><input type="text" class="datePicker" name="dob_#ID#" id="dob_#ID#" value="#DateFormat(dob,'mm/dd/yyyy')#" /></td>
-                                <td><input type="text" class="airportClass" name="departureAirport_#ID#" id="departureAirport_#ID#" value="#departureAirport#" /></td>
+                                <td><input type="text" class="datePicker checkField" name="dob_#ID#" id="dob_#ID#" value="#DateFormat(dob,'mm/dd/yyyy')#" /></td>
+                                <td><input type="text" class="airportClass checkField" name="departureAirport_#ID#" id="departureAirport_#ID#" value="#departureAirport#" /></td>
                                 <td><input type="text" name="notes_#ID#" id="notes_#ID#" value="#comments#" /></td>
                                 <td>
                                     <cfif vPlacements GTE vRequirement>

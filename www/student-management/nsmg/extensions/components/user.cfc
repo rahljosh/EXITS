@@ -2939,9 +2939,7 @@ setUserSessionPaperwork
                     <cfif LEN(ARGUMENTS.departureAirport)>
                     	departureAirport = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.departureAirport#">,
                     </cfif>
-                    <cfif LEN(ARGUMENTS.comments)>
-                    	comments = <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#ARGUMENTS.comments#">,
-                    </cfif>
+                    comments = <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#ARGUMENTS.comments#">,
                     updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
               	WHERE ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.ID#">
             </cfquery>
