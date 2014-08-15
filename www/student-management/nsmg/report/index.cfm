@@ -64,7 +64,7 @@
     
     
     <!--- List of Representative Management Reports --->
-    <cfcase value="userRegionalHierarchy,userAreaRepPaperwork,userComplianceMileageReport,userTrainingList">
+    <cfcase value="userRegionalHierarchy,userAreaRepPaperwork,userComplianceMileageReport,userTrainingList,userIncentiveTripReport">
 
         <cfinclude template="representativeManagement/_#action#.cfm" />
 
@@ -72,7 +72,7 @@
 
 
     <!--- List of Office Management Reports --->
-    <cfcase value="officeRegionGoal,officeComplianceCheckPaperwork,officeDOSCertification,officeDOSRelocation,officeRecruitmentReport,officeComplianceStateCountry,officeRegionGoalByProgram,officeIncentiveTripReport">
+    <cfcase value="officeRegionGoal,officeComplianceCheckPaperwork,officeDOSCertification,officeDOSRelocation,officeRecruitmentReport,officeComplianceStateCountry,officeRegionGoalByProgram">
 
         <cfinclude template="officeManagement/_#action#.cfm" />
 

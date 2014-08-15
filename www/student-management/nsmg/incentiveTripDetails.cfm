@@ -12,17 +12,6 @@
 
     <cfparam name="FORM.submitted" default="0">
     
-    <cfquery name="qGetPlacedStudents" datasource="#APPLICATION.DSN#">
-        SELECT COUNT(*) AS Count
-        FROM smg_students
-        INNER JOIN smg_programs ON smg_programs.programid = smg_students.programid
-        INNER JOIN smg_incentive_trip ON smg_programs.tripid = smg_incentive_trip.tripid
-        WHERE smg_students.placerepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#"> 
-        AND smg_students.host_fam_approved < 5
-        AND smg_students.active = 1
-        AND smg_incentive_trip.active = 1
-    </cfquery>
-    
     <cfquery name="qGetIncentiveTrip" datasource="#APPLICATION.DSN#">
         SELECT *
         FROM smg_incentive_trip 
@@ -35,23 +24,26 @@
     </cfquery>
     
     <cfscript>
-		vTotalPlacements = qGetPlacedStudents.count;
-        vPlacements = vTotalPlacements;
-		vTotalTrips = APPLICATION.CFC.USER.getTripsEarned(numPlacements = vPlacements);
+		vUserID = CLIENT.userID;
+        vSeasonID = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID;
+		
+		vTotalPlacements = APPLICATION.CFC.USER.getPlacementsAndPointsCount(
+			userID = vUserID,
+			seasonID = vSeasonID);
+		
+		vPlacements = vTotalPlacements;
+		vTotalTrips = APPLICATION.CFC.USER.getTripsEarned(numPlacements = vTotalPlacements);
 		vTripsLeft = vTotalTrips;
 		vTotalCost = 0;
 		
-        vUserID = CLIENT.userID;
-        vSeasonID = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID;
-        
         qGetIncentiveTripGuests = APPLICATION.CFC.USER.getIncentiveTripGuests(
             userID = vUserID,
             seasonID = vSeasonID);
 		
 		vTakingCheck = VAL(APPLICATION.CFC.USER.getTakingCheck(
 			userID = vUserID,
-            seasonID = vSeasonID).takingCheck);			   
-        
+            seasonID = vSeasonID).takingCheck);
+		
     </cfscript>
     
     <cfif VAL(FORM.submitted)>
@@ -402,7 +394,7 @@
                     </tr>
                     <tr>
                         <td>
-                            You have made <b>#qGetPlacedStudents.count#</b> placements and have earned a total of <b>#vTotalTrips#</b> trip(s).
+                            You have made <b>#vTotalPlacements#</b> placements and have earned a total of <b>#vTotalTrips#</b> trip(s).
                             <br />
                             You are using <b>#vTotalTrips - vTripsLeft#</b> trip(s) and will 
                             <cfif vTripsLeft GT 0>

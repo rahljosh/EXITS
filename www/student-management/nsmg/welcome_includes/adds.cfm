@@ -1,7 +1,7 @@
 <cfif (ListFind("5,6,7,9,15", CLIENT.userType) AND ListFind(APPLICATION.SETTINGS.COMPANYLIST.publicHS, CLIENT.companyid)) >
 
 	<cfscript>
-		tripcount = 7 - placed_students.Count;
+		tripcount = 7 - vPlacedStudents;
 		vDeadline = CreateDate(Year(NOW()),9,1);
 		vAdd = 0;
 		vDay = DayOfWeek(vDeadline);
@@ -26,7 +26,7 @@
                 <td>
                     <table border=0>
                         <tr>
-                            <cfif placed_students.Count LT 7>
+                            <cfif vPlacedStudents LT 7>
                                 <td class="sticky" align="center">
                                     #tripcount#
                                 </td>
@@ -40,10 +40,10 @@
                                 <td colspan=2 style="font-size:16px; color:##C55;">
                                     <img src="pics/warning.png" width="25px" />  You've earned a trip to 
                                     <b><a href="../uploadedFiles/Incentive_trip/incentiveTrip_#client.companyid#.pdf" target="_blank" style="color:##C55;">#incentive_trip.trip_place#!!!</a></b> 
-                                    <!--- Currently only available for Crossroads, Rocky Mountain, and Smoky Mountains 
+                                    <!--- Currently only available for Crossroads, Rocky Mountain, and Smoky Mountains --->
 									<cfif ListFind("1020,1093,1535",CLIENT.regionID)>
                                     	Please enter your and any guest's information by #DateFormat(vDeadline,'mm/dd/yyyy')# <b><a href="?curdoc=incentiveTripDetails" style="color:##C55;">HERE</a></b>.
-									</cfif>--->
+									</cfif>
                                 </td>
                             </cfif>
                         </tr>
