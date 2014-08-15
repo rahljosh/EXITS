@@ -2975,6 +2975,35 @@ setUserSessionPaperwork
         
     </cffunction>
     
+    <cffunction name="getPlacementsAndPointsCount" access="public" returntype="numeric" output="no" hint="Gets the total number of placements and points for this rep in this season">
+    	<cfargument name="userID" required="yes">
+        <cfargument name="seasonID" required="yes">
+        
+        <cfquery name="qGetPlacedStudents" datasource="#APPLICATION.DSN#">
+            SELECT COUNT(*) AS total
+            FROM smg_students
+            INNER JOIN smg_programs ON smg_programs.programid = smg_students.programid
+            INNER JOIN smg_incentive_trip ON smg_programs.tripid = smg_incentive_trip.tripid
+            WHERE smg_students.placerepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#"> 
+            AND smg_students.host_fam_approved < 5
+            AND smg_students.active = 1
+            AND smg_incentive_trip.active = 1
+        </cfquery>
+        
+        <cfquery name="qGetRepPoints" datasource="#APPLICATION.DSN#">
+            SELECT SUM(points) AS total
+            FROM smg_incentive_trip_points
+            WHERE isDeleted = 0
+            AND seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
+            AND userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
+        </cfquery>
+        
+        <cfscript>
+			return VAL(qGetPlacedStudents.total) + VAL(qGetRepPoints.total);
+		</cfscript>
+    
+    </cffunction>
+    
     <cffunction name="getTripsEarned" access="public" returntype="numeric" output="no" hint="Gets the number of trips earned based on the number of placements">
     	<cfargument name="numPlacements" required="yes">
         

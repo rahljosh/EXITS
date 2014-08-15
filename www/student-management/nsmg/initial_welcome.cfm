@@ -254,25 +254,12 @@
             and s.hostid > 0
             order by s.programid desc, studentLast, hostLast
          </cfquery>
-
-	<cfquery name="placed_students" datasource="#application.dsn#">
-        SELECT 
-        	COUNT(*) AS Count
-        FROM 
-        	smg_students
-        INNER JOIN 
-        	smg_programs ON smg_programs.programid = smg_students.programid
-        INNER JOIN 
-        	smg_incentive_trip ON smg_programs.tripid = smg_incentive_trip.tripid
-        WHERE 
-        	smg_students.placerepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#"> 
-        AND 
-        	smg_students.host_fam_approved < <cfqueryparam cfsqltype="cf_sql_integer" value="5"> 
-        AND 
-        	smg_students.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-        AND 
-        	smg_incentive_trip.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-    </cfquery>
+    
+    <cfscript>
+		vPlacedStudents = APPLICATION.CFC.USER.getPlacementsAndPointsCount(
+			userID = CLIENT.userID,
+			seasonID = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID);
+	</cfscript>
 
     <cfquery name="incentive_trip" datasource="#application.dsn#">
         SELECT

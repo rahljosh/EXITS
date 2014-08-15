@@ -301,7 +301,16 @@
             </ul>
         </td>
         <td class="lastRow">&nbsp;
-        	
+        	<!--- This report is only available for office users and managers --->
+			<cfif CLIENT.userType LTE 5>
+                <ul class="mainList">
+                    <li onclick="loadSelectedReport('userIncentiveTripReport');">Incentive Trip Report</li>
+                    <ul>
+                        <li>Generate a list of guests for the incentive trips</li>
+                        <li>Filter by: Season, trip</li>
+                    </ul>
+                </ul>
+          	</cfif>
         </td>
         <td class="lastRow right">&nbsp;
         	
@@ -377,15 +386,6 @@
                 <ul>
                     <li>Generate a total by region of new area reps</li>
                     <li>Filter by: Region, Season</li>
-                </ul>
-            </ul>
-        </td>
-		<td class="lastRow">&nbsp;
-            <ul class="mainList">
-                <li onclick="loadSelectedReport('officeIncentiveTripReport');">Incentive Trip Report</li>
-                <ul>
-                    <li>Generate a list of guests for the incentive trips</li>
-                    <li>Filter by: Season, trip</li>
                 </ul>
             </ul>
         </td>
