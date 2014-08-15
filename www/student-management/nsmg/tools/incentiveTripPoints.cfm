@@ -47,7 +47,7 @@
     
     <!--- Get all active reps --->
     <cfquery name="qGetReps" datasource="#APPLICATION.DSN#">
-    	SELECT u.userID, u.firstName, u.lastName
+    	SELECT u.userID, CONCAT(u.firstName, " ", u.lastName, " (##", CAST(u.userID AS CHAR), ")") AS userName
         FROM smg_users u
         INNER JOIN user_access_rights uar ON uar.userID = u.userID
         	AND uar.userType IN (5,6,7)
@@ -58,18 +58,16 @@
     
     <!--- Get all active students --->
     <cfquery name="qGetStudents" datasource="#APPLICATION.DSN#">
-    	SELECT studentID, firstName, familyLastName
+    	SELECT studentID, CONCAT(firstName, " ", familyLastName, " (##", CAST(studentID AS CHAR), ")") AS studentName
         FROM smg_students
         WHERE active = 1
     </cfquery>
     
-    <cfset userIDs = ListToArray(ValueList(qGetReps.userID))>
-    <cfset userFirstNames = ListToArray(ValueList(qGetReps.firstName))>
-    <cfset userLastNames = ListToArray(ValueList(qGetReps.lastName))>
+    <cfset userIDs = ListToArray(ValueList(qGetReps.userID),",",true)>
+    <cfset userNames = ListToArray(ValueList(qGetReps.userName),",",true)>
     
-    <cfset studentIDs = ListToArray(ValueList(qGetStudents.studentID))>
-    <cfset studentFirstNames = ListToArray(ValueList(qGetStudents.firstName))>
-    <cfset studentLastnames = ListToArray(ValueList(qGetStudents.familyLastName))>
+    <cfset studentIDs = ListToArray(ValueList(qGetStudents.studentID),",",true)>
+    <cfset studentNames = ListToArray(ValueList(qGetStudents.studentName),",",true)>
     
     <!--- Submitted form --->
     <cfif VAL(FORM.submitted)>
@@ -128,12 +126,10 @@
 <script type="text/javascript">
 	<cfoutput>
 		var #toScript(userIDs,"userIDs")#;
-		var #toScript(userFirstNames,"userFirstNames")#;
-		var #toScript(userLastNames,"userLastNames")#;
+		var #toScript(userNames,"userNames")#;
 		
 		var #toScript(studentIDs,"studentIDs")#;
-		var #toScript(studentFirstNames,"studentFirstNames")#;
-		var #toScript(studentLastNames,"studentLastNames")#;
+		var #toScript(studentNames,"studentNames")#;
 	</cfoutput>
 
 	$(document).ready(function() {
@@ -155,7 +151,7 @@
 		index = userIDs.indexOf(id);
 		if (index > -1) {
 			$("#noUserFound").hide();
-			$("#userName").html(userFirstNames[index] + " " + userLastNames[index] + " (#" + id + ")");
+			$("#userName").html(findNameByID(id,userNames));
 		} else {
 			$("#noUserFound").show();
 			$("#userName").html("");
@@ -166,11 +162,21 @@
 		index = studentIDs.indexOf(id);
 		if (index > -1) {
 			$("#noStudentFound").hide();
-			$("#studentName").html(studentFirstNames[index] + " " + studentLastNames[index] + " (#" + id + ")");
+			$("#studentName").html(findNameByID(id,studentNames));
 		} else {
 			$("#noStudentFound").show();
 			$("#studentName").html("");
 		}
+	}
+	
+	function findNameByID(id,array) {
+		var rValue = "";
+		for (var i=0; i < array.length; i++) {
+			if (array[i].indexOf("(#"+id+")") > -1) {
+				rValue = array[i];
+			}
+		}
+		return rValue;
 	}
 	
 	function validateForm() {
