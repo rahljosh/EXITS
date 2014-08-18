@@ -2291,7 +2291,7 @@
                         
                         <p>
                         	Please log in to EXITS to view this application or click the link below for direct access (you must be logged in EXITS). <br />
-                            <a href="#CLIENT.exits_URL#/nsmg/index.cfm?curdoc=hostApplication/listOfApps&status=7&seasonID=" & APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID#>View Host Family Application</a>
+                            <a href="#CLIENT.exits_URL#/nsmg/index.cfm?curdoc=hostApplication/listOfApps&status=7&seasonID=#APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID#">View Host Family Application</a>
 						</p>
                         
                         <p>
