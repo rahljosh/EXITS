@@ -148,6 +148,8 @@
                where caseID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.caseID#">
                and isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
             </cfquery>
+       <!----If case owner is Facilitator, loop in Program Manager or if, PM, loop in the Facilitator---->
+       
        
        
        <cfset vCaseID = #url.caseid#>
@@ -184,6 +186,8 @@
                 vCaseID = ValueList(qCaseID.caseid);
           </cfscript>
        </cfif>
+      
+      
        
 		  <!----insert the students associated with the case---->
             <cfquery datasource="#APPLICATION.DSN#">
@@ -231,7 +235,46 @@
                 </cfquery>
 	
         	</cfloop>       
-                                                      
+             <!----If case owner is Facilitator, loop in Program Manager or if, PM, loop in the Facilitator---->
+             <cfquery name="getCaseOwner" datasource="#APPLICATION.dsn#">
+             select fk_caseowner
+             from smg_casemgmt_cases 
+             where caseid = <cfqueryparam cfsqltype="cf_sql_integer" value="#vCaseID#">
+             </cfquery>
+               <cfquery name="checkUserType" datasource="#APPLICATION.dsn#">
+                   SELECT usertype
+                   FROM user_access_rights
+                   WHERE userid  = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.caseOwner#">
+                   AND companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.companyid#">
+               </cfquery>
+               <Cfquery name="pm" datasource="#APPLICATION.dsn#">
+                    SELECT pmUserID
+                    from smg_companies
+                    where companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.companyid#">
+                </Cfquery>
+                 <cfquery name="facilitator" datasource="#application.dsn#">
+                    select regionfacilitator
+                    from smg_regions 
+                    where regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.regionassigned#">
+                    
+                </cfquery>
+              
+               <cfif checkUserType.usertype eq 4>
+                     <cfquery name="LoopSomeoneIn" datasource="#application.dsn#">
+                        insert into smg_casemgmt_loopedin (fk_caseid, email)
+                                    values(<cfqueryparam cfsqltype="cf_sql_integer" value="#vCaseID#">, 
+                                           <cfqueryparam cfsqltype="cf_sql_varchar" value="#pm.pmUserID#">)
+                                        
+                     </cfquery>
+               </cfif>
+               <cfif #ARGUMENTS.caseOwner# eq #pm.pmUserID#>
+                <cfquery name="LoopSomeoneIn" datasource="#application.dsn#">
+                        insert into smg_casemgmt_loopedin (fk_caseid, email)
+                                    values(<cfqueryparam cfsqltype="cf_sql_integer" value="#vCaseID#">, 
+                                           <cfqueryparam cfsqltype="cf_sql_varchar" value="#facilitator.regionfacilitator#">)
+                                        
+                     </cfquery>
+      			 </cfif>                                 
      	<cfreturn vCaseID>
 
     </cffunction>
