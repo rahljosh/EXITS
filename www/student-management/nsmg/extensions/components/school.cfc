@@ -228,7 +228,8 @@
                 WHERE
                     host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4" list="yes"> )    
             </cfquery>
-             <cfquery name="check5students" datasource="#APPLICATION.DSN#">
+            
+            <cfquery datasource="#APPLICATION.DSN#">
            	   UPDATE smg_school_dates
                SET fiveStudentAssigned = <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
                WHERE schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.schoolID)#">
