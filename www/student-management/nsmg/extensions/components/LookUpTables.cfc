@@ -486,7 +486,8 @@
 
 	<cffunction name="getState" access="public" returntype="query" output="false" hint="Returns a list of states or a specific state">
     	<cfargument name="stateID" default="" hint="stateID is not required">
-
+		<cfargument name="country" default="US" hint="country pass in country if states aren't needed">
+        
         <cfquery 
         	name="qGetState"
         	datasource="#APPLICATION.DSN#">
@@ -497,10 +498,15 @@
                     guarantee_fee
 				FROM
                 	smg_states
+                WHERE 
+               
+                	country = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.country#">
+              
 				<cfif LEN(ARGUMENTS.stateID)>
-                    WHERE 
-                        ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.stateID)#">
-                </cfif>                        
+                AND
+                    ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.stateID)#">
+                </cfif>  
+                                 
         </cfquery> 
 
 		<cfreturn qGetState>

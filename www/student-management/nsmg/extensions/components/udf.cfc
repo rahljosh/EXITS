@@ -380,7 +380,7 @@
 			// Declare Variables		
 			
 			// ISE
-			var vUserListISE = '7657,9719,1'; // Thea Brewer | Bryan McCready 
+			var vUserListISE = '7657,9719,1'; // Thea Brewer | Bryan McCready | Josh Rahl
 			
 			// CASE
 			var vUserListCASE = '11364'; // Stacy Brewer
@@ -389,7 +389,7 @@
 			var vListESI = '11364,16761'; // Stacy Brewer | Stacy Brewer
 			
 			// Stores all IDs so we can check quickly and return a masked SSN
-			var vAllowedIDList = '7657,9719,11364,16761';
+			var vAllowedIDList = '7657,9719,11364,16761,1';
 			
 			// Stores the return variable
 			var vReturnSSN = '';

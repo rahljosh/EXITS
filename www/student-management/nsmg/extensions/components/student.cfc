@@ -600,6 +600,7 @@
 			var vHasHostIDChanged = 0;
 			var vHasPlacementChanged = 0;
 			var vAutomaticallyApprove = 0;
+			
 		
 			// Check if Host Family has changed - If Yes reset double placement
 			if ( ARGUMENTS.hostID NEQ qGetCurrentPlacementInfo.hostID ) {
@@ -625,22 +626,22 @@
 					// Data has changed - Update student table
 					vHasPlacementChanged = 1;
 			}
-			
-			// Set to automatically approve if the change is to the placing, supervising, or second visit rep - 
-			// and it is not a change to the hostID, schoolID, doublePlacementID, or isWelcomeFamily - 
-			// and it is already approved
-			if ( 
-				(ARGUMENTS.placeRepID NEQ qGetCurrentPlacementInfo.placeRepID 
-					OR ARGUMENTS.areaRepID NEQ qGetCurrentPlacementInfo.areaRepID 
-					OR ARGUMENTS.secondVisitRepID NEQ qGetCurrentPlacementInfo.secondVisitRepID)
-				AND NOT (ARGUMENTS.hostID NEQ qGetCurrentPlacementInfo.hostID
-					OR ARGUMENTS.schoolID NEQ qGetCurrentPlacementInfo.schoolID
-					OR ARGUMENTS.doublePlace NEQ qGetCurrentPlacementInfo.doublePlacementID
-					OR ARGUMENTS.isWelcomeFamily NEQ qGetCurrentPlacementInfo.isWelcomeFamily)
-				AND (ARGUMENTS.placementStatus EQ "Approved") ) {
-					vAutomaticallyApprove = 1;
+			if (client.companyid neq 10){
+				// Set to automatically approve if the change is to the placing, supervising, or second visit rep - 
+				// and it is not a change to the hostID, schoolID, doublePlacementID, or isWelcomeFamily - 
+				// and it is already approved
+				if ( 
+					(ARGUMENTS.placeRepID NEQ qGetCurrentPlacementInfo.placeRepID 
+						OR ARGUMENTS.areaRepID NEQ qGetCurrentPlacementInfo.areaRepID 
+						OR ARGUMENTS.secondVisitRepID NEQ qGetCurrentPlacementInfo.secondVisitRepID)
+					AND NOT (ARGUMENTS.hostID NEQ qGetCurrentPlacementInfo.hostID
+						OR ARGUMENTS.schoolID NEQ qGetCurrentPlacementInfo.schoolID
+						OR ARGUMENTS.doublePlace NEQ qGetCurrentPlacementInfo.doublePlacementID
+						OR ARGUMENTS.isWelcomeFamily NEQ qGetCurrentPlacementInfo.isWelcomeFamily)
+					AND (ARGUMENTS.placementStatus EQ "Approved") ) {
+						vAutomaticallyApprove = 1;
+				}
 			}
-
 			// Insert-Update Placement History
 			insertPlacementHistory(
 				studentID = ARGUMENTS.studentID,					   
