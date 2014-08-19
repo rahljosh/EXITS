@@ -144,7 +144,7 @@
             
                     <legend>Uploaded Documents</legend>
             		
-                    <p class="legend">After upload, click on edit to select the category information of a file.</p>
+                    <p class="legend"><font color="red"><b>Attention: </b>After the file upload is complete, click on <b><u>edit</u></b> to <b><u>select a category for the file</u></b>.</font></p>
                     
                     <div class="documentList" align="center">
                         <cfform>
