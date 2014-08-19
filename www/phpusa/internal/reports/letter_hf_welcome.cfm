@@ -71,7 +71,7 @@ group by seasonid
 	<tr>
 		<td align="left">The #get_student_unqid.hostlastname# Family<br>
 			#get_student_unqid.address#<br>
-			<Cfif get_student_unqid.address2 NEQ ''>#get_student.address2#<br></Cfif>
+			<Cfif get_student_unqid.address2 NEQ ''>#get_student_unqid.address2#<br></Cfif>
 			#get_student_unqid.city#, #get_student_unqid.state# #get_student_unqid.zip#
 		</td>
 		<td align="right">
