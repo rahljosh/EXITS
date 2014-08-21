@@ -23,6 +23,11 @@
 	-->
 	</style>	
 </head>
+<Cfquery name="companyInfo" datasource="#APPLICATION.dsn#">
+    select *
+    from smg_companies
+    where companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
+      </Cfquery>
 <body <cfif NOT LEN(URL.curdoc)>onLoad="print()"</cfif>>
 
 <cfif NOT LEN(URL.curdoc)>
@@ -49,27 +54,28 @@
 <div class="section"><br>
 <table width="670" border=0 cellpadding=1 cellspacing=0 align="center">
 	<tr><td>
-<h3>#CLIENT.companyName# (#CLIENT.companyShort#) Authorization to Treat a Minor and HIPAA Release<br></h3>
-<p style="font-size:10px;" >(We) the undersigned parent(s), or legal guardian of________________________________________, (hereafter "Exchange Student"), do hereby authorize and consent to the following: </p>
-<p style="font-size:10px;" ><strong>Authorization to Treat a Minor or Dependent</strong></p>
-<p style="font-size:10px;" >I do hereby state that I have legal custody of the aforementioned Minor. I grant my authorization and consent for #CLIENT.companyName# (#CLIENT.companyShort#), its officers, staff, Regional Managers, Area Representatives and Host Families (hereafter "Designated Adults") to administer general first aid treatment for any minor injuries or illnesses experienced by the Exchange Student. If the injury or illness is life threatening or in need of professional medical treatment, I authorize the Designated Adults to summon any and all professional emergency personnel to attend, transport, and treat the minor and to issue consent for any medical or psychological treatment, and to be rendered under the general supervision of, any licensed physician, surgeon, dentist, hospital, psychologist, psychiatrist, nurse practitioner or other medical professional or institution duly licensed to practice in the state in which such treatment is to occur. I agree to assume financial responsibility for all expenses of such care. 
+<h3>Authorization to Treat a Minor <cfif client.companyid neq 13> and HIPAA Release</cfif><br></h3>
+<p>(We) the undersigned parent(s), or legal guardian of #get_student_info.firstname# #get_student_info.familylastname#, (hereafter "Exchange Student"), do hereby authorize and consent to the following: </p>
+<p><strong>Authorization to Treat a Minor or Dependent</strong></p>
+<p>I do hereby state that I have legal custody of the aforementioned Minor. I grant my authorization and consent for #CLIENT.companyName# (#CLIENT.companyShort#), its officers, staff, Regional Managers, Area Representatives and Host Families (hereafter "Designated Adults") to administer general first aid treatment for any minor injuries or illnesses experienced by the Exchange Student. If the injury or illness is life threatening or in need of professional medical treatment, I authorize the Designated Adults to summon any and all professional emergency personnel to attend, transport, and treat the minor and to issue consent for any medical or psychological treatment, and to be rendered under the general supervision of, any licensed physician, surgeon, dentist, hospital, psychologist, psychiatrist, nurse practitioner or other medical professional or institution duly licensed to practice in the state in which such treatment is to occur. I agree to assume financial responsibility for all expenses of such care. 
 </p>
-<p style="font-size:10px;" >
+<p>
 I also understand that certain vaccinations may be required for the Exchange Student to participate in certain schools and that the vaccination requirements vary across each state in the United States. If the documentation of these vaccinations has not been included in the student application submitted to #CLIENT.companyShort#, I authorize the Designated Adults to have the required vaccines administered to the Exchange Student. I agree to assume financial responsibility for all expenses related to the administration of these vaccines. 
 </p>
-<p style="font-size:10px;" >
+<p>
 It is understood that this authorization is given in advance of any such medical treatment, but is given to provide authority and power on the part of the Designated Adult in the exercise of his or her best judgment upon the advice of any such medical or emergency personnel.
 </p>
-<h2>HIPAA-Compliant Authorization for Release of Health Information<br></h2>
-<p style="font-size:10px;" >
+<cfif client.companyid neq 13>
+<h3>HIPAA-Compliant Authorization for Release of Health Information<br></h3>
+<p>
 I hereby authorize the protected health information for Exchange Student to be released as specified in this HIPAA compliant Authorization.
 </p>
-<ol style="font-size:10px;" >
+<ol>
 <li>Description of Information To Be Disclosed: I authorize the release of any and all records and information pertaining to the Individual's medical care, treatment, and physical and psychological condition.</li>
 <li>Entities Authorized to Disclose: I authorize any hospital, clinic or other medical facility, physician, nurse, physical or occupational therapist, chiropractor, psychiatrist, psychologist, medical practitioner, pharmacy, emergency medical service, basic life support service, advanced life support service, insurance company, the Medical Information Bureau or any other person or entity licensed to create and/or maintain protected health information for the Individual to disclose the Individual's health information as described above.</li>
 <li>Information Disclosed To: I authorize the Individual's information to be disclosed to: 
-<p>Company - International Student Exchange ("ISE")  119 Cooper Street, Babylon, NY 11702 
-Any of ISE's Student Facilitators, Program Managers, or Corporate Officers.
+<p>Company - #CLIENT.companyname# ("#CLIENT.companyshort#")  #companyInfo.address#, #companyInfo.city#, #companyInfo.state# #companyInfo.zip# 
+Any of #CLIENT.companyshort#'s Student Facilitators, Program Managers, or Corporate Officers.
 </p>
 <p>The information will be used to assist the student, Designated Adults, and his/her natural family manage patient care. I authorize any third-party record retrieval agent to retrieve the protected health information as described above for use by Agent and other authorized recipients.</p>
 </li>
@@ -78,11 +84,11 @@ Any of ISE's Student Facilitators, Program Managers, or Corporate Officers.
 <li> Re-disclosure: I recognize that protected health information disclosed to Agent or other authorized recipients may no longer be protected by HIPAA or other federal laws.</li>
 <li>Eligibility for Benefits: Treatment, payment, enrollment in a health plan, or eligibility for health insurance benefits may not be conditioned on my signing this authorization.</li>
 <li>Facsimiles: A copy or facsimile of this authorization is as valid as the original.</li>
-<li>My Right to a Copy: I hereby understand that I have a right to a copy of this fully-executed authorization which I can obtain from ISE’s representative in my home country
+<li>My Right to a Copy: I hereby understand that I have a right to a copy of this fully-executed authorization which I can obtain from #CLIENT.companyshort#’s representative in my home country
 </li>
 </ol>
-<p style="font-size:10px;">I have read and understood this authorization and authorize the disclosure of the protected health information as described above.</p>
-
+<p>I have read and understood this authorization and authorize the disclosure of the protected health information as described above.</p>
+</cfif>
 </td></tr>
 </table><br>
 	
