@@ -49,11 +49,21 @@
                                     <option value="i20received">I-20</option>
                                     <option value="hf_placement">HF Placement</option>
                                     <option value="hf_application">HF Application</option>
-                                    <option value="php_orientationSignOff">HF Orientation Sign-Off</option>
-                                    <option value="orientationSignOff_student">Student Orientation Sign-Off</option>
+                                    <option value="doc_letter_rec_date">Host Family Letter </option>
+                                    <option value="doc_rules_rec_date">Host Family Rules Form </option>
+                                    <option value="doc_photos_rec_date">Host Family Photos </option>
+                                    <option value="doc_school_profile_rec">School & Community Profile </option>
+                                    <option value="doc_conf_host_rec">Confidential HF Visit form </option>
+                                    <option value="orientationSignOff_student">Student orientation sign off </option>
+                                    <option value="doc_ref_form_1">Reference 1 </option>
+                                    <option value="doc_ref_form_2">Reference 2 </option>
+                                    <option value="php_orientationSignOff">HF Orientation Sign-Off</option> 
                                     <option value="hf_cbc">HF CBC</option>
                                     <option value="rep_cbc">Representative CBC</option>
                                     <option value="rep_training">Representative Training</option>
+                                    
+	
+
                                 </cfselect>
                             </td>
                         </tr>					
