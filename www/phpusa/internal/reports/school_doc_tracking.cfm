@@ -123,9 +123,9 @@
                 <cfif i EQ 'hf_application'><td><b>HF App</b></td></cfif>
                 <cfif i EQ 'doc_letter_rec_date'><td><b>Host Family Letter</b></td></cfif>
                 <cfif i EQ 'doc_rules_rec_date'><td><b>Host Family Rules Form</b></td></cfif>
-                <cfif i EQ 'doc_photos_rec_date'><td><b>School & Community Profile </b></td></cfif>
-                <cfif i EQ 'doc_school_profile_rec'><td><b>Confidential HF Visit form</b></td></cfif>
-                <cfif i EQ 'doc_conf_host_rec'><td><b>Host Family Letter</b></td></cfif>
+                <cfif i EQ 'doc_photos_rec_date'><td><b>Host Family Photos</b></td></cfif>
+                <cfif i EQ 'doc_school_profile_rec'><td><b>School & Community Profile</b></td></cfif>
+                <cfif i EQ 'doc_conf_host_rec'><td><b>Confidential HF Visit form</b></td></cfif>
                 <cfif i EQ 'orientationSignOff_student'><td><b>Student orientation sign off</b></td></cfif>
                 <cfif i EQ 'doc_ref_form_1'><td><b>Reference 1</b></td></cfif>
                 <cfif i EQ 'doc_ref_form_2'><td><b>Reference 2</b></td></cfif>
@@ -193,7 +193,6 @@
         </cfloop>
     </table>
 <br /><br />
-Complete
 </cfoutput>
 
 </body>
