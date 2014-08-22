@@ -389,6 +389,7 @@
                             <li><a href="" onClick="javaScript:win=window.open('invoice/m_payment.cfm', '_blank', 'height=800, width=900,  toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=1, resizable=yes, copyhistory=no'); win.opener=self; return false;">Payments Received</a></li>
                             <li><a href="invoice/m_chargesList.cfm" target="_blank">List of Charges</a></li>
                             <li><a href="invoice/m_wt_prices.cfm" target="_blank">W&T Price List</a></li>
+                            <li><a href="invoice/m_financialSummary.cfm" target="_blank">Financial Summary</a></li>
                         </ul>
                     </li>              
                 </cfif>
