@@ -156,3 +156,33 @@
     <br />
 
 </cfif>
+
+<!--- Financial Reports --->
+<cfif CLIENT.userID EQ 7935 OR CLIENT.userID EQ 6622>
+
+    <table width="90%" border="0" cellpadding="0" cellspacing="0" align="center" bordercolor="#C7CFDC">	
+        <tr>
+            <td width="49%" valign="top">
+                <table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="#C7CFDC" bgcolor="ffffff">
+                    <tr>
+                        <td bordercolor="FFFFFF">
+                            <span class="style1"><strong>5. Financial Tools and Reports</strong></span><br />
+    
+                            <p style="padding-left:20px;"><a href="https://ise.exitsapplication.com/nsmg/invoice/m_chargesList.cfm" target="_blank" class="style4">- List of Charges by Agent</a></p>
+                            
+                            <p style="padding-left:20px;"><a href="https://ise.exitsapplication.com/nsmg/invoice/m_financialSummary.cfm" target="_blank" class="style4">- Financial Summary, Totals per Fee Type</a></p>
+                            
+                            <p style="padding-left:20px;"><a href="https://ise.exitsapplication.com/nsmg/invoice/m_wt_prices.cfm" target="_blank" class="style4">- Work & Travel Fees, Prices by Agent</a></p>
+                            
+							<p style="padding-left:20px;"><a href="https://ise.exitsapplication.com/nsmg/index.cfm?curdoc=invoice/invoice_index&Requesttimeout=300" target="_blank" class="style4">- Access Agent Accounts, View Invoices, Payments, Cancellations</a></p>
+
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    
+    <br />
+
+</cfif>
