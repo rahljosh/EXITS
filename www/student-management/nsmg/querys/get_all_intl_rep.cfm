@@ -2,5 +2,6 @@
 	SELECT	*
 	FROM smg_users
 	WHERE USERTYPE = '8'
+    and businessname != ""
 	ORDER BY businessname
 </cfquery>
