@@ -48,20 +48,30 @@
             php.transfer_type, 
             php.return_student,
             php.orientationSignOff_student,
+            php.doc_letter_rec_date,
+            php.doc_rules_rec_date,
+            php.doc_photos_rec_date,
+            php.doc_school_profile_rec,
+            php.doc_conf_host_rec,
+            php.orientationSignOff_student,
+            php.doc_ref_form_1,
+            php.doc_ref_form_2,
             h.php_orientationSignOff,
             IFNULL(alp.name, 'n/a') AS PHPReturnOption
         FROM 
             smg_students s
+        
         INNER JOIN
             php_students_in_program php ON php.studentid = s.studentid
+        LEFT JOIN
+        	smg_hosts h ON h.hostID = php.hostID
         LEFT JOIN 
             smg_programs ON smg_programs.programid = php.programid 
         LEFT JOIN 
             smg_users u on u.userid = s.intrep 
         LEFT JOIN 
             php_schools sc ON sc.schoolid = php.schoolid
-      	LEFT JOIN
-        	smg_hosts h ON h.hostID = s.hostID
+      	
         LEFT OUTER JOIN
             applicationLookUp alp ON alp.fieldID = php.return_student
                  AND
@@ -77,6 +87,7 @@
     </cfquery>
     
 </cfsilent>
+
 
 <!-----Company Information----->
 <cfinclude template="../querys/get_company_short.cfm">
@@ -110,11 +121,19 @@
                 <cfif i EQ 'i20received'><td><b>I-20</b></td></cfif>
                 <cfif i EQ 'hf_placement'><td><b>HF Place</b></td></cfif>
                 <cfif i EQ 'hf_application'><td><b>HF App</b></td></cfif>
+                <cfif i EQ 'doc_letter_rec_date'><td><b>Host Family Letter</b></td></cfif>
+                <cfif i EQ 'doc_rules_rec_date'><td><b>Host Family Rules Form</b></td></cfif>
+                <cfif i EQ 'doc_photos_rec_date'><td><b>School & Community Profile </b></td></cfif>
+                <cfif i EQ 'doc_school_profile_rec'><td><b>Confidential HF Visit form</b></td></cfif>
+                <cfif i EQ 'doc_conf_host_rec'><td><b>Host Family Letter</b></td></cfif>
+                <cfif i EQ 'orientationSignOff_student'><td><b>Student orientation sign off</b></td></cfif>
+                <cfif i EQ 'doc_ref_form_1'><td><b>Reference 1</b></td></cfif>
+                <cfif i EQ 'doc_ref_form_2'><td><b>Reference 2</b></td></cfif>
                 <cfif i EQ 'php_orientationSignOff'><td><b>HF Orientation Sign-Off </b></td></cfif>
-                <cfif i EQ 'orientationSignOff_student'><td><b>Student Orientation Sign-Off</b></td></cfif>
                 <cfif i EQ 'hf_cbc'><td><b>HF CBC</b></td></cfif>
                 <cfif i EQ 'rep_cbc'><td><b>Representative CBC</b></td></cfif>
                 <cfif i EQ 'rep_training'><td><b>Representative Training</b></td></cfif>
+                                        
            	</cfloop>
         </tr>
         <cfloop query="qGetResults">
@@ -127,6 +146,7 @@
                 <td>#qGetResults.schoolname#</td>
                 <td><i><font size="-2">#qGetResults.PHPReturnOption#</font></i></td>
                 <cfloop list="#FORM.documents#" index="i">
+              
                 	<cfif i NEQ 'hf_cbc' AND i NEQ 'rep_cbc' AND i NEQ 'rep_training' AND i NEQ 'php_orientationSignOff'>
                     	<td><i><font size="-2"><cfif Evaluate('qGetResults.#i#') NEQ ''>#DateFormat(Evaluate('qGetResults.#i#'), 'mm/dd/yy')#<cfelse>n/a</cfif></font></i></td>
                    	<cfelseif i EQ 'php_orientationSignOff'>
@@ -138,11 +158,12 @@
                                     <cfelseif DateAdd('yyyy',1,php_orientationSignOff) LT NOW()>
                                         Expired
                                     <cfelse>
-                                        #DateFormat(family_info.php_orientationSignOff,'mm/dd/yyyy')#
+                                       #DateFormat(php_orientationSignOff,'mm/dd/yyyy')#
                                     </cfif>
                            		</font>
                           	</i>
                       	</td>
+                        
                     <cfelseif i EQ 'hf_cbc'>
                     	<cfscript>
 							vIsHostCBCValid = APPLICATION.CFC.Host.isCBCValid(hostID = #VAL(hostID)#);
@@ -171,7 +192,8 @@
             </tr>								
         </cfloop>
     </table>
-
+<br /><br />
+Complete
 </cfoutput>
 
 </body>
