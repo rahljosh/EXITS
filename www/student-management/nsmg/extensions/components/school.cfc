@@ -209,7 +209,7 @@
            
             <cfscript>	
 			// Get the letter info
-			check5students = APPCFC.DOCUMENT.getDocuments(foreignTable='school_info',foreignid=url.schoolid,seasonid=url.season);
+			check5students = APPLICATION.CFC.DOCUMENT.getDocuments(foreignTable='school_info',foreignid=url.schoolid,seasonid=url.season);
  			</cfscript>
            
             <cfquery name="qGetApprovedStudents" dbtype="query">
