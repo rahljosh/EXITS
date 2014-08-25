@@ -274,6 +274,8 @@
             <strong>
                 Please briefly comment below about the participant's potential for success and any other information you think will assist in the evaluation of this participant:
             </strong>
+            <br />
+     		&nbsp;<font color="red"><b>Attention:</b> This is an official record.</font>
 		</div>
 		<div class="field">
         	<label for="#qGetQuestions.fieldKey[9]#">&nbsp;<cfif qGetQuestions.isRequired[9]><em>*</em></cfif></label>
