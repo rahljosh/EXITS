@@ -3106,6 +3106,8 @@ setUserSessionPaperwork
                 SET 
                 	takingCheck = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.takingCheck#">,
                 	updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
+             	WHERE userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
+                AND seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.seasonID#">
             </cfquery>
         <cfelse>
         	<cfquery datasource="#APPLICATION.DSN#">

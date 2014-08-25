@@ -331,14 +331,14 @@
                     <tr><td><hr /></td></tr>
                   	<tr>
                   		<td align="center">
-                      		<span id="noGuests">
+                      		<span id="noGuests" style="display:none;">
                         		<input type="checkbox" id="takingCheckBox" onclick="changeTakeCheck()" />Take a check for $#vTotalTrips*500#
                           	</span>
                      	</td>
                 	</tr>
                     <tr>
                         <td align="center">
-                        	<span id="guests">
+                        	<span id="guests" style="display:none;">
                                 <input type="button" value="Add Traveler" onclick="addGuest();" style="width: 100px; cursor:pointer;" />
                             </span>
                             <input type="button" value="Save Changes" onclick="saveChanges();" style="width: 100px; cursor:pointer;" />
