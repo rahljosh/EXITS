@@ -244,7 +244,7 @@
 			$("#addGuests").val(vNewGuestNumber);
 			$("#incentiveTripForm").submit();
 		} else {
-			alert("Please complete all fields highlighted in red.");	
+			alert("Please complete all fields highlighted in red.");
 		}
 	}
 
@@ -331,14 +331,14 @@
                     <tr><td><hr /></td></tr>
                   	<tr>
                   		<td align="center">
-                      		<span id="noGuests" style="display:none;">
+                      		<span id="noGuests">
                         		<input type="checkbox" id="takingCheckBox" onclick="changeTakeCheck()" />Take a check for $#vTotalTrips*500#
                           	</span>
                      	</td>
                 	</tr>
                     <tr>
                         <td align="center">
-                        	<span id="guests" style="display:none;">
+                        	<span id="guests">
                                 <input type="button" value="Add Traveler" onclick="addGuest();" style="width: 100px; cursor:pointer;" />
                             </span>
                             <input type="button" value="Save Changes" onclick="saveChanges();" style="width: 100px; cursor:pointer;" />
