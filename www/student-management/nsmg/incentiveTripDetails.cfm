@@ -243,6 +243,8 @@
 		if (!vErrors) {
 			$("#addGuests").val(vNewGuestNumber);
 			$("#incentiveTripForm").submit();
+		} else {
+			alert("Please complete all fields highlighted in red.");	
 		}
 	}
 
