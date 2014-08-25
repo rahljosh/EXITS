@@ -207,12 +207,10 @@
                     s.familyLastName                
             </cfquery>			            
            
-            <cfquery name="check5students" datasource="#APPLICATION.DSN#">
-           	    SELECT fiveStudentAssigned
-            	FROM smg_school_dates
-            	WHERE schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.schoolID)#">
-                AND seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentsAssignedToSchool.seasonid)#">
-            </cfquery>
+            <cfscript>	
+			// Get the letter info
+			check5students = APPCFC.DOCUMENT.getDocuments(foreignTable='school_info',foreignid=url.schoolid,seasonid=url.season);
+ 			</cfscript>
            
             <cfquery name="qGetApprovedStudents" dbtype="query">
                 SELECT
@@ -237,7 +235,7 @@
             </cfquery>
             
             <!--- Sent out Notification --->
-            <cfif qGetApprovedStudents.recordCount GTE 5 and not isDate(#check5students.fiveStudentAssigned#)>
+            <cfif qGetApprovedStudents.recordCount GTE 5 and not val(#check5students.recordcount#)>
 
 				<!--- Email Template --->
                 <cfsavecontent variable="vEmailSchoolNotification">
