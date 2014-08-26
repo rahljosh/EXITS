@@ -108,7 +108,7 @@
 	
 	#incentiveDetailsTable {
 		border-collapse: collapse;
-		width: 850px;
+		width: 900px;
 		margin: auto;
 	}
 	
@@ -271,13 +271,13 @@
                     <input type="hidden" id="airportCodes" value="#ValueList(qGetAirports.airCode)#" />
                     <table id="incentiveDetailsTable">
                         <tr>
-                            <td width="180px"><u><b>Name</b></u></td>
-                            <td width="160px"><u><b>Type</b></u></td>
-                            <td width="100px"><u><b>DOB</b></u></td>
-                            <td width="120px"><u><b>Departure Airport</b></u></td>
-                            <td width="180px"><u><b>Notes</b></u></td>
+                            <td width="220px"><u><b>Name (as it appears on passport)</b></u></td>
+                            <td width="150px"><u><b>Type</b></u></td>
+                            <td width="110px"><u><b>DOB</b></u></td>
+                            <td width="110px"><u><b>Departure Airport</b></u></td>
+                            <td width="150px"><u><b>Notes</b></u></td>
                             <td width="50px"><u><b>Cost</b></u></td>
-                            <td width="60px"><u><b></b></u></td>
+                            <td width="100px"><u><b></b></u></td>
                         </tr>
                         <cfloop query="qGetIncentiveTripGuests">
                             <cfscript>

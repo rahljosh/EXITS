@@ -2,17 +2,7 @@
 
 	<cfscript>
 		tripcount = 7 - vPlacedStudents;
-		vDeadline = CreateDate(Year(NOW()),9,1);
-		vAdd = 0;
-		vDay = DayOfWeek(vDeadline);
-		if (vDay EQ 1) {
-			vAdd = 8;	
-		} else if (vDay EQ 2) {
-			vAdd = 7;	
-		} else {
-			vAdd = 14 - (vDay - 2);	
-		}
-		vDeadline = DateAdd('d',vAdd,vDeadline);
+		vDeadline = CreateDate(Year(NOW()),9,4);
 	</cfscript>
     
 	<cfoutput>
@@ -41,9 +31,9 @@
                                     <img src="pics/warning.png" width="25px" />  You've earned a trip to 
                                     <b><a href="../uploadedFiles/Incentive_trip/incentiveTrip_#client.companyid#.pdf" target="_blank" style="color:##C55;">#incentive_trip.trip_place#!!!</a></b> 
                                     <!--- Currently only available for Crossroads, Rocky Mountain, and Smoky Mountains --->
-									<cfif ListFind("1020,1093,1535",CLIENT.regionID)>
+									<!---<cfif ListFind("1020,1093,1535",CLIENT.regionID)>--->
                                     	Please enter your and any guest's information by #DateFormat(vDeadline,'mm/dd/yyyy')# <b><a href="?curdoc=incentiveTripDetails" style="color:##C55;">HERE</a></b>.
-									</cfif>
+									<!---</cfif>--->
                                 </td>
                             </cfif>
                         </tr>
