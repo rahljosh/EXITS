@@ -2979,13 +2979,19 @@ setUserSessionPaperwork
         
         <cfquery name="qGetPlacedStudents" datasource="#APPLICATION.DSN#">
             SELECT COUNT(*) AS total
-            FROM smg_students
-            INNER JOIN smg_programs ON smg_programs.programid = smg_students.programid
-            INNER JOIN smg_incentive_trip ON smg_programs.tripid = smg_incentive_trip.tripid
-            WHERE smg_students.placerepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#"> 
-            AND smg_students.host_fam_approved < 5
-            AND smg_students.active = 1
-            AND smg_incentive_trip.active = 1
+            FROM smg_students s
+            INNER JOIN smg_programs p ON p.programid = s.programid
+            INNER JOIN smg_incentive_trip t ON t.tripid = p.tripid
+            WHERE s.placerepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#"> 
+            AND s.host_fam_approved < 5
+            AND s.active = 1
+            AND t.active = 1
+            AND s.studentID IN (
+    			SELECT studentID 
+                FROM smg_hosthistory 
+                WHERE compliance_review IS NOT NULL    
+                AND placeRepID = s.placeRepID   
+			)
         </cfquery>
         
         <cfquery name="qGetRepPoints" datasource="#APPLICATION.DSN#">
