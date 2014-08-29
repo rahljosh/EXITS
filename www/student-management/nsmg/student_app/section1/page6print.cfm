@@ -70,7 +70,7 @@
 	<tr><td colspan="3">&nbsp;</td></tr>
 	<tr>
 		<td width="5">&nbsp;</td>
-		<td width="660"><div align="justify">#get_student_info.familyletter#<br><img src="#vStudentAppRelativePath#pics/line.gif" width="650" height="1" border="0" align="absmiddle"></div></td>
+		<td width="660"><div align="justify" style="width:600px;">#get_student_info.familyletter#<br><img src="#vStudentAppRelativePath#pics/line.gif" width="650" height="1" border="0" align="absmiddle"></div></td>
 		<td width="5">&nbsp;</td>
 	</tr>
 </table><br><br>

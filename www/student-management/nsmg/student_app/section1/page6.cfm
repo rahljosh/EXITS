@@ -98,7 +98,11 @@ function areYouSure() {
 			</tr>
 			<tr>
 				<td width=6 style="border-left: 1px solid ##557aa7;">&nbsp;</td>
-				<td width=600 style="padding:5px;"><div align="justify">#get_student_info.familyletter#<br><br></div></td>
+				<td width=600 style="padding:5px;">
+                	<div style="width:600px;">
+                        #familyletter#
+                    </div>
+               	</td>
 				<td width=6 style="border-right: 1px solid ##557aa7;">&nbsp;</td>
 			</tr>
 			<tr valign="bottom">
@@ -110,7 +114,7 @@ function areYouSure() {
 		</td>
 	</tr>
 	<cfelse>
-	<tr><td><textarea cols="110" rows="22" name="familyletter" wrap="VIRTUAL" onchange="DataChanged();">#Replace(familyletter,"<br>","#chr(10)#","all")#</textarea></td></tr>
+	<tr><td><textarea cols="110" rows="22" name="familyletter" wrap="soft" onchange="DataChanged();">#Replace(familyletter,"<br>","#chr(10)#","all")#</textarea></td></tr>
 	</cfif>
 </table><br><br>
 

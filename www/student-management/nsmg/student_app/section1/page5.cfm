@@ -99,7 +99,7 @@ function areYouSure() {
 			</tr>
 			<tr>
 				<td width=6 style="border-left: 1px solid ##557aa7;">&nbsp;</td>
-				<td width=600 style="padding:5px;"><div align="justify">#get_student_info.letter#<br><br></div></td>
+				<td width=600 style="padding:5px;"><div align="justify" style="width:600px;">#get_student_info.letter#<br><br></div></td>
 				<td width=6 style="border-right: 1px solid ##557aa7;">&nbsp;</td>
 			</tr>
 			<tr valign="bottom">
