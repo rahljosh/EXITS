@@ -35,6 +35,7 @@ LEFT OUTER JOIN smg_host_app_season shas ON shas.hostID = s.hostID
 INNER JOIN smg_programs p ON p.programID = s.programID
       AND p.type IN(1,2)      
       AND p.programID >= 340
+INNER JOIN smg_seasons season ON season.seasonID = p.seasonID
 WHERE s.companyID IN (1,2,3,4,5,12)
 AND (
     CURDATE() > (SELECT MAX(dep_date) FROM smg_flight_info WHERE studentID = s.studentID AND isDeleted = 0 AND flight_type = "departure")
@@ -42,8 +43,8 @@ AND (
     OR (s.schoolID IN (SELECT schoolID FROM smg_school_dates WHERE seasonID IN (SELECT seasonID FROM smg_programs WHERE programID = s.programID) AND semester_ends <= CURDATE()) AND p.type = 2) )    
 AND NOT EXISTS (SELECT agentID FROM smg_users_payments WHERE studentID = s.studentID AND paymentType IN (12,27))
 AND ( 
-    (p.type = 1 AND MONTH(CURDATE()) IN (4,5,6,7,8)) 
-    OR ( p.type = 2 AND ( (MONTH(CURDATE()) IN (1,2,3,4)) OR (MONTH(CURDATE()) = 12 AND DAY(CURDATE()) >= 15) ) )
+    ( p.type = 1 AND CURDATE() > DATE_ADD(season.endDate, INTERVAL -60 DAY) ) 
+    OR ( p.type = 2 AND CURDATE() > DATE_ADD(season.endDate, INTERVAL 169 DAY) )
     )
 AND s.placeRepID NOT IN (SELECT fk_userID FROM smg_user_payment_special WHERE isActive = 1 AND receivesDeparturePayment = 0)        
 AND hh.host_arrival_orientation IS NOT NULL
