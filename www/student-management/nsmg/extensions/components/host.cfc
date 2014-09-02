@@ -262,7 +262,7 @@
 						) 
 					AS CHAR) LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.search#%">
                	<!--- Check if family is approved --->
-             	<cfif CLIENT.companyID EQ 10 OR CLIENT.companyID EQ 14>
+             	<cfif <!---CLIENT.companyID EQ 10 OR---> CLIENT.companyID EQ 14>
                 	AND hostID IN (
                         SELECT hostID 
                         FROM smg_host_app_season 
