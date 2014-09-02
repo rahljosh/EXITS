@@ -348,11 +348,13 @@
                         <td>
                             You have made <b>#vTotalPlacements#</b> placements and have earned a total of <b>#vTotalTrips#</b> trip(s).
                             <br />
-                            You are using <b>#vTotalTrips - vTripsLeft#</b> trip(s) and will 
-                            <cfif vTripsLeft GT 0>
-                                receive a <b>$#vTripsLeft * 500#</b> compensation for the unused trip(s).
-                            <cfelse>
-                                owe <b>$#vTotalCost#</b> for additional trips.
+                            <cfif VAL(vTakingCheck) OR (vTotalTrips - vTripsLeft NEQ 0)>
+                                You are using <b>#vTotalTrips - vTripsLeft#</b> trip(s)
+                                <cfif vTripsLeft GT 0>
+                                    and will receive a <b>$#vTripsLeft * 500#</b> compensation for the unused trip(s).
+                                <cfelse>
+                                    and will owe <b>$#vTotalCost#</b> for additional trips.
+                                </cfif>
                             </cfif>
                         </td>
                     </tr>

@@ -106,7 +106,7 @@
 			param name="FORM.sectionNotes#qGetApprovalHistory.ID[i]#_#qGetApprovalHistory.studentID[i]#" default="";
 			
 			// Check if level app has denied any of the sections
-			if ( qGetApprovalHistory[stOneLevelUpFieldSet.statusFieldName][i] EQ 'denied' ) {
+			if ( qGetApprovalHistory[stOneLevelUpFieldSet.statusFieldName][i] EQ 'denied' AND NOT ListFind("19,20",qGetApprovalHistory.ID[i]) ) {
 				vHasAppBeenDeniedByOneLevelUpUser = true;
 			}
 		}
@@ -246,8 +246,8 @@
 						}
 					}
 					
-					// If at least one section is denied we must send the application back one level
-					if ( FORM["sectionStatus" & qGetApprovalHistory.ID[i] & "_" & qGetApprovalHistory.studentID[i]] EQ 'denied' ) {
+					// If at least one section is denied we must send the application back one level, unless it is one of the forms
+					if ( FORM["sectionStatus" & qGetApprovalHistory.ID[i] & "_" & qGetApprovalHistory.studentID[i]] EQ 'denied' AND NOT ListFind("19,20",qGetApprovalHistory.ID[i]) ) {
 						vAction = "denied";
 						// Store a list of issues
 						vIssueList = ListAppend(vIssueList, '<li>#qGetApprovalHistory.description[i]# Section - #FORM["sectionNotes" & qGetApprovalHistory.ID[i] & "_" & qGetApprovalHistory.studentID[i]]#</li>');
