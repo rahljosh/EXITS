@@ -241,6 +241,7 @@
 		}
 		
 		if (!vErrors) {
+			isDirty = 0;
 			$("#addGuests").val(vNewGuestNumber);
 			$("#incentiveTripForm").submit();
 		} else {
