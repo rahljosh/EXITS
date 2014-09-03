@@ -16,22 +16,20 @@
 <!-----Company Information----->
 <cfinclude template="../querys/get_company_short.cfm">
 
-<cfscript>
-	vSetPIEStudentList = '33427,33443,33444,33445,33446,33447,33448,33411,33409,33403,33420,33417,33416,33408,33407,33406,33405,33404,33402,33399,33430,33423,33425,33424,33382,33385,33386,33387,33389,33388';
-</cfscript>
+
 
 <!--- get Students  --->
 <Cfquery name="qGetStudentList" datasource="MySQL">
 	SELECT 
 		s.studentid, s.firstname, s.familylastname, s.programid, s.ds2019_no, s.regionassigned, s.dateplaced, s.intrep, s.companyid,
 		s.placerepid, s.arearepid, s.hostid, s.schoolid, s.programid, s.isWelcomeFamily, s.sevis_activated,
-		p.programname,
+		p.programname, p.type as programType,
 		h.familylastname as hostfamily, h.fatherfirstname, h.fatherlastname, h.motherfirstname, h.motherlastname, 
 		h.address as hostaddress, h.address2 as hostaddress2, h.city as hostcity, h.state as hoststate, h.zip as hostzip,
 		sch.schoolname, sch.address as schooladdress, sch.address2 as schooladdress2,
 		sch.city as schoolcity, sch.state as schoolstate, sch.zip as schoolzip,
 		place.firstname as place_firstname, place.lastname as place_lastname,
-		area.firstname as area_firstname, area.lastname as area_lastname,
+		area.firstname as area_firstname, area.lastname as area_lastname, area.zip as area_zip,
 		comp.iap_auth,
 		country.countryname
 	FROM smg_students s 
@@ -94,6 +92,7 @@
 		<th>Home Country</th>
 		<th>SEVIS ID##</th>
 		<th>SEVIS Status <br /> (if not Active)</th>
+        <th>Length of Program</th>
 		<th>Host Father <br /> Last Name</th>
 		<th>Host Father <br /> First Name</th>
 		<th>Host Mother <br /> Last Name (if different)</th>
@@ -108,9 +107,11 @@
 		<th>City</th>
 		<th>State</th>
 		<th>ZIP</th>
-		<th>Name of Local <br /> Coordinator</th>
+		<th>First Name of Local <br /> Coordinator</th>
+        <th>Last Name of Local <br /> Coordinator</th>
+        <th>Local Coordinator Zip</th>
 		<th>Remarks</th>
-        <th>PIE</th>
+      
 	</tr>
 	<cfloop query="qGetStudentList">
 		<tr>
@@ -121,6 +122,7 @@
 			<td>#qGetStudentList.countryname#</td>
 			<td align="center">#qGetStudentList.ds2019_no#</td>
 			<td><cfif qGetStudentList.sevis_activated EQ 0>Initial<cfelse>&nbsp;</cfif></td>
+            <td><cfif qGetStudentList.programType eq 1>Academic Year<cfelse>Semester</cfif></td>
 			<td>#qGetStudentList.fatherlastname#</td>
 			<td>#qGetStudentList.fatherfirstname#</td>
 			<td><cfif qGetStudentList.motherlastname NEQ qGetStudentList.fatherlastname>#qGetStudentList.motherlastname#</cfif></td>
@@ -135,15 +137,11 @@
 			<td>#qGetStudentList.schoolcity#</td>
 			<td align="center">#qGetStudentList.schoolstate#</td>
 			<td>#qGetStudentList.schoolzip#</td>
-			<td>#qGetStudentList.area_firstname# #qGetStudentList.area_lastname#</td>
+			<td>#qGetStudentList.area_firstname#</td>
+            <td>#qGetStudentList.area_lastname#</td>
+            <td>#qGetStudentList.area_zip#</td>
 			<td>&nbsp;</td>
-            <td>
-            	<cfif ListFind(vSetPIEStudentList, qGetStudentList.studentID)>
-                	P
-                <cfelse>
-                	&nbsp;
-                </cfif>
-            </td>
+            
 		</tr>	
         
         <cfset vGetTimeStamp = now()>
