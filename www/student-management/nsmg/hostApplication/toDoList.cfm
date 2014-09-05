@@ -192,11 +192,14 @@
 				// Set Default Action
 				vAction = "approved";
 				vIssueList = "";
+				
+				// Set if a section that will allow approval or denial is updated (not orientations)
+				vSectionsChanged = 0;
 
 				// Update Each Section (Approve/Deny)
 				For ( i=1; i LTE qGetApprovalHistory.recordCount; i++ ) {
 					
-					APPLICATION.CFC.HOST.updateSectionStatus(
+					vChanged = APPLICATION.CFC.HOST.updateSectionStatus(
 						hostID=FORM.hostID,
 						studentID=qGetApprovalHistory.studentID[i],
 						itemID=qGetApprovalHistory.ID[i],
@@ -207,6 +210,10 @@
 						regionalAdvisorID=qGetHostInfo.regionalAdvisorID,
 						regionalManagerID=qGetHostInfo.regionalManagerID
 					);
+					
+					if (NOT ListFind("19,20",qGetApprovalHistory.ID[i])) {
+						vSectionsChanged = vSectionsChanged + vChanged;	
+					}
 					
 					// Get the history records for updating old fields (the first returned record is the current record)
 					qGetPlacementHistory = APPLICATION.CFC.STUDENT.getPlacementHistory(studentID=qGetApprovalHistory.studentID[i]);
@@ -300,7 +307,7 @@
 				}
 				
 				// Check if there are no errors
-				if ( NOT SESSION.formErrors.length() AND (vAppFullyApproved OR vAction EQ 'denied') ) {				
+				if ( NOT SESSION.formErrors.length() AND (vAppFullyApproved OR vAction EQ 'denied') AND VAL(vSectionsChanged) ) {				
 
 					// Approve/Deny Application
 					stReturnMessage = APPLICATION.CFC.HOST.submitApplication(
@@ -774,7 +781,7 @@
                                             <a href="hostApplication/hostOrientation.cfm?hostID=#qGetHostInfo.hostID#&seasonID=#vSelectedSeason#&view=1" class="jQueryModalRefresh">
                                                 [ View ]
                                             </a>
-                                            <cfif CLIENT.userType LTE 4>
+                                            <cfif CLIENT.userType LTE 4 OR qGetApprovalHistory.facilitatorStatus NEQ "approved">
                                                 <a href="hostApplication/hostOrientation.cfm?hostID=#qGetHostInfo.hostID#&seasonID=#vSelectedSeason#&delete=1" class="jQueryModalRefresh">
                                                     [ Delete ]
                                                 </a>
@@ -813,7 +820,7 @@
                                             <a href="hostApplication/virtualFolderDocuments.cfm?studentID=#studentID#&documentType=49&view=1" class="jQueryModalRefresh">
                                                 [ View ]
                                             </a>
-                                            <cfif CLIENT.userType LTE 4>
+                                            <cfif CLIENT.userType LTE 4 OR qGetApprovalHistory.facilitatorStatus NEQ "approved">
                                                 <a href="hostApplication/virtualFolderDocuments.cfm?studentID=#studentID#&documentType=49&delete=1" class="jQueryModalRefresh">
                                                     [ Delete ]
                                                 </a>
