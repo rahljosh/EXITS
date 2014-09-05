@@ -1591,7 +1591,7 @@
 	</cffunction>
     
     
-	<cffunction name="updateSectionStatus" access="public" returntype="void" output="false" hint="Approves/Denies sections">
+	<cffunction name="updateSectionStatus" access="public" returntype="numeric" output="false" hint="Approves/Denies sections">
         <cfargument name="hostID" default="" hint="HostID is not required">
         <cfargument name="studentID" default="" hint="studentID is not required">
         <cfargument name="itemID" default="" hint="itemID">
@@ -1605,44 +1605,119 @@
         <cfscript>
 			// This returns the approval fields for the logged in user
 			stFieldSet = getApprovalFieldNames();
+			
+			
+			// This is to keep track of if anything was changed
+			vAreaRepChanged = 0;
+			vRegionalAdvisorChanged = 0;
+			vRegionalManagerChanged = 0;
+			vFacilitatorChanged = 0;
+			vChanged = 0;
 		</cfscript>
         
         <cfif listFind("approved,denied", ARGUMENTS.action)>
         
-            <cfquery 
-                name="qCheckRecord" 
-                datasource="#APPLICATION.DSN#">
-                    SELECT
-                        ID
-                    FROM
-                        smg_host_app_history
-                    WHERE
-                        hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
-                    AND
-                        itemID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.itemID)#">                  
-                    AND
-                        seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
-                 	<cfif VAL(ARGUMENTS.studentID)>
-                    	AND
-                        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
-                    </cfif>                   
+            <cfquery name="qCheckRecord" datasource="#APPLICATION.DSN#">
+                SELECT ID, areaRepStatus, RegionalAdvisorStatus, RegionalManagerStatus, FacilitatorStatus
+                FROM smg_host_app_history
+                WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
+                AND itemID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.itemID)#">                  
+                AND seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
+                <cfif VAL(ARGUMENTS.studentID)>
+                    AND studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">
+                </cfif>                   
             </cfquery>	
             
             <!--- Update --->
             <cfif qCheckRecord.recordCount>
     
-                <cfquery 
-                    datasource="#APPLICATION.DSN#">
-                        UPDATE	
-                            smg_host_app_history
-                        SET
-                            #stFieldSet.statusFieldName# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.action#">,
-                            #stFieldSet.dateFieldName# = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
-                            #stFieldSet.notesFieldName# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.notes#" null="#yesNoFormat(NOT LEN(ARGUMENTS.notes))#">,
-                            #stFieldSet.idName# = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
-                        WHERE
-                            ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qCheckRecord.ID)#">
+                <cfquery datasource="#APPLICATION.DSN#">
+                    UPDATE smg_host_app_history
+                    SET
+                        #stFieldSet.statusFieldName# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.action#">,
+                        #stFieldSet.dateFieldName# = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
+                        #stFieldSet.notesFieldName# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.notes#" null="#yesNoFormat(NOT LEN(ARGUMENTS.notes))#">,
+                        #stFieldSet.idName# = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
+                    WHERE ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qCheckRecord.ID)#">
                 </cfquery>	
+                
+                <cfquery name="qCheckUpdatedRecord" datasource="#APPLICATION.DSN#">
+                    SELECT areaRepStatus, RegionalAdvisorStatus, RegionalManagerStatus, FacilitatorStatus, areaRepNotes, RegionalAdvisorNotes, RegionalManagerNotes, FacilitatorNotes
+                    FROM smg_host_app_history
+                    WHERE ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qCheckRecord.ID)#">                   
+            	</cfquery>
+                
+                <cfscript>
+					// Check if anything was changed
+					if (qCheckRecord.areaRepStatus NEQ qCheckUpdatedRecord.areaRepStatus) {
+						vAreaRepChanged = 1;
+					}
+					if (qCheckRecord.RegionalAdvisorStatus NEQ qCheckUpdatedRecord.RegionalAdvisorStatus) {
+						vRegionalAdvisorChanged = 1;
+					}
+					if (qCheckRecord.RegionalManagerStatus NEQ qCheckUpdatedRecord.RegionalManagerStatus) {
+						vRegionalManagerChanged = 1;
+					}
+					if (qCheckRecord.FacilitatorStatus NEQ qCheckUpdatedRecord.FacilitatorStatus) {
+						vFacilitatorChanged = 1;
+					}
+					if (vAreaRepChanged + vRegionalAdvisorChanged + vRegionalManagerChanged + vFacilitatorChanged GT 0) {
+						vChanged = 1;	
+					}
+					
+					// Checking if it was denied and getting the notes
+					vNotes = "";
+					if (qCheckUpdatedRecord.areaRepStatus EQ "denied") {
+						vNotes = qCheckUpdatedRecord.areaRepNotes;
+					}
+					if (qCheckUpdatedRecord.RegionalAdvisorStatus EQ "denied") {
+						vNotes = qCheckUpdatedRecord.RegionalAdvisorNotes;
+					}
+					if (qCheckUpdatedRecord.RegionalManagerStatus EQ "denied") {
+						vNotes = qCheckUpdatedRecord.RegionalManagerNotes;
+					}
+					if (qCheckUpdatedRecord.FacilitatorStatus EQ "denied") {
+						vNotes = qCheckUpdatedRecord.FacilitatorNotes;
+					}
+					
+					// Send out email if an orientation has changed
+					if (VAL(vChanged) AND LEN(vNotes) AND ListFind("19,20",VAL(ARGUMENTS.itemID))) {
+						// Get Host Family Info - Includes AR, RA, RD and Facilitator information
+						var qGetHostInfo = getApplicationList(hostID=ARGUMENTS.hostID,seasonID=ARGUMENTS.seasonID);	
+						var type = "host family";
+						if (ARGUMENTS.itemID EQ 20) {
+							type = "student";	
+						}
+						
+						// Create email message
+						vMessage = "
+							<p>This email is intended to notify you that a " & type & " orientation has been rejected for the " & qGetHostInfo.displayHostFamily & " family.</p>
+                        
+                        	<p>Please find the requested updates below.</p>
+                        
+                        	<p>" & vNotes & "</p>
+                        
+                        	<p>
+								Please log in to EXITS to view this application or click the link below for direct access (you must be logged in EXITS). <br />
+								<a href='" & CLIENT.exits_URL & "/nsmg/index.cfm?curdoc=hostApplication/toDoList&hostID=" & qGetHostInfo.hostID & "'>View Host Family Application</a>
+							</p>
+                        
+                        	<p>
+                        		Thank you, <br />
+                            	#CLIENT.companyName#
+							</p>";
+						
+						// Create Email Object
+						e = createObject("component","nsmg.cfc.email");
+						// Send Email
+						e.send_mail(
+							email_from = CLIENT.email,
+							email_to = qGetHostInfo.areaRepresentativeEmail & "," & qGetHostInfo.regionalManagerEmail & "," & APPLICATION.CFC.USER.getUserSession().emailCompliance,
+							email_subject = CLIENT.companyShort & " - Orientation Rejected",
+							email_message = vMessage
+						);	
+					}
+				</cfscript>
             
             <!--- Insert --->
             <cfelse>
@@ -1730,6 +1805,8 @@
             </cfif>
     
     	</cfif>
+        
+        <cfreturn vChanged>
     
     </cffunction>     
     
