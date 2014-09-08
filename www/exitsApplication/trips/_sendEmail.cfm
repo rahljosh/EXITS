@@ -69,13 +69,17 @@
              <!----  
             <font color="red">* * Your spot will not be confirmed until permission form has been received by MPD Tours America. Please work on getting this completed as soon as possible * *</font> 
 			---->
+            
+          <font color="red">* *  It is your responsibility as the student to make sure that this permission form is filled out in its entirety. Once the form is complete, you MUST forward a copy of the completed form to BOTH MPD Tours and your Regional Manager. * *</font> 
         </p>
     
         <p>
         	Attached is a Student Packet with hotel, airport arrival instructions, emergency numbers, etc.  
             Please keep this handy for your trip and leave a copy with your host family while you are on the trip.
         </p>
+        <p>
         
+        </p>
     	<p>
         	Please return the permission form by:<br />
             <ul>
