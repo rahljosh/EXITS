@@ -1728,6 +1728,9 @@
             
             <!--- Insert --->
             <cfelse>
+            
+            	<!--- Mark as changed if inserting --->
+            	<cfset vChanged = 1>
     
                 <cfquery 
                     datasource="#APPLICATION.DSN#">
