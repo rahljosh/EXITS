@@ -1606,7 +1606,6 @@
 			// This returns the approval fields for the logged in user
 			stFieldSet = getApprovalFieldNames();
 			
-			
 			// This is to keep track of if anything was changed
 			vAreaRepChanged = 0;
 			vRegionalAdvisorChanged = 0;
@@ -1635,7 +1634,6 @@
                     UPDATE smg_host_app_history
                     SET
                         #stFieldSet.statusFieldName# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.action#">,
-                        #stFieldSet.dateFieldName# = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
                         #stFieldSet.notesFieldName# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.notes#" null="#yesNoFormat(NOT LEN(ARGUMENTS.notes))#">,
                         #stFieldSet.idName# = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
                     WHERE ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qCheckRecord.ID)#">
@@ -1718,6 +1716,15 @@
 						);	
 					}
 				</cfscript>
+                
+                <!--- Only updated the date if something was updated --->
+                <cfif VAL(vChanged)>
+                	<cfquery datasource="#APPLICATION.DSN#">
+                        UPDATE smg_host_app_history
+                        SET #stFieldSet.dateFieldName# = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+                        WHERE ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qCheckRecord.ID)#">
+                    </cfquery>
+                </cfif>
             
             <!--- Insert --->
             <cfelse>
