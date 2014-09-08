@@ -380,7 +380,7 @@
         </tr>
         <tr>
             <td>
-                I have read and understand all the Terms and Conditions. All parties acknowledge that while on tour, #companyName# and MPD Tours America, Inc. or its representatives may take any action deemed necessary to protect student safety and well being, including medical treatment at the student's expense and transportation home at the student's expense. 
+               <font size=-2> I have read and understand all the Terms and Conditions. All parties acknowledge that while on tour, #companyName# and MPD Tours America, Inc. or its representatives may take any action deemed necessary to protect student safety and well being, including medical treatment at the student's expense and transportation home at the student's expense. </font> 
                 <br />
                 &nbsp;&nbsp;<i>Please Sign Form</i>
             </td>
@@ -451,7 +451,7 @@
      <table width="800" align="center" border="0" cellpadding="3" cellspacing="0">
      <tr>
      	<td align="center" bgcolor="##085dad">
-        	<font color="##FFFFFF">www.iseusa.com</font>
+        	<font color="##FFFFFF">www.iseusa.org</font>
         </td>
       </tr>
      </table>

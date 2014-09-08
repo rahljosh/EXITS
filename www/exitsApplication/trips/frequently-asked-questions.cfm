@@ -19,7 +19,7 @@
               <tr>
                   <td>
                     <p>#APPLICATION.MPD.name#and our partner exchange organizations ISE/CASE are proud to offer this year's Student Exchange Trips of exciting adventures across America.</p>
-                      <p>#APPLICATION.MPD.name#will be organizing <strong>8</strong> <strong>trips</strong>, chaperoned and supervised exclusively by our representatives for the <strong>2013-2014</strong> season.</p>
+                      <p>#APPLICATION.MPD.name#will be organizing <strong>9</strong> <strong>trips</strong>, chaperoned and supervised exclusively by our representatives for the <strong>2014-2015</strong> season.</p>
  <div style="border-bottom: 2px; border-bottom-style:dotted; border-bottom-color:##CCC; width: 570px; margin: 5px auto 5px auto;"> &nbsp; </div>
 <div style="border-bottom: 2px; border-bottom-style:dotted; border-bottom-color:##CCC; width: 570px; margin: 5px auto 25px auto;">                   
 <p style="text-align: center; font-size: 16px;">
