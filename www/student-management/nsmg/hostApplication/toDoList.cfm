@@ -195,6 +195,7 @@
 				
 				// Set if a section that will allow approval or denial is updated (not orientations)
 				vSectionsChanged = 0;
+				vOrientationsChanged = 0;
 
 				// Update Each Section (Approve/Deny)
 				For ( i=1; i LTE qGetApprovalHistory.recordCount; i++ ) {
@@ -211,8 +212,11 @@
 						regionalManagerID=qGetHostInfo.regionalManagerID
 					);
 					
+					// It should not be marked as changed if it was an orientation
 					if (NOT ListFind("19,20",qGetApprovalHistory.ID[i])) {
 						vSectionsChanged = vSectionsChanged + vChanged;	
+					} else {
+						vOrientationsChanged = vOrientationsChanged + vChanged;	
 					}
 					
 					// Get the history records for updating old fields (the first returned record is the current record)
@@ -307,7 +311,7 @@
 				}
 				
 				// Check if there are no errors
-				if ( NOT SESSION.formErrors.length() AND (vAppFullyApproved OR vAction EQ 'denied') AND VAL(vSectionsChanged) ) {				
+				if ( NOT SESSION.formErrors.length() AND (vAppFullyApproved OR vAction EQ 'denied') AND NOT VAL(vOrientationsChanged) ) {				
 
 					// Approve/Deny Application
 					stReturnMessage = APPLICATION.CFC.HOST.submitApplication(
