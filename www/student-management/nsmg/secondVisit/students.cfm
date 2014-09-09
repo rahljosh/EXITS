@@ -10,6 +10,7 @@ function OpenLetter(url) {
 
 <!----default variables---->
 <cfparam name="recordsToShow" default="25">
+<cfparam name="url.Variables" default="">
 
 
 <cfquery name="getResults" datasource="#application.dsn#">
