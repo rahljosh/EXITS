@@ -1217,7 +1217,7 @@
                 FROM
                 (
                     SELECT
-                       h.familyLastName, h.fatherFirstName, h.motherFirstName,
+                       h.hostID, h.familyLastName, h.fatherFirstName, h.motherFirstName,
                         <!--- Host Family Display Name --->
                         CAST( 
                             CONCAT(                      
@@ -1647,7 +1647,7 @@
         	SELECT *
             FROM smg_host_app_season
             WHERE seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#vPreviousSeasonID#">
-            AND hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#">
+            AND hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
         </cfquery>
        
         <cfquery 
