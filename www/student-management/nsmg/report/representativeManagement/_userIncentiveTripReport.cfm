@@ -89,12 +89,12 @@
                     GROUP BY guest.ID
                 </cfquery>
             <cfelseif FORM.reportType EQ 2>
-                
                 <cfquery name="qGetResults" datasource="#APPLICATION.DSN#">
                 	SELECT
                     	u.userID,
                         u.firstName,
                         u.lastName,
+                        r.regionName,
                         CASE
                         	WHEN payment.takingCheck = "" OR payment.takingCheck IS NULL OR payment.takingCheck = 0 THEN 0
                             ELSE 1
@@ -123,6 +123,7 @@
                     FROM smg_users u
                     INNER JOIN user_access_rights uar ON uar.userID = u.userID
                         AND uar.default_access = 1
+                  	INNER JOIN smg_regions r ON r.regionID = uar.regionID
                  	LEFT OUTER JOIN smg_incentive_trip_payment payment ON payment.userID = u.userID
                     	AND payment.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.seasonID)#">
                     WHERE uar.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#FORM.companyID#"> )
@@ -130,7 +131,6 @@
                     GROUP BY u.userID
                     ORDER BY u.lastName, u.firstName
                 </cfquery>
-                
             </cfif>
             
         </cfif>
@@ -322,10 +322,11 @@
             
                 <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
                     <tr>
-                        <td class="subTitleLeft" width="21%">Representative</td>
-                        <td class="subTitleCenter" width="13%">Number of Placements/Points</td>	
-                        <td class="subTitleCenter" width="13%">Number of Earned Trips</td>
-                        <td class="subTitleCenter" width="13%">Number of Travelers </td>
+                        <td class="subTitleLeft" width="18%">Representative</td>
+                        <td class="subTitleLeft" width="12%">Region</td>
+                        <td class="subTitleCenter" width="10%">Number of Placements/Points</td>	
+                        <td class="subTitleCenter" width="10%">Number of Earned Trips</td>
+                        <td class="subTitleCenter" width="10%">Number of Travelers </td>
                         <td class="subTitleCenter" width="10%">Taking Check</td>
                         <td class="subTitleLeft" width="15%">Amount owed to Rep.</td>
                         <td class="subTitleLeft" width="15%">Amount Rep owes</td>
@@ -334,6 +335,13 @@
                     <cfscript>
                         vRowCount = 1;
                         vRowColor = "##FFFFFF";
+						
+						vTotalPlacements = 0;
+						vTotalEarnedTrips = 0;
+						vTotalGuests = 0;
+						vTotalTakingCheck = 0;
+						vTotalISEOwes = 0;
+						vTotalRepOwes = 0;
                     </cfscript>
                     
                     <cfloop query="qGetResults">
@@ -375,22 +383,44 @@
                                 if (vCost LT 0 AND takingCheck) {
                                     vTakingCheck = "Yes";
                                 }
+								
+								vTotalPlacements = vTotalPlacements + vNumPlacements;
+								vTotalEarnedTrips = vTotalEarnedTrips + vTripsEarned;
+								vTotalGuests = vTotalGuests + vNumGuests;
+								vTotalISEOwes = vTotalISEOwes + vISEOwes;
+								vTotalRepOwes = vTotalRepOwes + vRepOwes;
+								
+								if (vTakingCheck EQ "Yes") {
+									vTotalTakingCheck = vTotalTakingCheck + vTakingCheck;	
+								}
                                 
                             </cfscript>
                         
                             <tr>
                                 <td style="font-size:10px" bgcolor="#vRowColor#" align="left">#firstName# #lastName# (###userID#)</td>
+                                <td style="font-size:10px" bgcolor="#vRowColor#" align="left">#regionName#</td>
                                 <td style="font-size:10px" bgcolor="#vRowColor#" align="center">#vNumPlacements#</td>
                                 <td style="font-size:10px" bgcolor="#vRowColor#" align="center">#vTripsEarned#</td>
                                 <td style="font-size:10px" bgcolor="#vRowColor#" align="center">#vNumGuests#</td>
                                 <td style="font-size:10px" bgcolor="#vRowColor#" align="center">#vTakingCheck#</td>
-                                <td style="font-size:10px" bgcolor="#vRowColor#" align="left">$#vISEOwes#</td>
-                                <td style="font-size:10px" bgcolor="#vRowColor#" align="left">$#vRepOwes#</td>
+                                <td style="font-size:10px" bgcolor="#vRowColor#" align="left">#DollarFormat(vISEOwes)#</td>
+                                <td style="font-size:10px" bgcolor="#vRowColor#" align="left">#DollarFormat(vRepOwes)#</td>
                             </tr>
                             
                       	</cfif>
                         
                     </cfloop>
+                    
+                    <tr>
+                        <td style="font-size:12px; font-weight:bold; border-top:thin solid black;" colspan="2">TOTAL:</td>
+                        <td style="font-size:12px; font-weight:bold; border-top:thin solid black;" align="center">#vTotalPlacements#</td>
+                        <td style="font-size:12px; font-weight:bold; border-top:thin solid black;" align="center">#vTotalEarnedTrips#</td>
+                        <td style="font-size:12px; font-weight:bold; border-top:thin solid black;" align="center">#vTotalGuests#</td>
+                        <td style="font-size:12px; font-weight:bold; border-top:thin solid black;" align="center">#vTotalTakingCheck#</td>
+                        <td style="font-size:12px; font-weight:bold; border-top:thin solid black;">#DollarFormat(vTotalISEOwes)#</td>
+                        <td style="font-size:12px; font-weight:bold; border-top:thin solid black;">#DollarFormat(vTotalRepOwes)#</td>
+                    </tr>
+                    
                 </table>
             
             </cfif>
