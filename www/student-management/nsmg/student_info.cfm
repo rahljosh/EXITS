@@ -27,7 +27,19 @@
 		vAllowedDivisionChangeList = "8731,8743,12313,12431,16718,12389,17993,16552,17972,18061";  // Bill, Bob, Brian Hause, Gary, Tal and Merri, Jan McInvale, Steve S, john	
 		
 		// Get Student Information 
-		qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(studentID=VAL(studentID)); 
+		qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(studentID=VAL(studentID));
+		
+		// Get Placement History List
+		qGetPlacementHistoryList = APPLICATION.CFC.STUDENT.getPlacementHistory(studentID=qGetStudentInfo.studentID);
+		
+		// Get Placement History By ID - First record of qGetPlacementHistoryList is the current record
+		if ( VAL(qGetPlacementHistoryList.isActive) ) {
+			// Get Current History
+			qGetPlacementHistoryByID = APPLICATION.CFC.STUDENT.getHostHistoryByID(studentID=qGetStudentInfo.studentID, historyID=qGetPlacementHistoryList.historyID);
+		} else {
+			// Student is unplaced 
+			qGetPlacementHistoryByID = APPLICATION.CFC.STUDENT.getHostHistoryByID(studentID=qGetStudentInfo.studentID, historyID=0);
+		};
 
 		// Get Super Rep
 		qGetSuperRep = APPLICATION.CFC.USER.getUserByID(userID=VAL(qGetStudentInfo.arearepid));
@@ -95,6 +107,36 @@
 		else
 			{
 			qGetActivePrograms = APPLICATION.CFC.PROGRAM.getPrograms(isActive=1);
+		}
+		
+		// Set Placement Status (Unplaced / Rejected / Approved / Pending / Incomplete)
+		vPlacementStatus = '';
+		
+		if ( 
+			NOT VAL(qGetPlacementHistoryByID.hostID) 
+			AND NOT VAL(qGetPlacementHistoryByID.schoolID) 
+			AND NOT VAL(qGetPlacementHistoryByID.placeRepID) 
+			AND NOT VAL(qGetPlacementHistoryByID.areaRepID) ) {
+			
+			vPlacementStatus = 'Unplaced';
+		} else if ( 
+			VAL(qGetPlacementHistoryByID.hostID) 
+			AND VAL(qGetPlacementHistoryByID.schoolID) 
+			AND VAL(qGetPlacementHistoryByID.placeRepID) 
+			AND VAL(qGetPlacementHistoryByID.areaRepID) ) {			
+			
+			if ( qGetStudentInfo.host_fam_approved EQ 99 ) {
+				// Placement Rejected
+				vPlacementStatus = 'Rejected';
+			} else if ( ListFind("1,2,3,4", qGetStudentInfo.host_fam_Approved) ) {
+				// Placement Approved
+				vPlacementStatus = 'Approved';
+			} else {
+				// Pending Approval
+				vPlacementStatus = 'Pending';
+			}
+		} else {
+			vPlacementStatus = 'Incomplete';
 		}
 	</cfscript>
 
@@ -1137,7 +1179,12 @@
 				<cfif APPLICATION.CFC.USER.isOfficeUser()>
 				<tr>
 					<td>: : <a href="javascript:OpenLetter('reports/acceptance_letter.cfm');">Acceptance</a></td>
-					<td>: : <a href="javascript:OpenLetter('reports/placementInfoSheet.cfm?uniqueID=#qGetStudentInfo.uniqueID#');">Placement</a></td>
+					<td>
+                    	<!--- Only for approved placements --->
+                    	<cfif vPlacementStatus EQ "Approved" OR CLIENT.userType LTE 4>
+                    		: : <a href="javascript:OpenLetter('reports/placementInfoSheet.cfm?uniqueID=#qGetStudentInfo.uniqueID#');">Placement</a>
+                      	</cfif>
+                  	</td>
 				</tr>
 				<tr>
 					<td width="50%">: : <a href="javascript:OpenLetter('reports/host_welcome_letter.cfm');">Family Welcome</a></td>
