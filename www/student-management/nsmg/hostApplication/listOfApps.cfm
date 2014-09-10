@@ -64,9 +64,9 @@
         }
 		
 		// Get List of Host Family Applications
-		qGetHostApplications = APPLICATION.CFC.HOST.getApplicationList(statusID=URL.status,seasonID=URL.seasonID);	
+		qGetHostApplications = APPLICATION.CFC.HOST.getApplicationListLimitedHostInfo(statusID=URL.status,seasonID=URL.seasonID);	
     </cfscript>
-    
+  
     <cfparam name="FORM.notHosting" default="0">
     <cfif VAL(FORM.notHosting)>
     	<cfquery datasource="#APPLICATION.DSN#">
@@ -150,7 +150,7 @@
                 messageType="divOnly"
                 width="90%"
                 />
-        
+ 
             <table width="98%" cellpadding="4" cellspacing="0" align="center">
                 <tr>
                     <th align="left">Host Family</th>
