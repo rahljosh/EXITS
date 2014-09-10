@@ -1182,6 +1182,267 @@
 		<cfreturn qGetApplicationList>
 	</cffunction>
     
+    <!----List of Apps that doesn't include all the Host Family information.. just the basics---->
+    <cffunction name="getApplicationListLimitedHostInfo" access="public" returntype="query" output="false" hint="Gets a list of host family applications">
+        <cfargument name="hostID" default="" hint="hostID">
+        <cfargument name="seasonID" default="#APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID#" hint="seasonID is not required">
+        <cfargument name="uniqueID" default="" hint="uniqueID">
+        <cfargument name="statusID" default="" hint="statusID is not required">
+        <cfargument name="companyID" default="#CLIENT.companyID#" hint="CompanyID is not required">
+        <cfargument name="userType" default="#CLIENT.userType#" hint="userType is not required">
+        <cfargument name="regionID" default="#CLIENT.regionID#" hint="regionID is not required">
+        <cfargument name="userID" default="#CLIENT.userID#" hint="userID is not required">
+
+        <cfquery 
+			name="qGetApplicationList" 
+			datasource="#APPLICATION.DSN#">
+                SELECT DISTINCT
+                	*,
+                     <!--- Total Family At Home --->
+                    
+                    <!--- Regional Manager Info --->
+                    rm.userID AS regionalManagerID,
+                    (
+                        CASE 
+                            WHEN 
+                                regionalManagerID IS NULL
+                            THEN 
+                                "Not Assigned"
+                            ELSE 
+                            	CAST(CONCAT(rm.firstName, ' ', rm.lastName,  ' (##', rm.userID, ')' ) AS CHAR)
+                            END
+                    ) AS regionalManager,
+                    rm.email AS regionalManagerEmail,
+                    rm.phone AS regionalManagerPhone
+                FROM
+                (
+                    SELECT
+                       h.familyLastName, h.fatherFirstName, h.motherFirstName,
+                        <!--- Host Family Display Name --->
+                        CAST( 
+                            CONCAT(                      
+                                h.familyLastName,
+                                ' - ', 
+                                IFNULL(h.fatherFirstName, ''),                                                  
+                                IF (h.fatherFirstName != '', IF (h.motherFirstName != '', ' and ', ''), ''),
+                                IFNULL(h.motherFirstName, ''),
+                                ' (##',
+                                h.hostID,
+                                ')'                    
+                            ) 
+                        AS CHAR) AS displayHostFamily,
+                        <!--- Is other host parent home? --->
+                        (
+                            CASE 
+                                WHEN h.otherHostParent = 'none' 
+                                THEN 0
+                               	ELSE 1
+                            END
+                        ) AS isOtherHostParentHome,
+                        <!--- Total of Children at home --->
+                        (
+                            SELECT 
+                                COUNT(shc.childID) 
+                            FROM 
+                                smg_host_children shc
+                            WHERE
+                                shc.hostID = h.hostID
+                            AND
+                                shc.liveathome = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">
+                            AND	
+                                shc.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                        ) AS totalChildrenAtHome,
+                        <!--- Region --->
+                        (
+                            CASE 
+                                WHEN 
+                                    r.regionID > 0
+                                THEN 
+                                    r.regionName 
+                                ELSE 
+                                    "Not Assigned"
+                            END
+                        ) AS regionName,
+                        <!--- Get Regional Manager ID --->
+                        (
+                            SELECT 
+                                rm.userID
+                            FROM
+                                smg_users rm
+                            INNER JOIN
+                                user_access_rights uarRM ON uarRM.userID = rm.userID
+                            WHERE 
+                                rm.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                            AND 
+                                uarRM.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="5">
+                            AND 
+                                uarRM.regionID = r.regionID
+                            LIMIT 1 
+                        ) AS regionalManagerID,
+						<!--- Regional Advisor Info (This will list the AR info if there is no RA and the AR is also an RA) --->
+                        ra.userID AS regionalAdvisorID,
+                        (
+                            CASE 
+                                WHEN ra.userID IS NULL AND areaRep.userType = 6
+                                THEN CAST(CONCAT(areaRep.firstName, ' ', areaRep.lastName,  ' (##', areaRep.userID, ')' ) AS CHAR)
+                              	WHEN ra.userID IS NULL
+                               	THEN "n/a"
+                                ELSE CAST(CONCAT(ra.firstName, ' ', ra.lastName,  ' (##', ra.userID, ')' ) AS CHAR)
+                     		END
+                        ) AS regionalAdvisor,
+                        (
+                            CASE 
+                                WHEN ra.userID IS NULL AND areaRep.userType = 6
+                                THEN areaRep.email
+                                ELSE ra.email
+                         	END
+                        ) AS regionalAdvisorEmail,
+                        (
+                            CASE 
+                                WHEN ra.userID IS NULL AND areaRep.userType = 6
+                                THEN areaRep.phone
+                                ELSE ra.phone
+                         	END
+                        ) AS regionalAdvisorPhone,
+                        <!--- Area Representative Info --->
+                        areaRep.userID AS areaRepresentativeID,
+                        (
+                            CASE 
+                                WHEN 
+                                    areaRep.userID IS NULL
+                                THEN 
+                                    "Not Assigned"
+                                ELSE 
+                                    CAST(CONCAT(areaRep.firstName, ' ', areaRep.lastName,  ' (##', areaRep.userID, ')' ) AS CHAR)
+                            END
+                        ) AS areaRepresentative,
+                        areaRep.email AS areaRepresentativeEmail,
+                        areaRep.phone AS areaRepresentativePhone,
+                        <!--- Facilitator --->
+                        fac.userID AS facilitatorID,
+                        (
+                            CASE 
+                                WHEN 
+                                    fac.userID IS NULL
+                                THEN 
+                                    "Not Assigned"
+                                ELSE 
+                                    CAST(CONCAT(fac.firstName, ' ', fac.lastName,  ' (##', fac.userID, ')' ) AS CHAR)
+                            END
+                        ) AS facilitator,
+                        fac.email AS facilitatorEmail,
+                        <!--- Host Season-based approval status --->
+                        smg_host_app_season.applicationStatusID,
+                        smg_host_app_season.repNotes,
+                        smg_host_app_season.dateSent,
+                        smg_host_app_season.dateStarted,
+                        smg_host_app_season.dateSubmitted,
+                        smg_host_app_season.ID AS hostAppSeasonID                      
+                    FROM 
+                        smg_hosts h
+                  	<!--- Host Season-based approval status --->
+                    <cfif LEN(ARGUMENTS.statusID)>
+                    	INNER JOIN smg_host_app_season ON smg_host_app_season.hostID = h.hostID
+                        	AND smg_host_app_season.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
+                            AND smg_host_app_season.applicationStatusID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.statusID)#">
+                   	<cfelse>
+                    	LEFT OUTER JOIN smg_host_app_season ON smg_host_app_season.hostID = h.hostID
+                        	AND smg_host_app_season.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
+                    </cfif>
+                    <!--- Region --->
+                    LEFT OUTER JOIN
+                        smg_regions r ON r.regionID = h.regionID
+                    <!--- Area Representative --->
+                    LEFT OUTER JOIN
+                        smg_users areaRep ON areaRep.userID = h.areaRepID
+                    LEFT OUTER JOIN
+                        user_access_rights uar ON uar.userID = areaRep.userID
+                            AND
+                                h.regionID = uar.regionID
+					<!--- Regional Advisor Info --->
+                    LEFT OUTER JOIN
+                        smg_users ra ON ra.userID = uar.advisorID
+					<!--- Facilitator --->
+                    LEFT OUTER JOIN
+                        smg_users fac ON fac.userID = r.regionFacilitator
+                    WHERE
+                        1 = 1 
+                    
+                    <!--- If hostID is passed ignore active and companyID filters --->
+                    <cfif LEN(ARGUMENTS.hostID)>
+                        AND
+                            h.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
+					<!--- Unique ID --->
+					<cfelseif LEN(ARGUMENTS.uniqueID)>
+                        AND
+                            h.uniqueID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.uniqueID#">
+					<!--- We are getting a list of families so make sure we get only active and families from the appropriate company --->
+					<cfelse>
+                    
+                    	AND
+                        	h.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                      	AND
+                        	h.isHosting = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                    
+						<!--- ISE - Displays all apps |  OR APPLICATION.CFC.USER.isOfficeUser()---> 
+						<cfif ARGUMENTS.companyID EQ 5>
+                            AND          
+                                h.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+                        <cfelseif VAL(ARGUMENTS.companyID)>
+                            AND
+                            	h.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
+                        </cfif>
+                        
+					</cfif>
+                    
+                    <cfswitch expression="#ARGUMENTS.userType#">
+                        
+                        <!--- Regional Manager --->
+                        <cfcase value="5">
+                            AND 
+                                h.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.regionID)#">
+                        </cfcase>
+                        
+                        <!--- Regional Advisor --->
+                        <cfcase value="6">
+                            AND 
+                                h.areaRepID IN ( 
+                                    SELECT
+                                        uarSU.userID
+                                    FROM
+                                        user_access_rights uarSU
+                                    WHERE
+                                        uarSU.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.regionID)#">
+                                    AND 
+                                        (
+                                            uarSU.advisorID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
+                                        OR
+                                            uarSU.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
+                                        )
+                                ) 
+                        </cfcase>
+                        
+                        <!--- Area Rep --->
+                        <cfcase value="7">
+                            AND 
+                                h.areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
+                        </cfcase>
+                        
+                    </cfswitch>
+				) AS tmpTable     
+
+				<!--- Regional Manager Info --->
+                LEFT OUTER JOIN
+                    smg_users rm ON rm.userID = regionalManagerID
+                             
+                ORDER BY 
+                    regionName,
+                    familyLastName
+		</cfquery>
+        
+		<cfreturn qGetApplicationList>
+	</cffunction>
+    <!---End of Basics for Host App List---->
     
     <cffunction name="getSeasonsForHost" access="public" returntype="query" output="no" hint="Gets the seasons the host has paperwork for">
     	<cfargument name="hostID" default="0" required="no">
