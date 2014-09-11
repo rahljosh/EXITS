@@ -484,7 +484,7 @@
 				<cfoutput>
                     <cfsavecontent variable="email_message">
                         This email is to notify you that a new agent profile has been created by #CLIENT.name#. This email is a reminder for the following:<br /><br />
-                        <strong>Ellen</strong> - Please send out a contract to that Agent<br />
+                        <strong>Lois</strong> - Please send out a contract to that Agent<br />
                         <strong>Marcel</strong> - Please make sure you have a price, insurance, and SEVIS option.<br />
                         <strong>Brian</strong> - Make sure this agent has been issued an allocation<br /><br />
                         Agent Info: <a href="#exits_url#/nsmg/index.cfm?curdoc=user_info&userID=">#FORM.businessname#</a>
@@ -493,7 +493,7 @@
 			
 				<!--- send email --->
                 <cfinvoke component="nsmg.cfc.email" method="send_mail">
-                    <cfinvokeargument name="email_to" value="ellen@iseusa.org,marcel@iseusa.org,bhause@iseusa.org">
+                    <cfinvokeargument name="email_to" value="lois@iseusa.org,marcel@iseusa.org,bhause@iseusa.org">
                     <cfinvokeargument name="email_subject" value="New Agent Profile">
                     <cfinvokeargument name="email_message" value="#email_message#">
                     <cfinvokeargument name="email_from" value="#CLIENT.emailfrom#">
