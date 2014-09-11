@@ -1,16 +1,22 @@
-
-<Cfquery name="hostInfo" datasource="#application.dsn#">
-select smg_hosts.hostid, smg_hosts.fatherFirstName, smg_hosts.motherFirstName, smg_hosts.familyLastName,  
-smg_hosts.fatherLastName, smg_hosts.motherLastName, max(history.facilitatorDateStatus) as dateApproved
-from smg_hosts
-left join smg_host_app_history history on history.hostid = smg_hosts.hostid
-where smg_hosts.hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.hostid#">
+<cfquery name="hostInfo" datasource="#application.dsn#">
+	SELECT
+   		h.hostid,
+        h.fatherFirstName, 
+        h.motherFirstName, 
+        h.familyLastName,  
+		h.fatherLastName, 
+        h.motherLastName,
+        s.dateUpdated AS dateApproved
+	FROM smg_hosts h
+    INNER JOIN smg_host_app_season s ON s.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(url.hostid)#">
+    	AND seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(url.seasonid)#">
+	WHERE h.hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(url.hostid)#">
 </cfquery>
 
-<Cfquery name="seasonName" datasource="#application.dsn#">
-select season
-from smg_seasons
-where seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.seasonid#">
+<cfquery name="seasonName" datasource="#application.dsn#">
+	SELECT season
+	FROM smg_seasons
+	WHERE seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(url.hostid)#">
 </Cfquery>
 
 
@@ -49,16 +55,15 @@ where seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.seasonid#"
 </div>
 <div style="width: 95%; margin: 50px auto; font-size: 45px;">
 <p>By signing this form you are verifying that the rules of the exchange program have been explained to you during your
-host family orientation and you have received a copy of the 
-<cfif CLIENT.companyid eq 10> CASE <cfif CLIENT.companyid eq 14> ESI <cfelse> ISE </cfif>host family rules, the US DOS Secondary School
+host family orientation and you have received a copy of the <cfoutput>#CLIENT.companyshort#</cfoutput> host family rules, the US DOS Secondary School
 Program regulations and the DOS Host Family Welcome letter.</p>
-<p>All policies are detailed in the ISE Host Family rules document and specific highlights of the program rules include:</p>
+<p>All policies are detailed in the <cfoutput>#CLIENT.companyshort#</cfoutput> Host Family rules document and specific highlights of the program rules include:</p>
 <ul><li style="margin-bottom: 30px;">Exchange students are not allowed to possess or consume alcoholic beverages, illegal drugs or prescription
 drugs that have not been prescribed to them by a physician.</li>
 <li style="margin-bottom: 30px;">Exchange students may not operate a motorized vehicle while on the exchange program except when
 accompanied by a licensed professional driving instructor. Students may never operate a family vehicle.</li>
 <li style="margin-bottom: 30px;">Exchange students may not travel overnight without host parent accompaniment unless the trip is part of an
-ISE, school or other trip authorized in advance by ISE.</li>
+ISE, school or other trip authorized in advance by <cfoutput>#CLIENT.companyshort#</cfoutput>.</li>
 <li style="margin-bottom: 30px;">Exchange student's finances should be kept entirely separate from the host family and host family members
 may not lend money to, nor borrow money from exchange students. The host family may not have access to
 an exchange student's bank card, credit card or bank PIN.</li>
@@ -66,7 +71,7 @@ an exchange student's bank card, credit card or bank PIN.</li>
 <li style="margin-bottom: 30px;">Exchange students must have their own permanent bed and may share a room with only one other person of
 the same gender.</li>
 <li style="margin-bottom: 30px;">Exchange students may not be deprived of reasonable access to their phone.</li>
-<li style="margin-bottom: 30px;">Exchange students may never be threatened with being sent home. Only ISE headquarters staff can decide
+<li style="margin-bottom: 30px;">Exchange students may never be threatened with being sent home. Only <cfoutput>#CLIENT.companyshort#</cfoutput> headquarters staff can decide
 to terminate a student's program.</li></ul>
 <p>*I agree to immediately notify my Area Representative of any violation of the program rules.</p>
 </div>
