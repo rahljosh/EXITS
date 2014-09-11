@@ -209,6 +209,14 @@
                             </h2>
 						</td>
                     </tr>
+                  
+                   <tr>
+                        <td align="center" colspan="2">
+                        	<p>Use <a href="hostOrientationSignOff.cfm?hostID=#qGetHostInfo.hostid#&seasonID=#url.seasonid#" target="_new">THIS</a> form for the Host Family Orientation<br /><br />
+						</td>
+                    </tr>
+                    
+                   
                     <tr>
                         <td align="center" colspan="2">
                         	<p>Please upload the host family orientation in any of the following formats: JPG, PNG or PDF</p>
