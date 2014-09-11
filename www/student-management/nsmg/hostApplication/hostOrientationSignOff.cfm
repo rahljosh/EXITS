@@ -6,10 +6,11 @@
         h.familyLastName,  
 		h.fatherLastName, 
         h.motherLastName,
-        s.dateUpdated AS dateApproved
+        max(hist.facilitatorDateStatus) AS dateApproved
 	FROM smg_hosts h
-    INNER JOIN smg_host_app_season s ON s.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(url.hostid)#">
+    LEFT JOIN smg_host_app_history hist ON hist.hostID = h.hostid
     	AND seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(url.seasonid)#">
+        AND itemID NOT IN (15,19,20)
 	WHERE h.hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(url.hostid)#">
 </cfquery>
 
