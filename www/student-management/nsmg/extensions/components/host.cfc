@@ -1978,7 +1978,7 @@
 					}
 				</cfscript>
                 
-                <!--- Only updated the date if something was updated --->
+                <!--- Only update the date if something was updated --->
                 <cfif VAL(vChanged)>
                 	<cfquery datasource="#APPLICATION.DSN#">
                         UPDATE smg_host_app_history
@@ -2103,24 +2103,62 @@
         
         	<!--- Check if we are Inserting/Updating --->
             <cfif VAL(ARGUMENTS.ID)>
+            	
+                <!--- Get original record --->
+                <cfquery name="qGetOriginal" datasource="#APPLICATION.DSN#">
+                	SELECT *
+                    FROM smg_host_reference_tracking
+                    WHERE ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.ID#">
+                    AND hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
+                </cfquery>
             
 				<!--- Update --->
-                <cfquery 
-                    datasource="#APPLICATION.DSN#">
-                        UPDATE	
-                            smg_host_reference_tracking
-                        SET
-                            <cfif isDate(ARGUMENTS.dateInterview)>
-                                dateInterview = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateInterview#">,
-                            </cfif>
-                            #stFieldSet.statusFieldName# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.action#">,
-                            #stFieldSet.dateFieldName# = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
-                            #stFieldSet.notesFieldName# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.notes#" null="#yesNoFormat(NOT LEN(ARGUMENTS.notes))#">
-                        WHERE
-                            ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.ID#">
-                        AND
-                        	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
-                </cfquery>	
+                <cfquery datasource="#APPLICATION.DSN#">
+                    UPDATE smg_host_reference_tracking
+                    SET
+                        <cfif isDate(ARGUMENTS.dateInterview)>
+                            dateInterview = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateInterview#">,
+                        </cfif>
+                        #stFieldSet.statusFieldName# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.action#">,
+                        #stFieldSet.notesFieldName# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.notes#" null="#yesNoFormat(NOT LEN(ARGUMENTS.notes))#">
+                    WHERE ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.ID#">
+                    AND hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
+                </cfquery>
+                
+                <!--- Get new record --->
+                <cfquery name="qGetNew" datasource="#APPLICATION.DSN#">
+                	SELECT *
+                    FROM smg_host_reference_tracking
+                    WHERE ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.ID#">
+                    AND hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
+                </cfquery>
+                
+                <!--- Check if anything was changed --->
+                <cfscript>
+					vChanged = 0;
+					if (qGetOriginal.areaRepStatus NEQ qGetNew.areaRepStatus) {
+						vChanged = 1;
+					}
+					if (qGetOriginal.RegionalAdvisorStatus NEQ qGetNew.RegionalAdvisorStatus) {
+						vChanged = 1;
+					}
+					if (qGetOriginal.RegionalManagerStatus NEQ qGetNew.RegionalManagerStatus) {
+						vChanged = 1;
+					}
+					if (qGetOriginal.FacilitatorStatus NEQ qGetNew.FacilitatorStatus) {
+						vChanged = 1;
+					}
+				</cfscript>
+                
+                <!--- Update the date if anything has changed --->
+                <cfif VAL(vChanged)>
+                	<cfquery datasource="#APPLICATION.DSN#">
+                    	UPDATE smg_host_reference_tracking
+                        SET #stFieldSet.dateFieldName# = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+                        WHERE ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.ID#">
+                        AND hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
+                    </cfquery>
+                </cfif>
             
            <cfelse> 
         		
@@ -2209,7 +2247,39 @@
     
     	</cfif>
     
-    </cffunction>         
+    </cffunction> 
+    
+    
+    <!--- Sets the dates of all required fields to today (for when the app is being approved) --->
+    <cffunction name="updateSectionDateFields" access="public" returntype="void" output="no">
+    	<cfargument name="hostID" required="yes" hint="hostID">
+        <cfargument name="seasonID" default="#APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID#" hint="seasonID">
+        <cfargument name="itemID" default="" hint="itemID - For updating sections">
+        <cfargument name="ID" default="" hint="ID - For updating references">
+        
+        <cfscript>
+			// This returns the approval fields for the logged in user
+			stFieldSet = getApprovalFieldNames();
+		</cfscript>
+        
+        <cfif VAL(ARGUMENTS.itemID)>
+            <cfquery datasource="#APPLICATION.DSN#">
+                UPDATE smg_host_app_history
+                SET #stFieldSet.dateFieldName# = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#NOW()#">
+                WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
+                AND itemID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.itemID)#">                  
+                AND seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
+            </cfquery>
+        <cfelseif VAL(ARGUMENTS.ID)>
+            <cfquery datasource="#APPLICATION.DSN#">
+                UPDATE smg_host_reference_tracking
+                SET #stFieldSet.dateFieldName# = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+                WHERE ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.ID#">
+                AND hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
+            </cfquery>
+      	</cfif>
+    
+    </cffunction>       
         
     
 	<cffunction name="submitApplication" access="public" returntype="struct" output="false" hint="Approves a Host Family Application">

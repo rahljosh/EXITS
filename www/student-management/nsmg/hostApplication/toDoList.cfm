@@ -30,15 +30,15 @@
     
     <!----Delete the school acceptance letter---->
 	<cfif isDefined('url.deleteSchoolAccept')>
-	<cfquery name="deleteSchoolAccept" datasource="#application.dsn#">
-        update document
-        set isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-        where id = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.id#">
-        and hashID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#url.key#">
+		<cfquery name="deleteSchoolAccept" datasource="#application.dsn#">
+            UPDATE document
+            SET isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+            WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.id#">
+            AND hashID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#url.key#">
         </cfquery>
-
         <cflocation url="index.cfm?curdoc=hostApplication/toDoList&hostID=#url.hostid#">
 	</cfif>
+    
     <cfscript>	
 		// Check if we have a valid URL.hostID
 		if ( VAL(URL.hostID) AND NOT VAL(FORM.hostID) ) {
@@ -99,6 +99,9 @@
 		
 		// This returns the fields that need to be checked
 		stOneLevelUpFieldSet = APPLICATION.CFC.HOST.getApprovalFieldNames(userType=stUserOneLevelUpInfo.userType);
+		
+		// Store the non-required sections of the app (they do not effect approval or denial of the entire app)
+		vNonRequiredSections = "15,19,20";
 
 		// Param Form Variables - Approval History
 		For ( i=1; i LTE qGetApprovalHistory.recordCount; i++ ) {
@@ -106,7 +109,7 @@
 			param name="FORM.sectionNotes#qGetApprovalHistory.ID[i]#_#qGetApprovalHistory.studentID[i]#" default="";
 			
 			// Check if level app has denied any of the sections
-			if ( qGetApprovalHistory[stOneLevelUpFieldSet.statusFieldName][i] EQ 'denied' AND NOT ListFind("19,20",qGetApprovalHistory.ID[i]) ) {
+			if ( qGetApprovalHistory[stOneLevelUpFieldSet.statusFieldName][i] EQ 'denied' AND NOT ListFind(vNonRequiredSections,qGetApprovalHistory.ID[i]) ) {
 				vHasAppBeenDeniedByOneLevelUpUser = true;
 			}
 		}
@@ -117,130 +120,78 @@
 			param name="FORM.referenceNotes#qGetReferences.ID[i]#" default="";
 		}
 		
-				
 		// FORM Submitted
 		if ( VAL(FORM.submitted) ) {
 			
-			// Update rep notes, this field can be updated regardless of what the approval status is.
-			APPLICATION.CFC.HOST.updateRepNotes(hostID=qGetHostInfo.hostID,seasonID=vSelectedSeason,repNotes=FORM.repNotes);
+			// Initialize variables
+			vApproveApp = true;
+			vSendAppBack = false;
+			vAppStatus = qGetHostInfo.applicationStatusID;
 			
-			// Variable to decide if the entire app is approved and should go to the next level
-			vAppFullyApproved = true;
-			
-			// Sections - Check for Errors
+			// Check if any section was denied and no reason was given
 			For ( i=1; i LTE qGetApprovalHistory.recordCount; i++ ) {
-
-				// Only check for approval if there is a school acceptance and a confidential host visit report
-				vCheckIfMissing = true;
-				
-				// Confidential Host Family Visit Form
-				if ( qGetApprovalHistory.ID[i] EQ 14 AND NOT qGetConfidentialVisitForm.recordCount ) {
-					vCheckIfMissing = false;
-					vAppFullyApproved = false;
-				}
-				
-				// Don't prevent approval if the host family orientation or any student orientations or school acceptances are missing
-				if ( qGetApprovalHistory.ID[i] EQ 15 OR qGetApprovalHistory.ID[i] EQ 19 OR qGetApprovalHistory.ID[i] EQ 20 ) {
-					vCheckIfMissing = false;
-				}
-
-				// Confidential Host Visit - Require approval when there is a report
-				if ( vCheckIfMissing ) {
-					
-					// Check if all sections have an approval/denial value
-					if ( NOT LEN(FORM["sectionStatus" & qGetApprovalHistory.ID[i] & "_" & qGetApprovalHistory.studentID[i]]) ) {
-						//SESSION.formErrors.Add("#qGetApprovalHistory.description[i]# - Please approve or deny this section");
-						vAppFullyApproved = false;
-					}
-					
-					// Check for reason if any section is denied
-					if ( 
-						FORM["sectionStatus" & qGetApprovalHistory.ID[i] & "_" & qGetApprovalHistory.studentID[i]] EQ 'denied' 
-						AND NOT LEN(FORM["sectionNotes" & qGetApprovalHistory.ID[i] & "_" & qGetApprovalHistory.studentID[i]]) ) {
+				if ( 
+					FORM["sectionStatus" & qGetApprovalHistory.ID[i] & "_" & qGetApprovalHistory.studentID[i]] EQ 'denied' 
+					AND NOT LEN(FORM["sectionNotes" & qGetApprovalHistory.ID[i] & "_" & qGetApprovalHistory.studentID[i]]) ) {
 						SESSION.formErrors.Add("#qGetApprovalHistory.description[i]# - Please enter a reason for denying this section");
-						vAppFullyApproved = false;
-					}
-				
 				}
-				
 			}
 			
-			// References - Check for Errors
+			// Check if any references were denied and no reason was given
 			For ( i=1; i LTE qGetReferences.recordCount; i++ ) {
-				
 				if ( VAL(qGetReferences.ID[i]) ) {
-
-					// Check if all sections have an approval/denial value
-					if ( NOT LEN(FORM["referenceStatus" & qGetReferences.ID[i]]) ) {
-						//SESSION.formErrors.Add("Reference for #qGetReferences.firstname[i]# #qGetReferences.lastname[i]# - Please approve or deny this report");
-						vAppFullyApproved = false;
-					}
-					
-					// Check for reason if any section is denied
 					if ( FORM["referenceStatus" & qGetReferences.ID[i]] EQ 'denied' AND NOT LEN(FORM["referenceNotes" & qGetReferences.ID[i]]) ) {
 						SESSION.formErrors.Add("Reference for #qGetReferences.firstname[i]# #qGetReferences.lastname[i]# - Please enter a reason for denying this report");
-						vAppFullyApproved = false;
 					}
-
-				}				
-				
+				}
 			}
 			
-			// Check if there are no errors
-			if ( NOT SESSION.formErrors.length() ) {				
-
-				// Set Default Action
-				vAction = "approved";
-				vIssueList = "";
+			// Only continue if there are no errors
+			if (NOT SESSION.formErrors.length()) {
 				
-				// Set if a section that will allow approval or denial is updated (not orientations)
-				vSectionsChanged = 0;
-				vOrientationsChanged = 0;
-
-				// Update Each Section (Approve/Deny)
+				// Update Representative Notes
+				APPLICATION.CFC.HOST.updateRepNotes(hostID=qGetHostInfo.hostID,seasonID=vSelectedSeason,repNotes=FORM.repNotes);
+				
+				// Update all sections of the app - Do not approve app if any of the non-required sections are denied
 				For ( i=1; i LTE qGetApprovalHistory.recordCount; i++ ) {
-					
-					vChanged = APPLICATION.CFC.HOST.updateSectionStatus(
+					vAction = FORM["sectionStatus" & qGetApprovalHistory.ID[i] & "_" & qGetApprovalHistory.studentID[i]];
+					vID = qGetApprovalHistory.ID[i];
+					APPLICATION.CFC.HOST.updateSectionStatus(
 						hostID=FORM.hostID,
 						studentID=qGetApprovalHistory.studentID[i],
-						itemID=qGetApprovalHistory.ID[i],
+						itemID=vID,
 						seasonID=vSelectedSeason,
-                        action=FORM["sectionStatus" & qGetApprovalHistory.ID[i] & "_" & qGetApprovalHistory.studentID[i]],
+                        action=vAction,
                         notes=FORM["sectionNotes" & qGetApprovalHistory.ID[i] & "_" & qGetApprovalHistory.studentID[i]],
 						areaRepID=qGetHostInfo.areaRepresentativeID,
 						regionalAdvisorID=qGetHostInfo.regionalAdvisorID,
 						regionalManagerID=qGetHostInfo.regionalManagerID
 					);
-					
-					// It should not be marked as changed if it was an orientation
-					if (NOT ListFind("19,20",qGetApprovalHistory.ID[i])) {
-						vSectionsChanged = vSectionsChanged + vChanged;	
-					} else {
-						vOrientationsChanged = vOrientationsChanged + vChanged;	
+					if (vAction EQ "denied" AND NOT ListFind(vNonRequiredSections,qGetApprovalHistory.ID[i])) {
+						vApproveApp = false;
+						vSendAppBack = true;
 					}
-					
 					// Get the history records for updating old fields (the first returned record is the current record)
 					qGetPlacementHistory = APPLICATION.CFC.STUDENT.getPlacementHistory(studentID=qGetApprovalHistory.studentID[i]);
 					vHasComplianceAccess = APPLICATION.CFC.USER.hasUserRoleAccess(userID=CLIENT.userID, role="studentComplianceCheckList");
-					
 					// Update old fields if neccessary
 					if (FORM["sectionStatus" & qGetApprovalHistory.ID[i] & "_" & qGetApprovalHistory.studentID[i]] EQ 'approved') {
-						if (qGetApprovalHistory.ID[i] EQ 15) {
+						if (vID EQ 15) {
 							if (NOT VAL(qGetPlacementHistory.doc_school_accept_date) AND NOT VAL(qGetPlacementHistory.compliance_school_accept_date) AND vHasComplianceAccess) {
 								APPLICATION.CFC.STUDENT.updateOldHostHistoryFields(historyID=VAL(qGetPlacementHistory.historyID),doc_school_accept_date=NOW(),compliance_school_accept_date=NOW());
 							} else if (NOT VAL(qGetPlacementHistory.doc_school_accept_date)) {
 								APPLICATION.CFC.STUDENT.updateOldHostHistoryFields(historyID=VAL(qGetPlacementHistory.historyID),doc_school_accept_date=NOW());
 							}
-						} else if (qGetApprovalHistory.ID[i] EQ 20) {
+						} else if (vID EQ 20) {
 							if (NOT VAL(qGetPlacementHistory.stu_arrival_orientation) AND NOT VAL(qGetPlacementHistory.compliance_stu_arrival_orientation) AND vHasComplianceAccess) {
 								APPLICATION.CFC.STUDENT.updateOldHostHistoryFields(historyID=VAL(qGetPlacementHistory.historyID),stu_arrival_orientation=NOW(),compliance_stu_arrival_orientation=NOW());
 							} else if (NOT VAL(qGetPlacementHistory.stu_arrival_orientation)) {
 								APPLICATION.CFC.STUDENT.updateOldHostHistoryFields(historyID=VAL(qGetPlacementHistory.historyID),stu_arrival_orientation=NOW());
 							}
-						} else if (qGetApprovalHistory.ID[i] EQ 14 OR qGetApprovalHistory.ID[i] EQ 19) {
+						} else if (vID EQ 14 OR vID EQ 19) {
 							For ( j=1; j LTE qGetCurrentStudents.recordCount; j++ ) {
 								qGetPlacementHistory = APPLICATION.CFC.STUDENT.getPlacementHistory(studentID=qGetCurrentStudents.studentID[j]);
-								if (qGetApprovalHistory.ID[i] EQ 14) {
+								if (vID EQ 14) {
 									if (NOT VAL(qGetPlacementHistory.doc_conf_host_rec) AND NOT VAL(qGetPlacementHistory.compliance_conf_host_rec) AND vHasComplianceAccess) {
 										APPLICATION.CFC.STUDENT.updateOldHostHistoryFields(historyID=VAL(qGetPlacementHistory.historyID),doc_conf_host_rec=NOW(),compliance_conf_host_rec=NOW());
 									} else if (NOT VAL(qGetPlacementHistory.doc_conf_host_rec)) {
@@ -256,89 +207,86 @@
 							}
 						}
 					}
-					
-					// If at least one section is denied we must send the application back one level, unless it is one of the forms
-					if ( FORM["sectionStatus" & qGetApprovalHistory.ID[i] & "_" & qGetApprovalHistory.studentID[i]] EQ 'denied' AND NOT ListFind("19,20",qGetApprovalHistory.ID[i]) ) {
-						vAction = "denied";
-						// Store a list of issues
-						vIssueList = ListAppend(vIssueList, '<li>#qGetApprovalHistory.description[i]# Section - #FORM["sectionNotes" & qGetApprovalHistory.ID[i] & "_" & qGetApprovalHistory.studentID[i]]#</li>');
-						vAppFullyApproved = false;
-					}
-					
 				}
 				
-				// Update Each Reference (Approve/Deny)
+				// Update all references in the app - Do not approve if any of the references are denied
 				For ( i=1; i LTE qGetReferences.recordCount; i++ ) {
-
+					vAction = FORM["referenceStatus" & qGetReferences.ID[i]];
 					APPLICATION.CFC.HOST.updateReferenceStatus(
 						ID=qGetReferences.ID[i],
 						hostID=FORM.hostID,
 						fk_referencesID=qGetReferences.fk_referencesID[i],
-                        action=FORM["referenceStatus" & qGetReferences.ID[i]],
+                        action=vAction,
                         notes=FORM["referenceNotes" & qGetReferences.ID[i]],
 						areaRepID=qGetHostInfo.areaRepID,
 						regionalAdvisorID=qGetHostInfo.regionalAdvisorID,
 						regionalManagerID=qGetHostInfo.regionalManagerID,
 						seasonID=vSelectedSeason
 					);
-					
-					// If at least one section is denied we must send the application back one level
-					if ( FORM["referenceStatus" & qGetReferences.ID[i]] EQ 'denied' ) {
-						vAction = "denied";
-						// Store a list of issues
-						vIssueList = ListAppend(vIssueList, '<li>Reference for #qGetReferences.firstname[i]# #qGetReferences.lastname[i]# - #FORM["referenceNotes" & qGetReferences.ID[i]]#</li>');
-						vAppFullyApproved = false;
+					if (vAction EQ "denied") {
+						vApproveApp = false;
+						vSendAppBack = true;
 					}
-
 				}
 				
-				// Check if Confidential Host Family Visit Form Has Been Submitted
-				if ( vAction NEQ 'denied' AND NOT qGetConfidentialVisitForm.recordCount ) {
-					//SESSION.formErrors.Add("Confidential Host Family Visit Form - Please submit a report");
-					vAppFullyApproved = false;
-				}
-				
-				// Check if references have been approved
+				// Make sure there are at least the required number of references - Do not approve the app otherwise
 				qGetApprovedReferences = APPLICATION.CFC.HOST.getReferences(hostID=qGetHostInfo.hostID, getCurrentUserApprovedReferences=CLIENT.userType);
-				
-				// Check how many references are missing
-				vMissingReferences = VAL(vRequiredApprovedReferences-qGetApprovedReferences.recordCount);
-				
-				// Only Force References when approving application
-				if ( vAction EQ 'approved' AND vMissingReferences GT 0 ) {
-					//SESSION.formErrors.Add("You must submit/approve a total of #vRequiredApprovedReferences# references. #vMissingReferences# reference(s) missing.");
-					vAppFullyApproved = false;
+				if (vRequiredApprovedReferences GT qGetApprovedReferences.recordCount) {
+					vApproveApp = false;	
 				}
 				
-				// Check if there are no errors
-				if ( NOT SESSION.formErrors.length() AND (vAppFullyApproved OR vAction EQ 'denied') AND NOT VAL(vOrientationsChanged) ) {				
-
-					// Approve/Deny Application
+				// Check if the confidential host family visit form is submitted - Do not approve the app if it is missing
+				if ( NOT qGetConfidentialVisitForm.recordCount ) {
+					vApproveApp = false;
+				}
+				
+				// Approve / deny the application
+				if (vApproveApp AND CLIENT.userType LTE vAppStatus AND vAppStatus GT 3) {
+					For ( i=1; i LTE qGetApprovalHistory.recordCount; i++ ) {
+						vID = qGetApprovalHistory.ID[i];
+						if (NOT ListFind(vNonRequiredSections,vID)) {
+							APPLICATION.CFC.HOST.updateSectionDateFields(
+								hostID=FORM.hostID,
+								seasonID=vSelectedSeason,
+								itemID=vID
+							);
+						}
+					}
+					For ( i=1; i LTE qGetReferences.recordCount; i++ ) {
+						APPLICATION.CFC.HOST.updateSectionDateFields(
+							hostID=FORM.hostID,
+							seasonID=vSelectedSeason,
+							ID=qGetReferences.ID[i]
+						);
+					}
 					stReturnMessage = APPLICATION.CFC.HOST.submitApplication(
 						hostID=qGetHostInfo.hostID,
 						seasonID=vSelectedSeason,
-						action=vAction,
-						issueList=vIssueList
+						action="approved"
 					);
-				
-					// Set Page Message
 					SESSION.pageMessages.Add(stReturnMessage.pageMessages);
-					
-					// Check if there is an error message
 					if ( LEN(stReturnMessage.formErrors) ) {
 						SESSION.formErrors.Add(stReturnMessage.formErrors);	
 					}
-					
-					// Go back to the list information
 					location("#CGI.SCRIPT_NAME#?curdoc=hostApplication/listOfApps&status=#qGetHostInfo.applicationStatusID#", "no");
-					
+				} else if (vSendAppBack AND CLIENT.userType LTE vAppStatus) {
+					stReturnMessage = APPLICATION.CFC.HOST.submitApplication(
+						hostID=qGetHostInfo.hostID,
+						seasonID=vSelectedSeason,
+						action="denied"
+					);
+					SESSION.pageMessages.Add(stReturnMessage.pageMessages);
+					if ( LEN(stReturnMessage.formErrors) ) {
+						SESSION.formErrors.Add(stReturnMessage.formErrors);	
+					}
+					location("#CGI.SCRIPT_NAME#?curdoc=hostApplication/listOfApps&status=#qGetHostInfo.applicationStatusID#", "no");
 				} else {
-					// Reload the to do list
 					location("#CGI.SCRIPT_NAME#?curdoc=hostApplication/toDoList&hostID=#qGetHostInfo.hostID#", "no");	
 				}
 				
 			}
-						
+		
+		// FORM Not Submitted
 		} else {
 			
 			// Set the repNotes Form value
