@@ -1217,7 +1217,7 @@
                 FROM
                 (
                     SELECT
-                       h.hostID, h.familyLastName, h.fatherFirstName, h.motherFirstName,
+                       h.hostID, h.uniqueID, h.familyLastName, h.fatherFirstName, h.motherFirstName,
                         <!--- Host Family Display Name --->
                         CAST( 
                             CONCAT(                      

@@ -182,7 +182,7 @@
                         	<table width="100%">
                             	<tr>
                                 	<td>
-                                    	<a class="jQueryModal" href="/hostApplication/index.cfm?uniqueID=#qGetHostApplications.uniqueID#&userID=#CLIENT.userID#" title="Open Application">
+                                    	<a class="jQueryModal" href="/hostApplication/index.cfm?uniqueID=#qGetHostApplications.uniqueID#&season=#URL.seasonID#&userID=#CLIENT.userID#" title="Open Application">
                                         	<img src="pics/buttons/openApplication.png" border="0">
                                       	</a>
                                     </td>
