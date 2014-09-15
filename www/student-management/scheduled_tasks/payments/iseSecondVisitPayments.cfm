@@ -46,7 +46,7 @@
     	AND hh.hostid = pr.fk_host 
         AND pr.fk_reporttype = 2 
 	WHERE hh.isActive = 1
-    AND st.programID > 339
+    AND st.programID > 341
     AND st.companyid IN (1,2,3,4,5,12)
     AND hh.isactive
     AND not EXISTS(
