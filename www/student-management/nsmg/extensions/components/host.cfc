@@ -1852,7 +1852,7 @@
 	</cffunction>
     
     
-	<cffunction name="updateSectionStatus" access="public" returntype="numeric" output="false" hint="Approves/Denies sections">
+	<cffunction name="updateSectionStatus" access="public" returntype="void" output="false" hint="Approves/Denies sections">
         <cfargument name="hostID" default="" hint="HostID is not required">
         <cfargument name="studentID" default="" hint="studentID is not required">
         <cfargument name="itemID" default="" hint="itemID">
@@ -1866,13 +1866,6 @@
         <cfscript>
 			// This returns the approval fields for the logged in user
 			stFieldSet = getApprovalFieldNames();
-			
-			// This is to keep track of if anything was changed
-			vAreaRepChanged = 0;
-			vRegionalAdvisorChanged = 0;
-			vRegionalManagerChanged = 0;
-			vFacilitatorChanged = 0;
-			vChanged = 0;
 		</cfscript>
         
         <cfif listFind("approved,denied", ARGUMENTS.action)>
@@ -1895,8 +1888,7 @@
                     UPDATE smg_host_app_history
                     SET
                         #stFieldSet.statusFieldName# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.action#">,
-                        #stFieldSet.notesFieldName# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.notes#" null="#yesNoFormat(NOT LEN(ARGUMENTS.notes))#">,
-                        #stFieldSet.idName# = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
+                        #stFieldSet.notesFieldName# = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.notes#" null="#yesNoFormat(NOT LEN(ARGUMENTS.notes))#">
                     WHERE ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qCheckRecord.ID)#">
                 </cfquery>	
                 
@@ -1908,39 +1900,21 @@
                 
                 <cfscript>
 					// Check if anything was changed
-					if (qCheckRecord.areaRepStatus NEQ qCheckUpdatedRecord.areaRepStatus) {
-						vAreaRepChanged = 1;
-					}
-					if (qCheckRecord.RegionalAdvisorStatus NEQ qCheckUpdatedRecord.RegionalAdvisorStatus) {
-						vRegionalAdvisorChanged = 1;
-					}
-					if (qCheckRecord.RegionalManagerStatus NEQ qCheckUpdatedRecord.RegionalManagerStatus) {
-						vRegionalManagerChanged = 1;
-					}
-					if (qCheckRecord.FacilitatorStatus NEQ qCheckUpdatedRecord.FacilitatorStatus) {
-						vFacilitatorChanged = 1;
-					}
-					if (vAreaRepChanged + vRegionalAdvisorChanged + vRegionalManagerChanged + vFacilitatorChanged GT 0) {
-						vChanged = 1;	
+					vChanged = 0;
+					if (qCheckRecord[stFieldSet.statusFieldName][1] NEQ qCheckUpdatedRecord[stFieldSet.statusFieldName][1]) {
+						vChanged = 1;
 					}
 					
 					// Checking if it was denied and getting the notes
 					vNotes = "";
-					if (qCheckUpdatedRecord.areaRepStatus EQ "denied") {
-						vNotes = qCheckUpdatedRecord.areaRepNotes;
-					}
-					if (qCheckUpdatedRecord.RegionalAdvisorStatus EQ "denied") {
-						vNotes = qCheckUpdatedRecord.RegionalAdvisorNotes;
-					}
-					if (qCheckUpdatedRecord.RegionalManagerStatus EQ "denied") {
-						vNotes = qCheckUpdatedRecord.RegionalManagerNotes;
-					}
-					if (qCheckUpdatedRecord.FacilitatorStatus EQ "denied") {
-						vNotes = qCheckUpdatedRecord.FacilitatorNotes;
+					vDenied = 0;
+					if (qCheckUpdatedRecord[stFieldSet.statusFieldName][1] EQ "denied") {
+						vNotes = qCheckUpdatedRecord[stFieldSet.notesFieldName][1];
+						vDenied = 1;
 					}
 					
 					// Send out email if an orientation has changed
-					if (VAL(vChanged) AND LEN(vNotes) AND ListFind("19,20",VAL(ARGUMENTS.itemID))) {
+					if (VAL(vChanged) AND VAL(vDenied) AND ListFind("19,20",VAL(ARGUMENTS.itemID))) {
 						// Get Host Family Info - Includes AR, RA, RD and Facilitator information
 						var qGetHostInfo = getApplicationList(hostID=ARGUMENTS.hostID,seasonID=ARGUMENTS.seasonID);	
 						var type = "host family";
@@ -1982,16 +1956,14 @@
                 <cfif VAL(vChanged)>
                 	<cfquery datasource="#APPLICATION.DSN#">
                         UPDATE smg_host_app_history
-                        SET #stFieldSet.dateFieldName# = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+                        SET #stFieldSet.dateFieldName# = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
+                        #stFieldSet.idName# = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
                         WHERE ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qCheckRecord.ID)#">
                     </cfquery>
                 </cfif>
             
             <!--- Insert --->
             <cfelse>
-            
-            	<!--- Mark as changed if inserting --->
-            	<cfset vChanged = 1>
     
                 <cfquery 
                     datasource="#APPLICATION.DSN#">
@@ -2076,8 +2048,6 @@
             </cfif>
     
     	</cfif>
-        
-        <cfreturn vChanged>
     
     </cffunction>     
     

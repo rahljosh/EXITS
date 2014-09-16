@@ -631,7 +631,6 @@
                                     <font color="##CCCCCC"><em>Previously Approved</em></font>
                                     <!--- This will automatically approve items in case upper lever has approved them | In the future we can give the approval/deny option --->
 									<input type="hidden" name="sectionStatus#qGetApprovalHistory.ID#" value="approved" /> 
-                                    <!--- input type="hidden" name="sectionStatus#qGetApprovalHistory.ID#" value="#FORM['sectionStatus' & qGetApprovalHistory.ID]#" />  --->
                                     
                                 <!--- Approve/Deny Options --->      
 								<cfelseif qGetHostInfo.applicationStatusID GTE CLIENT.userType>
