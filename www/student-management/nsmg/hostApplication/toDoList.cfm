@@ -127,6 +127,7 @@
 			vApproveApp = true;
 			vSendAppBack = false;
 			vAppStatus = qGetHostInfo.applicationStatusID;
+			vIssueList = "";
 			
 			// Check if any section was denied and no reason was given
 			For ( i=1; i LTE qGetApprovalHistory.recordCount; i++ ) {
@@ -170,6 +171,7 @@
 					if (vAction EQ "denied" AND NOT ListFind(vNonRequiredSections,qGetApprovalHistory.ID[i])) {
 						vApproveApp = false;
 						vSendAppBack = true;
+						vIssueList = ListAppend(vIssueList, '<li>#qGetApprovalHistory.description[i]# Section - #FORM["sectionNotes" & qGetApprovalHistory.ID[i] & "_" & qGetApprovalHistory.studentID[i]]#</li>');
 					}
 					// Get the history records for updating old fields (the first returned record is the current record)
 					qGetPlacementHistory = APPLICATION.CFC.STUDENT.getPlacementHistory(studentID=qGetApprovalHistory.studentID[i]);
@@ -226,6 +228,7 @@
 					if (vAction EQ "denied") {
 						vApproveApp = false;
 						vSendAppBack = true;
+						vIssueList = ListAppend(vIssueList, '<li>Reference for #qGetReferences.firstname[i]# #qGetReferences.lastname[i]# - #FORM["referenceNotes" & qGetReferences.ID[i]]#</li>');
 					}
 				}
 				
@@ -273,7 +276,8 @@
 					stReturnMessage = APPLICATION.CFC.HOST.submitApplication(
 						hostID=qGetHostInfo.hostID,
 						seasonID=vSelectedSeason,
-						action="denied"
+						action="denied",
+						issueList=vIssueList
 					);
 					SESSION.pageMessages.Add(stReturnMessage.pageMessages);
 					if ( LEN(stReturnMessage.formErrors) ) {
