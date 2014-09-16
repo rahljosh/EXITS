@@ -27,7 +27,7 @@
 			vErrors = vErrors & "<b>*ISE Placement Payments - " & e.message & ":</b> " & e.detail & "<br/>";	
 		}
 		try {
-			include "progressReportPayments.cfm";
+			include "iseProgressReportPayments.cfm";
 		} catch(any e) {
 			vErrors = vErrors & "<b>*ISE Progress Report Payments - " & e.message & ":</b> " & e.detail & "<br/>";	
 		}
@@ -73,6 +73,15 @@
 	
 	if (NOT LEN(vErrors)) {
 		vErrors = "All of the payment queries ran properly";	
+	}
+	
+	// ESI Payments
+	if ( NOT ListFind("1,7", DayOfWeek(Now())) ) {
+		try {
+			include "esiProgressReportPayments.cfm";
+		} catch(any e) {
+			vErrors = vErrors & "<b>*ESI Payments - " & e.message & ":</b> " & e.detail & "<br/>";
+		}
 	}
 	
 </cfscript>
