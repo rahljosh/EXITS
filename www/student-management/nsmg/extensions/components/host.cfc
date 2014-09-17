@@ -1117,9 +1117,8 @@
                             AND h.hostID IN (
                             	SELECT hostID
                                 FROM smg_hosthistory
-                                WHERE areaREpID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
+                                WHERE areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
                                 OR placeRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#"> )
-                                AND h.areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
                         </cfcase>
                         
                     </cfswitch>
