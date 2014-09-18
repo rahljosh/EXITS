@@ -262,19 +262,11 @@
 						) 
 					AS CHAR) LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.search#%">
                	<!--- Check if family is approved --->
-             	<cfif <!---CLIENT.companyID EQ 10 OR---> CLIENT.companyID EQ 14>
-                	AND hostID IN (
-                        SELECT hostID 
-                        FROM smg_host_app_season 
-                        WHERE applicationStatusID < 4 
-                        AND seasonID >= <cfqueryparam cfsqltype="cf_sql_integer" value="#vSeasonID#"> )
-                <cfelseif CLIENT.companyID NEQ 13>
-                	AND hostID IN (
-                        SELECT hostID 
-                        FROM smg_host_app_season 
-                        WHERE applicationStatusID < 9 
-                        AND seasonID >= <cfqueryparam cfsqltype="cf_sql_integer" value="#vSeasonID#"> )
-                </cfif>
+             	AND hostID IN (
+                    SELECT hostID 
+                    FROM smg_host_app_season 
+                    WHERE applicationStatusID < 4 
+                    AND seasonID >= <cfqueryparam cfsqltype="cf_sql_integer" value="#vSeasonID#"> )
                 ORDER BY 
                     familyLastName
         </cfquery>
