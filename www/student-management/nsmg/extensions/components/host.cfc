@@ -1114,11 +1114,13 @@
                         
                         <!--- Area Rep --->
                         <cfcase value="7">
-                            AND h.hostID IN (
-                            	SELECT hostID
-                                FROM smg_hosthistory
-                                WHERE areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
-                                OR placeRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#"> )
+                            AND (
+                            	h.hostID IN (
+                                    SELECT hostID
+                                    FROM smg_hosthistory
+                                    WHERE areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
+                                    OR placeRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#"> )
+                              	OR h.areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">)
                         </cfcase>
                         
                     </cfswitch>
