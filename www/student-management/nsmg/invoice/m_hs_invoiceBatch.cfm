@@ -849,19 +849,19 @@ GROUP BY agentid, testCompid
         <!--- CSB --->
 		<cfcase value="7,8,9">
 			<cfset compName = "csb">
-			<cfset emailFrom = 'marcel@iseusa.org'>
+			<cfset emailFrom = 'bmccready@iseusa.org'>
 		</cfcase>
 
 		<!--- Case --->
         <cfcase value="10">
 			<cfset compName = "case">
-			<cfset emailFrom = 'marcel@case-usa.org'>
+			<cfset emailFrom = 'bmccready@case-usa.org'>
 		</cfcase>
 		
         <!--- ISE --->        
 		<cfdefaultcase>
 			<cfset compName = "ise">
-			<cfset emailFrom = 'marcel@iseusa.org'>
+			<cfset emailFrom = 'bmccready@iseusa.org'>
 		</cfdefaultcase>
         
 	</cfswitch>
@@ -883,7 +883,7 @@ GROUP BY agentid, testCompid
 		
 	<cfif APPLICATION.isServerLocal>
 		<!--- Dev Server --->
-		<cfset emailTo = 'marcel@iseusa.org'>
+		<cfset emailTo = 'bmccready@iseusa.org'>
 	<cfelse>
 		<!--- Production Server  --->
 		<cfset emailTo = #getAgentInfo.billing_email#>
@@ -901,7 +901,7 @@ Please find attached your invoices.
 Payments by check should be mailed directly to our office address (Do not mail checks directly to our bank).
 Thank you for your cooperation,
 
-Marcel
+Bryan
 Financial Department
 
 119 Cooper St
@@ -910,7 +910,7 @@ Babylon, NY 11702
 631-893-4540-Phone
 631-893-4550-Fax
 
-marcel@iseusa.org
+bmccready@iseusa.org
 
 </small>
 		

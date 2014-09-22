@@ -159,7 +159,7 @@ END) AS testCompId
 		<cfset emailFrom = 'stacy@exchange-service.org'>
 	</cfcase>
 	<cfdefaultcase>
-		<cfset emailFrom = 'marcel@iseusa.org'>
+		<cfset emailFrom = 'bmccready@iseusa.org'>
 	</cfdefaultcase>
 </cfswitch>
 
@@ -319,7 +319,7 @@ END) AS testCompId
                         Stacy
                     </cfcase>
                     <cfdefaultcase>
-                        Marcel
+                        Bryan
                     </cfdefaultcase>
                 </cfswitch>
     
