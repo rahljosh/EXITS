@@ -87,7 +87,7 @@
 	// Set a short name for the APPLICATION.EMAIL
 	AppEmail = APPLICATION.EMAIL;
 	APPLICATION.EMAIL.errors = 'errors@student-management.com';
-	APPLICATION.EMAIL.finance = 'marcel@iseusa.org';	
+	APPLICATION.EMAIL.finance = 'bmccready@iseusa.org';	
 	APPLICATION.EMAIL.cbcNotifications = 'support@iseusa.org;bill@iseusa.org;gary@iseusa.org;merri@iseusa.org;tal@iseusa.com;bhause@iseusa.org;jan@iseusa.org;stephen@iseusa.org';
 	APPLICATION.EMAIL.cbcCaseNotifications = 'support@student-management.com;jana@case-usa.org';
 	APPLICATION.EMAIL.hostLeadNotifications = 'lamonica@iseusa.org';

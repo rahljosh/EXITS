@@ -53,7 +53,7 @@
 	VALUES ('#form.studentid#', '#newstatus#', '#form.reason#', '#client.userid#')
 </cfquery>
 
-<!--- SEND EMAIL TO MARCEL - FINANCE DEPARTMENT --->
+<!--- SEND EMAIL TO BRYAN - FINANCE DEPARTMENT --->
 
 <cfinclude template="../querys/get_company_short.cfm">
 
@@ -64,7 +64,7 @@
 </cfquery>
 
 <cfif NOT IsValid("email", get_current_user.email)>
-	<cfset get_current_user.email = 'marcel@iseusa.org'>
+	<cfset get_current_user.email = 'bmccready@iseusa.org'>
 </cfif>
 
 <cfquery name="get_denied_reason" datasource="MySql">
@@ -78,7 +78,7 @@
 </cfquery>
 
 <CFMAIL SUBJECT="Applicatiion Reactivated for #get_student_info.firstname# #get_student_info.familylastname# (###get_student_info.studentid#)"
-	TO="marcel@iseusa.org"
+	TO="bmccready@iseusa.org"
 	bcc="#get_current_user.email#"
 	FROM="""#get_current_user.firstname# #get_current_user.lastname# - #companyshort.companyshort#"" <#get_current_user.email#>"
 	failto="support@student-management.com"

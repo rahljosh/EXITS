@@ -102,14 +102,15 @@ Click on Business Name or enter Agent ID to add charges, see current charges, cr
                             </tr>
                             <tr>
                                 <td valign="top"><!----Reports---->
-                                    <a href="invoice/reports/outstanding_balances.cfm">Balance Report</a><br>
-                                    <a href="?curdoc=invoice/reports/balance_report_options">Balance Report w/ options</a><br>
-                                    <a href="invoice/m_balanceReport.cfm?RequestTimeout=3000" target="_blank">Balance Report per Program</a><br>
+                                    <a href="invoice/reports/outstanding_balances.cfm">Balance Report</a><br />
+                                    <a href="?curdoc=invoice/reports/balance_report_options">Balance Report w/ options</a><br />
+                                    <a href="invoice/m_balanceReport.cfm?RequestTimeout=3000" target="_blank">Balance Report per Program</a><br />
                                 </td>
                                 <td valign="top"><!----Tools---->
-                                    <a href="?curdoc=invoice/int_rep_rates&userid=all&compid=1">International Rep Rates</a><br>
-                                    <a href="index.cfm?curdoc=tools/programs">Program Maintenance</a><br>
-                                    <a href="?curdoc=invoice/reports/check_fees_menu">Check Fees Per Intl. Rep</a>
+                                    <a href="?curdoc=invoice/int_rep_rates&userid=all&compid=1">International Rep Rates</a><br />
+                                    <a href="?curdoc=invoice/insurance_rates">Insurance Rates</a><br />
+                                    <a href="index.cfm?curdoc=tools/programs">Program Maintenance</a><br />
+                                    <a href="?curdoc=invoice/reports/check_fees_menu">Check Fees Per Intl. Rep</a><br />
                                 </td>
                             </tr>
                     	</table>
