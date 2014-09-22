@@ -268,8 +268,8 @@ div.box2 {
 	<tr>
 		<td><h3><u>Finance Questions</u></h3>
 		
-	Marcel Akira Maebara<br>
-	<a href="mailto:marcel@iseusa.org">marcel@iseusa.org</a><br>
+	Bryan McCready<br>
+	<a href="mailto:bmccready@iseusa.org">bmccready@iseusa.org</a><br>
 	800-766-4656-Toll Free<br>
 	631-893-4540-Phone<br>
 	631-893-4550-Fax<br>
