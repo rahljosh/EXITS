@@ -732,7 +732,9 @@ setUserSessionPaperwork
 				stUserPaperwork.isUserPaperworkCompleted = true;
 				stUserPaperwork.isAccountCompliant = true;
 			}
-			
+			//bypass requierment right now. 
+				stUserPaperwork.isUserPaperworkCompleted = true;
+				stUserPaperwork.isAccountCompliant = true;
 			return stUserPaperwork;
 		</cfscript>
 		
