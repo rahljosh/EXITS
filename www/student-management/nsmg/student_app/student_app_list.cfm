@@ -142,6 +142,8 @@
                 AND 
                     s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.status#"> 
             </cfif>
+            
+      	GROUP BY s.studentID
 
         ORDER BY 
         	
