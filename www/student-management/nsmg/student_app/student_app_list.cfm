@@ -83,7 +83,7 @@
         FROM 
         	smg_students s 
         INNER JOIN 
-        	smg_users u ON u.userID = s.intRep
+        	smg_users u ON ( u.userID = s.intRep OR u.userID = s.branchID)
         LEFT OUTER JOIN
         	smg_student_app_programs appProgram ON appProgram.app_programID = s.app_indicated_program
         LEFT OUTER JOIN 
