@@ -17,11 +17,8 @@
                     smg_users 
                  SET
                     12_month_price = <cfqueryparam cfsqltype="cf_sql_decimal" value="#FORM[i & '_12_month_price']#">,
-                    12_month_ins = <cfqueryparam cfsqltype="cf_sql_decimal" value="#FORM[i & '_12_month_ins']#">,
                     10_month_price = <cfqueryparam cfsqltype="cf_sql_decimal" value="#FORM[i & '_10_month_price']#">,
-                    10_month_ins = <cfqueryparam cfsqltype="cf_sql_decimal" value="#FORM[i & '_10_month_ins']#">,
                     5_month_price = <cfqueryparam cfsqltype="cf_sql_decimal" value="#FORM[i & '_5_month_price']#">,
-                    5_month_ins = <cfqueryparam cfsqltype="cf_sql_decimal" value="#FORM[i & '_5_month_ins']#">,
                     insurance_typeid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM[i & '_insu_typeid']#">,
                     accepts_sevis_fee = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM[i & '_accepts_sevis_fee']#">	
                 WHERE 

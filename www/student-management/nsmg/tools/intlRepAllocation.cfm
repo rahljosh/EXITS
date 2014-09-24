@@ -14,13 +14,9 @@
     <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />
     
     <cfquery name="qGetSeasons" datasource="#APPLICATION.DSN#">
-        SELECT
-            seasonID,
-            season
-        FROM
-            smg_seasons
-        WHERE
-            active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+        SELECT seasonID, season
+        FROM smg_seasons
+        WHERE active = 1
     </cfquery>
     
     <!--- Param Variables --->
@@ -70,18 +66,17 @@
             
             <cfif VAL(qGetAllocations.recordCount)>
             
-                <cfquery name="updateAllocations" datasource="#APPLICATION.DSN#">
+                <cfquery datasource="#APPLICATION.DSN#">
                     UPDATE smg_users_allocation
                     SET 
                         januaryAllocation = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM[qGetRepresentatives.userID & '_januaryAllocation'])#">,
                         augustAllocation = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM[qGetRepresentatives.userID & '_augustAllocation'])#">
                     WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetAllocations.id#">
-                    
-                 </cfquery>
+               	</cfquery>
                  
             <cfelse>
             
-                <cfquery name="addAllocations" datasource="#APPLICATION.DSN#">
+                <cfquery datasource="#APPLICATION.DSN#">
                     INSERT INTO smg_users_allocation
                         (
                             userID, 
@@ -181,7 +176,11 @@
 		<cfif listFind("1,2,3,4", CLIENT.userType)>
             <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%">
                 <tr>
-                    <td colspan="6" align="center"><input type="image" name="submit" src="pics/buttons_submit.png" border="0"></td>
+                    <td colspan="6" align="center">
+                    	<!--- For some reason this is not working on the live server
+                        <input type="image" src="pics/buttons_submit.png" border="0">--->
+                        <input type="submit" value="Submit" />
+                  	</td>
                 </tr>
             </table>
         </cfif> 	
