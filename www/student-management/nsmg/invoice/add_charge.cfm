@@ -174,18 +174,20 @@ This agent does not have any students currently active OR all students have had 
 							</tr>
 							<cfset charge_list = ListAppend(charge_list, '#type#')>
 							</cfloop>
-											<cfquery name="program_charges" datasource="MySQL">
-											select 
-											<cfif #DateDiff('M', program_name_charge.startdate, program_name_charge.enddate)# gt 6>
-											10_month_price as program_fee, 10_month_ins as insurance_charge
-											<cfelse>
-											5_month_price as program_fee, 5_month_ins as insurance_charge
-											</cfif>
-											from smg_users
-											where userid = #url.userid#
-											</cfquery>
 							
-											<cfquery name="student_charges" datasource="MySQL">
+							<cfquery name="program_charges" datasource="#APPLICATION.DSN#">
+								SELECT 
+									<cfif #DateDiff('M', program_name_charge.startdate, program_name_charge.enddate)# gt 6>
+										u.10_month_price as program_fee, i.ayp10 as insurance_charge
+									<cfelse>
+										u.5_month_price as program_fee, i.ayp5 as insurance_charge
+									</cfif>
+								FROM smg_users u
+                                INNER JOIN smg_insurance_type i ON i.insutypeid = u.insurance_typeid
+								WHERE u.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(url.userid)#">
+							</cfquery>
+							
+											<cfquery name="student_charges" datasource="#APPLICATION.DSN#">
 												select regionguar, regionalguarantee, state_guarantee
 												from smg_students
 												where studentid = #students_under_rep_not_charged.studentid#

@@ -144,98 +144,75 @@ smg_charges
     5. Don't have all standard fees charged (ex: program price AND insurance fee AND placement fee AND sevis fee
     6. Have had standard charges canceled
     7. Have been canceled and reactivated afterwards --->
-    <cfquery name="getHSstud" datasource="MySQL">
-    SELECT
-		ss.studentid,
-		ss.intrep,
-		ss.programid,
-		ss.countrybirth,
-		ss.countryresident,
-		ss.countrycitizen,
-		ss.dateassigned,
-		ss.regionassigned,
-		ss.regionalguarantee,
-		ss.regionguar,
-		ss.state_guarantee,
-		ss.direct_placement,
-		ss.privateschool,
-		ss.accepts_private_high,
-		ss.app_school_name,
-		ss.app_school_type,
-		ss.aypenglish,
-		ss.ayporientation,
-		ss.scholarship,
-		ss.convalidation_needed,
-		ss.convalidation_completed,
-		ss.companyid,
-		ss.dateapplication,
-        ss.hostID,
-        ss.host_fam_approved,
-		sp.programname,
-		sp.startdate,
-		sp.enddate,
-		sr.regionname,
-		sr.regional_guarantee,
-		sst.statename,
-		sst.guarantee_Fee,
-		su.insurance_typeid,
-		su.10_month_price,
-		su.12_month_price,
-		su.5_month_price,
-		su.12_month_ins,
-		su.10_month_ins,
-		su.5_month_ins,
-		su.accepts_sevis_fee,
-        shist.datePlaced
-    FROM
-		smg_students ss
-    LEFT JOIN
-		smg_programs sp ON ss.programid = sp.programid
-    LEFT JOIN
-		smg_regions sr ON ss.regionalguarantee = sr.regionid
-    LEFT JOIN
-		smg_states sst ON ss.state_guarantee = sst.id
-    LEFT JOIN
-		smg_users su ON ss.intrep = su.userid
-    LEFT JOIN
-        smg_hostHistory shist ON shist.studentID = ss.studentID AND isActive = 1
-    WHERE
-		ss.active = 1
-    AND
-    	intrep != 0
-    <cfif form.placed EQ 1>
-    AND
-    	shist.datePlaced != ''
-    </cfif>
-    AND
-    	ss.app_current_status = 11
-    AND
-		sp.seasonid = #form.seasonId#
-    AND
-		sp.hold != 1
-    AND
-		ss.companyid in (1,2,3,4,10,12)
-    AND
-		ss.studentid
-	NOT IN
-		(SELECT
-			sc.stuid
-		FROM
-			smg_charges sc
-		INNER JOIN
-			smg_students ss ON ss.studentid = sc.stuid
-		WHERE
-			sc.agentid = ss.intrep
-		AND
-			sc.programid = ss.programid
-		AND
-			sc.companyid = ss.companyid
-		AND
-			sc.type = '#chargeType#'
-		AND
-			sc.active = 1)
-    ORDER BY
-		studentid
+    <cfquery name="getHSstud" datasource="#APPLICATION.DSN#">
+        SELECT
+            ss.studentid,
+            ss.intrep,
+            ss.programid,
+            ss.countrybirth,
+            ss.countryresident,
+            ss.countrycitizen,
+            ss.dateassigned,
+            ss.regionassigned,
+            ss.regionalguarantee,
+            ss.regionguar,
+            ss.state_guarantee,
+            ss.direct_placement,
+            ss.privateschool,
+            ss.accepts_private_high,
+            ss.app_school_name,
+            ss.app_school_type,
+            ss.aypenglish,
+            ss.ayporientation,
+            ss.scholarship,
+            ss.convalidation_needed,
+            ss.convalidation_completed,
+            ss.companyid,
+            ss.dateapplication,
+            ss.hostID,
+            ss.host_fam_approved,
+            sp.programname,
+            sp.startdate,
+            sp.enddate,
+            sr.regionname,
+            sr.regional_guarantee,
+            sst.statename,
+            sst.guarantee_Fee,
+            su.insurance_typeid,
+            su.10_month_price,
+            su.12_month_price,
+            su.5_month_price,
+            si.ayp12 AS 12_month_ins,
+            si.ayp10 AS 10_month_ins,
+            si.ayp5 AS 5_month_ins,
+            su.accepts_sevis_fee,
+            shist.datePlaced
+        FROM smg_students ss
+        LEFT JOIN smg_programs sp ON ss.programid = sp.programid
+        LEFT JOIN smg_regions sr ON ss.regionalguarantee = sr.regionid
+        LEFT JOIN smg_states sst ON ss.state_guarantee = sst.id
+        LEFT JOIN smg_users su ON ss.intrep = su.userid
+        LEFT JOIN smg_insurance_type si ON si.insutypeid = su.insurance_typeid
+        LEFT JOIN smg_hostHistory shist ON shist.studentID = ss.studentID AND isActive = 1
+        WHERE ss.active = 1
+        AND intrep != 0
+        <cfif form.placed EQ 1>
+            AND shist.datePlaced != ''
+        </cfif>
+        AND ss.app_current_status = 11
+        AND sp.seasonid = #form.seasonId#
+        AND sp.hold != 1
+        AND ss.companyid in (1,2,3,4,10,12)
+        AND ss.studentid NOT IN (
+            SELECT sc.stuid
+            FROM smg_charges sc
+            INNER JOIN smg_students ss ON ss.studentid = sc.stuid
+            WHERE sc.agentid = ss.intrep
+            AND sc.programid = ss.programid
+            AND sc.companyid = ss.companyid
+            AND sc.type = '#chargeType#'
+            AND sc.active = 1)
+        ORDER BY studentid
     </cfquery>
 
     <cfloop query="getHSstud">
@@ -680,16 +657,38 @@ ORDER BY su.businessname<!--- , s.companyid --->
 
 <br/><br/>
 
-<cfquery name="getMissingAmounts" datasource="MySQL">
-SELECT ss.intrep, ss.studentid, ss.firstname, ss.familylastname, ss.programid, ss.companyid, sp.programname, sp.startdate, sp.enddate, su.userid, su.businessname, su.insurance_typeid, ROUND( DATEDIFF( sp.enddate, sp.startdate ) /30, 0 ) AS datediffer, EXTRACT(MONTH FROM sp.enddate ) AS endMonth, su.10_month_price, su.12_month_price, su.5_month_price, su.12_month_ins, su.10_month_ins, su.5_month_ins, su.accepts_sevis_fee
-FROM smg_students ss
-INNER JOIN smg_programs sp ON ss.programid = sp.programid
-INNER JOIN smg_users su ON ss.intrep = su.userid
-WHERE ss.active =1
-AND sp.seasonid =#form.seasonId#
-AND sp.hold !=1
-AND ss.companyid IN (1,2,3,4,10,12)
-ORDER BY businessname, endMonth, datediffer
+<cfquery name="getMissingAmounts" datasource="#APPLICATION.DSN#">
+	SELECT 
+    	ss.intrep, 
+        ss.studentid, 
+        ss.firstname, 
+        ss.familylastname, 
+        ss.programid, 
+        ss.companyid, 
+        sp.programname, 
+        sp.startdate, 
+        sp.enddate, 
+        su.userid, 
+        su.businessname, 
+        su.insurance_typeid, 
+        ROUND( DATEDIFF( sp.enddate, sp.startdate ) /30, 0 ) AS datediffer, 
+        EXTRACT(MONTH FROM sp.enddate ) AS endMonth,
+        su.10_month_price, 
+        su.12_month_price, 
+        su.5_month_price, 
+        si.ayp12 AS 12_month_ins,
+        si.ayp10 AS 10_month_ins,
+        si.ayp5 AS 5_month_ins,
+        su.accepts_sevis_fee
+    FROM smg_students ss
+    INNER JOIN smg_programs sp ON ss.programid = sp.programid
+    INNER JOIN smg_users su ON ss.intrep = su.userid
+    INNER JOIN smg_insurance_type si ON si.insutypeid = su.insurance_typeid
+    WHERE ss.active =1
+    AND sp.seasonid =#form.seasonId#
+    AND sp.hold !=1
+    AND ss.companyid IN (1,2,3,4,10,12)
+    ORDER BY businessname, endMonth, datediffer
 </cfquery>
 
 <table class="frame" align="center">
