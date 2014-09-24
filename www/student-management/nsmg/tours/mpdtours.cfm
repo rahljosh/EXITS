@@ -485,7 +485,7 @@
                         	<cfif qGetResults.totalReceived GTE qGetResults.totalCost>
                             	PAID
                             <cfelse>                          
-	                            <span style="color:##F00; font-weight:bold;">#DollarFormat(qGetResults.totalCost - qGetResults.totalReceived)#</span>
+	                            <span style="color:##F00; font-weight:bold;">#DollarFormat(VAL(qGetResults.totalCost) - VAL(qGetResults.totalReceived))#</span>
                             </cfif>
                         </td>                       
                         <td align="center">#dateFormat(qGetResults.paid, 'mm/dd/yyyy')#</td>
