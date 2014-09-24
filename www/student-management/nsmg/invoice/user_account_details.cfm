@@ -65,7 +65,8 @@
 		select			
 			companyID,
 			companyShort,
-			companyName
+			companyName,
+            team_id
 		from 
 			smg_companies
 		where 
@@ -809,24 +810,29 @@ div.scroll {
 
 <!----Invoices this Month---->
 <cfquery name="current_invoices" datasource="mysql">
-SELECT invoiceid, invoicedate, SUM(amount_due) AS invoice_due, companyid 
-FROM smg_charges
-WHERE agentid = #url.userid#
-AND invoiceid <> 0
-<cfif form.view is not 'all'>
-	<cfswitch expression="#FORM.companyID#">
-		<cfcase value="1,2,3,4,12">
-			and companyid in (1,2,3,4,12)
-		</cfcase>
-		<cfdefaultcase>
-			and companyid = #FORM.companyID#
-		</cfdefaultcase>
-	</cfswitch>
-<cfelse>
-	and companyid != 14
-</cfif>
-GROUP BY 
-	invoiceid DESC, companyID 
+	SELECT 
+    	c.invoiceid, 
+        c.invoicedate, 
+        SUM(c.amount_due) AS invoice_due, 
+        c.companyid, 
+        comp.team_id
+	FROM smg_charges c
+    INNER JOIN smg_companies comp ON comp.companyID - c.companyID
+	WHERE c.agentid = #url.userid#
+	AND c.invoiceid <> 0
+	<cfif form.view is not 'all'>
+		<cfswitch expression="#FORM.companyID#">
+			<cfcase value="1,2,3,4,12">
+				AND c.companyid in (1,2,3,4,12)
+			</cfcase>
+			<cfdefaultcase>
+				AND c.companyid = #FORM.companyID#
+			</cfdefaultcase>
+		</cfswitch>
+	<cfelse>
+		AND companyid != 14
+	</cfif>
+	GROUP BY c.invoiceid DESC, c.companyID 
 </cfquery>
 
 <div class=scroll>
@@ -841,34 +847,6 @@ GROUP BY
 				</Td>
 				<td>Invoice</td><td>Date Created</td><td>Amount</td><td>Payments</td><td>C/C/R</td><td>Balance</td><!--- <cfif form.view is 'all'> ---><td>Comp</td><!--- </cfif> --->
 			</tr>
-
-	<!--- 			<cfset total_invoice_amount_received =0>
-				<cfquery name="invoice_totals" datasource="mysql">
-					select sum(amount_due) as invoice_due
-					from smg_charges
-					where invoiceid = #invoiceid#                    
-				</cfquery> --->
-                				
-<!--- 				<cfquery name="invoice_charge_id" datasource="MySQL">
-				select smg_charges.chargeid
-				from smg_charges 
-                where invoiceid = #invoiceid#                
-				</cfquery> --->
-				
-<!--- 				<Cfloop query="invoice_charge_id">
-					<cfquery name="get_applied_amount" datasource="mysql">
-					select amountapplied
-					from smg_payment_charges
-					where chargeid = #invoice_charge_id.chargeid#
-					</cfquery>
-                    
-						<cfloop query=get_applied_amount>
-							<cfset total_invoice_amount_received = #total_invoice_amount_received# + #get_applied_amount.amountapplied#>
-						</cfloop>
-				</Cfloop> --->
-						
-				
-				<!--- <Cfset payref.paymentref = ''> --->
 				
 				
 			<cfoutput query="current_invoices">
@@ -921,7 +899,7 @@ GROUP BY
                 </td>
              	<!--- <cfif form.view is 'all'> --->
                 	<td>
-                    #companyid#
+                    #team_id#
                     </td>
 				<!--- </cfif> --->
 			</Tr>
