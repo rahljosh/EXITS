@@ -41,6 +41,11 @@
         <cfinclude template="flightInformationPerTour.cfm" />
     </cfcase>
     
+      <!--- Missing payment information per tour report --->
+    <cfcase value="paymentHistory">
+        <cfinclude template="paymentHistory.cfm" />
+    </cfcase>
+    
     <!--- Menu Options --->
     <cfdefaultcase>
         <cfinclude template="menu.cfm" />
