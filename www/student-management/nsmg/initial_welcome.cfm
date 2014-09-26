@@ -305,14 +305,10 @@
 	// Set a new season
 	function reloadWithSelectedSeason() {
 		var newURL = document.URL.toString();
-		if (newURL.indexOf("&seasonID=") > 0) {
-			newURL = newURL.substring(0,newURL.indexOf("&seasonID="));
-		}
 		if (newURL.indexOf("?") > 0) {
-			newURL = newURL + "&seasonID=" + $("#seasonID").val();
-		} else {
-			newURL = newURL + "?seasonID=" + $("#seasonID").val();
+			newURL = newURL.substring(0,newURL.indexOf("?"));
 		}
+		newURL = newURL + "?seasonID=" + $("#seasonID").val()
 		window.location.href = newURL;
 	}
 </script>
