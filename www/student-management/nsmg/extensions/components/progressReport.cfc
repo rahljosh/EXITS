@@ -338,6 +338,8 @@
                 	AND
                     	pr.fk_seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
                 </cfif>  
+                
+                ORDER BY pr_id DESC
 
 		</cfquery>
         

@@ -389,7 +389,7 @@
      <!----Initial Answers on 1st Report ONLY show for office folks---->
     <cfscript>
    // Get Confidential Visit Form
-		previousReport = APPLICATION.CFC.PROGRESSREPORT.getVisitInformation(hostID=VAL(qGetHosts.hostid),reportType=5,seasonID=application.cfc.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID);
+		previousReport = APPLICATION.CFC.PROGRESSREPORT.getVisitInformation(hostID=VAL(qGetHosts.hostid),reportType=5);
     </cfscript>
     
     
