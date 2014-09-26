@@ -70,7 +70,11 @@
                 	tripID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.tourID#" list="yes"> )
               	AND
                 	ss.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-              	ORDER BY
+              	AND 
+                	st.paid IS NOT NULL
+                AND 
+                	st.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                ORDER BY
                 	familyLastName,
                     firstName           	
             </cfquery>
@@ -261,6 +265,8 @@
                     qGetResults
                 WHERE
                     tripID = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#">
+                    
+                   
             </cfquery>
             
             <cfset totalPerTour = 0>

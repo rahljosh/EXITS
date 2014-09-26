@@ -75,13 +75,24 @@
 				</ul>
             </ul>  
         </td>
+        </tr>
+        <tr>
+         <td class="right">
+            <ul class="mainList">
+                <li onclick="loadSelectedReport('paymentHistory');">Payment Information Per Tour</li>
+                <ul>
+                    <li>Generate a report with all payment transactions</li>
+                    <li>Filter by: Tour</li>
+				</ul>
+            </ul>  
+        </td>
 	</tr>	
 </table>    
 
 <!--- Load Report Here --->
 <table id="loadReportTable" class="reportMenuTable displayNone">
     <tr>
-    	<td colspan="3" id="loadReport"></td>
+    	<td colspan="4" id="loadReport"></td>
     </tr>
 </table>
 
