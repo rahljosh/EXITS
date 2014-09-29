@@ -379,8 +379,10 @@
 	});
 	
 	// End -->
-</script> 	
-
+</script>
+<cfif client.userid eq 1>
+	<cfdump var="#qGetPendingHosts#">	
+</cfif>
 <cfoutput>
 
 	<!--- Table Header --->
