@@ -28,7 +28,7 @@
     		
         </cfloop>
         
-        <cfset URL.message = 'Prices Updated Successfully!!'>
+        <cflocation url="?curdoc=invoice/int_rep_rates&message=Prices%20Updated%20Successfully!!">
     
     </cfif>
     
@@ -81,7 +81,7 @@
     
     <div align="center">To use Default insurance rates, leave rate for Insurance at 0.00</div>
     
-    <cfform action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
+    <form action="?curdoc=invoice/int_rep_rates" method="post" enctype="multipart/form-data">
         <input type="hidden" name="count" value="#qIntRepRates.recordcount#">
         
         <cfloop query="qGetInsuranceType">
@@ -153,6 +153,6 @@
          	</tr>
         </table>
         
-    </cfform>
+    </form>
 
 </cfoutput>
