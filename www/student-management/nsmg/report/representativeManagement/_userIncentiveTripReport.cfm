@@ -458,12 +458,10 @@
                                         <td style="font-size:10px" bgcolor="#vRowColor#" align="left" colspan="7">&nbsp;&nbsp;&nbsp;#firstName# #middlename# #familylastname# (###studentID#)</td>
                                     </tr>
                               	</cfloop>
-                                <cfif VAL(qGetResults.pointCount)>
-                                	<tr>
-                                        <td style="font-size:10px" bgcolor="#vRowColor#" align="left" colspan="2">&nbsp;</td>
-                                        <td style="font-size:10px" bgcolor="#vRowColor#" align="left" colspan="7">&nbsp;&nbsp;&nbsp;+#qGetResults.pointCount# points</td>
-                                    </tr>
-                                </cfif>
+                                <tr>
+                                    <td style="font-size:10px" bgcolor="#vRowColor#" align="left" colspan="2">&nbsp;</td>
+                                    <td style="font-size:10px" bgcolor="#vRowColor#" align="left" colspan="7">&nbsp;&nbsp;&nbsp;+#VAL(qGetResults.pointCount)# points</td>
+                                </tr>
                                 <tr>
                                     <td style="font-size:10px" bgcolor="#vRowColor#" align="left" colspan="2">&nbsp;</td>
                                     <td style="font-size:10px" bgcolor="#vRowColor#" align="left" colspan="7">NOT EARNED:</td>
