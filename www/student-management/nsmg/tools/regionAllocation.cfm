@@ -206,7 +206,11 @@
 		<cfif listFind("1,2,3,4", CLIENT.userType)>
             <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%">
                 <tr>
-                    <td colspan="6" align="center"><input type="image" name="submit" src="pics/buttons_submit.png" border="0"></td>
+                    <td colspan="6" align="center">
+                    	<!--- For some reason this is not working on the live server
+                        <input type="image" src="pics/buttons_submit.png" border="0">--->
+                        <input type="submit" value="Submit" />
+                  	</td>
                 </tr>
             </table>
         </cfif> 	
