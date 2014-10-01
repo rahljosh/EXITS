@@ -27,8 +27,10 @@
 		vReportTitle = "Representative Management - Incentive Trip Report";
 		if (FORM.reportType EQ 1) {
 			vReportTitle = vReportTitle & " Guest List";	
-		} else {
+		} else if (FORM.reportType EQ 2) {
 			vReportTitle = vReportTitle & " Payment List";
+		} else {
+			vReportTitle = vReportTitle & " Payment List with Students";	
 		}
 		
 		vCurrentSeason = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID;
@@ -88,7 +90,7 @@
                     AND uar.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#FORM.companyID#"> )
                     GROUP BY guest.ID
                 </cfquery>
-            <cfelseif FORM.reportType EQ 2>
+            <cfelseif ListFind("2,3",FORM.reportType) >
                 <cfquery name="qGetResults" datasource="#APPLICATION.DSN#">
                 	SELECT
                     	u.userID,
@@ -187,6 +189,7 @@
                         <select name="reportType" id="reportType" class="xLargeField" required>
                             <option value="1">Traveler List</option>
                             <option value="2">Payment List</option>
+                            <option value="3">Payment List with Students</option>
                         </select>
                     </td>		
                 </tr>
@@ -411,6 +414,68 @@
                                 <td style="font-size:10px" bgcolor="#vRowColor#" align="left">#DollarFormat(vISEOwes)#</td>
                                 <td style="font-size:10px" bgcolor="#vRowColor#" align="left">#DollarFormat(vRepOwes)#</td>
                             </tr>
+                            
+                            <cfif FORM.reportType EQ 3>
+                            	
+								<!--- Get students and points --->
+                                <cfquery name="qGetPlacements" datasource="#APPLICATION.DSN#">
+                                	SELECT s.*
+                                    FROM smg_students s    
+                                    INNER JOIN smg_programs p ON p.programID = s.programID    
+                                    INNER JOIN smg_incentive_trip t ON t.tripID = p.tripID
+                                    WHERE s.placeRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.userID#">
+                                    AND s.host_fam_approved < 5 
+                                    AND s.active = 1
+                                    AND t.active = 1
+                                    <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG,FORM.companyID)>
+                                        AND s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#"> )
+                                    <cfelse>
+                                        AND s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#FORM.companyID#"> )
+                                    </cfif>
+                                </cfquery>
+                                <cfquery name="qNonQualifiedGetPlacements" datasource="#APPLICATION.DSN#">
+                                	SELECT s.*
+                                    FROM smg_students s    
+                                    INNER JOIN smg_programs p ON p.programID = s.programID    
+                                    INNER JOIN smg_incentive_trip t ON t.tripID = p.tripID
+                                    WHERE s.placeRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.userID#">
+                                    AND s.host_fam_approved >= 5 
+                                    AND s.active = 1
+                                    AND t.active = 1
+                                    <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG,FORM.companyID)>
+                                        AND s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#"> )
+                                    <cfelse>
+                                        AND s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#FORM.companyID#"> )
+                                    </cfif>
+                                </cfquery>
+                                <tr>
+                                    <td style="font-size:10px" bgcolor="#vRowColor#" align="left" colspan="2">&nbsp;</td>
+                                    <td style="font-size:10px" bgcolor="#vRowColor#" align="left" colspan="7">EARNED:</td>
+                                </tr>
+                                <cfloop query="qGetPlacements">
+                                    <tr>
+                                        <td style="font-size:10px" bgcolor="#vRowColor#" align="left" colspan="2">&nbsp;</td>
+                                        <td style="font-size:10px" bgcolor="#vRowColor#" align="left" colspan="7">&nbsp;&nbsp;&nbsp;#firstName# #middlename# #familylastname# (###studentID#)</td>
+                                    </tr>
+                              	</cfloop>
+                                <cfif VAL(qGetResults.pointCount)>
+                                	<tr>
+                                        <td style="font-size:10px" bgcolor="#vRowColor#" align="left" colspan="2">&nbsp;</td>
+                                        <td style="font-size:10px" bgcolor="#vRowColor#" align="left" colspan="7">&nbsp;&nbsp;&nbsp;+#qGetResults.pointCount# points</td>
+                                    </tr>
+                                </cfif>
+                                <tr>
+                                    <td style="font-size:10px" bgcolor="#vRowColor#" align="left" colspan="2">&nbsp;</td>
+                                    <td style="font-size:10px" bgcolor="#vRowColor#" align="left" colspan="7">NOT EARNED:</td>
+                                </tr>
+                                <cfloop query="qNonQualifiedGetPlacements">
+                                    <tr>
+                                        <td style="font-size:10px" bgcolor="#vRowColor#" align="left" colspan="2">&nbsp;</td>
+                                        <td style="font-size:10px" bgcolor="#vRowColor#" align="left" colspan="7">&nbsp;&nbsp;&nbsp;#firstName# #middlename# #familylastname# (###studentID#)</td>
+                                    </tr>
+                              	</cfloop>
+                                
+                            </cfif>
                             
                       	</cfif>
                         
