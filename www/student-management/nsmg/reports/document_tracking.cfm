@@ -204,7 +204,7 @@
             sh.doc_single_place_auth,
             sh.stu_arrival_orientation, 
             sh.host_arrival_orientation, 
-            sh.doc_class_schedule,
+         <!---   sh.doc_class_schedule, --->
             sh.doc_income_ver_date,
             sh.doc_single_ref_check1,
             sh.doc_single_ref_check2,
@@ -287,8 +287,8 @@
                 sh.stu_arrival_orientation IS NULL 
             OR 
                 sh.host_arrival_orientation IS NULL 
-            OR 
-                sh.doc_class_schedule IS NULL
+       <!---     OR 
+                sh.doc_class_schedule IS NULL --->
 			OR
                 sh.doc_income_ver_date IS NULL
             OR
@@ -373,7 +373,7 @@
             sh.doc_single_place_auth,
             sh.stu_arrival_orientation, 
             sh.host_arrival_orientation, 
-            sh.doc_class_schedule,
+            <!---sh.doc_class_schedule, --->
             sh.doc_income_ver_date,
             sh.doc_single_ref_check1,
             sh.doc_single_ref_check2,
@@ -451,8 +451,8 @@
                 sh.stu_arrival_orientation IS NULL 
             OR 
                 sh.host_arrival_orientation IS NULL 
-            OR 
-                sh.doc_class_schedule IS NULL
+            <!---OR 
+                sh.doc_class_schedule IS NULL --->
 			OR
                 sh.doc_income_ver_date IS NULL
             OR
@@ -753,10 +753,10 @@
                                     missingDocumentsList = ListAppend(missingDocumentsList, "HF Orientation &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
 								
-<!---                                // Class Schedule
-                                if ( NOT isDate(qGetStudentsByRep.doc_class_schedule) ) {
-                                    missingDocumentsList = ListAppend(missingDocumentsList, "Class Schedule &nbsp; &nbsp;", " &nbsp; &nbsp;");
-                                } --->
+                                // Class Schedule
+                                //if ( NOT isDate(qGetStudentsByRep.doc_class_schedule) ) {
+                                //    missingDocumentsList = ListAppend(missingDocumentsList, "Class Schedule &nbsp; &nbsp;", " &nbsp; &nbsp;");
+                                //} 
                             </cfscript>
                             
                             <cfif LEN(missingDocumentsList) or LEN(hostAppsDocs)>
