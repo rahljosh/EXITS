@@ -324,7 +324,6 @@
                     OR
 <!---                        compliance_class_schedule IS NULL ---> 
                     <!--- Second Visit Date Compliance --->
-                    OR
                         dateCompliance IS NULL 
                         
                     <!--- Get Pending Notes --->    
@@ -695,10 +694,10 @@
 						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "HF Orientation <br />", " <br />");
 					}
 					
-<!---					// Arrival Orientation - Class Schedule
-					if ( NOT isDate(qGetResults.compliance_class_schedule) ) {
-						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Class Schedule <br />", " <br />");
-					} --->
+					// Arrival Orientation - Class Schedule
+					//if ( NOT isDate(qGetResults.compliance_class_schedule) ) {
+						//vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Class Schedule <br />", " <br />");
+					//} 
 
 					// 2nd Confidential Host Family Visit Form
 					if ( NOT isDate(qGetResults.dateCompliance) ) { 
@@ -1027,10 +1026,10 @@
                                             vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "HF Orientation &nbsp; - &nbsp;", " &nbsp; - &nbsp;");
                                         }
                                         
-<!---                                        // Arrival Orientation - Class Schedule
+                                       /* // Arrival Orientation - Class Schedule
                                         if ( NOT isDate(qGetStudentsInRegion.compliance_class_schedule) ) {
                                             vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Class Schedule &nbsp; - &nbsp;", " &nbsp; - &nbsp;");
-                                        } --->
+                                        } */
                     
                                         // 2nd Confidential Host Family Visit Form
                                         if ( NOT isDate(qGetStudentsInRegion.dateCompliance) ) { 
