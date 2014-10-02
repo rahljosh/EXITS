@@ -174,7 +174,6 @@
                             sh.compliance_single_place_auth,
                             sh.compliance_stu_arrival_orientation, 
                             sh.compliance_host_arrival_orientation, 
-                            sh.compliance_class_schedule,
                             sh.compliance_income_ver_date,
                             sh.compliance_single_ref_check1,
                             sh.compliance_single_ref_check2,
@@ -328,8 +327,6 @@
                                     sh.stu_arrival_orientation IS NULL 
                                 OR 
                                     sh.host_arrival_orientation IS NULL 
-                                OR 
-                                    sh.compliance_class_schedule IS NULL
                                 OR
                                     sh.compliance_income_ver_date IS NULL
                                 OR
@@ -695,10 +692,6 @@
 						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "HF Orientation <br />", " <br />");
 					}
 					
-					// Class Schedule
-					if ( NOT isDate(qGetResults.compliance_class_schedule) ) {
-						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Class Schedule <br />", " <br />");
-					}
 					
 					// Check if is compliant
 					/*
@@ -1035,11 +1028,6 @@
                                 // HF Orientation
                                 if ( NOT isDate(qGetStudentsInRegion.compliance_host_arrival_orientation) ) {
                                     vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "HF Orientation &nbsp; &nbsp;", " &nbsp; &nbsp;");
-                                }
-								
-                                // Class Schedule
-                                if ( NOT isDate(qGetStudentsInRegion.compliance_class_schedule) ) {
-                                    vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Class Schedule &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
 								
                                 // Check if is compliant
