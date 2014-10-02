@@ -124,7 +124,7 @@
                         <!--- Arrival Orientation --->
                         sh.compliance_stu_arrival_orientation,
                         sh.compliance_host_arrival_orientation,
-                        sh.compliance_class_schedule,
+                 <!---       sh.compliance_class_schedule, --->
                         <!--- Second Visit Date Compliance --->
                         sva.dateCompliance,
                         <!--- CBC Compliance --->
@@ -322,7 +322,7 @@
                     OR
                         compliance_host_arrival_orientation IS NULL 
                     OR
-                        compliance_class_schedule IS NULL 
+<!---                        compliance_class_schedule IS NULL ---> 
                     <!--- Second Visit Date Compliance --->
                     OR
                         dateCompliance IS NULL 
@@ -695,10 +695,10 @@
 						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "HF Orientation <br />", " <br />");
 					}
 					
-					// Arrival Orientation - Class Schedule
+<!---					// Arrival Orientation - Class Schedule
 					if ( NOT isDate(qGetResults.compliance_class_schedule) ) {
 						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Class Schedule <br />", " <br />");
-					}
+					} --->
 
 					// 2nd Confidential Host Family Visit Form
 					if ( NOT isDate(qGetResults.dateCompliance) ) { 
@@ -1027,10 +1027,10 @@
                                             vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "HF Orientation &nbsp; - &nbsp;", " &nbsp; - &nbsp;");
                                         }
                                         
-                                        // Arrival Orientation - Class Schedule
+<!---                                        // Arrival Orientation - Class Schedule
                                         if ( NOT isDate(qGetStudentsInRegion.compliance_class_schedule) ) {
                                             vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Class Schedule &nbsp; - &nbsp;", " &nbsp; - &nbsp;");
-                                        }
+                                        } --->
                     
                                         // 2nd Confidential Host Family Visit Form
                                         if ( NOT isDate(qGetStudentsInRegion.dateCompliance) ) { 
