@@ -1146,7 +1146,7 @@ setUserSessionPaperwork
 			}
 			
 			// Email Variables
-			var vEmailTo = stUserPaperwork.user.email + ",peter@iseusa.org";
+			var vEmailTo = stUserPaperwork.user.email & ",peter@iseusa.org";
 			var vEmailSubject = "EXITS - Account Fully Enabled";
 			var vEmailMessage = '';
 		</cfscript>
