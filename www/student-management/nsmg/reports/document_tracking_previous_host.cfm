@@ -585,10 +585,10 @@
                                     missingDocumentsList = ListAppend(missingDocumentsList, "HF Orientation &nbsp; &nbsp;", " &nbsp; &nbsp;");
                                 }
 								
-                                // Class Schedule
+<!---                                // Class Schedule
                                 if ( NOT isDate(qGetStudentsByRep.doc_class_schedule) ) {
                                     missingDocumentsList = ListAppend(missingDocumentsList, "Class Schedule &nbsp; &nbsp;", " &nbsp; &nbsp;");
-                                }
+                                } --->
                             </cfscript>
                             
                             <cfif LEN(missingDocumentsList)>

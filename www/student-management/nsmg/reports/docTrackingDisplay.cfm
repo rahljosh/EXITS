@@ -81,7 +81,7 @@
                                         <cfif NOT isDate(qGetStudentsByRep.doc_ref_form_2)>Ref. 2 &nbsp; &nbsp;</cfif>
                                         <cfif NOT isDate(qGetStudentsByRep.stu_arrival_orientation)>Student Orientation &nbsp; &nbsp;</cfif>
                                         <cfif NOT isDate(qGetStudentsByRep.host_arrival_orientation)>HF Orientation &nbsp; &nbsp;</cfif>
-                                        <cfif NOT isDate(qGetStudentsByRep.doc_class_schedule)>Class Schedule &nbsp; &nbsp;</cfif>
+<!---                                        <cfif NOT isDate(qGetStudentsByRep.doc_class_schedule)>Class Schedule &nbsp; &nbsp;</cfif> --->
                                         <cfif seasonid gt 8>
 											<cfif NOT isDate(qGetStudentsByRep.doc_income_ver_date)>Income Verification &nbsp; &nbsp;</cfif>
                                             <cfif NOT isDate(qGetStudentsByRep.doc_conf_host_rec2)> 2nd Conf. Host Visit &nbsp; &nbsp;</cfif>
