@@ -56,7 +56,7 @@
 			vEndDate = DateAdd('d',-1,CreateDate(vYear,vNextMonth,1));
 		</cfscript>
 
-        <cfquery name="qGetAllResults" datasource="#APPLICATION.DSN#">
+        <cfquery name="qGetResults" datasource="#APPLICATION.DSN#">
         	SELECT
             	hh.datePlacedEnded,
                 s.studentID,
@@ -96,17 +96,63 @@
                 AND departure.isDeleted = 0
                 AND departure.dep_date = (SELECT MIN(dep_date) FROM smg_flight_info WHERE studentID = s.studentID AND flight_type = "departure" AND isDeleted = 0)
            	WHERE arrival.dep_date IS NOT NULL
+            AND (
+            	(
+                	hh.datePlacedEnded >= 
+                    	CASE
+                            WHEN hh.isRelocation = 0 AND arrival.dep_date IS NOT NULL THEN CASE WHEN arrival.overnight = 1 THEN DATE_ADD(arrival.dep_date,INTERVAL 1 DAY) ELSE arrival.dep_date END
+                            WHEN hh.isRelocation = 1 AND hh.dateRelocated IS NOT NULL THEN hh.dateRelocated
+                            END 
+                    AND hh.datePlacedEnded >= p.startDate
+              	) 
+          	OR datePlacedEnded IS NULL
+            )
+            AND ( 
+            	(
+                	<cfqueryparam cfsqltype="cf_sql_date" value="#vStartDate#"> <= 
+                    	CASE
+                            WHEN hh.isRelocation = 0 AND arrival.dep_date IS NOT NULL THEN CASE WHEN arrival.overnight = 1 THEN DATE_ADD(arrival.dep_date,INTERVAL 1 DAY) ELSE arrival.dep_date END
+                            WHEN hh.isRelocation = 1 AND hh.dateRelocated IS NOT NULL THEN hh.dateRelocated
+                            END 
+                    AND <cfqueryparam cfsqltype="cf_sql_date" value="#vEndDate#"> >= 
+                    	CASE
+                            WHEN hh.isRelocation = 0 AND arrival.dep_date IS NOT NULL THEN CASE WHEN arrival.overnight = 1 THEN DATE_ADD(arrival.dep_date,INTERVAL 1 DAY) ELSE arrival.dep_date END
+                            WHEN hh.isRelocation = 1 AND hh.dateRelocated IS NOT NULL THEN hh.dateRelocated
+                            END
+              	)
+           		OR (
+            		<cfqueryparam cfsqltype="cf_sql_date" value="#vStartDate#"> >= 
+                    	CASE
+                            WHEN hh.isRelocation = 0 AND arrival.dep_date IS NOT NULL THEN CASE WHEN arrival.overnight = 1 THEN DATE_ADD(arrival.dep_date,INTERVAL 1 DAY) ELSE arrival.dep_date END
+                            WHEN hh.isRelocation = 1 AND hh.dateRelocated IS NOT NULL THEN hh.dateRelocated
+                            END 
+                    AND <cfqueryparam cfsqltype="cf_sql_date" value="#vEndDate#"> <= 
+                    	CASE
+                            WHEN hh.historyID = (SELECT MAX(historyID) FROM smg_hosthistory WHERE studentID = s.studentID) AND departure.dep_date IS NOT NULL THEN departure.dep_date
+                            WHEN hh.datePlacedEnded IS NOT NULL THEN hh.datePlacedEnded
+                            WHEN s.cancelDate IS NOT NULL THEN s.cancelDate
+                            ELSE p.endDate
+                            END
+              	)
+            	OR (
+                	<cfqueryparam cfsqltype="cf_sql_date" value="#vStartDate#"> <= 
+                    	CASE
+                            WHEN hh.historyID = (SELECT MAX(historyID) FROM smg_hosthistory WHERE studentID = s.studentID) AND departure.dep_date IS NOT NULL THEN departure.dep_date
+                            WHEN hh.datePlacedEnded IS NOT NULL THEN hh.datePlacedEnded
+                            WHEN s.cancelDate IS NOT NULL THEN s.cancelDate
+                            ELSE p.endDate
+                            END 
+                    AND <cfqueryparam cfsqltype="cf_sql_date" value="#vEndDate#"> >= 
+                    	CASE
+                            WHEN hh.historyID = (SELECT MAX(historyID) FROM smg_hosthistory WHERE studentID = s.studentID) AND departure.dep_date IS NOT NULL THEN departure.dep_date
+                            WHEN hh.datePlacedEnded IS NOT NULL THEN hh.datePlacedEnded
+                            WHEN s.cancelDate IS NOT NULL THEN s.cancelDate
+                            ELSE p.endDate
+                            END
+              	) 
+           	)
             GROUP BY studentName, hostName
            	ORDER BY s.familyLastName, s.firstName, startDate, h.familyLastName
-        </cfquery>
-        
-        <cfquery name="qGetResults" dbtype="query">
-        	SELECT *
-            FROM qGetAllResults
-            WHERE ((datePlacedEnded >= startDate AND datePlacedEnded >= programStartDate) OR datePlacedEnded IS NULL)
-            AND ( (<cfqueryparam cfsqltype="cf_sql_date" value="#vStartDate#"> <= startDate AND <cfqueryparam cfsqltype="cf_sql_date" value="#vEndDate#"> >= startDate)
-            	OR (<cfqueryparam cfsqltype="cf_sql_date" value="#vStartDate#"> >= startDate AND <cfqueryparam cfsqltype="cf_sql_date" value="#vEndDate#"> <= endDate)
-            	OR (<cfqueryparam cfsqltype="cf_sql_date" value="#vStartDate#"> <= endDate AND <cfqueryparam cfsqltype="cf_sql_date" value="#vEndDate#"> >= endDate) )
         </cfquery>
 
 	</cfif>
