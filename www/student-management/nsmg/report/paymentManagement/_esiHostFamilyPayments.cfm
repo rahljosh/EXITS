@@ -71,7 +71,7 @@
               		END AS hostName,
              	s.familylastname,
                 s.firstname,
-                s.studentID
+                s.studentID,
                 CASE
                 	WHEN hh.isRelocation = 0 AND arrival.dep_date IS NOT NULL THEN CASE WHEN arrival.overnight = 1 THEN DATE_ADD(arrival.dep_date,INTERVAL 1 DAY) ELSE arrival.dep_date END
                     WHEN hh.isRelocation = 1 AND hh.dateRelocated IS NOT NULL THEN hh.dateRelocated
