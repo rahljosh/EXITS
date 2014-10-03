@@ -107,7 +107,8 @@
                     		INNER JOIN smg_programs p ON p.programID = s.programID    
                      		INNER JOIN smg_incentive_trip t ON t.tripID = p.tripID
                      		WHERE s.placeRepID = u.userID
-                            AND s.host_fam_approved < 5 
+                            AND s.host_fam_approved < 5
+                            AND (s.cancelDate IS NULL OR s.cancelDate = "") 
                         	AND t.active = 1
                             <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG,FORM.companyID)>
                             	AND s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#"> )
@@ -424,6 +425,7 @@
                                     INNER JOIN smg_incentive_trip t ON t.tripID = p.tripID
                                     WHERE s.placeRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.userID#">
                                     AND s.host_fam_approved < 5
+                                    AND (s.cancelDate IS NULL OR s.cancelDate = "")
                                     AND t.active = 1
                                     <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG,FORM.companyID)>
                                         AND s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#"> )
@@ -437,7 +439,7 @@
                                     INNER JOIN smg_programs p ON p.programID = s.programID    
                                     INNER JOIN smg_incentive_trip t ON t.tripID = p.tripID
                                     WHERE s.placeRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.userID#">
-                                    AND s.host_fam_approved >= 5
+                                    AND (s.host_fam_approved >= 5 OR (s.cancelDate IS NOT NULL AND s.cancelDate != ""))
                                     AND t.active = 1
                                     <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG,FORM.companyID)>
                                         AND s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#"> )
