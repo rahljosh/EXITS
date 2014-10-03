@@ -104,7 +104,7 @@
 			SESSION.pageMessages.Add("Form successfully submitted.");
 
 			// Reload page
-			location("#CGI.SCRIPT_NAME#?curdoc=tools/intlRepAllocation&seasonID=#FORM.seasonID#", "no");	
+			location("?curdoc=tools/intlRepAllocation&seasonID=#FORM.seasonID#", "no");	
 		</cfscript>
         
     </cfif>
@@ -142,7 +142,7 @@
         />
         
 	<!--- Form to choose which seasons to show allocation for --->
-    <form name="intlRepAllocation" id="intlRepAllocation" action="#CGI.SCRIPT_NAME#?curdoc=tools/intlRepAllocation" method="post">
+    <form name="intlRepAllocation" id="intlRepAllocation" action="?curdoc=tools/intlRepAllocation" method="post" enctype="multipart/form-data">
     	<input type="hidden" name="submitted" id="submitted" value="1">
         
         <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%">
