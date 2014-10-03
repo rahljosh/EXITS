@@ -69,7 +69,9 @@
                 	WHEN h.w9_for = "father" THEN CONCAT(h.fatherfirstname, " ", h.familylastname, " (##", h.hostID, ")")
                     ELSE CONCAT(h.motherfirstname, " ", h.familylastname, " (##", h.hostID, ")")
               		END AS hostName,
-             	CONCAT(s.firstname, " ", s.middlename, " ", s.familylastname, " (##", s.studentID, ")") AS studentName,
+             	s.familylastname,
+                s.firstname,
+                s.studentID
                 CASE
                 	WHEN hh.isRelocation = 0 AND arrival.dep_date IS NOT NULL THEN CASE WHEN arrival.overnight = 1 THEN DATE_ADD(arrival.dep_date,INTERVAL 1 DAY) ELSE arrival.dep_date END
                     WHEN hh.isRelocation = 1 AND hh.dateRelocated IS NOT NULL THEN hh.dateRelocated
@@ -251,7 +253,9 @@
         <tr><th colspan="20">ESI Host Family Payments Report For <cfoutput>#DateFormat(vStartDate,'mm/dd/yyyy')# to #DateFormat(vEndDate,'mm/dd/yyyy')#</cfoutput></th></tr>
         <tr style="font-weight:bold; text-decoration:underline;">
             <td>Host Name</td>
-            <td>Student Name</td>
+            <td>Student Last Name</td>
+            <td>Student First Name</td>
+            <td>Student ID</td>
             <td>Region</td>
             <td>Placement Start</td>
             <td>Placement End</td>
@@ -298,7 +302,9 @@
             
             <tr>
                 <td #vRowColor#>#toString(hostName)#</td>
-                <td #vRowColor#>#toString(studentName)#</td>
+                <td #vRowColor#>#familyLastName#</td>
+                <td #vRowColor#>#firstName#</td>
+                <td #vRowColor#>#studentID#</td>
                 <td #vRowColor#>#toString(regionName)#</td>
                 <td #vRowColor#>#DateFormat(startDate,'mm/dd/yyyy')#</td>
                 <td #vRowColor#>#DateFormat(endDate,'mm/dd/yyyy')#</td>
