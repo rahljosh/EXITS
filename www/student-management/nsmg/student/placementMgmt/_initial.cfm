@@ -57,6 +57,9 @@
 		vIsDoublePlacementLanguageCompliant = '';
 		
 		// Check if placement is compliant - Office users | Display message to managers
+		//Compliance not required for CANADA
+		if (CLIENT.companyID NEQ 13){
+		
 		if ( listFind("1,2,3,4", CLIENT.userType) ) {
 
 			// Check if Host Family is in compliance
@@ -74,7 +77,10 @@
 			if (NOT IsDate(qGetPlacementHistoryByID.compliance_review)) {
 				vIsPlacementCompliant &= "<p style='color:red;'>Compliance Review must be checked off in paperwork before you can approve this placement.</p>";
 			}
-			
+		
+		};
+		// End Bypass for CANADA
+		
 			// Check if this is a double placement and both the student and the host app have approval for it
 			if (VAL(qGetPlacementHistoryByID.doublePlacementID)) {
 				vHostAcceptsDoublePlacement = 0;
@@ -149,8 +155,8 @@
 					SESSION.formErrors.Add("You must answer whether is a relocation or not");
 				}			
 				
-				if ( VAL(FORM.isRelocation) AND isDate(FORM.dateRelocated) AND FORM.dateRelocated LT DateFormat(now(), 'mm/dd/yyyy') ) {
-					SESSION.formErrors.Add("Relocation date is out of compliance, please enter a new date");
+				if ( VAL(FORM.isRelocation) AND NOT isDate(FORM.dateRelocated)  ) {
+					SESSION.formErrors.Add("Relocation date is required, please enter a date");
 				}
 
 				if ( NOT VAL(FORM.changePlacementReasonID) ) {
@@ -239,7 +245,7 @@
 				}			
 	
 			} 
-	
+			if (CLIENT.companyID neq 13){
 			// Update secondVisitRepID
 			if ( ListFindNoCase(FORM.subAction, "updateSecondVisitRepID") ) {
 			
@@ -262,7 +268,7 @@
 				*/
 
 			}
-			
+		}
 			// Update Double Placement
 			if ( ListFindNoCase(FORM.subAction, "updateDoublePlace") ) {
 				
@@ -1660,6 +1666,7 @@
         <!--- 2nd Representative Visit | Double Placement --->      
         <table width="90%" border="0" cellpadding="2" cellspacing="0" class="sectionBorderOnly" align="center">                            				
             <tr class="reportTitleLeftClean">
+            <cfif CLIENT.companyid neq 13>
                 <td width="50%">
                     <label for="secondVisitRepID">2<sup>nd</sup> Representative Visit</label>
                     
@@ -1676,6 +1683,7 @@
                         </div>
 					</cfif>                    
                 </td>
+             </cfif>
                 <td width="50%">
                 	<label for="doublePlacementID">Double Placement &nbsp; (Optional)</label>
                     
@@ -1690,6 +1698,7 @@
             </tr>
             <tr>
                 <!--- 2nd Representative Visit ---> 
+                <cfif CLIENT.companyid neq 13>
                 <td width="50%" style="padding:0px 0px 10px 10px;vertical-align:top; border-right:1px solid ##edeff4;">
                 	
                     <div class="placementMgmtInfo">
@@ -1748,7 +1757,7 @@
                     </div>
                                         
                 </td>
-                
+                </cfif>
                 <!--- Double Placement ---> 
                 <td width="50%" style="padding:0px 0px 10px 10px;vertical-align:top;">
                     
