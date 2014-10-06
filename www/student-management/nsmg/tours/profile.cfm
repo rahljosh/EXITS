@@ -165,6 +165,17 @@
             st.tripID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.tripID)#">
     </cfquery>
     
+    <cfquery name="paymentHistory" datasource="#APPLICATION.dsn#">
+    SELECT st.id as paymentID, st.studentid,st.tripid, tours.tour_name, ap.amount, ap.authResponseCode, ap.lastdigits, ap.creditcardtype, s.firstname, s.familylastname, st.paid, st.dateDepositPaid, st.dateFullyPaid, st.active
+                FROM student_tours st
+                LEFT JOIN smg_tours tours on tours.tour_id = st.tripid
+                LEFT JOIN applicationpayment ap on ap.foreignid = st.id
+                LEFT JOIN smg_students s on s.studentid = st.studentid 
+                WHERE st.studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.studentID)#">
+                ORDER BY authResponseCode
+    </cfquery>
+    
+    
     <!--- PHP needs to get this information from another table --->
     <cfif qGetRegistrationInfo.companyID EQ 6>
     	<cfquery name="qGetRegistrationInfo" datasource="#APPLICATION.DSN#">
@@ -1703,40 +1714,90 @@
         </table>
     </cfif>   
     
-    <!--- Resend Profile --->      
-	<form action="#CGI.SCRIPT_NAME#?curdoc=tours/profile" method="post"> 
-        <input type="hidden" name="studentID" value="#FORM.studentID#" />
-        <input type="hidden" name="tripID" value="#FORM.tripID#" />
-        <input type="hidden" name="action" value="resendEmail" />
-                   
-        <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%" style="padding-top:10px; padding-bottom:10px;">
-            <tr>
-                <td>
-
-                    <table cellpadding="4" cellspacing="0" border="0" align="center" width="50%" style="border:1px solid ##3b5998;">
-                        <tr style="background-color:##3b5998; color:##FFF; font-weight:bold;">
-                            <th colspan="2">Resend Forms To</th>
-                        </tr> 
+    
+    
+    
+    <Table width=100% style="padding-top:10px; padding-bottom:10px;" class="section">
+    	<tr>
+        	<Td valign="top" width=60%>
+    			<table border="0" cellpadding="4" cellspacing="0" width="100%" >
                         <tr>
-                            <td width="30%" class="greyTextRight">Email</td>
-                            <td width="70%">
-                            	<input type="checkbox" name="studentEmail" value="#FORM.emailAddress#" checked="checked" />Email Student: #FORM.emailAddress#<br/>
-                            	<input type="checkbox" name="hostEmail" value="#qGetRegistrationInfo.hostEmail#" checked="checked" />Email Host: #qGetRegistrationInfo.hostEmail#<br/>
-                                <input type="checkbox" name="otherEmail" value="1" />Other Email(s): 
-                                <input type="text" name="emailAddress" value="" class="largeField"/>
-                          	</td>
-                        </tr> 
-                        <tr>
-                            <td colspan="2" align="center" valign="top"><input type="submit" value="Resend Email" /></td>
+                            <td>
+            
+                                <table cellpadding="4" cellspacing="0" border="0" align="center" width=100% >
+                                    <tr style="background-color:##3b5998; color:##FFF; font-weight:bold;">
+                                        <th colspan="9">Payment History</th>
+                                    </tr> 
+                                    <tr style="font-weight:bold;">
+                                        <td>Tour</td>
+                                        <td>Amount</td>
+                                        <td>Status</td>
+                                        <td>Card Type</td>
+                                        <td>Last 4</td>
+                                        <td>Date</td>
+                                        <td>Deposit</td>
+                                        <td>Full</td>
+                                        <td>ISE Tran ID</td>
+                                    </tr>
+                                    <cfloop query="paymentHistory">
+                                    <tr class="#iif(paymentHistory.currentRow MOD 2 ,DE("off") ,DE("on") )#"  <cfif active eq 0 and authResponseCode eq 'Approved'>bgcolor="##FFCCCC"</cfif>>
+                                        <td>#tour_name#</td>
+                                        <td>#amount#</td>
+                                        <td>#authResponseCode#</td>
+                                        <td>#creditCardType#</td>
+                                        <td>#lastdigits#</td>
+                                        <td><cfif len(paid)>  #DateFormat(paid, 'mm/dd/yyyy')#<cfelse> -- </cfif></td>
+                                        <td><cfif len(dateDepositPaid)>  #DateFormat(dateDepositPaid, 'mm/dd/yyyy')#<cfelse> -- </cfif></td>
+                                        <td><cfif len(dateFullyPaid)>  #DateFormat(dateFullyPaid, 'mm/dd/yyyy')#<cfelse> -- </cfif></td>
+                                        <td>#paymentid#</td>
+                                    </tr>
+                                    </cfloop>
+                                </table> 
+            
+                            </td>
                         </tr>
-                    </table> 
-
-                </td>
-            </tr>
-        </table>
-                    
-  	</form>      
-     
+                    </table>
+    
+    		</Td>
+            <td valign="top" width=40%>
+    
+    
+				<!--- Resend Profile --->      
+                <form action="#CGI.SCRIPT_NAME#?curdoc=tours/profile" method="post"> 
+                    <input type="hidden" name="studentID" value="#FORM.studentID#" />
+                    <input type="hidden" name="tripID" value="#FORM.tripID#" />
+                    <input type="hidden" name="action" value="resendEmail" />
+                               
+                    <table border="0" cellpadding="4" cellspacing="0"  width="100%" >
+                        <tr>
+                            <td>
+            
+                                <table cellpadding="4" cellspacing="0" border="0" align="center" width="100%" >
+                                    <tr style="background-color:##3b5998; color:##FFF; font-weight:bold;">
+                                        <th colspan="2">Resend Forms To</th>
+                                    </tr> 
+                                    <tr>
+                                        <td width="30%" class="greyTextRight">Email</td>
+                                        <td width="70%">
+                                            <input type="checkbox" name="studentEmail" value="#FORM.emailAddress#" checked="checked" />Email Student: #FORM.emailAddress#<br/>
+                                            <input type="checkbox" name="hostEmail" value="#qGetRegistrationInfo.hostEmail#" checked="checked" />Email Host: #qGetRegistrationInfo.hostEmail#<br/>
+                                            <input type="checkbox" name="otherEmail" value="1" />Other Email(s): 
+                                            <input type="text" name="emailAddress" value="" class="largeField"/>
+                                        </td>
+                                    </tr> 
+                                    <tr>
+                                        <td colspan="2" align="center" valign="top"><input type="submit" value="Resend Email" /></td>
+                                    </tr>
+                                </table> 
+            
+                            </td>
+                        </tr>
+                    </table>
+                                
+                </form>      
+     	</td>
+      </tr>
+    </Table>
     <!--- Table Footer --->
     <gui:tableFooter />
 
