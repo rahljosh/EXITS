@@ -523,6 +523,7 @@
                             <td align="center">Male</td>
                             <td align="center">Female</td>
                             <td align="center">Available Seats</td>
+                            <td align="center">Room List</td>
                         </tr>
                         
                         <cfloop query="qGetTripTotalRegisteredStudents">
@@ -533,6 +534,7 @@
                                 <td align="center">#qGetTripTotalRegisteredStudents.totalMale#</td>
                                 <td align="center">#qGetTripTotalRegisteredStudents.totalFemale#</td>
                                 <td align="center">#qGetTripTotalRegisteredStudents.totalSpots - qGetTripTotalRegisteredStudents.total#</td>
+                                <td align="center"><a href="index.cfm?curdoc=tours/roomList&tour_id=#qGetTripTotalRegisteredStudents.tour_ID#" title="Room List">View</td>
                             </tr>
                             <cfscript>
 								vTotalSpots = vTotalSpots + qGetTripTotalRegisteredStudents.totalSpots;
@@ -549,6 +551,7 @@
                             <td align="center">#vTotalMale#</td>
                             <td align="center">#vTotalFemale#</td>
                             <td align="center">#vTotalAvailable#</td>
+                            <td></td>
                         </tr>            
                     </table>   
                     
