@@ -117,8 +117,11 @@ Password:<strong> #get_user.password#</strong></p></td>
     </Tr>
             <Tr>
                 <Td colspan=2><hr width="100%" align="center" />
+           
                 </Tr>
+           <cfif client.companyid NEQ 13>
             <tr>
+            
             <td><h2>Step ##3</h2>
                  <p>Once you have successfully logged in, you will continue the application process by being prompted with <strong>4 sections</strong> that need to be filled out.
         <ol>
@@ -133,6 +136,7 @@ Password:<strong> #get_user.password#</strong></p></td>
                 <img src="http://ise.exitsapplication.com/nsmg/pics/infoNeededScreen.png" width="300"  border="1"/>
                 </td>
             </tr>
+            </cfif>
             <Tr>
                 <Td colspan=2><hr width="100%" align="center" />
                 </Tr>
