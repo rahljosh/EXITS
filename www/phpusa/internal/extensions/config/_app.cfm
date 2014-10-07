@@ -35,11 +35,11 @@
 	AppEmail = APPLICATION.EMAIL;
 
 	APPLICATION.EMAIL.support = 'support@phpusa.com';
-	APPLICATION.EMAIL.finance = 'bmccready@iseusa.org;luke@phpusa.com';
+	APPLICATION.EMAIL.finance = 'bmccready@student-management.com;luke@phpusa.com';
 	APPLICATION.EMAIL.programManager = 'luke@phpusa.com';
 	APPLICATION.EMAIL.errors = 'errors@student-management.com';
 	APPLICATION.EMAIL.schoolNotification = 'luke@phpusa.com;tina@phpusa.com;joanna@phpusa.com';
-	APPLICATION.EMAIL.hostFamilyNotification = 'bmccready@iseusa.org;luke@phpusa.com';
+	APPLICATION.EMAIL.hostFamilyNotification = 'bmccready@student-management.com;luke@phpusa.com';
 	
 
 	/***** Create APPLICATION.PATH structure *****/
