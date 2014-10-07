@@ -328,6 +328,11 @@
                     INSERT INTO 
                     	smg_users 
                     (
+                    	<cfif client.companyid eq 13>
+                        accountCreationVerified,
+                        dateAccountVerified,
+                        last_verification,
+                        </cfif>
                     	uniqueid, 
                         datecreated, 
                         trainingDeadlineDate,
@@ -390,6 +395,11 @@
                     )
                     VALUES 
                     (
+                    	<cfif client.companyid eq 13>
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="1">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">,
+                        <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">,
+                        </cfif>
                         <cfqueryparam cfsqltype="cf_sql_idstamp" value="#createuuid()#">,
                         <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">,
                         <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">,
@@ -506,7 +516,7 @@
                     <cfinvokeargument name="email_to" value="#FORM.email#">
 					<cfinvokeargument name="email_replyto" value="#CLIENT.email#">
                     <cfinvokeargument name="email_subject" value="New Account Created / Login Information">
-                    <cfinvokeargument name="include_content" value="send_login">
+                    <cfinvokeargument name="include_content" value="accountActive">
                     <cfinvokeargument name="userID" value="#get_id.userID#">
                 </cfinvoke>
             </cfif>
