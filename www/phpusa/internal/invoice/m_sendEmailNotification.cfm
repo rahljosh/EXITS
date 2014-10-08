@@ -246,7 +246,7 @@
             
             <cfif variables.missingEmail NEQ 1 AND getTotalBalancePerAgent.recordCount NEQ 0>
             													
-                <cfmail from="bmccready@iseusa.org" to="#getAgentInfo.php_billing_email#" bcc="bmccready@iseusa.org" subject="#getAgentInfo.businessname# (#getAgentInfo.userid#) - PHP PROGRAM - Balance Due" type="html">
+                <cfmail from="bmccready@student-management.com" to="#getAgentInfo.php_billing_email#" bcc="bmccready@student-management.com" subject="#getAgentInfo.businessname# (#getAgentInfo.userid#) - PHP PROGRAM - Balance Due" type="html">
                 
                     <style type="text/css">
         
