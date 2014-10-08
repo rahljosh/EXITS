@@ -235,7 +235,7 @@
             </cfquery>
             
             <!--- Sent out Notification --->
-            <cfif qGetApprovedStudents.recordCount GTE 5 and not val(#check5students.recordcount#)>
+            <cfif qGetApprovedStudents.recordCount GTE 6 and not val(#check5students.recordcount#)>
 
 				<!--- Email Template --->
                 <cfsavecontent variable="vEmailSchoolNotification">
@@ -250,7 +250,7 @@
                                 <style type="text/css">
                                     <cfinclude template="../../linked/css/baseStyle.css">
                                 </style>                    
-                                Please obtain a letter from this high school stating that they will accept more than 5 exchange students from #client.companyshort# for the upcoming school year. The letter should be on school letterhead, dated, and hand signed.  It is required by Dept. of State to have this letter on file in the Compliance Department. <br><br>
+                                Please obtain a letter from this high school stating that they will accept more than 6 exchange students from #client.companyshort# for the upcoming school year. The letter should be on school letterhead, dated, and hand signed.  It is required by Dept. of State to have this letter on file in the Compliance Department. <br><br>
                                 Thank you for your assistance.<br>
                                 #client.companyname# Compliance Dept.<br><br>
                                 <table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
