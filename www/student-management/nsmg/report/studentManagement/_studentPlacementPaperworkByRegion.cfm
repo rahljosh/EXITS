@@ -699,10 +699,10 @@
 						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "HF Orientation <br />", " <br />");
 					}
 					
-					// Class Schedule
+				/*	// Class Schedule
 					if ( NOT isDate(qGetResults.doc_class_schedule) ) {
 						vMissingDocumentsMessage = ListAppend(vMissingDocumentsMessage, "Class Schedule <br />", " <br />");
-					}
+					} */
 					
 					// Check if is compliant
 					/*
