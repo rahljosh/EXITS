@@ -245,7 +245,7 @@
 				}			
 	
 			} 
-			if (CLIENT.companyID neq 13){
+			
 			// Update secondVisitRepID
 			if ( ListFindNoCase(FORM.subAction, "updateSecondVisitRepID") ) {
 			
@@ -256,11 +256,11 @@
 				if ( NOT LEN(FORM.secondVisitRepIDReason) ) {
 					SESSION.formErrors.Add("You must enter a reason for changing second representative visit");
 				}	
-				
-				if ( VAL(FORM.secondVisitRepID) AND VAL(FORM.placeRepID) AND FORM.secondVisitRepID EQ FORM.placeRepID ) { 
-					SESSION.formErrors.Add("Second Visit Representative must be different than Placing Representative");
-				}	
-				
+				if (CLIENT.companyID neq 13){
+					if ( VAL(FORM.secondVisitRepID) AND VAL(FORM.placeRepID) AND FORM.secondVisitRepID EQ FORM.placeRepID ) { 
+						SESSION.formErrors.Add("Second Visit Representative must be different than Placing Representative");
+					}	
+				}
 				/* Commented out as per Brian Hause request - 12/11/2012
 				if ( CLIENT.companyID NEQ 10 AND VAL(FORM.secondVisitRepID) AND VAL(FORM.areaRepID) AND FORM.secondVisitRepID EQ FORM.areaRepID ) { 
 					SESSION.formErrors.Add("Second Visit Representative must be different than Supervising Representative");
@@ -268,7 +268,7 @@
 				*/
 
 			}
-		}
+		
 			// Update Double Placement
 			if ( ListFindNoCase(FORM.subAction, "updateDoublePlace") ) {
 				
@@ -1618,7 +1618,7 @@
                                     </option>
                                 </cfloop>
                             </select>
-
+							
                             <!--- Display only if it's an update --->
                             <cfif VAL(qGetPlacementHistoryByID.areaRepID)>
 								
