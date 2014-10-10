@@ -451,21 +451,25 @@
                         <img src="../../pics/place_menu/#vSuperRepImage#.gif" alt="Supervising Representative" border="0">
                     </a>
                 </td>
+                <cfif client.companyid neq 13>
                 <td width="12.5%" align="center">
                     <a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#">
                         <img src="../../pics/place_menu/#vSecondVisitImage#.gif" alt="Second Vist Representative" border="0">
                     </a>
                 </td>
+                </cfif>
                 <td width="12.5%" align="center">
                     <a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#">
                         <img src="../../pics/place_menu/#vDoublePlaceImage#.gif" alt="Double Placement" border="0">
                     </a>
                 </td>
+                 <cfif client.companyid neq 13>
                 <td width="12.5%" align="center">
                     <a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#&action=paperwork">
                         <img src="../../pics/place_menu/#vPaperworkImage#.gif" alt="Placement Paperwork" border="0">
                     </a>
                 </td>
+                </cfif>
                 <td width="12.5%" align="center">
                     <a href="#CGI.SCRIPT_NAME#?uniqueID=#qGetStudentInfo.uniqueID#&action=placementNotes">
                         <img src="../../pics/place_menu/#vNotesImage#.gif" alt="Placement Notes" border="0">
@@ -592,7 +596,9 @@
                         <td class="reportTitleLeftClean" width="17%">School</td>
                         <td class="reportTitleLeftClean" width="17%">Placing Rep.</td>
                         <td class="reportTitleLeftClean" width="17%">Supervising Rep.</td>
+                       <cfif CLIENT.companyID neq 13>
                         <td class="reportTitleLeftClean" width="17%">2<sup>nd</sup> Rep.</td>
+                       </cfif>
                         <td class="reportTitleLeftClean" width="17%">Double Placement</td>
                     </tr>
                 </table>
@@ -631,6 +637,7 @@
                                 </a>    
                             </cfif>
                         </td>
+                        
                         <td width="17%" <cfif qGetPlacementHistoryList.hasAreaRepIDChanged> class="placementMgmtChanged" </cfif> >
                             <cfif VAL(qGetPlacementHistoryList.areaRepID)>
                                 <a href="../../index.cfm?curdoc=user_info&userID=#qGetPlacementHistoryList.areaRepID#" target="_blank" title="More Information">
@@ -638,13 +645,15 @@
                                 </a>
                             </cfif>
                         </td>
-                        <td width="17%" <cfif qGetPlacementHistoryList.hassecondVisitRepIDChanged> class="placementMgmtChanged" </cfif> >
-                            <cfif VAL(qGetPlacementHistoryList.secondVisitRepID)>
-                                <a href="../../index.cfm?curdoc=user_info&userID=#qGetPlacementHistoryList.secondVisitRepID#" target="_blank" title="More Information">    
-                                    #qGetPlacementHistoryList.secondRepFirstName# #qGetPlacementHistoryList.secondRepLastName# (###qGetPlacementHistoryList.secondVisitRepID#)
-                                </a>
-                            </cfif>
-                        </td>
+                        <cfif CLIENT.companyID neq 13>
+                            <td width="17%" <cfif qGetPlacementHistoryList.hassecondVisitRepIDChanged> class="placementMgmtChanged" </cfif> >
+                                <cfif VAL(qGetPlacementHistoryList.secondVisitRepID)>
+                                    <a href="../../index.cfm?curdoc=user_info&userID=#qGetPlacementHistoryList.secondVisitRepID#" target="_blank" title="More Information">    
+                                        #qGetPlacementHistoryList.secondRepFirstName# #qGetPlacementHistoryList.secondRepLastName# (###qGetPlacementHistoryList.secondVisitRepID#)
+                                    </a>
+                                </cfif>
+                            </td>
+                        </cfif>
                         <td width="17%" <cfif qGetPlacementHistoryList.hasDoublePlacementIDChanged> class="placementMgmtChanged" </cfif> >
                             <cfif VAL(qGetPlacementHistoryList.doublePlacementID)>
                                 <a href="../../index.cfm?curdoc=student_info&studentID=#qGetPlacementHistoryList.doublePlacementID#" target="_blank" title="More Information">
