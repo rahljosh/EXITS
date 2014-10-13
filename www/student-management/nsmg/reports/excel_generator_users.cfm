@@ -8,7 +8,7 @@
 
 <!--- get student info --->
 <cfquery name="get_users" datasource="MySQL">
-	SELECT DISTINCT u.userid, firstname, lastname, address, address2, city, state, zip, country, phone, fax, businessname,
+	SELECT DISTINCT u.userid, firstname, lastname, email, address, address2, city, state, zip, country, phone, fax, businessname,
 		countryname
 	FROM smg_users u
 	LEFT JOIN smg_countrylist ON smg_countrylist.countryid = u.country
@@ -69,6 +69,7 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
 		<td>Name</td>
 		<td>Last Name</td>
 		<td>Address</td>
+        <td>Email</td>
 		<td>City</td>
 		<td>State</td>
 		<td>Zip</td>
@@ -83,6 +84,7 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
 		<td>#FirstName#</td>
 		<td>#lastname#</td>
 		<td><cfif #address# is ''>#Address2#<cfelse>#Address#</cfif></td>
+        <td>#Email#</td>
 		<td>#City#</td>
 		<td>#State#</td>
 		<td>#ZIP#</td>
