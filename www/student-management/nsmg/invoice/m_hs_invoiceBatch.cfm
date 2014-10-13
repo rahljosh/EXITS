@@ -848,19 +848,19 @@ GROUP BY agentid, testCompid
         <!--- CSB --->
 		<cfcase value="7,8,9">
 			<cfset compName = "csb">
-			<cfset emailFrom = 'bmccready@iseusa.org'>
+			<cfset emailFrom = 'jennifer@iseusa.org'>
 		</cfcase>
 
 		<!--- Case --->
         <cfcase value="10">
 			<cfset compName = "case">
-			<cfset emailFrom = 'bmccready@case-usa.org'>
+			<cfset emailFrom = 'jennifer@case-usa.org'>
 		</cfcase>
 		
         <!--- ISE --->        
 		<cfdefaultcase>
 			<cfset compName = "ise">
-			<cfset emailFrom = 'bmccready@iseusa.org'>
+			<cfset emailFrom = 'jennifer@iseusa.org'>
 		</cfdefaultcase>
         
 	</cfswitch>
