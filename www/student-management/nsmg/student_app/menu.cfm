@@ -210,19 +210,19 @@ body {
 	</tr>
     <tr>
         <cfif url.p EQ '25'>
-			<td align="center" class="selected" colspan="2"><a class="item2" href="?curdoc=section4/page25&id=4&p=25" onClick="return CheckLink();"><div class="selectedlink">Page [24] &nbsp; Passport </div></a></td>
+			<td align="center" class="selected" colspan="2"><a class="item2" href="?curdoc=section4/page25&id=4&p=25" onClick="return CheckLink();"><div class="selectedlink">Page [25] &nbsp; Passport </div></a></td>
 		<cfelse>
-			<td align="center" class="ddmx" colspan="2"><a class="item2" href="?curdoc=section4/page25&id=4&p=25" onClick="return CheckLink();">Page [24] &nbsp; Passport </a></td>
+			<td align="center" class="ddmx" colspan="2"><a class="item2" href="?curdoc=section4/page25&id=4&p=25" onClick="return CheckLink();">Page [25] &nbsp; Passport </a></td>
 		</cfif>	
         <cfif url.p EQ '26'>
-			<td align="center" class="selected"><a class="item2" href="?curdoc=section4/page26&id=4&p=26" onClick="return CheckLink();"><div class="selectedlink">Page [25] &nbsp; Birth Certificate - Birth Registration </div></a></td>
+			<td align="center" class="selected"><a class="item2" href="?curdoc=section4/page26&id=4&p=26" onClick="return CheckLink();"><div class="selectedlink">Page [26] &nbsp; Birth Certificate - Birth Registration </div></a></td>
 		<cfelse>
-			<td align="center" class="ddmx"><a class="item2" href="?curdoc=section4/page26&id=4&p=26" onClick="return CheckLink();">Page [25] &nbsp; Birth Certificate - Birth Registration </a></td>
+			<td align="center" class="ddmx"><a class="item2" href="?curdoc=section4/page26&id=4&p=26" onClick="return CheckLink();">Page [26] &nbsp; Birth Certificate - Birth Registration </a></td>
 		</cfif>
         <cfif url.p EQ '27'>
-			<td align="center" class="selected" colspan="2"><a class="item2" href="?curdoc=section4/page27&id=4&p=27" onClick="return CheckLink();"><div class="selectedlink">Page [26] &nbsp; SLEP Test </div></a></td>
+			<td align="center" class="selected" colspan="2"><a class="item2" href="?curdoc=section4/page27&id=4&p=27" onClick="return CheckLink();"><div class="selectedlink">Page [27] &nbsp; SLEP Test </div></a></td>
 		<cfelse>
-			<td align="center" class="ddmx" colspan="2" ><a class="item2" href="?curdoc=section4/page27&id=4&p=27" onClick="return CheckLink();">Page [26] &nbsp; SLEP Test </a></td>
+			<td align="center" class="ddmx" colspan="2" ><a class="item2" href="?curdoc=section4/page27&id=4&p=27" onClick="return CheckLink();">Page [27] &nbsp; SLEP Test </a></td>
 		</cfif>	
     </tr>
 	</cfif>	
