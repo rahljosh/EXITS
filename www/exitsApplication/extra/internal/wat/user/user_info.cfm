@@ -218,7 +218,7 @@ function UserName() {
                                         </tr>
                                         <tr>
                                             <td class="style1"><b>Business Name:</b></td>
-                                            <td class="style1"><cfif edit EQ 'yes'><input type="text" name="businessname" value="#get_user.businessname#" size="40" maxlength="100"><cfelse>#get_user.businessname#</cfif></td>
+                                            <td class="style1"><cfif edit EQ 'yes' AND CLIENT.userType LTE 4><input type="text" name="businessname" value="#get_user.businessname#" size="40" maxlength="100"><cfelse>#get_user.businessname#</cfif></td>
                                         </tr>	
                                         <tr>
                                             <td class="style1" width="30%"><b>Occupation:</b></td>
