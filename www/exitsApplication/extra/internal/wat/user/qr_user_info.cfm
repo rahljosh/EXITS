@@ -16,7 +16,6 @@
 		OR get_user.country NEQ FORM.country
 		OR get_user.zip NEQ FORM.zip
 		OR get_user.occupation NEQ FORM.occupation
-		OR get_user.businessname NEQ FORM.businessname
 		OR get_user.work_phone NEQ FORM.work_phone
 		OR get_user.cell_phone NEQ FORM.cell_phone
 		OR get_user.email NEQ FORM.email
@@ -174,7 +173,9 @@
                 <cfif ListFind("1,2,3,4", CLIENT.userType)>
                 	occupation = '#FORM.occupation#',
                 </cfif>
-                businessname = '#FORM.businessname#',
+                <cfif CLIENT.userType NEQ 8>
+                	businessname = '#FORM.businessname#',
+              	</cfif>
                 work_phone = '#FORM.work_phone#',
                 phone = '#FORM.phone#',
                 cell_phone = '#FORM.cell_phone#',
