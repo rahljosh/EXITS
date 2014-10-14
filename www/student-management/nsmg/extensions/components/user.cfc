@@ -256,6 +256,133 @@ setUserSessionPaperwork
         
 	</cffunction>
     
+    
+    <cffunction name="setClientInformation" access="public" returntype="void" output="no">
+    	<cfargument name="userID" required="yes">
+        
+        <cfquery name="submitting_info" datasource="#APPLICATION.DSN#">
+            SELECT 
+            	website, 
+                url_ref, 
+                company_color
+            FROM smg_companies
+            WHERE companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyid)#">
+        </cfquery>
+        <cfscript>
+			CLIENT.company_submitting = submitting_info.website;
+			CLIENT.app_menu_comp = CLIENT.companyid;
+			CLIENT.color = submitting_info.company_color;
+			
+			if ( APPLICATION.isServerLocal ) {
+				CLIENT.exits_url = "http://" & submitting_info.url_ref;
+			} else if ( CGI.HTTP_HOST EQ '204.12.118.245' ) { // go daddy remedy
+				CLIENT.exits_url = "https://204.12.118.245";
+			} else {
+				CLIENT.exits_url = "https://" & submitting_info.url_ref;	
+			}
+			
+			APPLICATION.company_short = submitting_info.website;
+		</cfscript>
+        <cfquery name="qGetUser" datasource="#APPLICATION.DSN#">
+        	SELECT *
+            FROM smg_users
+            WHERE userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
+        </cfquery>
+        <cfquery name="qGetAccess" datasource="#APPLICATION.dsn#">
+            SELECT uar.*
+            FROM user_access_rights uar
+            INNER JOIN smg_companies c ON c.companyid = uar.companyid
+            WHERE c.website =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#CLIENT.company_submitting#">
+            AND uar.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetUser.userID)#">
+            ORDER BY uar.usertype
+        </cfquery>
+        <cfquery name="qGetDefaultAccess" dbtype="query">
+            SELECT *
+            FROM qGetAccess
+            WHERE default_access = 1
+        </cfquery>
+		<cfif qGetDefaultAccess.recordcount EQ 0>
+            <cfquery name="qGetDefaultAccess" dbtype="query" maxrows="1">
+                SELECT *
+                FROM qGetAccess
+            </cfquery>
+        </cfif>
+        <cfquery name="qGetCompany" datasource="#APPLICATION.dsn#">
+            SELECT companyname, team_id, pm_email, support_email, url, companyshort_nocolor, projectManager, financeEmail,website
+            FROM smg_companies
+            WHERE companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetDefaultAccess.companyid)#">
+        </cfquery>        
+    	<cfquery name="qGetUserType" datasource="#APPLICATION.dsn#">
+            SELECT usertype
+            FROM smg_usertype
+            WHERE usertypeid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetDefaultAccess.usertype)#">
+        </cfquery>
+        <cfquery name="qGetCompanies" dbtype="query">
+            SELECT DISTINCT companyid
+            FROM qGetAccess
+        </cfquery>
+        
+        <cfscript>
+			CLIENT.thislogin = dateFormat(now(), 'mm/dd/yyyy');
+		
+			CLIENT.userID = qGetUser.userID;
+			CLIENT.uniqueID = qGetUser.uniqueID;
+			CLIENT.name = qGetUser.firstname & ' ' & qGetUser.lastname;
+        	CLIENT.email = qGetUser.email;
+			CLIENT.lastlogin = qGetUser.lastlogin;
+			
+			CLIENT.levels = qGetAccess.recordcount;
+			CLIENT.companyid = qGetDefaultAccess.companyid;
+			CLIENT.usertype = qGetDefaultAccess.usertype;
+			CLIENT.regionid = qGetDefaultAccess.regionid;
+			
+			CLIENT.companies = valueList(qGetCompanies.companyid);
+			
+			if (CLIENT.usertype EQ 8) {
+				CLIENT.parentcompany = qGetUser.userID;
+			} else if (CLIENT.usertype EQ 9) {
+				CLIENT.parentcompany = qGetUser.intrepid;
+			}
+			
+			if ( CLIENT.companyID EQ 14 ) {
+				CLIENT.DSFormName = "I-20";
+			}
+			
+			if (NOT LEN(qGetUser.ssn) AND listfind('1,2,3,4,5,6,7', CLIENT.usertype)) {
+				CLIENT.needsSSN = 1;
+			}
+			
+			CLIENT.companyname = qGetCompany.companyname;
+			CLIENT.companyshort = qGetCompany.companyshort_nocolor;
+			CLIENT.programmanager = qGetCompany.team_id;
+			CLIENT.programmanager_email = qGetCompany.pm_email;
+			CLIENT.projectmanager_email = qGetCompany.projectManager;
+			CLIENT.finance_email = qGetCompany.financeEmail;
+			CLIENT.support_email = qGetCompany.support_email; 
+			CLIENT.site_url = qGetCompany.url;
+			
+			CLIENT.accesslevelname = qGetUserType.usertype;
+			
+			if (CLIENT.usertype NEQ 11 AND (qGetUser.last_verification EQ '' OR dateDiff("d", qGetUser.last_verification, now()) GTE 90)) {
+				CLIENT.verify_info = 1;
+			}
+			
+			if (qGetUser.changepass EQ 1) {
+				CLIENT.change_password = 1;
+			}
+		</cfscript>
+        
+		<cfif CLIENT.regionid NEQ ''>
+            <cfquery name="qGetRegion" datasource="#APPLICATION.dsn#">
+                SELECT regionname
+                FROM smg_regions
+                WHERE regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.regionid)#">
+            </cfquery>
+            <cfset CLIENT.accesslevelname = "#CLIENT.accesslevelname# in #qGetRegion.regionname#">
+        </cfif>
+        
+    </cffunction>
+    
 
 
     <!--- ------------------------------------------------------------------------- ----
@@ -2248,13 +2375,70 @@ setUserSessionPaperwork
                                 score = <cfqueryparam cfsqltype="cf_sql_float" value="#ARGUMENTS.score#">
                         )   
         </cfquery>
-		
+        
         <cfscript>
 			if ( ARGUMENTS.userID EQ CLIENT.userID ) {
 				// Update User Session Paperwork
 				setUserSessionPaperwork();
 			}
 		</cfscript>
+        
+        <!--- New Area Rep Training email --->
+        <cfif ARGUMENTS.trainingID EQ 6>
+        
+            <cfquery name="qGetUserInfo" datasource="#APPLICATION.DSN#">
+                SELECT ar.userID, ar.firstName, ar.lastName, ar.phone, ar.email, rm.firstName AS rmFirstName, rm.lastName AS rmLastName, rm.email AS rmEmail
+                FROM smg_users ar
+                LEFT JOIN user_access_rights uar ON uar.userID = ar.userID
+                    AND uar.default_access = 1
+                    AND uar.regionID != 0
+                    AND uar.userType IN (6,7)
+                LEFT JOIN user_access_rights uar2 ON uar2.regionID = uar.regionID
+                    AND uar2.userType = 5
+                LEFT JOIN smg_users rm ON rm.userID = uar2.userID
+                WHERE ar.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
+            </cfquery>
+            
+            <cfsavecontent variable="vEmailMessage">
+            	<cfoutput>
+                    <p>Hello #qGetUserInfo.rmFirstName# #qGetUserInfo.rmLastName#,</p>
+                    
+                    <p>
+                        This email is to confirm that #qGetUserInfo.firstName# #qGetUserInfo.lastName# (###qGetUserInfo.userID#) 
+                        has completed the New Area Rep. Orientation webex on #DateFormat(ARGUMENTS.dateTrained,'mm/dd/yyyy')#.
+                    </p>
+                    
+                    <p>
+                        Please take a moment to reach out to #qGetUserInfo.firstName# to thank them for their participation 
+                        and to provide them with the next steps in getting started!
+                    </p>
+                    
+                    <p>
+                        #qGetUserInfo.firstName# #qGetUserInfo.lastName# (###qGetUserInfo.userID#)<br/>
+                        #qGetUserInfo.phone#<br/>
+                        #qGetUserInfo.email#<br/>
+                        <br/>
+                        Thanks,<br/>
+                        <br/>                
+                        Peter Garuccio<br/>
+                        Director of Training<br/>
+                        International Student Exchange<br/>
+                        O: 631-893-4540 ext. 109<br/>
+                        M: 808-721-1685<br/>
+                        peter@iseusa.org<br/>
+                        www.iseusa.org<br/>
+                    </p>
+              	</cfoutput>
+            </cfsavecontent>
+            
+            <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                <cfinvokeargument name="email_to" value="#qGetUserInfo.rmEmail#">
+                <cfinvokeargument name="email_from" value="#CLIENT.emailfrom# (#CLIENT.companyshort# Support)">
+                <cfinvokeargument name="email_subject" value="New Area Rep. Training Completed">
+                <cfinvokeargument name="email_message" value="#vEmailMessage#">
+            </cfinvoke>
+            
+       	</cfif>       
         
 	</cffunction>
 
