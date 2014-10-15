@@ -1573,17 +1573,12 @@
                                         	<td class="style1" align="right" width="30%"><strong>Company Name:</strong></td>
                                             <td class="style1" align="left" width="70%">
                                             	<span class="readOnly">
-                                                	<!--- Office View Only --->
-                                                    <cfif ListFind("1,2,3,4", CLIENT.userType)>
-	                                                    <a 
-                                                        	href="?curdoc=hostcompany/hostCompanyInfo&hostCompanyID=#qCandidatePlaceCompany.hostCompanyID#" 
-                                                            class="style4" 
-                                                            target="_blank">
-                                                          	<strong>#qCandidatePlaceCompany.hostCompanyName#</strong>
-                                        				</a>
-                                                	<cfelse>
-                                                    	#qCandidatePlaceCompany.hostCompanyName#
-                                                    </cfif>
+                                                    <a 
+                                                        href="?curdoc=hostcompany/hostCompanyInfo&hostCompanyID=#qCandidatePlaceCompany.hostCompanyID#" 
+                                                        class="style4" 
+                                                        target="_blank">
+                                                        <strong>#qCandidatePlaceCompany.hostCompanyName#</strong>
+                                                    </a>
                                                 </span>
                                                 <select 
                                                 	name="hostCompanyID" 
