@@ -225,7 +225,12 @@
 
                         <td class="center">#vSetAllotment#</td>
                         <td class="center" bgcolor="#vSetColorCode#">#vSetRemaining#</td>
-                         
+                      
+                  	<cfelseif VAL(vTotalApps)>
+                    
+                    	<td class="center">-</td>
+                        <td class="center" bgcolor="##FF0000">-</td>
+                       
                     <cfelse>
                     
                         <td class="center">-</td>
