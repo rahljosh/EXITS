@@ -35,7 +35,7 @@
 	AppEmail = APPLICATION.EMAIL;
 
 	APPLICATION.EMAIL.support = 'support@phpusa.com';
-	APPLICATION.EMAIL.finance = 'bmccready@student-management.com;luke@phpusa.com;jennifer@student-management.com';
+	APPLICATION.EMAIL.finance = 'luke@phpusa.com;jennifer@student-management.com';
 	APPLICATION.EMAIL.programManager = 'luke@phpusa.com';
 	APPLICATION.EMAIL.errors = 'errors@student-management.com';
 	APPLICATION.EMAIL.schoolNotification = 'luke@phpusa.com;tina@phpusa.com;joanna@phpusa.com';
