@@ -13,7 +13,15 @@
 
 <!--- CHECK RIGHTS --->
 <cfinclude template="check_rights.cfm">
+<cfif isDefined('form.allocationSeasonID')>
 
+<cfquery name="updateAllocations" datasource="#APPLICATION.dsn#">
+	update smg_users_allocation
+    	set augustAllocation = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.augustAllocation#">,
+        	januaryAllocation = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.januaryAllocation#">
+    where userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userid#"> and seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.allocationSeasonID#">
+</cfquery>
+</cfif>
 <!--- Kill Extra Output --->
 <cfsilent>
 
@@ -229,6 +237,62 @@
         </cfcase>
         
     </cfswitch>
+ <!----Student Allocation---->
+   <cfquery name="qAllAvailablePrograms" datasource="#APPLICATION.dsn#">
+   SELECT 
+			p.programID,
+			p.programName,
+            p.startDate,
+            p.endDate,
+            p.type,
+			p.seasonid,
+            p.companyid,
+            s.season,
+            p.fk_smg_student_app_programID,
+						(SELECT count(studentid) as NoStudents
+						 FROM smg_Students s
+						 WHERE s.programID = p.programid
+                   		 AND  s.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#">)  as NoStudents,
+                      (SELECT Month(startdate) as startMonth
+						 FROM smg_programs
+						 WHERE programID = p.programid
+                   		)  as startMonth   
+                        
+        FROM 
+        	smg_programs p
+		LEFT JOIN smg_seasons s on s.seasonid = p.seasonid
+	
+        WHERE
+			
+            p.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+        <cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.publicHS, CLIENT.companyid)> 
+        	AND ( p.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.publicHS#" list="yes"> )
+			)
+        </cfif>
+		order by seasonid desc
+    </cfquery>
+    
+    <Cfquery name="availSeasons" dbtype="query">
+    select distinct season, seasonid
+    from qAllAvailablePrograms
+    order by seasonid desc
+    </Cfquery>
+    
+     <!---user allocations---->
+    <cfquery name="userAllocations" datasource="#application.dsn#">
+    SELECT 
+    	a.augustAllocation, a.januaryAllocation, a.seasonid
+    FROM 
+    	smg_users_allocation a
+    LEFT JOIN 
+    	smg_seasons s on s.seasonid = a.seasonid
+    WHERE 
+    	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#"> 
+    AND 
+    	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+    </cfquery>
+    
+
 
 	<cfscript>
         // Form Submitted 
@@ -638,6 +702,101 @@
             </div>
             <!--- ------------------------------------------------------------------------- ---->
             <!----End Notes for Int. Agent---->
+            <!--- ------------------------------------------------------------------------- ---->
+            <!---- Allocation ---->
+                <div class="rdholder" style="width:100%;float:left;" > 
+				<div class="rdtop"> 
+                    <span class="rdtitle">Season Allocations</span>
+            	</div> 
+                <div class="rdbox">
+                <table width="100%" cellpadding="4" cellspacing="0" border="0">
+               <Cfloop query="availSeasons">
+               		  <cfquery name="specificPrograms" dbtype="query">
+                        select *
+                        from qAllAvailablePrograms
+                        where seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#seasonid#">
+                       </cfquery> 
+                     <cfquery name="studentCountJan" dbtype="query">
+                       select sum(noStudents) as totalStudents
+                       from  qAllAvailablePrograms
+                       where seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#specificPrograms.seasonid#"> 
+                       and startMonth = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                       </cfquery>
+                    <cfquery name="studentCountAug" dbtype="query">
+                       select sum(noStudents) as totalStudents
+                       from  qAllAvailablePrograms
+                       where seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#specificPrograms.seasonid#"> 
+                       and startMonth = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+                       </cfquery>
+                     <Cfquery name="programAllocation" dbtype="query">
+                       SELECT
+                            augustAllocation, januaryAllocation
+                       FROM
+                            userAllocations
+                       WHERE
+                            seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(specificPrograms.seasonid)#">
+              	 	</Cfquery>
+                   
+                	<form action="?#cgi.QUERY_STRING#" method="post">
+                    <input type="hidden" value="#seasonID#" name="allocationSeasonID">
+                   
+                    <tr bgcolor="##006699">
+                    
+                        <td style="line-height:20px;" valign="top">
+                         <font color="##FFFFFF"><strong> #season#</strong></font>
+                        </td>
+                        <td align="center"><font color="##FFFFFF"><strong> August Allocation: 
+							<cfif client.usertype lte 3>
+                        		<input type="text" name="augustAllocation" value="#programAllocation.augustAllocation#" size=3/>
+                        	<cfelse>
+                            	#programAllocation.augustAllocation#
+                            </cfif>
+                            </strong>
+                            </font>
+                         </td>
+                         <td align="center"> <font color="##FFFFFF"><strong>January Allocation: 
+						 	<cfif client.usertype lte 2>
+                            	<input type="text" name="januaryAllocation" value="#programAllocation.januaryAllocation#" size=3 /><input type=submit value="Update" class="basicBlueButton" />
+                            <cfelse>
+                            	#programAllocation.januaryAllocation#
+                            </cfif>
+                            </strong>
+                            </font>
+                            
+                            </td>
+                        
+                    </tr>
+                    </form>
+                    
+                    
+                  	<Cfloop query="specificPrograms">
+                    <tr <cfif currentrow mod 2>bgcolor="##efefef"</cfif>>
+                    	<td>#programName#</td>
+                          <cfif DateFormat(startDate, 'm') is 1>
+                            	<Td align="center">&##8212;</Td><td align="center">#noStudents#</td>
+                                
+                            <cfelseif DateFormat(startDate, 'm') is 8>
+                            	<td align="center">#noStudents#</td><Td align="center">&##8212;</Td>
+                              
+                            </cfif>
+                     </tr>      
+                  
+                   </cfloop>
+               
+                   <tr bgcolor=##ccc>
+                   		<td>Total Students</td><Td align="center">#studentCountAug.totalStudents#</Td><td align="center">#studentCountJan.totalStudents#</td>
+                   </tr>
+                  	<tr>
+                    	<td><br /></td>
+                    </tr>
+                </Cfloop>
+                </table>
+               </div>
+            <div class="rdbottom"></div> <!-- end bottom --> 
+            </div>
+            
+            <!--- ------------------------------------------------------------------------- ---->
+            <!----End Student Allocation for Int. Agent---->
             <!--- ------------------------------------------------------------------------- ---->
             
 <cfelse>
