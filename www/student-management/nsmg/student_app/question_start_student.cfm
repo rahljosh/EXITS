@@ -1,3 +1,14 @@
+<script src="linked/js/jquery.colorbox.js"></script>
+<script>
+        $(document).ready(function(){
+            //Examples of how to assign the ColorBox event to elements
+            
+            $(".iframe").colorbox({width:"700px", height:"640px", iframe:true, 
+            
+               onClosed:function(){ location.reload(true); } });
+
+        });
+    </script>
 <table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
 	<tr valign=middle height=24>
 		<td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
@@ -21,7 +32,7 @@
 					<div align="justify">
                         <h2>Option 1</h2> Students will fill out their own application. You will fill out some basic information and they will
                         recieve an email with instructions on submitting their application. <br>
-                        <font size=-1><em>Students must have an email account and internet access to fill out the application</em></font><br><br><div align="center"> <a href="?curdoc=student_app/start_student&option=1"><img src="student_app/pics/start-application.gif" border=0></a> 
+                        <font size=-1><em>Students must have an email account and internet access to fill out the application</em></font><br><br><div align="center"> <a href="student_app/start_student.cfm?option=1" class='iframe'><img src="student_app/pics/start-application.gif" border=0></a> 
 					</div>
 				</td>
 				<td width="2%">&nbsp;</td>
