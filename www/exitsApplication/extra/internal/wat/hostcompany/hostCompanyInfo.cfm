@@ -3515,148 +3515,148 @@
                             </table> 
                             
                             <br />
+                        
+							<!--- PROGRAM PARTICIPATION --->
+                            <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
+                                <tr>
+                                    <td>
+                                        <table width="100%" cellpadding="3" cellspacing="3" border="0">
+                                            <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
+                                                <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Program Participation</td>
+                                            </tr>
+                                            <cfloop query="qGetProgramParticipation">
+                                                <cfquery name="qGetIncidents" datasource="#APPLICATION.DSN.Source#">
+                                                    SELECT i.*
+                                                    FROM extra_incident_report i
+                                                    INNER JOIN extra_candidates c ON c.candidateID = i.candidateID
+                                                    INNER JOIN smg_programs p ON p.programID = c.programID
+                                                        AND p.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetProgramParticipation.programID#">
+                                                    WHERE i.hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostCompanyInfo.hostCompanyID#">
+                                                </cfquery>
+                                                <cfquery name="qGetIncidentsGrouped" datasource="#APPLICATION.DSN.Source#">
+                                                    SELECT i.*
+                                                    FROM extra_incident_report i
+                                                    INNER JOIN extra_candidates c ON c.candidateID = i.candidateID
+                                                    INNER JOIN smg_programs p ON p.programID = c.programID
+                                                        AND p.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetProgramParticipation.programID#">
+                                                    WHERE i.hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostCompanyInfo.hostCompanyID#">
+                                                    GROUP BY i.subject
+                                                    ORDER BY i.subject
+                                                </cfquery>
+                                                <!--- Determines if this host company was a primary, secondary, or both placement types for this program. --->
+                                                <cfquery name="qGetPlacementType" datasource="#APPLICATION.DSN.Source#">
+                                                    SELECT 
+                                                        CASE 
+                                                            WHEN SUM(ecpc.isSecondary) = 0 AND SUM(ecpc.status) = 0 THEN "Primary Placement (Inactive)"
+                                                            WHEN SUM(ecpc.isSecondary) = 0 AND SUM(ecpc.status) = COUNT(ecpc.candidateID) THEN "Primary Placement (Active)"
+                                                            WHEN SUM(ecpc.isSecondary) = 0 AND SUM(ecpc.status) != 0 AND SUM(ecpc.status) != COUNT(ecpc.candidateID) THEN "Primary Placement (Both)"      
+                                                            WHEN SUM(ecpc.isSecondary) = COUNT(ecpc.candidateID) AND SUM(ecpc.status) = 0 THEN "Secondary Placement (Inactive)"
+                                                            WHEN SUM(ecpc.isSecondary) = COUNT(ecpc.candidateID) AND SUM(ecpc.status) = COUNT(ecpc.candidateID) THEN "Secondary Placement (Active)"
+                                                            WHEN SUM(ecpc.isSecondary) = COUNT(ecpc.candidateID) AND SUM(ecpc.status) != 0 AND SUM(ecpc.status) != COUNT(ecpc.candidateID) THEN "Secondary Placement (Active/Inactive)"
+                                                            WHEN SUM(ecpc.isSecondary) != 0 AND SUM(ecpc.isSecondary) != COUNT(ecpc.candidateID) AND SUM(ecpc.status) = 0 THEN "Primary/Secondary Placement (Inactive)"
+                                                            WHEN SUM(ecpc.isSecondary) != 0 AND SUM(ecpc.isSecondary) != COUNT(ecpc.candidateID) AND SUM(ecpc.status) = COUNT(ecpc.candidateID) THEN "Primary/Secondary Placement (Active)"
+                                                            ELSE "Primary/Secondary Placement (Active/Inactive)"            
+                                                        END AS "placementType"
+                                                    FROM extra_candidate_place_company ecpc
+                                                    INNER JOIN extra_candidates c ON c.candidateID = ecpc.candidateID
+                                                        AND c.cancel_date IS NULL
+                                                    WHERE ecpc.hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostCompanyInfo.hostCompanyID#">
+                                                    AND c.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetProgramParticipation.programID#">
+                                                </cfquery>
+                                                <tr>
+                                                    <td class="style1" valign="top">
+                                                        <a href="index.cfm?curdoc=reports/students_hired_per_company_wt&hostCompanyID=#qGetHostCompanyInfo.hostCompanyID#&programID=#programID#">#programName#</a>
+                                                        <br/>
+                                                        #qGetPlacementType.placementType#
+                                                    </td>
+                                                    <td class="style1" valign="top">
+                                                        <a href="index.cfm?curdoc=reports/incidentReport&hostCompanyID=#qGetHostCompanyInfo.hostCompanyID#&programID=#programID#">
+                                                            Incidents: #VAL(qGetIncidents.recordCount)#
+                                                        </a>
+                                                        <br/>
+                                                        <cfloop query="qGetIncidentsGrouped">
+                                                            <cfquery name="qGetIncidentsPerSubject" dbtype="query">
+                                                                SELECT *
+                                                                FROM qGetIncidents
+                                                                WHERE subject = <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetIncidentsGrouped.subject#">
+                                                            </cfquery>
+                                                            #qGetIncidentsGrouped.subject#: #VAL(qGetIncidentsPerSubject.recordCount)#<br/>
+                                                        </cfloop>
+                                                    </td>
+                                                </tr>
+                                            </cfloop>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
                             
-                      	</cfif>
-                        
-                        <!--- PROGRAM PARTICIPATION --->
-                        <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
-                        	<tr>
-                            	<td>
-                                	<table width="100%" cellpadding="3" cellspacing="3" border="0">
-                                        <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
-                                            <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Program Participation</td>
-                                        </tr>
-                                        <cfloop query="qGetProgramParticipation">
-                                        	<cfquery name="qGetIncidents" datasource="#APPLICATION.DSN.Source#">
-                                            	SELECT i.*
-                                                FROM extra_incident_report i
-                                                INNER JOIN extra_candidates c ON c.candidateID = i.candidateID
-                                                INNER JOIN smg_programs p ON p.programID = c.programID
-                                                	AND p.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetProgramParticipation.programID#">
-                                                WHERE i.hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostCompanyInfo.hostCompanyID#">
-                                            </cfquery>
-                                            <cfquery name="qGetIncidentsGrouped" datasource="#APPLICATION.DSN.Source#">
-                                            	SELECT i.*
-                                                FROM extra_incident_report i
-                                                INNER JOIN extra_candidates c ON c.candidateID = i.candidateID
-                                                INNER JOIN smg_programs p ON p.programID = c.programID
-                                                	AND p.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetProgramParticipation.programID#">
-                                                WHERE i.hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostCompanyInfo.hostCompanyID#">
-                                                GROUP BY i.subject
-                                                ORDER BY i.subject
-                                            </cfquery>
-                                            <!--- Determines if this host company was a primary, secondary, or both placement types for this program. --->
-                                            <cfquery name="qGetPlacementType" datasource="#APPLICATION.DSN.Source#">
-                                      			SELECT 
-                                           			CASE 
-                                              			WHEN SUM(ecpc.isSecondary) = 0 AND SUM(ecpc.status) = 0 THEN "Primary Placement (Inactive)"
-                                                        WHEN SUM(ecpc.isSecondary) = 0 AND SUM(ecpc.status) = COUNT(ecpc.candidateID) THEN "Primary Placement (Active)"
-                                                        WHEN SUM(ecpc.isSecondary) = 0 AND SUM(ecpc.status) != 0 AND SUM(ecpc.status) != COUNT(ecpc.candidateID) THEN "Primary Placement (Both)"      
-                                                        WHEN SUM(ecpc.isSecondary) = COUNT(ecpc.candidateID) AND SUM(ecpc.status) = 0 THEN "Secondary Placement (Inactive)"
-                                                        WHEN SUM(ecpc.isSecondary) = COUNT(ecpc.candidateID) AND SUM(ecpc.status) = COUNT(ecpc.candidateID) THEN "Secondary Placement (Active)"
-                                                        WHEN SUM(ecpc.isSecondary) = COUNT(ecpc.candidateID) AND SUM(ecpc.status) != 0 AND SUM(ecpc.status) != COUNT(ecpc.candidateID) THEN "Secondary Placement (Active/Inactive)"
-                                                        WHEN SUM(ecpc.isSecondary) != 0 AND SUM(ecpc.isSecondary) != COUNT(ecpc.candidateID) AND SUM(ecpc.status) = 0 THEN "Primary/Secondary Placement (Inactive)"
-                                                        WHEN SUM(ecpc.isSecondary) != 0 AND SUM(ecpc.isSecondary) != COUNT(ecpc.candidateID) AND SUM(ecpc.status) = COUNT(ecpc.candidateID) THEN "Primary/Secondary Placement (Active)"
-                                                        ELSE "Primary/Secondary Placement (Active/Inactive)"            
-                                                   	END AS "placementType"
-                                            	FROM extra_candidate_place_company ecpc
-                                                INNER JOIN extra_candidates c ON c.candidateID = ecpc.candidateID
-                                                	AND c.cancel_date IS NULL
-                                                WHERE ecpc.hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostCompanyInfo.hostCompanyID#">
-                                                AND c.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetProgramParticipation.programID#">
-                                            </cfquery>
-                                        	<tr>
-                                            	<td class="style1" valign="top">
-                                                	<a href="index.cfm?curdoc=reports/students_hired_per_company_wt&hostCompanyID=#qGetHostCompanyInfo.hostCompanyID#&programID=#programID#">#programName#</a>
-                                             		<br/>
-                                                    #qGetPlacementType.placementType#
-                                              	</td>
-                                                <td class="style1" valign="top">
-                                                	<a href="index.cfm?curdoc=reports/incidentReport&hostCompanyID=#qGetHostCompanyInfo.hostCompanyID#&programID=#programID#">
-                                                    	Incidents: #VAL(qGetIncidents.recordCount)#
-                                                 	</a>
-                                                    <br/>
-                                                	<cfloop query="qGetIncidentsGrouped">
-                                                    	<cfquery name="qGetIncidentsPerSubject" dbtype="query">
-                                                        	SELECT *
-                                                            FROM qGetIncidents
-                                                            WHERE subject = <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetIncidentsGrouped.subject#">
-                                                        </cfquery>
-                                                    	#qGetIncidentsGrouped.subject#: #VAL(qGetIncidentsPerSubject.recordCount)#<br/>
-                                                    </cfloop>
+                            <br />
+                            
+                            <!--- ADDITIONAL DOCUMENTS --->
+                            <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
+                                <tr>
+                                    <td>
+                                        <table width="100%" cellpadding="3" cellspacing="3" border="0">
+                                            <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
+                                                <td class="style2" bgcolor="##8FB6C9">&nbsp;:: Additional Documents</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="style1" valign="top" align="center">
+                                                    <cfif VAL(URL.hostCompanyID)>
+                                                        <a href="##" class="editPage" value="Upload" name="additional_document" id="additional_document" style="cursor:pointer">
+                                                            UPLOAD NEW FILE
+                                                        </a>
+                                                    <cfelse>
+                                                        <input type="hidden" id="additional_document"/><!--- This is to prevent errors with ajaxUpload --->
+                                                    </cfif>
                                                 </td>
                                             </tr>
-                                        </cfloop>
-                                  	</table>
-                                </td>
-                            </tr>
-                        </table>
-                        
-                        <br />
-                        
-                      	<!--- ADDITIONAL DOCUMENTS --->
-                        <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
-                    		<tr>
-                       			<td>
-                           			<table width="100%" cellpadding="3" cellspacing="3" border="0">
-                                        <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
-                                            <td class="style2" bgcolor="##8FB6C9">&nbsp;:: Additional Documents</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="style1" valign="top" align="center">
-                                                <cfif VAL(URL.hostCompanyID)>
-                                                	<a href="##" class="editPage" value="Upload" name="additional_document" id="additional_document" style="cursor:pointer">
-                                                    	UPLOAD NEW FILE
-                                                	</a>
-                                                <cfelse>
-                                                    <input type="hidden" id="additional_document"/><!--- This is to prevent errors with ajaxUpload --->
-                                                </cfif>
-                                           	</td>
-                                      	</tr>
-                                        <cfloop query="qGetAdditonalDocuments">
-                                        	<tr>
-                                            	<td class="style1" valign="top" align="left">
-                                                	<a href="##" onclick="printDocument('#id#')" style="cursor:pointer;">
-                                                  		#clientName#
-                                                    </a>
-                                                	<a href="##" class="editPage" onclick="deleteDocument('#id#')" style="float:right; cursor:pointer">
-                                                        DELETE
-                                                    </a>
-                                                	<input type="hidden" id="additional_document"/><!--- This is to prevent errors with ajaxUpload --->
+                                            <cfloop query="qGetAdditonalDocuments">
+                                                <tr>
+                                                    <td class="style1" valign="top" align="left">
+                                                        <a href="##" onclick="printDocument('#id#')" style="cursor:pointer;">
+                                                            #clientName#
+                                                        </a>
+                                                        <a href="##" class="editPage" onclick="deleteDocument('#id#')" style="float:right; cursor:pointer">
+                                                            DELETE
+                                                        </a>
+                                                        <input type="hidden" id="additional_document"/><!--- This is to prevent errors with ajaxUpload --->
+                                                    </td>
+                                                </tr>
+                                            </cfloop>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                                            
+                            <br />
+                            
+                            <!--- Host Company Warning --->
+                            <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
+                                <tr>
+                                    <td>
+                                        <table width="100%" cellpadding="3" cellspacing="3" border="0">
+                                            <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
+                                                <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Warning</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="style1" valign="top" align="left">
+                                                    <span class="readOnly">#YesNoFormat(FORM.warningStatus)#</span>
+                                                    <input type="checkbox" name="warningStatus" class="style1 editPage" value="1" <cfif FORM.warningStatus EQ 1>checked="checked"</cfif> />
+                                                </td>
+                                                <td class="style1" valign="top" align="left">
+                                                    <span class="readOnly">#FORM.warningNotes#</span>
+                                                    <textarea name="warningNotes" class="style1 editPage" cols="35" rows="4">#FORM.warningNotes#</textarea>
                                                 </td>
                                             </tr>
-                                        </cfloop>
-                                  	</table>
-                            	</td>
-                         	</tr>
-                      	</table>
-                                        
-          				<br />
-                        
-                        <!--- Host Company Warning --->
-                        <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
-                    		<tr>
-                       			<td>
-                           			<table width="100%" cellpadding="3" cellspacing="3" border="0">
-                                        <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
-                                            <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Warning</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="style1" valign="top" align="left">
-                                                <span class="readOnly">#YesNoFormat(FORM.warningStatus)#</span>
-                                                <input type="checkbox" name="warningStatus" class="style1 editPage" value="1" <cfif FORM.warningStatus EQ 1>checked="checked"</cfif> />
-                                           	</td>
-                                            <td class="style1" valign="top" align="left">
-                                                <span class="readOnly">#FORM.warningNotes#</span>
-                                   				<textarea name="warningNotes" class="style1 editPage" cols="35" rows="4">#FORM.warningNotes#</textarea>
-                                           	</td>
-                                      	</tr>
-                                  	</table>
-                            	</td>
-                         	</tr>
-                      	</table>
-                                        
-          				<br />
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                                            
+                            <br />
+                            
+                    	</cfif>
                         
     				</td>
 				</tr>
