@@ -1251,11 +1251,11 @@ WHERE su.userid = #url.userid#
 <cfswitch expression="#FORM.companyID#">
 	<cfcase value="10">
 		<cfset compName = "case">
-		<cfset emailFrom = 'bmccready@case-usa.org'>
+		<cfset emailFrom = 'jennifer@case-usa.org'>
 	</cfcase>
 	<cfcase value="5">
 		<cfset compName = "smg">
-		<cfset emailFrom = 'bmccready@iseusa.org'>
+		<cfset emailFrom = 'jennifer@iseusa.org'>
 	</cfcase>	
 	<cfcase value="14">
 		<cfset compName = "esi">
@@ -1263,7 +1263,7 @@ WHERE su.userid = #url.userid#
 	</cfcase>
 	<cfdefaultcase>
 		<cfset compName = "ise">
-		<cfset emailFrom = 'bmccready@iseusa.org'>
+		<cfset emailFrom = 'jennifer@iseusa.org'>
 	</cfdefaultcase>
 </cfswitch>
 
@@ -1328,7 +1328,7 @@ Payments by check should be mailed directly to our office address (Do not mail c
         <cfelseif ListFind("1,2,3,4,5,12",FORM.companyID)>
             Thank you for your cooperation,<br/><br/>
             
-            Bryan<br/>
+            Jennifer<br/>
             Financial Department<br/><br/>
             
             International Student Exchange<br/>
@@ -1337,13 +1337,13 @@ Payments by check should be mailed directly to our office address (Do not mail c
             800-766-4656-Toll Free<br/>
             631-893-4540-Phone<br/>
             631-893-4550-Fax<br/>
-            bmccready@iseusa.org<br/><br/>
+            jennifer@iseusa.org<br/><br/>
             
             visit our web site at #CLIENT.exits_url#</small>
        	<cfelse>
         	Thank you for your cooperation,<br/><br/>
             
-            Bryan<br/>
+            Jennifer<br/>
             Financial Department<br/><br/>
             
             Student Management Group<br/>
@@ -1352,7 +1352,7 @@ Payments by check should be mailed directly to our office address (Do not mail c
             800-766-4656-Toll Free<br/>
             631-893-4540-Phone<br/>
             631-893-4550-Fax<br/>
-            bmccready@iseusa.org<br/><br/>
+            jennifer@iseusa.org<br/><br/>
             
             visit our web site at #CLIENT.exits_url#</small>
         </cfif>
@@ -1375,16 +1375,16 @@ These confirmations are one more effort to keep both, yours and our records in t
         <cfelse>
             Thank you for your cooperation,<br/><br/>
             
-            Bryan<br/>
+            Jennifer<br/>
             Financial Department<br/><br/>
             
-            Student Management Group<br/>
+            International Student Exchange<br/>
             119 Cooper St<br/>
             Babylon, NY 11702<br/>
             800-766-4656-Toll Free<br/>
             631-893-4540-Phone<br/>
             631-893-4550-Fax<br/>
-            bmccready@iseusa.org<br/><br/>
+            jennifer@iseusa.org<br/><br/>
             
             visit our web site at #CLIENT.exits_url#</small> 
         </cfif>
