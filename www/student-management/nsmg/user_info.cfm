@@ -1643,7 +1643,7 @@
                                     	Not available. <br /> If you wish a copy of your statement please contact Stacy Brewer at stacy@exchange-service.org
                                     </cfcase>
                                     <cfdefaultcase>
-                                    	Not available. <br /> If you wish a copy of your statement please contact Bryan McCready at bmccready@iseusa.org
+                                    	Not available. <br /> If you wish a copy of your statement please contact Jennifer Dilig at jennifer@iseusa.org
                                     </cfdefaultcase>
                                 </cfswitch>
                             <cfelse>
@@ -1901,7 +1901,7 @@
                                 where userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
                             </cfquery>
                             <cfif (CLIENT.userID EQ 64 OR CLIENT.userID EQ 126) OR (CLIENT.usertype NEQ 8 AND invoice_check.invoice_access NEQ 1)> 
-                                Not available. <br /> If you wish a copy of your statement please contact Bryan McCready at bmccready@iseusa.org
+                                Not available. <br /> If you wish a copy of your statement please contact Jennifer Dilig at jennifer@iseusa.org
                             <cfelse>
                                 SMG Detailed Statement : <a href="index.cfm?curdoc=intrep/invoice/statement_detailed" class="smlink" target="_top">View Statement</a><br />
                             </cfif>

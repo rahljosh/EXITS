@@ -39,7 +39,7 @@
 	APPLICATION.EMAIL.programManager = 'luke@phpusa.com';
 	APPLICATION.EMAIL.errors = 'errors@student-management.com';
 	APPLICATION.EMAIL.schoolNotification = 'luke@phpusa.com;tina@phpusa.com;joanna@phpusa.com';
-	APPLICATION.EMAIL.hostFamilyNotification = 'bmccready@student-management.com;luke@phpusa.com;jennifer@student-management.com';
+	APPLICATION.EMAIL.hostFamilyNotification = 'bmccready@student-management.com;luke@phpusa.com';
 	
 
 	/***** Create APPLICATION.PATH structure *****/

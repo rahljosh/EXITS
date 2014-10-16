@@ -900,7 +900,7 @@ Please find attached your invoices.
 Payments by check should be mailed directly to our office address (Do not mail checks directly to our bank).
 Thank you for your cooperation,
 
-Bryan
+Jennifer
 Financial Department
 
 119 Cooper St
@@ -909,7 +909,7 @@ Babylon, NY 11702
 631-893-4540-Phone
 631-893-4550-Fax
 
-bmccready@iseusa.org
+jennifer@iseusa.org
 
 </small>
 		
