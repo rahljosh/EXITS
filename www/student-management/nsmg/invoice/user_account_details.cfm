@@ -1325,8 +1325,23 @@ Payments by check should be mailed directly to our office address (Do not mail c
             
             Thank you for your cooperation,<br/>
             Stacy
-        <cfelse>
+        <cfelseif ListFind("1,2,3,4,5,12",FORM.companyID)>
             Thank you for your cooperation,<br/><br/>
+            
+            Bryan<br/>
+            Financial Department<br/><br/>
+            
+            International Student Exchange<br/>
+            119 Cooper St<br/>
+            Babylon, NY 11702<br/>
+            800-766-4656-Toll Free<br/>
+            631-893-4540-Phone<br/>
+            631-893-4550-Fax<br/>
+            bmccready@iseusa.org<br/><br/>
+            
+            visit our web site at #CLIENT.exits_url#</small>
+       	<cfelse>
+        	Thank you for your cooperation,<br/><br/>
             
             Bryan<br/>
             Financial Department<br/><br/>
@@ -1339,7 +1354,7 @@ Payments by check should be mailed directly to our office address (Do not mail c
             631-893-4550-Fax<br/>
             bmccready@iseusa.org<br/><br/>
             
-            visit our web site at #CLIENT.exits_url#</small> 
+            visit our web site at #CLIENT.exits_url#</small>
         </cfif>
 
 	</cfcase>
