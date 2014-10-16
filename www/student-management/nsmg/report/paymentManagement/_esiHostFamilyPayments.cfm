@@ -153,7 +153,7 @@
                             END
               	) 
            	)
-            GROUP BY studentID, hostName
+            GROUP BY hh.historyID
            	ORDER BY s.familyLastName, s.firstName, startDate, h.familyLastName
         </cfquery>
 
