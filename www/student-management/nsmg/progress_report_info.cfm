@@ -225,10 +225,7 @@ function OpenLetter(url) {
 }
 //-->
 
-document.getElementById("submitReport").onsubmit = function() {   
-    this.children[1].disabled = true;
-   
-}
+
 </script>
 <!----SpellCheck info---->
  <!-- 1. include jQuery ... naturally none of this works without jQuery 
@@ -527,7 +524,11 @@ document.getElementById("submitReport").onsubmit = function() {
 <cfoutput>
 
 <cfif FORM.report_mode EQ 'view'>
-
+	<Cfif CLIENT.pr_rmonth eq 1>
+        <cfset thisMonth = 12>
+    <Cfelse>
+        <Cfset thisMonth = CLIENT.pr_rmonth -1>
+    </Cfif>
 	<!--- this table is so the form is not 100% width. --->
     <table align="center">
       <tr>
@@ -538,7 +539,7 @@ document.getElementById("submitReport").onsubmit = function() {
         <tr height=24>
             <td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
             <td width=26 background="pics/header_background.gif"><img src="pics/current_items.gif"></td>
-            <td background="pics/header_background.gif"><h2>#monthAsString(CLIENT.pr_rmonth)# Progress Report <br /></h2></td> 
+            <td background="pics/header_background.gif"><h2>#monthAsString(thisMonth)# Progress Report <br /></h2></td> 
             <td background="pics/header_background.gif" align="right"><a href="index.cfm?curdoc=progress_reports&lastReport=#get_student.studentid####get_student.studentid#">Back to Progress Reports</a>
       
             <td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
@@ -569,7 +570,11 @@ document.getElementById("submitReport").onsubmit = function() {
 
 <h2>
 	<cfif FORM.report_mode EQ 'print'>
-        
+        	<Cfif CLIENT.pr_rmonth eq 1>
+        <cfset thisMonth = 12>
+    <Cfelse>
+        <Cfset thisMonth = CLIENT.pr_rmonth -1>
+    </Cfif>
 		<!--- the image isn't working on the PDF so put company name instead of image. --->
         <cfif isDefined("FORM.pdf")>
             #CLIENT.companyname#<br />
@@ -577,7 +582,7 @@ document.getElementById("submitReport").onsubmit = function() {
             <img src="pics/logos/#get_student.companyid#.gif" align="left">
         </cfif>
         
-		#monthAsString(CLIENT.pr_rmonth)# Progress Report <br />
+		#monthAsString(thisMonth)# Progress Report <br />
     </cfif>
     
     Student: #get_student.firstname# #get_student.familylastname# (#get_student.studentid#)<br>
