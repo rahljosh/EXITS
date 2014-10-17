@@ -51,7 +51,9 @@
     <cfparam name="FORM.regionid" default="">
     <cfparam name="FORM.arearepid" default="">
     <cfparam name="FORM.subAction" default="">
-
+	<cfparam name="FORM.sourceCode" default="">
+    <cfparam name="FORM.sourceType" default="">
+    
 	<cfscript>
 		// Set Regions or users or user type that can start host app
 		//allowedUsers = '1,12313,8747,17972,17791,8731,12431,17438,17767,15045,10133,6617,16552,16718,10631,9974,510';	
@@ -184,6 +186,10 @@
 				SESSION.formErrors.Add("Please select a Region.");
 			}
 			
+			if ( NOT VAL(FORM.sourceCode) ) {
+				SESSION.formErrors.Add("Please select a Source Code.");
+			}
+			
 			// Check for email address. 
 			if ( FORM.subAction EQ 'eHost' AND NOT LEN(TRIM(FORM.email)) ) {
 				//Get all the missing items in a list
@@ -296,7 +302,9 @@
                         password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#strPassword#">,
                         active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">,
                         dateUpdated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
-            			updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
+            			updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
+                        sourceCode =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.sourceCode#">,
+                        sourceType = 'Direct'
                     WHERE 
                         hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.hostID)#">
                 </cfquery>	
@@ -357,7 +365,9 @@
                         arearepid,
                         dateCreated,
                         createdBy,
-                        updatedBy
+                        updatedBy,
+                        sourceCode, 
+                        sourceType
                     )
                     VALUES 
                     (
@@ -398,7 +408,9 @@
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
                         <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.sourceCode#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="Direct">
                     )  
                 </cfquery>
 
@@ -469,6 +481,8 @@
             FORM.companyID = qGetHostFamilyInfo.companyID;
             FORM.regionid = qGetHostFamilyInfo.regionid;
             FORM.arearepid = qGetHostFamilyInfo.arearepid;
+			FORM.sourceCode = qGetHostFamilyInfo.sourceCode;
+			FORM.sourceType = qGetHostFamilyInfo.sourceType;
             
             // the default values in the database for these used to be "na", so remove any.
             if ( FORM.father_cell EQ 'na' ) {
@@ -886,7 +900,28 @@
                         </select>
                     </td>
                 </tr>
-            </table> 		
+            </table> 
+             <table width="95%" align="center" class="section" border="0" cellpadding="4" cellspacing="0">
+                <tr bgcolor="##e2efc7">
+                    <th align="left">Source of Host Family</th>
+                     <td>&nbsp;</td>
+                </tr>                
+                <tr>
+                    <td class="label">Source: <span class="required">*</span></td>
+                    <td> 
+                        <select name="sourceCode" class="largeField">
+	                        <option value="">Select Source</option>
+                            <option value="Church Group" <cfif FORM.sourceCode EQ "Church Group">selected</cfif>>Church Group</option>
+                         	<option value="Friend / Acquaintance" <cfif FORM.sourceCode EQ "Friend / Acquaintance">selected</cfif>>Friend / Acquaintance</option>
+                            <option value="Facebook" <cfif FORM.sourceCode EQ "Facebook">selected</cfif>>Facebook</option>
+                            <option value="Google Search" <cfif FORM.sourceCode EQ "Google Search">selected</cfif>>Google Search</option>
+                            <option value="Past Host Family" <cfif FORM.sourceCode EQ "Past Host Family">selected</cfif>>Past Host Family</option>
+                            <option value="Printed Material" <cfif FORM.sourceCode EQ "Printed Material">selected</cfif>>Printed Material</option>
+                            <option value="Yahoo Search" <cfif FORM.sourceCode EQ "Yahoo Search">selected</cfif>>Yahoo Search</option> 
+                        </select>
+                    </td>
+                </tr>
+            </table> 			
         </cfif>
 
 
