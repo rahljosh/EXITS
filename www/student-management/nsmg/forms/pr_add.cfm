@@ -239,7 +239,12 @@
     </cfscript>
 
 </cfif>
-
+<script>
+document.getElementById("submitForm").onsubmit = function() {   
+    this.children[1].disabled = true;
+   
+}
+</script>
 <cfif NOT VAL(FORM.studentID)>
 	a numeric studentID is required to add a new report.
 	<cfabort>
@@ -282,7 +287,7 @@
 
 <cfoutput>
 
-    <form action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="POST"> 
+    <form action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="POST" id="submitForm"> 
         <input type="hidden" name="submitted" value="1">
         <input type="hidden" name="studentID" value="#FORM.studentID#">
         <input type="hidden" name="month_of_report" value="#FORM.month_of_report#">
