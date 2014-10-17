@@ -44,9 +44,13 @@
 		// Get School Information
 		qGetSchoolInfo = APPLICATION.CFC.SCHOOL.getSchoolByID(schoolID=URL.schoolID);
 		
-		// Get State List
-		qGetStateList = APPLICATION.CFC.LOOKUPTABLES.getState();
-		
+		if (CLIENT.companyid eq 13){
+			// Get Province List
+			qGetStateList = APPLICATION.CFC.LOOKUPTABLES.getState(country='CA');
+		}else{
+			// Get State List
+			qGetStateList = APPLICATION.CFC.LOOKUPTABLES.getState();
+		}
 		if ( qGetSchoolInfo.recordCount ) {
 			// Edit
 			// lookup_success may be set to 1 to not require lookup on edit.
@@ -66,6 +70,9 @@
 			FORM.lookup_success = 1;
 		}
 	</cfscript>
+    <Cfif client.companyid eq 13>
+    	<cfset FORM.lookup_success = 1>
+    </Cfif>
 	
     <!--- FORM Submitted --->
     <cfif FORM.submitted>
@@ -97,44 +104,48 @@
 			if ( FORM.lookup_success NEQ 1 ) {
 				FORM.errorMsg = FORM.errorMsg & 'Please lookup the address. \n';
 			}
-            
-			if ( NOT LEN(TRIM(FORM.schoolname)) ) {
-				FORM.errorMsg = FORM.errorMsg & "Please enter the School Name. \n";
-            }
-
-			if ( APPLICATION.address_lookup NEQ 2 AND NOT LEN(TRIM(FORM.address)) ) {
-				FORM.errorMsg = FORM.errorMsg & "Please enter the Address. \n";
-            }
-
-			if ( APPLICATION.address_lookup NEQ 2 AND NOT LEN(TRIM(FORM.city)) ) {
-				FORM.errorMsg = FORM.errorMsg & "Please enter the City. \n";
-            }
 			
-			if ( APPLICATION.address_lookup NEQ 2 AND NOT LEN(TRIM(FORM.state)) ) {
-				FORM.errorMsg = FORM.errorMsg & "Please select the State. \n";
-            }
-
-			if ( APPLICATION.address_lookup NEQ 2 AND NOT isValid("zipcode", TRIM(FORM.zip)) ) {
-				FORM.errorMsg = FORM.errorMsg & "Please enter a valid Zip. \n";
-            }
-
-			if ( NOT LEN(TRIM(FORM.principal)) ) {
-				FORM.errorMsg = FORM.errorMsg & "Please enter the Contact. \n";
-            }
-
-			if ( LEN(TRIM(FORM.email)) AND NOT isValid("email", TRIM(FORM.email)) ) {
-				FORM.errorMsg = FORM.errorMsg & "Please enter a valid Contact Email. \n";
-            }
-
-			if ( NOT isValid("telephone", TRIM(FORM.phone)) ) {
-				FORM.errorMsg = FORM.errorMsg & "Please enter a valid Phone. \n";
-            }
-
-			if ( LEN(TRIM(FORM.fax)) AND NOT isValid("telephone", TRIM(FORM.fax)) ) {
-				FORM.errorMsg = FORM.errorMsg & "Please enter a valid Fax. \n";
-            }
-		</cfscript>
-        
+					
+				if ( NOT LEN(TRIM(FORM.schoolname)) ) {
+					FORM.errorMsg = FORM.errorMsg & "Please enter the School Name. \n";
+				}
+	</cfscript>
+            <cfif client.companyid neq 13>
+          		 <cfscript>
+				if ( APPLICATION.address_lookup NEQ 2 AND NOT LEN(TRIM(FORM.address)) ) {
+					FORM.errorMsg = FORM.errorMsg & "Please enter the Address. \n";
+				}
+	
+				if ( APPLICATION.address_lookup NEQ 2 AND NOT LEN(TRIM(FORM.city)) ) {
+					FORM.errorMsg = FORM.errorMsg & "Please enter the City. \n";
+				}
+				
+				if ( APPLICATION.address_lookup NEQ 2 AND NOT LEN(TRIM(FORM.state)) ) {
+					FORM.errorMsg = FORM.errorMsg & "Please select the State. \n";
+				}
+	
+				if ( APPLICATION.address_lookup NEQ 2 AND NOT isValid("zipcode", TRIM(FORM.zip)) ) {
+					FORM.errorMsg = FORM.errorMsg & "Please enter a valid Zip. \n";
+				}
+	
+				if ( NOT LEN(TRIM(FORM.principal)) ) {
+					FORM.errorMsg = FORM.errorMsg & "Please enter the Contact. \n";
+				}
+	
+				if ( LEN(TRIM(FORM.email)) AND NOT isValid("email", TRIM(FORM.email)) ) {
+					FORM.errorMsg = FORM.errorMsg & "Please enter a valid Contact Email. \n";
+				}
+	
+				if ( NOT isValid("telephone", TRIM(FORM.phone)) ) {
+					FORM.errorMsg = FORM.errorMsg & "Please enter a valid Phone. \n";
+				}
+	
+				if ( LEN(TRIM(FORM.fax)) AND NOT isValid("telephone", TRIM(FORM.fax)) ) {
+					FORM.errorMsg = FORM.errorMsg & "Please enter a valid Fax. \n";
+				}
+			
+			</cfscript>
+        </cfif>
         <!--- // Check if there are no errors --->
         <cfif NOT LEN(FORM.errorMsg)>
         
@@ -271,6 +282,7 @@
 		
 		// Check required Fields
 		var errorMessage = "";
+		
 		if($("#schoolname").val() == ''){
 			errorMessage = (errorMessage + 'Please enter the School Name. \n')
 		}
@@ -468,13 +480,14 @@
     <table width="500px" class="section" align="center" border="0" cellpadding="4" cellspacing="0">
 		<tr>
             <td class="label">School Name: <span class="redtext">*</span></td>
-            <td colspan="3"><cfinput type="text" name="schoolname" value="#FORM.schoolName#" size="40" maxlength="200" required="yes" validate="noblanks" message="Please enter the School Name."></td>
+            <td colspan="3"><cfinput type="text" name="schoolname" value="#FORM.schoolName#" size="40" maxlength="200"></td>
 		</tr>
+        <cfif client.companyid NEQ 13>
          <tr id="zipLookupRow">
         	<td class="label">Zip Lookup: </td>
             <td colspan="3"><input type="text" name="zipLookup" id="zipLookup" value="#FORM.zipLookup#" size="5" maxlength="5" onblur="getLocationByZip();"></td>
         </tr>
-
+</cfif>
 		<!--- address lookup - auto version. --->
 		<cfif APPLICATION.address_lookup EQ 2>
             <tr>
@@ -501,16 +514,16 @@
                 <td colspan="3"><input type="text" name="city" value="#FORM.city#" size="20" maxlength="200" readonly="readonly"></td>
             </tr> 
             <tr>
-                <td class="label">State:</td>
+                <td class="label"><cfif client.companyid eq 13>Province:<cfelse>State:</cfif></td>
                 <td><input type="text" name="state" value="#FORM.state#" size="2" maxlength="2" readonly="readonly"></td>
-                <td class="zip">Zip:</td>
+                <td class="zip"><cfif client.companyid eq 13>Postal Code<cfelse>Zip</cfif>:</td>
                 <td><input type="text" name="zip" value="#FORM.zip#" size="5" maxlength="5" readonly="readonly"></td>
             </tr>
 		<cfelse>
             <tr>
-                <td class="label">Address: <span class="redtext">*</span></td>
+                <td class="label">Address: <cfif client.companyid NEQ 13><span class="redtext">*</span></cfif></td>
                 <td colspan="3">
-                	<cfinput type="text" name="address" value="#FORM.address#" size="40" maxlength="200" required="yes" validate="noblanks" message="Please enter the Address.">
+                	<cfinput type="text" name="address" value="#FORM.address#" size="40" maxlength="200">
                 	<br /> <font size="1">NO PO BOXES</font>
                 </td>
             </tr>
@@ -519,18 +532,18 @@
                 <td colspan="3"><cfinput type="text" name="address2" value="#FORM.address2#" size="40" maxlength="200"></td>
             </tr>
             <tr>
-                <td class="label">City: <span class="redtext">*</span></td>
-                <td colspan="3"><cfinput type="text" name="city" value="#FORM.city#" size="20" maxlength="200" required="yes" validate="noblanks" message="Please enter the City."></td>
+                <td class="label">City: <cfif client.companyid NEQ 13><span class="redtext">*</span></cfif></td>
+                <td colspan="3"><cfinput type="text" name="city" value="#FORM.city#" size="20" maxlength="200" ></td>
             </tr> 
             <tr>
-                <td class="label">State: <span class="redtext">*</span></td>
+                <td class="label"><cfif client.companyid eq 13>Province:<cfelse>State:</cfif>: <cfif client.companyid NEQ 13><span class="redtext">*</span></cfif></td>
                 <td>
                     <cfselect name="state" query="qGetStateList" value="state" display="statename" selected="#FORM.state#" queryPosition="below">
-                   		<option value="0">Select a State</option>
+                   		<option value="0">Select a <cfif client.companyid eq 13>Province<cfelse>State</cfif></option>
                     </cfselect>
                 </td>
-                <td class="zip">Zip: <span class="redtext">*</span></td>
-                <td><cfinput type="text" name="zip" value="#FORM.zip#" size="5" maxlength="5" required="yes" validate="zipcode" message="Please enter a valid Zip."></td>
+                <td class="zip"><cfif client.companyid eq 13>Postal Code<cfelse>Zip</cfif>: <cfif client.companyid NEQ 13><span class="redtext">*</span></cfif></td>
+                <td><cfinput type="text" name="zip" value="#FORM.zip#" size="5" maxlength="5" ></td>
             </tr>
             
 			<!--- address lookup - simple version. --->
@@ -552,12 +565,12 @@
 		</cfif>
 
         <tr>
-            <td class="label">Contact: <span class="redtext">*</span></td>
-            <td colspan="3"><cfinput type="text" name="principal" value="#FORM.principal#" size="30" maxlength="200" required="yes" validate="noblanks" message="Please enter the Contact."></td>
+            <td class="label">Contact: <cfif client.companyid NEQ 13><span class="redtext">*</span></cfif></td>
+            <td colspan="3"><cfinput type="text" name="principal" value="#FORM.principal#" size="30" maxlength="200" ></td>
         </tr>
         <tr>
             <td class="label">Contact Email:</td>
-            <td colspan="3"><cfinput type="text" name="email" value="#FORM.email#" size="30" maxlength="200" validate="email" message="Please enter a valid Contact Email."></td>
+            <td colspan="3"><cfinput type="text" name="email" value="#FORM.email#" size="30" maxlength="200" ></td>
         </tr>
         
         <!--- Editing School --->
@@ -574,14 +587,14 @@
         </cfif>
         
         <tr>
-            <td class="label">Phone: <span class="redtext">*</span></td>
-            <td><cfinput type="text" name="phone" id="phone" value="#FORM.phone#" size="14" maxlength="14" required="yes" validate="telephone" message="Please enter a valid Phone."></td>
+            <td class="label">Phone: <cfif client.companyid NEQ 13><span class="redtext">*</span></cfif></td>
+            <td><cfinput type="text" name="phone" id="phone" value="#FORM.phone#" size="14" maxlength="14"></td>
             <td class="zip">Ext:</td>
             <td><cfinput type="text" name="phone_ext" value="#FORM.phone_ext#" size="5" maxlength="20"></td>
         </tr>
         <tr>
             <td class="label">Fax:</td>
-            <td colspan="3"><cfinput type="text" name="fax" id="fax" value="#FORM.fax#" size="14" maxlength="14" validate="telephone" message="Please enter a valid Fax."></td>
+            <td colspan="3"><cfinput type="text" name="fax" id="fax" value="#FORM.fax#" size="14" maxlength="14" ></td>
         </tr>
         <tr>
             <td class="label">Web Site:</td>
@@ -603,7 +616,14 @@
 			<cfif VAL(qGetSchoolInfo.recordCount) AND ListFind("1,2,3,4", CLIENT.userType)>
                 <td><a href="?curdoc=querys/delete_school&schoolid=#schoolID#" onClick="return confirm('You are about to delete this School. You will not be able to recover this information. Click OK to continue.')"><img src="pics/delete.gif" border="0"></a></td>
             </cfif>
-            <td align="right"><img src="pics/submit.gif" style="cursor:pointer" onclick="javascript:verifyAddress();" /></td>
+            
+            <td align="right">
+           <Cfif client.companyid eq 13>
+           		<input type="submit" value="Submit" />
+           <cfelse>
+           	 <img src="pics/submit.gif" style="cursor:pointer" onclick="javascript:verifyAddress();" />
+           </Cfif>
+           </td>
         </tr>
     </table>
 

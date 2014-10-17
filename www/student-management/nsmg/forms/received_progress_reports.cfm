@@ -221,10 +221,17 @@ where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(url.stuid
                 </td>
                 <td>
                 	<!--- Display the month of the report --->
+                    
+                	<!--- Display the month of the report --->
                 	<cfif get_progress_reports.description EQ 'Progress Reports'>
-                        #MonthAsString(get_progress_reports.pr_month_of_report)# - Progress Report
+                     <Cfif (get_progress_reports.pr_month_of_report) eq 1>
+                                <cfset thisMonth = 12>
+                            <Cfelse>
+                                <Cfset thisMonth = get_progress_reports.pr_month_of_report -1>
+                            </Cfif>
+                     	#MonthAsString(thisMonth)# - Progress Report
                     <cfelse>
-                        #get_progress_reports.description#
+                   		#get_progress_reports.description#
                     </cfif>
                                   
                 </td>
