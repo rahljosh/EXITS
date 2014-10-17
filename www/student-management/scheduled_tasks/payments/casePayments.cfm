@@ -299,7 +299,7 @@ left outer join smg_user_payment_special sppmt on pr.fk_sr_user = sppmt.fk_userI
 
 where 
 st.programID >339
-and st.companyid in (1,2,3,4,5,12)
+and st.companyid in (10)
 and pr.pr_ny_approved_date is not null
 and pr.fk_reportType = 1  
 and hh.isactive
