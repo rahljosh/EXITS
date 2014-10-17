@@ -4,7 +4,7 @@ from smg_tours
 where tour_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.tour_id#"> 
 </cfquery>
 <cfquery name="femaleStudentsOnTour" datasource="#application.dsn#">
-    SELECT st.studentid, s.sex, (CONCAT(s.firstname, ' ', s.familylastname)) as studentName,
+    SELECT st.studentid, s.sex, s.familylastname, s.firstname,
     sts.siblingID, (CONCAT(hc.name, ' ', hc.lastname)) as siblingName, hc.sex as siblingSex
     FROM student_tours st
     LEFT JOIN smg_students s on s.studentid = st.studentid
@@ -16,7 +16,7 @@ where tour_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.tour_id#">
     
 </cfquery>
 <cfquery name="maleStudentsOnTour" datasource="#application.dsn#">
-    SELECT st.studentid, s.sex, (CONCAT(s.firstname, ' ', s.familylastname)) as studentName,
+    SELECT st.studentid, s.sex,s.familylastname, s.firstname,
     sts.siblingID, (CONCAT(hc.name, ' ', hc.lastname)) as siblingName, hc.sex as siblingSex
     FROM student_tours st
     LEFT JOIN smg_students s on s.studentid = st.studentid
@@ -63,16 +63,18 @@ where tour_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.tour_id#">
     </cfif>
 
 	<tr>
-    	<td>#roomcount#. #studentName#</Td><td>#siblingName#</td>
+    	<td>#roomcount#. <b>#familylastname#</b> #firstname#</Td><td>#siblingName#</td>
     </tr>
    <cfset roomcount = #roomcount# + 1>
-   <cfif roomcount eq 5 >
-   	<Cfset roomcount = 1>
-   	<cfset curRoom = #roomnumber#>
-   	<cfset roomnumber = #roomnumber# + 1>
-   
-   </cfif>
+	   <cfif roomcount eq 5 >
+        <Cfset roomcount = 1>
+        <cfset curRoom = #roomnumber#>
+       <cfif femaleStudentsOnTour.currentrow neq femaleStudentsOnTour.recordcount>
+        <cfset roomnumber = #roomnumber# + 1>
+       </cfif>
+      </cfif>
   </cfloop>
+  
     <cfset roomnumber = #roomnumber# + 1>
 	<cfset curRoom = #roomnumber#>
     <cfset roomCount = 1> 
@@ -91,19 +93,22 @@ where tour_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.tour_id#">
     </cfif>
 
 	<tr>
-    	<Td>#roomcount#. #studentName#</Td><td>#siblingName#</td>
+    	<Td>#roomcount#. <b>#familylastname#</b> #firstname#</Td><td>#siblingName#</td>
     </tr>
    <cfset roomcount = #roomcount# + 1>
    	<cfif roomcount eq 5 >
     <Cfset roomcount = 1>
    		<cfset curRoom = #roomnumber#>
-   		<cfset roomnumber = #roomnumber# + 1>
+        <cfif maleStudentsOnTour.currentrow neq maleStudentsOnTour.recordcount>
+   			<cfset roomnumber = #roomnumber# + 1>
+        </cfif>
    </cfif>
   </cfloop> 
+  <Cfset roomnumber = #roomnumber# +1>
     <tr>
-        	<td><strong> Room #roomNumber# - <em>Chaperone / Tour Guide</em></strong></td>
+        	<td><strong> Room #roomNumber# - <em>Chaperone</em></strong></td>
        </tr
-  <tr>
+  ><tr>
     	<td>1. _______________</td>
     </tr>
     <tr>
@@ -117,9 +122,9 @@ where tour_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.tour_id#">
     </tr>
     <cfset roomnumber = #roomnumber# + 1>
       <tr>
-        	<td><strong> Room #roomNumber# - <em>Chaperone / Tour Guide</em></strong></td>
+        	<td><strong> Room #roomNumber# - <em>Chaperone</em></strong></td>
        </tr
-  <tr>
+  ><tr>
     	<td>1. _______________</td>
     </tr>
     <tr>
