@@ -245,7 +245,8 @@
                         <!--- Create Online Application ---> 
                         
                             HostAppStatus,
-                            applicationSent
+                            applicationSent,
+                            sourceType
                     )
                     VALUES 
                     (
@@ -265,6 +266,7 @@
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionid#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="9">,
                         <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetHostLead.hearAboutUs#">
                     )  
                 </cfquery>
 				<!----Insert Host ID into HostLead Table, so we know the app has been sent---->
@@ -280,7 +282,10 @@
 					
 					// Set Page Message
 					SESSION.pageMessages.Add("Host App Email Sent.");
-				</cfscript>
+					
+					// Update Host Status According to usertype approving/denying the application
+					 APPLICATION.CFC.HOST.setHostSeasonStatus(hostID=FORM.hostID);
+                </cfscript>
                 
                 <script language="javascript">
                 // Close Window After 1.5 Seconds
