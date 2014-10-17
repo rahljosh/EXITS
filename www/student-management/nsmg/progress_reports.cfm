@@ -213,14 +213,24 @@
                     Phase<br />
                     <select name="rmonth" class="mediumField">
                         <cfloop list="8,9,10,11,12,1,2,3,4,5,6,7" index="reportMonth">
-                            <option value="#reportMonth#" <cfif CLIENT.pr_rmonth EQ reportMonth> selected="selected" </cfif> >#Left(MonthAsString(reportMonth), 3)# Report</option>
+                         <Cfif reportMonth eq 1>
+                                <cfset thisMonth = 12>
+                            <Cfelse>
+                                <Cfset thisMonth = reportMonth -1>
+                            </Cfif>
+                            <option value="#reportMonth#" <cfif CLIENT.pr_rmonth EQ reportMonth> selected="selected" </cfif> >#MonthAsString(thisMonth)# 1 - #DaysInMonth('#thisMonth#/01/#dateFormat(now(),'yyyy')#')#</option>
                         </cfloop>
                     </select>                        
                 </td>
             </tr>
             <tr>
                 <td colspan="5" align="center" style="border-top:1px solid ##ccc">
-                    The <strong>#monthAsString(CLIENT.pr_rmonth)#</strong> report is for contact durring the month of <strong>#DateFormat(vSetStartDate, 'mmmm')#</strong> 
+               				 <Cfif CLIENT.pr_rmonth eq 1>
+                                <cfset thisMonth = 12>
+                            <Cfelse>
+                                <Cfset thisMonth = CLIENT.pr_rmonth -1>
+                            </Cfif>
+                    The <strong>#monthAsString(thisMonth)#</strong> report is for contact durring the month of <strong>#DateFormat(vSetStartDate, 'mmmm')#</strong> 
                     and due on <strong>#DateFormat(vSetDueDate,'mmm. d, yyyy')#</strong>. 
                 </td>
             </tr>
