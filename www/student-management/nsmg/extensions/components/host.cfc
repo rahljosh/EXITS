@@ -2821,7 +2821,7 @@
                         <p>Dear #ARGUMENTS.regionalAdvisor#,</p>
                         
                         <p>
-	                        This email is intended to notify you that your Regional Advisor #ARGUMENTS.submittedBy# has requested additional information in order to 
+	                        This email is intended to notify you that your Regional Manager #ARGUMENTS.submittedBy# has requested additional information in order to 
                             approve the #ARGUMENTS.hostFamilyLastName# family’s Host Application. 
                         </p>
                         
