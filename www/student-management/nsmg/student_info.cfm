@@ -304,7 +304,33 @@
     </cfquery>
     
 </cfsilent>
+<style type="text/css">
+.alertRed{
+	margin-left:auto;
+	margin-right:auto;
+	width:770px;
+	height:55px;
+	border:#666;
+	background-color:#FF9797;
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+	vertical-align:center;
 
+	
+}
+.alertGreen{
+	margin-left:auto;
+	margin-right:auto;
+	width:770px;
+	height:55px;
+	border:#666;
+	background-color:#DEEAE1;
+	-moz-border-radius: 15px;
+	border-radius: 15px;
+	vertical-align:center;
+	
+}
+</style>
 <script type="text/javascript" src="student_info.js"></script>
 	
 <script language="javascript">	
@@ -588,17 +614,24 @@
 										
 										<cfif CLIENT.usertype EQ 1 OR ListFind(vAllowedDivisionChangeList, CLIENT.userid)>
                                             <tr>
-                                                <td>Division:</td><td>
-                                                <cfif FORM.edit EQ 'no'>
-                                                    #qAssignedCompany.team_id# 
-                                                <cfelse>
-                                                    <select name="team_id">
-                                                    <cfloop query="qAvailableTeams">
-                                                    <option value="#companyid#" <cfif CLIENT.companyid eq companyid>selected</cfif>>#team_id#</option>
-                                                    </cfloop>
-                                                    </select>
-                                                    <br />*You will need to re-assign regions after updating.
-                                                </cfif>
+                                                <td>Division:</td>
+                                                <td>
+													<cfif FORM.edit EQ 'no'>
+                                                        #qAssignedCompany.team_id# 
+                                                    <cfelse>
+                                                        <select name="team_id">
+                                                        <cfloop query="qAvailableTeams">
+                                                        <option value="#companyid#" <cfif CLIENT.companyid eq companyid>selected</cfif>>#team_id#</option>
+                                                        </cfloop>
+                                                        </select>
+                                                        <br />*You will need to re-assign regions after updating.
+                                                    </cfif>
+                                              	</td>
+                                            </tr>
+                                        <cfelse>
+                                        	<tr>
+                                                <td>Division:</td>
+                                                <td>#qAssignedCompany.team_id#</td>
                                             </tr>
                                         </cfif>
                                         
@@ -709,14 +742,43 @@
 
 <br />
 
-<cfif CLIENT.companyid neq qAssignedCompany.companyid> 
-	<table width=770 bgcolor="##CC3300" align="center">
-		<tr>
-		<td>
-			<img src="pics/error_exclamation.gif"></td><td><font color="white">Student is assigned to a different company then you are accessing the record through. <br /> Please change companies to #qAssignedCompany.team_id# to prevent errors in displayed and recorded information.</font>
-		</td>
-	</table>
-		</cfif>
+<!---<cfif CLIENT.companyid neq qAssignedCompany.companyid> 
+	<div class="alertRed">
+    	<table>
+        	<tr>
+            	<Td>
+                	<i class="fa fa-exclamation-triangle fa-3x"></i>
+                </Td>
+                <td>
+                	<h1>Change Program Managers</h1>
+                	<em>This student is assigned to #qAssignedCompany.team_id#.</em>
+            	</td>
+         	</Tr>
+       	</table>
+  	</div>
+    <br /><br />
+</cfif>--->
+
+<cfdirectory directory="#APPLICATION.PATH.uploadedFiles#/online_app/page23/" name="file" filter="#qGetStudentInfo.studentid#.*">	
+    
+<cfif VAL(file.recordcount)>
+          <div class="alertGreen">
+          <table>
+          	<Tr>
+            	<Td>
+                <i class="fa fa-users fa-3x"></i>
+                </Td>
+                <td>
+                <h1>Student Accepts Double Placement</h1>
+                <em>Double Placment acceptence form has been signed in the student applicaiton.</em>
+            	</td>
+               </Tr>
+             </table>
+             
+            </div>
+    	<br /><br />
+        </cfif>
+	
 <!--- PROGRAM / REGION --->
 <table width="770" border=0 cellpadding=0 cellspacing=0 align="center">	
 	<tr>
