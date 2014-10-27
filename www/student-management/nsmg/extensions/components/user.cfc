@@ -2387,16 +2387,12 @@ setUserSessionPaperwork
         <cfif ARGUMENTS.trainingID EQ 6>
         
             <cfquery name="qGetUserInfo" datasource="#APPLICATION.DSN#">
-                SELECT ar.userID, ar.firstName, ar.lastName, ar.phone, ar.email, rm.firstName AS rmFirstName, rm.lastName AS rmLastName, rm.email AS rmEmail
-                FROM smg_users ar
-                LEFT JOIN user_access_rights uar ON uar.userID = ar.userID
-                    AND uar.default_access = 1
-                    AND uar.regionID != 0
-                    AND uar.userType IN (6,7)
-                LEFT JOIN user_access_rights uar2 ON uar2.regionID = uar.regionID
-                    AND uar2.userType = 5
-                LEFT JOIN smg_users rm ON rm.userID = uar2.userID
-                WHERE ar.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
+                SELECT 
+                	vuh.`area rep ID` as `userID`, vuh.`Area Rep First Name` as `firstname`, vuh.`Area Rep Last Name` as `lastname`, ar.phone, ar.email, vuh.`Regional Advisor Email` as `raEmail`, 
+                    vuh.`Regional Manager First Name` as `rmFirstName`, vuh.`Regional Manager Last Name` as `rmLastname`, vuh.`Regional Manager Email` as `rmEmail`
+                FROM v_user_hierarchy vuh
+                LEFT JOIN smg_users ar on vuh.`area rep ID` = ar.userid
+                WHERE userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
             </cfquery>
             
             <cfsavecontent variable="vEmailMessage">
@@ -2432,7 +2428,7 @@ setUserSessionPaperwork
             </cfsavecontent>
             
             <cfinvoke component="nsmg.cfc.email" method="send_mail">
-                <cfinvokeargument name="email_to" value="#qGetUserInfo.rmEmail#">
+                <cfinvokeargument name="email_to" value="#qGetUserInfo.rmEmail#; #qGetUserInfo.raEmail#">
                 <cfinvokeargument name="email_from" value="#CLIENT.emailfrom# (#CLIENT.companyshort# Support)">
                 <cfinvokeargument name="email_cc" value="peter@iseusa.org">
                 <cfinvokeargument name="email_subject" value="New Area Rep. Training Completed">
