@@ -363,10 +363,10 @@
                             sh.dateCreated DESC  
                     ) AS T  
                     
-                    WHERE
-                        isActivePlacement = <cfqueryparam cfsqltype="cf_sql_bit" value="1"> 
-                    OR
-                        hostID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ValueList(qGetHostList.hostID)#" list="yes"> ) 
+                    WHERE isActivePlacement = <cfqueryparam cfsqltype="cf_sql_bit" value="1"> 
+                    <cfif VAL(qGetHostList.recordCount)>
+                    	OR hostID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ValueList(qGetHostList.hostID)#" list="yes"> )
+                  	</cfif> 
             </cfquery>
 
 		</cfif> <!--- NOT SESSION.formErrors.length() ---->
