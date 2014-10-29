@@ -37,11 +37,11 @@
         <p>     
             [ &nbsp;
             
-            <a href=" https://iseusa1.webex.com/iseusa1/lsr.php?AT=pb&SP=EC&rID=3771082&rKey=7092fd35f85dfe83" target="_blank">Database Navigation</a>
+            <a href=" https://iseusa1.webex.com/iseusa1/lsr.php?RCID=ae3f0ad1448874a199514a32bb2998be" target="_blank">Database Navigation</a>
             
             &nbsp; &nbsp; | &nbsp; &nbsp;
             
-            <a href="https://iseusa1.webex.com/iseusa1/lsr.php?AT=pb&SP=EC&rID=3680852&rKey=962a228bb9d3c2d2" target="_blank">Department of State Regulations</a> 
+            <a href="https://iseusa1.webex.com/iseusa1/lsr.php?RCID=5d09651fee3e22a25290d4b05a6be210" target="_blank">Department of State Regulations</a> 
             
             &nbsp; &nbsp; | &nbsp; &nbsp;
 
