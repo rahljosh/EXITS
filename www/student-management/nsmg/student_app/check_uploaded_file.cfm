@@ -58,9 +58,9 @@
 						upload a legible copy of your Birth Certificate or other official birth 
 						registration document in pdf or jpeg format
                     <cfelseif URL.p EQ 27>
-                    	Most US schools now require a SLEP Test for enrollment. To ensure that you 
+                    	Most US schools now require a ELTIS Test for enrollment. To ensure that you 
 						can be succesfully enrolled in a school and placed with a host family, 
-						please upload a legible copy of your SLEP Test in pdf or jpeg format.
+						please upload a legible copy of your ELTIS Test in pdf or jpeg format.
                     <cfelse>
         				Please print, sign, scan and upload this page. Click on the link below to 
 						upload this page.

@@ -220,9 +220,9 @@ body {
 			<td align="center" class="ddmx"><a class="item2" href="?curdoc=section4/page26&id=4&p=26" onClick="return CheckLink();">Page [26] &nbsp; Birth Certificate - Birth Registration </a></td>
 		</cfif>
         <cfif url.p EQ '27'>
-			<td align="center" class="selected" colspan="2"><a class="item2" href="?curdoc=section4/page27&id=4&p=27" onClick="return CheckLink();"><div class="selectedlink">Page [27] &nbsp; SLEP Test </div></a></td>
+			<td align="center" class="selected" colspan="2"><a class="item2" href="?curdoc=section4/page27&id=4&p=27" onClick="return CheckLink();"><div class="selectedlink">Page [27] &nbsp; ELTIS Test </div></a></td>
 		<cfelse>
-			<td align="center" class="ddmx" colspan="2" ><a class="item2" href="?curdoc=section4/page27&id=4&p=27" onClick="return CheckLink();">Page [27] &nbsp; SLEP Test </a></td>
+			<td align="center" class="ddmx" colspan="2" ><a class="item2" href="?curdoc=section4/page27&id=4&p=27" onClick="return CheckLink();">Page [27] &nbsp; ELTIS Test </a></td>
 		</cfif>	
     </tr>
 	</cfif>	

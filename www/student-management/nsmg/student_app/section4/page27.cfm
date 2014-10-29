@@ -3,7 +3,7 @@
 	File:		page27.cfm
 	Author:		James Griffiths
 	Date:		October 23, 2013
-	Desc:		SLEP Test
+	Desc:		ELTIS Test
 
 ----- ------------------------------------------------------------------------- --->
 
@@ -24,7 +24,7 @@
         <tr height="33">
             <td width="8" class="tableside"><img src="pics/p_topleft.gif" width="8"></td>
             <td width="26" class="tablecenter"><img src="../pics/students.gif"></td>
-            <td class="tablecenter"><h2>Page [27] - SLEP Test</h2></td>
+            <td class="tablecenter"><h2>Page [27] - ELTIS Test</h2></td>
             <td align="right" class="tablecenter"></td>
             <td width="42" class="tableside"><img src="pics/p_topright.gif" width="42"></td>
         </tr>
