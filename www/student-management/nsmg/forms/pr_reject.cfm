@@ -54,7 +54,7 @@
             </cfquery>
 	        <cfset email_to = listAppend(email_to, get_facilitator.email)>
         </cfif>
-        <cfif email_to NEQ ''>
+        <cfif LEN(email_to)>
             <cfquery name="get_student" datasource="#application.dsn#">
                 SELECT studentid, firstname, familylastname
                 FROM smg_students
@@ -62,7 +62,7 @@
             </cfquery>
             <cfsavecontent variable="email_message">
             <cfoutput>				
-                <p>A  report has been rejected.</p>
+                <p>A report has been rejected.</p>
                 <p>Student: #get_student.firstname# #get_student.familylastname# (#get_student.studentid#)</p>
                 <p>Rejection Reason:<br />
                 #replaceList(form.pr_rejection_reason, '#chr(13)##chr(10)#,#chr(13)#,#chr(10)#', '<br>,<br>,<br>')#</p>
@@ -72,7 +72,7 @@
 			<cfif get_report.fk_reportType EQ 1>
             	<cfset emailSubject = "SMG - Progress Report Rejected">
             <cfelseif get_report.fk_reportType EQ 2>
-            	<cfset emailSubject = "SMG - Second Visit Report Rejected">
+            	<cfset emailSubject = "SMG - Second Visit Report Rejected ">
             <cfelse>
             	<cfset emailSubject = "SMG - Confidential Host Family Visit Report Rejected">
             </cfif>
