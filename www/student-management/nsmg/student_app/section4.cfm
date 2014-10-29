@@ -50,7 +50,7 @@
 			filled out, printed, signed and uploaded back into the system with 
 			original signatures. Page [22] is a Supplements page that allows for the 
 			loading of all supplemental documents required by #get_intl_rep.businessname#.
-			Supplements may include (but not be limited to) the SLEP Test Answer 
+			Supplements may include (but not be limited to) the ELTIS Test Answer 
 			Sheet and English Certificates. 
 			<cfif CLIENT.companyID NEQ 13>
 				Page [23] is optional, but must be uploaded if you choose to authorize a double placement.
