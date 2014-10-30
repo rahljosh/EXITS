@@ -48,105 +48,122 @@
 
 <!--- FORM Submitted --->
 <cfif FORM.submitted>
+
+	<!--- Initialize the pr_id for sending the form later --->
+    <cfset vPRID = 0>
+
+    <Cfquery name="checkForDupe" datasource="#application.dsn#">
+        select *
+        from progress_reports
+        where fk_student =  <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentID#">
+        and pr_month_of_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.month_of_report#">
+	</Cfquery>
     
-    <cflock timeout="30">
+	<cfif NOT VAL(checkForDupe.recordcount)>
     
-    	<!--- Insert Report Data --->
-        <cfquery datasource="#APPLICATION.DSN#" result="newRecord">
-            INSERT INTO 
-                progress_reports 
-            (
-                fk_reportType, 
-                fk_student, 
-                pr_uniqueID, 
-                pr_month_of_report, 
-                fk_program, 
-                fk_secondVisitRep, 
-                fk_sr_user, 
-                fk_pr_user, 
-                fk_ra_user, 
-                fk_rd_user, 
-                fk_ny_user, 
-                fk_host, 
-                fk_intrep_user
-            )
-            VALUES 
-            (
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.reportType#">,
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentID#">,
-                <cfqueryparam cfsqltype="cf_sql_idstamp" value="#CreateUUID()#">,
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.month_of_report#">,
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">,
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.fk_secondVisitRep#">,
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.fk_sr_user#">,
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.fk_pr_user#">,
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.fk_ra_user#" null="#NOT VAL(FORM.fk_ra_user)#">,
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.fk_rd_user#">,
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.fk_ny_user#">,
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.fk_host#">,
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.fk_intrep_user#">
-            )  
-        </cfquery>
+        <cflock timeout="30">
         
-    </cflock>
-        
-    <!--- Progress Report --->    
-    <cfif CLIENT.reportType NEQ 2>
-    
-        <cfquery name="qGetPRQuestions" datasource="#APPLICATION.DSN#">
-            SELECT 
-                ID
-            FROM 
-                smg_prquestions
-            WHERE 
-                companyGroup = <cfqueryparam cfsqltype="cf_sql_varchar" value="#CLIENT.company_submitting#"> 
-            AND 	
-                active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-            AND 
-                month = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.month_of_report#">
-        </cfquery>
-       
-        <cfloop query="qGetPRQuestions">
-    
-            <cfquery datasource="#APPLICATION.DSN#">
+            <!--- Insert Report Data --->
+            <cfquery datasource="#APPLICATION.DSN#" result="newRecord">
                 INSERT INTO 
-                    x_pr_questions 
+                    progress_reports 
                 (
-                        fk_progress_report, 
-                        fk_prquestion
+                    fk_reportType, 
+                    fk_student, 
+                    pr_uniqueID, 
+                    pr_month_of_report, 
+                    fk_program, 
+                    fk_secondVisitRep, 
+                    fk_sr_user, 
+                    fk_pr_user, 
+                    fk_ra_user, 
+                    fk_rd_user, 
+                    fk_ny_user, 
+                    fk_host, 
+                    fk_intrep_user
                 )
                 VALUES 
                 (
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.reportType#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentID#">,
+                    <cfqueryparam cfsqltype="cf_sql_idstamp" value="#CreateUUID()#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.month_of_report#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.fk_secondVisitRep#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.fk_sr_user#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.fk_pr_user#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.fk_ra_user#" null="#NOT VAL(FORM.fk_ra_user)#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.fk_rd_user#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.fk_ny_user#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.fk_host#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.fk_intrep_user#">
+                )  
+            </cfquery>
+       
+        </cflock>
+            
+        <!--- Progress Report --->    
+        <cfif CLIENT.reportType NEQ 2>
+        
+            <cfquery name="qGetPRQuestions" datasource="#APPLICATION.DSN#">
+                SELECT 
+                    ID
+                FROM 
+                    smg_prquestions
+                WHERE 
+                    companyGroup = <cfqueryparam cfsqltype="cf_sql_varchar" value="#CLIENT.company_submitting#"> 
+                AND 	
+                    active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                AND 
+                    month = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.month_of_report#">
+            </cfquery>
+           
+            <cfloop query="qGetPRQuestions">
+        
+                <cfquery datasource="#APPLICATION.DSN#">
+                    INSERT INTO 
+                        x_pr_questions 
+                    (
+                            fk_progress_report, 
+                            fk_prquestion
+                    )
+                    VALUES 
+                    (
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#newRecord.GENERATED_KEY#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetPRQuestions.ID#">
+                    )
+                </cfquery>
+        
+            </cfloop>
+        
+        <!--- Second Visit Report --->
+        <cfelseif CLIENT.reportType EQ 2>
+        
+            <cfquery datasource="#APPLICATION.DSN#">
+                INSERT INTO
+                    secondVisitAnswers 
+                (
+                    fk_reportID, 
+                    fk_studentID,
+                    dueFromDate,
+                    dueToDate                               
+                )
+                VALUES
+                (
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#newRecord.GENERATED_KEY#">,
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetPRQuestions.ID#">
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentID#">,
+                    <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.dueFromDate#" null="#NOT IsDate(FORM.dueFromDate)#">,
+                    <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.dueToDate#" null="#NOT IsDate(FORM.dueToDate)#">
                 )
             </cfquery>
-    
-        </cfloop>
-    
-    <!--- Second Visit Report --->
-    <cfelseif CLIENT.reportType EQ 2>
-    
-        <cfquery datasource="#APPLICATION.DSN#">
-            INSERT INTO
-                secondVisitAnswers 
-            (
-                fk_reportID, 
-                fk_studentID,
-                dueFromDate,
-                dueToDate                               
-            )
-            VALUES
-            (
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#newRecord.GENERATED_KEY#">,
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentID#">,
-                <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.dueFromDate#" null="#NOT IsDate(FORM.dueFromDate)#">,
-                <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.dueToDate#" null="#NOT IsDate(FORM.dueToDate)#">
-            )
-        </cfquery>
+            
+        </cfif>
         
+        <cfset vPRID = newRecord.GENERATED_KEY>
+        
+  	<cfelse>
+    	<cfset vPRID = checkForDupe.pr_id>        
     </cfif>
-    
     <cfscript>    
 		// Redirect to 2nd Visit Report 
 		if ( CLIENT.reportType EQ 2 ) {
@@ -159,7 +176,7 @@
     
     <cfoutput>
         <form action="#vFormPath#" method="post" name="theForm" id="theForm">
-            <input type="hidden" name="pr_id" value="#newRecord.GENERATED_KEY#">
+            <input type="hidden" name="pr_id" value="#vPRID#">
         </form>
     </cfoutput>
     
