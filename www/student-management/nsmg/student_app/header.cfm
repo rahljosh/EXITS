@@ -28,6 +28,11 @@
 			// EIS
 			CLIENT.org_code = CLIENT.companyid;
 			bgcolor ='c4d5ef';
+		
+		} else if ( CLIENT.companyid EQ 13 ) {
+			// CANADA
+			CLIENT.org_code = CLIENT.companyid;
+			bgcolor ='B5D66E';
 		} else {
 			// EXITS APPLICATION
 			CLIENT.org_code = 5;
