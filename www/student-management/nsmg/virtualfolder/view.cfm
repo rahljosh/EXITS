@@ -74,14 +74,14 @@
 <cfif val(url.vfid)>
 	<cfif ((userid eq client.userid) OR (client.usertype lte 2)) AND url.how is not 'auto'>
 		<cfquery datasource="#application.dsn#">
-            update virtualFolder
+            update virtualfolder
             set isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
             where vfid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.vfid#">
                 <Cfset fileDeleted = "#url.vfid#">
         </cfquery>
 		<cfif val(url.unDelete)>
             <cfquery datasource="#application.dsn#">
-                update virtualFolder
+                update virtualfolder
                 set isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
                 where vfid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.vfid#">
             </cfquery>
@@ -125,8 +125,8 @@
     <cfquery name="qGetOtherFiles" datasource="#application.dsn#">
     	SELECT vf.fileName, vf.dateAdded, vf.filePath, vfc.categoryName, vfd.documentType, u.firstname, u.lastname , u.userid, vf.generatedHow, vf.uploadedBy, vf.vfid,
         h.familylastname, vf.fk_hostid, vfd.viewPermissions
-        FROM virtualFolder vf
-        LEFT JOIN virtualFolderDocuments vfd on vfd.id = vf.fk_documentType
+        FROM virtualfolder vf
+        LEFT JOIN virtualfolderDocuments vfd on vfd.id = vf.fk_documentType
         LEFT JOIN virtualFolderCategory vfc on vfc.categoryID = vfd.fk_category
         LEFT JOIN smg_users u on u.userid = vf.uploadedBy
         LEFT JOIN smg_hosts h on h.hostid = vf.fk_hostID
