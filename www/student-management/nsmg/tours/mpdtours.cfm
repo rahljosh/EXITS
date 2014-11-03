@@ -146,7 +146,7 @@
                 	SELECT 
                 		sum(amount)
                   	FROM
-                  		applicationPayment ap
+                  		applicationpayment ap
                     WHERE
                     	ap.foreignID = st.ID
                 	AND
@@ -196,7 +196,7 @@
                         	SELECT
                             	foreignID
                             FROM
-                            	applicationPayment
+                            	applicationpayment
                             WHERE	
                                 foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="student_tours">
                             AND	

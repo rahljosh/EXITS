@@ -743,7 +743,7 @@
                     SELECT
                         SUM(Amount) AS totalReceived     
                     FROM
-                        applicationPayment ap
+                        applicationpayment ap
                     WHERE
                         ap.foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="student_tours">
                     AND	
@@ -816,7 +816,7 @@
     			
                 <cfquery datasource="#APPLICATION.DSN#">
                     UPDATE
-                        applicationPayment
+                        applicationpayment
                     SET  
                         authTransactionID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.referencePaid#">
                     WHERE
