@@ -206,7 +206,7 @@
                 AND
                 	DATE_ADD(p.endDate, INTERVAL 9 MONTH) >= CURDATE()
             INNER JOIN
-                smg_hostHistoryTracking sht ON sht.studentID = s.studentID
+                smg_hosthistorytracking sht ON sht.studentID = s.studentID
                     AND
                         sht.fieldName = <cfqueryparam cfsqltype="cf_sql_varchar" value="areaRepID">
                     AND
@@ -299,7 +299,7 @@
                 AND
                 	DATE_ADD(p.endDate, INTERVAL 9 MONTH) >= CURDATE()
             INNER JOIN
-                smg_hostHistoryTracking sht ON sht.studentID = s.studentID
+                smg_hosthistorytracking sht ON sht.studentID = s.studentID
                     AND
                         sht.fieldName = <cfqueryparam cfsqltype="cf_sql_varchar" value="placeRepID">
                     AND
@@ -329,7 +329,7 @@
                 AND
                 	DATE_ADD(p.endDate, INTERVAL 9 MONTH) >= CURDATE()
             INNER JOIN
-                smg_hostHistoryTracking sht ON sht.studentID = s.studentID
+                smg_hosthistorytracking sht ON sht.studentID = s.studentID
                     AND
                         sht.fieldName = <cfqueryparam cfsqltype="cf_sql_varchar" value="placeRepID">
                     AND
@@ -422,7 +422,7 @@
                 AND
                 	DATE_ADD(p.endDate, INTERVAL 9 MONTH) >= CURDATE()
             INNER JOIN
-                smg_hostHistoryTracking sht ON sht.studentID = s.studentID
+                smg_hosthistorytracking sht ON sht.studentID = s.studentID
                     AND
                         sht.fieldName = <cfqueryparam cfsqltype="cf_sql_varchar" value="secondVisitRepID">
                     AND
