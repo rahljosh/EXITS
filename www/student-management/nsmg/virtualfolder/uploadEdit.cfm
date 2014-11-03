@@ -27,7 +27,7 @@
     </script>
 </head>
 
-<cfparam name="emailRecipient" default="#APPLICATION.EMAIL.support#">
+<cfparam name="emailRecipient" default="#client.support_email#">
 
 <!--- Import CustomTag Used for Page Messages and Form Errors --->
 <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
@@ -330,11 +330,7 @@
 </cfif>
 
 <cfoutput>
-<cfif client.userid eq 1>
-	<cfdump var="#application#">
-    <cfdump var="#client#">
-    <cfdump var="#emailRecipient#">
-</cfif>
+
 	
     <gui:pageHeader
         headerType="applicationNoHeader"
