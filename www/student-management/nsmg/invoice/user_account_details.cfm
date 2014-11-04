@@ -10,8 +10,7 @@
 <cfparam name="FORM.quickSearchAutoSuggestAgentID" default="type agent, ID, contact">
 <cfparam name="FORM.quickSearchAgentID" default="">
 
-<cfscript>	
-	
+<cfscript>
 	// Quick Search User
 	if ( VAL(FORM.quickSearchAgentID) ) {
 		Location("index.cfm?curdoc=invoice/user_account_details&userid=#FORM.quickSearchAgentID#", "no");	
@@ -61,16 +60,11 @@
 <cfif FORM.submitted>
 	
 	<!--- query to get company info --->
-	<Cfquery name="qCompanyDetail" datasource="MySQL">
-		select			
-			companyID,
-			companyShort,
-			companyName
-		from 
-			smg_companies
-		where 
-			companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.companyID#">
-	</Cfquery>
+	<cfquery name="qCompanyDetail" datasource="#APPLICATION.DSN#">
+		SELECT companyID, companyShort, companyName
+		FROM smg_companies
+		WHERE companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.companyID#">
+	</cfquery>
 	
 	<cfset CLIENT.companyID = qCompanyDetail.companyID>
 	<cfset CLIENT.companyShort = qCompanyDetail.companyShort>
@@ -84,69 +78,54 @@
 <!----Cookie list for recent agents accessed---->
 <cfif isDefined('cookie.intagentlist')>
 	<cfset intagentlist = #cookie.intagentlist#>
-		<cfif listcontains(intagentlist,#url.userid#, ',')>
-			<cfset cookie.intagentlist = #intagentlist#>
+	<cfif listcontains(intagentlist,#url.userid#, ',')>
+		<cfset cookie.intagentlist = #intagentlist#>
+	<cfelse>
+		<cfif listlen(intagentlist) eq 5>
+			<cfset intagentlist = #ListDeleteAt(intagentlist, 1, ',')#>
+			<cfset intagentlist = #ListAppend(intagentlist, #url.userid#, ',')#>
 		<cfelse>
-			<cfif listlen(intagentlist) eq 5>
-				<cfset intagentlist = #ListDeleteAt(intagentlist, 1, ',')#>
-				<cfset intagentlist = #ListAppend(intagentlist, #url.userid#, ',')#>
-				
-			<cfelse>
-				<cfset intagentlist = #ListAppend(intagentlist, #url.userid#, ',')#>
-			</cfif>
+			<cfset intagentlist = #ListAppend(intagentlist, #url.userid#, ',')#>
 		</cfif>
+	</cfif>
 	<cfcookie name=intagentlist value="#intagentlist#" expires="never">
 <cfelse>
-<cfcookie name=intagentlist value="#url.userid#" expires="never">
+	<cfcookie name=intagentlist value="#url.userid#" expires="never">
 </cfif>
 
-<!-------->
-
 <cfif isDefined('url.invall')>
-	<Cfset form.view = 'all'>
+	<cfset form.view = 'all'>
 <cfelse>
 	<cfset form.view = #FORM.companyID#>		
 </cfif>
 
-
-<Cfoutput>
+<cfoutput>
 	<cfif client.companyID NEQ 14>
-		<div align="center"><a href="?curdoc=invoice/user_account_details&userid=#url.userid#">Show only this Company</a> :: <a href="?curdoc=invoice/user_account_details&userid=#url.userid#&invall">Include all company numbers</a></div>
+		<div align="center">
+        	<a href="?curdoc=invoice/user_account_details&userid=#url.userid#">Show only this Company</a> :: 
+            <a href="?curdoc=invoice/user_account_details&userid=#url.userid#&invall">Include all company numbers</a>
+     	</div>
     </cfif>
-</Cfoutput>
+</cfoutput>
 
-<Cfquery name="agent_details" datasource="MySQL">
-	select businessname, firstname, lastname, city, smg_countrylist.countryname
-	from smg_users
+<cfquery name="agent_details" datasource="#APPLICATION.DSN#">
+	SELECT businessname, firstname, lastname, city, smg_countrylist.countryname
+	FROM smg_users
 	LEFT JOIN smg_countrylist ON smg_countrylist.countryid = smg_users.country
-	where userid = #url.userid#
-</Cfquery>
-<!----
-<cfquery name="received_payments" datasource="MySQL">
-SELECT smg_charges.agentid, sum( smg_payment_received.totalreceived ) AS amount_paid
-FROM smg_payment_received INNER JOIN ((smg_invoice INNER JOIN smg_charges ON smg_invoice.invoiceid = smg_charges.invoiceid) INNER JOIN smg_payment_charges ON smg_charges.chargeid = smg_payment_charges.chargeid) ON smg_payment_received.paymentid = smg_payment_charges.paymentid
-GROUP BY smg_charges.agentid
-HAVING (((smg_charges.agentid)=#userid#))
+	WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userid#">
 </cfquery>
----->
 
-<cfquery name="agentTotalBalance" datasource="MySQL">
-SELECT SUM(t.total) AS totalPerAgent
-        FROM (
-        SELECT sch.agentid, su.businessname, sch.programid, IFNULL(SUM(sch.amount_due),0) AS total, sch.companyid<!--- (CASE 
-WHEN sp.type = 7 THEN 7
-WHEN sp.type = 8 THEN 7
-WHEN sp.type = 9 THEN 7
-WHEN sp.type = 11 THEN 8
-ELSE sch.companyid
-END) AS testCompId --->
+<cfquery name="agentTotalBalance" datasource="#APPLICATION.DSN#">
+	SELECT SUM(t.total) AS totalPerAgent
+	FROM (
+		SELECT sch.agentid, su.businessname, sch.programid, IFNULL(SUM(sch.amount_due),0) AS total, sch.companyid
         FROM smg_charges sch
         LEFT JOIN smg_programs sp ON sp.programid = sch.programid
         LEFT JOIN smg_users su ON su.userid = sch.agentid
-        WHERE sch.agentid = #url.userid#
+        WHERE sch.agentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userid#">
         <cfswitch expression="#client.companyid#">
             <cfcase value="5,10,14">
-                AND sch.companyid = #client.companyid#
+                AND sch.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
             </cfcase>
             <cfcase value="7,8">
                 AND sch.companyid IN (7,8)
@@ -157,17 +136,10 @@ END) AS testCompId --->
         </cfswitch>
 		GROUP BY sch.companyid<!--- testCompId --->
 		<cfif form.view is not 'all'>
-        	HAVING sch.companyid = #FORM.companyID#
+        	HAVING sch.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.companyid#">
 		</cfif>
         UNION ALL
-        SELECT sch.agentid, su.businessname, sch.programid, IFNULL(SUM(spc.amountapplied)*-1,0) AS total, sch.companyid<!--- 
-(CASE 
-WHEN sp.type = 7 THEN 7
-WHEN sp.type = 8 THEN 7
-WHEN sp.type = 9 THEN 7
-WHEN sp.type = 11 THEN 8
-ELSE sch.companyid
-END) AS testCompId --->
+        SELECT sch.agentid, su.businessname, sch.programid, IFNULL(SUM(spc.amountapplied)*-1,0) AS total, sch.companyid
         FROM smg_payment_charges spc
         LEFT JOIN smg_charges sch ON sch.chargeid = spc.chargeid
         LEFT JOIN smg_programs sp ON sp.programid = sch.programid
@@ -189,14 +161,7 @@ END) AS testCompId --->
         	HAVING sch.companyid = #FORM.companyID#
 		</cfif>
         UNION ALL
-        SELECT sc.agentid, su.businessname, sch.programid, IFNULL(SUM(sc.amount - sc.amount_applied)* -1,0) AS total, sc.companyid<!--- 
-(CASE 
-WHEN sp.type = 7 THEN 7
-WHEN sp.type = 8 THEN 7
-WHEN sp.type = 9 THEN 7
-WHEN sp.type = 11 THEN 8
-ELSE sc.companyid
-END) AS testCompId --->
+        SELECT sc.agentid, su.businessname, sch.programid, IFNULL(SUM(sc.amount - sc.amount_applied)* -1,0) AS total, sc.companyid
         FROM smg_credit sc
         LEFT JOIN smg_charges sch ON sch.chargeid = sc.chargeid
         LEFT JOIN smg_programs sp ON sp.programid = sch.programid
@@ -213,132 +178,81 @@ END) AS testCompId --->
                 AND sc.companyid IN (1,2,3,4,5,7,8,10,12)
             </cfdefaultcase>
         </cfswitch>
-        AND sc.agentid = #url.userid#
+        AND sc.agentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userid#">
 		GROUP BY sc.companyid<!--- testCompId --->
 		<cfif form.view is not 'all'>
-        	HAVING sc.companyid = #FORM.companyID#
+        	HAVING sc.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.companyid#">
 		</cfif>
-        ) t
-        GROUP BY t.agentid
+	) t
+	GROUP BY t.agentid
 </cfquery>
 
-			<!--- <Cfquery name="total_due" datasource="MySQL">
-			select sum(amount_due) as amount_due
-			from smg_charges
-			where agentid = #URL.userid# 
-				<cfif form.view is not 'all'>
-                and companyid = #FORM.companyID#
-                </cfif>
-			</Cfquery>
+<!----total credits in system---->
+<cfquery name="total_credit_amount" datasource="#APPLICATION.DSN#">
+    SELECT sum(amount) as credit_amount
+    FROM smg_credit
+    WHERE agentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userid#">
+    <cfif form.view is not 'all'>
+    	AND companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.companyid#">
+    </cfif>
+    AND active = 1
+</cfquery>
+			
+<cfif total_credit_amount.credit_amount is ''>
+	<cfset total_credit_amount.credit_amount = 0>
+</cfif>
             
-			<cfif total_due.amount_due is ''>
-				<cfset total_due.amount_due = 0>
-			</cfif>
+<!----Total credits applied---->
+<cfquery name="total_Credit_applied" datasource="#APPLICATION.DSN#">
+    SELECT sum(amount_applied) as credit_amount
+    FROM smg_credit
+    WHERE agentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userid#">
+	<cfif form.view is not 'all'>
+    	AND companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.companyid#">
+    </cfif>
+    AND active = 1
+</cfquery>
 			
+<cfif total_Credit_applied.credit_amount is ''>
+	<cfset total_Credit_applied.credit_amount = 0>
+</cfif>
 			
-			<cfquery name="total_received" datasource="mysql">
-			select sum(totalreceived) as total_received
-			from smg_payment_received
-			where agentid = #url.userid# 			
-				<cfif form.view is not 'all'>
-                and companyid = #FORM.companyID#
-                </cfif>
-			</cfquery>
-			<cfif total_received.total_received is ''>
-				<cfset total_received.total_received = 0>
-			</cfif>
-			
-			<cfquery name="overpayment_credit" datasource="MySQL">
-			select sum(amount) as overpayment_amount
-			from smg_credit
-			where agentid = #url.userid# and payref <> '' and active = 0
-			<cfif form.view is not 'all'>
-			and companyid = #FORM.companyID#
-			</cfif>
-			</cfquery>
-			<cfif overpayment_credit.overpayment_amount is ''>
-			<cfset overpayment_credit.overpayment_amount = 0>
-			</cfif> --->
-            
-			<!----total credits in system---->
-			<cfquery name="total_credit_amount" datasource="MySQL">
-			select sum(amount) as credit_amount
-			from smg_credit
-			where agentid = #url.userid#
-			<cfif form.view is not 'all'>
-			and companyid = #FORM.companyID#
-			</cfif>
-			and active = 1
-			</cfquery>
-			<cfif total_credit_amount.credit_amount is ''>
-				<cfset total_credit_amount.credit_amount = 0>
-			</cfif>
-            
-			<!----Total credits applied---->
-			<cfquery name="total_Credit_applied" datasource="MySQL">
-			select sum(amount_applied) as credit_amount
-			from smg_credit
-			where agentid = #url.userid#
-				<cfif form.view is not 'all'>
-                and companyid = #FORM.companyID#
-                </cfif>
-			and active = 1
-			</cfquery>
-			<cfif total_Credit_applied.credit_amount is ''>
-				<cfset total_Credit_applied.credit_amount = 0>
-			</cfif>
-			
-			<cfset total_credit = #total_credit_amount.credit_amount# - #total_credit_applied.credit_amount#>
+<cfset total_credit = #total_credit_amount.credit_amount# - #total_credit_applied.credit_amount#>
 
+<!----Refund Query not combined---->
+<cfquery name="refunds" datasource="#APPLICATION.DSN#">
+    SELECT *
+    FROM smg_invoice_refunds
+    WHERE smg_invoice_refunds.agentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userid#">
+    <cfif form.view is not 'all'>
+    	AND smg_invoice_refunds.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.companyid#">
+    </cfif>
+    AND smg_invoice_refunds.refund_receipt_id = 0
+</cfquery>
+			
+<cfquery name="refunds" datasource="#APPLICATION.DSN#">
+    SELECT smg_invoice_refunds.id, smg_invoice_refunds.refund_receipt_id, smg_invoice_refunds.date, smg_invoice_refunds.amount,
+    	smg_credit.creditid, smg_credit.amount as credit_amount, smg_credit.description
+    FROM smg_invoice_refunds right join smg_credit on smg_invoice_refunds.creditid = smg_credit.id
+    WHERE smg_invoice_refunds.agentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userid#">
+    <cfif FORM.companyID EQ 5 AND form.view is not 'all'>
+    	AND smg_invoice_refunds.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.companyid#">
+    </cfif>
+    AND smg_invoice_refunds.refund_receipt_id = 0
+</cfquery>
 
-			<!--- <cfquery name="total_refund" datasource="mysql">
-			select sum(smg_credit.amount) as total_refund
-			from smg_invoice_refunds right join smg_credit on smg_invoice_refunds.creditid = smg_credit.creditid
-			where smg_invoice_refunds.agentid =#url.userid#
-			
-				<cfif form.view is not 'all'>
-				and smg_invoice_refunds.companyid = #FORM.companyID#
-				</cfif>
-			</cfquery>
-			<cfif total_refund.total_refund is ''>
-				<cfset total_refund.total_refund = 0>
-			</cfif> --->
-			
-			
-			<!----Refund Query not combined---->
-			<cfquery name="refunds" datasource="MySQL">
-			select *
-			from smg_invoice_refunds
-			where smg_invoice_refunds.agentid = #url.userid#
-			<cfif form.view is not 'all'>
-			and smg_invoice_refunds.companyid = #FORM.companyID#
-			</cfif>
-			and smg_invoice_refunds.refund_receipt_id = 0
-			</cfquery>
-			<cfquery name="refunds" datasource="MySQL">
-			select smg_invoice_refunds.id, smg_invoice_refunds.refund_receipt_id, smg_invoice_refunds.date, smg_invoice_refunds.amount,
-			smg_credit.creditid, smg_credit.amount as credit_amount, smg_credit.description
-			from smg_invoice_refunds right join smg_credit on smg_invoice_refunds.creditid = smg_credit.id
-			where smg_invoice_refunds.agentid = #url.userid#
-			<cfif FORM.companyID EQ 5 AND form.view is not 'all'>
-			and smg_invoice_refunds.companyid = #FORM.companyID#
-			</cfif>
-			and smg_invoice_refunds.refund_receipt_id = 0
-			</cfquery>
-			<!----Refund Query not combined---->
-			<cfquery name="refunds1" datasource="MySQL">
-			select  distinct smg_invoice_refunds.refund_receipt_id
-			from smg_invoice_refunds 
-			where smg_invoice_refunds.agentid = #url.userid#
-			<cfif FORM.companyID EQ 5 AND form.view is not 'all'>
-			and smg_invoice_refunds.companyid = #FORM.companyID#
-			</cfif>
-			and smg_invoice_refunds.refund_receipt_id <> 0
-			</cfquery>
-
+<!----Refund Query not combined---->
+<cfquery name="refunds1" datasource="#APPLICATION.DSN#">
+    SELECT  distinct smg_invoice_refunds.refund_receipt_id
+    FROM smg_invoice_refunds 
+    WHERE smg_invoice_refunds.agentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userid#">
+    <cfif FORM.companyID EQ 5 AND form.view is not 'all'>
+    	AND smg_invoice_refunds.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.companyid#">
+    </cfif>
+    AND smg_invoice_refunds.refund_receipt_id <> 0
+</cfquery>
 
 <script type="text/javascript">
-		
 	function displayMenu() {
 		document.getElementById("chargesMenu").style.display = "block";
 	}
@@ -369,100 +283,109 @@ END) AS testCompId --->
 	}
 </style>
 		
-<Cfoutput>
+<cfoutput>
 
-<Table width=100% border=0>
-	<tr>
-		<td width=50% valign="top">
-	
-
-
-
-<!----Overview---->
-					
-					<table width=1000% cellpadding=0 cellspacing=0 border=0 height=24>
-						<tr valign=middle height=24>
-							<td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
-							<td width=26 background="pics/header_background.gif"><img src="pics/$.gif"><img src="pics/$.gif"><img src="pics/$.gif"></td>
-							<td background="pics/header_background.gif"><h2>&nbsp;&nbsp;Overview</td><td background="pics/header_background.gif" width=16></a></td>
-							<td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
-						</tr>
-					</table>
-					
-					
-						
-					<table width=100% cellpadding=2 cellspacing=0 border=0 class="section">
-						<tr>
-							<td style="line-height:20px;" valign="top">
+	<table width=100% border=0>
+		<tr>
+			<td width=50% valign="top">
+				
+				<!----Overview---->
+				<table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
+                    <tr valign=middle height=24>
+                        <td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
+                        <td width=26 background="pics/header_background.gif"><img src="pics/$.gif"><img src="pics/$.gif"><img src="pics/$.gif"></td>
+                        <td background="pics/header_background.gif"><h2>&nbsp;&nbsp;Overview</td><td background="pics/header_background.gif" width=16></a></td>
+                        <td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
+                    </tr>
+                </table>
+				
+                <table width=100% cellpadding=2 cellspacing=0 border=0 class="section">
+					<tr>
+						<td style="line-height:20px;" valign="top">
 							<table width = 100%>
 								<tr>
 									<td valign="top" width=50%>
-                                    <cfform name="quickSearchAgentForm" id="quickSearchAgentForm" method="post" action="" style="margin:0px; padding:0px;">
-                                    	<input type="text" style="font-size:11px; font-style:italic; color:##666666;" name="quickSearchAutoSuggestAgentID" id="quickSearchAutoSuggestAgentID" value="#FORM.quickSearchAutoSuggestAgentID#" onclick="quickSearchValidation();" class="mediumField quickSearchField" maxlength="20" />
-                                        <input type="hidden" name="quickSearchAgentID" id="quickSearchAgentID" value="#FORM.quickSearchAgentID#" class="quickSearchField" />
-                                    </cfform>
-									<b>#agent_details.businessname#</b><br>
-									Agent ID: #userid#<br>
-		#agent_Details.firstname# #agent_details.lastname#<br>
-		#agent_details.city#, #agent_details.countryname#</br>
+                                    	<cfform name="quickSearchAgentForm" id="quickSearchAgentForm" method="post" action="" style="margin:0px; padding:0px;">
+                                    		<input 
+                                            	type="text" 
+                                                style="font-size:11px; font-style:italic; color:##666666;" 
+                                                name="quickSearchAutoSuggestAgentID" 
+                                                id="quickSearchAutoSuggestAgentID" 
+                                                value="#FORM.quickSearchAutoSuggestAgentID#" 
+                                                onclick="quickSearchValidation();" 
+                                                class="mediumField quickSearchField" 
+                                                maxlength="20" />
+                                        	<input 
+                                            	type="hidden" 
+                                                name="quickSearchAgentID" 
+                                                id="quickSearchAgentID" 
+                                                value="#FORM.quickSearchAgentID#" 
+                                                class="quickSearchField" />
+                                    	</cfform>
+										
+                                        <b>#agent_details.businessname#</b><br>
+										Agent ID: #userid#<br>
+                                        #agent_Details.firstname# #agent_details.lastname#<br>
+                                        #agent_details.city#, #agent_details.countryname#</br>
 		
-
-		<cfquery name="qCompShort" datasource="MySQL">
-		SELECT companyid, companyshort
-		FROM smg_companies
-		WHERE companyid != 11
-		</cfquery>
+        								<cfquery name="qCompShort" datasource="#APPLICATION.DSN#">
+                                            SELECT companyid, companyshort
+                                            FROM smg_companies
+                                            WHERE companyid != 11
+                                        </cfquery>
 		
-		<cfif client.companyid NEQ 10>
-			<cfform name="changeCompany" method="post" action="#cgi.SCRIPT_NAME#?#cgi.QUERY_STRING#">
-				<input type="hidden" name="submitted" value="1" />
-				Change company:
-				<cfselect name="companyid" query="qCompShort" display="companyshort" value="companyid" selected="#FORM.companyID#" onChange="javaScript:changeCompany.submit();">
-				</cfselect>
-			</cfform>
-		</cfif>
-
+										<cfif client.companyid NEQ 10>
+                                            <cfform name="changeCompany" method="post" action="#cgi.SCRIPT_NAME#?#cgi.QUERY_STRING#">
+                                                <input type="hidden" name="submitted" value="1" />
+                                                Change company:
+                                                <cfselect 
+                                                	name="companyid" 
+                                                    query="qCompShort" 
+                                                    display="companyshort" 
+                                                    value="companyid" 
+                                                    selected="#FORM.companyID#" 
+                                                    onChange="javaScript:changeCompany.submit();">
+                                                </cfselect>
+                                            </cfform>
+										</cfif>
 									</td>
-									
 									<td>&nbsp;</td>
 									<td valign="top" align="right">
 
-									<!---Current Balance---->
-									<table align="right">
-											<tr><strong></strong>
-												<td><b>Balance:</b></td><td><!--- <cfset balance_due = #total_due.amount_due# - #total_received.total_received# - #total_credit# + #overpayment_credit.overpayment_amount#> --->
+										<!---Current Balance---->
+                                        <table align="right">
+											<tr>
+												<td><b>Balance:</b></td><td>
 												<b>#LSCurrencyFormat(agentTotalBalance.totalPerAgent, 'local')#</b></td>
 											</tr>
-										
 											<tr>
-												<td>Last Payment</td><td>
-												<Cfquery name="recent_date" datasource="MySQL">
-												select max(date) as recent_pay
-												from smg_payment_received
-												where agentid = #url.userid#
-													<cfif form.view is not 'all'>
-													and companyid = #FORM.companyID#
-													</cfif>
-												</Cfquery>
-												<cfif recent_Date.recent_pay is ''>
-												<cfset last_payment.totalreceived = 0>
-												<cfelse>
-												
-												<cfquery name="last_payment" datasource="MySQL">
-												select totalreceived from smg_payment_received
-												where agentid = #url.userid# and date = #recent_date.recent_pay#
-												</cfquery>
-												</cfif>
-												
-												
-												
-												#LSCurrencyFormat(last_payment.totalreceived, 'local')#
+												<td>Last Payment</td>
+                                                <td>
+                                                    <cfquery name="recent_date" datasource="#APPLICATION.DSN#">
+                                                        SELECT max(date) as recent_pay
+                                                        FROM smg_payment_received
+                                                        WHERE agentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userid#">
+                                                        <cfif form.view is not 'all'>
+                                                        	AND companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.companyid#">
+                                                        </cfif>
+                                                    </cfquery>
+                                                    
+													<cfif recent_Date.recent_pay is ''>
+                                                    	<cfset last_payment.totalreceived = 0>
+                                                    <cfelse>
+                                                        <cfquery name="last_payment" datasource="#APPLICATION.DSN#">
+                                                            SELECT totalreceived 
+                                                            FROM smg_payment_received
+                                                            WHERE agentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userid#">
+                                                            AND date = #recent_date.recent_pay#
+                                                        </cfquery>
+                                                    </cfif>
+													#LSCurrencyFormat(last_payment.totalreceived, 'local')#
 												</td>
 											</tr>
 											<tr>
 												<td>Pay Date:</td><Td><cfif last_payment.totalreceived is not 0>#DateFormat(recent_date.recent_pay, 'mm/dd/yyyy')#</cfif></Td>
 											</tr>
-											
 											<tr>
 												<td>Credit</td><td>#LSCurrencyFormat(total_credit, 'local')#</td>
 											</tr>
@@ -471,49 +394,48 @@ END) AS testCompId --->
 									</td>
 								</tr>
 							</table>
-							
-							
-										
-								
+						</td>
+					</tr>
+				</table>
 					
-							</td>
-						</tr>
-						
-					</table>
-					<!----footer of table---->
-								<table width=100% cellpadding=0 cellspacing=0 border=0>
-									<tr valign=bottom >
-										<td width=9 valign="top" height=12><img src="pics/footer_leftcap.gif" ></td>
-										<td width=100% background="pics/header_background_footer.gif"></td>
-										<td width=9 valign="top"><img src="pics/footer_rightcap.gif"></td>
-									</tr>
-								</table>
-				</td>
-				<td></td>
-				<td valign="top">
-				<!----Account Options---->
+				<!----footer of table---->
+                <table width=100% cellpadding=0 cellspacing=0 border=0>
+                    <tr valign=bottom >
+                        <td width=9 valign="top" height=12><img src="pics/footer_leftcap.gif" ></td>
+                        <td width=100% background="pics/header_background_footer.gif"></td>
+                        <td width=9 valign="top"><img src="pics/footer_rightcap.gif"></td>
+                    </tr>
+                </table>
+                
+			</td>
 				
-				<table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
-						<tr valign=middle height=24>
-							<td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
-							<td width=26 background="pics/header_background.gif"><img src="pics/$.gif"><img src="pics/$.gif"><img src="pics/$.gif"></td>
-							<td background="pics/header_background.gif"><h2>&nbsp;&nbsp;Account Tasks</td><td background="pics/header_background.gif" width=16></a></td>
-							<td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
-						</tr>
-					</table>
-					
-					
-						
-					<table width=100% cellpadding=4 cellspacing=0 border=0 class="section" >
-						<tr>
-							<td style="line-height:20px;" valign="top">
-							<cfif form.view is not 'all'>
-						
-						<Table id="menuAddCharge" border=0 width=100%>
-							<tr>
-								<td onmouseover="javaScript:displayMenu()" onMouseOut="javaScript:hideMenu()">  					
-								:: <cfif client.userid is 1967><cfelse>
-								<a class=nav_bar href="" onClick="javaScript:win=window.open('invoice/add_charge.cfm?userid=#url.userid#', 'Charges', 'height=395, width=602, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"></cfif>Add Charge</a>
+         	<td></td>
+			
+            <td valign="top">
+			
+			<!----Account Options---->
+			<table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
+                <tr valign=middle height=24>
+                    <td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
+                    <td width=26 background="pics/header_background.gif"><img src="pics/$.gif"><img src="pics/$.gif"><img src="pics/$.gif"></td>
+                    <td background="pics/header_background.gif"><h2>&nbsp;&nbsp;Account Tasks</td><td background="pics/header_background.gif" width=16></a></td>
+                    <td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
+                </tr>
+            </table>
+
+			<table width=100% cellpadding=4 cellspacing=0 border=0 class="section" >
+				<tr>
+					<td style="line-height:20px;" valign="top">
+						<cfif form.view is not 'all'>
+							<table id="menuAddCharge" border=0 width=100%>
+								<tr>
+									<td onmouseover="javaScript:displayMenu()" onMouseOut="javaScript:hideMenu()">  					
+										:: 
+										<cfif client.userid NEQ 1967>
+											<a 
+                                            	class=nav_bar href="" 
+                                                onClick="javaScript:win=window.open('invoice/add_charge.cfm?userid=#url.userid#', 'Charges', 'height=395, width=602, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">
+                                                </cfif>Add Charge</a>
                                 <div class="menuInvoice" id="chargesMenu" align="justify">
                                 	<a href="" onClick="javaScript:win=window.open('invoice/add_charge.cfm?userid=#url.userid#', 'Charges', 'height=395, width=602, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">High School</a><br />
                                     <a href="" onClick="javaScript:win=window.open('invoice/m_w&t_addCharge.cfm?userid=#url.userid#', 'Charges', 'height=395, width=602, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Work & Travel</a><br />
@@ -522,11 +444,11 @@ END) AS testCompId --->
                                     <a href="" onClick="javaScript:win=window.open('invoice/m_misc_addCharge.cfm?userid=#url.userid#', 'Charges', 'height=395, width=602, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Miscellaneous</a><br />
 								</div>
                                 </td>
-                                <td>::<cfif client.userid is 1967><cfelse> <a href="?curdoc=invoice/select_invoice_type&agentid=#url.userid#"></cfif>Create Invoice</a></td>
+                                <td>::<cfif client.userid NEQ 1967> <a href="?curdoc=invoice/select_invoice_type&agentid=#url.userid#"></cfif>Create Invoice</a></td>
 								<td>:: <a class=nav_bar href="" onClick="javascript: win=window.open('invoice/issue_refund.cfm?userid=#url.userid#', 'Refund', 'height=395, width=622, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Issue Refund</a></td>
 							</tr>
 							<tr>
-								<td>:: <cfif client.userid is 1967><cfelse><a class=nav_bar href="" onClick="javascript: win=window.open('invoice/receive_payment.cfm?userid=#url.userid#', 'Payments', 'height=395, width=602, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"></cfif>Receive Payment</a></td>
+								<td>:: <cfif client.userid NEQ 1967><a class=nav_bar href="" onClick="javascript: win=window.open('invoice/receive_payment.cfm?userid=#url.userid#', 'Payments', 'height=395, width=602, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"></cfif>Receive Payment</a></td>
 								<td onmouseover="javaScript:displayMenu1()" onMouseOut="javaScript:hideMenu1()">:: <cfif client.userid is 1967><cfelse><a class=nav_bar href="" onClick="javascript: win=window.open('invoice/credit_account.cfm?userid=#url.userid#', 'Payments', 'height=395, width=602, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"></cfif>Credit Account</a>
                                 <div class="menuInvoice" id="cancellationMenu" align="justify">
                                 	<a href="" onClick="javaScript:win=window.open('invoice/m_cancelStud.cfm?userid=#url.userid#', 'Charges', 'height=800, width=1000, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Cancel a student</a><br/>
@@ -535,44 +457,35 @@ END) AS testCompId --->
 								<td>:: <a class=nav_bar href="" onClick="javascript: win=window.open('invoice/create_refund_receipt.cfm?userid=#url.userid#', 'Refund', 'height=395, width=622, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Create Refund Receipt</a></td>
 							</tr>
 							<tr>
-								<td>:: <a href="?curdoc=invoice/date_range&userid=#url.userid#">Monthly Statement</a></td><td>::<cfif client.userid is 1967><cfelse> <a href="?curdoc=forms/program_discount&userid=#url.userid#"></cfif>Fee Maintenance</a></td>
+								<td>:: <a href="?curdoc=invoice/date_range&userid=#url.userid#">Monthly Statement</a></td><td>::<cfif client.userid NEQ 1967> <a href="?curdoc=forms/program_discount&userid=#url.userid#"></cfif>Fee Maintenance</a></td>
 								<td>&nbsp;</td>
 						  </tr>
 							
-						</Table>
+							</table>
 						</cfif>
-							
-										
-								
-					
-							</td>
-						</tr>
-						
-					</table>
-					<!----footer of table---->
-								<table width=100% cellpadding=0 cellspacing=0 border=0>
-									<tr valign=bottom >
-										<td width=9 valign="top" height=12><img src="pics/footer_leftcap.gif" ></td>
-										<td width=100% background="pics/header_background_footer.gif"></td>
-										<td width=9 valign="top"><img src="pics/footer_rightcap.gif"></td>
-									</tr>
-								</table>
-				
-				
-				
-				
+					</td>
+				</tr>
+			</table>
 			
-			
-				</td>
-			</tr>
-		</table>
+			<!----footer of table---->
+            <table width=100% cellpadding=0 cellspacing=0 border=0>
+                <tr valign=bottom >
+                    <td width=9 valign="top" height=12><img src="pics/footer_leftcap.gif" ></td>
+                    <td width=100% background="pics/header_background_footer.gif"></td>
+                    <td width=9 valign="top"><img src="pics/footer_rightcap.gif"></td>
+                </tr>
+            </table>
+        
+     	</td>
+ 	</tr>
+</table>
 
 
 
 </cfoutput>
 
 <!--- test to select which query to run: current_charges OR current_charges_extra --->
-<cfquery name="selectQuery" datasource="MySQL">
+<cfquery name="selectQuery" datasource="#APPLICATION.DSN#">
 SELECT s.stuid, s.programid, sp.type AS progType
 FROM smg_charges s
 LEFT JOIN smg_programs sp ON sp.programid = s.programid
@@ -588,7 +501,7 @@ AND s.invoiceid = 0
     <cfif progType EQ 7 OR progType EQ 8 OR progType EQ 9 OR progType EQ 11 OR progType EQ 22 OR progType EQ 23>
         
 		<!----Current Charges Work not invoiced---->
-        <cfquery name="current_charges" datasource="mysql">
+        <cfquery name="current_charges" datasource="#APPLICATION.DSN#">
         SELECT s.chargeid, s.stuid, s.invoiceid, s.description, s.date, s.amount, s.type, ec.firstname, ec.lastname
         from smg_charges s
         INNER JOIN extra_candidates ec ON ec.candidateid = s.stuid
@@ -601,7 +514,7 @@ AND s.invoiceid = 0
 		<cfelse>
          
 			<!----Current Charges High School not invoiced---->
-            <cfquery name="current_charges" datasource="mysql">
+            <cfquery name="current_charges" datasource="#APPLICATION.DSN#">
             SELECT s.chargeid, s.stuid, s.invoiceid, s.description, s.date, s.amount, s.type, ss.firstname, ss.familylastname AS lastname
             from smg_charges s
             LEFT JOIN smg_students ss ON ss.studentid = s.stuid
@@ -621,13 +534,13 @@ AND s.invoiceid = 0
 		<td width=50% valign="top">
 <!----Recent Charges Not Invoiced---->
 		<table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
-								<tr valign=middle height=24>
-									<td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
-									<td width=26 background="pics/header_background.gif"><img src="pics/$.gif"><img src="pics/$.gif"><img src="pics/$.gif"></td>
-									<td background="pics/header_background.gif"><h2>&nbsp;&nbsp;Recent Charges Not Yet Invoiced</td><td background="pics/header_background.gif" width=16></a></td>
-									<td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
-								</tr>
-							</table>
+            <tr valign=middle height=24>
+                <td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
+                <td width=26 background="pics/header_background.gif"><img src="pics/$.gif"><img src="pics/$.gif"><img src="pics/$.gif"></td>
+                <td background="pics/header_background.gif"><h2>&nbsp;&nbsp;Recent Charges Not Yet Invoiced</td><td background="pics/header_background.gif" width=16></a></td>
+                <td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
+            </tr>
+        </table>
 							
 		
 								
@@ -638,18 +551,19 @@ AND s.invoiceid = 0
 			</tr>
 			<cfif selectQuery.recordcount NEQ 0>
 				<cfoutput query="current_charges">
-                    <Tr <cfif current_charges.currentrow mod 2>bgcolor="ededed"</cfif>>
-                    <td><p>E</p>
-                    <p>D</p>
-                    </td>
-                    <td>#firstname# #lastname# <cfif stuid is 0><Cfelse>(#stuid#)</cfif></td><td>#description#</td><Td>#type#</Td><td>#LSCurrencyFormat(amount,'local')#</td>
+                    <tr <cfif current_charges.currentrow mod 2>bgcolor="ededed"</cfif>>
+                    	<td>
+                        	<p>E</p>
+                    		<p>D</p>
+                    	</td>
+                    	<td>#firstname# #lastname# <cfif stuid is 0><Cfelse>(#stuid#)</cfif></td>
+                        <td>#description#</td><Td>#type#</Td><td>#LSCurrencyFormat(amount,'local')#</td>
                     </Tr>
                 </cfoutput>
-                                                	                         
-					<cfelse>				               
-                        <tr>
-                            <td colspan=5 align="center">No open charges.</td>
-                        </tr>
+			<cfelse>				               
+                <tr>
+                    <td colspan=5 align="center">No open charges.</td>
+                </tr>
 			</cfif>
 			
 		</table>
@@ -657,12 +571,12 @@ AND s.invoiceid = 0
 
 		<!----foter table---->
 		<table width=100% cellpadding=0 cellspacing=0 border=0>
-									<tr valign=bottom >
-										<td width=9 valign="top" height=12><img src="pics/footer_leftcap.gif" ></td>
-										<td width=100% background="pics/header_background_footer.gif"></td>
-										<td width=9 valign="top"><img src="pics/footer_rightcap.gif"></td>
-									</tr>
-								</table>
+            <tr valign=bottom >
+                <td width=9 valign="top" height=12><img src="pics/footer_leftcap.gif" ></td>
+                <td width=100% background="pics/header_background_footer.gif"></td>
+                <td width=9 valign="top"><img src="pics/footer_rightcap.gif"></td>
+            </tr>
+        </table>
 		
 	</td>
 	
@@ -670,21 +584,14 @@ AND s.invoiceid = 0
 	<td>
 			<!----Refunds---->
 			<table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
-								<tr valign=middle height=24>
-									<td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
-									<td width=26 background="pics/header_background.gif"><img src="pics/$.gif"><img src="pics/$.gif"><img src="pics/$.gif"></td>
-									<td background="pics/header_background.gif"><h2>&nbsp;&nbsp;Refunds </td><td background="pics/header_background.gif" align="right">
-	
-			<!----<cfif refunds.recordcount eq 0 and refunds1.recordcount eq 0 >
-			<cfelse>
-			<cfoutput>
-			<h2>Total: #LSCurrencyFormat(total_refund.total_refund,'local')#</h2>
-			</cfoutput>
-			</cfif>---->
-									</td>
-									<td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
-								</tr>
-							</table>
+                <tr valign=middle height=24>
+                    <td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
+                    <td width=26 background="pics/header_background.gif"><img src="pics/$.gif"><img src="pics/$.gif"><img src="pics/$.gif"></td>
+                    <td background="pics/header_background.gif"><h2>&nbsp;&nbsp;Refunds </td><td background="pics/header_background.gif" align="right">
+                    </td>
+                    <td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
+                </tr>
+            </table>
 							
 		
 								
@@ -700,32 +607,22 @@ AND s.invoiceid = 0
 			<cfelse>
 			<cfoutput>
 			<cfloop query="refunds">
-			<!----<cfquery name="refund_sent" datasource="mysql">
-						select amount 
-						from smg_invoice_refunds
-						where id = #refund_receipts_id#
-						</cfquery>---->
 			<tr>
 				<td><a href="invoice/refund_receipt.cfm?id=#id#&userid=#url.userid#" target="_top">#creditid#</td><td>#DateFormat(date, 'mm/dd/yyyy')#</td><td>#description#</td><td>#LSCurrencyFormat(refunds.amount,'local')#</td>
 			</tr>
 			</cfloop>
 			<cfloop query="refunds1">
-						<cfquery name="refunds1_date" datasource="MySQL">
+						<cfquery name="refunds1_date" datasource="#APPLICATION.DSN#">
 						select  distinct date 
 						from smg_invoice_refunds 
 						where refund_receipt_id = #refund_receipt_id#
 						</cfquery>
-						<cfquery name="refund_total" datasource="MySQL">
+						<cfquery name="refund_total" datasource="#APPLICATION.DSN#">
 						select sum(smg_credit.amount) as total_amount
 						from smg_invoice_refunds right join smg_credit on smg_invoice_refunds.creditid = smg_credit.creditid
 						where smg_invoice_refunds.agentid =#url.userid#
 						and smg_invoice_refunds.refund_receipt_id = #refund_receipt_id#
 						</cfquery>
-						<!----<cfquery name="refund_sent" datasource="mysql">
-						select amount 
-						from smg_invoice_refunds
-						where id = #refund_receipts_id#
-						</cfquery>---->
 				<tr>
 				<td><a href="invoice/view_refund_receipt.cfm?id=#refund_receipt_id#&userid=#url.userid#" target="_top">#refund_receipt_id#</td><td>#DateFormat(refunds1_date.date, 'mm/dd/yyyy')#</td><td><a href="invoice/view_refund_receipt.cfm?id=#refund_receipt_id#&userid=#url.userid#" target="_top">Click to see detailsls</td><td><!----#LSCurrencyFormat(refund_sent.amount,'local')#----></td>
 			</tr>
@@ -734,32 +631,6 @@ AND s.invoiceid = 0
 			</cfoutput>
 			</cfif>
 			
-			<!----
-			<cfquery name="refunds" datasource="mysql">
-			
-			</cfquery>
-						<cfif current_charges.recordcount eq 0>
-				<tr>
-					<td colspan=5 align="center">No refunds issued.</td>
-				</tr>
-			<cfelse>
-						<cfoutput query="refunds">
-			
-					<cfquery name="student_name" datasource="MySQL">
-					select firstname, familylastname
-					from smg_students
-					where studentid = #stuid#
-					</cfquery>
-					<Tr <cfif current_charges.currentrow mod 2>bgcolor="ededed"</cfif>>
-					
-					
-						<td><a class=nav_bar href="" onClick="javascript: win=window.open('invoice/edit_charge.cfm?chargeid=#chargeid#', 'Charges', 'height=395, width=602, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">	#DateFormat(date, 'mm-dd-yyyy')#</a></td><td>#student_name.firstname# #student_name.familylastname# <cfif stuid is 0><Cfelse>(#stuid#)</cfif></td><td>#description#</td><Td>#type#</Td><td>#LSCurrencyFormat(amount,'local')#</td>
-					</Tr>
-					
-					</cfoutput>
-					
-			</cfif>
-			---->
 		</table>
 		<!----foter table---->
 		<table width=100% cellpadding=0 cellspacing=0 border=0>
@@ -808,11 +679,11 @@ div.scroll {
 					</table>
 
 <!----Invoices this Month---->
-<cfquery name="current_invoices" datasource="mysql">
-SELECT invoiceid, invoicedate, SUM(amount_due) AS invoice_due, companyid 
-FROM smg_charges
-WHERE agentid = #url.userid#
-AND invoiceid <> 0
+<cfquery name="current_invoices" datasource="#APPLICATION.DSN#">
+    SELECT invoiceid, invoicedate, SUM(amount_due) AS invoice_due, companyid 
+    FROM smg_charges
+    WHERE agentid = #url.userid#
+    AND invoiceid <> 0
 <cfif form.view is not 'all'>
 	<cfswitch expression="#FORM.companyID#">
 		<cfcase value="1,2,3,4,12">
@@ -841,39 +712,11 @@ GROUP BY
 				</Td>
 				<td>Invoice</td><td>Date Created</td><td>Amount</td><td>Payments</td><td>C/C/R</td><td>Balance</td><!--- <cfif form.view is 'all'> ---><td>Comp</td><!--- </cfif> --->
 			</tr>
-
-	<!--- 			<cfset total_invoice_amount_received =0>
-				<cfquery name="invoice_totals" datasource="mysql">
-					select sum(amount_due) as invoice_due
-					from smg_charges
-					where invoiceid = #invoiceid#                    
-				</cfquery> --->
-                				
-<!--- 				<cfquery name="invoice_charge_id" datasource="MySQL">
-				select smg_charges.chargeid
-				from smg_charges 
-                where invoiceid = #invoiceid#                
-				</cfquery> --->
-				
-<!--- 				<Cfloop query="invoice_charge_id">
-					<cfquery name="get_applied_amount" datasource="mysql">
-					select amountapplied
-					from smg_payment_charges
-					where chargeid = #invoice_charge_id.chargeid#
-					</cfquery>
-                    
-						<cfloop query=get_applied_amount>
-							<cfset total_invoice_amount_received = #total_invoice_amount_received# + #get_applied_amount.amountapplied#>
-						</cfloop>
-				</Cfloop> --->
-						
-				
-				<!--- <Cfset payref.paymentref = ''> --->
 				
 				
 			<cfoutput query="current_invoices">
             	
-				<cfquery name="get_applied_amount" datasource="mysql">
+				<cfquery name="get_applied_amount" datasource="#APPLICATION.DSN#">
                 SELECT s.invoiceid, SUM(spc.amountapplied) AS total_received
                 FROM smg_payment_charges spc
                 RIGHT JOIN smg_charges s ON s.chargeid = spc.chargeid
@@ -958,7 +801,7 @@ GROUP BY
 		<Td></Td><td>Payment Ref</td><td>Payment Type</td><td>Date Received</td><td>Amount</td>
 	</tr>
 	
-<Cfquery name="payments_received" datasource="mysql">
+<Cfquery name="payments_received" datasource="#APPLICATION.DSN#">
     SELECT 
         sch.agentid, 
         su.businessname, 
@@ -1011,7 +854,7 @@ GROUP BY
 </Cfquery>
 	
 <cfoutput query="payments_received">
-	<cfquery name="totals" datasource="MySQL">
+	<cfquery name="totals" datasource="#APPLICATION.DSN#">
 	select spr.agentid, spr.paymenttype, spr.date, spr.paymentref, spr.paymenttype, sum(spc.amountapplied) as payment_total, sc.companyid
 	from smg_payment_received spr
 	right join smg_payment_charges spc on spc.paymentid = spr.paymentid
@@ -1026,7 +869,7 @@ GROUP BY
 	</cfquery>
 
 	<cfloop query="totals">
-		<cfquery name="agent_details" datasource="mysql">
+		<cfquery name="agent_details" datasource="#APPLICATION.DSN#">
 		select businessname
 		from smg_users
 		where userid = #VAL(totals.agentid)#
@@ -1058,7 +901,7 @@ GROUP BY
 
 <!----Unapplied Credits---->
 				
-<Cfquery name="credits_active" datasource="mysql">
+<Cfquery name="credits_active" datasource="#APPLICATION.DSN#">
 select sc.date, sc.type, sc.description, sc.stuid, sc.invoiceid, sc.amount, sc.creditid, sc.amount_applied, sc.credit_type, c.companyshort
 from smg_credit sc
 LEFT JOIN smg_companies c ON c.companyid = sc.companyid
@@ -1137,7 +980,7 @@ ORDER BY sc.creditid DESC, sc.stuid DESC, sc.chargeid ASC
 <br>
 <!----Applied Credits---->
 
-<Cfquery name="credits" datasource="mysql">
+<Cfquery name="credits" datasource="#APPLICATION.DSN#">
 select sc.date, sc.type, sc.description, sc.stuid, sc.invoiceid, sc.amount, sc.creditid, sc.credit_type, c.companyshort
 from smg_credit sc
 LEFT OUTER JOIN smg_companies c ON c.companyid = sc.companyid
@@ -1228,20 +1071,20 @@ ORDER BY sc.creditid DESC, sc.stuid DESC, sc.chargeid ASC
 
 <cfdirectory action="create" directory="#AppPath.uploadedFiles#invoices_pdf" mode="777">
 
-<cfquery name="getAgentInfo" datasource="MySQL">
+<cfquery name="getAgentInfo" datasource="#APPLICATION.DSN#">
 SELECT *
 FROM smg_users su
 WHERE su.userid = #url.userid#
 </cfquery>
 
 <cfif getAgentInfo.email IS NOT "" AND getAgentInfo.billing_email IS "">
-	<cfquery name="getAgentInfoSecRun" datasource="MySQL">
+	<cfquery name="getAgentInfoSecRun" datasource="#APPLICATION.DSN#">
 	UPDATE smg_users su
 	SET su.billing_email = su.email
 	WHERE userid = #url.userid#
 	</cfquery>
 	
-	<cfquery name="getAgentInfo" datasource="MySQL">
+	<cfquery name="getAgentInfo" datasource="#APPLICATION.DSN#">
 	SELECT *
 	FROM smg_users su
 	WHERE su.userid = #url.userid#
