@@ -186,7 +186,7 @@
 				SESSION.formErrors.Add("Please select a Region.");
 			}
 			
-			if ( NOT VAL(FORM.sourceCode) ) {
+			if ( NOT LEN(FORM.sourceCode) ) {
 				SESSION.formErrors.Add("Please select a Source Code.");
 			}
 			
@@ -879,7 +879,29 @@
                 <td><input type="text" name="father_cell" id="father_cell" value="#FORM.father_cell#" class="largeField" maxlength="14"></td>
             </tr>
         </table>		
-
+	<table width="95%" align="center" class="section" border="0" cellpadding="4" cellspacing="0">
+                <tr bgcolor="##e2efc7">
+                    <th align="left">Source of Host Family</th>
+                     <td>&nbsp;</td>
+                </tr>                
+                <tr>
+                    <td class="label">Source: <span class="required">*</span></td>
+                    <td> 
+                        <select name="sourceCode" class="largeField">
+	                        <option value="">Select Source</option>
+                            <option value="Church Group" <cfif FORM.sourceCode EQ "Church Group">selected</cfif>>Church Group</option>
+                         	<option value="Friend / Acquaintance" <cfif FORM.sourceCode EQ "Friend / Acquaintance">selected</cfif>>Friend / Acquaintance</option>
+                            <option value="Facebook" <cfif FORM.sourceCode EQ "Facebook">selected</cfif>>Facebook</option>
+                            <option value="Fair / Trade Show" <cfif FORM.sourceCode EQ "Fair / Trade Show">selected</cfif>>Fair / Trade Show</option> 
+                            <option value="Google Search" <cfif FORM.sourceCode EQ "Google Search">selected</cfif>>Google Search</option>
+                            <option value="Past Host Family" <cfif FORM.sourceCode EQ "Past Host Family">selected</cfif>>Past Host Family</option>
+                            <option value="Printed Material" <cfif FORM.sourceCode EQ "Printed Material">selected</cfif>>Printed Material</option>
+                            <option value="Yahoo Search" <cfif FORM.sourceCode EQ "Yahoo Search">selected</cfif>>Yahoo Search</option> 
+                            <option value="Other" <cfif FORM.sourceCode EQ "Other">selected</cfif>>Other</option> 
+                        </select>
+                    </td>
+                </tr>
+            </table> 
 		<!--- Region Information | New Host Family Only --->
         <cfif NOT qGetHostFamilyInfo.recordCount>
             <table width="95%" align="center" class="section" border="0" cellpadding="4" cellspacing="0">
@@ -901,28 +923,9 @@
                     </td>
                 </tr>
             </table> 
-             <table width="95%" align="center" class="section" border="0" cellpadding="4" cellspacing="0">
-                <tr bgcolor="##e2efc7">
-                    <th align="left">Source of Host Family</th>
-                     <td>&nbsp;</td>
-                </tr>                
-                <tr>
-                    <td class="label">Source: <span class="required">*</span></td>
-                    <td> 
-                        <select name="sourceCode" class="largeField">
-	                        <option value="">Select Source</option>
-                            <option value="Church Group" <cfif FORM.sourceCode EQ "Church Group">selected</cfif>>Church Group</option>
-                         	<option value="Friend / Acquaintance" <cfif FORM.sourceCode EQ "Friend / Acquaintance">selected</cfif>>Friend / Acquaintance</option>
-                            <option value="Facebook" <cfif FORM.sourceCode EQ "Facebook">selected</cfif>>Facebook</option>
-                            <option value="Google Search" <cfif FORM.sourceCode EQ "Google Search">selected</cfif>>Google Search</option>
-                            <option value="Past Host Family" <cfif FORM.sourceCode EQ "Past Host Family">selected</cfif>>Past Host Family</option>
-                            <option value="Printed Material" <cfif FORM.sourceCode EQ "Printed Material">selected</cfif>>Printed Material</option>
-                            <option value="Yahoo Search" <cfif FORM.sourceCode EQ "Yahoo Search">selected</cfif>>Yahoo Search</option> 
-                        </select>
-                    </td>
-                </tr>
-            </table> 			
-        </cfif>
+                </cfif>
+             			
+    
 
 
         <table width="95%" align="center" class="section" border="0" cellpadding="4" cellspacing="0">
