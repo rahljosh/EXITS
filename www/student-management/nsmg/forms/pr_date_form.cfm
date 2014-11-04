@@ -83,6 +83,8 @@
     <!--- Loop Through Months in a season | July needs to be included here --->
     <cfloop from="#qGetSeasonDateRange.startDate#" to="#qGetSeasonDateRange.endDate#" index="i" step="#CreateTimeSpan(31,0,0,0)#">
        	
+        	<cfset i = DateAdd('m', -1, i)>
+        
         <cfif CLIENT.pr_rmonth EQ DatePart('m', i)>
 			<cfset vSetStartDate =  DateAdd('m', -1, DatePart("yyyy", i) & '-' & DatePart("m", i) & '-01')>
             <cfset vSetEndDate = CreateDate(year(vSetStartDate), month(vSetStartDate), DaysInMonth(vSetStartDate))>
