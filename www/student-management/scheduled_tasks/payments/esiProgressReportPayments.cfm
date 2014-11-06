@@ -54,7 +54,7 @@
                 on st.studentID = fldep.studentiD
     LEFT OUTER JOIN smg_user_payment_special sppmt on pr.fk_sr_user = sppmt.fk_userID and 
                     ((st.studentID = sppmt.forStudent and sppmt.specialpaymenttype = "block") or sppmt.receivesProgressReportPayments = 0)
-	WHERE st.programID > 339
+	WHERE st.programID > 370
 	AND st.companyid = 14
 	AND pr.pr_ny_approved_date is not null
 	AND pr.fk_reportType = 1  
