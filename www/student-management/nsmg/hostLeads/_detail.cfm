@@ -246,7 +246,8 @@
                         
                             HostAppStatus,
                             applicationSent,
-                            sourceCode
+                            sourceCode,
+                            sourceType
                     )
                     VALUES 
                     (
@@ -266,7 +267,8 @@
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionid#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="9">,
                         <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetHostLead.hearAboutUs#">
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetHostLead.hearAboutUs#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="Lead">
                     )  
                 </cfquery>
 				<!----Insert Host ID into HostLead Table, so we know the app has been sent---->
