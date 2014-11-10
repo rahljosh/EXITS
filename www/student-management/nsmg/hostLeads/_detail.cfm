@@ -242,11 +242,11 @@
                         password,
                         companyID, 
                         regionid,
-                        <!--- Create Online Application ---> 
+                        
                         
                             HostAppStatus,
                             applicationSent,
-                            sourceType
+                            sourceCode
                     )
                     VALUES 
                     (
@@ -265,7 +265,7 @@
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostLead.companyID#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionid#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="9">,
-                        <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
+                        <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetHostLead.hearAboutUs#">
                     )  
                 </cfquery>
