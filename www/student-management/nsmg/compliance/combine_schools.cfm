@@ -129,7 +129,7 @@
 	<!--- MOVE SCHOOL HISTORY TRACKING --->
 	<cfquery datasource="MySQL">
 		UPDATE 
-        	smg_hosthistoryTracking
+        	smg_hosthistorytracking
 		SET 
         	fieldID = <cfqueryparam value="#FORM.to#" cfsqltype="cf_sql_integer">
 		WHERE 
