@@ -655,9 +655,8 @@
                     cbc.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#">
 				</cfif>
                 
-                ORDER BY	
-                	c.companyID,
-                    cbc.hostID
+                GROUP BY hostID, cbc_type, familyID
+                ORDER BY c.companyID, cbc.hostID
                 
                 <!--- If running batch, limit to 20 so we don't get time outs --->
                 <cfif VAL(ARGUMENTS.batch)>
