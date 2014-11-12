@@ -30,16 +30,22 @@
     <cfif VAL(FORM.submitted)>
 
         <cfquery name="qGetResults" datasource="#APPLICATION.DSN#">
-            SELECT *
-            FROM v_esi_payments_detail
+            SELECT 
+            	vepd.*,
+                CASE 
+                	WHEN s.active = 1 THEN "Active"
+                	ELSE "Inactive"
+                	END AS status
+            FROM v_esi_payments_detail vepd
+            INNER JOIN smg_students s ON s.studentID = vepd.StudentID
             WHERE 1 = 1
             <cfif VAL(FORM.seasonID)>
-                AND `Season Name` IN (SELECT season FROM smg_seasons WHERE seasonID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#" list="yes">))
+                AND vepd.`Season Name` IN (SELECT season FROM smg_seasons WHERE seasonID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#" list="yes">))
             </cfif>
             <cfif FORM.period EQ "January">
-            	AND `Program Type` IN (SELECT programName FROM smg_programs WHERE type IN (2,4))
+            	AND vepd.`Program Type` IN (SELECT programName FROM smg_programs WHERE type IN (2,4))
             <cfelseif FORM.period EQ "August">
-                AND `Program Type` IN (SELECT programName FROM smg_programs WHERE type IN (1,3))
+                AND vepd.`Program Type` IN (SELECT programName FROM smg_programs WHERE type IN (1,3))
             </cfif>
         </cfquery>
 
@@ -125,11 +131,12 @@
     <cfheader name="Content-Disposition" value="attachment; filename=ESI Payments Report.xls">
     
     <table width="98%" cellpadding="4" cellspacing="0" align="center" border="1">
-        <tr><th colspan="20">ESI Payments Report - <cfoutput>#DateFormat(NOW(),'mm/dd/yyyy')# #TimeFormat(NOW(),'h:mm tt')#</cfoutput></th></tr>
+        <tr><th colspan="21">ESI Payments Report - <cfoutput>#DateFormat(NOW(),'mm/dd/yyyy')# #TimeFormat(NOW(),'h:mm tt')#</cfoutput></th></tr>
         <tr style="font-weight:bold; text-decoration:underline;">
             <td>First Name</td>
             <td>Last Name</td>
             <td>StudentID</td>
+            <td>Status</td>
             <td>Program Type</td>
             <td>Agent</td>
             <td>Region Name</td>
@@ -170,6 +177,7 @@
                 <td #vRowColor#>#qGetResults['First Name'][CurrentRow]#</td>
                 <td #vRowColor#>#qGetResults['Last Name'][CurrentRow]#</td>
                 <td #vRowColor#>#qGetResults['StudentID'][CurrentRow]#</td>
+                <td #vRowColor#>#qGetResults['Status'][CurrentRow]#</td>
                 <td #vRowColor#>#qGetResults['Program Type'][CurrentRow]#</td>
                 <td #vRowColor#>#qGetResults['Agent'][CurrentRow]#</td>
                 <td #vRowColor#>#qGetResults['Region Name'][CurrentRow]#</td>
