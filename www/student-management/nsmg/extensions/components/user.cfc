@@ -802,7 +802,11 @@ setUserSessionPaperwork
 				stUserPaperwork.isTrainingCompleted = true;
 				stUserPaperwork.isDOSCertificationCompleted = true;
 			}
-			
+			// DASH - Only Agreement and CBC - No References, employment history, trainings and DOS Certification
+			if ( CLIENT.companyID EQ APPLICATION.SETTINGS.COMPANYLIST.DASH ) {
+				
+				stUserPaperwork.isDOSCertificationCompleted = true;
+			}
 			
 			// Check if initial paperwork have been submitted by the user (Agreement, CBC Authorization, Employment History, References)
 			if ( 	
@@ -2224,7 +2228,6 @@ setUserSessionPaperwork
 				vReturnStruct.dateExpired = "";
 				vReturnStruct.isDOSCertificationValid = false;
 			}
-			
 			return vReturnStruct;
 		</cfscript>
         
