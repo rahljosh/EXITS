@@ -806,6 +806,7 @@ setUserSessionPaperwork
 			if ( CLIENT.companyID EQ APPLICATION.SETTINGS.COMPANYLIST.DASH ) {
 				
 				stUserPaperwork.isDOSCertificationCompleted = true;
+				stUserPaperwork.isTrainingCompleted = true;
 			}
 			
 			// Check if initial paperwork have been submitted by the user (Agreement, CBC Authorization, Employment History, References)
