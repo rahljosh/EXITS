@@ -33,6 +33,10 @@
 			// CANADA
 			CLIENT.org_code = CLIENT.companyid;
 			bgcolor ='B5D66E';
+		} else if ( CLIENT.companyid EQ 15 ) {
+			// CANADA
+			CLIENT.org_code = CLIENT.companyid;
+			bgcolor ='B5D66E';
 		} else {
 			// EXITS APPLICATION
 			CLIENT.org_code = 5;
