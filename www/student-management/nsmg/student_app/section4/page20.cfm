@@ -200,7 +200,7 @@ and sc.fk_companyid = #client.companyid#
 </cfif>
 
 
-<!--- Do not display for ESI or Canada Application --->
+<!--- Do not display for ESI or Canada Application 
 <cfif CLIENT.companyID EQ 14 OR ListFind("14,15,16", get_student_info.app_indicated_program)> 
 	
     <div class="section"><br>
@@ -209,7 +209,7 @@ and sc.fk_companyid = #client.companyid#
         <Br><br><BR>
 	</div>
     
-<cfelse>
+<cfelse> --->
 
 	<div class="section"><br>
 
