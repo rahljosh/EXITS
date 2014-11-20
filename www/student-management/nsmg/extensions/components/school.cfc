@@ -168,7 +168,8 @@
                     p.programName,
                     p.seasonid,
                     c.companyShort,
-                    r.regionName               
+                    r.regionName,
+                    vuh.`Regional Manager Email` AS rmEmail               
                 FROM
                     smg_students s
                 INNER JOIN
@@ -187,6 +188,8 @@
                     smg_schools sc ON sh.schoolID = sc.schoolID
                         AND
                             sc.schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.schoolID#">
+                INNER JOIN
+                	v_user_hierarchy vuh ON r.regionID = vuh.`Region ID`
                
                 WHERE s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
                	AND ( sh.datePlacedEnded > p.startDate or sh.datePlacedEnded is null )
