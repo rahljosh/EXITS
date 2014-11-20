@@ -201,15 +201,15 @@ and sc.fk_companyid = #client.companyid#
 
 
 <!--- Do not display for ESI or Canada Application 
-<cfif CLIENT.companyID EQ 14 OR ListFind("14,15,16", get_student_info.app_indicated_program)> 
+<cfif CLIENT.companyID EQ 14 OR ListFind("14,15,16", get_student_info.app_indicated_program)>  
 	
     <div class="section"><br>
         <br><Br><br>
         <h2 align=center>This page does not apply to your program.</h2>
         <Br><br><BR>
-	</div>
+	</div> --->
     
-<cfelse> --->
+<cfelse> 
 
 	<div class="section"><br>
 
