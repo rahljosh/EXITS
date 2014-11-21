@@ -207,11 +207,11 @@ and sc.fk_companyid = #client.companyid#
         <br><Br><br>
         <h2 align=center>This page does not apply to your program.</h2>
         <Br><br><BR>
-	</div> --->
+	</div>
     
-<cfelse> 
+<cfelse>  --->
 
-	<div class="section"><br>
+	<div class="section"><br> 
 
 		<!--- Check uploaded file - Upload File Button --->
         <cfinclude template="../check_uploaded_file.cfm">
@@ -283,7 +283,7 @@ and sc.fk_companyid = #client.companyid#
 	<!--- PAGE BUTTONS --->
     <cfinclude template="../page_buttons.cfm">
 
-</Cfif>
+<!--- </Cfif> -->
 
 </cfoutput>
 
