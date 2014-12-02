@@ -44,7 +44,7 @@
                     dateCreated,
                     dateUpdated
 				FROM
-                	applicationLookUp
+                	applicationlookup
 				WHERE
                     fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.fieldKey#">
                 
@@ -127,7 +127,7 @@
                     <!--- Entered By --->
                     CAST(CONCAT(u.firstName, ' ', u.lastName,  ' ##', u.userID) AS CHAR) AS enteredBy
 				FROM
-                	applicationHistory ah 
+                	applicationhistory ah 
                 LEFT OUTER JOIN
                 	smg_users u ON u.userID = ah.enteredByID    
                 WHERE
@@ -192,7 +192,7 @@
         <cfquery 
         	datasource="#APPLICATION.DSN#">
                 INSERT
-                    applicationHistory
+                    applicationhistory
                  (
                     applicationID,
                     foreignTable,
@@ -228,7 +228,7 @@
         <cfquery 
         	datasource="#APPLICATION.DSN#">
                 UPDATE
-                    applicationHistory
+                    applicationhistory
                 SET
                 	isResolved = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isResolved)#">
                 WHERE
@@ -473,7 +473,7 @@
 				FROM
                 	smg_countryLanguageJN clJN
                 INNER JOIN
-					applicationLookUp alu ON alu.fieldID = clJN.languageID
+					applicationlookup alu ON alu.fieldID = clJN.languageID
                     	AND
                         	fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="language">
                 WHERE 

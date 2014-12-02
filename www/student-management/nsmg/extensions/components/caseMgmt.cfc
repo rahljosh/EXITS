@@ -56,7 +56,7 @@
                    
             SELECT 
             	*
-            FROM smg_caseMgmt_caseLevel
+            FROM smg_casemgmt_caseLevel
             WHERE isActive = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.isActive#">
         
           </cfquery>  
@@ -74,7 +74,7 @@
                    
             SELECT 
             	*
-            FROM smg_caseMgmt_caseStatus
+            FROM smg_casemgmt_casestatus
             WHERE isActive = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.isActive#">
         
           </cfquery>  
@@ -92,7 +92,7 @@
                    
             SELECT 
             	*
-            FROM smg_caseMgmt_casePrivacy
+            FROM smg_casemgmt_caseprivacy
             WHERE isActive = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.isActive#">
         
           </cfquery>  
@@ -135,7 +135,7 @@
         <cfquery 
 			name="qCaseDates" 
 			datasource="#APPLICATION.DSN#">
-            update smg_caseMgmt_cases
+            update smg_casemgmt_cases
             	set caseDateOpened = <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">,
                     fk_caseUpdatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">,
                     fk_caseUpdated = <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">,
@@ -191,20 +191,20 @@
        
 		  <!----insert the students associated with the case---->
             <cfquery datasource="#APPLICATION.DSN#">
-            delete from smg_caseMgmt_case_tags
+            delete from smg_casemgmt_case_tags
             where caseID = <cfqueryparam cfsqltype="cf_sql_integer" value="#vCaseID#"> 
             </cfquery>
             
             <Cfloop list="#ARGUMENTS.tags#" index=tagID>
             <cfquery datasource="#APPLICATION.DSN#">
-            Insert into smg_caseMgmt_case_tags (caseID, tagID)	
+            Insert into smg_casemgmt_case_tags (caseID, tagID)	
             			values(<cfqueryparam cfsqltype="cf_sql_integer" value="#vCaseID#">,<cfqueryparam cfsqltype="cf_sql_integer" value="#tagID#">)
             </cfquery>
             </Cfloop>
             
             <!----Insert Regional Manager of Case---->
                 <Cfquery  datasource="#APPLICATION.DSN#">
-                delete from smg_caseMgmt_users_involved
+                delete from smg_casemgmt_users_involved
                 where fk_caseid = <cfqueryparam cfsqltype="cf_sql_integer" value="#vCaseID#"> 
                 </Cfquery>  
             <cfloop list="#ARGUMENTS.studentList#" index="i">
@@ -225,7 +225,7 @@
                 <cfquery
                     name="assignStudentsToCase"
                     datasource="#APPLICATION.DSN#">
-                    INSERT INTO smg_caseMgmt_users_involved (fk_caseID, fk_hostid, fk_studentid, fk_arearep, fk_regionalManager)
+                    INSERT INTO smg_casemgmt_users_involved (fk_caseID, fk_hostid, fk_studentid, fk_arearep, fk_regionalManager)
                     								values  (<cfqueryparam cfsqltype="cf_sql_integer" value="#vCaseID#">,
                                                     		 <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.hostid#">,
                                                              <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.studentid#">,
@@ -299,10 +299,10 @@
             FROM smg_casemgmt_cases cases
             LEFT JOIN smg_users owner on owner.userid = cases.fk_caseOwner
             LEFT JOIN smg_users creator on creator.userid = cases.fk_caseCreatedBy
-            LEFT JOIN smg_caseMgmt_casePrivacy cp on cp.id = cases.casePrivacy
-            LEFT JOIN smg_caseMgmt_caseLevel cl on cl.id = cases.caseLevel
-            LEFT JOIN smg_caseMgmt_caseStatus cs on cs.id = cases.caseStatus
-            LEFT JOIN smg_caseMgmt_users_involved cmui on cmui.fk_caseid = cases.caseid
+            LEFT JOIN smg_casemgmt_caseprivacy cp on cp.id = cases.casePrivacy
+            LEFT JOIN smg_casemgmt_caseLevel cl on cl.id = cases.caseLevel
+            LEFT JOIN smg_casemgmt_casestatus cs on cs.id = cases.caseStatus
+            LEFT JOIN smg_casemgmt_users_involved cmui on cmui.fk_caseid = cases.caseid
             WHERE
             <cfif val(ARGUMENTS.caseID)>
              cases.caseid = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.caseID#">
@@ -418,7 +418,7 @@
                 SELECT 
                     *
                 FROM smg_casemgmt_cases cmc
-                LEFT JOIN smg_caseMgmt_users_involved cmui on cmui.fk_caseid = cmc.caseid
+                LEFT JOIN smg_casemgmt_users_involved cmui on cmui.fk_caseid = cmc.caseid
                 
                 WHERE 1 = 1 
                 <Cfif val(arguments.personid)>
@@ -485,7 +485,7 @@
 			datasource="#APPLICATION.DSN#">
             SELECT
            CAST(CONCAT(u.firstName, ' ', u.LastName) AS CHAR) AS loopedInInfo
-            from smg_caseMgmt_loopedin li          
+            from smg_casemgmt_loopedin li          
             left join smg_users u on u.userid = li.email 
             WHERE fk_caseid = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.caseid#">
 	
@@ -511,11 +511,11 @@
             FROM smg_casemgmt_cases cases
             LEFT JOIN smg_users owner on owner.userid = cases.fk_caseOwner
             LEFT JOIN smg_users creator on creator.userid = cases.fk_caseCreatedBy
-            LEFT JOIN smg_caseMgmt_casePrivacy cp on cp.id = cases.casePrivacy
-            LEFT JOIN smg_caseMgmt_caseLevel cl on cl.id = cases.caseLevel
-            LEFT JOIN smg_caseMgmt_caseStatus cs on cs.id = cases.caseStatus
-            LEFT JOIN smg_caseMgmt_users_involved cmui on cmui.fk_caseid = cases.caseid
-            LEFT JOIN smg_caseMgmt_loopedin li on li.fk_caseid  = cases.caseid
+            LEFT JOIN smg_casemgmt_caseprivacy cp on cp.id = cases.casePrivacy
+            LEFT JOIN smg_casemgmt_caseLevel cl on cl.id = cases.caseLevel
+            LEFT JOIN smg_casemgmt_casestatus cs on cs.id = cases.caseStatus
+            LEFT JOIN smg_casemgmt_users_involved cmui on cmui.fk_caseid = cases.caseid
+            LEFT JOIN smg_casemgmt_loopedin li on li.fk_caseid  = cases.caseid
                 WHERE (cases.fk_caseOwner = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.personid#">
                 OR cmui.fk_arearep  = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.personid#"> 
                 OR cmui.fk_regionalManager = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.personid#">
@@ -545,11 +545,11 @@
             FROM smg_casemgmt_cases cases
             LEFT JOIN smg_users owner on owner.userid = cases.fk_caseOwner
             LEFT JOIN smg_users creator on creator.userid = cases.fk_caseCreatedBy
-            LEFT JOIN smg_caseMgmt_casePrivacy cp on cp.id = cases.casePrivacy
-            LEFT JOIN smg_caseMgmt_caseLevel cl on cl.id = cases.caseLevel
-            LEFT JOIN smg_caseMgmt_caseStatus cs on cs.id = cases.caseStatus
-            LEFT JOIN smg_caseMgmt_users_involved cmui on cmui.fk_caseid = cases.caseid
-            LEFT JOIN smg_caseMgmt_loopedin li on li.fk_caseid = cases.caseid
+            LEFT JOIN smg_casemgmt_caseprivacy cp on cp.id = cases.casePrivacy
+            LEFT JOIN smg_casemgmt_caseLevel cl on cl.id = cases.caseLevel
+            LEFT JOIN smg_casemgmt_casestatus cs on cs.id = cases.caseStatus
+            LEFT JOIN smg_casemgmt_users_involved cmui on cmui.fk_caseid = cases.caseid
+            LEFT JOIN smg_casemgmt_loopedin li on li.fk_caseid = cases.caseid
             WHERE (li.email = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.personid#">)
          		and cases.caseStatus != 2 
 			and cases.isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
@@ -572,7 +572,7 @@
                 s.firstname, s.familylastname, s.studentid, r.regionname, f.`Facilitator First Name` as facFirstName, f.`Facilitator Last Name` as facLastName,
                 (SELECT MAX(casedate) FROM smg_casemgmt_case_items WHERE caseid = cases.caseid) AS lastPerCommentDate
                 from smg_casemgmt_cases cases
-                left join smg_caseMgmt_casestatus cs on cs.id = cases.caseStatus
+                left join smg_casemgmt_casestatus cs on cs.id = cases.caseStatus
                 left join smg_casemgmt_users_involved ui on ui.fk_caseid = cases.caseid
                 left join smg_students s on s.studentid = ui.fk_studentid
                 left join smg_regions r on r.regionid = s.regionassigned
@@ -602,7 +602,7 @@
                  s.firstname, s.familylastname, s.studentid, r.regionname, f.`Facilitator First Name` as facFirstName, f.`Facilitator Last Name` as facLastName,
                  (SELECT MAX(casedate) FROM smg_casemgmt_case_items WHERE caseid = cases.caseid) AS lastPerCommentDate
                 from smg_casemgmt_cases cases
-                left join smg_caseMgmt_casestatus cs on cs.id = cases.caseStatus
+                left join smg_casemgmt_casestatus cs on cs.id = cases.caseStatus
                 left join smg_casemgmt_loopedin li on li.fk_caseid = cases.caseid
                 left join smg_casemgmt_users_involved ui on ui.fk_caseid = cases.caseid
                 left join smg_students s on s.studentid = ui.fk_studentid
@@ -630,7 +630,7 @@
                 select cases.caseDateOpened, cs.status as caseStatus, cases.caseSubject, cases.caseid,
                  s.firstname, s.familylastname, s.studentid
                 from smg_casemgmt_cases cases
-                left join smg_caseMgmt_casestatus cs on cs.id = cases.caseStatus
+                left join smg_casemgmt_casestatus cs on cs.id = cases.caseStatus
                 left join smg_casemgmt_loopedin li on li.fk_caseid = cases.caseid
                 left join smg_casemgmt_users_involved ui on ui.fk_caseid = cases.caseid
                 left join smg_students s on s.studentid = ui.fk_studentid

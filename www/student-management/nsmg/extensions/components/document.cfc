@@ -160,7 +160,7 @@
                     dateCreated,
                     dateUpdated
 				FROM
-                	documentType
+                	documenttype
 				WHERE
                 	1 = 1
                     
@@ -228,7 +228,7 @@
                 FROM 
                     document d
 				LEFT OUTER JOIN                      
-                	documentType dt ON dt.ID = d.documentTypeID
+                	documenttype dt ON dt.ID = d.documentTypeID
 				LEFT OUTER JOIN
                 	smg_seasons s ON s.seasonID = d.seasonID
                 LEFT OUTER JOIN
