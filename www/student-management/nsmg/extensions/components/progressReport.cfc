@@ -315,7 +315,7 @@
                 FROM 
                 	progress_reports pr
                 LEFT OUTER JOIN    
-                    secondVisitAnswers sva ON sva.fk_reportID = pr.pr_ID
+                    secondvisitanswers sva ON sva.fk_reportID = pr.pr_ID
                 WHERE 
                 	1 = 1
                     
@@ -385,7 +385,7 @@
                     pReport.pr_ny_approved_date,
                     pReport.pr_rejected_date      
                 FROM
-                    secondVisitAnswers sva
+                    secondvisitanswers sva
                 INNER JOIN        
                     progress_reports pReport ON pReport.pr_id = sva.fk_reportID
                         AND
@@ -447,7 +447,7 @@
         <cfquery 
 			datasource="#APPLICATION.DSN#">
                 UPDATE 
-                    secondVisitAnswers
+                    secondvisitanswers
                 SET 
                     dateCompliance = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.dateCompliance#" null="#NOT IsDate(ARGUMENTS.dateCompliance)#">
                 WHERE 

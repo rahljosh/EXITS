@@ -3089,7 +3089,7 @@
                 LEFT OUTER JOIN
                 	smg_users u ON u.userID = hl.areaRepID    
                 LEFT OUTER JOIN
-                	applicationLookUp alk ON alk.fieldID = hl.statusID 
+                	applicationlookup alk ON alk.fieldID = hl.statusID 
                     	AND 
                             alk.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="hostLeadStatus">
                 WHERE
@@ -3185,7 +3185,7 @@
                 LEFT OUTER JOIN
                 	smg_users u ON u.userID = hl.areaRepID    
                 LEFT OUTER JOIN
-                	applicationLookUp alk ON alk.fieldID = hl.statusID 
+                	applicationlookup alk ON alk.fieldID = hl.statusID 
                     	AND 
                             alk.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="hostLeadStatus">
                 WHERE
@@ -3293,7 +3293,7 @@
                 LEFT OUTER JOIN
                 	smg_users u ON u.userID = hl.areaRepID    
                 LEFT OUTER JOIN
-                	applicationLookUp alk ON alk.fieldID = hl.statusID 
+                	applicationlookup alk ON alk.fieldID = hl.statusID 
                     	AND 
                             alk.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="hostLeadStatus">
                 WHERE
@@ -3701,7 +3701,7 @@
                 LEFT OUTER JOIN
                 	smg_users u ON u.userID = hl.areaRepID    
                 LEFT OUTER JOIN
-                	applicationLookUp alk ON alk.fieldID = hl.statusID 
+                	applicationlookup alk ON alk.fieldID = hl.statusID 
                     	AND 
                             alk.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="hostLeadStatus">
                 WHERE
@@ -3993,7 +3993,7 @@
                 LEFT OUTER JOIN
                 	smg_users u ON u.userID = hl.areaRepID    
                 LEFT OUTER JOIN
-                	applicationLookUp alk ON alk.fieldID = hl.statusID 
+                	applicationlookup alk ON alk.fieldID = hl.statusID 
                     	AND 
                             alk.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="hostLeadStatus">
                 WHERE
@@ -4094,7 +4094,7 @@
                 LEFT OUTER JOIN
                 	smg_users u ON u.userID = hl.areaRepID    
                 LEFT OUTER JOIN
-                	applicationLookUp alk ON alk.fieldID = hl.statusID 
+                	applicationlookup alk ON alk.fieldID = hl.statusID 
                     	AND 
                             alk.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="hostLeadStatus">
                 WHERE

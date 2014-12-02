@@ -501,9 +501,9 @@ setUserSessionPaperwork
                     alup.isActive,
                     surJN.userID
                 FROM
-                	applicationLookUp alup                
+                	applicationlookup alup                
                 LEFT OUTER JOIN
-                	smg_users_role_JN surJN ON alup.fieldID = surJN.roleID
+                	smg_users_role_jn surJN ON alup.fieldID = surJN.roleID
                     AND
                     	surJN.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.userID)#">
                 WHERE
@@ -886,11 +886,11 @@ setUserSessionPaperwork
                     u.lastName,
                     alup.name
                 FROM
-                	smg_users_role_JN surJN
+                	smg_users_role_jn surJN
 				INNER JOIN   
                     smg_users u ON surJN.userID = u.userID
                 INNER JOIN
-                	applicationLookup alup on alup.fieldID = surJN.roleID                
+                	applicationlookup alup on alup.fieldID = surJN.roleID                
                 	AND
                     	alup.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="userRole">
                 WHERE	
@@ -2115,7 +2115,7 @@ setUserSessionPaperwork
                 FROM 
                     smg_users_training sut
 				INNER JOIN	
-                	applicationLookUP alup ON alup.fieldID = sut.training_id 
+                	applicationlookup alup ON alup.fieldID = sut.training_id 
                     	AND 
                         	fieldkey = <cfqueryparam cfsqltype="cf_sql_varchar" value="smgUsersTraining">
 				LEFT OUTER JOIN
@@ -2496,7 +2496,7 @@ setUserSessionPaperwork
                 LEFT OUTER JOIN
                 	smg_users_training sut ON sut.user_ID = u.userID
 				LEFT OUTER JOIN
-                	applicationLookUP alup ON alup.fieldID = sut.training_id 
+                	applicationlookup alup ON alup.fieldID = sut.training_id 
                     	AND 
                         	fieldkey = <cfqueryparam cfsqltype="cf_sql_varchar" value="smgUsersTraining">
                 WHERE	
@@ -2556,7 +2556,7 @@ setUserSessionPaperwork
                             AND	
                             	training_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.trainingID#">
                     LEFT OUTER JOIN
-                        applicationLookUP alup ON alup.fieldID = sut.training_id 
+                        applicationlookup alup ON alup.fieldID = sut.training_id 
                             AND 
                                 fieldkey = <cfqueryparam cfsqltype="cf_sql_varchar" value="smgUsersTraining">
                     WHERE	
@@ -2625,7 +2625,7 @@ setUserSessionPaperwork
                         AND	
                             training_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.trainingID#">
                 LEFT OUTER JOIN
-                    applicationLookUP alup ON alup.fieldID = sut.training_id 
+                    applicationlookup alup ON alup.fieldID = sut.training_id 
                         AND 
                             fieldkey = <cfqueryparam cfsqltype="cf_sql_varchar" value="smgUsersTraining">
                 WHERE	

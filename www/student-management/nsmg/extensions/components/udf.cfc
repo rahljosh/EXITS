@@ -157,6 +157,8 @@
 				FindNoCase("119cooper", CGI.http_host) 
 			OR
 				FindNoCase("111cooper", CGI.http_host)
+			OR
+				FindNoCase("exitsdev", CGI.http_host)
 			){
 				return(true);
 			} else {
