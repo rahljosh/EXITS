@@ -193,7 +193,7 @@ smg_charges
         LEFT JOIN smg_states sst ON ss.state_guarantee = sst.id
         LEFT JOIN smg_users su ON ss.intrep = su.userid
         LEFT JOIN smg_insurance_type si ON si.insutypeid = su.insurance_typeid
-        LEFT JOIN smg_hostHistory shist ON shist.studentID = ss.studentID AND isActive = 1
+        LEFT JOIN smg_hosthistory shist ON shist.studentID = ss.studentID AND isActive = 1
         WHERE ss.active = 1
         AND intrep != 0
         <cfif form.placed EQ 1>
