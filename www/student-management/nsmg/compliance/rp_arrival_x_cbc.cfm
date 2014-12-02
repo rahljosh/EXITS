@@ -70,7 +70,7 @@
 			u.firstname as repfirstname, u.lastname as replastname, u.userid,
 			h.familylastname as hostlastname
 		FROM smg_students s
-		INNER JOIN smg_users U ON u.userid = s.placerepid
+		INNER JOIN smg_users u ON u.userid = s.placerepid
 		INNER JOIN smg_hosts h ON h.hostid = s.hostid
 		WHERE s.active = '1' 
 			AND s.regionassigned = '#current_region#' 
