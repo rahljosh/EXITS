@@ -471,7 +471,7 @@
                     clJN.dateUpdated,
                     alu.name
 				FROM
-                	smg_countryLanguageJN clJN
+                	smg_countrylanguagejn clJN
                 INNER JOIN
 					applicationlookup alu ON alu.fieldID = clJN.languageID
                     	AND
