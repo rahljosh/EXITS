@@ -1220,7 +1220,7 @@
                     </td>
 				</tr>
 				  	<tr>
-					<td align="right">Work Phone: <span class="redtext">+</span></td>
+					<td align="right">ISE Contact Number: <span class="redtext">+</span></td>
 					<td>
 						<!---- Int. Reps ---->
                         <cfif FORM.usertype EQ 8>

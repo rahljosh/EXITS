@@ -43,7 +43,7 @@
 		<td align="right">&nbsp;&nbsp;&nbsp;Home Phone:</td><Td align="left"> <cfinput type=text name="home_phone" size=12></td>
 	</tr>
 	<Tr>
-		<td align="right">Work Phone: </td><td align="left"><cfinput type=text name="work_phone" size=12></td>
+		<td align="right">ISE Contact Number: </td><td align="left"><cfinput type=text name="work_phone" size=12></td>
 	</tr>
 	<tr>
 		<td align="right">Fax:</td><td align="left"><cfinput type=text name=fax size=12></td>
