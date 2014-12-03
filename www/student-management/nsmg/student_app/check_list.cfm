@@ -616,17 +616,6 @@
 
 	<!--- PAGE 14 --->
 	<tr><td><a href="index.cfm?curdoc=section3/page14&id=3&p=14"><h3>Page [14] - Authorization to Treat a Minor</h3></a></td></tr>
-	<cfloop query="page14">
-		<cfset get_field = page14.table_located &"."& page14.field_name>
-		<cfif NOT LEN(Evaluate(get_field)) AND required EQ 1>
-			<tr><td><font color="FF0000">#field_label#</font><br></td></tr> 
-			<cfset count14 = 1> <cfset countRed = countRed + 1>
-		<cfelseif NOT LEN(Evaluate(get_field)) AND NOT VAL(required)>
-			<tr><td><font color="0000FF">#field_label#</font><br></td></tr> 
-			<cfset count14 = 1>
-		</cfif>
-	</cfloop>
-    
 	<cfif check_14_upload.recordcount EQ 0>
 		<tr><td><font color="FF0000">This page has not been uploaded. You must print, sign, scan and upload this page.</font><br></td></tr>
 		<cfset count14 = 1>
