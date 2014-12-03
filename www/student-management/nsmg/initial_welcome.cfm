@@ -235,7 +235,7 @@
             p.programname,
             u.firstname as repFirst, u.lastname as repLast, r.regionname
             from smg_students s
-            left outer join smg_hostHistory hh on hh.hostID = s.hostid
+            left outer join smg_hosthistory hh on hh.hostID = s.hostid
             left join smg_hosts h on h.hostid = s.hostid
             left join smg_regions r on r.regionid = s.regionassigned
             left join smg_users u on u.userid = s.arearepid
@@ -489,7 +489,7 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
 
 				<!--- News Messages --->
                 <cfif qNewsMessages.recordcount>
-                    <div class="rdholder"> 
+                    <div class="rdholder" style="width:100%; float:left;"> 
                     
                         <div class="rdtop"> 
                             <span class="rdtitle">Please take note...</span> 
@@ -716,7 +716,7 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                         
 					<!--- Bonuses for the Field --->    
                     <cfelse>
-                    	<Cfif client.companyid neq 14>
+                    	<Cfif client.companyid lt 13 >
                     	<cfif isDate('#APPLICATION.CFC.USER.getUserSessionPaperwork().dateDOSTestExpired#')>
                    			<cfif #now()# gt #DateAdd('m','-1','#APPLICATION.CFC.USER.getUserSessionPaperwork().dateDOSTestExpired#')#>
 								<cfset daysToExpire = #dateDiff('d','#now()#','#APPLICATION.CFC.USER.getUserSessionPaperwork().dateDOSTestExpired#')#>
