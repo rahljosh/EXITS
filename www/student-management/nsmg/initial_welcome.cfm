@@ -1396,7 +1396,7 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                                         <br>There are currently no announcements or news items.
                                     <cfelse>
                                     
-                                        <cfloop query="news_messages">
+                                        <cfloop query="qNewsMessages">
                                             <p>
                                                 <b>#message#</b><br>
                                                 #DateFormat(startdate, 'MMMM D, YYYY')# - #replaceList(details, '#chr(13)##chr(10)#,#chr(13)#,#chr(10)#', '<br>,<br>,<br>')#
