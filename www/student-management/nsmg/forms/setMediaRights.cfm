@@ -44,6 +44,7 @@
                         <Td bgcolor="##efefef"><img src="pics/smgLogos/4.png"></Td>
                         <Td><img src="pics/smgLogos/5.png"></Td>
                          <Td bgcolor="##efefef"><img src="pics/smgLogos/6.png"></Td>
+                          <Td ><img src="pics/smgLogos/7.png"></Td>
                     </Tr>
                     <tr>
                     	<td><input type="checkbox" name='userMediaAccess' value="1" <cfif listFind(userRights, 1)>checked</cfif> /> Agreement Received</td>
@@ -52,18 +53,18 @@
                     	<td bgcolor="##efefef"><input type="checkbox" name='userMediaAccess' value='4' <cfif listFind(userRights, 4)>checked</cfif>/> Agreement Received</td>
                         <td><input type="checkbox" name='userMediaAccess' value='5' <cfif listFind(userRights, 5)>checked</cfif> /> Agreement Received</td> 
                         <td bgcolor="##efefef"><input type="checkbox" name='userMediaAccess' value='6' <cfif listFind(userRights, 6)>checked</cfif>/> Agreement Received</td>
+                        <td><input type="checkbox" name='userMediaAccess' value='7' <cfif listFind(userRights, 7)>checked</cfif> /> Agreement Received</td> 
                     </tr> 
-                    <Td colspan=5 align="center"><input type="submit" name="updateAccessRights" value="Update Media Rights" class="basicOrangeButton"></Td>
+                    <Td colspan=7 align="center"><input type="submit" name="updateAccessRights" value="Update Media Rights" class="basicOrangeButton"></Td>
                 </tr>
                 </table>
-                  </table>
+              
                   
               </form>
              </cfoutput>
               <!----*****End Account Status****---->	
              		
-             
-                      
+              
             </div>
             	<div class="rdbottom"></div> <!-- end bottom --> 
          </div>
