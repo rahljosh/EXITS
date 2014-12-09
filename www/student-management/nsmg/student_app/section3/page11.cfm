@@ -129,27 +129,32 @@ function NextPage() {
 <!--- MEDICAL HISTORY --->
 <table width="670" border=0 cellpadding=2 cellspacing=0 align="center">
 	<tr><td colspan="4"><b>MEDICAL HISTORY</b> - <em>Have you had?</em></td></tr>
-	<tr><td width="90" align="right">
-			<cfif get_health.had_measles EQ '0'><cfinput type="radio" name="had_measles" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="had_measles" value="0" onchange="DataChanged();">No</cfif>
-			<cfif get_health.had_measles EQ '1'><cfinput type="radio" name="had_measles" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="had_measles" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;
-		</td>
-		<td width="245"><em>Measles</em></td>
+	<tr>
+  
 		<td width="90" align="right">
 			<cfif get_health.had_diabetes EQ '0'><cfinput type="radio" name="had_diabetes" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="had_diabetes" value="0" onchange="DataChanged();">No</cfif>
 			<cfif get_health.had_diabetes EQ '1'><cfinput type="radio" name="had_diabetes" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="had_diabetes" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;			
 		</td>
 		<td width="245"><em>Diabetes</em></td>	
-	</tr>
-	<tr><td align="right">
-			<cfif get_health.had_mumps EQ '0'><cfinput type="radio" name="had_mumps" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="had_mumps" value="0" onchange="DataChanged();">No</cfif>
-			<cfif get_health.had_mumps EQ '1'><cfinput type="radio" name="had_mumps" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="had_mumps" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;
+         
+		<td align="right">
+			<cfif get_health.had_strokes EQ '0'><cfinput type="radio" name="had_strokes" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="had_strokes" value="0" onchange="DataChanged();">No</cfif>
+			<cfif get_health.had_strokes EQ '1'><cfinput type="radio" name="had_strokes" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="had_strokes" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;		
 		</td>
-		<td><em>Mumps</em></td>
+		<td><em>Strokes / Cerebral Hemorrhage</em></td>
+	</tr>
+	<tr>
+   
 		<td align="right">
 			<cfif get_health.had_cancer EQ '0'><cfinput type="radio" name="had_cancer" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="had_cancer" value="0" onchange="DataChanged();">No</cfif>
 			<cfif get_health.had_cancer EQ '1'><cfinput type="radio" name="had_cancer" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="had_cancer" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;	 
 		</td>
-		<td><em>Cancer</em></td>	
+		<td><em>Cancer</em></td>
+        <td align="right">
+			<cfif get_health.had_concussion EQ '0'><cfinput type="radio" name="had_concussion" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="had_concussion" value="0" onchange="DataChanged();">No</cfif>
+			<cfif get_health.had_concussion EQ '1'><cfinput type="radio" name="had_concussion" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="had_concussion" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;
+		</td>
+		<td><em>Concussion or Head Injuries</em></td>	
 	</tr>
 	<tr><td align="right">
 			<cfif get_health.had_chickenpox EQ '0'><cfinput type="radio" name="had_chickenpox" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="had_chickenpox" value="0" onchange="DataChanged();">No</cfif>
@@ -172,71 +177,21 @@ function NextPage() {
 			<cfif get_health.had_sexually_disease EQ '1'><cfinput type="radio" name="had_sexually_disease" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="had_sexually_disease" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;
 		</td>
 		<td><em>Sexually Transmitted Disease</em></td>
-	</tr>
-	<tr><td align="right">
-			<cfif get_health.had_rubella EQ '0'><cfinput type="radio" name="had_rubella" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="had_rubella" value="0" onchange="DataChanged();">No</cfif>
-			<cfif get_health.had_rubella EQ '1'><cfinput type="radio" name="had_rubella" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="had_rubella" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;		
-		</td>
-		<td><em>Rubella</em></td>
-		<td align="right">
-			<cfif get_health.had_strokes EQ '0'><cfinput type="radio" name="had_strokes" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="had_strokes" value="0" onchange="DataChanged();">No</cfif>
-			<cfif get_health.had_strokes EQ '1'><cfinput type="radio" name="had_strokes" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="had_strokes" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;		
-		</td>
-		<td><em>Strokes / Cerebral Hemorrhage</em></td>
-	</tr>
-	<tr><td align="right">
-			<cfif get_health.had_concussion EQ '0'><cfinput type="radio" name="had_concussion" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="had_concussion" value="0" onchange="DataChanged();">No</cfif>
-			<cfif get_health.had_concussion EQ '1'><cfinput type="radio" name="had_concussion" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="had_concussion" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;
-		</td>
-		<td><em>Concussion or Head Injuries</em></td>
-		<td align="right">
-			<cfif get_health.had_tuberculosis EQ '0'><cfinput type="radio" name="had_tuberculosis" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="had_tuberculosis" value="0" onchange="DataChanged();">No</cfif>
-			<cfif get_health.had_tuberculosis EQ '1'><cfinput type="radio" name="had_tuberculosis" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="had_tuberculosis" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;		
-		</td>
-		<td><em>Tuberculosis</em></td>		
-	</tr>
-	<tr><td align="right">
-			<cfif get_health.had_rheumatic_fever EQ '0'><cfinput type="radio" name="had_rheumatic_fever" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="had_rheumatic_fever" value="0" onchange="DataChanged();">No</cfif>
-			<cfif get_health.had_rheumatic_fever EQ '1'><cfinput type="radio" name="had_rheumatic_fever" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="had_rheumatic_fever" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;
-		</td>
-		<td><em>Rheumatic Fever or Heart Disease</em></td>
-		<td align="right">&nbsp;</td>
-		<td>&nbsp;</td>	
-	</tr>
-	<tr><td>&nbsp;</td></tr>
+	</tr>	
 	<tr>
     	<td align="right">
 			<cfif get_health.been_hospitalized EQ '0'><cfinput type="radio" name="been_hospitalized" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="been_hospitalized" value="0" onchange="DataChanged();">No</cfif>
 			<cfif get_health.been_hospitalized EQ '1'><cfinput type="radio" name="been_hospitalized" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="been_hospitalized" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;		
 		</td>
-		<td colspan="3"><em>Have you ever been hospitalized?</em></td>
-	</tr>
-	<tr>
+		<td colspan="3"><em>Have you ever been hospitalized, had surgery or been treated for a chronic medical illness?</em></td>
+	</tr
+	><tr>
     	<td>&nbsp;</td>
-		<td colspan="3"><em>Please explain:</em> &nbsp; <cfinput type="text" name="hospitalized_reason" size="50" maxlength="200" value="#get_health.hospitalized_reason#" onchange="DataChanged();"></td>
+		<td colspan="3" valign="top">
+        <cftextarea name="hospitalized_reason" cols=80 rows =3 onchange="DataChanged();" placeholder="If yes, please Explain">#get_health.hospitalized_reason#</cftextarea>
+        <!---<cfinput type="text" name="hospitalized_reason" size="50" maxlength="200" value="#get_health.hospitalized_reason#" >----></td>
 	</tr>
-    <tr>
-    	<td align="right">
-			<cfif get_health.surgery EQ '0'><cfinput type="radio" name="surgery" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="surgery" value="0" onchange="DataChanged();">No</cfif>
-			<cfif get_health.surgery EQ '1'><cfinput type="radio" name="surgery" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="surgery" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;		
-		</td>
-		<td colspan="3"><em>Have you ever had surgery?</em></td>
-	</tr>
-	<tr>
-    	<td>&nbsp;</td>
-		<td colspan="3"><em>Please explain:</em> &nbsp; <cfinput type="text" name="surgery_reason" size="50" maxlength="200" value="#get_health.surgery_reason#" onchange="DataChanged();"></td>
-	</tr>
-    <tr>
-    	<td align="right">
-			<cfif get_health.chronicIllness EQ '0'><cfinput type="radio" name="chronicIllness" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="chronicIllness" value="0" onchange="DataChanged();">No</cfif>
-			<cfif get_health.chronicIllness EQ '1'><cfinput type="radio" name="chronicIllness" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="chronicIllness" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;		
-		</td>
-		<td colspan="3"><em>Have you been treated for a chronic medical illness?</em></td>
-	</tr>
-	<tr>
-    	<td>&nbsp;</td>
-		<td colspan="3"><em>Please explain:</em> &nbsp; <cfinput type="text" name="chronicIllness_reason" size="50" maxlength="200" value="#get_health.chronicIllness_reason#" onchange="DataChanged();"></td>
-	</tr>	
+  
 </table><br>
 <hr class="bar">
 </hr><br>
@@ -245,28 +200,21 @@ function NextPage() {
 <table width="670" border=0 cellpadding=2 cellspacing=0 align="center">
 	<tr><td colspan="4"><b>SYSTEMIC REVIEW</b> - <em>Do you have the following?</em></td></tr>
 	<tr><td colspan="2" align="left"><b>Eyes-Ears-Nose-Throat:</b></td>
-		<td colspan="2" align="left"><b>Skin</b></td>
+		
 	</tr>
 	<tr><td width="90" align="right">
 			<cfif get_health.have_eye_disease EQ '0'><cfinput type="radio" name="have_eye_disease" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="have_eye_disease" value="0" onchange="DataChanged();">No</cfif>
 			<cfif get_health.have_eye_disease EQ '1'><cfinput type="radio" name="have_eye_disease" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="have_eye_disease" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;
 		</td>
 		<td width="245"><em>Eye disease or injury</em></td>
-		<td width="90" align="right">
-			<cfif get_health.have_skin_disease EQ '0'><cfinput type="radio" name="have_skin_disease" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="have_skin_disease" value="0" onchange="DataChanged();">No</cfif>
-			<cfif get_health.have_skin_disease EQ '1'><cfinput type="radio" name="have_skin_disease" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="have_skin_disease" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;		
-		</td>
-		<td width="245"><em>Skin disease, hives, eczema</em></td>	</tr>
-	<tr><td align="right">
+		<td align="right">
 			<cfif get_health.wear_glasses EQ '0'><cfinput type="radio" name="wear_glasses" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="wear_glasses" value="0" onchange="DataChanged();">No</cfif>
 			<cfif get_health.wear_glasses EQ '1'><cfinput type="radio" name="wear_glasses" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="wear_glasses" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;		
 		</td>
-		<td><em>Do you wear glasses?</em></td>		
-		<td align="right">
-			<cfif get_health.have_jaundice EQ '0'><cfinput type="radio" name="have_jaundice" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="have_jaundice" value="0" onchange="DataChanged();">No</cfif>
-			<cfif get_health.have_jaundice EQ '1'><cfinput type="radio" name="have_jaundice" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="have_jaundice" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;		
-		</td>
-		<td><em>Jaundice</em></td>
+		<td><em>Do you wear glasses?</em></td>	
+    </tr>
+	<tr>	
+		
 	</tr>
 	<tr><td align="right">
 			<cfif get_health.have_double_vision EQ '0'><cfinput type="radio" name="have_double_vision" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="have_double_vision" value="0" onchange="DataChanged();">No</cfif>
@@ -274,90 +222,38 @@ function NextPage() {
 		</td>
 		<td><em>Double Vision</em></td>
 		<td align="right">
-			<cfif get_health.have_infection EQ '0'><cfinput type="radio" name="have_infection" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="have_infection" value="0" onchange="DataChanged();">No</cfif>
-			<cfif get_health.have_infection EQ '1'><cfinput type="radio" name="have_infection" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="have_infection" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;		
-		</td>
-		<td><em>Frequent infection or boils</em></td>
-	</tr>
-	<tr><td align="right">
 			<cfif get_health.have_headaches EQ '0'><cfinput type="radio" name="have_headaches" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="have_headaches" value="0" onchange="DataChanged();">No</cfif>
 			<cfif get_health.have_headaches EQ '1'><cfinput type="radio" name="have_headaches" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="have_headaches" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;		
 		</td>
 		<td><em>Chronic Headaches</em></td>	
-		<td align="right">
-			<cfif get_health.have_pigmentation EQ '0'><cfinput type="radio" name="have_pigmentation" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="have_pigmentation" value="0" onchange="DataChanged();">No</cfif>
-			<cfif get_health.have_pigmentation EQ '1'><cfinput type="radio" name="have_pigmentation" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="have_pigmentation" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;		
-		</td>
-		<td><em>Abnormal pigmentation</em></td>	
 	</tr>
-	<tr><td align="right">
-			<cfif get_health.have_glaucoma EQ '0'><cfinput type="radio" name="have_glaucoma" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="have_glaucoma" value="0" onchange="DataChanged();">No</cfif>
-			<cfif get_health.have_glaucoma EQ '1'><cfinput type="radio" name="have_glaucoma" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="have_glaucoma" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;		
-		</td>
-		<td><em>Glaucoma</em></td>
-		<td colspan="2" align="left"><b>Neck:</b></td>
-	</tr>
-	<tr><td align="right">
-			<cfif get_health.have_nosebleeds EQ '0'><cfinput type="radio" name="have_nosebleeds" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="have_nosebleeds" value="0" onchange="DataChanged();">No</cfif>
-			<cfif get_health.have_nosebleeds EQ '1'><cfinput type="radio" name="have_nosebleeds" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="have_nosebleeds" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;		
-		</td>
-		<td><em>Chronic Nosebleeds</em></td>
-		<td align="right">
-			<cfif get_health.have_stiffness EQ '0'><cfinput type="radio" name="have_stiffness" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="have_stiffness" value="0" onchange="DataChanged();">No</cfif>
-			<cfif get_health.have_stiffness EQ '1'><cfinput type="radio" name="have_stiffness" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="have_stiffness" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;		
-		</td>
-		<td><em>Stiffness</em></td>	
-	</tr>
+	
 	<tr><td align="right">
 			<cfif get_health.have_sinus EQ '0'><cfinput type="radio" name="have_sinus" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="have_sinus" value="0" onchange="DataChanged();">No</cfif>
 			<cfif get_health.have_sinus EQ '1'><cfinput type="radio" name="have_sinus" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="have_sinus" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;		
 		</td>
 		<td><em>Chronic sinus trouble</em></td>
 		<td align="right">
-			<cfif get_health.have_thyroid_trouble EQ '0'><cfinput type="radio" name="have_thyroid_trouble" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="have_thyroid_trouble" value="0" onchange="DataChanged();">No</cfif>
-			<cfif get_health.have_thyroid_trouble EQ '1'><cfinput type="radio" name="have_thyroid_trouble" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="have_thyroid_trouble" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;		
-		</td>
-		<td><em>Thyroid Trouble</em></td>
-	</tr>
-	<tr><td align="right">
 			<cfif get_health.have_ear_disease EQ '0'><cfinput type="radio" name="have_ear_disease" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="have_ear_disease" value="0" onchange="DataChanged();">No</cfif>
 			<cfif get_health.have_ear_disease EQ '1'><cfinput type="radio" name="have_ear_disease" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="have_ear_disease" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;		
 		</td>
 		<td><em>Ear Disease</em></td>
-		<td align="right">
-			<cfif get_health.have_enlarged_glands EQ '0'><cfinput type="radio" name="have_enlarged_glands" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="have_enlarged_glands" value="0" onchange="DataChanged();">No</cfif>
-			<cfif get_health.have_enlarged_glands EQ '1'><cfinput type="radio" name="have_enlarged_glands" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="have_enlarged_glands" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;		
-		</td>
-		<td><em>Enlarged glands</em></td>	
+	</tr>
+	<tr>
+		
 	</tr>
 	<tr><td align="right">
 			<cfif get_health.have_impaired_hearing EQ '0'><cfinput type="radio" name="have_impaired_hearing" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="have_impaired_hearing" value="0" onchange="DataChanged();">No</cfif>
 			<cfif get_health.have_impaired_hearing EQ '1'><cfinput type="radio" name="have_impaired_hearing" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="have_impaired_hearing" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;
 		</td>
-		<td><em>Impaired hearing</em></td>
-		<td colspan="2" align="left"><b>Respiratory: </b></td>
-	</tr>
-	<tr><td align="right">
-			<cfif get_health.wear_hearing_aids EQ '0'><cfinput type="radio" name="wear_hearing_aids" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="wear_hearing_aids" value="0" onchange="DataChanged();">No</cfif>
-			<cfif get_health.wear_hearing_aids EQ '1'><cfinput type="radio" name="wear_hearing_aids" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="wear_hearing_aids" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;
-		</td>
-		<td><em>Do you wear hearing aids?</em></td>
-		<td align="right">
-			<cfif get_health.have_spitting_up_blood EQ '0'><cfinput type="radio" name="have_spitting_up_blood" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="have_spitting_up_blood" value="0" onchange="DataChanged();">No</cfif>
-			<cfif get_health.have_spitting_up_blood EQ '1'><cfinput type="radio" name="have_spitting_up_blood" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="have_spitting_up_blood" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;		
-		</td>
-		<td><em>Spitting up blood</em></td>	
-	</tr>
-	<tr><td align="right">
+		<td><em>Impaired hearing</em></td>		<td align="right">
 			<cfif get_health.have_dizziness EQ '0'><cfinput type="radio" name="have_dizziness" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="have_dizziness" value="0" onchange="DataChanged();">No</cfif>
 			<cfif get_health.have_dizziness EQ '1'><cfinput type="radio" name="have_dizziness" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="have_dizziness" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;			
 		</td>
 		<td><em>Dizziness</em></td>
-		<td align="right">
-			<cfif get_health.have_cough EQ '0'><cfinput type="radio" name="have_cough" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="have_cough" value="0" onchange="DataChanged();">No</cfif>
-			<cfif get_health.have_cough EQ '1'><cfinput type="radio" name="have_cough" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="have_cough" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;		
-		</td>
-		<td><em>Chronic or frequent cough</em></td>	
+	</tr>
+		<tr>
+		
 	</tr>
 	<tr><td align="right">
 			<cfif get_health.have_unconsciousness EQ '0'><cfinput type="radio" name="have_unconsciousness" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="have_unconsciousness" value="0" onchange="DataChanged();">No</cfif>
@@ -365,12 +261,28 @@ function NextPage() {
 		</td>
 		<td><em>Episodes of unconsciousness</em></td>
 		<td align="right">
-			<cfif get_health.have_asthma EQ '0'><cfinput type="radio" name="have_asthma" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="have_asthma" value="0" onchange="DataChanged();">No</cfif>
-			<cfif get_health.have_asthma EQ '1'><cfinput type="radio" name="have_asthma" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="have_asthma" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;				
+			<cfif get_health.have_nosebleeds EQ '0'><cfinput type="radio" name="have_nosebleeds" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="have_unconsciousness" value="0" onchange="DataChanged();">No</cfif>
+			<cfif get_health.have_nosebleeds EQ '1'><cfinput type="radio" name="have_nosebleeds" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="have_unconsciousness" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;	 
 		</td>
-		<td><em>Asthma</em></td>	
+		<td><em>Nosebleeds</em></td>
 	</tr>
-	<tr><td>&nbsp;</td></tr>
+    <tr>
+    	<td colspan="2" align="left"><b>Skin</b></td>
+	</tr>
+    <Tr>
+    <td width="90" align="right">
+			<cfif get_health.have_skin_disease EQ '0'><cfinput type="radio" name="have_skin_disease" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="have_skin_disease" value="0" onchange="DataChanged();">No</cfif>
+			<cfif get_health.have_skin_disease EQ '1'><cfinput type="radio" name="have_skin_disease" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="have_skin_disease" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;		
+		</td>
+		<td width="245"><em>Skin disease, hives, eczema</em></td>	
+    	<td align="right">
+			<cfif get_health.have_jaundice EQ '0'><cfinput type="radio" name="have_jaundice" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="have_jaundice" value="0" onchange="DataChanged();">No</cfif>
+			<cfif get_health.have_jaundice EQ '1'><cfinput type="radio" name="have_jaundice" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="have_jaundice" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;		
+		</td>
+		<td><em>Jaundice</em></td>
+    
+    </Tr>
+    <tr><td>&nbsp;</td></tr>
 	<tr><td align="right">
 			<cfif get_health.good_health EQ '0'><cfinput type="radio" name="good_health" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="good_health" value="0" onchange="DataChanged();">No</cfif>
 			<cfif get_health.good_health EQ '1'><cfinput type="radio" name="good_health" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="good_health" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;		
@@ -399,42 +311,16 @@ function NextPage() {
 		</td>
 		<td width="245"><em>Novocaine or other anesthetics</em></td>
 	</tr>
-	<tr><td align="right">
-			<cfif get_health.allergic_to_morphine EQ '0'><cfinput type="radio" name="allergic_to_morphine" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="allergic_to_morphine" value="0" onchange="DataChanged();">No</cfif>
-			<cfif get_health.allergic_to_morphine EQ '1'><cfinput type="radio" name="allergic_to_morphine" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="allergic_to_morphine" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;
-		</td>
-		<td><em>Morphine, Codeine, Demerol, other narcotics</em></td>
-		
-		<td align="right">
-			<cfif get_health.allergic_to_sulfa EQ '0'><cfinput type="radio" name="allergic_to_sulfa" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="allergic_to_sulfa" value="0" onchange="DataChanged();">No</cfif>
-			<cfif get_health.allergic_to_sulfa EQ '1'><cfinput type="radio" name="allergic_to_sulfa" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="allergic_to_sulfa" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;
-		</td>
-		<td><em>Sulfa drugs</em></td>
-	</tr>
+	
 	<tr><td align="right">
 			<cfif get_health.allergic_to_aspirin EQ '0'><cfinput type="radio" name="allergic_to_aspirin" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="allergic_to_aspirin" value="0" onchange="DataChanged();">No</cfif>
 			<cfif get_health.allergic_to_aspirin EQ '1'><cfinput type="radio" name="allergic_to_aspirin" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="allergic_to_aspirin" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;
 		</td>
 		<td><em>Aspirin, empirin or other pain remedies</em></td>
 		
-		<td align="right">
-			<cfif get_health.allergic_to_adhesive EQ '0'><cfinput type="radio" name="allergic_to_adhesive" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="allergic_to_adhesive" value="0" onchange="DataChanged();">No</cfif>
-			<cfif get_health.allergic_to_adhesive EQ '1'><cfinput type="radio" name="allergic_to_adhesive" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="allergic_to_adhesive" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;
-		</td>
-		<td><em>Adhesive tape or latex</em></td>
+	
 	</tr>
-	<tr><td align="right">
-			<cfif get_health.allergic_to_tetanus EQ '0'><cfinput type="radio" name="allergic_to_tetanus" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="allergic_to_tetanus" value="0" onchange="DataChanged();">No</cfif>
-			<cfif get_health.allergic_to_tetanus EQ '1'><cfinput type="radio" name="allergic_to_tetanus" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="allergic_to_tetanus" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;
-		</td>
-		<td><em>Tetanus, antitoxin or other serums</em></td>
-		
-		<td align="right">
-			<cfif get_health.allergic_to_iodine EQ '0'><cfinput type="radio" name="allergic_to_iodine" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="allergic_to_iodine" value="0" onchange="DataChanged();">No</cfif>
-			<cfif get_health.allergic_to_iodine EQ '1'><cfinput type="radio" name="allergic_to_iodine" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="allergic_to_iodine" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;
-		</td>
-		<td><em>Iodine or merthiolate</em></td>
-	</tr>
+	
 	<tr><td align="right">
 			<cfif get_health.allergic_to_foods EQ '0'><cfinput type="radio" name="allergic_to_foods" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="allergic_to_foods" value="0" onchange="DataChanged();">No</cfif>
 			<cfif get_health.allergic_to_foods EQ '1'><cfinput type="radio" name="allergic_to_foods" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="allergic_to_foods" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;
@@ -517,30 +403,15 @@ function NextPage() {
          	&nbsp;
         </td>
         <td width="245"><em>Anxiety disorders</em></td>
-        <!--- Neurocognitive disorders --->
-        <td width="90" align="right">
-			<input type="radio" name="psychological_neurocognitive" value="0" <cfif get_health.psychological_neurocognitive EQ '0'>checked="yes"</cfif> onchange="DataChanged();">No
-            <input type="radio" name="psychological_neurocognitive" value="1" <cfif get_health.psychological_neurocognitive EQ '1'>checked="yes"</cfif> onchange="DataChanged();">Yes 
-         	&nbsp;
-        </td>
-        <td width="245"><em>Neurocognitive disorders</em></td>
-    </tr>
-    <tr>
-    	<!--- Dissociative disorders --->
+        <!--- Dissociative disorders --->
     	<td width="90" align="right">
 			<input type="radio" name="psychological_dissociative" value="0" <cfif get_health.psychological_dissociative EQ '0'>checked="yes"</cfif> onchange="DataChanged();">No
             <input type="radio" name="psychological_dissociative" value="1" <cfif get_health.psychological_dissociative EQ '1'>checked="yes"</cfif> onchange="DataChanged();">Yes 
          	&nbsp;
         </td>
         <td width="245"><em>Dissociative disorders</em></td>
-        <!--- Neurodevelopmental disorders --->
-        <td width="90" align="right">
-			<input type="radio" name="psychological_neurodevelopmental" value="0" <cfif get_health.psychological_neurodevelopmental EQ '0'>checked="yes"</cfif> onchange="DataChanged();">No
-            <input type="radio" name="psychological_neurodevelopmental" value="1" <cfif get_health.psychological_neurodevelopmental EQ '1'>checked="yes"</cfif> onchange="DataChanged();">Yes 
-         	&nbsp;
-        </td>
-        <td width="245"><em>Neurodevelopmental disorders</em></td>
     </tr>
+  
     <tr>
     	<!--- Eating disorders --->
     	<td width="90" align="right">
@@ -549,30 +420,15 @@ function NextPage() {
          	&nbsp;
         </td>
         <td width="245"><em>Eating disorders</em></td>
-        <!--- Psychotic disorders --->
-        <td width="90" align="right">
-			<input type="radio" name="psychological_psychotic" value="0" <cfif get_health.psychological_psychotic EQ '0'>checked="yes"</cfif> onchange="DataChanged();">No
-            <input type="radio" name="psychological_psychotic" value="1" <cfif get_health.psychological_psychotic EQ '1'>checked="yes"</cfif> onchange="DataChanged();">Yes 
-         	&nbsp;
-        </td>
-        <td width="245"><em>Psychotic disorders</em></td>
-    </tr>
-    <tr>
-    	<!--- Cutting disorders --->
+      <!--- Cutting disorders --->
     	<td width="90" align="right">
 			<input type="radio" name="psychological_cutting" value="0" <cfif get_health.psychological_cutting EQ '0'>checked="yes"</cfif> onchange="DataChanged();">No
             <input type="radio" name="psychological_cutting" value="1" <cfif get_health.psychological_cutting EQ '1'>checked="yes"</cfif> onchange="DataChanged();">Yes 
          	&nbsp;
         </td>
         <td width="245"><em>Cutting behavior (Factitious disorders)</em></td>
-        <!--- Sexual Gender Identity disorders --->
-        <td width="90" align="right">
-			<input type="radio" name="psychological_sexualGenderIdentity" value="0" <cfif get_health.psychological_sexualGenderIdentity EQ '0'>checked="yes"</cfif> onchange="DataChanged();">No
-            <input type="radio" name="psychological_sexualGenderIdentity" value="1" <cfif get_health.psychological_sexualGenderIdentity EQ '1'>checked="yes"</cfif> onchange="DataChanged();">Yes 
-         	&nbsp;
-        </td>
-        <td width="245"><em>Sexual and gender identity disorders</em></td>
     </tr>
+
     <tr>
     	<!--- Depression --->
     	<td width="90" align="right">
@@ -592,29 +448,15 @@ function NextPage() {
     <tr>
     	<!--- Factitious disorders --->
     	<td width="90" align="right">
-			<input type="radio" name="psychological_factitious" value="0" <cfif get_health.psychological_factitious EQ '0'>checked="yes"</cfif> onchange="DataChanged();">No
-            <input type="radio" name="psychological_factitious" value="1" <cfif get_health.psychological_factitious EQ '1'>checked="yes"</cfif> onchange="DataChanged();">Yes 
+			<input type="radio" name="other_psycho" value="0" <cfif get_health.other_psycho EQ '0'>checked="yes"</cfif> onchange="DataChanged();">No
+            <input type="radio" name="other_psycho" value="1" <cfif get_health.other_psycho EQ '1'>checked="yes"</cfif> onchange="DataChanged();">Yes 
          	&nbsp;
         </td>
-        <td width="245"><em>Factitious disorders</em></td>
-        <td width="90" align="right" colspan="2"></td>
+        <td width="245"><em>Other</em></td>
+        <td width="90"  colspan="3" ></td>
     </tr>
-    <tr><td colspan="4"><em>If you answered yes to any of these, please provide a detailed explanation:</em></td></tr>
-    <tr><td colspan="4"><input type="text" name="medical_attention_reason" size="90" maxlength="200" value="#get_health.medical_attention_reason#" onchange="DataChanged();"></td></tr>
-    <tr>
-    	<td width="90" align="right">
-			<input type="radio" name="psychological_treatment" value="0" <cfif get_health.psychological_treatment EQ '0'>checked="yes"</cfif> onchange="DataChanged();">No
-            <input type="radio" name="psychological_treatment" value="1" <cfif get_health.psychological_treatment EQ '1'>checked="yes"</cfif> onchange="DataChanged();">Yes 
-         	&nbsp;
-        </td>
-        <td colspan="3"><em>Have you ever received treatment or counseling for any psychological disorder?</em></td>
-    </tr>
-    <tr>
-    	<td colspan="4">
-            <em>If yes, please explain:</em>
-            <input type="text" name="psychological_treatmentExplanation" size="60" maxlength="200" value="#get_health.psychological_treatmentExplanation#" onchange="DataChanged();">
-  		</td>
- 	</tr>
+    <tr><td colspan="7"><em>If you answered yes to any of these, please provide a detailed explanation:</em><input type="text" name="medical_attention_reason" size="90" maxlength="200" value="#get_health.medical_attention_reason#" onchange="DataChanged();"></td></tr>
+    <tr><td colspan="4"></td></tr>
 </table>
 
 <br/>

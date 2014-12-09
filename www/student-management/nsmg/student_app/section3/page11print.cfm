@@ -51,27 +51,29 @@
 <!--- MEDICAL HISTORY --->
 <table width="660" border=0 cellpadding=1 cellspacing=0 align="center">
 	<tr><td colspan="4"><b>MEDICAL HISTORY</b> - <em>Have you had?</em></td></tr>
-	<tr><td width="90" align="right">
-			<cfif get_health.had_measles is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
-			<cfif get_health.had_measles is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;
-		</td>
-		<td width="245"><em>Measles</em></td>
+	<tr>
 		<td width="90" align="right">
 			<cfif get_health.had_diabetes is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
 			<cfif get_health.had_diabetes is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;			
 		</td>
 		<td width="245"><em>Diabetes</em></td>	
-	</tr>
-	<tr><td align="right">
-			<cfif get_health.had_mumps is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
-			<cfif get_health.had_mumps is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;
+        <td align="right">
+			<cfif get_health.had_strokes is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
+			<cfif get_health.had_strokes is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;		
 		</td>
-		<td><em>Mumps</em></td>
+		<td><em>Strokes / Cerebral Hemorrhage</em></td>
+	</tr>
+	<tr>
 		<td align="right">
 			<cfif get_health.had_cancer is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
 			<cfif get_health.had_cancer is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;	 
 		</td>
 		<td><em>Cancer</em></td>	
+        <td align="right">
+			<cfif get_health.had_concussion is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
+			<cfif get_health.had_concussion is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;
+		</td>
+		<td><em>Concussion or Head Injuries</em></td>
 	</tr>
 	<tr><td align="right">
 			<cfif get_health.had_chickenpox is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
@@ -95,33 +97,13 @@
 		</td>
 		<td><em>Sexually Transmitted Disease</em></td>
 	</tr>
-	<tr><td align="right">
-			<cfif get_health.had_rubella is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
-			<cfif get_health.had_rubella is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;		
-		</td>
-		<td><em>Rubella</em></td>
-		<td align="right">
-			<cfif get_health.had_strokes is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
-			<cfif get_health.had_strokes is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;		
-		</td>
-		<td><em>Strokes</em></td>
+	<tr>
+		
 	</tr>
-	<tr><td align="right">
-			<cfif get_health.had_concussion is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
-			<cfif get_health.had_concussion is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;
-		</td>
-		<td><em>Concussion or Head Injuries</em></td>
-		<td align="right">
-			<cfif get_health.had_tuberculosis is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
-			<cfif get_health.had_tuberculosis is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;		
-		</td>
-		<td><em>Tuberculosis</em></td>		
+	<tr>
+		
 	</tr>
-	<tr><td align="right">
-			<cfif get_health.had_rheumatic_fever is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
-			<cfif get_health.had_rheumatic_fever is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;
-		</td>
-		<td><em>Rheumatic Fever or Heart Disease</em></td>
+	<tr>
 		<td align="right">&nbsp;</td>
 		<td>&nbsp;</td>	
 	</tr>
@@ -130,99 +112,45 @@
 			<cfif get_health.been_hospitalized is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
 			<cfif get_health.been_hospitalized is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;		
 		</td>
-		<td colspan="3"><em>Have you ever been hospitalized? </em></td>
+		<td colspan="3"><em>Have you ever been hospitalized, had surgery or been treated for a chronic medical illness?</em></td>
 	</tr>
 	<tr><td>&nbsp;</td>
 		<td colspan="3"><em>Please Explain:</em> &nbsp; #get_health.hospitalized_reason#<br><img src="#vStudentAppRelativePath#pics/line.gif" width="500" height="1" border="0" align="absmiddle"></td>
 	</tr>
-    <tr>
-    	<td align="right">
-			<cfif get_health.surgery EQ 0><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
-			<cfif get_health.surgery EQ 1><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;
-      	</td>
-		<td colspan="3"><em>Have you ever had surgery? </em></td>
-	</tr>
-	<tr><td>&nbsp;</td>
-		<td colspan="3"><em>Please Explain:</em> &nbsp; #get_health.surgery_reason#<br><img src="#vStudentAppRelativePath#pics/line.gif" width="500" height="1" border="0" align="absmiddle"></td>
-	</tr>
-    <tr>
-    	<td align="right">
-			<cfif get_health.chronicIllness is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
-			<cfif get_health.chronicIllness is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;		
-		</td>
-		<td colspan="3"><em>Have you ever been treated for a chronic medical illness? </em></td>
-	</tr>
-	<tr><td>&nbsp;</td>
-		<td colspan="3"><em>Please Explain:</em> &nbsp; #get_health.chronicIllness_reason#<br><img src="#vStudentAppRelativePath#pics/line.gif" width="500" height="1" border="0" align="absmiddle"></td>
-	</tr>
+  
 </table>
 
 <!--- SYSTEMIC REVIEW --->
 <table width="660" border=0 cellpadding=1 cellspacing=0 align="center">
 	<tr><td colspan="4"><b>SYSTEMIC REVIEW</b> - <em>Do you have the following?</em></td></tr>
 	<tr><td colspan="2" align="left"><b>Eyes-Ears-Nose-Throat:</b></td>
-		<td colspan="2" align="left"><b>Skin</b></td>
+		
 	</tr>
 	<tr><td width="90" align="right">
 			<cfif get_health.have_eye_disease is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
 			<cfif get_health.have_eye_disease is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;
 		</td>
 		<td width="245"><em>Eye disease or injury</em></td>
-		<td width="90" align="right">
-			<cfif get_health.have_skin_disease is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
-			<cfif get_health.have_skin_disease is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> >Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;		
-		</td>
-		<td width="245"><em>Skin disease, hives, eczema</em></td>	</tr>
-	<tr><td align="right">
+        <td align="right">
 			<cfif get_health.wear_glasses is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
 			<cfif get_health.wear_glasses is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;		
 		</td>
-		<td><em>Do you wear glasses?</em></td>		
-		<td align="right">
-			<cfif get_health.have_jaundice is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
-			<cfif get_health.have_jaundice is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;		
-		</td>
-		<td><em>Jaundice</em></td>
-	</tr>
+		<td><em>Do you wear glasses?</em></td>	
+		</tr>
+	
 	<tr><td align="right">
 			<cfif get_health.have_double_vision is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
 			<cfif get_health.have_double_vision is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;		
 		</td>
 		<td><em>Double Vision</em></td>
 		<td align="right">
-			<cfif get_health.have_infection is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
-			<cfif get_health.have_infection is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;		
-		</td>
-		<td><em>Frequent infection or boils</em></td>
-	</tr>
-	<tr><td align="right">
 			<cfif get_health.have_headaches is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
 			<cfif get_health.have_headaches is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;		
 		</td>
-		<td><em>Headaches</em></td>	
-		<td align="right">
-			<cfif get_health.have_pigmentation is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
-			<cfif get_health.have_pigmentation is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;		
-		</td>
-		<td><em>Abnormal pigmentation</em></td>	
+		<td><em>Cronic Headaches</em></td>	
 	</tr>
-	<tr><td align="right">
-			<cfif get_health.have_glaucoma is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
-			<cfif get_health.have_glaucoma is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;		
-		</td>
-		<td><em>Glaucoma</em></td>
-		<td colspan="2" align="left"><b>Neck:</b></td>
-	</tr>
-	<tr><td align="right">
-			<cfif get_health.have_nosebleeds is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
-			<cfif get_health.have_nosebleeds is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;		
-		</td>
-		<td><em>Nosebleeds</em></td>
-		<td align="right">
-			<cfif get_health.have_stiffness is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
-			<cfif get_health.have_stiffness is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;		
-		</td>
-		<td><em>Stiffness</em></td>	
+
+	<tr>
 	</tr>
 	<tr><td align="right">
 			<cfif get_health.have_sinus is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
@@ -230,62 +158,54 @@
 		</td>
 		<td><em>Chronic sinus trouble</em></td>
 		<td align="right">
-			<cfif get_health.have_thyroid_trouble is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
-			<cfif get_health.have_thyroid_trouble is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;		
-		</td>
-		<td><em>Thyroid Trouble</em></td>
-
-	</tr>
-	<tr><td align="right">
 			<cfif get_health.have_ear_disease is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
 			<cfif get_health.have_ear_disease is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;		
 		</td>
 		<td><em>Ear Disease</em></td>
-		<td align="right">
-			<cfif get_health.have_enlarged_glands is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
-			<cfif get_health.have_enlarged_glands is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;		
-		</td>
-		<td><em>Enlarged glands</em></td>	
 	</tr>
+	
+	
 	<tr><td align="right">
 			<cfif get_health.have_impaired_hearing is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
 			<cfif get_health.have_impaired_hearing is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;
 		</td>
-		<td><em>Impaired hearing</em></td>
-		<td colspan="2" align="left"><b>Respiratory: </b></td>
-	</tr>
-	<tr><td align="right">
-			<cfif get_health.wear_hearing_aids is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
-			<cfif get_health.wear_hearing_aids is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;
-		</td>
-		<td><em>Do you wear hearing aids?</em></td>
+		<td><em>Impaired Hearing</em></td>
 		<td align="right">
-			<cfif get_health.have_spitting_up_blood is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
-			<cfif get_health.have_spitting_up_blood is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;		
-		</td>
-		<td><em>Spitting up blood</em></td>	
-	</tr>
-	<tr><td align="right">
 			<cfif get_health.have_dizziness is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
 			<cfif get_health.have_dizziness is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;			
 		</td>
 		<td><em>Dizziness</em></td>
-		<td align="right">
-			<cfif get_health.have_cough is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
-			<cfif get_health.have_cough is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;		
-		</td>
-		<td><em>Chronic or frequent cough</em></td>	
 	</tr>
-	<tr><td align="right">
+<tr>
+		<td align="right">
 			<cfif get_health.have_unconsciousness is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
 			<cfif get_health.have_unconsciousness is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;	 
 		</td>
 		<td><em>Episodes of unconsciousness</em></td>
 		<td align="right">
-			<cfif get_health.have_asthma is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
-			<cfif get_health.have_asthma is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;				
+			<cfif get_health.have_nosebleeds is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
+			<cfif get_health.have_nosebleeds is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;		
 		</td>
-		<td><em>Asthma</em></td>	
+		<td><em>Nosebleeds</em></td>
+		
+	</tr>
+    <Tr>
+    	<td colspan="2" align="left"><b>Skin</b></td>
+    </Tr>
+	<tr>
+    <td width="90" align="right">
+			<cfif get_health.have_skin_disease is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
+			<cfif get_health.have_skin_disease is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> >Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;		
+		</td>
+		<td width="245"><em>Skin disease, hives, eczema</em></td>	
+        <td align="right">
+			<cfif get_health.have_jaundice is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
+			<cfif get_health.have_jaundice is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;		
+		</td>
+		<td><em>Jaundice</em></td>
+        
+    
+		
 	</tr>
 	<tr><td align="right">
 			<cfif get_health.good_health is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
@@ -313,42 +233,16 @@
 		</td>
 		<td width="245"><em>Novocaine or other anesthetics</em></td>
 	</tr>
-	<tr><td align="right">
-			<cfif get_health.allergic_to_morphine is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
-			<cfif get_health.allergic_to_morphine is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;
-		</td>
-		<td><em>Morphine, Codeine, Demerol, other narcotics</em></td>
-		
-		<td align="right">
-			<cfif get_health.allergic_to_sulfa is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
-			<cfif get_health.allergic_to_sulfa is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;
-		</td>
-		<td><em>Sulfa drugs</em></td>
-	</tr>
+	
 	<tr><td align="right">
 			<cfif get_health.allergic_to_aspirin is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
 			<cfif get_health.allergic_to_aspirin is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;
 		</td>
 		<td><em>Aspirin, empirin or other pain remedies</em></td>
 		
-		<td align="right">
-			<cfif get_health.allergic_to_adhesive is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
-			<cfif get_health.allergic_to_adhesive is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;
-		</td>
-		<td><em>Adhesive tape or latex</em></td>
-	</tr>
-	<tr><td align="right">
-			<cfif get_health.allergic_to_tetanus is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
-			<cfif get_health.allergic_to_tetanus is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;
-		</td>
-		<td><em>Tetanus, antitoxin or other serums</em></td>
 		
-		<td align="right">
-			<cfif get_health.allergic_to_iodine is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
-			<cfif get_health.allergic_to_iodine is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;
-		</td>
-		<td><em>Iodine or merthiolate</em></td>
 	</tr>
+	
 	<tr><td align="right">
 			<cfif get_health.allergic_to_foods is 'no'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> No <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> No</cfif>
 			<cfif get_health.allergic_to_foods is 'yes'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> Yes <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> Yes</cfif> &nbsp;
@@ -409,30 +303,15 @@
          	&nbsp;
         </td>
         <td width="245"><em>Anxiety disorders</em></td>
-        <!--- Neurocognitive disorders --->
-        <td width="90" align="right">
-			<input type="radio" disabled="disabled" name="psychological_neurocognitive" value="0" <cfif get_health.psychological_neurocognitive EQ '0'>checked="yes"</cfif> onchange="DataChanged();">No
-            <input type="radio" disabled="disabled" name="psychological_neurocognitive" value="1" <cfif get_health.psychological_neurocognitive EQ '1'>checked="yes"</cfif> onchange="DataChanged();">Yes 
-         	&nbsp;
-        </td>
-        <td width="245"><em>Neurocognitive disorders</em></td>
-    </tr>
-    <tr>
-    	<!--- Dissociative disorders --->
+        <!--- Dissociative disorders --->
     	<td width="90" align="right">
 			<input type="radio" disabled="disabled" name="psychological_dissociative" value="0" <cfif get_health.psychological_dissociative EQ '0'>checked="yes"</cfif> onchange="DataChanged();">No
             <input type="radio" disabled="disabled" name="psychological_dissociative" value="1" <cfif get_health.psychological_dissociative EQ '1'>checked="yes"</cfif> onchange="DataChanged();">Yes 
          	&nbsp;
         </td>
         <td width="245"><em>Dissociative disorders</em></td>
-        <!--- Neurodevelopmental disorders --->
-        <td width="90" align="right">
-			<input type="radio" disabled="disabled" name="psychological_neurodevelopmental" value="0" <cfif get_health.psychological_neurodevelopmental EQ '0'>checked="yes"</cfif> onchange="DataChanged();">No
-            <input type="radio" disabled="disabled" name="psychological_neurodevelopmental" value="1" <cfif get_health.psychological_neurodevelopmental EQ '1'>checked="yes"</cfif> onchange="DataChanged();">Yes 
-         	&nbsp;
-        </td>
-        <td width="245"><em>Neurodevelopmental disorders</em></td>
     </tr>
+  
     <tr>
     	<!--- Eating disorders --->
     	<td width="90" align="right">
@@ -441,30 +320,15 @@
          	&nbsp;
         </td>
         <td width="245"><em>Eating disorders</em></td>
-        <!--- Psychotic disorders --->
-        <td width="90" align="right">
-			<input type="radio" disabled="disabled" name="psychological_psychotic" value="0" <cfif get_health.psychological_psychotic EQ '0'>checked="yes"</cfif> onchange="DataChanged();">No
-            <input type="radio" disabled="disabled" name="psychological_psychotic" value="1" <cfif get_health.psychological_psychotic EQ '1'>checked="yes"</cfif> onchange="DataChanged();">Yes 
-         	&nbsp;
-        </td>
-        <td width="245"><em>Psychotic disorders</em></td>
-    </tr>
-    <tr>
-    	<!--- Cutting disorders --->
+      <!--- Cutting disorders --->
     	<td width="90" align="right">
 			<input type="radio" disabled="disabled" name="psychological_cutting" value="0" <cfif get_health.psychological_cutting EQ '0'>checked="yes"</cfif> onchange="DataChanged();">No
             <input type="radio" disabled="disabled" name="psychological_cutting" value="1" <cfif get_health.psychological_cutting EQ '1'>checked="yes"</cfif> onchange="DataChanged();">Yes 
          	&nbsp;
         </td>
         <td width="245"><em>Cutting behavior (Factitious disorders)</em></td>
-        <!--- Sexual Gender Identity disorders --->
-        <td width="90" align="right">
-			<input type="radio" disabled="disabled" name="psychological_sexualGenderIdentity" value="0" <cfif get_health.psychological_sexualGenderIdentity EQ '0'>checked="yes"</cfif> onchange="DataChanged();">No
-            <input type="radio" disabled="disabled" name="psychological_sexualGenderIdentity" value="1" <cfif get_health.psychological_sexualGenderIdentity EQ '1'>checked="yes"</cfif> onchange="DataChanged();">Yes 
-         	&nbsp;
-        </td>
-        <td width="245"><em>Sexual and gender identity disorders</em></td>
     </tr>
+ 
     <tr>
     	<!--- Depression --->
     	<td width="90" align="right">
@@ -481,36 +345,20 @@
         </td>
         <td width="245"><em>Substance Abuse</em></td>
     </tr>
-    <tr>
+     <tr>
     	<!--- Factitious disorders --->
     	<td width="90" align="right">
-			<input type="radio" disabled="disabled" name="psychological_factitious" value="0" <cfif get_health.psychological_factitious EQ '0'>checked="yes"</cfif> onchange="DataChanged();">No
-            <input type="radio" disabled="disabled" name="psychological_factitious" value="1" <cfif get_health.psychological_factitious EQ '1'>checked="yes"</cfif> onchange="DataChanged();">Yes 
+			<input type="radio" disabled="disabled" name="other_psycho" value="0" <cfif get_health.other_psycho EQ '0'>checked="yes"</cfif> onchange="DataChanged();">No
+            <input type="radio" disabled="disabled" name="other_psycho" value="1" <cfif get_health.other_psycho EQ '1'>checked="yes"</cfif> onchange="DataChanged();">Yes 
          	&nbsp;
         </td>
-        <td width="245"><em>Factitious disorders</em></td>
-        <td width="90" align="right" colspan="2"></td>
+        <td width="245"><em>Other</em></td>
+        <td width="90"  colspan="3" ></td>
     </tr>
     <tr><td colspan="4"><em>If you answered yes to any of these, please provide a detailed explanation:</em></td></tr>
     <tr><td colspan="4">#get_health.medical_attention_reason#&nbsp;</td></tr>
     <tr><td colspan="4"><img src="#vStudentAppRelativePath#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td></tr>
-    <tr>
-    	<td width="90" align="right">
-			<input type="radio" disabled="disabled" name="psychological_treatment" value="0" <cfif get_health.psychological_treatment EQ '0'>checked="yes"</cfif> onchange="DataChanged();">No
-            <input type="radio" disabled="disabled" name="psychological_treatment" value="1" <cfif get_health.psychological_treatment EQ '1'>checked="yes"</cfif> onchange="DataChanged();">Yes 
-         	&nbsp;
-        </td>
-        <td colspan="3"><em>Have you ever received treatment or counseling for any psychological disorder?</em></td>
-    </tr>
-    <tr>
-    	<td colspan="4">
-            <em>If yes, please explain:</em>
-            <br/>
-            #get_health.psychological_treatmentExplanation#
-            <br/>
-            <img src="#vStudentAppRelativePath#pics/line.gif" width="315" height="1" border="0" align="absmiddle">
-  		</td>
- 	</tr>
+
 </table>
 <br><table width="660" border=0 cellpadding=1 cellspacing=0 align="center">
 	<tr>
