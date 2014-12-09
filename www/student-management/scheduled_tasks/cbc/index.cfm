@@ -68,12 +68,12 @@
 
 <cfscript>
 	// Current Students
-	isUpcomingProgram = 0;
-	include "getExpiredHosts.cfm";
+	//isUpcomingProgram = 0;
+	//include "getExpiredHosts.cfm";
 
 	// Upcoming Students 
-	isUpcomingProgram = 1;
-	include "getExpiredHosts.cfm";
+	//isUpcomingProgram = 1;
+	//include "getExpiredHosts.cfm";
 	
 	// Run for father
 	userType = 'father';
