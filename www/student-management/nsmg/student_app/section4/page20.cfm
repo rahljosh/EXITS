@@ -89,7 +89,7 @@ function NextPage() {
 <!----Get Regions that have been canceled for students Program---->
 <Cfquery name="unAvailableRegions" datasource="#APPLICATION.DSN#">
 select fk_regionID
-from regionStateClosure sc
+from regionstateclosure sc
 where fk_programid = #get_student_info.programid#
 <Cfif client.companyid lte 5 or client.companyid eq 12>
 and sc.fk_companyid = 1
@@ -159,7 +159,7 @@ and sc.fk_companyid = #client.companyid#
     </cfif>
 </cfif>
 <!--- NOT ESI / PROGRAM TYPES 1 = AYP 10 AUG / 2 = AYP 5 AUG / 3 = AYP 5 JAN / 4 = AYP 12 JAN --->
-<cfif (CLIENT.companyID EQ 14 OR  ListFind("7,8,10,11", get_student_info.app_current_status)) and check_guarantee.app_region_guarantee eq 0 > 
+<cfif ( ListFind("14", client.companyid) OR  ListFind("7,8,10,11", get_student_info.app_current_status)) and check_guarantee.app_region_guarantee eq 0 > 
 	<div class="section"><br><br>
 	<table width="670" cellpadding=2 cellspacing=0 align="center">
 		<tr>
@@ -172,6 +172,22 @@ and sc.fk_companyid = #client.companyid#
 	<cfabort>	
 </cfif>
 <!----Regional Choice doesn't apply to ESI---->
+<cfif ( ListFind("15", client.companyid))> 
+	<div class="section"><br><br>
+	<table width="670" cellpadding=2 cellspacing=0 align="center">
+		<tr>
+			<td><br>
+        <br><Br><br>
+        <h2 align=center>This page does not apply to your program.</h2>
+        <Br><br><BR>
+  </td>
+		</tr>
+	</table><br><br>
+	</div>
+	<!--- FOOTER OF TABLE --->
+	<cfinclude template="../footer_table.cfm">
+	<cfabort>	
+</cfif>
 
 <cfform action="?curdoc=section4/qr_page20" method="post" name="page20" onSubmit="return CheckRegion();">
 
