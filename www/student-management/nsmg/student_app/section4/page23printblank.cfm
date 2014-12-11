@@ -76,6 +76,7 @@
                                     &nbsp; &nbsp;
                                 </cfif>
                             </td>
+                            <td  class="tablecenter"><cfinclude template="../datestamp.cfm"></td>
                             <td width="42" class="tableside"><img src="#path#pics/p_topright.gif" width="42"></td>
                         </tr>
                     </table>
