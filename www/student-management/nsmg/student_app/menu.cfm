@@ -169,14 +169,15 @@ body {
 			<td align="center" class="selectedline menuline"><a class="item2" href="?curdoc=section4/page18#print#&id=4&p=18" onClick="return CheckLink();"><div class="selectedlink">Page [18] &nbsp; Private School </div></a></td>
 		<cfelse>
 			<td align="center" class="ddmx menuline"><a class="item2" href="?curdoc=section4/page18#print#&id=4&p=18" onClick="return CheckLink();">Page [18] &nbsp; Private School </a></td>
+          </tr>
+	<tr>
 		</cfif>
         <cfif url.p EQ '19'>
 			<td align="center" class="selected"><a class="item2" href="?curdoc=section4/page19#print#&id=4&p=19" onClick="return CheckLink();"><div class="selectedlink">Page [19] &nbsp; Intl. Rep. Questionnaire </div></a></td>
 		<cfelse>
 			<td align="center" class="ddmx"><a class="item2" href="?curdoc=section4/page19#print#&id=4&p=19" onClick="return CheckLink();">Page [19] &nbsp; Intl. Rep. Questionnaire </a></td>
 		</cfif>	
-	</tr>
-	<tr>		
+	
 		<cfif url.p EQ '20'>
 			<td align="center" class="selected" <cfif CLIENT.companyID EQ 13>colspan="2"</cfif>><a class="item2" href="?curdoc=section4/page20#print#&id=4&p=20" onClick="return CheckLink();"><div class="selectedlink">Page [20] &nbsp; Regional Choice </div></a></td>
 		<cfelse>
@@ -187,11 +188,14 @@ body {
 		<cfelse>
 			<td align="center" class="ddmx"><a class="item2" href="?curdoc=section4/page21#print#&id=4&p=21" onClick="return CheckLink();">Page [21] &nbsp; <cfif CLIENT.companyID NEQ 14>State Choice<Cfelse>District Choice</cfif> </a></td>
 		</cfif>	
+  
 		<cfif url.p EQ '22'>
 			<td align="center" class="selected" <cfif CLIENT.companyID EQ 13>colspan="2"</cfif>><a class="item2" href="?curdoc=section4/page22&id=4&p=22" onClick="return CheckLink();"><div class="selectedlink">Page [22] &nbsp; Supplements </div></a></td>
 		<cfelse>
 			<td align="center" class="ddmx" <cfif CLIENT.companyID EQ 13>colspan="2"</cfif>><a class="item2" href="?curdoc=section4/page22&id=4&p=22" onClick="return CheckLink();">Page [22] &nbsp; Supplements </a></td>
 		</cfif>
+               	</tr>
+    <tr>
 		<!--- Canada is not using pages 23 or 24 --->
         <cfif CLIENT.companyID NEQ 13 AND CLIENT.companyID NEQ 14>
 			<cfif url.p EQ '23'>
@@ -200,6 +204,8 @@ body {
 				<td align="center" class="ddmx"><a class="item2" href="?curdoc=section4/page23&id=4&p=23" onClick="return CheckLink();">Page [23] &nbsp; Double Placement Authorization </a></td>
 			</cfif>
       	</cfif>
+ 
+    <!----
         <cfif CLIENT.companyID NEQ 13>
 	        <cfif url.p EQ '24'>
 				<td align="center" class="selected" bgcolor="##fff">&nbsp;<!----<a class="item2" href="?curdoc=section4/page24&id=4&p=24" onClick="return CheckLink();"><div class="selectedlink">Page [24] &nbsp; HIPAA Release </div></a>----></td>
@@ -207,22 +213,23 @@ body {
 				<td align="center" class="ddmx" bgcolor="##fff">&nbsp;<!----<a class="item2" href="?curdoc=section4/page24&id=4&p=24" onClick="return CheckLink();">Page [24] &nbsp; HIPAA Release </a>----></td>
 			</cfif>
 		</cfif>
-	</tr>
-    <tr>
+---->
         <cfif url.p EQ '25'>
-			<td align="center" class="selected" colspan="2"><a class="item2" href="?curdoc=section4/page25&id=4&p=25" onClick="return CheckLink();"><div class="selectedlink">Page [25] &nbsp; Passport </div></a></td>
+			<td align="center" class="selected" colspan="2"><a class="item2" href="?curdoc=section4/page25&id=4&p=25" onClick="return CheckLink();"><div class="selectedlink">Page [24] &nbsp; Passport </div></a></td>
 		<cfelse>
-			<td align="center" class="ddmx" colspan="2"><a class="item2" href="?curdoc=section4/page25&id=4&p=25" onClick="return CheckLink();">Page [25] &nbsp; Passport </a></td>
+			<td align="center" class="ddmx" colspan="2"><a class="item2" href="?curdoc=section4/page25&id=4&p=25" onClick="return CheckLink();">Page [24] &nbsp; Passport </a></td>
 		</cfif>	
+        <!----
         <cfif url.p EQ '26'>
 			<td align="center" class="selected"><a class="item2" href="?curdoc=section4/page26&id=4&p=26" onClick="return CheckLink();"><div class="selectedlink">Page [26] &nbsp; Birth Certificate - Birth Registration </div></a></td>
 		<cfelse>
 			<td align="center" class="ddmx"><a class="item2" href="?curdoc=section4/page26&id=4&p=26" onClick="return CheckLink();">Page [26] &nbsp; Birth Certificate - Birth Registration </a></td>
 		</cfif>
+		---->
         <cfif url.p EQ '27'>
-			<td align="center" class="selected" colspan="2"><a class="item2" href="?curdoc=section4/page27&id=4&p=27" onClick="return CheckLink();"><div class="selectedlink">Page [27] &nbsp; ELTIS Test </div></a></td>
+			<td align="center" class="selected" colspan="2"><a class="item2" href="?curdoc=section4/page27&id=4&p=27" onClick="return CheckLink();"><div class="selectedlink">Page [25] &nbsp; ELTIS Test </div></a></td>
 		<cfelse>
-			<td align="center" class="ddmx" colspan="2" ><a class="item2" href="?curdoc=section4/page27&id=4&p=27" onClick="return CheckLink();">Page [27] &nbsp; ELTIS Test </a></td>
+			<td align="center" class="ddmx" colspan="2" ><a class="item2" href="?curdoc=section4/page27&id=4&p=27" onClick="return CheckLink();">Page [25] &nbsp; ELTIS Test </a></td>
 		</cfif>	
     </tr>
 	</cfif>	

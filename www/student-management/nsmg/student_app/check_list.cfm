@@ -716,7 +716,7 @@
     
     <!--- Do not display for ESI or Canada Application --->
     
-    <cfif CLIENT.companyID EQ 14 OR ListFind("14,15,16", smg_students.app_indicated_program)> 
+    <cfif ( ListFind("14,15,16", smg_students.app_indicated_program) OR ListFind("14,15", smg_students.companyid))> 
 		<tr><td><font color="0000FF">This page does not apply to your program</font><br></td></tr>
     <cfelseif smg_student_app_state_requested.state1 GT 0 or smg_student_app_state_requested.state2 GT 0 or smg_student_app_state_requested.state3 GT 0>
     	<tr><td>You've requested a state preference, therefore a region preference is not available. </td></tr>
@@ -776,8 +776,9 @@
 	<!--- PAGE 21 --->
 	<tr><td><a href="index.cfm?curdoc=section4/page21&id=4&p=21"><h3>Page [21] - <cfif CLIENT.companyID NEQ 14>State <cfelse>District </cfif> Choice </h3></a></td></tr>
 
-    <!--- Do not display for Canada Application --->
-    <cfif ListFind("14,15,16", smg_students.app_indicated_program)> 
+    <!--- Do not display for Canada Application or DASH --->
+  
+    <cfif ListFind("14,15,16", smg_students.app_indicated_program) OR ListFind("15", smg_students.companyid)> 
 		<tr><td><font color="0000FF">This page does not apply to your program</font><br></td></tr>
 	
 	<cfelseif CLIENT.companyID EQ 14>
@@ -967,7 +968,7 @@
 			<tr><td><font color="0000FF">Complete</font><br></td></tr>
 		</cfif>
 	    <tr><td>&nbsp;</td></tr>
-	    
+	    <!----
 	    <!--- PAGE 24 --->
 		<tr><td><a href="index.cfm?curdoc=section4/page24&id=4&p=24"><h3>Page [24] - HIPAA Release</h3></a></td></tr>
 		<cfif check_24_upload.recordcount EQ 0>
@@ -976,10 +977,11 @@
 			<tr><td><font color="0000FF">Complete</font><br></td></tr>
 		</cfif>
 	    <tr><td>&nbsp;</td></tr>
+		--->
 	</cfif>
     
     <!--- PAGE 25 --->
-	<tr><td><a href="index.cfm?curdoc=section4/page25&id=4&p=25"><h3>Page [25] - Passport</h3></a></td></tr>
+	<tr><td><a href="index.cfm?curdoc=section4/page25&id=4&p=25"><h3>Page [24] - Passport</h3></a></td></tr>
 	<cfif check_25_upload.recordcount EQ 0>
 		<tr><td><font color="0000FF">This page has not been uploaded. You must upload this page.</font><br></td></tr>
 	<cfelse>
@@ -987,7 +989,7 @@
 	</cfif>
     
     <tr><td>&nbsp;</td></tr>
-    
+    <!----
     <!--- PAGE 26 --->
 	<tr><td><a href="index.cfm?curdoc=section4/page26&id=4&p=26"><h3>Page [26] - Birth Certificate - Birth Registration</h3></a></td></tr>
 	<cfif check_26_upload.recordcount EQ 0>
@@ -997,9 +999,9 @@
 	</cfif>
     
     <tr><td>&nbsp;</td></tr>
-    
+    --->
     <!--- PAGE 27 --->
-	<tr><td><a href="index.cfm?curdoc=section4/page26&id=4&p=26"><h3>Page [27] - ELTIS Test</h3></a></td></tr>
+	<tr><td><a href="index.cfm?curdoc=section4/page26&id=4&p=26"><h3>Page [25] - ELTIS Test</h3></a></td></tr>
 	<cfif check_27_upload.recordcount EQ 0>
 		<tr><td><font color="0000FF">This page has not been uploaded. You must upload this page.</font><br></td></tr>
 	<cfelse>
