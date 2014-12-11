@@ -75,10 +75,6 @@
 			had_tuberculosis = <cfif IsDefined('form.had_tuberculosis')>'#form.had_tuberculosis#',<cfelse>NULL,</cfif> 
 			been_hospitalized = <cfif IsDefined('form.been_hospitalized')>'#form.been_hospitalized#',<cfelse>NULL,</cfif> 
 		    hospitalized_reason = <cfqueryparam value="#form.hospitalized_reason#" cfsqltype="cf_sql_char">,
-            surgery = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.surgery)#">,
-		    surgery_reason = <cfqueryparam value="#form.surgery_reason#" cfsqltype="cf_sql_char">,
-            chronicIllness = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.chronicIllness)#">,
-		    chronicIllness_reason = <cfqueryparam value="#form.chronicIllness_reason#" cfsqltype="cf_sql_char">,
 			have_eye_disease = <cfif IsDefined('form.have_eye_disease')>'#form.have_eye_disease#',<cfelse>NULL,</cfif>
 			wear_glasses = <cfif IsDefined('form.wear_glasses')>'#form.wear_glasses#',<cfelse>NULL,</cfif>
 			have_double_vision = <cfif IsDefined('form.have_double_vision')>'#form.have_double_vision#',<cfelse>NULL,</cfif>
@@ -126,16 +122,16 @@
             psychological_anxiety = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.psychological_anxiety)#">,
             psychological_dissociative = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.psychological_dissociative)#">,
             psychological_cutting = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.psychological_cutting)#">,
-            psychological_factitious = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.psychological_factitious)#">,
+        
             psychological_impulseControl = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.psychological_impulseControl)#">,
-            psychological_neurocognitive = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.psychological_neurocognitive)#">,
-            psychological_neurodevelopmental = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.psychological_neurodevelopmental)#">,
-            psychological_psychotic = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.psychological_psychotic)#">,
-            psychological_sexualGenderIdentity = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.psychological_sexualGenderIdentity)#">,
+           
+           
+          
+            
             psychological_substance = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.psychological_substance)#">,
 			medical_attention_reason = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.medical_attention_reason#">,
-            psychological_treatment = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.psychological_treatment)#">,
-            psychological_treatmentExplanation = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.psychological_treatmentExplanation#">
+          
+            other_psycho = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.other_psycho#">
             
 		WHERE healthid = <cfqueryparam value="#form.healthid#" cfsqltype="cf_sql_integer"> 
 		</cfquery>
