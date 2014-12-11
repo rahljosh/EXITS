@@ -135,7 +135,7 @@
 
 <Cfquery name="qGetStateClosed" datasource="#APPLICATION.DSN#">
     select sc.fk_stateID, s.statename
-    from regionStateClosure sc 
+    from regionstateclosure sc 
     LEFT join smg_states s on s.id = sc.fk_stateID
     where  sc.fk_programid = #get_student_info.programid#
     <Cfif client.companyid lte 5 or client.companyid eq 12>
@@ -195,7 +195,7 @@
 	SELECT
     	sc.fk_districtID
    	FROM
-    	regionStateClosure sc
+    	regionstateclosure sc
    	WHERE
     	sc.fk_programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.programID#">
  	AND
@@ -257,7 +257,7 @@
 
 
 <!--- Do not display for Canada Application --->
-<cfif ListFind("14,15,16", get_student_info.app_indicated_program)> 
+<cfif (ListFind("14,15,16", get_student_info.app_indicated_program) or ListFind("15", client.companyid)) > 
 
     <div class="section"><br>
         <br><Br><br>
