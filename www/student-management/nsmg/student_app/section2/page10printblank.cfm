@@ -42,6 +42,7 @@
 		<cfif LEN(URL.curdoc)>
 		<td align="right" class="tablecenter"><a href="" onClick="javascript: win=window.open('section2/page10printblank.cfm', 'Reports', 'height=600, width=800, location=no, scrollbars=yes, menubars=no, toolbars=yes, resizable=yes'); win.opener=self; return false;"><img src="#path#pics/printhispage.gif" border="0" alt="Click here to print this page"></img></A>&nbsp; &nbsp;</td>
 		</cfif>
+        <td  class="tablecenter"><cfinclude template="../datestamp.cfm"></td>
 		<td width="42" class="tableside"><img src="#path#pics/p_topright.gif" width="42"></td>
 	</tr>
 </table>
