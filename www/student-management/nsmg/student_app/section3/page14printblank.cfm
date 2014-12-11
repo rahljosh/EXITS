@@ -59,7 +59,7 @@
 	<tr><td>
     <article style="font-size:10px;">
 <h3>Authorization to Treat a Minor <cfif client.companyid neq 13> and HIPAA Release</cfif><br></h3>
-<p>(We) the undersigned parent(s), or legal guardian of #get_student_info.firstname# #get_student_info.familylastname#, (hereafter "Exchange Student"), do hereby authorize and consent to the following: </p>
+<p>(We) the undersigned parent(s), or legal guardian of _________________________________________, (hereafter "Exchange Student"), do hereby authorize and consent to the following: </p>
 <p><strong>Authorization to Treat a Minor or Dependent</strong></p>
 <p>I do hereby state that I have legal custody of the aforementioned Minor. I grant my authorization and consent for #CLIENT.companyName# (#CLIENT.companyShort#), its officers, staff, Regional Managers, Area Representatives and Host Families (hereafter "Designated Adults") to administer general first aid treatment for any minor injuries or illnesses experienced by the Exchange Student. If the injury or illness is life threatening or in need of professional medical treatment, I authorize the Designated Adults to summon any and all professional emergency personnel to attend, transport, and treat the minor and to issue consent for any medical or psychological treatment, and to be rendered under the general supervision of, any licensed physician, surgeon, dentist, hospital, psychologist, psychiatrist, nurse practitioner or other medical professional or institution duly licensed to practice in the state in which such treatment is to occur. I agree to assume financial responsibility for all expenses of such care. 
 </p>
