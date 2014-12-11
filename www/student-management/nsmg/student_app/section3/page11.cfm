@@ -432,7 +432,7 @@ function NextPage() {
     <tr>
     	<!--- Depression --->
     	<td width="90" align="right">
-			<input type="radio" name="depression" value="0" <cfif get_health.depression EQ '0'>checked="yes"</cfif> onchange="DataChanged();">No
+			<input type="radio" name="depression" value="0" <cfif get_health.depression EQ '0'>checked="n"</cfif> onchange="DataChanged();">No
             <input type="radio" name="depression" value="1" <cfif get_health.depression EQ '1'>checked="yes"</cfif> onchange="DataChanged();">Yes 
          	&nbsp;
         </td>

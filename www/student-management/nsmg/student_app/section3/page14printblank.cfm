@@ -47,14 +47,17 @@
 		<cfif LEN(URL.curdoc)>
 		<td align="right" class="tablecenter"><a href="" onClick="javascript: win=window.open('section3/page14printblank.cfm', 'Reports', 'height=600, width=800, location=no, scrollbars=yes, menubars=no, toolbars=yes, resizable=yes'); win.opener=self; return false;"><img src="#path#pics/printhispage.gif" border="0" alt="Click here to print this page"></img></A>&nbsp; &nbsp;</td>
 		</cfif>
+        <td  class="tablecenter"><cfinclude template="../datestamp.cfm"></td>
 		<td width="42" class="tableside"><img src="#path#pics/p_topright.gif" width="42"></td>
 	</tr>
 </table>
 
 <div class="section"><br>
 <cfsavecontent variable="publicAgreement">
+
 <table width="670" border=0 cellpadding=1 cellspacing=0 align="center">
 	<tr><td>
+    <article style="font-size:10px;">
 <h3>Authorization to Treat a Minor <cfif client.companyid neq 13> and HIPAA Release</cfif><br></h3>
 <p>(We) the undersigned parent(s), or legal guardian of #get_student_info.firstname# #get_student_info.familylastname#, (hereafter "Exchange Student"), do hereby authorize and consent to the following: </p>
 <p><strong>Authorization to Treat a Minor or Dependent</strong></p>
@@ -89,6 +92,7 @@ Any of #CLIENT.companyshort#'s Student Facilitators, Program Managers, or Corpor
 </li>
 </ol>
 <p>I have read and understood this authorization and authorize the disclosure of the protected health information as described above.</p>
+</article>
 </cfif>
 </td></tr>
 </table><br>
@@ -97,6 +101,7 @@ Any of #CLIENT.companyshort#'s Student Facilitators, Program Managers, or Corpor
     <cfsavecontent variable="phpAgreement">
 <table width="670" border=0 cellpadding=1 cellspacing=0 align="center">
 	<tr><td>
+    <article style="font-size:10px;">
 <h3>Authorization to Treat a Minor <cfif client.companyid neq 13> and HIPAA Release</cfif><br></h3>
 
 
@@ -135,7 +140,7 @@ Any of DMD/PHP’s Student Facilitators, Program Managers, or Corporate Officers.
 </li>
 </ol>
 <p>I have read and understood this authorization and authorize the disclosure of the protected health information as described above.</p>
-
+</article>
 </td></tr>
 </table><br> 
     
@@ -162,6 +167,8 @@ Any of DMD/PHP’s Student Facilitators, Program Managers, or Corporate Officers.
 
 
 <!--- FOOTER OF TABLE --->
+
+
 <table width="100%" cellpadding="0" cellspacing="0">
 	<tr height="8">
 		<td width="8"><img src="#path#pics/p_bottonleft.gif" width="8"></td>

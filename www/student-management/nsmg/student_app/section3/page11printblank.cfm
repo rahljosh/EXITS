@@ -49,27 +49,29 @@
 <!--- MEDICAL HISTORY --->
 <table width="670" border=0 cellpadding=2 cellspacing=0 align="center">
 	<tr><td colspan="4"><b>MEDICAL HISTORY</b> - <em>Have you had?</em></td></tr>
-	<tr><td width="90" align="right">
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
-		</td>
-		<td width="245"><em>Measles</em></td>
+	<tr>
 		<td width="90" align="right">
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
 		</td>
 		<td width="245"><em>Diabetes</em></td>	
-	</tr>
-	<tr><td align="right">
+        <td align="right">
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
 		</td>
-		<td><em>Mumps</em></td>
+		<td><em>Strokes / Cerbral Hemorrhage</em></td>
+	</tr>
+	<tr>
 		<td align="right">
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
 		</td>
 		<td><em>Cancer</em></td>	
+        <td align="right">
+			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
+			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
+		</td>
+		<td><em>Concussion or Head Injuries</em></td>
 	</tr>
 	<tr><td align="right">
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
@@ -93,93 +95,38 @@
 		</td>
 		<td><em>Sexually Transmitted Disease</em></td>
 	</tr>
+	
 	<tr><td align="right">
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
 		</td>
-		<td><em>Rubella</em></td>
-		<td align="right">
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
-		</td>
-		<td><em>Strokes</em></td>
-	</tr>
-	<tr><td align="right">
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
-		</td>
-		<td><em>Concussion or Head Injuries</em></td>
-		<td align="right">
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
-		</td>
-		<td><em>Tuberculosis</em></td>		
-	</tr>
-	<tr><td align="right">
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
-		</td>
-		<td><em>Rheumatic Fever or Heart Disease</em></td>
-		<td align="right">&nbsp;</td>
-		<td>&nbsp;</td>	
-	</tr>
-	<tr><td align="right">
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
-		</td>
-		<td colspan="3"><em>Have you ever been hospitalized? </em></td>
+		<td colspan="3"><em>Have you ever been hospitalized, had surgery or been treated for a chronic medical illness?</em></td>
 	</tr>
 	<tr>
 		<td>&nbsp;</td>
 		<td colspan="3"><em>Please Explain:</em> &nbsp; <br><img src="#path#pics/line.gif" width="500" height="1" border="0" align="absmiddle"></td>
 	</tr>
-    <tr><td align="right">
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
-		</td>
-		<td colspan="3"><em>Have you ever had surgery? </em></td>
-	</tr>
-	<tr>
-		<td>&nbsp;</td>
-		<td colspan="3"><em>Please Explain:</em> &nbsp; <br><img src="#path#pics/line.gif" width="500" height="1" border="0" align="absmiddle"></td>
-	</tr>
-    <tr><td align="right">
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
-		</td>
-		<td colspan="3"><em>Have you ever been treated for a chronic medical illness? </em></td>
-	</tr>
-	<tr><td>&nbsp;</td>
-		<td colspan="3"><em>Please Explain:</em> &nbsp; <br><img src="#path#pics/line.gif" width="500" height="1" border="0" align="absmiddle"></td>
-	</tr>	
+   
+
 </table>
 <!--- SYSTEMIC REVIEW --->
 <table width="670" border=0 cellpadding=2 cellspacing=0 align="center">
 	<tr><td colspan="4"><b>SYSTEMIC REVIEW</b> - <em>Do you have the following?</em></td></tr>
 	<tr><td colspan="2" align="left"><b>Eyes-Ears-Nose-Throat:</b></td>
-		<td colspan="2" align="left"><b>Skin</b></td>
+		
 	</tr>
 	<tr><td width="90" align="right">
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
 		</td>
 		<td width="245"><em>Eye disease or injury</em></td>
-		<td width="90" align="right">
+        <td align="right">
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
 		</td>
-		<td width="245"><em>Skin disease, hives, eczema</em></td>	</tr>
-	<tr><td align="right">
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
-		</td>
-		<td><em>Do you wear glasses?</em></td>		
-		<td align="right">
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
-		</td>
-		<td><em>Jaundice</em></td>
+		<td><em>Do you wear glasses?</em></td>	
 	</tr>
+	
 	<tr><td align="right">
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
@@ -189,101 +136,67 @@
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
 		</td>
-		<td><em>Frequent infection or boils</em></td>
+		<td><em>Chronic Headaches</em></td>	
 	</tr>
-	<tr><td align="right">
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
-		</td>
-		<td><em>Headaches</em></td>	
-		<td align="right">
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
-		</td>
-		<td><em>Abnormal pigmentation</em></td>	
-	</tr>
-	<tr><td align="right">
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
-		</td>
-		<td><em>Glaucoma</em></td>
-		<td colspan="2" align="left"><b>Neck:</b></td>
-	</tr>
-	<tr><td align="right">
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
-		</td>
-		<td><em>Nosebleeds</em></td>
-		<td align="right">
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
-		</td>
-		<td><em>Stiffness</em></td>	
-	</tr>
-	<tr><td align="right">
+	
+	
+	<tr>
+    	<td align="right">
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
 		</td>
 		<td><em>Chronic sinus trouble</em></td>
-		<td align="right">
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
-		</td>
-		<td><em>Thyroid Trouble</em></td>
-
-	</tr>
-	<tr><td align="right">
+ 	    <td align="right">
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
 		</td>
 		<td><em>Ear Disease</em></td>
-		<td align="right">
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
-		</td>
-		<td><em>Enlarged glands</em></td>	
+	
 	</tr>
-	<tr><td align="right">
+	
+	<tr>
+<td align="right">
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
 		</td>
 		<td><em>Impaired hearing</em></td>
-		<td colspan="2" align="left"><b>Respiratory: </b></td>
-	</tr>
-	<tr><td align="right">
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
-		</td>
-		<td><em>Do you wear hearing aids?</em></td>
-		<td align="right">
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
-		</td>
-		<td><em>Spitting up blood</em></td>	
-	</tr>
-	<tr><td align="right">
+        <td align="right">
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
 		</td>
 		<td><em>Dizziness</em></td>
-		<td align="right">
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
-		</td>
-		<td><em>Chronic or frequent cough</em></td>	
+		
 	</tr>
+	
 	<tr><td align="right">
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
 		</td>
 		<td><em>Episodes of unconsciousness</em></td>
-		<td align="right">
+	 <td align="right">
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
 		</td>
-		<td><em>Asthma</em></td>	
+		<td><em>Nosebleeds</em></td>
 	</tr>
-	<tr><td align="right">
+	
+    <tr>
+    	<td colspan="2" align="left"><b>Skin</b></td>
+    </tr>
+    <Tr>
+    	<td width="90" align="right">
+			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
+			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
+		</td>
+		<td width="245"><em>Skin disease, hives, eczema</em></td>
+        <td align="right">
+			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
+			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
+		</td>
+		<td><em>Jaundice</em></td>
+        
+    </Tr>
+    <tr><td align="right">
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
 		</td>
@@ -312,38 +225,10 @@
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
 		</td>
-		<td><em>Morphine, Codeine, Demerol, other narcotics</em></td>
-		
-		<td align="right">
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
-		</td>
-		<td><em>Sulfa drugs</em></td>
-	</tr>
-	<tr><td align="right">
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
-		</td>
 		<td><em>Aspirin, empirin or other pain remedies</em></td>
-		
-		<td align="right">
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
-		</td>
-		<td><em>Adhesive tape or latex</em></td>
+	
 	</tr>
-	<tr><td align="right">
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
-		</td>
-		<td><em>Tetanus, antitoxin or other serums</em></td>
-		
-		<td align="right">
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
-		</td>
-		<td><em>Iodine or merthiolate</em></td>
-	</tr>
+
 	<tr><td align="right">
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
@@ -400,27 +285,14 @@
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
         </td>
         <td width="245"><em>Anxiety disorders</em></td>
-        <!--- Neurocognitive disorders --->
-        <td width="90" align="right">
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
-        </td>
-        <td width="245"><em>Neurocognitive disorders</em></td>
-    </tr>
-    <tr>
-    	<!--- Dissociative disorders --->
+       <!--- Dissociative disorders --->
     	<td width="90" align="right">
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
         </td>
         <td width="245"><em>Dissociative disorders</em></td>
-        <!--- Neurodevelopmental disorders --->
-        <td width="90" align="right">
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
-        </td>
-        <td width="245"><em>Neurodevelopmental disorders</em></td>
     </tr>
+ 
     <tr>
     	<!--- Eating disorders --->
     	<td width="90" align="right">
@@ -428,27 +300,14 @@
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
         </td>
         <td width="245"><em>Eating disorders</em></td>
-        <!--- Psychotic disorders --->
-        <td width="90" align="right">
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
-        </td>
-        <td width="245"><em>Psychotic disorders</em></td>
-    </tr>
-    <tr>
-    	<!--- Cutting disorders --->
+        	<!--- Cutting disorders --->
     	<td width="90" align="right">
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
         </td>
         <td width="245"><em>Cutting behavior (Factitious disorders)</em></td>
-        <!--- Sexual Gender Identity disorders --->
-        <td width="90" align="right">
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
-        </td>
-        <td width="245"><em>Sexual and gender identity disorders</em></td>
     </tr>
+   
     <tr>
     	<!--- Depression --->
     	<td width="90" align="right">
@@ -469,26 +328,26 @@
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
 			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
         </td>
-        <td width="245"><em>Factitious disorders</em></td>
+        <td width="245"><em>Other</em></td>
         <td width="90" align="right" colspan="2"></td>
     </tr>
     <tr><td colspan="4"><em>If you answered yes to any of these, please provide a detailed explanation:</em></td></tr>
     <tr><td>&nbsp;</td></tr>
     <tr><td colspan="4"><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td></tr>
-    <tr>
-    	<td width="90" align="right">
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> No
-			<img src="#path#pics/RadioN.gif" width="13" height="13" border="0"> Yes &nbsp;
-        </td>
-        <td colspan="3"><em>Have you ever received treatment or counseling for any psychological disorder?</em></td>
-    </tr>
-    <tr>
-    	<td colspan="4">
-            <em>If yes, please explain:</em>
-            <img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle">
-  		</td>
- 	</tr>
+   
 </table>
+
+	<br><br>
+	<table width="660" border=0 cellpadding=3 cellspacing=0 align="center">
+		
+		<tr>
+			<td><br><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
+			<td>&nbsp;</td>
+			<td colspan="2"><br><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
+		</tr>
+        <tr><td><em>Student Signature</em></td><td>&nbsp;</td><td colspan="2"><em>Parent/Guardian Signature</em></td></tr>
+		
+	</table>
 </div>
 
 <!--- FOOTER OF TABLE --->
