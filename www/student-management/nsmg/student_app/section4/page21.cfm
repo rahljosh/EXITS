@@ -257,7 +257,7 @@
 
 
 <!--- Do not display for Canada Application --->
-<cfif (ListFind("14,15,16", get_student_info.app_indicated_program) or ListFind("15", client.companyid)) > 
+<cfif (ListFind("14,15,16", get_student_info.app_indicated_program) or ListFind("13,15", client.companyid)) > 
 
     <div class="section"><br>
         <br><Br><br>
