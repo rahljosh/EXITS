@@ -125,7 +125,7 @@
     </cfquery>
     
     <!--- Temporary fix for issue with season change --->
-    <cfif ListFind("366,367",qGetStudentInfo.programid)>
+    <cfif ListFind("392,393",qGetStudentInfo.programid)>
     	<cfset qGetStudentInfo.programid = 369>
     </cfif>
     
