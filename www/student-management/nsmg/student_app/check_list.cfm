@@ -716,7 +716,7 @@
     
     <!--- Do not display for ESI or Canada Application --->
     
-    <cfif ( ListFind("14,15,16", smg_students.app_indicated_program) OR ListFind("14,15", smg_students.companyid))> 
+    <cfif ( ListFind("14,15,16", smg_students.app_indicated_program) OR ListFind("13,14,15", smg_students.companyid))> 
 		<tr><td><font color="0000FF">This page does not apply to your program</font><br></td></tr>
     <cfelseif smg_student_app_state_requested.state1 GT 0 or smg_student_app_state_requested.state2 GT 0 or smg_student_app_state_requested.state3 GT 0>
     	<tr><td>You've requested a state preference, therefore a region preference is not available. </td></tr>
@@ -778,7 +778,7 @@
 
     <!--- Do not display for Canada Application or DASH --->
   
-    <cfif ListFind("14,15,16", smg_students.app_indicated_program) OR ListFind("15", smg_students.companyid)> 
+    <cfif ListFind("14,15,16", smg_students.app_indicated_program) OR ListFind("13,15", smg_students.companyid)> 
 		<tr><td><font color="0000FF">This page does not apply to your program</font><br></td></tr>
 	
 	<cfelseif CLIENT.companyID EQ 14>

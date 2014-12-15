@@ -172,7 +172,7 @@ and sc.fk_companyid = #client.companyid#
 	<cfabort>	
 </cfif>
 <!----Regional Choice doesn't apply to ESI---->
-<cfif ( ListFind("15", client.companyid))> 
+<cfif ( ListFind("13,15", client.companyid))> 
 	<div class="section"><br><br>
 	<table width="670" cellpadding=2 cellspacing=0 align="center">
 		<tr>
