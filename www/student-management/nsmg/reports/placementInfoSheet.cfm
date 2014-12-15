@@ -124,6 +124,11 @@
         WHERE airCode = <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetHostFamily.major_air_code#">
     </cfquery>
     
+    <!--- Temporary fix for issue with season change --->
+    <cfif ListFind("366,367",qGetStudentInfo.programid)>
+    	<cfset qGetStudentInfo.programid = 369>
+    </cfif>
+    
     <cfquery name="qGetSchoolDates" datasource="#APPLICATION.DSN#">
         SELECT 
         	schooldateid, 
@@ -134,15 +139,11 @@
             semester_ends, 
             semester_begins, 
             year_ends,
-            p.programid
-        FROM 
-        	smg_school_dates
-        INNER JOIN 
-        	smg_programs p ON p.seasonid = smg_school_dates.seasonid
-        WHERE 
-        	schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetPlacementHistory.schoolID)#">
-        AND 
-        	p.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.programid)#">
+            p.programID
+        FROM smg_school_dates
+        INNER JOIN smg_programs p ON p.seasonid = smg_school_dates.seasonid
+        WHERE schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetPlacementHistory.schoolID)#">
+        AND p.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.programid)#">
     </cfquery>
     
     <!---number kids at home---->
