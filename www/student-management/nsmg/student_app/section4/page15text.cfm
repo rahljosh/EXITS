@@ -290,10 +290,10 @@ The Exchange Student will abide by the federal, state, and local laws of the Uni
     </ol>    
 </cfsavecontent>
 
-<table width="670px" cellpadding=3 cellspacing=0 align="center">
+<table width="670px" cellpadding=2 cellspacing=0 align="center">
 	<tr>
 		<td style="text-align:justify;">
-			<p style="font-weight:bold;">Please read carefully, print, sign and date where indicated.</p>
+			
             
             <cfif ListFind("14,15,16", qGetStudentInfo.app_indicated_program)>            	
 				<!--- Canada Agreement --->

@@ -103,9 +103,9 @@
 </cfif>
 
 <table width="660" border=0 cellpadding=3 cellspacing=0 align="center">
-	<tr><td><b>IMMUNIZATIONS REQUIRED FOR SCHOOL ADMITTANCE</b></td></tr>
+	<tr><td colspan=2><b>IMMUNIZATIONS REQUIRED FOR SCHOOL ADMITTANCE</b></td></tr>
 	<tr>
-    	<td>
+    	<td colspan=2>
     		<div align="justify">
 				<cfif ListFind("14,15,16", get_student_info.app_indicated_program)>     
                     <!--- Canada Application --->       	
@@ -123,18 +123,19 @@
 			</div>
 		</td>
     </tr>
-	<tr><td>&nbsp;</td></tr>
-	<tr><td><b>MINIMUM IMMUNIZATION REQUIREMENTS:</b></td></tr>
-	<tr><td>Five or more doses of DTaP</td></tr>
-	<tr><td>Three or more doses of trivalent oral polio vaccine (TOPV).</td></tr>
-	<tr><td>Two doses measles vaccine.</td></tr>
-	<tr><td>Two doses mumps vaccine.</td></tr>
-	<tr><td>Two doses rubella vaccine.</td></tr>
-    <tr><td>Two doses of Hepatitis A vaccine.</td></tr>
-	<tr><td>Three doses of Hepatitis B vaccine.</td></tr>
-	<tr><td>Two doses of Varicella vaccine (Two doses required if first dose issued after thirteenth birthday).</td></tr>
-    <tr><td>Two doses of Meningococcal vaccine (Two doses required if older than 16).</td></tr>
-	<tr><td>If the final dose of any of the above vaccines occurs before the third birthday, a booster shot is required.</td></tr>
+	<tr><td colspan=2>&nbsp;</td></tr>
+	<tr><td colspan =2><b>MINIMUM IMMUNIZATION REQUIREMENTS:</b></td></tr>
+	<tr><td>Five or more doses of DTaP</td><td>Two doses measles vaccine.</td></tr>
+	
+	<tr><td>Two doses mumps vaccine.</td><td>Two doses rubella vaccine.</td></tr>
+	
+	<tr><td>Two doses of Hepatitis A vaccine.</td><td>Three doses of Hepatitis B vaccine.</td></tr>
+
+	
+    <tr><td colspan=2>Three or more doses of trivalent oral polio vaccine (TOPV).</td></tr>
+	<tr><td colspan=2>Two doses of Varicella vaccine (Two doses required if first dose issued after thirteenth birthday).</td></tr>
+    <tr><td colspan=2>Two doses of Meningococcal vaccine (Two doses required if older than 16).</td></tr>
+	<tr><td colspan=2> If the final dose of any of the above vaccines occurs before the third birthday, a booster shot is required.</td></tr>
 </table><br>
 
 <table width="660" border=1 cellpadding=3 cellspacing=0  bordercolor="CCCCCC" align="center">
