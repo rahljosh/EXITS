@@ -37,7 +37,7 @@
 	FROM
     	smg_student_app_language l
  	LEFT OUTER JOIN
-    	applicationLookUp alk ON alk.fieldID = l.languageID
+    	applicationlookup alk ON alk.fieldID = l.languageID
        	AND
           	alk.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="language">
   	WHERE
@@ -86,12 +86,14 @@
 
 <div class="section"><br>
 <table width="660" border="0" cellpadding="1" cellspacing="0" align="center">	
-	<tr><td colspan="8"><em>Check any activity in which you participate in your home country (check at least 3 and no more than 6).</em></td></tr>
-	<tr><cfloop query="get_interests">	
-		<td><cfif ListFind(get_student_info.interests, interestid, ",")><img src="#vStudentAppRelativePath#pics/checkY.gif" width="13" height="13" border="0"><cfelse><img src="#vStudentAppRelativePath#pics/checkN.gif" width="13" height="13" border="0"></cfif></td>
-		<td>#interest# <cfif ListFind(get_student_info.interests, interestid, ",")>x</cfif></td>
-			<cfif (get_interests.currentrow MOD 4 ) is 0></tr><tr></cfif>
-		</cfloop>
+	<tr>
+	  <td colspan="8"><em>List activities in which you participate in your home country ( at least 3 and no more than 6).</em></td></tr>
+	<tr>	
+		<td><cfloop query="get_interests">
+			<cfif ListFind(get_student_info.interests, interestid, ",")><input type="checkbox" checked>#interest# </cfif>
+           	</cfloop> </td>
+			
+		
 	<tr><td colspan="8"><em>Other:</em></td></tr>
 	<tr><td colspan="8">#app_other_interest#<br><img src="#vStudentAppRelativePath#pics/line.gif" width="660" height="1" border="0" align="absmiddle"></td></tr>
 	<tr><td>&nbsp;</td></tr>

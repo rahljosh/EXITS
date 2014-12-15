@@ -6,8 +6,9 @@
 	<title>Page [03] - Personal Data</title>
 </head>
 <body>
-
+<!----
 <cftry>
+---->
 
 <!--- This enables easy use of the functions in the student.cfc file through javascript --->
 <cfajaxproxy cfc="nsmg.extensions.components.student" jsclassname="STUDENT">
@@ -116,7 +117,7 @@ function CheckFields() {
 	FROM
     	smg_student_app_language l
  	LEFT OUTER JOIN
-    	applicationLookUp alk ON alk.fieldID = l.languageID
+    	applicationlookup alk ON alk.fieldID = l.languageID
        	AND
           	alk.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="language">
   	WHERE
@@ -363,11 +364,12 @@ function CheckFields() {
 
 <!--- FOOTER OF TABLE --->
 <cfinclude template="../footer_table.cfm">
-
+<!----
 <cfcatch type="any">
 	<cfinclude template="../error_message.cfm">
 </cfcatch>
-</cftry>
 
+</cftry>
+---->
 </body>
 </html>

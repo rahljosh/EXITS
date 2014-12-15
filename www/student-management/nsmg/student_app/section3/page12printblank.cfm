@@ -42,7 +42,6 @@
 		<cfif LEN(URL.curdoc)>
 		<td align="right" class="tablecenter"><a href="" onClick="javascript: win=window.open('section3/page12printblank.cfm', 'Reports', 'height=600, width=800, location=no, scrollbars=yes, menubars=no, toolbars=yes, resizable=yes'); win.opener=self; return false;"><img src="#path#pics/printhispage.gif" border="0" alt="Click here to print this page"></img></A>&nbsp; &nbsp;</td>
 		</cfif>
-        <td  class="tablecenter"><cfinclude template="../datestamp.cfm"></td>
 		<td width="42" class="tableside"><img src="#path#pics/p_topright.gif" width="42"></td>
 	</tr>
 </table>
@@ -165,48 +164,54 @@
 				<tr><td>&nbsp; Psychiatric</td>
 					<td align="center"><img src="#path#pics/RadioN.gif" width="13" height="13" border="0"></td>
 					<td align="center"><img src="#path#pics/RadioN.gif" width="13" height="13" border="0"></td>
-				<tr><td>&nbsp; Pelvic (female only)<br> &nbsp;  &nbsp; check how done <br> &nbsp; &nbsp;
-						<img src="#path#pics/RadioN.gif" width="13" height="13" border="0">  vaginal &nbsp;  
+				<tr><td>&nbsp; Pelvic (female only)<br> &nbsp; &nbsp;
+						<img src="#path#pics/RadioN.gif" width="13" height="13" border="0">  vaginal or  
 						<img src="#path#pics/RadioN.gif" width="13" height="13" border="0">  rectal <br><br></td>
 					<td align="center"><img src="#path#pics/RadioN.gif" width="13" height="13" border="0"></td>
 					<td align="center"><img src="#path#pics/RadioN.gif" width="13" height="13" border="0"></td>
 			</table>	
 		</td>
 	</tr>	
-</table><br>
+</table>
+<br>
+<table width="660" border=0 cellpadding=2 cellspacing=0 align="center">
+  <tr >
+    <td width="20%" align="left" colspan="0"><span class="style3">Medical Notes:</span></td>
+    <td width="100%"><br><img src="#path#pics/line.gif" width="400" height="1" border="0" align="absmiddle"></td>
+  </tr>
+  </table><br>
 
-<table width="670" border=0 cellpadding=2 cellspacing=0 align="center">
+<table width="660" border=0 cellpadding=1 cellspacing=0 align="center">
 	<tr><td colspan="7"><b>BLOOD PRESSURE</b></td></tr>
-	<tr><td width="10">&nbsp;</td>
-		<td width="80" align="right"><em>Sitting:</em></td>
-		<td width="130"><br><img src="#path#pics/line.gif" width="120" height="1" border="0" align="absmiddle"></td>
+	<tr><td width="">&nbsp;</td>
+		<td width="" align="right"><em>Sitting:</em></td>
+		<td width=""><br><img src="#path#pics/line.gif" width="50" height="1" border="0" align="absmiddle"></td>
 		
-		<td width="110" align="right"><em>Recumbent:</em></td>
-		<td width="120" ><br><img src="#path#pics/line.gif" width="110" height="1" border="0" align="absmiddle"></td>
+		<td width="" align="right"><em>Recumbent:</em></td>
+		<td width="" ><br><img src="#path#pics/line.gif" width="50" height="1" border="0" align="absmiddle"></td>
 		
-		<td width="90" align="right"><em>Standing:</em></td>
-		<td width="130"><br><img src="#path#pics/line.gif" width="120" height="1" border="0" align="absmiddle"></td></tr>
+		<td width="" align="right"><em>Standing:</em></td>
+		<td width=""><br><img src="#path#pics/line.gif" width="50" height="1" border="0" align="absmiddle"></td></tr>
 	
-	<tr><td colspan="7">&nbsp;</td></tr>
+	
 	
 	<tr><td colspan="7"><b>PULSE</b> (arm at heart level)</td></tr>
 	<tr><td>&nbsp;</td>
 		<td align="right"><em>Sitting: </em></td>
-		<td><br><img src="#path#pics/line.gif" width="120" height="1" border="0" align="absmiddle"></td>
+		<td><br><img src="#path#pics/line.gif" width="50" height="1" border="0" align="absmiddle"></td>
 		
 		<td align="right"><em>After Exercise:</em></td>
-		<td><br><img src="#path#pics/line.gif" width="110" height="1" border="0" align="absmiddle"></td>
+		<td><br><img src="#path#pics/line.gif" width="50" height="1" border="0" align="absmiddle"></td>
 
 		<td align="right"><em>2 Minutes After:</em></td>
-		<td><br><img src="#path#pics/line.gif" width="120" height="1" border="0" align="absmiddle"></td></tr>
+		<td><br><img src="#path#pics/line.gif" width="50" height="1" border="0" align="absmiddle"></td></tr>
 
 	<tr><td>&nbsp;</td>
 		<td align="right"><em>Recumbent: </em> </td>
-		<td><br><img src="#path#pics/line.gif" width="120" height="1" border="0" align="absmiddle"></td>
+		<td><br><img src="#path#pics/line.gif" width="50" height="1" border="0" align="absmiddle"></td>
 		
-		<td align="right"><em>After Standing 3 Minutes: </em></td>
-		<td colspan="3"><br><img src="#path#pics/line.gif" width="110" height="1" border="0" align="absmiddle"></td></tr>
-</table><br>
+		<td  align="right" width=200><em>After Standing 3 Minutes: </em></td><td><br><img src="#path#pics/line.gif" width="50" height="1" border="0" align="absmiddle"></td></tr>
+</table>
 
 <table width="670" border=0 cellpadding=2 cellspacing=0 align="center">
 	<tr><td colspan="5"><b>LABORATORY FINDINGS</b></td></tr>
@@ -242,16 +247,17 @@
 </table><br>
 
 <table width="670" border=0 cellpadding=2 cellspacing=0 align="center">
-<tr>
+	<tr>
     	<td colspan="3">
-        	Are you aware of any physical or psychological condition that the student may have that would impact their ability to travel to the United States to participate in a high school exchange program?
+        	Are you aware on any physical or psychological condition that the student may have that would impact their ability to travel to the United States to participate in a high school exchange program (yes/no)?
         </td>
     </tr>
-   <tr><td colspan="3"><input type="checkbox"> No</td></tr>
-    <tr><td colspan="3"></td></tr>
+    <tr><td colspan="3"><input type="checkbox"> No</td></tr>
     <tr><td>&nbsp;</td></tr>
+    
     <tr><td colspan="3"><input type="checkbox"> Yes (please explain):</td></tr>
     <tr><td colspan="3"><img src="#path#pics/line.gif" width="540" height="1" border="0" align="absmiddle" style="margin-left:125px;"></td></tr>
+    <tr><td>&nbsp;</td></tr>
 
 	<tr><td width="315"><em>Physician's Name</em></td><td width="40">&nbsp;</td><td width="315"><em>Signature</em></td></tr>
 	<tr>
@@ -267,34 +273,7 @@
 	</tr>
 </table><br>
 
-<table width="670" border=0 cellpadding=2 cellspacing=0 align="center">
-	<tr>
-		<td colspan="3"><div align="justify">We certify that the information supplied is true and complete to the best or our knowledge. We authorize
-		any of the doctors, hospitals, or clinics mentioned above to furnish a complete transcript of medical records for purposes of processing 
-		this application.</div>
-		</td>
-	</tr>
-	<tr>
-		<td width="315"><em>Signature of Student</em></td>
-		<td width="40">&nbsp;</td>
-		<td width="315"><em>Date</em></td>
-	</tr>
-	<tr>
-		<td><br><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
-		<td>&nbsp;</td>
-		<td><br><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
-	</tr>
-	<tr>
-		<td><em>Signature of Parent</em></td>
-		<td>&nbsp;</td>
-		<td><em>Date</em></td>
-	</tr>	
-	<tr>
-		<td><br><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
-		<td>&nbsp;</td>
-		<td><br><img src="#path#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
-	</tr>	
-</table><br>
+
 </div>
 
 <!--- FOOTER OF TABLE --->

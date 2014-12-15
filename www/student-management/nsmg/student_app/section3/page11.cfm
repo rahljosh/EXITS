@@ -261,8 +261,8 @@ function NextPage() {
 		</td>
 		<td><em>Episodes of unconsciousness</em></td>
 		<td align="right">
-			<cfif get_health.have_nosebleeds EQ '0'><cfinput type="radio" name="have_nosebleeds" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="have_unconsciousness" value="0" onchange="DataChanged();">No</cfif>
-			<cfif get_health.have_nosebleeds EQ '1'><cfinput type="radio" name="have_nosebleeds" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="have_unconsciousness" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;	 
+			<cfif get_health.have_nosebleeds EQ '0'><cfinput type="radio" name="have_nosebleeds" value="0" checked="yes" onchange="DataChanged();">No <cfelse><cfinput type="radio" name="have_nosebleeds" value="0" onchange="DataChanged();">No</cfif>
+			<cfif get_health.have_nosebleeds EQ '1'><cfinput type="radio" name="have_nosebleeds" value="1" checked="yes" onchange="DataChanged();">Yes <cfelse><cfinput type="radio" name="have_nosebleeds" value="1" onchange="DataChanged();">Yes</cfif> &nbsp;	 
 		</td>
 		<td><em>Nosebleeds</em></td>
 	</tr>

@@ -171,8 +171,8 @@
 				<tr><td>&nbsp; Psychiatric</td>
 					<td align="center"><cfif get_health.clinical_psychiatric is 'normal'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"><cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"></cfif></td>
 					<td align="center"><cfif get_health.clinical_psychiatric is 'abnormal'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"><cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"></cfif></td>
-				<tr><td>&nbsp; Pelvic (female only)<br> &nbsp;  &nbsp; check how done <br> &nbsp; &nbsp;
-						<cfif get_health.clinical_pelvic_type is 'vaginal'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"><cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"></cfif>  vaginal &nbsp;  
+				<tr><td>&nbsp; Pelvic (female only) &nbsp;  &nbsp;&nbsp; &nbsp;
+						<cfif get_health.clinical_pelvic_type is 'vaginal'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"><cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"></cfif>  vaginal or 
 						<cfif get_health.clinical_pelvic_type is 'vaginal'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"><cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"></cfif>  rectal <br><br></td>
 					<td align="center"><cfif get_health.clinical_pelvic is 'normal'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"><cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"></cfif></td>
 					<td align="center"><cfif get_health.clinical_pelvic is 'abnormal'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"><cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"></cfif></td>
@@ -183,44 +183,42 @@
 <table width="660" border=0 cellpadding=2 cellspacing=0 align="center">
   <tr >
     <td width="20%" align="left" colspan="0"><span class="style3">Medical Notes:</span></td>
-    <td width="100%">#get_health.med_notes#<br></td>
+    <td width="100%">#get_health.med_notes#<br><img src="#vStudentAppRelativePath#pics/line.gif" width="400" height="1" border="0" align="absmiddle"></td>
   </tr>
-  </table>
+  </table><br>
 
-<br>
 
 <table width="660" border=0 cellpadding=1 cellspacing=0 align="center">
 	<tr><td colspan="7"><b>BLOOD PRESSURE</b></td></tr>
-	<tr><td width="10">&nbsp;</td>
-		<td width="80" align="right"><em>Sitting:</em></td>
-		<td width="130">#get_health.clinical_blood_sitting#<br><img src="#vStudentAppRelativePath#pics/line.gif" width="120" height="1" border="0" align="absmiddle"></td>
+	<tr><td width="">&nbsp;</td>
+		<td width="" align="right"><em>Sitting:</em></td>
+		<td width="">#get_health.clinical_blood_sitting#<br><img src="#vStudentAppRelativePath#pics/line.gif" width="50" height="1" border="0" align="absmiddle"></td>
 		
-		<td width="110" align="right"><em>Recumbent:</em></td>
-		<td width="120" >#get_health.clinical_blood_recumbent#<br><img src="#vStudentAppRelativePath#pics/line.gif" width="110" height="1" border="0" align="absmiddle"></td>
+		<td width="" align="right"><em>Recumbent:</em></td>
+		<td width="" >#get_health.clinical_blood_recumbent#<br><img src="#vStudentAppRelativePath#pics/line.gif" width="50" height="1" border="0" align="absmiddle"></td>
 		
-		<td width="90" align="right"><em>Standing:</em></td>
-		<td width="130">#get_health.clinical_blood_standing#<br><img src="#vStudentAppRelativePath#pics/line.gif" width="120" height="1" border="0" align="absmiddle"></td></tr>
+		<td width="" align="right"><em>Standing:</em></td>
+		<td width="">#get_health.clinical_blood_standing#<br><img src="#vStudentAppRelativePath#pics/line.gif" width="50" height="1" border="0" align="absmiddle"></td></tr>
 	
-	<tr><td colspan="7">&nbsp;</td></tr>
+	
 	
 	<tr><td colspan="7"><b>PULSE</b> (arm at heart level)</td></tr>
 	<tr><td>&nbsp;</td>
 		<td align="right"><em>Sitting: </em></td>
-		<td>#get_health.clinical_pulse_sitting#<br><img src="#vStudentAppRelativePath#pics/line.gif" width="120" height="1" border="0" align="absmiddle"></td>
+		<td>#get_health.clinical_pulse_sitting#<br><img src="#vStudentAppRelativePath#pics/line.gif" width="50" height="1" border="0" align="absmiddle"></td>
 		
 		<td align="right"><em>After Exercise:</em></td>
-		<td>#get_health.clinical_pulse_exercise#<br><img src="#vStudentAppRelativePath#pics/line.gif" width="110" height="1" border="0" align="absmiddle"></td>
+		<td>#get_health.clinical_pulse_exercise#<br><img src="#vStudentAppRelativePath#pics/line.gif" width="50" height="1" border="0" align="absmiddle"></td>
 
 		<td align="right"><em>2 Minutes After:</em></td>
-		<td>#get_health.clinical_pulse_2min#<br><img src="#vStudentAppRelativePath#pics/line.gif" width="120" height="1" border="0" align="absmiddle"></td></tr>
+		<td>#get_health.clinical_pulse_2min#<br><img src="#vStudentAppRelativePath#pics/line.gif" width="50" height="1" border="0" align="absmiddle"></td></tr>
 
 	<tr><td>&nbsp;</td>
 		<td align="right"><em>Recumbent: </em> </td>
-		<td>#get_health.clinical_pulse_recumbent#<br><img src="#vStudentAppRelativePath#pics/line.gif" width="120" height="1" border="0" align="absmiddle"></td>
+		<td>#get_health.clinical_pulse_recumbent#<br><img src="#vStudentAppRelativePath#pics/line.gif" width="50" height="1" border="0" align="absmiddle"></td>
 		
-		<td align="right"><em>After Standing 3 Minutes: </em></td>
-		<td colspan="3">#get_health.clinical_pulse_3min#<br><img src="#vStudentAppRelativePath#pics/line.gif" width="110" height="1" border="0" align="absmiddle"></td></tr>
-</table><br>
+		<td  align="right" width=200><em>After Standing 3 Minutes: </em></td><td>#get_health.clinical_pulse_3min#<br><img src="#vStudentAppRelativePath#pics/line.gif" width="50" height="1" border="0" align="absmiddle"></td></tr>
+</table>
 
 <table width="660" border=0 cellpadding=1 cellspacing=0 align="center">
 	<tr><td colspan="5"><b>LABORATORY FINDINGS</b></td></tr>
@@ -260,60 +258,32 @@
 <table width="660" border=0 cellpadding=1 cellspacing=0 align="center">
 	<tr>
     	<td colspan="3">
-        	Are you aware of any physical or psychological condition that the student may have that would impact their ability to travel to the United States to participate in a high school exchange program?
+        	Are you aware on any physical or psychological condition that the student may have that would impact their ability to travel to the United States to participate in a high school exchange program ?
         </td>
     </tr>
-   <tr><td colspan="3"><input type="checkbox"> No</td></tr>
-    <tr><td colspan="3"></td></tr>
-    <tr><td>&nbsp;</td></tr>
-    <tr><td colspan="3"><input type="checkbox"> Yes (please explain):</td></tr>
-    <tr><td colspan="3"><img src="#vStudentAppRelativePath#pics/line.gif" width="540" height="1" border="0" align="absmiddle" style="margin-left:125px;"></td></tr>
+    <tr>
+    <td width="40"><input type="checkbox"> No </td><td width="140"><input type="checkbox"> Yes (please explain):</td><Td><br><img src="#vStudentAppRelativePath#pics/line.gif" width="480" height="1" border="0" align="absmiddle"></td>
    
-    
-    
-	<tr><td width="315"><em>Physician's Name</em></td><td width="40">&nbsp;</td><td width="315"><em>Signature</em></td></tr>
-	<tr>
-		<td><br><img src="#vStudentAppRelativePath#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
-		<td>&nbsp;</td>
-		<td><br><img src="#vStudentAppRelativePath#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
-	</tr>
-	<tr><td><em>Address</em></td><td width="40">&nbsp;</td><td width="315"><em>Date of Exam</em></td></tr>
-	<tr>
-		<td><br><img src="#vStudentAppRelativePath#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
-		<td>&nbsp;</td>
-		<td><br><img src="#vStudentAppRelativePath#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
-	</tr>
-</table><br>
-
+    <tr><td>&nbsp;</td></tr>
+</table>
 <table width="660" border=0 cellpadding=1 cellspacing=0 align="center">
 	<tr>
-		<td colspan="3"><div align="justify">We certify that the information supplied is true and complete to the best or our knowledge. We authorize
-		any of the doctors, hospitals, or clinics mentioned above to furnish a complete transcript of medical records for purposes of processing 
-		this application.</div>
-		</td>
-	</tr>
-	<tr><td>&nbsp;</td></tr>
+    	<td width="315"><em>Physician's Name</em><img src="#vStudentAppRelativePath#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
+    	<td width="40">&nbsp;</td>
+        <td width="315"><em>Date</em> <img src="#vStudentAppRelativePath#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
+    </tr>
 	<tr>
-		<td width="315"><em>Signature of Student</em></td>
-		<td width="40">&nbsp;</td>
-		<td width="315"><em>Date</em></td>
-	</tr>
+    	<td>&nbsp;</td>
+   </tr>
 	<tr>
-		<td><br><img src="#vStudentAppRelativePath#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
-		<td>&nbsp;</td>
-		<td><br><img src="#vStudentAppRelativePath#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
-	</tr>
-	<tr>
-		<td><em>Signature of Parent</em></td>
-		<td>&nbsp;</td>
-		<td><em>Date</em></td>
-	</tr>	
-	<tr>
-		<td><br><img src="#vStudentAppRelativePath#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
-		<td>&nbsp;</td>
-		<td><br><img src="#vStudentAppRelativePath#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
-	</tr>	
+    	<td width="315"><em>Physician's Signature</em><img src="#vStudentAppRelativePath#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
+        <td width="40">&nbsp;</td>
+        <td width="315"><em>Date</em> <img src="#vStudentAppRelativePath#pics/line.gif" width="315" height="1" border="0" align="absmiddle"></td>
+    </tr>
+	
 </table><br>
+
+
 
 </div>
 
