@@ -151,19 +151,19 @@
             </cfcase>
 			
         	<cfcase value="6">
-            	<cfset vEmailToList = 'luke@phpusa.com;eric@iseusa.org'>
+            	<cfset vEmailToList = 'luke@phpusa.com;'>
             </cfcase>
 
         	<cfcase value="7">
-            	<cfset vEmailToList = 'ryan@iseusa.com;eric@iseusa.org'>
+            	<cfset vEmailToList = 'ryan@iseusa.com;'>
             </cfcase>
 
         	<cfcase value="8">
-            	<cfset vEmailToList = 'anca@csb-usa.com;eric@iseusa.org'>
+            	<cfset vEmailToList = 'anca@csb-usa.com;'>
             </cfcase>
             
         	<cfcase value="10">
-            	<cfset vEmailToList = 'stacy@case-usa.org;eric@iseusa.org'>
+            	<cfset vEmailToList = 'stacy@case-usa.org;'>
             </cfcase>
             
 		</cfswitch>        
