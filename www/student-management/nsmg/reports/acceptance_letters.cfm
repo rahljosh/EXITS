@@ -61,11 +61,11 @@
 	<tr>
 	<td colspan="2">
     <div align="justify"><span class="application_section_header"><font size=+1><b><u>RECEIPT AND ACCEPTANCE NOTIFICATION</u></b></font></span><br><br><br>
-	  The application for the following student(s) has been received. Not only is this a
+	  The application for the following student(s) has been accepted. Not only is this a
 	  notification of acceptance but it is also, in some cases, a notice that additional
 	  information is needed in order to adhere to United States Department of State regulations
 	  and to ensure that the student will be easily placed. Please send the requested information
-	  <b>in English </b>as soon as possible. It is extremely important!!! If a student has been rejected you will be
+	  <b>in English </b>as soon as possible. It is extremely important!!! If a student has been denied you will be
 	  notified with a separate letter. (If a student has scheduled dates written in for upcoming 
 	  immunizations, please make sure that he/she obtains proof in writing from their doctor that
 	  the immunizations have been completed and the date). <br><br>

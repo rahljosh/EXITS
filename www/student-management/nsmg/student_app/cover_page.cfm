@@ -244,33 +244,31 @@
             </cfif>
             <!--- APP PREVIOUSLY DENIED --->
             
-            <tr><td colspan="2" style="font-weight:bold">Please read carefully the instructions below:</td></tr>
             <tr>
-            	<td colspan="2">
-            		<div align="justify">
-                        This student's application has already been submitted through EXITS, so 
-                        you will not need to input the application as a new application.  You 
-                        must first review the application according to your normal application 
-                        reviewing procedures; creating and filing the application review 
-                        checklist accordingly. <br /><br />
-                        
-                        As soon as the student is assigned to the requested company, the student's
-                        record will show up on your unplaced students list.  Once the student's 
-                        application appears on your unplaced students list, you must complete 
-                        the information listed in the Student Information Screen since this is 
-                        only recorded after the student's application has been assigned to your 
-                        company.  This includes assigning a program, a region or a state preference.<br /><br />
-                        
-                        Please also remember to send out acceptance letters and to fill out the 
-                        missing documents page as you do for all paper applications.<br /><br />
-                        
-                        Regional Managers will have access to the complete online student 
-                        application through the Student's Info page of EXITS.<br /><br />
-                        
-                        Sincerely,<br />
-                        EXITS<br /><br />
-                    </div>
-                </td>
+              <td colspan="2" style="font-weight:bold">Timeline of the ISE Student Application Process</td></tr>
+            <tr>
+           	  <td colspan="2">
+           		  <div align="justify">
+                      <p><strong>1.</strong> Student application submitted to ISE by International Representative: Initial review completed by Budge.</p>
+<p><strong>2.</strong> Student application moved into &quot;Received&quot; section: Secondary review completed by Lois. </p>
+                <p><strong>3</strong>. Student application &quot;Accepted&quot; with a final review completed by the student's Program Manager. The student will then be assigned a region and facilitator, who will serve as the primary contact for any and all specific student issues or concerns going forward. <ul> 
+                    </p>
+                <li>
+                You may hear from Budge (lamonica@iseusa.org) or Lois (lois@iseusa.org) regarding missing documents while the student application is in the Submitted or Received stage.                    
+				<p>&nbsp;</p>
+				<li>
+                You will be contacted by Tom (<a href="mailto:tom@iseusa.org">tom@iseusa.org</a>) if there are any questions regarding a student region or state choice. 
+                  <p>&nbsp;</p>
+<li>Once a student is assigned to a region, the student's facilitator will serve as the primary contact for questions regarding specific students. Student facilitator information can be found by clicking on the &quot;Students&quot; tab of your EXITS homepage and clicking on the student you wish to find. From there, you will be directedto the student homepage. On the left side of the page, beneath the student photo, you will see the name of the student facilitator listed. If you click on the student facilitator name, an email window will open automatically for you to contact the student facilitator directly. 
+<p>&nbsp;</p>
+<li>You will receive notification of whether or not a student has been accepted or denied from the program within two weeks of submitting the application to ISE. <br />
+  <br />
+  
+  Sincerely,<br />
+  EXITS<br /><br />
+  </p>
+</div>
+              </td>
             </tr>
         </table>
 

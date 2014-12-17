@@ -188,8 +188,23 @@
                 <b>Reason: #FORM.reason#</b>
                 <br>
                 
-                Due to Department of State Regulations, program requirements and  acceptance deadlines this application will not be re-considered for 
-                acceptance during the current program cycle. Please contact me directly if you require the original application be returned to you at any time.
+                Please note that when resubmitting a student application, it is very important to resubmit the same
+
+application for that student, using the same identification number, rather than create an entirely new 
+
+application. When a new student application is submitted, it creates confusion for our student services 
+
+team regarding which student application should be considered. Resubmitting the ORIGINAL application 
+
+for approval helps our student services team track the progress of a student application and assists 
+
+them in keeping this process organized.
+
+<br>To resubmit an application, go into the “Denied” section of your EXITS homepage. In the Denied section, 
+
+you can find your student’s application, make the appropriate revisions and additions, and you will have 
+
+the option of resubmitting the application.
                 
         <br><br>
         
