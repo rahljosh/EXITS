@@ -127,8 +127,8 @@ $(".paging a").click(function() {
 <div class="main_view">
     <div class="window">
         <div class="image_reel">
-        <a href="slideshow/pdfs/ISE/Bonus-Sheet.pdf" rel="1" target="_new"> <img src="slideshow/images/ISE/BonusSheet.png" alt="" /></a>
-        	<!---<a href="slideshow/pdfs/ISE/IncentiveTrip.pdf" rel="2" target="_new"> <img src="slideshow/images/ISE/londonIcon.png" alt="" /></a>--->
+        <!---<a href="slideshow/pdfs/ISE/Bonus-Sheet.pdf" rel="1" target="_new"> <img src="slideshow/images/ISE/BonusSheet.png" alt="" /></a>---->
+        	<a href="uploadedFiles/Incentive_trip/incentiveTrip_12.pdf" rel="2" target="_new"> <img src="slideshow/images/ISE/dublin.png" alt="" /></a>
             <a href="slideshow/pdfs/ISE/PreAypBonus.pdf" rel="2" target="_new"> <img src="slideshow/images/ISE/slide_1.jpg" alt="" /></a>
            
             
@@ -138,7 +138,7 @@ $(".paging a").click(function() {
     <div class="paging">
         <a href="slideshow/pdfs/ISE/Bonus-Sheet.pdf" rel="1">1</a>
     	 <!---<a href="slideshow/pdfs/ISE/IncentiveTrip.pdf" rel="2">2</a>--->
-         <a href="slideshow/pdfs/ISE/PreAypBonus.pdf" rel="2">2</a>
+         <a href="uploadedFiles/Incentive_trip/incentiveTrip_12.pdf" rel="2">2</a>
 
          
     </div>
@@ -150,14 +150,14 @@ $(".paging a").click(function() {
         <a href="slideshow/pdfs/CASE/25th_anniversary_Bonus.pdf" rel="1" target="_new"><img src="slideshow/images/CASE/slide_3.jpg" alt="" /></a>
 <!---         <a href="slideshow/pdfs/CASE/Early_Placement_Bonus_2013.pdf" rel="2" target="_new"><img src="slideshow/images/CASE/slide_2.jpg" alt="" /></a> ----> 
 <!---        <a href="slideshow/pdfs/CASE/PreAypBonus.pdf" rel="3" target="_new"> <img src="slideshow/images/CASE/slide_1.jpg" alt="" /></a> ---->
-       <a href="slideshow/pdfs/CASE/IncentiveTrip.pdf" rel="2" target="_new"> <img src="slideshow/images/CASE/londonIcon.png" alt="" /></a> 
+       <a href="uploadedFiles/Incentive_trip/incentiveTrip_10.pdf" rel="2" target="_new"> <img src="slideshow/images/CASE/dublin.png" alt="" /></a> 
         </div>
     </div>
     <div class="paging">
    		 <a href="slideshow/pdfs/CASE/25th_anniversary_Bonus.pdf" rel="1">1</a>
 <!---        <a href="slideshow/pdfs/CASE/Early_Placement_Bonus_2013.pdf" rel="2">2</a> ----> 
 <!---         <a href="slideshow/pdfs/CASE/PreAypBonus.pdf" rel="3">3</a> ---->
-        <a href="slideshow/pdfs/CASE/IncentiveTrip.pdf" rel="2">2</a>
+        <a href="uploadedFiles/Incentive_trip/incentiveTrip_10.pdf" rel="2">2</a>
         
     </div>
 </div>
