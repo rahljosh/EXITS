@@ -209,7 +209,7 @@
 		</cfif>
         
         <!--- Send Out Email --->
-        <cfscript>
+        <!---<cfscript>
 			// Check if we have a valid intl. rep. email
 			if ( IsValid("email", qGetIntlRep.email) ) {
 				vEmailList = vEmailList & qGetIntlRep.email & ';' ; 
@@ -257,7 +257,7 @@
                 <cfinvokeargument name="email_from" value="#qGetCompanyInfo.companyshort#-support@exitsapplication.com">
             </cfinvoke>
                 
-     	</cfif>
+     	</cfif>--->
                   
 	</cffunction>
 
