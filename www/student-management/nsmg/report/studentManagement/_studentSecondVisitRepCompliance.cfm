@@ -698,17 +698,16 @@
                                         <td class="center" style="font-size:9px">#DateFormat(qGetResultsByRegion.dateArrived, 'mm/dd/yy')#</td>
                                         <td class="center #vSetRelocationColorCode#" style="font-size:9px">#DateFormat(qGetResultsByRegion.dateRelocated, 'mm/dd/yy')#</td>
                                         <td class="center" style="font-size:9px">
-                                            <cfif isDate(qGetResultsByRegion.dateStartWindowCompliance)>
-                                            
-                                                #DateFormat(qGetResultsByRegion.dateStartWindowCompliance, 'mm/dd/yy')# - 
-                                                
-                                                <cfif isDate(qGetResultsByRegion.datePlacedEnded)>
-                                                    #DateFormat(qGetResultsByRegion.datePlacedEnded, 'mm/dd/yy')# (#totalAssignedPeriod# days)
-                                                <cfelse>
-                                                    present
-                                                </cfif>
-                                                
+                                        	<cfif qGetResultsByRegion.datePlaced LT qGetResultsByRegion.dateArrived AND NOT ISDATE(qGetResultsByRegion.datePlacedEnded)>
+                                            	#DateFormat(qGetResultsByRegion.dateArrived, 'mm/dd/yy')# - present
+                                            <cfelseif qGetResultsByRegion.datePlaced LT qGetResultsByRegion.dateArrived AND ISDATE(qGetResultsByRegion.datePlacedEnded)>
+                                            	#DateFormat(qGetResultsByRegion.dateArrived, 'mm/dd/yy')# - #DateFormat(qGetResultsByRegion.datePlacedEnded, 'mm/dd/yy')#
+                                            <cfelseif qGetResultsByRegion.datePlaced GTE qGetResultsByRegion.dateArrived AND NOT ISDATE(qGetResultsByRegion.datePlacedEnded)>
+                                            	#DateFormat(qGetResultsByRegion.datePlaced, 'mm/dd/yy')# - present
+                                            <cfelse>
+                                            	#DateFormat(qGetResultsByRegion.datePlaced, 'mm/dd/yy')# - #DateFormat(qGetResultsByRegion.datePlacedEnded, 'mm/dd/yy')#
                                             </cfif>
+                                            (#totalAssignedPeriod# days)
                                         </td>
                                         <td class="center" style="font-size:9px">#DateFormat(qGetResultsByRegion.dateStartWindowCompliance, 'mm/dd/yy')# - #DateFormat(qGetResultsByRegion.dateEndWindowCompliance, 'mm/dd/yy')#</td>
                                         <td class="center" style="font-size:9px">#DateFormat(qGetResultsByRegion.dateEndWindowCompliance, 'mm/dd/yy')#</td>
