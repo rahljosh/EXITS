@@ -53,6 +53,7 @@
     <cfparam name="FORM.subAction" default="">
 	<cfparam name="FORM.sourceCode" default="">
     <cfparam name="FORM.sourceType" default="">
+    <cfparam name="FORM.sourceOther" default="">
     
 	<cfscript>
 		// Set Regions or users or user type that can start host app
@@ -189,7 +190,10 @@
 			if ( NOT LEN(FORM.sourceCode) ) {
 				SESSION.formErrors.Add("Please select a Source Code.");
 			}
-			
+			if ( FORM.sourceCode EQ 'Other' AND NOT LEN(TRIM(FORM.sourceOther)) ) {
+				//Get all the missing items in a list
+				SESSION.formErrors.Add("Please provide Other description for source.");
+			}
 			// Check for email address. 
 			if ( FORM.subAction EQ 'eHost' AND NOT LEN(TRIM(FORM.email)) ) {
 				//Get all the missing items in a list
@@ -304,6 +308,7 @@
                         dateUpdated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
             			updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
                         sourceCode =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.sourceCode#">,
+                        sourceOther = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.sourceOther#">,
                         sourceType = 'Direct'
                     WHERE 
                         hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.hostID)#">
@@ -367,7 +372,8 @@
                         createdBy,
                         updatedBy,
                         sourceCode, 
-                        sourceType
+                        sourceType,
+                        sourceOther
                     )
                     VALUES 
                     (
@@ -410,7 +416,8 @@
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.sourceCode#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="Direct">
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="Direct">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.sourceOther#">
                     )  
                 </cfquery>
 
@@ -483,6 +490,7 @@
             FORM.arearepid = qGetHostFamilyInfo.arearepid;
 			FORM.sourceCode = qGetHostFamilyInfo.sourceCode;
 			FORM.sourceType = qGetHostFamilyInfo.sourceType;
+			FORM.sourceOther = qGetHostFamilyInfo.sourceOther;
             
             // the default values in the database for these used to be "na", so remove any.
             if ( FORM.father_cell EQ 'na' ) {
@@ -681,7 +689,19 @@
 		}
 
 	}
-
+	//show and hide "Other"
+	$(document).ready(function(){
+    $('#sourceCode').on('change', function() {
+      if ( this.value == 'Other')
+      {
+        $("#sourceOther").show();
+      }
+      else
+      {
+        $("#sourceOther").hide();
+      }
+    });
+	});
 	// Error handler for the asynchronous functions. 
 	var myErrorHandler = function(statusCode, statusMsg) { 
 		alert('Status: ' + statusCode + ', ' + statusMsg); 
@@ -887,7 +907,7 @@
                 <tr>
                     <td class="label">Source: <span class="required">*</span></td>
                     <td> 
-                        <select name="sourceCode" class="largeField">
+                        <select name="sourceCode" class="largeField" id="sourceCode">
 	                        <option value="">Select Source</option>
                             <option value="Church Group" <cfif FORM.sourceCode EQ "Church Group">selected</cfif>>Church Group</option>
                          	<option value="Friend / Acquaintance" <cfif FORM.sourceCode EQ "Friend / Acquaintance">selected</cfif>>Friend / Acquaintance</option>
@@ -895,13 +915,23 @@
                             <option value="Fair / Trade Show" <cfif FORM.sourceCode EQ "Fair / Trade Show">selected</cfif>>Fair / Trade Show</option> 
                             <option value="Google Search" <cfif FORM.sourceCode EQ "Google Search">selected</cfif>>Google Search</option>
                             <option value="Past Host Family" <cfif FORM.sourceCode EQ "Past Host Family">selected</cfif>>Past Host Family</option>
+                            <option value="Newspaper" <cfif FORM.sourceCode EQ "Newspaper">selected</cfif>>Newspaper</option>
                             <option value="Printed Material" <cfif FORM.sourceCode EQ "Printed Material">selected</cfif>>Printed Material</option>
                             <option value="Yahoo Search" <cfif FORM.sourceCode EQ "Yahoo Search">selected</cfif>>Yahoo Search</option> 
                             <option value="Other" <cfif FORM.sourceCode EQ "Other">selected</cfif>>Other</option> 
                         </select>
                     </td>
                 </tr>
+           </table>
+            <cfif FORM.sourceCode NEQ "Other"> <div style='display:none;' id='sourceOther'></cfif>
+           <table width="95%" align="center" class="section" border="0" cellpadding="4" cellspacing="0">
+              
+                <tr>
+                	<td class="label">Other: <span class="required">*</span></td><td><input type="text" size=25 name="sourceOther" value="#FORM.sourceOther#" placeholder="Other Description" /></td>
+                </tr>
+               
             </table> 
+            <cfif FORM.sourceCode NEQ "Other">  </div></cfif>
 		<!--- Region Information | New Host Family Only --->
         <cfif NOT qGetHostFamilyInfo.recordCount>
             <table width="95%" align="center" class="section" border="0" cellpadding="4" cellspacing="0">
