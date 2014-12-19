@@ -87,7 +87,7 @@
 
 	/***** Create APPLICATION.SETTINGS structure *****/
 	APPLICATION.SETTINGS = StructNew();		
-	APPLICATION.SETTINGS.watdisplayUserSSNIDList = "7935,12038"; // Anca, Elena
+	APPLICATION.SETTINGS.watdisplayUserSSNIDList = "7935,19658"; // Anca, Ryan
 
 
 	/***** Create APPLICATION.METADATA structure / Stores Default Metadata Information *****/
@@ -124,7 +124,7 @@
 	APPLICATION.EMAIL = StructNew();		
 	APPLICATION.EMAIL.flightReport = 'anca@csb-usa.com;ryan@csb-usa.com';
 	APPLICATION.EMAIL.traineeFlightReport = 'ryan@iseusa.com';
-	APPLICATION.EMAIL.watMissingDocuments = 'elena@csb-usa.com';
+	APPLICATION.EMAIL.watMissingDocuments = 'ryan@csb-usa.com';
 	
 	/***** Create APPLICATION.PATH structure *****/
 	APPLICATION.PATH = StructNew();	

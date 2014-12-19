@@ -60,7 +60,21 @@
         WHERE 
         	programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.programid)#">
     </cfquery>
-
+	
+    <!-----Facilitator----->
+    <Cfquery name="qGetFacilitator" datasource="MySQL">
+        SELECT
+ 	      concat(vuh.`facilitator first name`, ' ',vuh.`facilitator last name`) as facilitatorname,
+          vuh.`facilitator email` AS facilitatoremail  
+        FROM 
+        	v_user_hierarchy vuh
+        LEFT OUTER JOIN
+            smg_students s on vuh.`Area Rep ID` = s.arearepID   
+        WHERE 
+        	arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.arearepid)#">
+        LIMIT 1
+    </Cfquery>
+    
 	<!--- Display only for ESI --->
     <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ESI, CLIENT.companyID)>
 
@@ -117,8 +131,8 @@
             	#Left(qGetIntlRep.businessname,40)#
 			<cfelse>
             	#qGetIntlRep.businessname#
-			</cfif><br />
-            #qGetIntlRep.fax#<br />
+		  </cfif><br />
+        #qGetIntlRep.fax#<br />
             <a href="mailto:#qGetIntlRep.email#">#qGetIntlRep.email#</a><br />
             
             <form action="email_acceptance_letter.cfm?studentID=#qGetStudentInfo.studentID#" method="post" style="padding:0px;" onsubmit="return confirm ('Are you sure? This Acceptance Letter will be sent to the International Representative')">
@@ -132,7 +146,7 @@
             <div align="right">
                 #qGetCompanyShort.companyShort#<br />
                 #qGetCompanyShort.address#<br />
-                #qGetCompanyShort.city#, #qGetCompanyShort.state# #qGetCompanyShort.zip#<br /><br />
+            #qGetCompanyShort.city#, #qGetCompanyShort.state# #qGetCompanyShort.zip#<br /><br />
                 <cfif LEN(qGetCompanyShort.phone)>Phone: #qGetCompanyShort.phone#<br /></cfif>
                 <cfif LEN(qGetCompanyShort.toll_free)>Toll Free: #qGetCompanyShort.toll_free#<br /></cfif>
                 <cfif LEN(qGetCompanyShort.fax)>Fax: #qGetCompanyShort.fax#<br /></cfif>
@@ -161,10 +175,17 @@
                         information is needed in order to adhere to United States Department of State regulations
                         and to ensure that the student will be easily placed. Please send the requested information
                         <b>in English </b>as soon as possible. It is extremely important!!! If a student has been denied you will be
-                        notified with a separate letter. (If a student has scheduled dates written in for upcoming 
+                        notified with a separate letter. (If a student has scheduled dates for upcoming 
                         immunizations, please make sure that he/she obtains proof in writing from their doctor that
-                        the immunizations have been completed and the date).
+                        the immunizations have been completed).
                     </p>
+                    <p style="margin-top:15px; margin-bottom:15px">
+                        From this point on, the student facilitator will serve as the primary contact for questions 
+                        regarding specific students. Student facilitator information can be found below and also by clicking on the 
+                        &quot;Students&quot; tab of your EXITS homepage and clicking on the student you wish to find. From there, 
+                        you will be directed to the student homepage. On the left side of the page, beneath the student photo, 
+                        you will see the name of the student facilitator listed. If you click on the student facilitator name, an 
+                        email window will open automatically for you to contact the student facilitator directly. </p>
 				</cfif>  
                                   
 	 		</div>
@@ -176,7 +197,7 @@
 	<tr>
     	<td colspan="4">
     		<b>Program:</b> #qGetProgramName.programname# &nbsp; - &nbsp; #qGetProgramName.programtype#
-        </td>
+      </td>
     </tr>            
 	<tr>
     	<td colspan="4"><hr width=100% align="center"></td>
@@ -236,12 +257,10 @@
 <table width="650" border="0" align="center" cellspacing="2" cellpadding="4">
 	<tr>
     	<td>
-			<p>Thanks,</p>
-            <p>
-                #qGetCompanyShort.admission_person#<br /> 
-                Student Admissions Department
-			</p>                
-        </td>
+			<p>Thanks,</p> 
+            <p>#qGetFacilitator.facilitatorname#<br /> 
+            	
+        Internatioanl Student Exchange Facilitator			</p></td>
     </tr>
 </table>
     
