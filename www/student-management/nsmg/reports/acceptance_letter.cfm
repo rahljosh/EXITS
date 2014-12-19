@@ -252,7 +252,7 @@
     	<td>
 			<p>Thanks,</p>
             <p>
-                <cfif CLIENT.companyID in (1,2,3,4,5,12) >
+                <cfif NOT ListFind(APPLICATION.SETTINGS.COMPANYLIST.ESI, CLIENT.companyID)>
                 	#qGetFacilitator.facilitatorname#<br />
                     International Student Exchange
                 <cfelse>	
