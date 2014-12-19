@@ -208,8 +208,8 @@
             
 		</cfif>
         
-      <!--- Send Out Email 
-        <!---<cfscript>
+        <!--- Send Out Email only for ESI, PHP, and SMG Canada--->
+        	<cfscript>
 			// Check if we have a valid intl. rep. email
 			if ( IsValid("email", qGetIntlRep.email) ) {
 				vEmailList = vEmailList & qGetIntlRep.email & ';' ; 
@@ -220,10 +220,10 @@
 				// Send a copy to the student
 				vEmailList = vEmailList & qGetStudentInfo.email & ';' ; 
 			}
-		</cfscript> --->
+		</cfscript>
 		
         <!--- We have at least one email address --->
-        <cfif ARGUMENTS.statusID EQ 11 AND LEN(vEmailList)>
+        <cfif ARGUMENTS.statusID EQ 11 AND ARGUMENTS.companyID IN (6,13,14) AND LEN(vEmailList)>
         
             <cfsavecontent variable="vEmailMessage">
                 <cfoutput>
@@ -250,14 +250,14 @@
 				</cfoutput>                    
             </cfsavecontent>
                 
-           <!--  <cfinvoke component="nsmg.cfc.email" method="send_mail">   -->
+            <cfinvoke component="nsmg.cfc.email" method="send_mail">
                 <cfinvokeargument name="email_to" value="#vEmailList#">
                 <cfinvokeargument name="email_subject" value="#qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# ###qGetStudentInfo.studentID# - Exchange Application Approved">
                 <cfinvokeargument name="email_message" value="#vEmailMessage#">
                 <cfinvokeargument name="email_from" value="#qGetCompanyInfo.companyshort#-support@exitsapplication.com">
             </cfinvoke>
                 
-     	</cfif>--->
+     	</cfif>
                   
 	</cffunction>
 

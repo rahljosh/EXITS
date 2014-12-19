@@ -16,17 +16,17 @@
 </cfquery>
 
 <!-----Facilitator----->
-<cfquery name="qGetFacilitator" datasource="MySQL">
-        SELECT
- 	      concat(vuh.`facilitator first name`, ' ',vuh.`facilitator last name`) as facilitatorname,
-          vuh.`facilitator email` AS facilitatoremail  
-        FROM 
-        	v_user_hierarchy vuh
-        LEFT OUTER JOIN
-            smg_students s on vuh.`Area Rep ID` = s.arearepID   
-        WHERE 
-        	arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.arearepid)#">
-        LIMIT 1
+<Cfquery name="qGetFacilitator" datasource="MySQL">
+	SELECT
+	  concat(vuh.`facilitator first name`, ' ',vuh.`facilitator last name`) as facilitatorname,
+	  vuh.`facilitator email` AS facilitatoremail  
+	FROM 
+		v_user_hierarchy vuh
+	LEFT OUTER JOIN
+		smg_students s on vuh.`Area Rep ID` = s.arearepID   
+	WHERE 
+		arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.arearepid)#">
+	LIMIT 1
 </Cfquery>
 
 <!-----Company Information----->
@@ -136,7 +136,12 @@
 <table width=650 border=0 align="center" bgcolor="FFFFFF">
 	<tr><td>
 	<br>Thanks,<br><br>
-	#qGetFacilitator.facilitatorname#<br> 
-	Internatioanl Student Exchange Facilitator 
+               <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+                	#qGetFacilitator.facilitatorname#<br />
+                    International Student Exchange
+                <cfelse>	
+                	#qGetCompanyShort.admission_person#  <br />
+                	Student Admissions Department 
+                </cfif>
 	</td></tr>
 </cfoutput>

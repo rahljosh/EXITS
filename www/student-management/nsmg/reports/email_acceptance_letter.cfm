@@ -53,18 +53,6 @@
         WHERE 
         	programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.programid#">
     </cfquery>
-
-    <cfquery name="qGetCurrentUser" datasource="MySql">
-	    SELECT 
-        	userID,
-            email, 
-            firstname, 
-            lastname
-    	FROM 
-        	smg_users
-	    WHERE 
-        	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
-    </cfquery>
     
     <!-----Facilitator----->
     <Cfquery name="qGetFacilitator" datasource="MySQL">
@@ -79,6 +67,18 @@
         	arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.arearepid)#">
         LIMIT 1
     </Cfquery>
+
+    <cfquery name="qGetCurrentUser" datasource="MySql">
+	    SELECT 
+        	userID,
+            email, 
+            firstname, 
+            lastname
+    	FROM 
+        	smg_users
+	    WHERE 
+        	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+    </cfquery>
     
 	<!--- Display only for ESI --->
     <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ESI, CLIENT.companyID)>
@@ -157,22 +157,15 @@
                     <!--- Do Not Display for ESI --->
                     <cfif NOT ListFind(APPLICATION.SETTINGS.COMPANYLIST.ESI, CLIENT.companyID)>
                         <p style="margin-top:15px; margin-bottom:15px">
-                            The application for the following student(s) has been accepted. Not only is this a
+                            The application for the following student(s) has been received. Not only is this a
                             notification of acceptance but it is also, in some cases, a notice that additional
                             information is needed in order to adhere to United States Department of State regulations
                             and to ensure that the student will be easily placed. Please send the requested information
-                            <b>in English </b>as soon as possible. It is extremely important!!! If a student has been denied you will be
-                            notified with a separate letter. (If a student has scheduled dates  for upcoming 
+                            <b>in English </b>as soon as possible. It is extremely important!!! If a student has been rejected you will be
+                            notified with a separate letter. (If a student has scheduled dates written in for upcoming 
                             immunizations, please make sure that he/she obtains proof in writing from their doctor that
-                            the immunizations have been completed).
+                            the immunizations have been completed and the date).
                         </p>
-                        <p style="margin-top:15px; margin-bottom:15px">
-                        From this point on, the student facilitator will serve as the primary contact for questions 
-      					regarding specific students. Student facilitator information can be found below and also by clicking on the 
-                        &quot;Students&quot; tab of your EXITS homepage and clicking on the student you wish to find. From there, 
-                        you will be directed to the student homepage. On the left side of the page, beneath the student photo, 
-                        you will see the name of the student facilitator listed. If you click on the student facilitator name, an 
-                        email window will open automatically for you to contact the student facilitator directly. </p>
                     </cfif>  
                                       
                 </div>
@@ -185,7 +178,7 @@
         <tr>
             <td colspan="4">
                 <b>Program:</b> #qGetProgramName.programname# &nbsp; - &nbsp; #qGetProgramName.programtype#
-          </td>
+            </td>
 		</tr>            
         <tr>
             <td colspan="4"><hr width=100% align="center"></td>
@@ -246,9 +239,15 @@
         <tr>
             <td>
                 <p>Thanks,</p>
-                <p>#qGetFacilitator.facilitatorname#<br> 
-                    International Student Exchange Facilitator
-              </p>                
+            <p>
+                <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+                	#qGetFacilitator.facilitatorname#<br />
+                    International Student Exchange
+                <cfelse>	
+                	#qGetCompanyShort.admission_person#  <br />
+                	Student Admissions Department 
+                </cfif>
+			</p>                       
             </td>
         </tr>
     </table>
