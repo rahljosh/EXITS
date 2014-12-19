@@ -31,6 +31,20 @@
 	WHERE userid = #client.userid#
 </cfquery>
 
+<!-----Facilitator----->
+<Cfquery name="qGetFacilitator" datasource="MySQL">
+    SELECT
+      concat(vuh.`facilitator first name`, ' ',vuh.`facilitator last name`) as facilitatorname,
+      vuh.`facilitator email` AS facilitatoremail  
+    FROM 
+        v_user_hierarchy vuh
+    LEFT OUTER JOIN
+        smg_students s on vuh.`Area Rep ID` = s.arearepID   
+    WHERE 
+        arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.arearepid)#">
+    LIMIT 1
+</Cfquery>
+    
 <cfoutput>
 <CFMAIL SUBJECT="Receipt and Acceptance Letter for #int_agent.businessname#"
 TO=#int_agent.email#  
@@ -74,18 +88,26 @@ If you are not able to read this e-mail please contact #companyshort.companyshor
 <table  width=650 align="center" border=0 bgcolor="FFFFFF" >
 	<tr>
 	<td>
-    <div align="justify"><span class="application_section_header"><font size=+1><b><u>RECEIPT AND ACCEPTANCE NOTIFICATION</u></b></font></span><br>
-    <br><br>
-		  The application for the following student(s) has been received. Not only is this a
-		  notification of acceptance but it is also, in some cases, a notice that additional
-		  information is needed in order to adhere to United States Department of State regulations
-		  and to ensure that the student will be easily placed. Please send the requested information
-		  <b>in English </b>as soon as possible. It is extremely important!!! If a student has been rejected you will be
-		  notified with a separate letter. (If a student has scheduled dates written in for upcoming 
-		  immunizations, please make sure that he/she obtains proof in writing from their doctor that
-		  the immunizations have been completed and the date).
-     <br><br>
-	 </div></td></tr>
+    <div align="justify">
+      <p><span class="application_section_header"><font size=+1><b><u>RECEIPT AND ACCEPTANCE NOTIFICATION</u></b></font></span><br>
+        <br><br>
+        The application for the following student(s) has been accepted. Not only is this a
+        notification of acceptance but it is also, in some cases, a notice that additional
+        information is needed in order to adhere to United States Department of State regulations
+        and to ensure that the student will be easily placed. Please send the requested information
+        <b>in English </b>as soon as possible. It is extremely important!!! If a student has been denied you will be
+        notified with a separate letter. (If a student has scheduled dates written in for upcoming 
+        immunizations, please make sure that he/she obtains proof in writing from their doctor that
+        the immunizations have been completed).        </p>
+      <p>From this point on, the student facilitator will serve as the primary contact for questions 
+      regarding specific students. Student facilitator information can be found below and also by clicking on the 
+      &quot;Students&quot; tab of your EXITS homepage and clicking on the student you wish to find. From there, 
+      you will be directed to the student homepage. On the left side of the page, beneath the student photo, 
+      you will see the name of the student facilitator listed. If you click on the student facilitator name, an 
+      email window will open automatically for you to contact the student facilitator directly. <br>
+        <br>
+      </p>
+    </div></td></tr>
 </table>
 
 <cfloop query="get_programs">
@@ -138,8 +160,8 @@ If you are not able to read this e-mail please contact #companyshort.companyshor
 <table width=650 border=0 align="center" bgcolor="FFFFFF">
 	<tr><td>
 	<br>Thanks,<br><br>
-	#companyshort.admission_person#<br> 
-	Student Admissions Department
+	#qGetFacilitator.facilitatorname#<br> 
+	International Student Exchange Facilitator 
 	</td></tr>
 </body>
 </html>
