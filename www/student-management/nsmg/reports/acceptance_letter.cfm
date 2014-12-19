@@ -252,7 +252,7 @@
     	<td>
 			<p>Thanks,</p>
             <p>
-                <cfif qGetCompanyShort.companyID in (1,2,3,4,5,12) >
+                <cfif CLIENT.companyID in (1,2,3,4,5,12) >
                 	#qGetFacilitator.facilitatorname#<br />
                     International Student Exchange
                 <cfelse>	
