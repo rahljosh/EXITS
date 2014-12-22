@@ -12,7 +12,7 @@
 <body onload="opener.location.reload()">
 <cfif isDefined('form.userToDisable')>
 	<cfquery name="addReason" datasource="#application.dsn#">
-    insert into smg_accountDisabledHistory (date, fk_whoDisabled, fk_userDisabled, reason, accountAction)
+    insert into smg_accountdisabledhistory (date, fk_whoDisabled, fk_userDisabled, reason, accountAction)
     					values(#now()#, #client.userid#, #form.userToDisable#, '#form.enableReason#', 'Activate')
     </cfquery>
     <cfquery name="disableAccount" datasource="#application.dsn#">

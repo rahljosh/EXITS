@@ -207,14 +207,14 @@
         
         	<cfquery name="disabledReasonid" datasource="#application.dsn#">
             select max(id) as maxid 
-            from smg_accountDisabledHistory
+            from smg_accountdisabledhistory
             where fk_userDisabled = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qAuthenticateUser.userID)#">
             </cfquery>
            
             <cfif val(disabledReasonid.maxid)>
                 <cfquery name="disabledReason" datasource="#application.dsn#">
                 select date, reason
-                from smg_accountDisabledHistory
+                from smg_accountdisabledhistory
                 where id = <cfqueryparam value="#VAL(disabledReasonid.maxid)#" cfsqltype="CF_SQL_INTEGER" >
                 </cfquery>
                 
