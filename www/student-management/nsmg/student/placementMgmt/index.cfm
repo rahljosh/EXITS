@@ -608,7 +608,7 @@
                         // Get Actions History
                         qGetActionsHistory = APPLICATION.CFC.LOOKUPTABLES.getApplicationHistory(
 							applicationID=APPLICATION.CONSTANTS.TYPE.EXITS,
-                            foreignTable='smg_hostHistory',
+                            foreignTable='smg_hosthistory',
                             foreignID=qGetPlacementHistoryList.historyID,
                             sortBy='dateCreated',
                             sortOrder='DESC'

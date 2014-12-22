@@ -895,7 +895,7 @@
             <cfquery 
                 datasource="#APPLICATION.DSN#">
                     UPDATE
-                        smg_hostHistory
+                        smg_hosthistory
                     SET
                         <cfif qGetStudentInfo.doublePlace NEQ ARGUMENTS.doublePlace>
 	                        hasDoublePlacementIDChanged = <cfqueryparam cfsqltype="cf_sql_bit" value="1">,
@@ -973,7 +973,7 @@
 			// Set Old Records to Inactive
 			setHostHistoryInactive(studentID=ARGUMENTS.studentID);		
 		
-			// Insert History - It tracks placement statuses only, placement updates are tracked on smg_hostHistory
+			// Insert History - It tracks placement statuses only, placement updates are tracked on smg_hosthistory
 			insertPlacementActionHistory(
 				studentID=ARGUMENTS.studentID,
 				changedBy=ARGUMENTS.changedBy,
@@ -1080,7 +1080,7 @@
         <cfquery 
             datasource="#APPLICATION.DSN#">
                 UPDATE
-                    smg_hostHistory
+                    smg_hosthistory
                 SET
                     <!--- Set Placement Date on the history if Approved by Headquarters - Only first time approval--->
                     <cfif VAL(vUpdateDatePlaced)>
@@ -1097,7 +1097,7 @@
             // Assign Pre-AYP English Camp based on host family state	
             // APPLICATION.CFC.STUDENT.assignEnglishCamp(studentID=CLIENT.studentID);
 			
-			// Insert New History - It tracks placement statuses only, placement updates are tracked on smg_hostHistory
+			// Insert New History - It tracks placement statuses only, placement updates are tracked on smg_hosthistory
 			insertPlacementActionHistory(
 				studentID=ARGUMENTS.studentID,
 				changedBy=ARGUMENTS.changedBy,
@@ -1161,7 +1161,7 @@
 		</cfquery>
         
 		<cfscript>
-			// Insert New History - It tracks placement statuses only, placement updates are tracked on smg_hostHistory
+			// Insert New History - It tracks placement statuses only, placement updates are tracked on smg_hosthistory
 			insertPlacementActionHistory(
 				studentID=ARGUMENTS.studentID,
 				changedBy=ARGUMENTS.changedBy,
@@ -1206,7 +1206,7 @@
 		</cfquery>
         
 		<cfscript>
-			// Insert New History - It tracks placement statuses only, placement updates are tracked on smg_hostHistory
+			// Insert New History - It tracks placement statuses only, placement updates are tracked on smg_hosthistory
 			insertPlacementActionHistory(
 				studentID=ARGUMENTS.studentID,
 				changedBy=ARGUMENTS.changedBy,
@@ -1299,7 +1299,7 @@
         </cfquery>
         
 		<cfscript>
-			// Insert New History - It tracks placement statuses only, placement updates are tracked on smg_hostHistory
+			// Insert New History - It tracks placement statuses only, placement updates are tracked on smg_hosthistory
 			insertPlacementActionHistory(
 				studentID=ARGUMENTS.studentID,
 				changedBy=ARGUMENTS.changedBy,
@@ -1414,7 +1414,7 @@
 				// Insert Actions Into Separate Table
 				APPLICATION.CFC.LOOKUPTABLES.insertApplicationHistory(
 					applicationID=APPLICATION.CONSTANTS.TYPE.EXITS,
-					foreignTable='smg_hostHistory',
+					foreignTable='smg_hosthistory',
 					foreignID=vHostHistoryID,
 					enteredByID=VAL(ARGUMENTS.changedBy),
 					actions=vActions
@@ -1930,7 +1930,7 @@
             
                 <cfquery datasource="#APPLICATION.DSN#" result="test1">
 					UPDATE
-                    	smg_hostHistory
+                    	smg_hosthistory
                     SET
                     	stu_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" value="#qGetPreviousPlacementHistory.stu_arrival_orientation#" null="#NOT IsDate(qGetPreviousPlacementHistory.stu_arrival_orientation)#">,
                         doc_school_accept_date = <cfqueryparam cfsqltype="cf_sql_date" value="#qGetPreviousPlacementHistory.doc_school_accept_date#" null="#NOT IsDate(qGetPreviousPlacementHistory.doc_school_accept_date)#">,
@@ -1945,7 +1945,7 @@
             
                 <cfquery datasource="#APPLICATION.DSN#" result="test2">
 					UPDATE
-                    	smg_hostHistory
+                    	smg_hosthistory
                     SET
                     	stu_arrival_orientation = <cfqueryparam cfsqltype="cf_sql_date" value="#qGetPreviousPlacementHistory.stu_arrival_orientation#" null="#NOT IsDate(qGetPreviousPlacementHistory.stu_arrival_orientation)#">,
                         updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
@@ -1968,7 +1968,7 @@
 				// Insert Actions Into Separate Table
 				APPLICATION.CFC.LOOKUPTABLES.insertApplicationHistory(
 					applicationID=APPLICATION.CONSTANTS.TYPE.EXITS,
-					foreignTable='smg_hostHistory',
+					foreignTable='smg_hosthistory',
 					foreignID=vHostHistoryID,
 					enteredByID=VAL(ARGUMENTS.changedBy),
 					actions=vActions
@@ -2167,7 +2167,7 @@
         		SELECT
                 	historyID
                 FROM
-                	smg_hostHistoryTracking
+                	smg_hosthistorytracking
                 WHERE
                 	historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.historyID)#">
                 AND
@@ -2183,7 +2183,7 @@
             <cfquery 
                 datasource="#APPLICATION.DSN#">
                     INSERT INTO 
-                        smg_hostHistoryTracking
+                        smg_hosthistorytracking
                     (
                         historyID,
                         studentID,
@@ -2213,7 +2213,7 @@
         <cfquery 
             datasource="#APPLICATION.DSN#">
                 UPDATE
-                    smg_hostHistory
+                    smg_hosthistory
                 SET
                     isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
                     updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
@@ -2245,7 +2245,7 @@
             <cfquery 
                 datasource="#APPLICATION.DSN#">
                     UPDATE
-                        smg_hostHistory
+                        smg_hosthistory
                     SET
                         datePlacedEnded = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.datePlacedEnded#">,
                         updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
@@ -2266,7 +2266,7 @@
         <cfquery 
             datasource="#APPLICATION.DSN#">
                 UPDATE
-                    smg_hostHistory
+                    smg_hosthistory
                 SET
                     hfSupervisingDistance = <cfqueryparam cfsqltype="cf_sql_float" value="#ARGUMENTS.distanceInMiles#">,
                     updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
@@ -2292,7 +2292,7 @@
         
         <cfquery datasource="#APPLICATION.DSN#">
             UPDATE
-                smg_hostHistory
+                smg_hosthistory
             SET
                 datePISEmailed = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
                 updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
@@ -2323,7 +2323,7 @@
                 historyID,
                 isActive
             FROM 
-                smg_hostHistory
+                smg_hosthistory
             WHERE
                 studentID = <cfqueryparam cfsqltype="integer" value="#ARGUMENTS.studentID#">
             AND
@@ -2356,7 +2356,7 @@
         
 		<cfquery datasource="#APPLICATION.DSN#" result="recordKey">
         	UPDATE 
-				smg_hostHistory
+				smg_hosthistory
         	SET
 				datePlaced = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#vSetNewDate#">,
                 updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
@@ -2372,7 +2372,7 @@
             	dateCreated = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#vSetNewDate#">,
                 dateUpdated = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#vSetNewDate#"> 
             WHERE
-            	foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="smg_hostHistory">
+            	foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="smg_hosthistory">
             AND
             	foreignID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHistoryID.historyID)#">   
             AND
@@ -2701,7 +2701,7 @@
                     dp.studentID AS doublePlacementID,
                     CAST(CONCAT(dp.firstName, ' ', dp.familyLastName,  ' (##', dp.studentID, ')') AS CHAR) AS doublePlacementStudent                    
                 FROM
-                    smg_hostHistoryTracking ht
+                    smg_hosthistorytracking ht
 				INNER JOIN
                 	smg_students dp ON ht.fieldID = dp.studentID 
                	WHERE 
@@ -2779,7 +2779,7 @@
         <cfquery 
             datasource="#APPLICATION.DSN#">
                 UPDATE
-                	smg_hostHistoryTracking
+                	smg_hosthistorytracking
                 SET
                 	isDoublePlacementPaperworkRequired = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isDoublePlacementPaperworkRequired)#" null="#NOT IsNumeric(ARGUMENTS.isDoublePlacementPaperworkRequired)#">,
                     doublePlacementParentsDateSigned = <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.doublePlacementParentsDateSigned#" null="#NOT IsDate(ARGUMENTS.doublePlacementParentsDateSigned)#">,
@@ -3120,7 +3120,7 @@
                 FROM 
                 	smg_students s
                 INNER JOIN
-                	smg_hostHistory sh ON sh.studentID = s.studentID
+                	smg_hosthistory sh ON sh.studentID = s.studentID
                 AND
                 	sh.isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
                 AND
@@ -3544,7 +3544,7 @@
                     DELETE FROM
                         applicationHistory
                     WHERE
-                    	foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="smg_hostHistory">
+                    	foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="smg_hosthistory">
                     AND                  
                         foreignID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.historyID#">
             </cfquery>
@@ -3553,7 +3553,7 @@
             <cfquery 
                 datasource="#APPLICATION.dsn#">
                     DELETE FROM
-                        smg_hostHistoryTracking
+                        smg_hosthistorytracking
                     WHERE
                         historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.historyID#">
             </cfquery>
@@ -3562,7 +3562,7 @@
             <cfquery 
                 datasource="#APPLICATION.dsn#">
                     DELETE FROM
-                        smg_hostHistory
+                        smg_hosthistory
                     WHERE
                         historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.historyID#">
             </cfquery>

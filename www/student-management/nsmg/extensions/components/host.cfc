@@ -3007,7 +3007,7 @@
                     AND
                     	p.smgSeasonID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(ARGUMENTS.seasonID)#">  
 				INNER JOIN
-                	smg_hostHistory h ON h.studentID = s.studentID
+                	smg_hosthistory h ON h.studentID = s.studentID
                     AND
                     	h.isActive = 1
                     AND

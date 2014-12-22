@@ -470,7 +470,7 @@
             LEFT JOIN
             	smg_regions sr ON sh.regionid = sr.regionid
             LEFT JOIN
-            	smg_hostHistory shist ON shist.studentID = ss.studentID AND isActive = 1
+            	smg_hosthistory shist ON shist.studentID = ss.studentID AND isActive = 1
             WHERE
             	ss.studentid =#student#
             </cfquery>          
