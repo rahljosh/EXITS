@@ -363,7 +363,7 @@
                 FROM 	
                     smg_students s
                 INNER JOIN
-                    smg_hostHistory ht ON ht.studentID = s.studentID
+                    smg_hosthistory ht ON ht.studentID = s.studentID
                         AND
                             ht.assignedID = <cfqueryparam cfsqltype="cf_sql_bit" value="0"> 
                 INNER JOIN 
@@ -525,7 +525,7 @@
                 FROM 	
                     smg_students s
                 INNER JOIN
-                    smg_hostHistory ht ON ht.studentID = s.studentID
+                    smg_hosthistory ht ON ht.studentID = s.studentID
                         AND
                             ht.assignedID = <cfqueryparam cfsqltype="cf_sql_bit" value="0"> 
                         AND
@@ -736,13 +736,13 @@
                 FROM 	
                     smg_students s
                 INNER JOIN
-                    smg_hostHistory ht ON ht.studentID = s.studentID
+                    smg_hosthistory ht ON ht.studentID = s.studentID
                         AND
                             ht.assignedID = <cfqueryparam cfsqltype="cf_sql_bit" value="0"> 
                         AND
                         	ht.datePlaced IS NOT NULL
                 INNER JOIN
-                	smg_hostHistoryTracking sht ON sht.historyID = ht.historyID
+                	smg_hosthistoryTracking sht ON sht.historyID = ht.historyID
                     AND
                     	fieldName = <cfqueryparam cfsqltype="cf_sql_varchar" value="secondVisitRepID">
                     AND

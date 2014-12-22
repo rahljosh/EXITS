@@ -48,7 +48,7 @@
     FROM 
         smg_students s
     INNER JOIN
-    	smg_hostHistory sh ON sh.studentID = s.studentID
+    	smg_hosthistory sh ON sh.studentID = s.studentID
         	AND
             	sh.isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
     LEFT JOIN 

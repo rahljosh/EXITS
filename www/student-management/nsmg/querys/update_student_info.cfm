@@ -420,7 +420,7 @@
 	<cfif NOT LEN(qStudentInfo.canceldate)>
 		
 		<cfscript>
-			// Update datePlacedEnded on smg_hostHistory
+			// Update datePlacedEnded on smg_hosthistory
 			APPLICATION.CFC.STUDENT.setDatePlacedEnded(studentID=qStudentInfo.studentID, datePlacedEnded=FORM.date_canceled);
 		
             // Get Intl. Rep. Info
