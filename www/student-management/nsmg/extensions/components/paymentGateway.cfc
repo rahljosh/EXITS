@@ -108,7 +108,7 @@
             result="newRecord"
             datasource="#APPLICATION.DSN#">
                 INSERT INTO
-                    applicationPayment
+                    applicationpayment
                 (                    
                     applicationID,
                     sessionInformationID,
@@ -178,7 +178,7 @@
 		<cfquery 
 			datasource="#APPLICATION.DSN#">
 				UPDATE
-                	applicationPayment
+                	applicationpayment
                 SET  
                     authTransactionID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.authTransactionID#">,
                     authApprovalCode = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.authApprovalCode#">,
@@ -232,7 +232,7 @@
                     dateUpdated,
                     dateCreated
 				FROM
-                	applicationPayment
+                	applicationpayment
                 WHERE
                	
                 <cfif LEN(ARGUMENTS.ID)>
@@ -294,7 +294,7 @@
                     billingZipCode,
                     billingCountryID
                	FROM
-                	applicationPayment
+                	applicationpayment
                 WHERE
                     applicationID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.applicationID)#">
                 AND
@@ -691,7 +691,7 @@
             <cfquery 
                 datasource="#APPLICATION.DSN#">
                     UPDATE
-                        applicationPayment
+                        applicationpayment
                     SET
                         authorizeNetPaymentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#customerPaymentProfileId#">
                     WHERE

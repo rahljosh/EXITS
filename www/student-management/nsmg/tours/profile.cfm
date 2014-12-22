@@ -132,7 +132,7 @@
                 SELECT 
                     sum(amount)
                 FROM
-                    applicationPayment ap
+                    applicationpayment ap
                 WHERE
                     ap.foreignID = st.ID
                 AND
@@ -143,7 +143,7 @@
         FROM 
         	student_tours st
         INNER JOIN
-            applicationPayment ap ON ap.foreignID = st.ID
+            applicationpayment ap ON ap.foreignID = st.ID
                 AND
                     foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="student_tours">
                 AND	
@@ -230,7 +230,7 @@
                     SELECT 
                         sum(amount)
                     FROM
-                        applicationPayment ap
+                        applicationpayment ap
                     WHERE
                         ap.foreignID = st.ID
                     AND
@@ -239,7 +239,7 @@
                         authIsSuccess = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
                 ) AS totalReceived	
 	 		FROM student_tours st
-        	INNER JOIN applicationPayment ap ON ap.foreignID = st.ID
+        	INNER JOIN applicationpayment ap ON ap.foreignID = st.ID
      			AND foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="student_tours">
           		AND	authIsSuccess = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
         	LEFT OUTER JOIN smg_students s on s.studentID = st.studentID
@@ -257,7 +257,7 @@
     	SELECT
             ap.*     
         FROM
-	        applicationPayment ap
+	        applicationpayment ap
         WHERE
             ap.foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="student_tours">
         AND	
@@ -270,7 +270,7 @@
     	SELECT
             ap.*     
         FROM
-	        applicationPayment ap
+	        applicationpayment ap
         WHERE
             ap.foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="student_tours">
         AND	
