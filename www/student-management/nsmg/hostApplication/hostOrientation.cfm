@@ -65,7 +65,7 @@
     
     <cfquery name="qGetDocumentID" datasource="#APPLICATION.DSN#">
     	SELECT ID
-        FROM documentType
+        FROM documenttype
         WHERE documentGroup = "hostOrientation"
     </cfquery>
     
