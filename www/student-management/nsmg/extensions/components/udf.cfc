@@ -151,8 +151,8 @@
 			// Check for local servers
 			if (	
 				FindNoCase("dev.student-management.com", CGI.http_host) 
-			OR 
-				FindNoCase("developer", server.ColdFusion.ProductLevel) 
+			//OR 
+				//FindNoCase("developer", server.ColdFusion.ProductLevel) 
 			OR
 				FindNoCase("119cooper", CGI.http_host) 
 			OR
@@ -999,7 +999,7 @@
         
         <cfquery name="qGetVFDocuments" datasource="#APPLICATION.DSN#">
         	SELECT *
-            FROM virtualFolder
+            FROM virtualfolder
             WHERE isDeleted = 0
             <cfif VAL(ARGUMENTS.documentType)>
             	AND fk_documentType = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.documentType#">
@@ -1119,7 +1119,7 @@
     	<cfargument name="ID" required="yes" hint="ID is required">
         
         <cfquery datasource="#APPLICATION.DSN#">
-        	UPDATE virtualFolder
+        	UPDATE virtualfolder
             SET isDeleted = 1
             WHERE vfID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.ID)#">
         </cfquery>
@@ -1808,7 +1808,7 @@
             APPLICATION.CFC.UDF.insertInternalFile(filePath=fullPath,fieldID=1,studentID=qGetStudentInfo.studentID,hostID=qGetStudentInfo.hostID);
         </cfscript>
      	<cfquery name="insertFileDetails" datasource="#application.dsn#">
-   			INSERT INTO  virtualFolder (
+   			INSERT INTO  virtualfolder (
             	fk_categoryID, 
                 fk_documentType, 
                 fileDescription,
@@ -1975,7 +1975,7 @@
 				APPLICATION.CFC.UDF.insertInternalFile(filePath=fullPath,fieldID=1,studentID=qGetStudentInfo.studentID,hostID=qGetStudentInfo.hostID);
 			</cfscript>
             <cfquery name="insertFileDetails" datasource="#application.dsn#">
-            insert into  virtualFolder (fk_categoryID, 
+            insert into  virtualfolder (fk_categoryID, 
             							fk_documentType, 
                                         fileDescription,
                                         fileName, 
@@ -2200,7 +2200,7 @@
 				APPLICATION.CFC.UDF.insertInternalFile(filePath=fullPath,fieldID=1,studentID=qGetStudentInfo.studentID,hostID=qGetStudentInfo.hostID);
 			</cfscript>
             <cfquery name="insertFileDetails" datasource="#application.dsn#">
-            insert into  virtualFolder (fk_categoryID, 
+            insert into  virtualfolder (fk_categoryID, 
                     fk_documentType, 
                     fileDescription,
                     fileName, 
@@ -2873,7 +2873,7 @@
 				APPLICATION.CFC.UDF.insertInternalFile(filePath=fullPath,fieldID=1,studentID=qGetStudentInfo.studentID,hostID=qGetStudentInfo.hostID);
 			</cfscript>
             <cfquery name="insertFileDetails" datasource="#application.dsn#">
-            insert into  virtualFolder (fk_categoryID, 
+            insert into  virtualfolder (fk_categoryID, 
                     fk_documentType, 
                     fileDescription,
                     fileName, 
