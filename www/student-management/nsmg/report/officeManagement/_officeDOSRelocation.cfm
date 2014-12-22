@@ -210,7 +210,7 @@
                 INNER JOIN  
                     smg_users u ON u.userID = hist.areaRepID
                 LEFT OUTER JOIN
-                    applicationLookUp alup ON alup.fieldID = hist.changePlacementReasonID
+                    applicationlookup alup ON alup.fieldID = hist.changePlacementReasonID
                     AND
                         fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="changePlacementReason">                             
                 WHERE
