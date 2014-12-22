@@ -455,7 +455,7 @@
                 FROM
                     smg_student_app_language l
                 LEFT OUTER JOIN
-                    applicationLookUp alk ON alk.fieldID = l.languageID
+                    applicationlookup alk ON alk.fieldID = l.languageID
                     AND
                         alk.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="language">
                 WHERE
@@ -542,7 +542,7 @@
                 FROM
                     smg_student_app_language l
                 LEFT OUTER JOIN
-                    applicationLookUp alk ON alk.fieldID = l.languageID
+                    applicationlookup alk ON alk.fieldID = l.languageID
                     AND
                         alk.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="language">
                 WHERE
@@ -3394,7 +3394,7 @@
 				FROM
                 	smg_countryLanguageJN clJN
                 INNER JOIN
-					applicationLookUp alu ON alu.fieldID = clJN.languageID
+					applicationlookup alu ON alu.fieldID = clJN.languageID
                     	AND
                         	fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="language">
                 INNER JOIN	

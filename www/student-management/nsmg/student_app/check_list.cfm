@@ -817,7 +817,7 @@
        			<cfloop list="#SorryList#" index="i">
               		<cfquery name="districtName" datasource="#application.dsn#">
                         SELECT name
-                        FROM applicationLookUp
+                        FROM applicationlookup
                         WHERE fieldKey =  <cfqueryparam cfsqltype="cf_sql_varchar" value="ESIDistrictChoice">  
                         AND id = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#">
                		</cfquery>

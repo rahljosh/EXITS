@@ -178,7 +178,7 @@
                     FROM 
                         smg_virtualfolder vf
                     LEFT OUTER JOIN
-                        applicationLookUp alk ON alk.fieldID = vf.categoryID
+                        applicationlookup alk ON alk.fieldID = vf.categoryID
                             AND 
                                 alk.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="virtualFolderCategory">
                     WHERE 
