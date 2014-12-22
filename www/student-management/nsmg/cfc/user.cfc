@@ -41,7 +41,7 @@
                 WHERE
                     url_ref LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#cgi.server_name#"> 
             </cfquery>
-        
+       
         </cfif>        
 		
         <cfscript>
@@ -78,7 +78,7 @@
 			</cfoutput>
             <cfabort>
         </cfif>
-        	
+       
 		<cfscript>
 			CLIENT.company_submitting = submitting_info.website;
 			CLIENT.app_menu_comp = CLIENT.companyid;
@@ -89,7 +89,7 @@
 			} else if ( CGI.HTTP_HOST EQ '204.12.118.245' ) { // go daddy remedy
 				CLIENT.exits_url = "https://204.12.118.245";
 			} else {
-				CLIENT.exits_url = "https://" & submitting_info.url_ref;	
+				CLIENT.exits_url = "http://" & submitting_info.url_ref;	
 			}
 			
 			APPLICATION.company_short = submitting_info.website;
@@ -125,7 +125,7 @@
             <!--- Production / Force SSL --->    
             <cfelse>
             	
-                <cflocation url="#CLIENT.exits_url#/nsmg/student_app/index.cfm" addtoken="no">
+                <cflocation url="nsmg/student_app/index.cfm" addtoken="no">
             	
             </cfif>
 		
@@ -202,7 +202,7 @@
 			// Set USER SESSION Paperwork
 			APPLICATION.CFC.USER.setUserSessionPaperwork(userID=qAuthenticateUser.userID);
         </cfscript>
-            
+            	
         <Cfif not val(qAuthenticateUser.accountCreationVerified)>
         
         	<cfquery name="disabledReasonid" datasource="#application.dsn#">
@@ -240,6 +240,14 @@
         <cfset CLIENT.regions = get_default_access.regionid>  <!--- these are both the same, but phase out CLIENT.regions --->
         <cfset CLIENT.regionid = get_default_access.regionid>
     	<!----Check is SSN is missing---->
+        
+        <!----<cfif client.usertype gt 4>
+            <h1>Scheduled Maintnance</h1>
+            EXITS is currently undergoing maintnanace and is not avaialble.<br>
+            We expect to have all systems back on line by  Sept 21, 2014 at 12:01am EST<br>
+            <cfabort>	
+        </cfif>---->
+        
         <cfif NOT LEN(qAuthenticateUser.ssn) AND listfind('1,2,3,4,5,6,7', CLIENT.usertype)>
         	<cfset CLIENT.needsSSN = 1>
         </cfif>
@@ -346,8 +354,20 @@
 				);
 			}
 		</cfscript>
-                
-
+        <!----
+         <cfscript>
+			// Host Family Leads Pop Up
+				// Check if there are leads assigned to an Area Representative
+				qGetNotifications = APPLICATION.CFC.USER.getNotifications(
+					userType=CLIENT.userType,
+					userID=CLIENT.userID, 
+					regionID=CLIENT.regionID,
+					lastLogin=CLIENT.lastlogin,
+					setClientVariable=1
+				);
+			
+		</cfscript>
+        ---->
         <!--- Check if server is local, if it is do not redirect to SSL --->
 		<cfif APPLICATION.IsServerLocal>
 			
@@ -355,14 +375,17 @@
 			
         <!--- Production / Force SSL if not Case --->
         <cfelse>
+        <cfparam name="url.ref" default="">
        		<Cfif url.ref is 'studentApp'>
             	
-            	<cflocation url="/nsmg/exits_app.cfm?unqid=#url.uniqid#" addtoken="no"> 
+            	<cflocation url="/nsmg/student_app/print_application.cfm?uniqid=#url.uniqid#" addtoken="no"> 
             <cfelse>
-            <cflocation url="#CLIENT.exits_url#/nsmg/index.cfm?curdoc=initial_welcome" addtoken="no">
+          	<cfdump var="#client#">
+            <cfabort>
+            <cflocation url="#CLIENT.exits_url#/nsmg/index.cfm?curdoc=students" addtoken="no">
 			</Cfif>
         </cfif>
-        
+         
 	</cffunction>
 
 
@@ -401,7 +424,7 @@
             ORDER BY 
             	uar.usertype
         </cfquery>
-        
+       
         <!--- user has no access records. --->
         <cfif get_usertypes.recordCount EQ 0>
         
