@@ -39,12 +39,12 @@
 
 	<cfif url.isActive eq 0>
         <Cfquery datasource="#application.dsn#">
-            insert into regionStateClosure (fk_districtID, fk_programid, fk_companyid)
+            insert into regionstateclosure (fk_districtID, fk_programid, fk_companyid)
                                 values(#url.districtID#, #url.programid#, #client.companyid#)
         </cfquery>
     <Cfelse>
         <Cfquery datasource="#application.dsn#">
-    	 delete from regionStateClosure where fk_districtID = #url.districtID# and fk_programid = #url.programid#
+    	 delete from regionstateclosure where fk_districtID = #url.districtID# and fk_programid = #url.programid#
 		</cfquery>
     </cfif>
 </cfif>
@@ -52,7 +52,7 @@
 
 <Cfquery name="districtClosed" datasource="#application.dsn#">
 select sc.fk_districtID
-from regionStateClosure sc 
+from regionstateclosure sc 
 where  sc.fk_programid = #url.programid#
 
 and fk_companyid = #client.companyid#

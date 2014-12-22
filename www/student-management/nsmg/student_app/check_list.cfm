@@ -737,7 +737,7 @@
                   <cfif Evaluate(get_field) GT 0>
                  <cfquery name="checkRegionFull" datasource="#application.dsn#">
                         select fk_regionID
-                        from regionStateClosure sc
+                        from regionstateclosure sc
                         where fk_programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_student_info.programid)#">
                         <Cfif client.companyid lte 5 or client.companyid eq 12>
                         and sc.fk_companyid = 1
@@ -792,7 +792,7 @@
          
 			<cfquery name="districtClosed" datasource="#application.dsn#">
          		SELECT sc.fk_districtID
-	         	FROM regionStateClosure sc
+	         	FROM regionstateclosure sc
 	         	WHERE sc.fk_programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_student_info.programID#">
 	         	AND sc.fk_companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
          	</cfquery>
@@ -865,7 +865,7 @@
                         <!---check state 1---->
                         <Cfquery name="statesClosedCheck1" datasource="#application.dsn#">
                         select sc.fk_stateID, s.statename
-                        from regionStateClosure sc 
+                        from regionstateclosure sc 
                         LEFT join smg_states s on s.id = sc.fk_stateID
                         where  sc.fk_programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_student_info.programid)#">
                         <cfif client.companyid lte 5 OR client.companyid eq 12>
@@ -882,7 +882,7 @@
                         <!---check state 2---->
                         <Cfquery name="statesClosedCheck2" datasource="#application.dsn#">
                         select sc.fk_stateID, s.statename
-                        from regionStateClosure sc 
+                        from regionstateclosure sc 
                         LEFT join smg_states s on s.id = sc.fk_stateID
                         where  sc.fk_programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_student_info.programid)#">
                         <cfif client.companyid lte 5 OR client.companyid eq 12>
@@ -899,7 +899,7 @@
                          <!---check state3---->
                         <Cfquery name="statesClosedCheck3" datasource="#application.dsn#">
                         select sc.fk_stateID, s.statename
-                        from regionStateClosure sc 
+                        from regionstateclosure sc 
                         LEFT join smg_states s on s.id = sc.fk_stateID
                         where  sc.fk_programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_student_info.programid)#">
                         <cfif client.companyid lte 5 OR client.companyid eq 12>

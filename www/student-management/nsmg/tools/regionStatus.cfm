@@ -20,13 +20,13 @@
 	<cfif url.isActive eq 1>
    
         <Cfquery datasource="#application.dsn#">
-            insert into regionStateClosure (fk_regionID, fk_programid, fk_companyid)
+            insert into regionstateclosure (fk_regionID, fk_programid, fk_companyid)
                                 values(#url.regionid#, #url.programid#, <cfif client.companyid lte 5 OR client.companyid eq 12>1<cfelse>10</cfif>)
         </cfquery>
     
     <Cfelse>
         <Cfquery datasource="#application.dsn#">
-    	delete from regionStateClosure where fk_regionid = #url.regionid# and fk_programid = #url.programid#
+    	delete from regionstateclosure where fk_regionid = #url.regionid# and fk_programid = #url.programid#
 		</cfquery>
     </cfif>
 </cfif>
@@ -73,7 +73,7 @@
 </cfif>
 <cfquery name="inActiveRegions" datasource="#application.dsn#">
 select *
-from regionStateClosure
+from regionstateclosure
 where fk_programid = #qCurrentProgram.programid#
 <cfif client.companyid lte 5 OR client.companyid eq 12>
 and fk_companyid = 1
