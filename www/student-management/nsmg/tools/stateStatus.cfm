@@ -88,13 +88,13 @@ Please select a program to view availability.
 	<cfif url.isActive eq 0>
    
         <Cfquery datasource="#application.dsn#">
-            insert into regionStateClosure (fk_stateID, fk_programid, fk_companyid)
+            insert into regionstateclosure (fk_stateID, fk_programid, fk_companyid)
                                 values(#url.stateid#, #url.programid#, <cfif client.companyid lte 5 OR client.companyid eq 12>1<cfelse>10</cfif>)
         </cfquery>
     
     <Cfelse>
         <Cfquery datasource="#application.dsn#">
-    	delete from regionStateClosure where fk_stateid = #url.stateid# and fk_programid = #url.programid#
+    	delete from regionstateclosure where fk_stateid = #url.stateid# and fk_programid = #url.programid#
 		</cfquery>
     </cfif>
 </cfif>
@@ -106,7 +106,7 @@ where (s.id < 52 AND s.id !=11 and s.id !=2)
 
 <Cfquery name="statesClosed" datasource="#application.dsn#">
 select sc.fk_stateID, s.statename
-from regionStateClosure sc 
+from regionstateclosure sc 
 LEFT join smg_states s on s.id = sc.fk_stateID
 where  sc.fk_programid = #qCurrentProgram.programid#
 <cfif client.companyid lte 5 OR client.companyid eq 12>
