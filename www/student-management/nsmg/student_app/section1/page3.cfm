@@ -26,7 +26,7 @@
 </cfif>
 
 <cfscript>
-	 qGetLanguageList = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='language');
+	 qGetLanguageList = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey="language",sortBy="name");
 </cfscript>
 
 <cfinclude template="../querys/get_student_info.cfm">
