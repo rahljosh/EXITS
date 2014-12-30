@@ -31,9 +31,22 @@ order by companyshort, datecreated, type
     <cfoutput>
     <cfloop query="sevisReport">
     
+    <Cfif sevisReport.type is 'host_update'>
+    	<cfset linkType = 'host_results'>
+    <cfelseif sevisReport.type is 'school_update'>
+    	<cfset linkType = 'site_activity_results'>
+    <cfelseif sevisReport.type is 'activate'>
+    	<cfset linkType = 'activate_results'>
+    <cfelseif sevisReport.type is 'new'>
+    	<cfset linkType = 'new_forms_results'>
+    <cfelse>
+    	<cfset linkType = ''>
+    </cfif>
+    
+    	
     <tr <cfif currentrow mod 2>bgcolor="##cccccc"</cfif>>
     	<td>#companyshort#</td>
-        <td>#batchid#</td>
+        <td><cfif len(linkType)><a href="?curdoc=sevis/#linkType#&batch=#batchid#.xml"></cfif>#batchid#</a></td>
         <td><cfif DateDiff('d','#now()#', '#dateCreated#') eq 1>Yesterday<cfelse>#DateFormat(datecreated, 'mmm d, yyyy')#</cfif></td>
         <td>#type#</td>
         <td align="center">#totalstudents#</td>
