@@ -164,8 +164,8 @@ If you are not able to read this e-mail please contact #companyshort.companyshor
 	<br>Thanks,<br><br>
 <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
                 	#qGetFacilitator.facilitatorname#<br />
-                    International Student Exchange
-                <cfelse>	
+                    International Student Exchange Facilitator
+                    <cfelse>	
                 	#qGetCompanyShort.admission_person#  <br />
                 	Student Admissions Department 
                 </cfif>
