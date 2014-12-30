@@ -177,7 +177,7 @@
                             CAST(CONCAT(h.familyLastName, ' ##', h.hostID) AS CHAR) AS hostFamilyName,
                             CONCAT(fac.firstName, ' ', fac.lastName) AS facilitatorName                   
                         FROM smg_students s
-                        INNER JOIN smg_hostHistory ht ON ht.studentID = s.studentID
+                        INNER JOIN smg_hosthistory ht ON ht.studentID = s.studentID
                       		AND ht.assignedID = 0    
                         INNER JOIN progress_reports pr ON pr.fk_student = s.studentID            
                             AND pr.fk_reportType = 2
@@ -251,7 +251,7 @@
                             CAST(CONCAT(h.familyLastName, ' ##', h.hostID) AS CHAR) AS hostFamilyName,
                             CONCAT(fac.firstName, ' ', fac.lastName) AS facilitatorName
                         FROM smg_students s
-                        INNER JOIN smg_hostHistory ht ON ht.studentID = s.studentID
+                        INNER JOIN smg_hosthistory ht ON ht.studentID = s.studentID
                       		AND ht.assignedID = 0   
                          	AND ht.hostID != 0
                         INNER JOIN smg_programs p ON p.programID = s.programID
