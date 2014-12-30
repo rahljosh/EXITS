@@ -166,6 +166,14 @@
                             immunizations, please make sure that he/she obtains proof in writing from their doctor that
                             the immunizations have been completed and the date).
                         </p>
+                        <p style="margin-top:15px; margin-bottom:15px">
+                        	From this point on, the student facilitator will serve as the primary contact for questions regarding specific students. 
+                            Student facilitator information can be found below and also by clicking on the &ldquo;Students&rdquo; tab of your EXITS 
+                            homepage and clicking on the student you wish to find. From there, you will be directed to the student homepage. 
+                            On the left side of the page, beneath the student photo, you will see the name of the student facilitator listed. 
+                            If you click on the student facilitator name, an email window will open automatically for you to contact the student facilitator directly.</p>
+                        <br />
+                        <p style="margin-top:15px; margin-bottom:15px">&nbsp;</p>
                     </cfif>  
                                       
                 </div>
