@@ -32,7 +32,7 @@
 		vReportTitle = "Office Management - Compliance Check Placement Paperwork";
 
 		// PS: smg_hostHistory is already taken by the placement history so I set table name as smg_hostHistoryCompliance
-		vComplianceTableName = "smg_hostHistoryCompliance";
+		vComplianceTableName = "smg_hosthistorycompliance";
 
 		// Get Programs
 		qGetPrograms = APPLICATION.CFC.PROGRAM.getPrograms(programIDList=FORM.programID);
@@ -184,7 +184,7 @@
                     FROM 
                         smg_students s
                     INNER JOIN
-                        smg_hostHistory sh ON sh.studentID = s.studentID
+                        smg_hosthistory sh ON sh.studentID = s.studentID
 						<!--- Date Placed --->
                         <cfif isDate(FORM.placedDateFrom) AND isDate(FORM.placedDateTo)>
                             AND 
@@ -222,7 +222,7 @@
                         secondVisitAnswers sva ON sva.fk_reportID = secondVisitReport.pr_ID
                     <!--- Double Placement Compliance --->
                     LEFT OUTER JOIN
-                    	smg_hostHistoryTracking sht ON sht.historyID = sh.historyID
+                    	smg_hosthistorytracking sht ON sht.historyID = sh.historyID
                         AND
                         	fieldName = <cfqueryparam cfsqltype="cf_sql_varchar" value="doublePlacementID">
                         AND
