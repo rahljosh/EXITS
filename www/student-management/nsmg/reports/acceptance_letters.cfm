@@ -74,16 +74,26 @@
 	<hr width=80% align="center">
 	<tr>
 	<td colspan="2">
-    <div align="justify"><span class="application_section_header"><font size=+1><b><u>RECEIPT AND ACCEPTANCE NOTIFICATION</u></b></font></span><br><br><br>
-	  The application for the following student(s) has been accepted. Not only is this a
-	  notification of acceptance but it is also, in some cases, a notice that additional
-	  information is needed in order to adhere to United States Department of State regulations
-	  and to ensure that the student will be easily placed. Please send the requested information
-	  <b>in English </b>as soon as possible. It is extremely important!!! If a student has been denied you will be
-	  notified with a separate letter. (If a student has scheduled dates written in for upcoming 
-	  immunizations, please make sure that he/she obtains proof in writing from their doctor that
-	  the immunizations have been completed and the date). <br><br>
-	 </div></td></tr>
+    <div align="justify">
+      <p><span class="application_section_header"><font size=+1><b><u>RECEIPT AND ACCEPTANCE NOTIFICATION</u></b></font></span><br><br><br>
+        The application for the following student(s) has been accepted. Not only is this a
+        notification of acceptance but it is also, in some cases, a notice that additional
+        information is needed in order to adhere to United States Department of State regulations
+        and to ensure that the student will be easily placed. Please send the requested information
+        <b>in English </b>as soon as possible. It is extremely important!!! If a student has been denied you will be
+        notified with a separate letter. (If a student has scheduled dates written in for upcoming 
+        immunizations, please make sure that he/she obtains proof in writing from their doctor that
+        the immunizations have been completed and the date). </p>
+      <p dir="ltr">From this point on, the student facilitator will serve as the primary contact for questions regarding specific students. 
+        Student facilitator information can be found below and also by clicking on the &ldquo;Students&rdquo; tab of your EXITS homepage and 
+      	clicking on the student you wish to find. From there, you will be directed to the student homepage. On the left side of the page, 
+      	beneath the student photo, you will see the name of the student facilitator listed. If you click on the student facilitator name, 
+      	an email window will open automatically for you to contact the student facilitator directly.</p>
+      <br />
+      <p><br>
+        <br>
+      </p>
+    </div></td></tr>
 </table>
 
 <cfloop query="get_programs">
