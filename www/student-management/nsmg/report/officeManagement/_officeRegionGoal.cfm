@@ -165,7 +165,7 @@
                 AND
                 	sh.assignedID = <cfqueryparam cfsqltype="cf_sql_bit" value="0"> <!--- Filter Out PHP students --->
             WHERE
-                s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+            <!---    s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1"> --->
             AND
                 s.regionAssigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#">
             AND
@@ -507,7 +507,7 @@
     </table>
     
     <!--- On Screen Report --->
-    <cfelse>
+<cfelse>
     
     	<cfsavecontent variable="report">
             
