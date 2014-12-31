@@ -742,7 +742,7 @@
                         AND
                         	ht.datePlaced IS NOT NULL
                 INNER JOIN
-                	smg_hosthistoryTracking sht ON sht.historyID = ht.historyID
+                	smg_hosthistorytracking sht ON sht.historyID = ht.historyID
                     AND
                     	fieldName = <cfqueryparam cfsqltype="cf_sql_varchar" value="secondVisitRepID">
                     AND
