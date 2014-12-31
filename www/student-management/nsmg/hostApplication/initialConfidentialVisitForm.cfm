@@ -248,17 +248,17 @@
             <!--- Update --->
             <cfif VAL(FORM.pr_ID)>
             
-            	<!--- Check if secondVisitAnswers record exists --->
+            	<!--- Check if secondvisitanswers record exists --->
                 <cfquery name="qGetSecondVisitAnswersRecord" datasource="#APPLICATION.DSN#">
                 	SELECT *
-                    FROM secondVisitAnswers
+                    FROM secondvisitanswers
                     WHERE fk_reportID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.pr_ID)#">
                 </cfquery>
             
             	<cfif VAL(qGetSecondVisitAnswersRecord.recordCount)>
                     <cfquery datasource="#APPLICATION.DSN#">
                         UPDATE 
-                            secondVisitAnswers 
+                            secondvisitanswers 
                         SET
                             dateOfVisit = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.dateOfVisit#">,
                             neighborhoodAppearance= <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.neighborhoodAppearance#">,
@@ -289,7 +289,7 @@
                     </cfquery>
             	<cfelse>
                 	<cfquery datasource="#APPLICATION.DSN#">
-                        INSERT INTO secondVisitAnswers
+                        INSERT INTO secondvisitanswers
                         (
                             fk_reportID,
                             dateOfVisit,
@@ -390,7 +390,7 @@
                 <!--- Insert Answers --->
                 <cfquery datasource="#APPLICATION.DSN#">
                     INSERT INTO
-                        secondVisitAnswers
+                        secondvisitanswers
                     (
                         fk_reportID,
                         dateOfVisit,

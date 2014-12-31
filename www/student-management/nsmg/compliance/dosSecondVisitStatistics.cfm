@@ -129,7 +129,7 @@
                     AND
                         pr.pr_ny_approved_date IS NOT <cfqueryparam cfsqltype="cf_sql_date" null="yes">   
                 INNER JOIN	
-                	secondVisitAnswers sva ON sva.fk_reportID = pr.pr_ID
+                	secondvisitanswers sva ON sva.fk_reportID = pr.pr_ID
                 INNER JOIN
                     smg_regions r ON r.regionID = s.regionAssigned     
                     AND

@@ -117,7 +117,7 @@ table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #2
     </cfquery>
 
     <cfquery  datasource="#application.dsn#">
-        INSERT INTO secondVisitAnswers
+        INSERT INTO secondvisitanswers
             (
                 fk_reportID,
                 fk_studentID

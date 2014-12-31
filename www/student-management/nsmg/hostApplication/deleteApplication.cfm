@@ -15,7 +15,7 @@
 				smg_host_reference_anwers
 				smg_host_reference_tracking
 				
-				secondVisitAnswers
+				secondvisitanswers
 				progress_reports
 				
 				smg_hosts
@@ -143,7 +143,7 @@
         <!--- Initial Visit - Second Visit Answers --->
         <cfquery datasource="#APPLICATION.DSN#">
             DELETE FROM
-                secondVisitAnswers
+                secondvisitanswers
             WHERE
                 fk_reportID IN (
                                     SELECT
@@ -261,7 +261,7 @@
         
         <p>Data deleted from smg_host_reference_tracking</p>
 
-        <p>Data deleted from secondVisitAnswers</p>
+        <p>Data deleted from secondvisitanswers</p>
         
         <p>Data deleted from progress_reports</p>
         
