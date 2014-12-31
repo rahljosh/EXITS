@@ -251,7 +251,7 @@
                                 SELECT
                                     foreignID
                                 FROM
-                                    applicationHistory
+                                    applicationhistory
                                 WHERE
                                     foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="smg_hostHistoryCompliance">
                                 AND
@@ -333,7 +333,7 @@
                          	SELECT
                             	foreignID
                             FROM
-                            	applicationHistory
+                            	applicationhistory
                             WHERE
                             	foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="smg_hostHistoryCompliance">
                             AND

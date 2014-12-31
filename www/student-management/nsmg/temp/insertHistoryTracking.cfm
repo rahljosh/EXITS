@@ -82,7 +82,7 @@
         sh.doublePlacementID,           
         sh.dateCreated
     FROM 
-    	applicationHistory ah
+    	applicationhistory ah
     INNER JOIN
     	smg_hostHistory sh on sh.historyID = ah.foreignID and ah.foreignTable = 'smg_hostHistory' 
     WHERE 

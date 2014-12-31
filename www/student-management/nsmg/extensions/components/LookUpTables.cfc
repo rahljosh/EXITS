@@ -221,7 +221,7 @@
 	</cffunction>
 
 
-	<cffunction name="updateApplicationHistory" access="public" returntype="void" output="false" hint="Updates isResolved value on applicationHistory">
+	<cffunction name="updateApplicationHistory" access="public" returntype="void" output="false" hint="Updates isResolved value on applicationhistory">
     	<cfargument name="ID" hint="ID is required">
     	<cfargument name="isResolved" default="" hint="isResolved is not required">
 

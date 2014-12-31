@@ -3350,7 +3350,7 @@
                         SELECT
                             foreignID
                         FROM
-                            applicationHistory
+                            applicationhistory
                         WHERE
                             foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="smg_host_lead">
                     ) 

@@ -318,7 +318,7 @@ if (CLIENT.companyid eq 13){
                     from document
                     where foreignID = <cfqueryparam cfsqltype="cf_sql_integer" value="#schoolid#">
                     and seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#currentSeason.seasonid#">
-                    and documentTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="44">
+                    and documenttypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="44">
                     </cfquery>
                     
                      <cfscript>	
@@ -349,7 +349,7 @@ if (CLIENT.companyid eq 13){
                     from document
                     where foreignID = <cfqueryparam cfsqltype="cf_sql_integer" value="#schoolid#">
                     and seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#nextSeason#">
-                    and documentTypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="44">
+                    and documenttypeID = <cfqueryparam cfsqltype="cf_sql_integer" value="44">
                     </cfquery>
                     
                      <cfscript>	

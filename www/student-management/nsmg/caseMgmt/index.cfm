@@ -78,7 +78,7 @@
                     stResult = APPLICATION.CFC.DOCUMENT.uploadFile(
                         foreignTable="smg_caseMgmt",
                         foreignID=URL.caseID, 
-                        documentTypeID=33,
+                        documenttype=33,
                         uploadPath=vSetUploadPath,					
                         description="#form.fileDescription#",
                         allowedExt="jpg,jpeg,png,pdf,doc,docx,ppt,pps,pptx,ppsx,gif,pages,numbers,odt,xls,"
