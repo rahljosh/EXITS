@@ -44,7 +44,7 @@
                     dateCreated,
                     dateUpdated
 				FROM
-                	applicationLookUp
+                	applicationlookup
 				WHERE
                     fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.fieldKey#">
                 
