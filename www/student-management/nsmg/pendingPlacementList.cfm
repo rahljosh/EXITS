@@ -148,7 +148,7 @@
             	SELECT
                 	ah.actions
                 FROM
-                	applicationHistory ah
+                	applicationhistory ah
 				WHERE
                 	ah.foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="smg_hostHistory">
                 AND
