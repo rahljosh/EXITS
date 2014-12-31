@@ -1,4 +1,4 @@
 <cfquery name="get_name" datasource="mysql">
 	select *
-	from smg_Students	
+	from smg_students	
 </cfquery>

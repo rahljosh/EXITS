@@ -169,7 +169,7 @@ if (CLIENT.companyid eq 13){
     <cfquery name="getResults" datasource="#APPLICATION.dsn#">
        SELECT DISTINCT 
 			s.*, (SELECT count(studentid) as NoStudents
-					FROM smg_Students
+					FROM smg_students
 					WHERE schoolid = s.schoolid 
                     AND programID IN ( #programList#)
                     <cfif CLIENT.companyID EQ 10>
@@ -180,7 +180,7 @@ if (CLIENT.companyid eq 13){
                         smg_students.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
                 </cfif> )as noStudentsThisYear,
                     (SELECT count(studentid) as NoNextStudents
-					FROM smg_Students
+					FROM smg_students
 					WHERE schoolid = s.schoolid 
                     AND programID IN ( #nextProgramList#)
                     <cfif CLIENT.companyID EQ 10>

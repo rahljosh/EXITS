@@ -250,7 +250,7 @@
             s.season,
             p.fk_smg_student_app_programID,
 						(SELECT count(studentid) as NoStudents
-						 FROM smg_Students s
+						 FROM smg_students s
 						 WHERE s.programID = p.programid
                    		 AND  s.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#">)  as NoStudents,
                       (SELECT Month(startdate) as startMonth
