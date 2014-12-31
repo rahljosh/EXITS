@@ -145,9 +145,9 @@ table.nav_bar { font-size: 10px; background-color: #ffffff; border: 1px solid #2
 </table>
 
 <cfquery name="get_progress_reports" datasource="#application.dsn#">
-    SELECT progress_reports.*, reportTrackingType.description
+    SELECT progress_reports.*, reporttrackingtype.description
     FROM progress_reports
-    LEFT JOIN reportTrackingType on reportTrackingType.reportTypeID = progress_reports.fk_reportType
+    LEFT JOIN reporttrackingtype on reporttrackingtype.reportTypeID = progress_reports.fk_reportType
     WHERE fk_student = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(url.stuid)#">
     ORDER BY fk_reportType, pr_id DESC
 </cfquery>
