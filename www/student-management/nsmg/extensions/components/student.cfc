@@ -2367,7 +2367,7 @@
         <!--- Update History Log --->
         <cfquery datasource="#APPLICATION.DSN#">
 			UPDATE
-            	applicationHistory
+            	applicationhistory
             SET
             	dateCreated = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#vSetNewDate#">,
                 dateUpdated = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#vSetNewDate#"> 
@@ -3542,7 +3542,7 @@
             <cfquery 
                 datasource="#APPLICATION.dsn#">
                     DELETE FROM
-                        applicationHistory
+                        applicationhistory
                     WHERE
                     	foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="smg_hosthistory">
                     AND                  

@@ -1088,7 +1088,7 @@
         </cfif>
         
         <cfquery datasource="#APPLICATION.DSN#">
-        	INSERT INTO virtualFolder (
+        	INSERT INTO virtualfolder (
             	fk_categoryID,
                 fk_documentType,
                 fk_studentID,
