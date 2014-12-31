@@ -90,7 +90,7 @@
             showPhase,
             ESI
        	FROM
-        	reportTrackingType
+        	reporttrackingtype
       	WHERE
         	isActive = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
       	<cfif CLIENT.companyID EQ 14>
