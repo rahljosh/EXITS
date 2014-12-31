@@ -94,7 +94,7 @@
     	SELECT
        		max(id) as id
     	FROM 
-        	smg_accountDisabledHistory
+        	smg_accountdisabledhistory
         WHERE 
         	fk_userDisabled = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#">
     </cfquery>
@@ -105,7 +105,7 @@
         	SELECT 
             	*
         	FROM 
-            	smg_accountDisabledHistory
+            	smg_accountdisabledhistory
             WHERE 
             	id = <cfqueryparam cfsqltype="cf_sql_integer" value="#disableReasonID.id#">
         </cfquery>
@@ -341,7 +341,7 @@
 	<!----Denial/Submit/Approve info history---->
     <Cfquery name="accountDisableHistory" datasource="#application.dsn#">
     select h.date, h.fk_whoDisabled, h.reason, h.accountAction, smg_users.firstname, smg_users.lastname
-    from smg_accountDisabledHistory h
+    from smg_accountdisabledhistory h
     left join smg_users on smg_users.userID = h.fk_whoDisabled
     where fk_userDisabled = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#">
     order by date desc
