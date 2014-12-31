@@ -141,7 +141,7 @@
         
             <cfquery datasource="#APPLICATION.DSN#">
                 INSERT INTO
-                    secondVisitAnswers 
+                    secondvisitanswers 
                 (
                     fk_reportID, 
                     fk_studentID,

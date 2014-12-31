@@ -219,7 +219,7 @@
                                 secondVisitReport.fk_reporttype = <cfqueryparam cfsqltype="cf_sql_integer" value="2">
                     <!--- Second Visit Answer --->
                     LEFT OUTER JOIN
-                        secondVisitAnswers sva ON sva.fk_reportID = secondVisitReport.pr_ID
+                        secondvisitanswers sva ON sva.fk_reportID = secondVisitReport.pr_ID
                     <!--- Double Placement Compliance --->
                     LEFT OUTER JOIN
                     	smg_hosthistorytracking sht ON sht.historyID = sh.historyID

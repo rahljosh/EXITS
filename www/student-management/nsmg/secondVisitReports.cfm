@@ -146,7 +146,7 @@
         
             <cfquery datasource="#APPLICATION.DSN#">
                 DELETE FROM 
-                	secondVisitAnswers
+                	secondvisitanswers
                 WHERE 
                 	fk_reportID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.pr_ID)#">
             </cfquery>
@@ -393,7 +393,7 @@
                     AND
                         pr.fk_host = ht.hostID
                 LEFT OUTER JOIN
-                    secondVisitAnswers sva ON sva.fk_reportID = pr.pr_ID
+                    secondvisitanswers sva ON sva.fk_reportID = pr.pr_ID
                 LEFT OUTER JOIN 
                     smg_users advisor ON advisor.userID = uar.advisorID  
                 LEFT OUTER JOIN 
@@ -476,7 +476,7 @@
                         FROM 
                             progress_reports pr2
                         INNER JOIN
-                            secondVisitAnswers sva2 ON sva2.fk_reportID = pr2.pr_ID
+                            secondvisitanswers sva2 ON sva2.fk_reportID = pr2.pr_ID
                         WHERE
                             pr2.fk_student = s.studentID             
                         AND
@@ -559,7 +559,7 @@
                     AND
                         pr.fk_host = ht.hostID
                 LEFT OUTER JOIN
-                    secondVisitAnswers sva ON sva.fk_reportID = pr.pr_ID
+                    secondvisitanswers sva ON sva.fk_reportID = pr.pr_ID
                 LEFT OUTER JOIN 
                     smg_users advisor ON advisor.userID = uar.advisorID  
                 LEFT OUTER JOIN 
@@ -774,7 +774,7 @@
                     AND
                         pr.fk_host = ht.hostID
                 LEFT OUTER JOIN
-                    secondVisitAnswers sva ON sva.fk_reportID = pr.pr_ID
+                    secondvisitanswers sva ON sva.fk_reportID = pr.pr_ID
                 LEFT OUTER JOIN 
                     smg_users advisor ON advisor.userID = uar.advisorID  
                 LEFT OUTER JOIN 

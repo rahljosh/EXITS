@@ -183,7 +183,7 @@
                             AND pr.fk_reportType = 2
                             AND pr.fk_host = ht.hostID 
                             AND pr.pr_ny_approved_date IS NOT NULL  
-                        INNER JOIN secondVisitAnswers sva ON sva.fk_reportID = pr.pr_ID
+                        INNER JOIN secondvisitanswers sva ON sva.fk_reportID = pr.pr_ID
                         INNER JOIN smg_programs p ON p.programID = s.programID
                             AND p.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> )
                         INNER JOIN smg_regions r ON r.regionID = s.regionAssigned     
