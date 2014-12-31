@@ -31,7 +31,7 @@
 		// Set Report Title To Keep Consistency
 		vReportTitle = "Office Management - Compliance Check Placement Paperwork";
 
-		// PS: smg_hostHistory is already taken by the placement history so I set table name as smg_hostHistoryCompliance
+		// PS: smg_hosthistory is already taken by the placement history so I set table name as smg_hosthistorycompliance
 		vComplianceTableName = "smg_hosthistorycompliance";
 
 		// Get Programs
@@ -253,7 +253,7 @@
                                 FROM
                                     applicationhistory
                                 WHERE
-                                    foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="smg_hostHistoryCompliance">
+                                    foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="smg_hosthistorycompliance">
                                 AND
                                     foreignID = sh.historyID
                                 AND
@@ -335,7 +335,7 @@
                             FROM
                             	applicationhistory
                             WHERE
-                            	foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="smg_hostHistoryCompliance">
+                            	foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="smg_hosthistorycompliance">
                             AND
                             	foreignID = historyID
 							AND

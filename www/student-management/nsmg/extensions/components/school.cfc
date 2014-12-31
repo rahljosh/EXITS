@@ -183,7 +183,7 @@
                         AND
                             p.endDate <= <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.endDate#">                              
                 INNER JOIN
-                    smg_hostHistory sh ON sh.studentID = s.studentID
+                    smg_hosthistory sh ON sh.studentID = s.studentID
                 INNER JOIN
                     smg_schools sc ON sh.schoolID = sc.schoolID
                         AND

@@ -39,7 +39,7 @@
             FROM
                 smg_students s
             INNER JOIN
-                smg_hostHistory h ON h.studentID = s.studentID
+                smg_hosthistory h ON h.studentID = s.studentID
                     AND
                         h.assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
                     AND
@@ -79,7 +79,7 @@
                 SELECT
                     historyID
                 FROM
-                    smg_hostHistory
+                    smg_hosthistory
                 WHERE
                     studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetPlacedStudents.studentID#">
                 AND

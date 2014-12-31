@@ -34,7 +34,7 @@
             SELECT
                 *
             FROM
-                smg_hostHistory
+                smg_hosthistory
             WHERE
                 studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetPlacedStudents.studentID#">
             <!--- Do Not Include PHP --->
@@ -84,7 +84,7 @@
     FROM 
     	applicationhistory ah
     INNER JOIN
-    	smg_hostHistory sh on sh.historyID = ah.foreignID and ah.foreignTable = 'smg_hostHistory' 
+    	smg_hosthistory sh on sh.historyID = ah.foreignID and ah.foreignTable = 'smg_hosthistory' 
     WHERE 
     	ah.enteredByID = 510
     <!---
@@ -108,7 +108,7 @@
             SELECT 
                 ID
             FROM 
-                smg_hostHistoryTracking
+                smg_hosthistorytracking
             WHERE 
                 historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetNewRecords.historyID)#">
             AND
@@ -123,7 +123,7 @@
 
             <cfquery datasource="#APPLICATION.DSN#">
                 INSERT
-                    smg_hostHistoryTracking
+                    smg_hosthistorytracking
                 (
                 	historyID,
                     studentID,
@@ -153,7 +153,7 @@
             SELECT 
                 ID
             FROM 
-                smg_hostHistoryTracking
+                smg_hosthistorytracking
             WHERE 
                 historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetNewRecords.historyID)#">
             AND
@@ -168,7 +168,7 @@
 
             <cfquery datasource="#APPLICATION.DSN#">
                 INSERT
-                    smg_hostHistoryTracking
+                    smg_hosthistorytracking
                 (
                 	historyID,
                     studentID,
@@ -198,7 +198,7 @@
             SELECT 
                 ID
             FROM 
-                smg_hostHistoryTracking
+                smg_hosthistorytracking
             WHERE 
                 historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetNewRecords.historyID)#">
             AND
@@ -213,7 +213,7 @@
 
             <cfquery datasource="#APPLICATION.DSN#">
                 INSERT
-                    smg_hostHistoryTracking
+                    smg_hosthistorytracking
                 (
                 	historyID,
                     studentID,

@@ -94,7 +94,7 @@
                 FROM 
                     smg_students s
                 INNER JOIN
-                    smg_hostHistory sh ON sh.studentID = s.studentID
+                    smg_hosthistory sh ON sh.studentID = s.studentID
 						<!--- Get Missing --->
                         <cfif FORM.compliantOption EQ 'missing'>
                             AND

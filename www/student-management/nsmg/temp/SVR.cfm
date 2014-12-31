@@ -86,7 +86,7 @@ AND (<cfloop list=#form.programid# index='prog'>
     FROM
         smg_hosts h
     INNER JOIN
-        smg_hostHistoryTracking sht ON h.hostid = sht.fieldID
+        smg_hosthistorytracking sht ON h.hostid = sht.fieldID
         AND
             sht.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#studentid#">                    
         AND
@@ -117,7 +117,7 @@ AND (<cfloop list=#form.programid# index='prog'>
         </cfquery>
         <Cfquery name="checkWelcome" datasource="#application.dsn#">
         select isWelcomeFamily as isWelcome
-        from smg_hostHistory
+        from smg_hosthistory
         where hostid = #allHostFamilies.hostid#
         </cfquery>
         <Cfif #DateFormat(dateplaced, 'mm/dd/yyyy')# is '2011-11-21'>
@@ -135,7 +135,7 @@ AND (<cfloop list=#form.programid# index='prog'>
             <td></td>
         </Cfif>
            <Td>&nbsp;#allHostFamilies.familylastname# (#allHostFamilies.hostid#)&nbsp;</Td>
-           <td>&nbsp;#DateFormat(allHostFamilies.dateplaced, 'mm/dd/yyyy')#&nbsp;</td>
+           <tr  ><td>&nbsp;#DateFormat(allHostFamilies.dateplaced, 'mm/dd/yyyy')#&nbsp;</td>
            <td>&nbsp;#DateFormat(arrivalInformation.arrivalDate, 'mm/dd/yyyy')#&nbsp;</td>
        
        

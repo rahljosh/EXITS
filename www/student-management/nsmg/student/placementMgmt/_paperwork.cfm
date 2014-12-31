@@ -7,8 +7,8 @@
 
 	Updated:	10/26/2012 - Adding Check All option for paperwork and compliance
 				06/20/2012 - Compliance log added. 
-					PS: smg_hostHistory is already taken by the placement history 
-					so I set foreignTable value as smg_hostHistoryCompliance
+					PS: smg_hosthistory is already taken by the placement history 
+					so I set foreignTable value as smg_hosthistorycompliance
 				06/12/2012 - User Role Access Added
 				05/30/2012 - Added Compliances
 				04/03/2012 - Displaying non-compliant message in line instead of gui
@@ -130,8 +130,8 @@
 	<cfset FORM.email_to = rereplace(tempEmail, " , ", "", "all")> 
     <cfset FORM.logMessage = "Log sent to #FORM.email_to#">
     <cfscript>
-		// PS: smg_hostHistory is already taken by the placement history so I set table name as smg_hostHistoryCompliance
-		vComplianceTableName = "smg_hostHistoryCompliance";
+		// PS: smg_hosthistory is already taken by the placement history so I set table name as smg_hosthistorycompliance
+		vComplianceTableName = "smg_hosthistorycompliance";
 		
 		// Get Most Recent CBCs
 		qGetMostRecentCBC = APPLICATION.CFC.CBC.getLastHostCBC(hostID=qGetPlacementHistoryByID.hostID);

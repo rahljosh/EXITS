@@ -12,7 +12,7 @@ where studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#">
     <cfif hostid gt 0>
 		<Cfif isDate('#Evaluate("FORM." & i & "_" & hostStuCombo.hostid)#')>
             <cfquery name="updateDateReceived" datasource="#APPLICATION.DSN#">
-            	UPDATE smg_hostHistory 
+            	UPDATE smg_hosthistory 
                 SET 
                 	dateReceived = <cfqueryparam cfsqltype="cf_sql_date" value="#Evaluate("FORM." & i & "_" & hostStuCombo.hostid)#">,
                     updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">

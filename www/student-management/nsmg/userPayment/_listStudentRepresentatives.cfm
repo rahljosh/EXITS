@@ -164,7 +164,7 @@
         FROM 
         	smg_users u
         INNER JOIN
-        	smg_hostHistoryTracking sht ON sht.fieldID = u.userID
+        	smg_hosthistorytracking sht ON sht.fieldID = u.userID
             	AND
                 	sht.fieldName = <cfqueryparam cfsqltype="cf_sql_varchar" value="secondVisitRepID">
                 AND

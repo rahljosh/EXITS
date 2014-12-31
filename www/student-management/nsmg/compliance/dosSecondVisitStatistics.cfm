@@ -117,7 +117,7 @@
                 FROM 	
                     smg_students s
                 INNER JOIN
-                    smg_hostHistory ht ON ht.studentID = s.studentID
+                    smg_hosthistory ht ON ht.studentID = s.studentID
                         AND
                             ht.assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">    
                 INNER JOIN
@@ -198,7 +198,7 @@
                 FROM 	
                     smg_students s
                 INNER JOIN
-                    smg_hostHistory ht ON ht.studentID = s.studentID
+                    smg_hosthistory ht ON ht.studentID = s.studentID
                         AND
                             ht.assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">    
                         AND

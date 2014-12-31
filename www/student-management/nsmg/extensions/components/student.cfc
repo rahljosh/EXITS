@@ -2720,7 +2720,7 @@
     </cffunction>
     
     
-    <!--- Updates fields in smg_hostHistory that are now in the host application --->
+    <!--- Updates fields in smg_hosthistory that are now in the host application --->
     <cffunction name="updateOldHostHistoryFields" access="public" returntype="void" output="no">
     	<cfargument name="historyID" type="numeric" required="yes" hint="historyID is required">
         <cfargument name="doc_conf_host_rec" default="" hint="doc_conf_host_rec is not required">
@@ -2767,7 +2767,7 @@
     
 	<!--- Updates a double placement tracking history --->
 	<cffunction name="updateDoublePlacementTrackingHistory" access="public" returntype="void" output="false" hint="Updates a double placement tracking history">
-    	<cfargument name="ID" hint="smg_hostHistoryTracking ID is required">
+    	<cfargument name="ID" hint="smg_hosthistoryTracking ID is required">
         <cfargument name="isDoublePlacementPaperworkRequired" default="" hint="isDoublePlacementPaperworkRequired is not required">
         <cfargument name="doublePlacementParentsDateSigned" default="" hint="doublePlacementParentsDateSigned is not required">
         <cfargument name="doublePlacementParentsDateCompliance" default="" hint="doublePlacementParentsDateCompliance is not required">
@@ -3549,7 +3549,7 @@
                         foreignID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.historyID#">
             </cfquery>
             
-            <!--- smg_hostHistoryTracking --->  
+            <!--- smg_hosthistoryTracking --->  
             <cfquery 
                 datasource="#APPLICATION.dsn#">
                     DELETE FROM
@@ -3558,7 +3558,7 @@
                         historyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.historyID#">
             </cfquery>
             
-            <!--- smg_hostHistory --->
+            <!--- smg_hosthistory --->
             <cfquery 
                 datasource="#APPLICATION.dsn#">
                     DELETE FROM
