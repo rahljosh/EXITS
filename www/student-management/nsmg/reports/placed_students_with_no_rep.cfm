@@ -1,6 +1,6 @@
 <Cfquery name="students_with_reps" datasource="mysql">
 select studentid, firstname, familylastname, old_stuid, arearepid
- from smg_Students
+ from smg_students
  where arearepid = 0  and (hostid <> 0) and companyid = #client.companyid#
 
 </Cfquery>

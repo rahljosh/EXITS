@@ -10,7 +10,7 @@ where number=#url.number#
 <cfoutput query="get_Students">
 	
 	<cfquery name="update_students" datasource="MySQL">
-	update smg_Students
+	update smg_students
 	set application_fee = #now()#
 	where studentid = #studentid#
 	</cfquery>
@@ -49,7 +49,7 @@ where number=#url.number#
 </cfquery>
 <cfoutput query="get_Students">
 <cfquery name="update_students" datasource="MySQL">
-update smg_Students
+update smg_students
 set application_fee = #now()#
 where studentid = #studentid#
 </cfquery>
