@@ -3481,7 +3481,7 @@ setUserSessionPaperwork
 						AND
                         	uar.userType IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7" list="yes"> )                            
                 INNER JOIN 
-                    smg_userType ut ON ut.userTypeID = uar.userType
+                    smg_usertype ut ON ut.userTypeID = uar.userType
                 WHERE 
                     u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">                        
                 ORDER BY 

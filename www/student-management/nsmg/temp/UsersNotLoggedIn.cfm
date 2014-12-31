@@ -26,7 +26,7 @@ INNER JOIN
 INNER JOIN
       smg_companies c ON c.companyID = r.company            
 INNER JOIN
-      smg_userType ut ON ut.userTypeID = uar.userType
+      smg_usertype ut ON ut.userTypeID = uar.userType
 WHERE
      u.active = 1  
 AND

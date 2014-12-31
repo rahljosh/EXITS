@@ -61,7 +61,7 @@
                	INNER JOIN
                 	smg_regions r ON r.regionID = uar.regionID
               	INNER JOIN
-                	smg_userType ut ON ut.userTypeID = uar.userType
+                	smg_usertype ut ON ut.userTypeID = uar.userType
                	LEFT OUTER JOIN
                 	smg_users_training t ON t.user_id = u.userID
                         AND

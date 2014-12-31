@@ -299,7 +299,7 @@
                     active,
                     formType
 				FROM
-                	smg_userType
+                	smg_usertype
                 WHERE 
                     active = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.active#">
                 <cfif LEN(ARGUMENTS.userTypeList)>

@@ -84,7 +84,7 @@
                         AND uar.default_access = 1
                     INNER JOIN smg_regions r ON r.regionID = uar.regionID
                     	<cfif CLIENT.userType EQ 5>AND r.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetUserRegion.regionID)#"></cfif>
-                    LEFT OUTER JOIN smg_userType ut ON ut.userTypeID = guest.userType
+                    LEFT OUTER JOIN smg_usertype ut ON ut.userTypeID = guest.userType
                     WHERE isDeleted = 0
                     AND guest.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.seasonID)#">
                     AND uar.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#FORM.companyID#"> )

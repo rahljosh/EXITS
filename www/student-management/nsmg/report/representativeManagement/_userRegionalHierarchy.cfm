@@ -646,7 +646,7 @@
                         FROM
                             user_access_rights uar
                         INNER JOIN
-                            smg_userType t ON t.userTypeID = uar.userType
+                            smg_usertype t ON t.userTypeID = uar.userType
                         RIGHT JOIN
                             smg_users u ON uar.userID = u.userID
                         WHERE

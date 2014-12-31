@@ -36,7 +36,7 @@
 <!----List of UsersTypes---->
 <cfquery name="userTypes" datasource="#application.dsn#">
 select *
-from smg_userType
+from smg_usertype
 where usertypeid <= <cfqueryparam cfsqltype="cf_sql_integer" value="8">
 or usertypeid = <cfqueryparam cfsqltype="cf_sql_integer" value="11">
 or usertypeid = <cfqueryparam cfsqltype="cf_sql_integer" value="14">
