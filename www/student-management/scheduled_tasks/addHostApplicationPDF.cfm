@@ -16,7 +16,8 @@
         INNER JOIN smg_host_app_season ON smg_host_app_season.hostID = smg_hosts.hostID
         	AND smg_host_app_season.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#vCurrentSeason#">
       	WHERE active = 1 )
-    AND studentID NOT IN (SELECT DISTINCT fk_studentID FROM virtualFolder WHERE fk_hostID = hostID AND fk_documentType = 28 AND isDeleted = 0)
+    AND studentID NOT IN (SELECT DISTINCT fk_studentID FROM virtualfolder
+ WHERE fk_hostID = hostID AND fk_documentType = 28 AND isDeleted = 0)
 </cfquery>
 
 <cfoutput>
@@ -62,7 +63,8 @@
             APPLICATION.CFC.UDF.insertInternalFile(filePath=fullPath,fieldID=1,studentID=studentID,hostID=hostID);
         </cfscript>
         <cfquery name="insertFileDetails" datasource="#application.dsn#">
-            INSERT INTO  virtualFolder (
+            INSERT INTO  virtualfolder
+ (
                 fk_categoryID, 
                 fk_documentType, 
                 fileDescription,
@@ -100,7 +102,8 @@
         INNER JOIN smg_host_app_season ON smg_host_app_season.hostID = smg_hosts.hostID
         	AND smg_host_app_season.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#vCurrentSeason#">
       	WHERE active = 1 )
-    AND studentID NOT IN (SELECT DISTINCT fk_studentID FROM virtualFolder WHERE fk_hostID = hostID AND fk_documentType = 29 AND isDeleted = 0)
+    AND studentID NOT IN (SELECT DISTINCT fk_studentID FROM virtualfolder
+ WHERE fk_hostID = hostID AND fk_documentType = 29 AND isDeleted = 0)
 </cfquery>
 
 <cfoutput>
@@ -146,7 +149,8 @@
             APPLICATION.CFC.UDF.insertInternalFile(filePath=fullPath,fieldID=1,studentID=studentID,hostID=hostID);
         </cfscript>
         <cfquery name="insertFileDetails" datasource="#application.dsn#">
-            INSERT INTO  virtualFolder (
+            INSERT INTO  virtualfolder
+ (
                 fk_categoryID, 
                 fk_documentType, 
                 fileDescription,
