@@ -56,7 +56,7 @@
                    
             SELECT 
             	*
-            FROM smg_casemgmt_caseLevel
+            FROM smg_casemgmt_caselevel
             WHERE isActive = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.isActive#">
         
           </cfquery>  
@@ -300,7 +300,7 @@
             LEFT JOIN smg_users owner on owner.userid = cases.fk_caseOwner
             LEFT JOIN smg_users creator on creator.userid = cases.fk_caseCreatedBy
             LEFT JOIN smg_casemgmt_caseprivacy cp on cp.id = cases.casePrivacy
-            LEFT JOIN smg_casemgmt_caseLevel cl on cl.id = cases.caseLevel
+            LEFT JOIN smg_casemgmt_caselevel cl on cl.id = cases.caseLevel
             LEFT JOIN smg_casemgmt_casestatus cs on cs.id = cases.caseStatus
             LEFT JOIN smg_casemgmt_users_involved cmui on cmui.fk_caseid = cases.caseid
             WHERE
@@ -369,7 +369,7 @@
                 host.fatherfirstname as fatherFirstName,
                 host.motherfirstname as motherFirstName,
                 <!--- Area Representative --->
-                arearep.userid as areaRepID,
+                areaRep.userid as areaRepID,
                 areaRep.firstName AS areaRepFirstName,
                 areaRep.lastName AS areaRepLastName,
                 areaRep.email AS areaRepEmail,
@@ -512,7 +512,7 @@
             LEFT JOIN smg_users owner on owner.userid = cases.fk_caseOwner
             LEFT JOIN smg_users creator on creator.userid = cases.fk_caseCreatedBy
             LEFT JOIN smg_casemgmt_caseprivacy cp on cp.id = cases.casePrivacy
-            LEFT JOIN smg_casemgmt_caseLevel cl on cl.id = cases.caseLevel
+            LEFT JOIN smg_casemgmt_caselevel cl on cl.id = cases.caseLevel
             LEFT JOIN smg_casemgmt_casestatus cs on cs.id = cases.caseStatus
             LEFT JOIN smg_casemgmt_users_involved cmui on cmui.fk_caseid = cases.caseid
             LEFT JOIN smg_casemgmt_loopedin li on li.fk_caseid  = cases.caseid
@@ -546,7 +546,7 @@
             LEFT JOIN smg_users owner on owner.userid = cases.fk_caseOwner
             LEFT JOIN smg_users creator on creator.userid = cases.fk_caseCreatedBy
             LEFT JOIN smg_casemgmt_caseprivacy cp on cp.id = cases.casePrivacy
-            LEFT JOIN smg_casemgmt_caseLevel cl on cl.id = cases.caseLevel
+            LEFT JOIN smg_casemgmt_caselevel cl on cl.id = cases.caseLevel
             LEFT JOIN smg_casemgmt_casestatus cs on cs.id = cases.caseStatus
             LEFT JOIN smg_casemgmt_users_involved cmui on cmui.fk_caseid = cases.caseid
             LEFT JOIN smg_casemgmt_loopedin li on li.fk_caseid = cases.caseid
