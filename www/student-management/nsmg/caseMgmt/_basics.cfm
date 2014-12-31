@@ -200,13 +200,13 @@ window.onload = function additionalInfo() {
 
 <cfquery name="caseStatus" datasource="#APPLICATION.dsn#">
     select *
-    from smg_caseMgmt_casestatus
+    from smg_casemgmt_casestatus
     where isActive = 1
     </cfquery>
     
     <cfquery name="caseLevel" datasource="#APPLICATION.dsn#">
      select *
-     from smg_Casemgmt_caselevel
+     from smg_casemgmt_caselevel
      where isActive = 1
     </cfquery>
 
