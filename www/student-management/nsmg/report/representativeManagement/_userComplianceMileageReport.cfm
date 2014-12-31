@@ -100,7 +100,7 @@
                 LEFT JOIN 
                     smg_users u ON s.arearepid = u.userid
                 INNER JOIN
-                    smg_hostHistory ht ON ht.studentID = s.studentID
+                    smg_hosthistory ht ON ht.studentID = s.studentID
                         AND 
                             ht.isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">            	
                         AND

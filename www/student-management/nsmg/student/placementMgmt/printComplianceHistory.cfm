@@ -45,7 +45,7 @@
 		// Get Compliance Log
 		qGetComplianceHistory = APPLICATION.CFC.LOOKUPTABLES.getApplicationHistory(
 			applicationID=APPLICATION.CONSTANTS.TYPE.EXITS,																				   
-			foreignTable="smg_hostHistoryCompliance",
+			foreignTable="smg_hosthistorycompliance",
 			foreignID=qGetPlacementHistoryByID.historyID,
 			isResolved=0
 		);

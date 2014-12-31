@@ -21,7 +21,7 @@
 			ar.phone AS ar_phone, ar.email AS ar_email,
 			r.regionname,
 			c.countryname
-		FROM smg_hostHistory h
+		FROM smg_hosthistory h
 		INNER JOIN smg_hosts host On host.hostID = h.hostID
 		INNER JOIN smg_students s ON s.studentID = h.studentID
 		INNER JOIN smg_schools sc ON sc.schoolID = h.schoolID

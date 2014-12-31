@@ -105,7 +105,7 @@
 		}
 	</cfscript>
     
-	<!--- Update Date Placed | Update on both tables students and smg_hostHistory --->
+	<!--- Update Date Placed | Update on both tables students and smg_hosthistory --->
     <cfif IsDate(FORM.NewDatePlaced)>
     	
         <cfscript>

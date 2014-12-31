@@ -21,7 +21,7 @@
         FROM 
             smg_students s
         INNER JOIN
-            smg_hostHistory sh ON sh.studentID = s.studentID
+            smg_hosthistory sh ON sh.studentID = s.studentID
                 AND
                     sh.assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
                 AND
@@ -44,7 +44,7 @@
 
     <cfquery datasource="#APPLICATION.DSN#">
         UPDATE
-            smg_hostHistory
+            smg_hosthistory
         SET
             dateRelocated = <cfqueryparam cfsqltype="cf_sql_date" value="#qGetRelocations.datePlaced#">,
             updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">

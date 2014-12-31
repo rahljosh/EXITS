@@ -150,7 +150,7 @@
                 FROM
                 	applicationhistory ah
 				WHERE
-                	ah.foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="smg_hostHistory">
+                	ah.foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="smg_hosthistory">
                 AND
                 	ah.foreignID = sh.historyID
                 ORDER BY
@@ -164,7 +164,7 @@
 		INNER JOIN 
         	smg_programs p ON p.programid = s.programid
 		INNER JOIN 
-        	smg_hostHistory sh ON sh.studentID = s.studentID
+        	smg_hosthistory sh ON sh.studentID = s.studentID
             AND
             	sh.isActive = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
             AND	

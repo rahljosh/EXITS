@@ -17,7 +17,7 @@
             host.familyLastName, host.address, host.address2, host.city, host.state, host.zip, host.regionID AS regionAssigned,
             h.areaRepID, h.datePlaced,
             c.countryName
-        FROM smg_hostHistory h
+        FROM smg_hosthistory h
         INNER JOIN smg_hosts host ON host.hostID = h.hostID
         INNER JOIN smg_students s ON s.studentID = h.studentID
         INNER JOIN smg_countrylist c ON c.countryid = s.countryresident

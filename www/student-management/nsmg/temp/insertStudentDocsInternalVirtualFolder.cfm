@@ -7,7 +7,7 @@
         <cfquery name="qGetActivePlacedStudents" datasource="#APPLICATION.DSN#">
             SELECT s.studentID, s.uniqueID, MAX(hist.historyID) AS historyID
             FROM smg_students s
-            INNER JOIN smg_hostHistory hist ON hist.studentID = s.studentID
+            INNER JOIN smg_hosthistory hist ON hist.studentID = s.studentID
             WHERE s.hostID != 0
             AND s.active = 1
             AND s.studentID IN (SELECT studentID FROM smg_flight_info)

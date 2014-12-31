@@ -55,9 +55,9 @@
         FROM 
             smg_students s
         INNER JOIN
-            smg_hostHistory sh ON sh.studentID = s.studentID
+            smg_hosthistory sh ON sh.studentID = s.studentID
         INNER JOIN
-            smg_hostHistoryTracking sht ON sht.historyID = sh.historyID
+            smg_hosthistoryTracking sht ON sht.historyID = sh.historyID
                 AND
                     sht.fieldName = <cfqueryparam cfsqltype="cf_sql_varchar" value="doublePlacementID"> 
                 AND

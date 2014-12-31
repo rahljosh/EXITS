@@ -56,7 +56,7 @@
             sh.*,
             CAST(CONCAT(s.firstName, ' ', s.familyLastName,  ' ##', s.studentID) AS CHAR) AS studentDisplayName            
         FROM
-            smg_hostHistory sh
+            smg_hosthistory sh
         INNER JOIN
         	smg_students s ON s.studentID = sh.studentID
         WHERE
