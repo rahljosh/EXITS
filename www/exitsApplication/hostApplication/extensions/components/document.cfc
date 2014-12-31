@@ -161,7 +161,7 @@
                     dateCreated,
                     dateUpdated
 				FROM
-                	documentType
+                	documenttype
 				WHERE
                 	1 = 1
 				  
@@ -223,13 +223,13 @@
                     d.dateUpdated,
                     CONCAT(serverName, '.', serverExt) AS fileName,
                     CONCAT(location, serverName, '.', serverExt) AS filePath,
-                    dt.ID AS documentTypeID,
+                    dt.ID AS documenttypeID,
                     dt.name AS documentType,
                     s.season
                 FROM 
                     document d
 				LEFT OUTER JOIN                      
-                	documentType dt ON dt.ID = d.documentTypeID
+                	documenttype dt ON dt.ID = d.documentTypeID
 				LEFT OUTER JOIN
                 	smg_seasons s ON s.seasonID = d.seasonID
                 WHERE 
@@ -320,9 +320,9 @@
                     ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.ID#">
 		</cfquery>
 
-        <cftry>
+        <!----<cftry>
         
-			<!--- Delete File | Document or Large Image | --->
+			<!--- Delete File | Document or Large Image | 
             <cffile action="delete" file="#qGetDoc.filePath#">            
 			
             <cfif ARGUMENTS.documentGroup EQ 'familyAlbum'>
@@ -335,8 +335,8 @@
             <cfcatch type="any">
 				<!--- Error --->            
             </cfcatch>
-        
-        </cftry>
+        --->
+        </cftry>---->
            
 	</cffunction>
     
