@@ -42,7 +42,7 @@
                     dateCreated,
                     dateUpdated
 				FROM
-                	applicationLookUp
+                	 applicationlookup
 				WHERE
                 	isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.isActive#">
                 AND 
