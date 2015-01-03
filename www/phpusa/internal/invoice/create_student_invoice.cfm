@@ -31,7 +31,7 @@
         LEFT JOIN 
         	smg_insurance_type insu ON insu.insutypeid = u.php_insurance_typeid
         LEFT OUTER JOIN
-        	applicationLookUp alp ON alp.fieldID = php.return_student
+        	 applicationlookup alp ON alp.fieldID = php.return_student
             	 AND
                  	fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="PHPReturnOptions">            
         WHERE 
@@ -278,11 +278,11 @@ function MM_jumpMenu(targ,selObj,restore){ //v3.0
 							<tr>
 								<!--- INSURANCE INFO MISSING --->
 								<cfif php_insurance_typeid EQ 0>
-								<td align="center"><cfinput type="checkbox" name="insurance_ckbox" disabled="disabled"></td>
+								<td align="center"><cfinput type="checkbox" name="insurance_ckbox" disabled></td>
 								<td colspan="3">Insurance Policy Type is Missing</td>
 								<!--- DOES NOT TAKE INSURANCE --->
 								<cfelseif php_insurance_typeid EQ 1>
-								<td align="center"><cfinput type="checkbox" name="insurance_ckbox" disabled="disabled"></td>
+								<td align="center"><cfinput type="checkbox" name="insurance_ckbox" disabled></td>
 								<td colspan="3">#businessname# does not take insurance provided by PHP</td>								
 								<cfelse>
 								<td align="center"><cfinput type="checkbox" name="insurance_ckbox"></td>
