@@ -380,7 +380,7 @@
             	
             	<cflocation url="/nsmg/student_app/print_application.cfm?uniqid=#url.uniqid#" addtoken="no"> 
             <cfelse>
-          	
+          	<cfabort>
             <cflocation url="#CLIENT.exits_url#/nsmg/index.cfm?curdoc=students" addtoken="no">
 			</Cfif>
         </cfif>
