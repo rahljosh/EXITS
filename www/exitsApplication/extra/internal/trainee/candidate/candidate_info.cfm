@@ -440,7 +440,7 @@
 									<table width="100%" cellpadding="2">
 										<tr>
 											<td width="135" valign="top">			
-												<cfif '#FileExists("#AppPath.candidatePicture##qGetCandidate.candidateID#.#qGetCandidate.picture_type#")#'>
+												<cfif '#FileExists('#expandPath("../uploadedfiles/web-candidates/#qGetCandidate.candidateID#.#qGetCandidate.picture_type#")#')#'>
 													<img src="../uploadedfiles/web-candidates/#qGetCandidate.candidateID#.#qGetCandidate.picture_type#" width="135" /><br />
 													<a  class="style4Big" href="" onClick="javascript: win=window.open('candidate/upload_picture.cfm?uniqueID=#uniqueID#', 'Settings', 'height=305, width=636, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><b><center>Change Picture</center></b></a>
 												<cfelse>
@@ -497,8 +497,8 @@
                                             	<cfinput type="text" name="dob" class="style1" size=12 value="#dateformat(qGetCandidate.dob, 'mm/dd/yyyy')#" maxlength="35" validate="date" message="Date of Birth (MM/DD/YYYY)" required="yes">
                                             	&nbsp; 
                                                 <b>Sex:</b> 
-                                                <input type="radio" name="sex" value="M" required="yes" message="You must specify the candidate's sex." <cfif qGetCandidate.sex Eq 'M'>checked="checked"</cfif>>Male &nbsp; &nbsp;
-                                                <input type="radio" name="sex" value="F" required="yes" message="You must specify the candidate's sex." <cfif qGetCandidate.sex Eq 'F'>checked="checked"</cfif>>Female 
+                                                <input type="radio" name="sex" value="M" required message="You must specify the candidate's sex." <cfif qGetCandidate.sex Eq 'M'>checked="checked"</cfif>>Male &nbsp; &nbsp;
+                                                <input type="radio" name="sex" value="F" required message="You must specify the candidate's sex." <cfif qGetCandidate.sex Eq 'F'>checked="checked"</cfif>>Female 
                                             </td>
                                         </tr> 
                                         <tr>
