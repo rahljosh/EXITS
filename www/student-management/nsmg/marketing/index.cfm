@@ -1,6 +1,6 @@
 <cfquery name="marketingMaterial" datasource="#application.dsn#">
 select *
-from smg_marketingMaterial	 
+from smg_marketingmaterial	 
 </cfquery>
 
 <cfoutput>

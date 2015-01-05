@@ -261,7 +261,7 @@
                 <cfif NOT ListFind(APPLICATION.SETTINGS.COMPANYLIST.ESI, CLIENT.companyID)>
                 	#qGetFacilitator.facilitatorname#<br />
                     International Student Exchange Student Facilitator<br />
-                    #qGetFacilitator.email#<br />
+                    #qGetFacilitator.facilitatoremail#<br />
                 <cfelse>	
                 	#qGetCompanyShort.admission_person#  <br />
                 	Student Admissions Department 
