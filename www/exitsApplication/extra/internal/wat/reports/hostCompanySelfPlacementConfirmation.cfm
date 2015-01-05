@@ -86,7 +86,7 @@
                 </cfif>
 
             LEFT OUTER JOIN
-            	smg_countryList cl ON cl.countryID = ec.residence_country
+            	smg_countrylist cl ON cl.countryID = ec.residence_country
           	LEFT JOIN
             	smg_states s ON s.id = ehc.state          
             WHERE 

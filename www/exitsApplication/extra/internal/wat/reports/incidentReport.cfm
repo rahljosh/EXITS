@@ -79,7 +79,7 @@
                             eir.isSolved = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isSolved)#">
                     </cfif>
 			INNER JOIN
-            	extra_hostCompany ehc ON ehc.hostCompanyID = eir.hostCompanyID
+            	extra_hostcompany ehc ON ehc.hostCompanyID = eir.hostCompanyID
 					<cfif VAL(FORM.hostcompanyID)> 
                         AND
                             ehc.hostcompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">                               

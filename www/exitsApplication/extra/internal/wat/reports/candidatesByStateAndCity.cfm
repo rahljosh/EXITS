@@ -51,7 +51,7 @@
      	FROM
         	extra_candidates c
       	INNER JOIN
-        	extra_hostCompany h ON c.hostCompanyID = h.hostCompanyID
+        	extra_hostcompany h ON c.hostCompanyID = h.hostCompanyID
       	INNER JOIN
         	smg_users r ON r.userID = c.intrep
        	INNER JOIN
@@ -264,7 +264,7 @@
                                         h.name,
                                         j.title
                                     FROM
-                                        extra_hostCompany h
+                                        extra_hostcompany h
                                     INNER JOIN
                                         extra_candidate_place_company ecpc ON ecpc.hostCompanyID = h.hostCompanyID
                                     LEFT JOIN

@@ -41,7 +41,7 @@
             AND u.userID IN (
             	SELECT ec.intrep
                 FROM extra_candidates ec
-                INNER JOIN extra_hostCompany eh ON ec.hostCompanyID = eh.hostCompanyID
+                INNER JOIN extra_hostcompany eh ON ec.hostCompanyID = eh.hostCompanyID
                 WHERE ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.programID)#">
                 AND ec.status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                 <cfif FORM.housingArrangements NEQ "All">
@@ -82,7 +82,7 @@
                     ELSE "0"
                     END AS isTerminated
             FROM extra_candidates candidate
-            INNER JOIN extra_hostCompany host ON candidate.hostCompanyID = host.hostCompanyID
+            INNER JOIN extra_hostcompany host ON candidate.hostCompanyID = host.hostCompanyID
             INNER JOIN smg_programs program ON candidate.programID = program.programID
                 AND program.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.programID)#">
             LEFT JOIN smg_states state ON host.state = state.ID

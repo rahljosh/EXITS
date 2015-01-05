@@ -45,7 +45,7 @@
           	INNER JOIN
             	smg_programs p ON p.programID = ec.programID
           	INNER JOIN
-            	extra_hostCompany h ON h.hostCompanyID = ec.hostCompanyID
+            	extra_hostcompany h ON h.hostCompanyID = ec.hostCompanyID
             <cfif NOT VAL(FORM.status)>
                 INNER JOIN
                     extra_cultural_activity eca ON eca.candidateID = ec.candidateID

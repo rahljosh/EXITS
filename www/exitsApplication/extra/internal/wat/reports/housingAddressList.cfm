@@ -247,7 +247,7 @@
                             <cfquery name="qGetSecondaryPlacements" datasource="#APPLICATION.DSN.Source#">
                                 SELECT ecpc.hostCompanyID, h.name
                                 FROM extra_candidate_place_company ecpc
-                                INNER JOIN extra_hostCompany h ON h.hostCompanyID = ecpc.hostCompanyID
+                                INNER JOIN extra_hostcompany h ON h.hostCompanyID = ecpc.hostCompanyID
                                 WHERE ecpc.candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(candidateID)#">
                                 AND ecpc.status = 1
                                 AND ecpc.isSecondary = 1

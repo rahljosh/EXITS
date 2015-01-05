@@ -30,7 +30,7 @@
         <!--- Get Hosts --->
 		<cfquery name="qGetHosts" datasource="#APPLICATION.DSN.Source#">
         	SELECT h.hostCompanyID, h.name
-            FROM extra_hostCompany h
+            FROM extra_hostcompany h
             INNER JOIN extra_candidates c ON h.hostCompanyID = c.hostCompanyID
             	AND c.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.programID)#">
                 AND c.status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
@@ -83,7 +83,7 @@
                     END AS isTerminated
             FROM extra_candidates candidate
             INNER JOIN smg_users rep ON candidate.intRep = rep.userID
-            INNER JOIN extra_hostCompany host ON candidate.hostCompanyID = host.hostCompanyID
+            INNER JOIN extra_hostcompany host ON candidate.hostCompanyID = host.hostCompanyID
             INNER JOIN smg_programs program ON candidate.programID = program.programID
                 AND program.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.programID)#">
             LEFT JOIN smg_states state ON host.state = state.ID
