@@ -50,8 +50,8 @@
               AND hh3.placeRepID = pmt3.agentID
     		  AND pmt3.paymentType IN (9,15,17))
               
-              ) AS hhX ON bonus.placerepID = hhX.placerepID
-	INNER JOIN smg_students st on hhX.studentID = st.studentID and hhX.isactive
+              ) AS hhx ON bonus.placerepID = hhx.placerepID
+	INNER JOIN smg_students st on hhx.studentID = st.studentID and hhx.isactive
       ORDER BY bonus.placerepID, hhx.datePISEmailed
 </cfquery>
 

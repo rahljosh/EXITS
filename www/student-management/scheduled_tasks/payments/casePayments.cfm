@@ -63,7 +63,7 @@ FROM
 	smg_students st
 		INNER JOIN smg_hosthistory hh ON st.studentID = hh.studentID AND hh.isactive
 		INNER JOIN smg_hosts hst ON st.hostID = hst.hostID
-		LEFT OUTER JOIN (SELECT hostID, count(childID) AS numChildren FROM smg_host_children WHERE liveathome = "yes" GROUP BY hostID) ctCh ON hst.hostid = ctch.hostID
+		LEFT OUTER JOIN (SELECT hostID, count(childID) AS numChildren FROM smg_host_children WHERE liveathome = "yes" GROUP BY hostID) ctch ON hst.hostid = ctch.hostID
 		LEFT OUTER JOIN smg_hosthistorytracking hhtr ON hh.historyID = hhtr.historyID AND fieldname = "doublePlacementID"
 		INNER JOIN smg_users_payments_ranges pmtrng ON st.programID = pmtrng.fk_programID
 		LEFT OUTER JOIN smg_user_payment_special sppmt ON st.placeRepID = sppmt.fk_userID AND sppmt.specialPaymentType = "draw"
