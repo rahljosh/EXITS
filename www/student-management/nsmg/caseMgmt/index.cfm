@@ -36,7 +36,7 @@
         </cfquery>
         
         <Cfquery datasource="#application.dsn#">
-        update smg_caseMgmt_cases set isdeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+        update smg_casemgmt_cases set isdeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
         where caseid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.caseid#">
         </Cfquery>
         
