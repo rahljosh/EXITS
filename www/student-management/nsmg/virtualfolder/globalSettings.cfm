@@ -26,7 +26,7 @@
     select vfd.documentType, vfd.id,  vfd.fk_category,   vfd.viewPermissions,  vfd.uploadPermissions, vfd.dateCreated,
     vfc.categoryName, u.firstname, u.lastname
     from virtualfoldercategory vfc
-    LEFT OUTER JOIN virtualFolderDocuments vfd on vfd.fk_category = vfc.categoryid 
+    LEFT OUTER JOIN virtualfolderdocuments vfd on vfd.fk_category = vfc.categoryid 
     LEFT JOIN smg_users u on u.userid = vfd.whoCreated
     where vfc.isActive = <Cfqueryparam cfsqltype="cf_sql_integer" value=1>
     order by categoryName, documentType

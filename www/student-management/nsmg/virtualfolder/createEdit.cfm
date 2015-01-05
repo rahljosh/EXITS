@@ -26,7 +26,7 @@
 <!----Catagories that are available for documents---->
 <cfquery name="qCatagories" datasource="#application.dsn#">
     select *
-    from virtualFolderCategory
+    from virtualfoldercategory
     where isActive = <Cfqueryparam cfsqltype="cf_sql_integer" value=1>
 </cfquery>
 
@@ -43,7 +43,7 @@ or usertypeid = <cfqueryparam cfsqltype="cf_sql_integer" value="14">
 <!---Check if able to delete---->
 <cfquery name="checkDocCount" datasource="#application.dsn#">
 SELECT count(vfid) as docCount 
-FROM virtualFolder
+FROM virtualfolder
 where fk_documentType = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(FORM.docExists)#">
 </cfquery>
 
@@ -128,7 +128,7 @@ where fk_documentType = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(FOR
 <cfif val(form.docExists)>
 	<cfquery name="qCurrentDoc" datasource="#application.dsn#">
      select *
-     from virtualFolderDocuments
+     from virtualfolderdocuments
      where id = <Cfqueryparam cfsqltype="cf_sql_integer" value = "#form.docExists#"> 
     </cfquery>
     <cfscript>

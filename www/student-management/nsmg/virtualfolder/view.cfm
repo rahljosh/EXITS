@@ -126,8 +126,8 @@
     	SELECT vf.fileName, vf.dateAdded, vf.filePath, vfc.categoryName, vfd.documentType, u.firstname, u.lastname , u.userid, vf.generatedHow, vf.uploadedBy, vf.vfid,
         h.familylastname, vf.fk_hostid, vfd.viewPermissions
         FROM virtualfolder vf
-        LEFT JOIN virtualfolderDocuments vfd on vfd.id = vf.fk_documentType
-        LEFT JOIN virtualFolderCategory vfc on vfc.categoryID = vfd.fk_category
+        LEFT JOIN virtualfolderdocuments vfd on vfd.id = vf.fk_documentType
+        LEFT JOIN virtualfoldercategory vfc on vfc.categoryID = vfd.fk_category
         LEFT JOIN smg_users u on u.userid = vf.uploadedBy
         LEFT JOIN smg_hosts h on h.hostid = vf.fk_hostID
         WHERE vf.fk_studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.studentID#">
@@ -149,8 +149,8 @@
     <cfquery name="qGetUploadedFiles" datasource="#APPLICATION.DSN#">
     	SELECT v.fileName, v.dateAdded, v.filePath,  v.generatedHow, v.uploadedBy, v.vfid, v.fk_hostid, u.userID, u.firstName, u.lastName,  vfd.documentType, vfc.categoryName
         FROM virtualfolder v
-        LEFT JOIN virtualFolderDocuments vfd on vfd.id = v.fk_documentType
-        LEFT JOIN virtualFolderCategory vfc on vfc.categoryID = vfd.fk_category
+        LEFT JOIN virtualfolderdocuments vfd on vfd.id = v.fk_documentType
+        LEFT JOIN virtualfoldercategory vfc on vfc.categoryID = vfd.fk_category
         LEFT JOIN smg_users u on u.userID = v.uploadedBy
         WHERE v.fk_studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.studentID#">
         <cfif VAL(URL.hostID)>
