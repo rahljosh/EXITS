@@ -118,7 +118,7 @@ window.onload = function additionalInfo() {
 	<cfset newCase = 0>
 	<Cfquery name="caseDetails" datasource="#APPLICATION.dsn#">
     select *
-    from smg_caseMgmt_cases
+    from smg_casemgmt_cases
     where caseID = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.caseid#">
     </Cfquery>
 
