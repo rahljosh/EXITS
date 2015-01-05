@@ -225,7 +225,7 @@
                     dateCreated,
                     dateUpdated
 				FROM
-					applicationStatus
+					applicationstatus
 				WHERE
 	                applicationID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.applicationID#">
 				AND
@@ -254,7 +254,7 @@
                     dateCreated,
                     dateUpdated
 				FROM
-					applicationStatus
+					applicationstatus
 				WHERE
 	                statusID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.statusID#">
 		</cfquery>
@@ -643,7 +643,7 @@
 		<cfquery 
 			datasource="#APPLICATION.DSN.Source#">
 				INSERT INTO
-                	applicationStatusJN
+                	applicationstatusjn
                 (
                 	applicationID,
                     applicationStatusID,
@@ -695,9 +695,9 @@
                     aps.name,
                     aps.description
 				FROM	
-                	applicationStatusJN apsJN
+                	applicationstatusjn apsJN
                 LEFT OUTER JOIN
-                	applicationStatus aps ON aps.statusID = apsJN.applicationStatusID
+                	applicationstatus aps ON aps.statusID = apsJN.applicationStatusID
 				WHERE
                 	apsJN.foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.foreignTable#">
                 AND
@@ -735,9 +735,9 @@
                     aps.name,
                     aps.description
 				FROM	
-                	applicationStatusJN apsJN
+                	applicationstatusjn apsJN
                 LEFT OUTER JOIN
-                	applicationStatus aps ON aps.statusID = apsJN.applicationStatusID
+                	applicationstatus aps ON aps.statusID = apsJN.applicationStatusID
 				WHERE
                 	apsJN.foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.foreignTable#">
                 AND
@@ -779,7 +779,7 @@
                     dateCreated,
                     dateUpdated
 				FROM
-					applicationQuestion
+					applicationquestion
 				WHERE
 	                applicationID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.applicationID#">
 				AND
@@ -858,9 +858,9 @@
                     aa.dateCreated,
                     aa.dateUpdated
 				FROM
-					applicationAnswer aa
+					applicationanswer aa
                 RIGHT OUTER JOIN
-                	applicationQuestion aq ON aa.applicationQuestionID = aq.ID
+                	applicationquestion aq ON aa.applicationQuestionID = aq.ID
 				WHERE
 	                aq.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
 
@@ -917,7 +917,7 @@
             <cfquery 
                 datasource="#APPLICATION.DSN.Source#">
 					UPDATE
-						applicationAnswer
+						applicationanswer
                     SET
                     	answer = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.answer)#">
 					WHERE
@@ -930,7 +930,7 @@
             <cfquery 
                 datasource="#APPLICATION.DSN.Source#">
                     INSERT INTO
-                    	applicationAnswer
+                    	applicationanswer
                     (
 						applicationQuestionID,
                         foreignTable,
@@ -982,7 +982,7 @@
                     displayField,
                     sectionName
 				FROM
-					applicationQuestion aq
+					applicationquestion aq
 				WHERE
                     sectionName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.sectionName#">    
                 AND	
@@ -995,7 +995,7 @@
                     	SELECT 
                         	applicationQuestionID 
                         FROM 
-                        	applicationAnswer 
+                        	applicationanswer 
                         WHERE 
                             foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.foreignTable#">    
                         AND	
