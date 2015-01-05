@@ -36,7 +36,7 @@
             sc.schoolName,
             preAYPArrival.flightID AS preAYPFlightID
 		FROM 
-        	#application.dsn#_students s
+        	smg_students s
 		INNER JOIN 
         	smg_programs p ON s.programid = p.programid
 		LEFT OUTER JOIN
@@ -44,7 +44,7 @@
 		LEFT OUTER JOIN
         	smg_schools sc ON sc.schoolID = s.schoolID        
         LEFT OUTER JOIN
-        	smg_aypCamps ac ON ac.campID = s.aypEnglish
+        	smg_aypcamps ac ON ac.campID = s.aypEnglish
 		LEFT OUTER JOIN
         	smg_flight_info preAYPArrival ON preAYPArrival.studentID = s.studentID
                 AND
@@ -163,7 +163,7 @@
 		LEFT OUTER JOIN
         	smg_schools sc ON sc.schoolID = s.schoolID        
 		LEFT OUTER JOIN
-        	smg_aypCamps ac ON ac.campID = s.aypEnglish
+        	smg_aypcamps ac ON ac.campID = s.aypEnglish
 		WHERE 
 			s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
         AND                    					
@@ -666,9 +666,13 @@
                             <td>#qPHPStudentsMissingDeparture.schoolName#</td>
                             <td>n/a</td>
                             <td style="font-weight:bold;">
+                            <cfif '#now()#' gt #qPHPStudentsMissingDeparture.startInputDate# and client.companyid eq 10>
+                        Submit after #DateFormat(qPHPStudentsMissingDeparture.startInputDate, 'mm/dd/yyyy')# 
+                            <cfelse>
                                 <a href="student/index.cfm?action=flightInformation&uniqueID=#qPHPStudentsMissingDeparture.uniqueID#&programID=#qPHPStudentsMissingDeparture.programID#" class="jQueryModal">
                                     [ Submit Departure ]
                                 </a>
+                            </cfif>
                             </td>
                         </tr>
                     </cfloop>
