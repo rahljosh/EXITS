@@ -145,7 +145,7 @@ window.onload = function additionalInfo() {
     </Cfif>
 	<cfquery name="currentTags" datasource="#APPLICATION.dsn#">
     select tagid
-    from smg_caseMgmt_case_tags
+    from smg_casemgmt_case_tags
     where caseid = <cfqueryparam cfsqltype="cf_sql_integer" value='#url.caseid#'>
     </cfquery>
    
