@@ -87,13 +87,13 @@
 <!---Check if able to delete---->
 <cfquery name="checkDocCount" datasource="#application.dsn#">
     SELECT count(vfid) as docCount 
-    FROM virtualFolder
+    FROM virtualfolder
     where fk_documentType = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(FORM.docExists)#">
 </cfquery>
 
 <cfquery name="HostFamDocs" datasource="#application.dsn#">
     select id
-    from virtualFolderDocuments
+    from virtualfolderdocuments
     where fk_category = <cfqueryparam cfsqltype="cf_sql_integer" value="2">
 </cfquery>
 
@@ -106,7 +106,7 @@
 <cfif len(form.subAction) and form.subAction is not 'Cancel'>
     <cfquery name="catCheck" datasource="#application.dsn#">
         select fk_category
-        from virtualFolderDocuments
+        from virtualfolderdocuments
         where id = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.docType#">
     </cfquery>
 
@@ -139,7 +139,7 @@
 		<!----Check if Already  Doc Type---->
         <cfquery name="qCheckExists" datasource="#application.dsn#">
             select documentType, id
-            from virtualFolderDocuments
+            from virtualfolderdocuments
             where documentType = <Cfqueryparam cfsqltype="cf_sql_varchar" value="#form.fileToUpload#">
         </cfquery>
 	
@@ -318,7 +318,7 @@
 <cfif val(form.docExists)>
 	<cfquery name="qCurrentDoc" datasource="#application.dsn#">
 		select *
-     	from virtualFolderDocuments
+     	from virtualfolderdocuments
      	where id = <Cfqueryparam cfsqltype="cf_sql_integer" value = "#form.docExists#"> 
     </cfquery>
     <cfscript>
