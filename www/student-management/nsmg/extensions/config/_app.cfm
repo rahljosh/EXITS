@@ -44,7 +44,7 @@
 	APPLICATION.SETTINGS.COMPANYLIST.CASExchange = 10;
 	APPLICATION.SETTINGS.COMPANYLIST.Canada = 13;
 	APPLICATION.SETTINGS.COMPANYLIST.ESI = 14;
-	APPLICATION.SETTINGS.COMPANYLIST.ESI = 15;
+	APPLICATION.SETTINGS.COMPANYLIST.DASH = 15;
 	APPLICATION.SETTINGS.COMPANYLIST.All = "1,2,3,4,5,6,10,12,13,14,15";
 
 	// Use our gmail accounts to send out some of the emails
@@ -133,7 +133,7 @@
 		// Getting error on querys/upload_logo.cfm. Getting full path including /query
 		// APPLICATION.PATH.base = getDirectoryFromPath(getBaseTemplatePath());
 		// Base Path eg. C:\websites\smg\nsmg\
-		APPLICATION.PATH.base = 'C:/websites/www/student-management/nsmg/';
+		APPLICATION.PATH.base = 'C:/websites/student-management/nsmg/';
 		
 		// URL: http://smg.local
 		APPLICATION.KEY.googleMapsAPI = 'ABQIAAAAiT0TfDoNFmmMRtOgGZNu_RQ7SAcFHxXg_-mJGkd4r8IEQsqs-RTA-mZLUkFOvNCYFwvV4y4wGdOOyg'; 

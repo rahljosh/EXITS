@@ -28,6 +28,7 @@
 <cfparam name="CLIENT.levels" default="0">
 <cfparam name="CLIENT.accesslevelname" default="">
 <cfparam name="CLIENT.displayHostLeadPopUp" default="0">
+<cfparam name="CLIENT.displayNotificationsPopUp" default="0">
 <cfparam name="CLIENT.DSFormName" default="DS-2019">
-<cfparam name="CLIENT.exits_url" default="https://ise.exitsapplication.com">
+<cfparam name="CLIENT.exits_url" default="http://ise.exitsdev.com">
 <cfparam name="CLIENT.support_email" default="support@student-management.com"> 

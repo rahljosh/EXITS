@@ -208,8 +208,8 @@
             
 		</cfif>
         
-        <!--- Send Out Email only for ESI, PHP, and SMG Canada--->
-        	<cfscript>
+        <!--- Send Out Email --->
+        <cfscript>
 			// Check if we have a valid intl. rep. email
 			if ( IsValid("email", qGetIntlRep.email) ) {
 				vEmailList = vEmailList & qGetIntlRep.email & ';' ; 
@@ -223,7 +223,7 @@
 		</cfscript>
 		
         <!--- We have at least one email address --->
-        <cfif ARGUMENTS.statusID EQ 11 AND ARGUMENTS.companyID IN (6,13,14) AND LEN(vEmailList)>
+        <cfif ARGUMENTS.statusID EQ 11 AND LEN(vEmailList)>
         
             <cfsavecontent variable="vEmailMessage">
                 <cfoutput>
