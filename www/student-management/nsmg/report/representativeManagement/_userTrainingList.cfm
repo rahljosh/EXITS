@@ -287,7 +287,7 @@
                             FROM
                                 smg_users_training t
                             INNER JOIN
-                                applicationLookup al ON al.fieldID = t.training_id
+                                applicationlookup al ON al.fieldID = t.training_id
                             WHERE
                                 t.training_id IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#FORM.trainingID#"> )
                             AND
@@ -365,7 +365,7 @@
                                         SELECT
                                             name
                                         FROM 
-                                            applicationLookup 
+                                            applicationlookup 
                                         WHERE
                                             fieldID = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#">
                                     </cfquery>
@@ -473,7 +473,7 @@
                             FROM
                                 smg_users_training t
                             INNER JOIN
-                                applicationLookup al ON al.fieldID = t.training_id
+                                applicationlookup al ON al.fieldID = t.training_id
                             WHERE
                                 t.training_id IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#FORM.trainingID#"> )
                             AND
@@ -557,7 +557,7 @@
                                         SELECT
                                             name
                                         FROM 
-                                            applicationLookup 
+                                            applicationlookup 
                                         WHERE
                                             fieldID = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#">
                                     </cfquery>
