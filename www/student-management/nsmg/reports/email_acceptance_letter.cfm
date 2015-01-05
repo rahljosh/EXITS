@@ -91,15 +91,15 @@
             FROM 
                 smg_student_app_options appo
             LEFT OUTER JOIN
-                applicationLookup opt1 ON opt1.fieldID = appo.option1 
+                applicationlookup opt1 ON opt1.fieldID = appo.option1 
                     AND 
                         opt1.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="ESIDistrictChoice">
             LEFT OUTER JOIN
-                applicationLookup opt2 ON opt2.fieldID = appo.option2 
+                applicationlookup opt2 ON opt2.fieldID = appo.option2 
                     AND 
                         opt2.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="ESIDistrictChoice">
             LEFT OUTER JOIN
-                applicationLookup opt3 ON opt3.fieldID = appo.option3 
+                applicationlookup opt3 ON opt3.fieldID = appo.option3 
                     AND 
                         opt3.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="ESIDistrictChoice">
             WHERE 
