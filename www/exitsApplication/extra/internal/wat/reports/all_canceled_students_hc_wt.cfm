@@ -68,7 +68,7 @@
             INNER JOIN
                 smg_users u on u.userid = c.intrep
             INNER JOIN
-            	extra_hostCompany ehc ON ehc.hostCompanyID = c.hostCompanyID
+            	extra_hostcompany ehc ON ehc.hostCompanyID = c.hostCompanyID
             LEFT JOIN 
                 smg_countrylist country ON country.countryid = c.home_country
             WHERE 

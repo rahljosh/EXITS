@@ -329,7 +329,7 @@
                                 FROM
                                     extra_candidate_place_company ecpc
                                 INNER JOIN
-                                    extra_hostCompany h ON h.hostCompanyID = ecpc.hostCompanyID
+                                    extra_hostcompany h ON h.hostCompanyID = ecpc.hostCompanyID
                                 INNER JOIN
                                     smg_states s ON s.id = h.state
                                 LEFT JOIN

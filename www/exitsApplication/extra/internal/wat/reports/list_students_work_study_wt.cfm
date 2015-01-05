@@ -203,7 +203,7 @@
                   	FROM
                     	extra_candidate_place_company ecpc
                    	INNER JOIN
-                    	extra_hostCompany ec ON ec.hostCompanyID = ecpc.hostCompanyID
+                    	extra_hostcompany ec ON ec.hostCompanyID = ecpc.hostCompanyID
                    	INNER JOIN
                     	smg_states s ON s.ID = ec.state
                    	WHERE
