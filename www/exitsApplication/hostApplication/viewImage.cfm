@@ -18,33 +18,29 @@
     	<cfif val(url.rotate)>
             <cfset myImage=ImageNew("#url.absoluteLargePath#")>
             <cfset ImageSetAntialiasing(myImage,"on")>
-            <!--- Rotate the image by 90 degrees clockwise. --->
             <cfset ImageRotate(myImage,#url.rotate#)>
             <cfimage source="#myImage#" destination="#url.absoluteLargePath#" action="write" overwrite="yes">
            
             <cfset myImage2=ImageNew("#url.absoluteThumbPath#")>
-           
             <cfset ImageSetAntialiasing(myImage2,"on")>
-            <!--- Rotate the image by 90 degrees clockwise. --->
             <cfset ImageRotate(myImage2,#url.rotate#)>
             <cfimage source="#myImage2#" destination="#url.absoluteThumbPath#" action="write" overwrite="yes">
-        <cfelse>	
-            <cfset myImage = #url.viewImagePath#>
-        </cfif>
+      	</cfif>
+
+		<cfset myImage = #url.viewImagePath#>
         
         <cfoutput>
         	<table align="Center" cellpadding="4" cellspacing="0">
         		<tr>
                 	<td align="left" valign="Center">
                 		<a href="viewImage.cfm?viewImagePath=#url.viewImagePath#&absoluteLargePath=#url.absoluteLargePath#&absoluteThumbPath=#url.absoluteThumbPath#&label=#url.label#&rotate=90">
-                        	Rotate <input type="image" src="https://www.iseusa.com/hostApplication/images/buttons/arrow_left.png" height=20/>
+                        	Rotate <input type="image" src="images/buttons/arrow_left.png" height=20/>
                      	</a>
-               
                 	</td>
                 	<td align="Center"><h2>#url.label#</h2></td>
                 	<td align="right" valign="Center">
                 		<a href="viewImage.cfm?viewImagePath=#url.viewImagePath#&absoluteLargePath=#url.absoluteLargePath#&absoluteThumbPath=#url.absoluteThumbPath#&label=#url.label#&rotate=-90">
-                        	<img src="https://www.iseusa.com/hostApplication/images/buttons/arrow_right.png" height=20/> Rotate
+                        	<img src="images/buttons/arrow_right.png" height=20/> Rotate
                       	</a>
                   	</td>
             	</tr>
