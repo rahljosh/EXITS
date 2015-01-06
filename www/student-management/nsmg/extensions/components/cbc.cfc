@@ -1344,7 +1344,13 @@
                     </cfxml>
                 
                 </cfif> <!--- End of NO SSN --->
-                
+           	<!----
+                <cfmail to="josh@iseusa.org" from="support@iseusa.org" subject="CBC Info">
+                #requestXML#
+                </cfmail>
+				
+				
+				---->
 			</cfoutput>
             
             <cftry>
@@ -1357,7 +1363,37 @@
                 
                 <cfscript>	
                     // Parse XML we received back to a variable
-                    responseXML = XmlParse(cfhttp.filecontent);		
+                    responseXML = XmlParse(cfhttp.filecontent);	
+					
+					
+					
+					// temporarily add to check results.
+					
+					if ( VAL(ARGUMENTS.hostID) ) {
+						// Update Host CBC 
+						updateHostCBC(
+							ReportID=ReportID,
+							cbcFamID=ARGUMENTS.cbcID,
+							xmlReceived=responseXML
+						);							
+						
+						// Set up URL Results
+						batchResult.URLResults = "view_host_cbc.cfm?hostID=#ARGUMENTS.hostID#&CBCFamID=#ARGUMENTS.cbcID#";
+
+					} else {
+						// Update User CBC 
+						updateUserCBC(
+							ReportID=ReportID,
+							cbcID=ARGUMENTS.cbcID,
+							xmlReceived=responseXML
+						);
+
+						// Set up URL Results
+						batchResult.URLResults = "view_user_cbc.cfm?userid=#ARGUMENTS.userID#&cbcID=#ARGUMENTS.cbcID#";
+					}
+					
+					
+					
 					
                     // Reads XML File and Send Email CFC
                     batchResult.message = sendEmailResult(
@@ -1563,7 +1599,7 @@
                 
                     <cfscript>
 						// Display Formatted Results
-                        displayXMLResult(
+                       	displayXMLResult(
                             companyID=ARGUMENTS.companyID, 
                             responseXML=ARGUMENTS.responseXML, 
                             userType=ARGUMENTS.userType,
