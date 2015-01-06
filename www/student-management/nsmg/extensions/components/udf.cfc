@@ -154,6 +154,8 @@
 			//OR 
 				//FindNoCase("developer", server.ColdFusion.ProductLevel) 
 			OR
+				FindNoCase(".local", CGI.HTTP_HOST)
+			OR
 				FindNoCase("119cooper", CGI.http_host) 
 			OR
 				FindNoCase("111cooper", CGI.http_host)
