@@ -259,18 +259,7 @@
 				SESSION.COMPANY.logoImage = "logoESI.png";
 				SESSION.COMPANY.submitGreyImage = "submitGrey.png";
 				SESSION.COMPANY.submitImage = "submit.png";
-			
-			} else if ( 
-				ListFindNoCase(CGI.SERVER_NAME, "dash", ".") 
-				OR ListFindNoCase(CGI.SERVER_NAME, "dash.exitsapplication.com") 
-				OR ListFindNoCase(CGI.SERVER_NAME, "smg.esi.local")) {
 				
-				// ESI
-				SESSION.COMPANY.ID = 15;
-				SESSION.COMPANY.exitsURL = "https://dash.exitsapplication.com/";
-				SESSION.COMPANY.logoImage = "logoDASH.png";
-				SESSION.COMPANY.submitGreyImage = "submitGrey.png";
-				SESSION.COMPANY.submitImage = "submit.png";	
 			} else {
 				
 				// ISE

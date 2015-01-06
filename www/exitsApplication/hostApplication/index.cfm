@@ -8,7 +8,9 @@
 	Updated:	
 
 ----- ------------------------------------------------------------------------- --->
-
+<cfif CGI.REMOTE_ADDR is '73.3.102.155'>
+<Cfdump var="#session#">
+</cfif>
 <cfsilent>
 	
     <cfscript>

@@ -224,7 +224,7 @@
                     CONCAT(serverName, '.', serverExt) AS fileName,
                     CONCAT(location, serverName, '.', serverExt) AS filePath,
                     dt.ID AS documenttypeID,
-                    dt.name AS documentType,
+                    dt.name AS documenttype,
                     s.season
                 FROM 
                     document d

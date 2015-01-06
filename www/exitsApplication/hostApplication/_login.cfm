@@ -339,8 +339,10 @@
         <p align="center" style="margin:5px 5px 30px 5px;">
             <img src="images/LoginIcon_2.png" width="196" height="140" border="0" /> <br />
         </p>
-    
+    	
         <table align="center" cellpadding="4" cellspacing="0">
+         	
+		
             <tr>
                 <td><label for="username">Email:</label></td>
                 <td><input type="text" name="username" id="username" value="#FORM.userName#" size="35" /></td>
@@ -353,6 +355,7 @@
                 <td><span style="color:green; cursor:pointer;" onclick="forgotLogin()">Forgot Login?</span></td>
                 <td align="right"><input type="image" name="login" value="Login" src="images/login.png" /></td>
             </tr>
+			
         </table>
         
     </div>
