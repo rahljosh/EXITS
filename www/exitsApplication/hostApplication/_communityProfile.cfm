@@ -49,7 +49,7 @@
         SELECT 
         	*
         FROM 
-        	smg_cityState
+        	smg.smg_citystate
         WHERE 
         	population > <cfqueryparam cfsqltype="cf_sql_integer" value="30000">
     </cfquery>
@@ -227,7 +227,7 @@
             SELECT 
             	population
             FROM 
-            	smg_cityState
+            	smg.smg_citystate
             WHERE 
             	city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetHostFamilyInfo.city#">
             AND 
