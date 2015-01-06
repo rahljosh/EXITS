@@ -152,7 +152,7 @@
 			
 			// Force SSL
 			if ( NOT APPLICATION.isServerLocal AND CGI.SERVER_PORT EQ 80 ) {
-				location("https://#CGI.HTTP_HOST##CGI.SCRIPT_NAME#", "no");
+				location("https://#CGI.HTTP_HOST##CGI.SCRIPT_NAME#?section=#URL.section#", "no");
 			}
 		</cfscript>
 		
