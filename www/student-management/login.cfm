@@ -6,10 +6,11 @@
 		<cfset temp = DeleteClientVariable(ThisVarName)>
 	</cfloop>
 	<cfscript>
+		
 		// redirect to SSL
-		if ( NOT APPLICATION.isServerLocal AND CGI.SERVER_PORT EQ 80 ) {
-			location("https://#CGI.HTTP_HOST#", "no");
-		}
+		//if ( NOT APPLICATION.isServerLocal AND CGI.SERVER_PORT EQ 80 ) {
+		//	location("https://#CGI.HTTP_HOST#", "no");
+		//}
 	</cfscript>
 
 	<!--- Param Form Variables --->
@@ -203,10 +204,7 @@
 	<link href="exitsapp_images/STB.css" rel="stylesheet" type="text/css" media="screen"/>
 </cfif>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js" type="text/javascript"></script> <!-- jQuery -->
-<script src="SpryAssets/SpryValidationTextField.js" type="text/javascript"></script>
-<script src="SpryAssets/SpryValidationPassword.js" type="text/javascript"></script>
-<link href="SpryAssets/SpryValidationTextField.css" rel="stylesheet" type="text/css" />
-<link href="SpryAssets/SpryValidationPassword.css" rel="stylesheet" type="text/css" />
+
 </head>
 
 
