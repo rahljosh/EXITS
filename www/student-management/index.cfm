@@ -2,7 +2,8 @@
 <cfif CGI.HTTP_HOST NEQ 'www.student-management.com'>
 
 	<!--- Redirect to Login Page --->
-    <cflocation url="login.cfm" addtoken="no">
+   <cflocation url="login.cfm" addtoken="no">
+
 <cfelse>
 <cfparam name="form.sendForm" default="0" type="integer" />
 <cfparam name="form.name" default="0" type="string" />
@@ -232,7 +233,6 @@
 		<div class="title-page-container fl">
 			<span class="title-bg-lf fl"></span>
 			<div class="title-bg fl"><h2>Programs</h2></div>
-            <div style="float:right;"> <a href="_pdf/SMG_Company_Brochure.pdf" target="_blank"><img src="images/SMG_Screen.png" width="140" height="40" alt="Screen"></a>&nbsp;<a href="_pdf/SMG_Company_Brochure_Print.pdf" target="_blank"><img src="images/SMG_print.png" width="140" height="40" alt="Screen"></a></div>
 			<span class="title-bg-rt fl"></span>
 		</div><!-- end of .title-page-container //-->
 		
