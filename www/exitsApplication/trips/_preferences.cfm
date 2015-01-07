@@ -23,7 +23,7 @@
         FROM 
         	student_tours st
 		INNER JOIN
-        	applicationPayment ap ON ap.foreignID = st.ID
+        	applicationpayment ap ON ap.foreignID = st.ID
             	AND
                 	ap.foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="student_tours">
                 AND
@@ -42,7 +42,7 @@
         FROM 
         	student_tours st
 		INNER JOIN
-        	applicationPayment ap ON ap.foreignID = st.ID
+        	applicationpayment ap ON ap.foreignID = st.ID
             	AND
                 	ap.foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="student_tours">
                 AND

@@ -336,6 +336,7 @@
                 <!--- Student Information --->
                 <h3 class="tripSectionTitle">Look Up Your Account</h3>
                 
+               
                 <table width="100%" border="0" align="center" cellpadding="2" cellspacing="0" class="tripTableBorder">
                     <tr class="blueRow">
                         <td class="tripFormTitle" width="30%">Student ID Number <span class="required">*</span></td>
@@ -364,7 +365,7 @@
                         <td colspan="2" align="center"><input type="image" src="extensions/images/Next.png" width="89" height="33" /></td>
                     </tr>
                 </table>
-            
+          
             </form>
             
 
@@ -377,8 +378,7 @@
                 	<img src="extensions/images/exitsLogo.jpg" border="0" style="display:block;" />
                 	Login using your EXITS Student Application Account
                 </h3> 
-
-                <table width="100%" border="0" align="center" cellpadding="2" cellspacing="0" class="tripTableBorder">
+						<table width="100%" border="0" align="center" cellpadding="2" cellspacing="0" class="tripTableBorder">
                     <tr class="blueRow">
                         <td class="tripFormTitle" width="30%">Username <span class="required">*</span></td>
                         <td width="70%"><input type="text" name="exitsUsername" class="largeField" value="#FORM.exitsUsername#" maxlength="100"></td>
@@ -402,7 +402,7 @@
                         <td colspan="2" align="center"><input type="image" src="extensions/images/Next.png" width="89" height="33" /></td>
                     </tr>
                 </table>
-            
+           
             </form>
             
         </cfdefaultcase>            

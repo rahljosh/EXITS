@@ -40,7 +40,7 @@
         FROM 
         	student_tours st
 		INNER JOIN
-        	applicationPayment ap ON ap.foreignID = st.ID
+        	applicationpayment ap ON ap.foreignID = st.ID
             	AND
                 	ap.ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(SESSION.TOUR.applicationPaymentID)#">
         WHERE 
