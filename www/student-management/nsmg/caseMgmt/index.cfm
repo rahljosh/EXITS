@@ -31,7 +31,7 @@
 	<cfif val(url.caseid)>
         <cfquery name="studentInvolved" datasource="#application.dsn#">
         select fk_studentid
-        from smg_caseMgmt_users_involved
+        from smg_casemgmt_users_involved
         where fk_caseid = #url.caseid#
         </cfquery>
         
@@ -57,7 +57,7 @@
             // Student Transportation
             if  ( NOT  len(TRIM(FORM.fileData)) ) {
 				SESSION.formErrors.Add("Please select a file.");
-            }
+            } 
             // Student Transportation
             if  ( NOT LEN(TRIM(FORM.fileDescription)) and len(TRIM(FORM.fileData)) ) {
 				SESSION.formErrors.Add("Please provide a brief description of the file you are uploading.");
@@ -76,9 +76,9 @@
     
                     // Upload File
                     stResult = APPLICATION.CFC.DOCUMENT.uploadFile(
-                        foreignTable="smg_caseMgmt",
+                        foreignTable="smg_casemgmt",
                         foreignID=URL.caseID, 
-                        documenttype=33,
+                        documentTypeID=33,
                         uploadPath=vSetUploadPath,					
                         description="#form.fileDescription#",
                         allowedExt="jpg,jpeg,png,pdf,doc,docx,ppt,pps,pptx,ppsx,gif,pages,numbers,odt,xls,"
@@ -96,7 +96,7 @@
 		qFullCaseDetails =  APPLICATION.CFC.CASEMGMT.fullCaseDetails(caseid=url.caseid);
 		qUsersInvolved =  APPLICATION.CFC.CASEMGMT.usersInvolved(caseid=url.caseid);
 		qGetFiles = APPLICATION.CFC.DOCUMENT.getDocuments(
-			foreignTable="smg_caseMgmt",	
+			foreignTable="",	
 			foreignID=url.caseid, 			
 			documentGroup="caseMgmt" 
 		);
@@ -108,7 +108,7 @@
 		qFullCaseDetails =  APPLICATION.CFC.CASEMGMT.fullCaseDetails(caseid=0);
 		qUsersInvolved =  APPLICATION.CFC.CASEMGMT.usersInvolved(personid=url.studentid);
 		qGetFiles = APPLICATION.CFC.DOCUMENT.getDocuments(
-			foreignTable="smg_caseMgmt",	
+			foreignTable="smg_casemgmt",	
 			foreignID=url.caseid, 			
 			documentGroup="caseMgmt" 
 		);
@@ -121,7 +121,7 @@
 		qFullCaseDetails =  APPLICATION.CFC.CASEMGMT.fullCaseDetails(caseid=0);
 		qUsersInvolved =  APPLICATION.CFC.CASEMGMT.usersInvolved(personid=client.userid);
 		qGetFiles = APPLICATION.CFC.DOCUMENT.getDocuments(
-			foreignTable="smg_caseMgmt",	
+			foreignTable="smg_casemgmt",	
 			foreignID=url.caseid, 			
 			documentGroup="caseMgmt" 
 		);
