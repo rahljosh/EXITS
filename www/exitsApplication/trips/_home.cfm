@@ -45,7 +45,7 @@
 		  </td>
         </tr> 
         
-        <cfif (#CGI.REMOTE_ADDR# is not '96.56.128.61' AND #CGI.REMOTE_ADDR# is not '198.228.201.148' AND #CGI.REMOTE_ADDR# is not '64.134.39.16' ) >           
+        <cfif (#CGI.REMOTE_ADDR# is not '96.56.128.61' AND #CGI.REMOTE_ADDR# is not '198.228.201.148') >           
             <tr>
                 <td colspan="4"> 
                     <h3><div align="center"><p>The MPD TourAmerica website is currently under construction. We are hard at work updating our website content  to reflect available trips for the 2014-2015 season. Please check back on September 15, 2014 for information on all of our new trip offerings. Enrollment for these new trips will begin on September 15, 2014.</p>

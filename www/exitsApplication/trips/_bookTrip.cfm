@@ -23,7 +23,7 @@
         	countryID,
             countryName 
         FROM 
-        	smg_countryList 
+        	smg_countrylist 
         ORDER BY
         	countryName
     </cfquery>
@@ -294,7 +294,7 @@
                     countryID,
                     countryName 
                 FROM 
-                    smg_countryList 
+                    smg_countrylist 
                 WHERE
                 	countryID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.billingCountryID)#">
             </cfquery>
@@ -791,7 +791,7 @@
                         /
                         <select name="expirationYear" id="expirationYear" class="smallFieldNoBlock">
                             <option value=""></option>
-                            <cfloop from="#Year(now())#" to="#Year(now()) + 8#" index="i">
+                            <cfloop from="#Year(now())#" to="#Year(now()) + 16#" index="i">
                                 <option value="#i#" <cfif FORM.expirationYear EQ i> selected="selected" </cfif> >#i#</option>
                             </cfloop>
                         </select>
