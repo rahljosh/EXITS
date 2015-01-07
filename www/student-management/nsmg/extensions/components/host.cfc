@@ -2577,9 +2577,9 @@
                             <cfif CLIENT.companyID EQ 10>
                                 <a href="http://www.case-usa.org/hostApplication/" target="_blank">http://www.case-usa.org/hostApplication/</a>
                           	<cfelseif CLIENT.companyID EQ 14>
-                            	<a href="https://exchange-service.org/hostApplication/" target="_blank">https://exchange-service.org/hostApplication/</a>
+                            	<a href="http://exchange-service.org/hostApplication/" target="_blank">http://exchange-service.org/hostApplication/</a>
                             <cfelse>
-                                <a href="https://www.iseusa.com/hostApplication/" target="_blank">https://www.iseusa.com/hostApplication/</a>
+                                <a href="http://www.iseusa.com/hostApplication/" target="_blank">http://www.iseusa.com/hostApplication/</a>
                             </cfif>
                         </p>
 
