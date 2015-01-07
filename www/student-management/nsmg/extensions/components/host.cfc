@@ -764,7 +764,7 @@
         <cfargument name="toHost" default="0" required="yes" hint="toHost is required">
         
         <cfquery datasource="#APPLICATION.DSN#">
-            UPDATE smg_hosthistoryTracking
+            UPDATE smg_hosthistorytracking
             SET fieldID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.toHost#">
             WHERE fieldID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.fromHost#">	
             AND fieldName =  <cfqueryparam cfsqltype="cf_sql_varchar" value="hostID">           	
