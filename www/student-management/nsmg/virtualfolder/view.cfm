@@ -1,3 +1,47 @@
+<!--- Temporary code to add files from old server when page is viewed --->
+<cfsetting requesttimeout="60">
+
+<cfquery name="qGetDocs" datasource="#APPLICATION.DSN#">
+    SELECT *
+    FROM virtualfolder
+    WHERE isDeleted = 0
+    AND fk_studentID = (SELECT studentID FROM smg_students WHERE uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#URL.unqID#"> LIMIT 1)
+</cfquery>
+    
+<cfloop query="qGetDocs">
+    <cftry>
+        <cfif NOT FileExists("C://websites/student-management/nsmg/#filePath##fileName#")>
+            <cfftp 
+                action="existsfile" 
+                remotefile="/student-management/nsmg/#filePath##fileName#"
+                server="204.12.102.11" 
+                username="jgriffiths" 
+                password="Is3^2012"
+                passive="yes">
+        	<cfif cfftp.ReturnValue>
+				<cfif NOT DirectoryExists("C://websites/student-management/nsmg/#filePath#")>
+                    <cfdirectory action="create" directory="C://websites/student-management/nsmg/#filePath#">
+                </cfif>
+                <cfftp 
+                    action="getfile" 
+                    remotefile="/student-management/nsmg/#filePath##fileName#" 
+                    localfile="C://websites/student-management/nsmg/#filePath##fileName#" 
+                    server="204.12.102.11" 
+                    username="jgriffiths" 
+                    password="Is3^2012"
+                    passive="yes">
+         	</cfif>
+        </cfif>
+    <cfcatch type="any">
+        
+    </cfcatch>
+    </cftry>
+</cfloop>
+
+
+
+
+
 
 <script src="linked/js/jquery.colorbox.js"></script>
 	
