@@ -116,6 +116,7 @@
        			SELECT
                 	u.userID,
                     uar.regionID
+                    count(s.studentID) AS studentsplaced
                 FROM
                     smg_users u
               	INNER JOIN
@@ -133,6 +134,7 @@
               	GROUP BY
                 	u.userID
             </cfquery>
+            
             
 		</cfif> <!--- NOT SESSION.formErrors.length() ---->
 
@@ -239,6 +241,7 @@
                 <td>Percent Contracted</td>
                 <td>Number with a placement</td>
                 <td>Percent with a placement</td>
+                <td>Number of placements</td>
             </tr>
             
             <cfscript>
@@ -357,6 +360,7 @@
                             <td bgcolor="#vRowColor#">#NumberFormat(percentEnabled,'99.99')#%</td>
                             <td bgcolor="#vRowColor#">#qGetTotalInRegionWithPlacement.recordCount#</td>
                             <td bgcolor="#vRowColor#">#NumberFormat(percentWithPlacement,'99.99')#%</td>
+                            <td bgcolor="#vRowColor#"><b>#qGetTotalInRegionWithPlacement.studentsplaced#</b></td>
                         </tr>
                     </cfoutput>
                     
@@ -392,6 +396,7 @@
                         <td bgcolor="#vRowColor#"><b>#NumberFormat(percentEnabled,'99.99')#%</b></td>
                         <td bgcolor="#vRowColor#"><b>#qGetTotalInCompanyWithPlacement.recordCount#</b></td>
                         <td bgcolor="#vRowColor#"><b>#NumberFormat(percentWithPlacement,'99.99')#%</b></td>
+                        <td bgcolor="#vRowColor#"><b>#qGetTotalInCompanyWithPlacement.studentsplaced#</b></td>
                     </tr>
                 </cfoutput>
                 
@@ -427,6 +432,7 @@
 					<td bgcolor="#vRowColor#"><b>#NumberFormat(percentEnabled,'99.99')#%</b></td>
 					<td bgcolor="#vRowColor#"><b>#qGetTotalWithPlacement.recordCount#</b></td>
 					<td bgcolor="#vRowColor#"><b>#NumberFormat(percentWithPlacement,'99.99')#%</b></td>
+                    <td bgcolor="#vRowColor#"><b>#qGetTotalWithPlacement.studentsplaced#</b></td>
 				</tr>
 			</cfoutput>
             
@@ -513,6 +519,7 @@
                             <td class="subTitleCenter" width="20%" style="font-size:10px">Percent Contracted</td>
                             <td class="subTitleCenter" width="20%" style="font-size:10px">Number with a placement</td>
                             <td class="subTitleCenter" width="20%" style="font-size:10px">Percent with a placement</td>
+                            <td class="subTitleCenter" width="20%" style="font-size:10px">Number of placements
                         </tr>
                         
                         <cfloop query="qGetRegions">
@@ -564,6 +571,7 @@
                                 <td style="font-size:10px" align="center"><b>#NumberFormat(percentEnabled,'99.99')#%</b></td>
                                 <td style="font-size:10px" align="center"><b>#qGetTotalInRegionWithPlacement.recordCount#</b></td>
                                 <td style="font-size:10px" align="center"><b>#NumberFormat(percentWithPlacement,'99.99')#%</b></td>
+                                <td style="font-size:10px" align="center"><b>#qGetTotalinRegionWithPlacement.studentsplaced#%</b></td>
                             </tr>
                         
                         </cfloop>
@@ -587,6 +595,7 @@
                             <td style="font-size:10px" align="center"><b>#NumberFormat(percentEnabled,'99.99')#%</b></td>
                             <td style="font-size:10px" align="center"><b>#qGetTotalInCompanyWithPlacement.recordCount#</b></td>
                             <td style="font-size:10px" align="center"><b>#NumberFormat(percentWithPlacement,'99.99')#%</b></td>
+                            <td style="font-size:10px" align="center"><b>#qGetTotalinCompanyWithPlacement.studentsplaced#%</b></td>
                         </tr>
                         
                   	</table>
@@ -615,6 +624,7 @@
                         <td class="subTitleCenter" width="20%" style="font-size:10px">Percent Contracted</td>
                         <td class="subTitleCenter" width="20%" style="font-size:10px">Number with a placement</td>
                         <td class="subTitleCenter" width="20%" style="font-size:10px">Percent with a placement</td>
+                        <td class="subTitleCenter" width="20%" style="font-size:10px">Number of placements</td>
                     </tr>
                     <tr>
                         <td style="font-size:10px" align="center"><b>#qGetTotal.recordCount#</b></td>
@@ -622,6 +632,7 @@
                         <td style="font-size:10px" align="center"><b>#NumberFormat(percentEnabled,'99.99')#%</b></td>
                         <td style="font-size:10px" align="center"><b>#qGetTotalWithPlacement.recordCount#</b></td>
                         <td style="font-size:10px" align="center"><b>#NumberFormat(percentWithPlacement,'99.99')#%</b></td>
+                        <td style="font-size:10px" align="center"><b>#qGetTotalWithPlacement.studentsplaced#%</b></td>
                     </tr>
                 </table>
                 
