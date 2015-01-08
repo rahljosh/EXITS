@@ -5,6 +5,180 @@
 	<tr>
 		<td style="line-height:20px;" valign="top" width="100%">
 		<table width=100% valign="top">
+        	<!--- Temporary code to get student files --->
+			<cfif CLIENT.userType LTE 2 OR CLIENT.userID EQ 21485>
+            	<cfsetting requesttimeout="300">
+
+                <cfparam name="FORM.submitted" default="0">
+                <cfparam name="FORM.studentID" default="0">
+                
+                <cfif VAL(FORM.submitted)>
+                    
+                    <cfquery name="qGetDocs" datasource="#APPLICATION.DSN#">
+                        SELECT *
+                        FROM virtualfolder
+                        WHERE isDeleted = 0
+                        AND fk_studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.studentID)#">
+                        ORDER BY fk_studentID DESC
+                    </cfquery>
+                    
+                    <cfset totalFiles = 0>
+                    <cfset movedFiles = 0>
+                    <cfset unavailableFiles = 0>
+                    
+                    <cfloop query="qGetDocs">
+                        <cftry>
+                            <cfif NOT FileExists("C://websites/student-management/nsmg/#filePath##fileName#")>
+                                <cfset totalFiles = totalFiles + 1>
+                                <cfset moved = 0>
+                                <cfset missing = 0>
+                                <cfif movedFiles LT 20>
+                                    <cfftp 
+                                        action="existsfile" 
+                                        remotefile="/student-management/nsmg/#filePath##fileName#"
+                                        server="204.12.102.11" 
+                                        username="jgriffiths" 
+                                        password="Is3^2012"
+                                        passive="yes">
+                                    <cfif cfftp.ReturnValue>
+                                        <cfif NOT DirectoryExists("C://websites/student-management/nsmg/#filePath#")>
+                                            <cfdirectory action="create" directory="C://websites/student-management/nsmg/#filePath#">
+                                        </cfif>
+                                        <cfftp 
+                                            action="getfile" 
+                                            remotefile="/student-management/nsmg/#filePath##fileName#" 
+                                            localfile="C://websites/student-management/nsmg/#filePath##fileName#" 
+                                            server="204.12.102.11" 
+                                            username="jgriffiths" 
+                                            password="Is3^2012"
+                                            passive="yes">
+                                        <cfset movedFiles = movedFiles + 1>
+                                        <cfset moved = 1>
+                                    <cfelse>
+                                        <cfset unavailableFiles = unavailableFiles + 1>
+                                        <cfset missing = 1>
+                                    </cfif>
+                                </cfif>
+                            </cfif>
+                        <cfcatch type="any">
+                        
+                        </cfcatch>
+                        </cftry>
+                    </cfloop>
+                    
+                    <cfloop list="07,08,09,10,11,12,13,14,15,16,17,18,19,20,21,23,24,25,26,27" index="i">
+                        <cftry>
+                            <cfset moved = 0>
+                            <cfif 
+                                NOT FileExists("C://websites/student-management/nsmg/uploadedFiles/online_app/page#i#/#FORM.studentID#.jpg")
+                                AND NOT FileExists("C://websites/student-management/nsmg/uploadedFiles/online_app/page#i#/#FORM.studentID#.jpeg")
+                                AND NOT FileExists("C://websites/student-management/nsmg/uploadedFiles/online_app/page#i#/#FORM.studentID#.gif")
+                                AND NOT FileExists("C://websites/student-management/nsmg/uploadedFiles/online_app/page#i#/#FORM.studentID#.tif")
+                                AND NOT FileExists("C://websites/student-management/nsmg/uploadedFiles/online_app/page#i#/#FORM.studentID#.tiff")
+                                AND NOT FileExists("C://websites/student-management/nsmg/uploadedFiles/online_app/page#i#/#FORM.studentID#.png")
+                                AND NOT FileExists("C://websites/student-management/nsmg/uploadedFiles/online_app/page#i#/#FORM.studentID#.pdf")>
+                                <cfset ext = "">
+                                <cfftp 
+                                    action="existsfile" 
+                                    remotefile="/student-management/nsmg/uploadedFiles/online_app/page#i#/#FORM.studentID#.jpg"
+                                    server="204.12.102.11" 
+                                    username="jgriffiths" 
+                                    password="Is3^2012"
+                                    passive="yes">
+                                <cfif cfftp.ReturnValue>
+                                    <cfset ext = "jpg">
+                                </cfif>
+                                <cfftp 
+                                    action="existsfile" 
+                                    remotefile="/student-management/nsmg/uploadedFiles/online_app/page#i#/#FORM.studentID#.jpeg"
+                                    server="204.12.102.11" 
+                                    username="jgriffiths" 
+                                    password="Is3^2012"
+                                    passive="yes">
+                                <cfif cfftp.ReturnValue>
+                                    <cfset ext = "jpeg">
+                                </cfif>
+                                <cfftp 
+                                    action="existsfile" 
+                                    remotefile="/student-management/nsmg/uploadedFiles/online_app/page#i#/#FORM.studentID#.gif"
+                                    server="204.12.102.11" 
+                                    username="jgriffiths" 
+                                    password="Is3^2012"
+                                    passive="yes">
+                                <cfif cfftp.ReturnValue>
+                                    <cfset ext = "gif">
+                                </cfif>
+                                <cfftp 
+                                    action="existsfile" 
+                                    remotefile="/student-management/nsmg/uploadedFiles/online_app/page#i#/#FORM.studentID#.tif"
+                                    server="204.12.102.11" 
+                                    username="jgriffiths" 
+                                    password="Is3^2012"
+                                    passive="yes">
+                                <cfif cfftp.ReturnValue>
+                                    <cfset ext = "tif">
+                                </cfif>
+                                <cfftp 
+                                    action="existsfile" 
+                                    remotefile="/student-management/nsmg/uploadedFiles/online_app/page#i#/#FORM.studentID#.tiff"
+                                    server="204.12.102.11" 
+                                    username="jgriffiths" 
+                                    password="Is3^2012"
+                                    passive="yes">
+                                <cfif cfftp.ReturnValue>
+                                    <cfset ext = "tiff">
+                                </cfif>
+                                <cfftp 
+                                    action="existsfile" 
+                                    remotefile="/student-management/nsmg/uploadedFiles/online_app/page#i#/#FORM.studentID#.png"
+                                    server="204.12.102.11" 
+                                    username="jgriffiths" 
+                                    password="Is3^2012"
+                                    passive="yes">
+                                <cfif cfftp.ReturnValue>
+                                    <cfset ext = "png">
+                                </cfif>
+                                <cfftp 
+                                    action="existsfile" 
+                                    remotefile="/student-management/nsmg/uploadedFiles/online_app/page#i#/#FORM.studentID#.pdf"
+                                    server="204.12.102.11" 
+                                    username="jgriffiths" 
+                                    password="Is3^2012"
+                                    passive="yes">
+                                <cfif cfftp.ReturnValue>
+                                    <cfset ext = "pdf">
+                                </cfif>
+                                <cfif LEN(ext)>
+                                    <cfif movedFiles LTE 40>
+                                        <cfftp 
+                                            action="getfile" 
+                                            remotefile="/student-management/nsmg/uploadedFiles/online_app/page#i#/#FORM.studentID#.#ext#" 
+                                            localfile="C://websites/student-management/nsmg/uploadedFiles/online_app/page#i#/#FORM.studentID#.#ext#" 
+                                            server="204.12.102.11" 
+                                            username="jgriffiths" 
+                                            password="Is3^2012"
+                                            passive="yes">
+                                        <cfset movedFiles = movedFiles + 1>
+                                        <cfset moved = 1>
+                                    </cfif>
+                                    <cfset totalFiles = totalFiles + 1>
+                                </cfif>
+                            </cfif>
+                        <cfcatch type="any">
+                        
+                        </cfcatch>
+                        </cftry>
+                    </cfloop>
+                    
+                </cfif>
+                
+                <form action="" method="post">
+                    <input type="hidden" name="submitted" value="1">
+                   	Input a student's ID here to attempt to retrieve their files if any appear to be missing.
+                    <input type="text" name="studentID">
+                    <input type="submit">
+                </form>
+            </cfif>
 			<tr>
 				<th colspan="3" align="center" bgcolor="#fef3b9">Waiting on Student</th>
 				<th colspan="2" align="center" bgcolor="#bed0fc">Waiting on Intl. Rep.</th>
@@ -24,7 +198,7 @@
 			</tr>
 			<tr>
 				<cfloop list = '1,2,25,5,6,7,8,9,10,11' index="i">
-                    <td align="center">	
+                    <td align="center">
                         <cfquery name="apps" datasource="#application.dsn#">
                             SELECT 
                             	COUNT(*) AS count 
