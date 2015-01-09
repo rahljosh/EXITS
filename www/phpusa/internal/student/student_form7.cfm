@@ -102,7 +102,8 @@ function DataChanged()
 				<tr><td>Years of English:</td>
 					<td><cfinput type="text" name="yearsenglish" size=6 value="#yearsenglish#"></td>
 				</tr>										
-				<tr><td>SLEP Test Score:</td>
+				<tr>
+				  <td>SLEP/ELTiS Test Score:</td>
 					<td><cfinput type="text" name="slep_score" size=6 value="#slep_score#"></td>
 				</tr>	
 				<tr><td>&nbsp;</td></tr>									
