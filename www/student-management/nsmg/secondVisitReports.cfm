@@ -1091,7 +1091,7 @@
                                 <!--- Add Report --->
                                 <form action="index.cfm?curdoc=forms/pr_add" method="post" style="display:inline;margin-right:10px;">
                                     <input type="hidden" name="studentID" value="#ARGUMENTS.setQuery.studentID#">
-                                    <input type="hidden" name="type_of_report" value="#CLIENT.reportType#">
+                                    <input type="hidden" name="type_of_report" value="2">
                                     <input type="hidden" name="fk_host" value="#ARGUMENTS.setQuery.hostID#">
                                     <input type="hidden" name="month_of_report" value="#Month(now())#">
                                     <input type="hidden" name="dueFromDate" value="#DateFormat(ARGUMENTS.setQuery.dateStartWindowCompliance, 'mm/dd/yy')#">

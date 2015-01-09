@@ -36,7 +36,7 @@
 		qGetStudent = APPLICATION.CFC.STUDENT.getStudentByID(studentID=VAL(FORM.studentID));
 	
 		// Progress Report
-		if ( CLIENT.reportType EQ 1 ) {
+		if ( FORM.type_of_report EQ 1 ) {
 			vFormTitle = "Add Progress Report";
 		// 2nd Visit Report
 		} else {
@@ -56,7 +56,10 @@
         select *
         from progress_reports
         where fk_student =  <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentID#">
-        and pr_month_of_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.month_of_report#">
+        <cfif FORM.type_of_report NEQ 2>
+        	and pr_month_of_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.month_of_report#">
+        </cfif>
+        AND fk_reportType = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.type_of_report#">
 	</Cfquery>
     
 	<cfif NOT VAL(checkForDupe.recordcount)>
@@ -84,7 +87,7 @@
                 )
                 VALUES 
                 (
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.reportType#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.type_of_report#">,
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentID#">,
                     <cfqueryparam cfsqltype="cf_sql_idstamp" value="#CreateUUID()#">,
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.month_of_report#">,
@@ -103,7 +106,7 @@
         </cflock>
             
         <!--- Progress Report --->    
-        <cfif CLIENT.reportType NEQ 2>
+        <cfif FORM.type_of_report NEQ 2>
         
             <cfquery name="qGetPRQuestions" datasource="#APPLICATION.DSN#">
                 SELECT 
@@ -137,7 +140,7 @@
             </cfloop>
         
         <!--- Second Visit Report --->
-        <cfelseif CLIENT.reportType EQ 2>
+        <cfelseif FORM.type_of_report EQ 2>
         
             <cfquery datasource="#APPLICATION.DSN#">
                 INSERT INTO
@@ -166,7 +169,7 @@
     </cfif>
     <cfscript>    
 		// Redirect to 2nd Visit Report 
-		if ( CLIENT.reportType EQ 2 ) {
+		if ( FORM.type_of_report EQ 2 ) {
 			vFormPath = "index.cfm?curdoc=forms/secondHomeVisitReport";
 		// Redirect to Progress Report
 		} else {
@@ -319,6 +322,7 @@ document.getElementById("submitForm").onsubmit = function() {
         <input type="hidden" name="fk_intrep_user" value="#FORM.fk_intrep_user#">
         <input type="hidden" name="dueFromDate" value="#FORM.dueFromDate#">
        	<input type="hidden" name="dueToDate" value="#FORM.dueToDate#">
+        <input type="hidden" name="type_of_report" value="#FORM.type_of_report#" />
 
 		<!--- Table Header --->
         <gui:tableHeader
@@ -333,7 +337,7 @@ document.getElementById("submitForm").onsubmit = function() {
                     <h2>
                         Student: #qGetStudent.firstname# #qGetStudent.familylastname# ###FORM.studentID# <br />
                         <!--- Progress Report --->
-                        <cfif CLIENT.reportType eq 1>
+                        <cfif FORM.type_of_report eq 1>
                             <cfswitch expression="#FORM.month_of_report#">
                                 <cfcase value="10">
                                     Phase 1<br>
