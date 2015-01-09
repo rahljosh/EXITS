@@ -17,6 +17,7 @@
     <!--- Param FORM Variables --->
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.pr_action" default="">
+    <cfparam name="FORM.pr_id" default="0">
     <cfparam name="FORM.performEdit" default="0">
 	<cfparam name="FORM.neighborhoodAppearance" default="">
     <cfparam name="FORM.avoid" default="">
@@ -51,6 +52,17 @@
         <cfset FORM.pr_id = URL.reportID>
     </cfif>
   
+  	<cfquery name="reportDates" datasource="#application.dsn#">
+        select *
+        from progress_reports
+        where pr_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">
+    </cfquery>
+    
+    <cfscript>
+		// Get Student By UniqueID
+        qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(studentID=reportDates.fk_student);
+	</cfscript>
+  
 	<!----Edit Report---->
     <cfif pr_action EQ 'edit_report'>
         <cfset FORM.performEdit=1>
@@ -58,6 +70,22 @@
 	
 	<!----Save Report---->
 	<cfif pr_action EQ 'save'>
+    
+    	<!---<cfquery name="qCheckForReport" datasource="#APPLICATION.DSN#">
+        	SELECT *
+            FROM secondvisitanswers
+            WHERE fk_reportID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">
+        </cfquery>
+        
+        <cfif NOT VAL(qCheckForReport.recordCount)>
+        	<cfquery datasource="#APPLICATION.DSN#">
+            	INSERT INTO secondvisitanswers (fk_reportID, fk_studentID)
+                VALUES(
+                	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.studentID#">
+                )
+            </cfquery>
+        </cfif>--->
      
         <cfquery datasource="#application.dsn#">
             UPDATE 
@@ -92,12 +120,6 @@
         select *
         from secondvisitanswers
         where fk_reportID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">
-    </cfquery>
-    
-    <cfquery name="reportDates" datasource="#application.dsn#">
-        select *
-        from progress_reports
-        where pr_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.pr_id#">
     </cfquery>
 
     <cfquery name="get_report" datasource="#application.dsn#">
@@ -374,8 +396,6 @@
     </cfif>
 
 	<cfscript>
-        // Get Student By UniqueID
-        qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(studentID=reportDates.fk_student);
         
         CLIENT.studentID = reportDates.fk_student;
         
@@ -609,7 +629,7 @@
                 </table>
             </cfif>
             
-            <h1>Second Host Family Home Visit</h1>
+            <h1>Second Host Family Home Visit #FORM.pr_id#</h1>
             <p>
                 <strong>Student:</strong> #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentid#)<br />
                 <strong>Report ID:</strong> #FORM.pr_id# #previousReport.fk_reportID#<br />
