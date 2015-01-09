@@ -59,6 +59,7 @@
         <cfif FORM.type_of_report NEQ 2>
         	and pr_month_of_report = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.month_of_report#">
         </cfif>
+        AND fk_host = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.fk_host#">
         AND fk_reportType = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.type_of_report#">
 	</Cfquery>
     
