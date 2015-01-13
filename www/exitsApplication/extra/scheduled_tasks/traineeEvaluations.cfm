@@ -99,7 +99,7 @@
         FROM 
 			extra_candidates ec
         INNER JOIN	
-        	extra_hostCompany hc ON hc.hostCompanyID = ec.hostCompanyID
+        	extra_hostcompany hc ON hc.hostCompanyID = ec.hostCompanyID
 		INNER JOIN
         	smg_programs p ON p.programID = ec.programID
 		WHERE
@@ -134,7 +134,7 @@
         FROM 
 			extra_candidates ec
         INNER JOIN	
-        	extra_hostCompany hc ON hc.hostCompanyID = ec.hostCompanyID
+        	extra_hostcompany hc ON hc.hostCompanyID = ec.hostCompanyID
 		INNER JOIN
         	smg_programs p ON p.programID = ec.programID
 		WHERE
@@ -177,7 +177,7 @@
         FROM 
 			extra_candidates ec
         INNER JOIN	
-        	extra_hostCompany hc ON hc.hostCompanyID = ec.hostCompanyID
+        	extra_hostcompany hc ON hc.hostCompanyID = ec.hostCompanyID
 		INNER JOIN
         	smg_programs p ON p.programID = ec.programID
         WHERE
@@ -212,7 +212,7 @@
         FROM 
 			extra_candidates ec
         INNER JOIN	
-        	extra_hostCompany hc ON hc.hostCompanyID = ec.hostCompanyID
+        	extra_hostcompany hc ON hc.hostCompanyID = ec.hostCompanyID
 		INNER JOIN
         	smg_programs p ON p.programID = ec.programID
         WHERE
@@ -247,7 +247,7 @@
         FROM 
 			extra_candidates ec
         INNER JOIN	
-        	extra_hostCompany hc ON hc.hostCompanyID = ec.hostCompanyID
+        	extra_hostcompany hc ON hc.hostCompanyID = ec.hostCompanyID
 		INNER JOIN
         	smg_programs p ON p.programID = ec.programID
 		WHERE
