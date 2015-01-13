@@ -87,11 +87,8 @@
 </cfsilent>
 
 <cfif VAL(FORM.submitted) AND NOT SESSION.formErrors.length()>
-        
-	<script type="text/javascript">
-        // Reload Window After 1.5 Seconds
-        setTimeout(function() { window.location.reload(); }, 1500);
-    </script>
+
+	<cflocation url="culturalActivityReport.cfm?uniqueID=#URL.uniqueID#">
 
 </cfif>
 
