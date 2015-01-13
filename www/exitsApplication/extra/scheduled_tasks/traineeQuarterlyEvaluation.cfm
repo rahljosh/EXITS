@@ -108,7 +108,7 @@
             hc.email AS hostEmail
         FROM extra_candidates ec
 		INNER JOIN smg_programs p ON p.programID = ec.programID
-        INNER JOIN extra_hostCompany hc ON hc.hostCompanyID = ec.hostCompanyID            
+        INNER JOIN extra_hostcompany hc ON hc.hostCompanyID = ec.hostCompanyID            
 		WHERE ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
 		AND ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="7">
         AND ec.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vProgramList#" list="yes"> )
