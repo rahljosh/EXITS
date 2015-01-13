@@ -80,7 +80,7 @@ Order by birthdate
 <cfquery name="school_name" datasource="mysql">
 select schoolname
 from php_schools
-left join php_students_in_program on php_students_in_program.schoolid = php_Schools.schoolid
+left join php_students_in_program on php_students_in_program.schoolid = php_schools.schoolid
 where php_students_in_program.studentid = #get_student_unqid.studentid#
 </cfquery>
 
@@ -171,11 +171,12 @@ where php_students_in_program.studentid = #get_student_unqid.studentid#
 				<cfelse>
 					Parents Letter n/a
 				</cfif>
-				&nbsp - &nbsp			
+				<!----&nbsp - &nbsp			
                 <!--- Flight Information --->
                 <a href="student/index.cfm?action=flightInformation&uniqueID=#get_student_unqid.uniqueid#&programID=#get_student_unqid.programID#" class="jQueryModal">Flight Information</a>
                 &nbsp - &nbsp
                 <a href="" onClick="javascript: win=window.open('forms/received_progress_reports.cfm?unqid=#get_student_unqid.uniqueid#', 'Reports', 'height=450, width=610, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Progress Reports</A> 
+				---->
 			</td></tr>
 	</table>
 </table>
