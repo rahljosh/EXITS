@@ -55,7 +55,6 @@
   		WHERE pmt.paymenttype = 22 
         AND st.studentID = pmt.studentID 
         AND hh.hostID = pmt.hostID)
-    AND hh.datePISEmailed IS NOT NULL
     AND pr.pr_ny_approved_date IS NOT NULL
     ORDER BY st.placerepID
 </cfquery>
