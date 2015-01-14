@@ -147,7 +147,7 @@
 		<cfswitch expression="#CLIENT.companyID#">
         
         	<cfcase value="1,2,3,4,5,12,13,14">
-            	<cfset vEmailToList = 'thea@iseusa.org;#CLIENT.programmanager_email#;#vRMEmailList#'>
+            	<cfset vEmailToList = 'bmccready@iseusa.org;thea@iseusa.org;#CLIENT.programmanager_email#;#vRMEmailList#'>
             </cfcase>
 			
         	<cfcase value="6">
