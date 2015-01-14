@@ -436,9 +436,13 @@
                             Note: If meanwhile you have submitted the requested information, thank you and please disregard this notice.
 							<br/>
                             <br/>
-                            Clarification: The Orientation Sign Off Form, if included in this report, must be submitted only after the 
-                            participants received the visa documents from CSB and after they passed the orientation session organized by 
-                            your organization, in preparation for their departure from the home country to the United States.
+                            Clarification of exceptions: 
+                            <br/>
+                             - The Housing Arrangements Form, if included in this report, must be submitted with 15 days before arrival.
+                            <br/>
+                             - The Orientation Sign Off Form, if included in this report, must be submitted only after the participants received the
+                             visa documents from CSB and after they passed the orientation session organized by your organization, in preparation for
+                             their departure from the home country to the United States.
                         </p>
                     </cfsavecontent>
                 
