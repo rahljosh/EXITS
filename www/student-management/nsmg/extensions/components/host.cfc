@@ -218,6 +218,12 @@
 			}
 		</cfscript>
         
+        <cfquery name="qGetProgramInfo" datasource="#APPLICATION.DSN#">
+        	SELECT *
+            FROM smg_programs
+            WHERE programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.programID)#">
+        </cfquery>
+        
         <!--- Do search --->
         <cfquery 
 			name="qLookupHostFamily" 
@@ -236,16 +242,12 @@
                             ')'                    
 						) 
 					AS CHAR) AS displayHostFamily
-                FROM 
-                	smg_hosts
-                WHERE 
-                	 active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-				AND
-                	isNotQualifiedToHost = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                FROM smg_hosts
+                WHERE active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+				AND isNotQualifiedToHost = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
                     
                 <cfif LEN(ARGUMENTS.regionID)>
-                    AND
-                        regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.regionID)#">
+                    AND regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.regionID)#">
                 </cfif>
                 
                 AND
@@ -262,15 +264,14 @@
 						) 
 					AS CHAR) LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.search#%">
                	<!--- Check if family is approved --->
-                <cfif CLIENT.companyID NEQ 13>
+                <cfif NOT ListFind("13",CLIENT.companyID) AND NOT (ListFind("1,2,3,4,5,12",CLIENT.companyID) AND ListFind("2,4",qGetProgramInfo.type))>
                     AND hostID IN (
                         SELECT hostID 
                         FROM smg_host_app_season 
                         WHERE applicationStatusID < 4 
                         AND seasonID >= <cfqueryparam cfsqltype="cf_sql_integer" value="#vSeasonID#"> )
                	</cfif>
-                ORDER BY 
-                    familyLastName
+                ORDER BY familyLastName
         </cfquery>
         
         <cfscript>
