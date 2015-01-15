@@ -8,15 +8,13 @@
 ----- ------------------------------------------------------------------------- --->
 
 <!--- Kill Extra Output --->
-<cfsilent>
 
 	<!--- Import CustomTag --->
     <cfimport taglib="../../../extensions/customTags/gui/" prefix="gui" />	
 
     <!--- Candidate Details --->
     <cfparam name="FORM.candidateID" default="#APPLICATION.CFC.CANDIDATE.getcandidateID()#">
-    <cfparam name="FORM.foreignTable" default="#APPLICATION.foreignTable#">
-    <cfparam name="FORM.blockEditDelete" default="0">
+    <cfparam name="FORM.foreigntable" default="#APPLICATION.foreigntable#">
 
 	<cfajaxproxy cfc="extensions.components.document" jsclassname="proxyDocument">
     
@@ -36,9 +34,8 @@
 		}
 	</cfscript>
     
-</cfsilent>
 
-<cfoutput>
+
 
 <!--- Page Header --->
 <gui:pageHeader
@@ -81,23 +78,23 @@
                 <fieldset>
             
                    <legend>Upload PDF Documents</legend>
-            
+                   <cfoutput>
+                 
+                 
                     <div class="documentList" align="center">
-                    
-                        <cffileupload 
-                            title="Select one or more files and click on Upload"
-                            name="fileData" 
-                            url="upload.cfm?#urlEncodedFormat('#SESSION.URLToken#&foreignID=#FORM.candidateID#&uploadPath=#APPLICATION.CFC.CANDIDATE.getCandidateSession().myUploadFolder#')#"
-                            extensionfilter="pdf" 
-                            oncomplete="handleComplete" 
-                            uploadbuttonlabel="Upload Now"            
-                            maxfileselect="5" 
-                            maxuploadsize="10" 
-                            bgcolor="##FFFFFF" 
+                       <cffileupload
+                        	title="Select one or more files and click on Upload"
+                            name="fileData"
+                            url="upload.cfm" 
+                            extensionfilter="pdf"
+                            oncomplete="handleComplete"
+                            uploadbuttonlabel="Upload Now"
+                            maxfileselect="5"
+                            maxuploadsize="10"
+                            bgcolor="##FFFFFF"
                             align="center"
                             height="220"
                             width="650">
-            
                     </div>
                     
                 </fieldset>
@@ -149,14 +146,14 @@
                     <div class="documentList" align="center">
                         <cfform>
                         <!--- These variables are used in the CFGrid --->
-                        <input type="hidden" name="foreignTable" id="foreignTable" value="#FORM.foreignTable#" />
+                        <input type="hidden" name="foreigntable" id="foreigntable" value="#FORM.foreigntable#" />
                         <input type="hidden" name="candidateID" id="candidateID" value="#FORM.candidateID#" />
                         <input type="hidden" name="blockEditDelete" id="blockEditDelete" value="#FORM.blockEditDelete#" />
             
                         <cfgrid name="documentList" 
                             title="Click on Edit to update the category information"
                             format="html"
-                            bind="cfc:extensions.components.document.getDocumentsRemote({foreignTable},{candidateID},{cfgridPage},{cfgridPageSize},{cfgridSortColumn},{cfgridSortDirection},{blockEditDelete})"                    
+                            bind="cfc:extensions.components.document.getDocumentsRemote({foreigntable},{candidateID},{cfgridPage},{cfgridPageSize},{cfgridSortColumn},{cfgridSortDirection},{blockEditDelete})"                    
                             width="650px"
                             pagesize="10"
                             bgcolor="##FFFFFF" 
@@ -166,7 +163,7 @@
                             <cfgridcolumn name="ID" display="no">
                             <cfgridcolumn name="fileName" header="File Name" width="220">
                             <cfgridcolumn name="documentType" header="Category" width="180">
-                            <cfgridcolumn name="fileSize" header="Size" width="60">
+                            <!----<cfgridcolumn name="fileSize" header="Size" width="60">---->
                             <cfgridcolumn name="displayDateCreated" header="Date" width="60">
                             <cfgridcolumn name="action" header="Actions" width="130">
                         </cfgrid>

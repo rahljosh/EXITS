@@ -10,33 +10,14 @@
 	
 ----- ------------------------------------------------------------------------- --->
 
-<!--- Kill Extra Output --->
-<cfsilent>
-
-	<!--- Param Variables --->
-    <cfparam name="URL.foreignTable" default="#APPLICATION.foreignTable#"> <!--- extra_candidates --->
-    <cfparam name="URL.foreignID" default="0"> <!--- #APPLICATION.CFC.CANDIDATE.getCandidateID()# --->
-	<cfparam name="URL.uploadPath" default="">
-
-    <cfscript>
-		// APPLICATION.CFC.CANDIDATE.getCandidateSession().myUploadFolder
-	
-		// Decrypt Variables 
-		URL.foreignID = URLDecode(URL.foreignID);
-		URL.uploadPath = URLDecode(URL.uploadPath);
-	</cfscript>		
-    
-</cfsilent>
-
-
 <cfscript>
-    if ( structKeyExists(FORM, "fileData") AND VAL(URL.foreignID) AND LEN(URL.uploadPath) ) {
-    
+    if ( structKeyExists(FORM, "fileData") ) {
+
         // Upload Document		
         APPLICATION.CFC.DOCUMENT.upload(
-            foreignTable=URL.foreignTable,
-            foreignID=URL.foreignID,
-            uploadPath=URL.uploadPath
+            foreignTable="extra_candidates",
+            foreignID=APPLICATION.CFC.CANDIDATE.getCandidateID(),
+            uploadPath=APPLICATION.CFC.CANDIDATE.getCandidateSession().myUploadFolder
         );
     
 	}

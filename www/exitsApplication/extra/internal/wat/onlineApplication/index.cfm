@@ -9,6 +9,9 @@
 
 <!--- Kill extra output --->
 <cfsilent>
+
+	<!--- Allow AJAX --->
+	<cfajaximport csssrc="/CFIDE/scripts/ajax/" scriptsrc="/CFIDE/scripts/">
 	
 	<!--- Param local variables --->
 	<cfparam name="action" default="home">

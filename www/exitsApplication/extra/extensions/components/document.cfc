@@ -310,7 +310,7 @@
         
 		<!--- Upload the document to the file directory --->
 		<cffile 
-        	action="uploadall" 
+        	action="upload" 
             filefield="fileData" 
             destination="#ARGUMENTS.uploadPath#" 
             nameconflict="makeunique">
@@ -334,7 +334,7 @@
         </cfscript>
 
 		<!--- Check to see if we can upload the file --->
-		<cfif acceptFile>
+		<cfif VAL(acceptFile)>
         
 			<!--- The file has been uploaded and accepted --->
             <cfscript>
@@ -348,7 +348,7 @@
 					clientName=CFFILE.ClientFileName,
 					filesize=APPLICATION.CFC.UDF.displayFileSize(CFFILE.FileSize),
 					uploadPath=ARGUMENTS.uploadPath);
-			</cfscript>
+			</cfscript> 
                         
         <cfelse>
         	
@@ -386,19 +386,21 @@
                 clientName,
                 fileSize,
                 location,
-                dateCreated
+                description,
+                dateCreated       
             )
             VALUES
             (
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.foreignTable#" />,
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.foreignID#" />,
-                <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.documentTypeID#" />,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.foreignID#" />,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.documentTypeID#" />,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.serverExtension#" />,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.serverName#" />,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.clientExtension#" />,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.clientName#" />,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.filesize#" />,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.uploadPath#" />,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="" />,
                 <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
             )
         </cfquery>
