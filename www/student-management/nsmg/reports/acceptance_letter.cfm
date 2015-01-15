@@ -23,7 +23,7 @@
 		qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(studentID=CLIENT.studentID);
 		
 		// Get Student Region Assigned
-		qRegionAssigned = APPLICATION.CFC.STUDENT.getRegions(regionID=qGetStudentInfo.regionAssigned);
+		qRegionAssigned = APPLICATION.CFC.REGION.getRegions(regionID=qGetStudentInfo.regionAssigned);
 		
 		//Get Facilitator for this Region
 		qFacilitator = APPLICATION.CFC.USER.getUserByID(userID=VAL(qRegionAssigned.regionfacilitator));
@@ -266,22 +266,20 @@
 			<p>Thanks,</p>
             <p>
                 <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISE, CLIENT.companyID)>
-                	#qGetFacilitator.firstname# #qGetFacilitator.lastname#<br />
                     <!---If the Facilitator is Lois show Admissions email --->
                     <cfif qRegionAssigned.regionfacilitator EQ 21485>
                     	Student Admissions Department <br />
+                        #qGetFacilitator.facilitatorname#<br />
                         <a href="mailto:admissions@iseusa.org">admissions@iseusa.org</a>
                     <cfelse>
                     	 International Student Exchange Facilitator <br />
-                        <a href="mailto:#qGetFacilitator.email#">#qGetFacilitator.email#</a>
+                         #qGetFacilitator.facilitatorname#<br />
+                        <a href="mailto:#qGetFacilitator.facilitatoremail#">#qGetFacilitator.facilitatoremail#</a>
                      </cfif>
                      <br />
-                    International Student Exchange Student Facilitator<br />
-                    #qGetFacilitator.facilitatoremail#<br />
                 <cfelse>	
                 	#qGetCompanyShort.admission_person#  <br />
                 	Student Admissions Department
-                    </cfif> 
                 </cfif>
 			</p>                
         </td>
