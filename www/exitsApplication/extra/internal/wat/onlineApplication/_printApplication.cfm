@@ -8,7 +8,7 @@
 ----- ------------------------------------------------------------------------- --->
 
 <!--- Kill Extra Output --->
-<cfsilent>
+
 
 	<!--- Import CustomTag --->
     <cfimport taglib="../../../extensions/customTags/gui/" prefix="gui" />	
@@ -25,13 +25,13 @@
 		
 		// Gets a list of uploaded PDF files to attach to the online application
 		qGetPDFDocumentList = APPLICATION.CFC.DOCUMENT.getDocumentsByFilter(
-			foreignTable=APPLICATION.foreignTable,
+			foreigntable=APPLICATION.foreigntable,
 			foreignID=qGetCandidateInfo.candidateID,
 			clientExt='pdf'
 		);
 
 		qGetOtherDocumentList = APPLICATION.CFC.DOCUMENT.getDocumentsByFilter(
-			foreignTable=APPLICATION.foreignTable,
+			foreigntable=APPLICATION.foreigntable,
 			foreignID=qGetCandidateInfo.candidateID,
 			NotClientExt='pdf'
 		);
@@ -47,15 +47,18 @@
 		FORM.submitted = 0;	
 		
 		// Check if there is an English Assessment uploaded
-		qGetEnglishAssessment = APPLICATION.CFC.DOCUMENT.getDocuments(foreignTable=APPLICATION.foreignTable, foreignID=qGetCandidateInfo.candidateID, documentType="English Assessment");
+		qGetEnglishAssessment = APPLICATION.CFC.DOCUMENT.getDocuments(foreigntable=APPLICATION.foreigntable, foreignID=qGetCandidateInfo.candidateID, documentType="English Assessment");
 	</cfscript>
     
-</cfsilent>
+
 
 <cfoutput>
-	
-    <cfdocument name="printPDFApplication" format="pdf" localUrl="yes" backgroundvisible="yes" saveasname="CSB-Application">
-	
+
+
+  
+              
+    <cfdocument name="printPDFApplication" format="pdf"  backgroundvisible="yes" saveasname="CSB-Application" localUrl="yes">
+
         <cfdocumentsection name="Application">
         
             <!--- Page Header --->
@@ -194,7 +197,7 @@
                         
                     </cfloop>
             </cfpdf>
-    
+    <!----
             <!--- Include other files such as Jpgs --->
             <cfpdf   
                 action="merge" 
@@ -214,7 +217,7 @@
                         
                     </cfloop>
             </cfpdf>
-
+---->
 			<!--- Set up the header info --->
             <cfheader 
                 name="content-disposition" 
