@@ -23,9 +23,9 @@
 	FROM 
 		v_user_hierarchy vuh
 	LEFT OUTER JOIN
-		smg_students s on vuh.`Area Rep ID` = s.arearepID   
+		smg_students s on vuh.`region ID` = s.regionassigned   
 	WHERE 
-		arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.arearepid)#">
+		regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.regionassigned)#">
 	LIMIT 1
 </Cfquery>
 
@@ -146,14 +146,17 @@
 
 <table width=650 border=0 align="center" bgcolor="FFFFFF">
 	<tr><td>
-	<br>Thanks,<br><br>
-               <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID)>
+	<p>Thanks,</p>
+            <p>
+                <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISE, CLIENT.companyID)>
                 	#qGetFacilitator.facilitatorname#<br />
+                    <cfif facilitatorname EQ ''Lois Culmo 
                     International Student Exchange Student Facilitator<br />
                     #qGetFacilitator.facilitatoremail#<br />
                 <cfelse>	
                 	#qGetCompanyShort.admission_person#  <br />
-                	Student Admissions Department
+                	Student Admissions Department 
                 </cfif>
+			</p>                
 	</td></tr>
 </cfoutput>
