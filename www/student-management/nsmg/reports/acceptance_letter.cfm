@@ -23,11 +23,12 @@
 		qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(studentID=CLIENT.studentID);
 		
 		// Get Student Region Assigned
-		qRegionAssigned = APPLICATION.CFC.REGION.getRegions(regionID=qGetStudentInfo.regionAssigned);
+		qRegionAssigned = APPLICATION.CFC.STUDENT.getRegions(regionID=qGetStudentInfo.regionAssigned);
 		
-		// Get Facilitator for this Region
+		//Get Facilitator for this Region
 		qFacilitator = APPLICATION.CFC.USER.getUserByID(userID=VAL(qRegionAssigned.regionfacilitator));
 	</cfscript>
+    
 
 	<!-----Company Information----->
     <Cfquery name="qGetCompanyShort" datasource="MySQL">
@@ -265,19 +266,22 @@
 			<p>Thanks,</p>
             <p>
                 <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISE, CLIENT.companyID)>
-                	#qFacilitator.firstname# #qFacilitator.lastname#<br />
-                    <cfif facilitatorname EQ ''Lois Culmo 
-                    International Student Exchange Student Facilitator<br />
-                    <!--- If the Facilitator is Lois send this to a different email --->
-					<cfif qRegionAssigned.regionfacilitator EQ 21485>
-                    	<a href="mailto:admissions@iseusa.org">admissions@iseusa.org</a>
+                	#qGetFacilitator.firstname# #qGetFacilitator.lastname#<br />
+                    <!---If the Facilitator is Lois show Admissions email --->
+                    <cfif qRegionAssigned.regionfacilitator EQ 21485>
+                    	Student Admissions Department <br />
+                        <a href="mailto:admissions@iseusa.org">admissions@iseusa.org</a>
                     <cfelse>
-                    	<a href="mailto:#qFacilitator.email#">#qFacilitator.email#</a>
-                    </cfif>
-                    <br />
+                    	 International Student Exchange Facilitator <br />
+                        <a href="mailto:#qGetFacilitator.email#">#qGetFacilitator.email#</a>
+                     </cfif>
+                     <br />
+                    International Student Exchange Student Facilitator<br />
+                    #qGetFacilitator.facilitatoremail#<br />
                 <cfelse>	
                 	#qGetCompanyShort.admission_person#  <br />
-                	Student Admissions Department 
+                	Student Admissions Department
+                    </cfif> 
                 </cfif>
 			</p>                
         </td>
