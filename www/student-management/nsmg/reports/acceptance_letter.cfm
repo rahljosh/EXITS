@@ -31,7 +31,7 @@
     
 
 	<!-----Company Information----->
-    <Cfquery name="qGetCompanyShort" datasource="MySQL">
+    <Cfquery name="qGetCompanyShort" datasource="#APPLICATION.DSN#">
         SELECT
         	*
         FROM 
@@ -41,7 +41,7 @@
     </Cfquery>
     
     <!-----Intl. Agent----->
-    <cfquery name="qGetIntlRep" datasource="MySQL">
+    <cfquery name="qGetIntlRep" datasource="#APPLICATION.DSN#">
         SELECT 
         	companyid, 
             firstName,
@@ -56,7 +56,7 @@
     </cfquery>
     
     <!-----Program Name----->
-    <cfquery name="qGetProgramName" datasource="MySQL">
+    <cfquery name="qGetProgramName" datasource="#APPLICATION.DSN#">
         SELECT 
         	programname, 
             programtype
@@ -67,25 +67,11 @@
         WHERE 
         	programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.programid)#">
     </cfquery>
-    
-    <!-----Facilitator----->
-    <Cfquery name="qGetFacilitator" datasource="MySQL">
-        SELECT
- 	      concat(vuh.`facilitator first name`, ' ',vuh.`facilitator last name`) as facilitatorname,
-          vuh.`facilitator email` AS facilitatoremail  
-        FROM 
-        	v_user_hierarchy vuh
-        LEFT OUTER JOIN
-            smg_students s on vuh.`Region ID` = s.regionassigned   
-        WHERE 
-        	regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.regionassigned)#">
-        LIMIT 1
-    </Cfquery>
 
 	<!--- Display only for ESI --->
     <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ESI, CLIENT.companyID)>
 
-        <cfquery name="qESIDistrictChoice" datasource="MySQL">
+        <cfquery name="qESIDistrictChoice" datasource="#APPLICATION.DSN#">
             SELECT 
                 opt1.name as option1,
                 opt2.name as option2,
@@ -269,12 +255,12 @@
                     <!---If the Facilitator is Lois show Admissions email --->
                     <cfif qRegionAssigned.regionfacilitator EQ 21485>
                     	Student Admissions Department <br />
-                        #qGetFacilitator.facilitatorname#<br />
+                        #qFacilitator.firstName# #qFacilitator.lastName#<br />
                         <a href="mailto:admissions@iseusa.org">admissions@iseusa.org</a>
                     <cfelse>
                     	 International Student Exchange Facilitator <br />
-                         #qGetFacilitator.facilitatorname#<br />
-                        <a href="mailto:#qGetFacilitator.facilitatoremail#">#qGetFacilitator.facilitatoremail#</a>
+                         #qFacilitator.firstName# #qFacilitator.lastName#<br />
+                        <a href="mailto:#qFacilitator.email#">#qFacilitator.email#</a>
                      </cfif>
                      <br />
                 <cfelse>	
