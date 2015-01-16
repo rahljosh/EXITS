@@ -264,7 +264,7 @@
 						) 
 					AS CHAR) LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.search#%">
                	<!--- Check if family is approved --->
-                <cfif NOT ListFind("13",CLIENT.companyID) AND NOT (ListFind("1,2,3,4,5,12",CLIENT.companyID) AND ListFind("2,4",qGetProgramInfo.type))>
+                <cfif NOT ListFind("13",CLIENT.companyID)>
                     AND hostID IN (
                         SELECT hostID 
                         FROM smg_host_app_season 
