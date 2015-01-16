@@ -251,11 +251,11 @@
     	<td>
 			<p>Thanks,</p>
             <p>
-                <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISE, CLIENT.companyID)>
+                <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISE, qGetStudentInfo.companyID)>
                     <!---If the Facilitator is Lois show Admissions email --->
-                    <cfif qRegionAssigned.regionfacilitator EQ 21485>
+                    <cfif NOT VAL(qRegionAssigned.regionfacilitator)>
                     	Student Admissions Department <br />
-                        #qFacilitator.firstName# #qFacilitator.lastName#<br />
+                        Lois Culmo<br />
                         <a href="mailto:admissions@iseusa.org">admissions@iseusa.org</a>
                     <cfelse>
                     	 International Student Exchange Facilitator <br />
