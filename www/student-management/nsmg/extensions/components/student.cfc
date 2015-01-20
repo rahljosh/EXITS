@@ -3388,11 +3388,11 @@
         	name="qGetStudentPrimaryLanguageBasedOnCountry"
         	datasource="#APPLICATION.DSN#">
                 SELECT 
-                    clJN.countryID,
-                    clJN.languageID,
+                    cljn.countryID,
+                    cljn.languageID,
                     alu.name
 				FROM
-                	smg_countryLanguageJN clJN
+                	smg_countrylanguagejn cljn
                 INNER JOIN
 					applicationlookup alu ON alu.fieldID = clJN.languageID
                     	AND
