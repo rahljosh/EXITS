@@ -693,15 +693,17 @@
 	$(document).ready(function(){
     $('#sourceCode').on('change', function() {
       if ( this.value == 'Other')
-      {
-        $("#sourceOther").show();
-      }
-      else
-      {
-        $("#sourceOther").hide();
-      }
+		  {
+			$("#sourceOther").show();
+		  }
+		  else
+		  {
+			$("#sourceOther").hide();
+		  }
+	 
     });
 	});
+	
 	// Error handler for the asynchronous functions. 
 	var myErrorHandler = function(statusCode, statusMsg) { 
 		alert('Status: ' + statusCode + ', ' + statusMsg); 
@@ -914,20 +916,23 @@
                             <option value="Facebook" <cfif FORM.sourceCode EQ "Facebook">selected</cfif>>Facebook</option>
                             <option value="Fair / Trade Show" <cfif FORM.sourceCode EQ "Fair / Trade Show">selected</cfif>>Fair / Trade Show</option> 
                             <option value="Google Search" <cfif FORM.sourceCode EQ "Google Search">selected</cfif>>Google Search</option>
-                            <option value="Past Host Family" <cfif FORM.sourceCode EQ "Past Host Family">selected</cfif>>Past Host Family</option>
                             <option value="Newspaper Ad" <cfif FORM.sourceCode EQ "Newspaper Ad">selected</cfif>>Newspaper Ad</option>
+                            <option value="Past Host Family" <cfif FORM.sourceCode EQ "Past Host Family">selected</cfif>>Past Host Family</option>
+                            <option value="Phone-A-Thon" <cfif FORM.sourceCode EQ "Phone-A-Thon">selected</cfif>>Phone-A-Thon</option>
                             <option value="Printed Material" <cfif FORM.sourceCode EQ "Printed Material">selected</cfif>>Printed Material</option>
+                            <option value="Representative" <cfif FORM.sourceCode EQ "Representative" >selected</cfif>>Representative</option> 
                             <option value="Yahoo Search" <cfif FORM.sourceCode EQ "Yahoo Search">selected</cfif>>Yahoo Search</option> 
+                           
                             <option value="Other" <cfif FORM.sourceCode EQ "Other">selected</cfif>>Other</option> 
                         </select>
                     </td>
                 </tr>
            </table>
-            <cfif FORM.sourceCode NEQ "Other"> <div style='display:none;' id='sourceOther'></cfif>
+            <cfif FORM.sourceCode NEQ "Other" AND  (LEN(FORM.sourceOther) eq 0)> <div style='display:none;' id='sourceOther'></cfif>
            <table width="95%" align="center" class="section" border="0" cellpadding="4" cellspacing="0">
               
                 <tr>
-                	<td class="label">Other: <span class="required">*</span></td><td><input type="text" size=25 name="sourceOther" value="#FORM.sourceOther#" placeholder="Other Description" /></td>
+                	<td class="label">Describe: <span class="required">*</span></td><td><input type="text" size=25 name="sourceOther" value="#FORM.sourceOther#" placeholder="Other Description" /></td>
                 </tr>
                
             </table> 
@@ -993,7 +998,7 @@
                 <cfelse>
                     <td align="Center">   
                     <cfif client.companyid neq 13> 
-                        <input name="subAction" id="submitStandard" type="submit" value="Submit"  alt="Submit Paper Application" border="0" class="buttonRed" onclick="verifyAddress('submitStandard'); return false;" />
+                       
                     <cfelse>
                     <input name="subAction" id="submitStandard" type="submit" value="Submit"  alt="Submit Paper Application" border="0" class="buttonRed" />
                     </cfif>
