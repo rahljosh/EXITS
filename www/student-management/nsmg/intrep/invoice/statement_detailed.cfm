@@ -88,6 +88,7 @@ function OpenRefund(url)
                                     <option value="14">ESI</option>
                                     <option value="8">Work and Travel</option>
                                     <option value="7">Trainee</option>
+                                    <option value="13">SMG Canada</option>
                             	</select>
                              </td>
                         </tr>
@@ -151,7 +152,7 @@ function OpenRefund(url)
             	<cfcase value="1">
                 	AND smg_charges.companyid IN (1,2,3,4,5,12)
                 </cfcase>
-            	<cfcase value="7,8,10,14">
+            	<cfcase value="7,8,10,13,14">
                 	AND smg_charges.companyid = #chooseCompany#
                 </cfcase>
             </cfswitch>
@@ -201,7 +202,7 @@ function OpenRefund(url)
             	<cfcase value="1">
                 	AND sch.companyid IN (1,2,3,4,5,12)
                 </cfcase>
-            	<cfcase value="7,8,10,14">
+            	<cfcase value="7,8,10,13,14">
                 	AND sch.companyid = #chooseCompany#
                 </cfcase>  
             </cfswitch>
@@ -251,7 +252,7 @@ function OpenRefund(url)
             	<cfcase value="1">
                 	AND sc.companyid IN (1,2,3,4,5,12)
                 </cfcase>
-            	<cfcase value="7,8,10,14">
+            	<cfcase value="7,8,10,13,14">
                 	AND sc.companyid = #chooseCompany#
                 </cfcase>
             </cfswitch>
@@ -291,7 +292,7 @@ function OpenRefund(url)
             	<cfcase value="1">
                 	AND scr.companyid IN (1,2,3,4,5,12)
                 </cfcase>
-            	<cfcase value="7,8,10,14">
+            	<cfcase value="7,8,10,13,14">
                 	AND scr.companyid = #chooseCompany#
                 </cfcase>
             </cfswitch>   
@@ -322,7 +323,7 @@ function OpenRefund(url)
             	<cfcase value="1">
                 	AND ref.companyid IN (1,2,3,4,5,12)
                 </cfcase>
-            	<cfcase value="7,8,10,14">
+            	<cfcase value="7,8,10,13,14">
                 	AND ref.companyid = #chooseCompany#
                 </cfcase>
             </cfswitch>
@@ -352,7 +353,7 @@ function OpenRefund(url)
             	<cfcase value="1">
                 	AND smg_charges.companyid IN (1,2,3,4,5,12)
                 </cfcase>
-            	<cfcase value="7,8,10,14">
+            	<cfcase value="7,8,10,13,14">
                 	AND smg_charges.companyid = #chooseCompany#
                 </cfcase>
             </cfswitch>
@@ -398,7 +399,7 @@ function OpenRefund(url)
                     <cfcase value="1">
                         AND sch.companyid IN (1,2,3,4,5,12)
                     </cfcase>
-                    <cfcase value="7,8,10,14">
+                    <cfcase value="7,8,10,13,14">
                         AND sch.companyid = #chooseCompany#
                     </cfcase>  
                 </cfswitch>          
@@ -444,7 +445,7 @@ function OpenRefund(url)
                     <cfcase value="1">
                         AND sc.companyid IN (1,2,3,4,5,12)
                     </cfcase>
-                    <cfcase value="7,8,10,14">
+                    <cfcase value="7,8,10,13,14">
                         AND sc.companyid = #chooseCompany#
                     </cfcase>  
                 </cfswitch>
@@ -479,7 +480,7 @@ function OpenRefund(url)
                     <cfcase value="1">
                         AND scr.companyid IN (1,2,3,4,5,12)
                     </cfcase>
-                    <cfcase value="7,8,10,14">
+                    <cfcase value="7,8,10,13,14">
                         AND scr.companyid = #chooseCompany#
                     </cfcase>  
                 </cfswitch>  
@@ -501,7 +502,7 @@ function OpenRefund(url)
             	<cfcase value="1">
                 	AND ref.companyid IN (1,2,3,4,5,12)
                 </cfcase>
-            	<cfcase value="7,8,10,14">
+            	<cfcase value="7,8,10,13,14">
                 	AND ref.companyid = #chooseCompany#
                 </cfcase>
             </cfswitch>
@@ -541,7 +542,7 @@ function OpenRefund(url)
             	<cfcase value="1">
                 	AND smg_charges.companyid IN (1,2,3,4,5,12)
                 </cfcase>
-            	<cfcase value="7,8,10,14">
+            	<cfcase value="7,8,10,13,14">
                 	AND smg_charges.companyid = #chooseCompany#
                 </cfcase>  
             </cfswitch>
@@ -587,7 +588,7 @@ function OpenRefund(url)
                 <cfcase value="1">
                     AND sch.companyid IN (1,2,3,4,5,12)
                 </cfcase>
-                <cfcase value="7,8,10,14">
+                <cfcase value="7,8,10,13,14">
                     AND sch.companyid = #chooseCompany#
                 </cfcase>  
             </cfswitch>       
@@ -634,7 +635,7 @@ function OpenRefund(url)
 
                         AND sc.companyid IN (1,2,3,4,5,12)
                     </cfcase>
-                    <cfcase value="7,8,10,14">
+                    <cfcase value="7,8,10,13,14">
                         AND sc.companyid = #chooseCompany#
                     </cfcase>  
                 </cfswitch>
@@ -669,7 +670,7 @@ function OpenRefund(url)
                     <cfcase value="1">
                         AND scr.companyid IN (1,2,3,4,5,12)
                     </cfcase>
-                    <cfcase value="7,8,10,14">
+                    <cfcase value="7,8,10,13,14">
                         AND scr.companyid = #chooseCompany#
                     </cfcase>  
                 </cfswitch>   
@@ -691,7 +692,7 @@ function OpenRefund(url)
             	<cfcase value="1">
                 	AND ref.companyid IN (1,2,3,4,5,12)
                 </cfcase>
-            	<cfcase value="7,8,10,14">
+            	<cfcase value="7,8,10,13,14">
                 	AND ref.companyid = #chooseCompany#
                 </cfcase>
             </cfswitch>

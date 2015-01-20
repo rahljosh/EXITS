@@ -77,10 +77,10 @@ WHERE
 	<cfif CLIENT.companyid EQ 14>
     	companyID = 14
     <cfelse>
-		companyID IN (1,7,8,9,10,12,14)
+		companyID IN (1,7,8,9,10,12,13,14)
     </cfif>
 AND
-	type NOT IN (6,10,13,14,15,16,17,18,19,20,21)
+	type NOT IN (6,10,14,15,16,17,18,19,20,21)
 ORDER BY 
 	companyid, 
 	startdate DESC
@@ -122,6 +122,7 @@ ORDER BY
                     <cfcase value="8"><cfset compId = 'W&T'></cfcase>
                     <cfcase value="9"><cfset compId = 'H2B'></cfcase>
                     <cfcase value="10"><cfset compId = 'CASE'></cfcase>
+                    <cfcase value="13"><cfset comId = 'SMG Canada'></cfcase>
                     <cfcase value="14"><cfset compId = 'ESI'></cfcase>
                 </cfswitch>
                 <option value="#programid#">#variables.compId# - #getPrograms.programname#</option>
@@ -191,6 +192,7 @@ WHERE
                     <cfcase value="8"><cfset compId = 'W&T'></cfcase>
                     <cfcase value="9"><cfset compId = 'H2B'></cfcase>
 					<cfcase value="10"><cfset compId = 'CASE'></cfcase>
+                    <cfcase value="13"><cfset compID = 'SMG Canada'></cfcase>
                     <cfcase value="14"><cfset compId = 'ESI'></cfcase>
                 </cfswitch>
                 
