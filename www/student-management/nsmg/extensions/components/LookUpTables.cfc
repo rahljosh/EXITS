@@ -464,20 +464,20 @@
         	name="qGetCountryLanguage"
         	datasource="#APPLICATION.DSN#">
                 SELECT 
-                	clJN.ID,
-                    clJN.countryID,
-                    clJN.languageID,
-                    clJN.dateCreated,
-                    clJN.dateUpdated,
+                	cljn.ID,
+                    cljn.countryID,
+                    cljn.languageID,
+                    cljn.dateCreated,
+                    cljn.dateUpdated,
                     alu.name
 				FROM
-                	smg_countrylanguagejn clJN
+                	smg_countrylanguagejn cljn
                 INNER JOIN
-					applicationlookup alu ON alu.fieldID = clJN.languageID
+					applicationlookup alu ON alu.fieldID = cljn.languageID
                     	AND
                         	fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="language">
                 WHERE 
-                    clJN.countryID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.countryID)#">
+                    cljn.countryID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.countryID)#">
         </cfquery> 
 
 		<cfreturn qGetCountryLanguage>
