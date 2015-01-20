@@ -1,9 +1,10 @@
+	
 	<cfif isDefined('form.updateAccessRights')>
-    
-    <cfquery datasource="#application.dsn#">
+   <cfquery datasource="#application.dsn#">
     delete from smg_media_user_access
     where fk_userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.userid#">
     </cfquery> 
+    <Cfif isDefined('form.userMediaAccess')>
     <cfloop list="#form.userMediaAccess#" index="i">
         <cfquery name="insertRights"  datasource="#application.dsn#">
         insert into smg_media_user_access (fk_userid, fk_companyid)
@@ -13,6 +14,7 @@
                             
         </cfquery>
      </cfloop>
+     </Cfif>
      <Cflocation url="?curdoc=user_info&userID=#url.userid#" addtoken="no">
     </cfif>
     
