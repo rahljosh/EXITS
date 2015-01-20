@@ -3394,11 +3394,11 @@
 				FROM
                 	smg_countrylanguagejn cljn
                 INNER JOIN
-					applicationlookup alu ON alu.fieldID = clJN.languageID
+					applicationlookup alu ON alu.fieldID = cljn.languageID
                     	AND
                         	fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="language">
                 INNER JOIN	
-                     smg_students s ON clJN.countryID = s.countryResident
+                     smg_students s ON cljn.countryID = s.countryResident
                      AND
                      	s.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.studentID)#">                
         </cfquery> 
