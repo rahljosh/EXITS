@@ -82,8 +82,9 @@
     
     <!--- Loop Through Months in a season | July needs to be included here --->
     <cfloop from="#qGetSeasonDateRange.startDate#" to="#qGetSeasonDateRange.endDate#" index="i" step="#CreateTimeSpan(31,0,0,0)#">
-       	
-        	<cfset i = DateAdd('m', -1, i)>
+
+   		<!--- This may have been a fix for full year programs, It wasn't working for January programs
+		<cfset i = DateAdd('m', -1, i)>--->
         
         <cfif CLIENT.pr_rmonth EQ DatePart('m', i)>
 			<cfset vSetStartDate =  DateAdd('m', -1, DatePart("yyyy", i) & '-' & DatePart("m", i) & '-01')>
@@ -233,8 +234,8 @@
 
 <cfform action="index.cfm?curdoc=forms/pr_date_form" method="post" name="my_form" onSubmit="return checkForm();">
     <input type="hidden" name="submitted" value="1">
-    <cfinput type="hidden" name="prdate_id" value="#FORM.prdate_id#">
-    <cfinput type="hidden" name="pr_id" value="#FORM.pr_id#">
+    <input type="hidden" name="prdate_id" value="#FORM.prdate_id#">
+    <input type="hidden" name="pr_id" value="#FORM.pr_id#">
 
     <table width="40%" border="0" cellpadding="4" cellspacing="0" class="section" align="center">
         <tr>
@@ -253,7 +254,7 @@
         </tr>
         <tr>
             <td class="label">Date: <span class="redtext">*</span></td>
-            <td><cfinput type="text" name="prdate_date" value="#dateFormat(FORM.prdate_date, 'mm/dd/yyyy')#" class="datePicker" size="10" maxlength="10" mask="99/99/9999" > mm/dd/yyyy</td>
+            <td><input type="text" name="prdate_date" value="#dateFormat(FORM.prdate_date, 'mm/dd/yyyy')#" class="datePicker" size="10" maxlength="10" mask="99/99/9999" > mm/dd/yyyy</td>
         </tr>
         <tr>
             <td class="label">Type: <span class="redtext">*</span></td>
