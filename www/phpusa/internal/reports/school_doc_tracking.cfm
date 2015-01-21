@@ -73,7 +73,7 @@
             php_schools sc ON sc.schoolid = php.schoolid
       	
         LEFT OUTER JOIN
-            applicationLookUp alp ON alp.fieldID = php.return_student
+             applicationlookup alp ON alp.fieldID = php.return_student
                  AND
                     fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="PHPReturnOptions">            
         WHERE
