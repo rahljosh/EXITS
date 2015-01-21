@@ -52,7 +52,7 @@ inner join smg_programs prog on st.programID = prog.programID
 inner join smg_hosthistory hh on st.studentID = hh.studentID
 left outer join (select studentID,flight_type, max(dep_date) as arrival_date from smg_flight_info where flight_type = "arrival" and NOT isdeleted group by studentID) as flarr
 			on st.studentID = flarr.studentiD
-left outer join (select studentID,flight_type, max(dep_date) as departure_date from smg_flight_info where flight_type = "departure" and NOT isdeleted group by studentID) as fldep
+left outer join (select studentID,flight_type, min(dep_date) as departure_date from smg_flight_info where flight_type = "departure" and NOT isdeleted group by studentID) as fldep
 			on st.studentID = fldep.studentiD
 left outer join smg_user_payment_special sppmt on pr.fk_sr_user = sppmt.fk_userID and 
 				((st.studentID = sppmt.forStudent and sppmt.specialpaymenttype = "block") or sppmt.receivesProgressReportPayments = 0)
