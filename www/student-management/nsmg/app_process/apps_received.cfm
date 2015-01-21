@@ -151,8 +151,7 @@
             	)
         </cfif>
         
-        ORDER BY 
-        	#orderby#
+        ORDER BY <cfqueryparam cfsqltype="cf_sql_varchar" value="#orderby#">
     </cfquery>
 
 	<cfif getResults.recordCount>
