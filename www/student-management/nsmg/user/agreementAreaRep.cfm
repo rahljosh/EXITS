@@ -28,7 +28,7 @@
 <div align="center">
     #qGetCompanyInfo.companyname# <br />
     #qGetCompanyInfo.companyname# - (#qGetCompanyInfo.companyshort_nocolor# <br />
-    AYP 2014-2015 Services Agreement
+    AYP 2015-2016 Services Agreement
 </div> <br />
 
 <p>
@@ -421,7 +421,7 @@
         <p>
             (a) <strong>Fast-Track Placement Bonus:</strong> A bonus of $1,500 will be paid by #qGetCompanyInfo.companyshort_nocolor# to
             the AR each time the AR has successfully placed a group of five (5) August arriving students in five (5) permanent homes and 
-            submitted all Department of State and CSIET mandated documentation prior to April 15, #Year(qGetSeason.datePaperworkEnded)#. <!--- Date --->
+            submitted all Department of State and CSIET mandated documentation prior to April 30, #Year(qGetSeason.datePaperworkEnded)#. <!--- Date --->
         </p>
         
         <p>
@@ -458,12 +458,12 @@
 
         <p>
             (b)<strong> Early Placement Bonus:</strong> A bonus of $1,000 will be paid by #qGetCompanyInfo.companyshort_nocolor# to the AR each
-            time the AR has successfully placed a group of five (5) August arriving students in five (5) permanent homes prior to June 3<sup>rd</sup> of the applicable
-            calendar year and upon receipt, prior to June 3<sup>rd</sup>, submitted the Department of State and CSIET mandated documentation.
+            time the AR has successfully placed a group of five (5) August arriving students in five (5) permanent homes prior to June 15<sup>th</sup> of the applicable
+            calendar year and upon receipt, prior to June 15<sup>th</sup>, submitted the Department of State and CSIET mandated documentation.
         </p>
         
         <p>
-            There is no limit to the number of $1,000 Early Placement Bonuses an AR can earn. For example, placing 50 students by June 3<sup>rd</sup> will earn ten (10) Early
+            There is no limit to the number of $1,000 Early Placement Bonuses an AR can earn. For example, placing 50 students by June 15<sup>th</sup> will earn ten (10) Early
             Placement Bonuses, equal to $10,000.
         </p>
         
@@ -501,8 +501,8 @@
         
         <p>
             (c) <strong>Placement Paperwork Bonus:</strong> A bonus of $500 will be paid by #qGetCompanyInfo.companyshort_nocolor# to the AR
-            each time the AR has successfully placed a group of five (5) August arriving students in five (5) permanent homes prior to August 1<sup>st</sup> 
-            of the applicable calendar year and upon receipt, prior to August 1<sup>st</sup>, submitted the Department of State and CSIET mandated documentation.
+        each time the AR has successfully placed a group of five (5) August arriving students in five (5) permanent homes prior to August 31<sup>st</sup> 
+            of the applicable calendar year and upon receipt, prior to August 31<sup>st</sup>, submitted the Department of State and CSIET mandated documentation.
         </p>
         
         <p>
@@ -550,15 +550,9 @@
         <p>
             (d) <strong>Payment of Bonuses:</strong> The Early Placement Bonus and the Placement Paperwork Bonus will be paid as soon as the manager submits the bonus
             request form for the AR and the <cfif CLIENT.companyID EQ 10>New Jersey<cfelse>New York</cfif> office approves it.
-        </p>
-        
-        <p>
-            Bonus payments request forms must be received in the #qGetCompanyInfo.state# office within 30
-            days of the bonus deadline, that is, May 16<sup>th</sup> for the Fast Track Placement Bonus July 2<sup>nd</sup> for the Early Placement Bonus 
-            and September 4<sup>th</sup> for the Placement Paperwork Bonus. Payment request forms received after the due dates will not be eligible for payment.
-        </p>
-        
-    </li> <br />
+    </p>
+    </li> 
+    <br />
 
     <li><strong>Terms and Conditions</strong></li> <br />
 	
