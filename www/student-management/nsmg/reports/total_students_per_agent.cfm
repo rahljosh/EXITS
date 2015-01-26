@@ -129,116 +129,116 @@
             	
                 <cfscript>
 					vTotalApps = 0;
+					
+					// Default Value for Remaining
+					vSetRemaining = "-";
+					
+					// Display appropriate allotment and calculate remaining
+					if ( FORM.startMonth EQ "january" ) {
+						// January
+						vSetAllotment = qGetIntlReps.januaryAllocation;
+					} else { 
+						// August
+						vSetAllotment = qGetIntlReps.augustAllocation;
+					}
+					
+					vSubmitted = 0;
+					vReceived = 0;
+					vOnHold = 0;
+					vAccepted = 0;
 				</cfscript>
                 
-                <tr class="#iif(currentrow MOD 2 ,DE("off") ,DE("on") )#">
-                	<td>#qGetIntlReps.businessname#</td>
-                    <td>#qGetIntlReps.countryName#</td>
-                    
-                    <!--- Inner Loop for Submitted, Received, On Hold, and Accepted --->
-                    <cfloop list='#vApplicationStatusList#' index="i">
-                    
-                        <cfquery name="qGetTotalApps" datasource="#APPLICATION.DSN#">
-                            SELECT
-                                COUNT(s.studentID) AS totalStudents,
-                                studentID                                
-                            FROM 
-                                smg_students s
-                            INNER JOIN 
-                                smg_programs p ON s.programID = p.programID
-                                    AND
-                                        p.type IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vProgramTypeList#" list="yes"> )
-                                    AND
-                                        p.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#">
-                            WHERE 
-                                s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-                            AND
-                                s.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetIntlReps.userid#">
-                            AND 
-                                s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#">
-                           	
-                            <!--- Apps that are not approved have no companyID ( = 0 ) --->                  
-							<cfif CLIENT.companyID EQ 5>
-                                AND
-                                    s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,5,#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )        
-                            <cfelse>
-                                AND
-                                    s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">        
-                            </cfif>        
-                            
-                            <cfif VAL(FORM.countryID)>
-                                AND 
-                                    s.countryresident = ( <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.countryID#" list="yes"> )
-                            </cfif>
-                            
-                        </cfquery>
+                <!--- Inner Loop for Submitted, Received, On Hold, and Accepted --->
+                <cfloop list='#vApplicationStatusList#' index="i">
+                
+                    <cfquery name="qGetTotalApps" datasource="#APPLICATION.DSN#">
+                        SELECT
+                            COUNT(s.studentID) AS totalStudents,
+                            studentID                                
+                        FROM smg_students s
+                        INNER JOIN smg_programs p ON s.programID = p.programID
+                            AND p.type IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vProgramTypeList#" list="yes"> )
+                            AND p.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#">
+                        WHERE s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                        AND s.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetIntlReps.userid#">
+                        AND s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="#i#">
                         
-                        <cfset vTotalApps += qGetTotalApps.totalStudents>
+                        <!--- Apps that are not approved have no companyID ( = 0 ) --->                  
+                        <cfif CLIENT.companyID EQ 5>
+                            AND s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,5,#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )        
+                        <cfelse>
+                            AND s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">        
+                        </cfif>        
                         
-                        <cfif i EQ 7>
-                        	<cfset vTotalSubmitted += qGetTotalApps.totalStudents>
-                        <cfelseif i EQ 8>
-                        	<cfset vTotalReceived += qGetTotalApps.totalStudents>
-                        <cfelseif i EQ 10>
-                        	<cfset vTotalOnHold += qGetTotalApps.totalStudents>
-                        <cfelseif i EQ 11>
-                        	<cfset vTotalAccepted += qGetTotalApps.totalStudents>
+                        <cfif VAL(FORM.countryID)>
+                            AND s.countryresident = ( <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.countryID#" list="yes"> )
                         </cfif>
-                        
-                        <td class="center">#qGetTotalApps.totalStudents#</td>
-                    </cfloop>
+                    </cfquery>
                     
-                    <cfset vTotalStudents += vTotalApps>
-                    
-                    <td class="center">#vTotalApps#</td>
-                    
-					<cfscript>
-						// Default Value for Remaining
-						vSetRemaining = "-";
-						
-                        // Display appropriate allotment and calculate remaining
-                        if ( FORM.startMonth EQ "january" ) {
-                            // January
-                            vSetAllotment = qGetIntlReps.januaryAllocation;
-                        } else { 
-                            // August
-                            vSetAllotment = qGetIntlReps.augustAllocation;
+                    <cfscript>
+                        vTotalApps += qGetTotalApps.totalStudents;
+                        if (i EQ 7) {
+                            vSubmitted = qGetTotalApps.totalStudents;
+                            vTotalSubmitted += qGetTotalApps.totalStudents;
+                        } else if (i EQ 8) {
+                            vReceived = qGetTotalApps.totalStudents;
+                            vTotalReceived += qGetTotalApps.totalStudents;
+                        } else if (i EQ 10) {
+                            vOnHold = qGetTotalApps.totalStudents;
+                            vTotalOnHold += qGetTotalApps.totalStudents;
+                        } else if (i EQ 11) {
+                            vAccepted = qGetTotalApps.totalStudents;
+                            vTotalAccepted += qGetTotalApps.totalStudents;
                         }
                     </cfscript>
                     
-					<cfif VAL(vSetAllotment)>
-
-						<cfscript>
-							vSetColorCode = '';
-							
-							vSetRemaining = vSetAllotment - vTotalApps;
-							vTotalRemaining += vSetRemaining;
-                            vTotalAllotment += vSetAllotment;
-							
-                            // Set up Remaining Days Alert
-                            if ( IsNumeric(vSetRemaining) AND vSetRemaining LTE 0 ) {
-                                vSetColorCode = '##FF0000';
-                            } else if ( IsNumeric(vSetRemaining) AND vSetRemaining LTE 10 ) {
-                                vSetColorCode = '##FFFF00';
-                            }
-                        </cfscript>
-
-                        <td class="center">#vSetAllotment#</td>
-                        <td class="center" bgcolor="#vSetColorCode#">#vSetRemaining#</td>
-                      
-                  	<cfelseif VAL(vTotalApps)>
-                    
-                    	<td class="center">-</td>
-                        <td class="center" bgcolor="##FF0000">-</td>
-                       
-                    <cfelse>
-                    
-                        <td class="center">-</td>
-                        <td class="center">-</td>
+                </cfloop>
+                
+                <cfif VAL(vSetAllotment) OR VAL(vSubmitted)>
+                	<cfscript>
+						vTotalStudents += vTotalApps;
+						vTotalSubmitted += vSubmitted;
+						vTotalReceived += vReceived;
+						vTotalOnHold += vOnHold;
+						vTotalAccepted += vAccepted;
+					</cfscript>
+                
+                	<tr class="#iif(currentrow MOD 2 ,DE("off") ,DE("on") )#">
+                        <td>#qGetIntlReps.businessname#</td>
+                        <td>#qGetIntlReps.countryName#</td>
+                        <td class="center">#vSubmitted#</td>
+                        <td class="center">#vReceived#</td>
+                        <td class="center">#vOnHold#</td>
+                        <td class="center">#vAccepted#</td>
+                        <td class="center">#vTotalApps#</td>
                         
-                    </cfif>
-
-                </tr>
+                        <cfif VAL(vSetAllotment)>
+                            <cfscript>
+                                vSetColorCode = '';
+                                vSetRemaining = vSetAllotment - vTotalApps;
+                                vTotalRemaining += vSetRemaining;
+                                vTotalAllotment += vSetAllotment;
+                                
+                                // Set up Remaining Days Alert
+                                if ( IsNumeric(vSetRemaining) AND vSetRemaining LTE 0 ) {
+                                    vSetColorCode = '##FF0000';
+                                } else if ( IsNumeric(vSetRemaining) AND vSetRemaining LTE 10 ) {
+                                    vSetColorCode = '##FFFF00';
+                                }
+                            </cfscript>
+                            <td class="center">#vSetAllotment#</td>
+                            <td class="center" bgcolor="#vSetColorCode#">#vSetRemaining#</td>
+                        <cfelseif VAL(vTotalApps)>
+                            <td class="center">-</td>
+                            <td class="center" bgcolor="##FF0000">-</td>
+                        <cfelse>
+                            <td class="center">-</td>
+                            <td class="center">-</td>
+                        </cfif>
+    
+                    </tr>
+              	</cfif>
+                    
         	</cfloop>
             
 			<!--- Display Report Total --->            
