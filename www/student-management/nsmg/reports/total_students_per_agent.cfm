@@ -129,6 +129,10 @@
             	
                 <cfscript>
 					vTotalApps = 0;
+					vSubmitted = 0;
+					vReceived = 0;
+					vOnHold = 0;
+					vAccepted = 0;
 					
 					// Default Value for Remaining
 					vSetRemaining = "-";
@@ -141,11 +145,6 @@
 						// August
 						vSetAllotment = qGetIntlReps.augustAllocation;
 					}
-					
-					vSubmitted = 0;
-					vReceived = 0;
-					vOnHold = 0;
-					vAccepted = 0;
 				</cfscript>
                 
                 <!--- Inner Loop for Submitted, Received, On Hold, and Accepted --->
@@ -176,31 +175,28 @@
                     </cfquery>
                     
                     <cfscript>
-                        vTotalApps += qGetTotalApps.totalStudents;
                         if (i EQ 7) {
                             vSubmitted = qGetTotalApps.totalStudents;
-                            vTotalSubmitted += qGetTotalApps.totalStudents;
                         } else if (i EQ 8) {
                             vReceived = qGetTotalApps.totalStudents;
-                            vTotalReceived += qGetTotalApps.totalStudents;
                         } else if (i EQ 10) {
                             vOnHold = qGetTotalApps.totalStudents;
-                            vTotalOnHold += qGetTotalApps.totalStudents;
                         } else if (i EQ 11) {
                             vAccepted = qGetTotalApps.totalStudents;
-                            vTotalAccepted += qGetTotalApps.totalStudents;
                         }
+						vTotalApps = vSubmitted + vReceived + vOnHold + vAccepted;
                     </cfscript>
                     
                 </cfloop>
                 
-                <cfif VAL(vSetAllotment) OR VAL(vSubmitted)>
+                <cfif VAL(vSetAllotment) OR VAL(vTotalApps)>
                 	<cfscript>
-						vTotalStudents += vTotalApps;
 						vTotalSubmitted += vSubmitted;
 						vTotalReceived += vReceived;
 						vTotalOnHold += vOnHold;
 						vTotalAccepted += vAccepted;
+						
+						vTotalStudents += vTotalApps;
 					</cfscript>
                 
                 	<tr class="#iif(currentrow MOD 2 ,DE("off") ,DE("on") )#">
