@@ -238,10 +238,15 @@ Order by birthdate
                         Students Letter n/a				
                     </cfif>
 					&nbsp &nbsp - &nbsp &nbsp
-					<cfif #FileExists("uploadedfiles/letters/parents/#get_student_info.studentid#.pdf")#>
-						<a href="../uploadedfiles/letters/parents/#get_student_info.studentid#.pdf">Parents Letter</a>
-					<cfelse>
-						<a href="javascript:OpenApp('section1/page6print.cfm');">Parents Letter</a>
+					<cfdirectory directory="#AppPath.onlineApp.parentLetter#" name="paletter" filter="#get_student_info.studentID#.*">
+					<cfif ListFind("jpg,gif", LCase(Right(paletter.name, 3)))>
+                        <a href="javascript:OpenApp('print_letter_profile.cfm?studentID=#get_student_info.studentID#&letter=parents');">Parent's Letter</a>
+                    <cfelseif paletter.recordcount>
+                        <a href="../uploadedfiles/letters/parents/#get_student_info.studentid#.pdf" target="_blank">Parent's Letter</a>
+                    <cfelseif get_student_info.app_current_status NEQ 0>
+                        <a href="javascript:OpenApp('section1/page6print.cfm');">Parent's Letter</a>
+                    <cfelse>
+                        Parents Letter n/a
 					</cfif>
 				</cfif>
 				</td></tr>
