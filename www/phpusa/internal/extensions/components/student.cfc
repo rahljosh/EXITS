@@ -1224,7 +1224,7 @@
             
         	<cfinvoke component="internal.extensions.components.email" method="send_mail">
             	<cfinvokeargument name="email_from" value="#APPLICATION.EMAIL.support#">
-                <cfinvokeargument name="email_to" value="#APPLICATION.EMAIL.finance#">
+                <cfinvokeargument name="email_to" value="#APPLICATION.EMAIL.cancellation#">
                 <cfinvokeargument name="email_subject" value="PHP School Change Notification - #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#) - #qGetProgramInfo.programname# (###qGetProgramInfo.programID#) ">
                 <cfinvokeargument name="email_message" value="#vEmailMessage#">
            	</cfinvoke>
