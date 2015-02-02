@@ -105,7 +105,7 @@
                     <!--- Entered By --->
                     CAST(CONCAT(u.firstName, ' ', u.lastName,  ' ##', u.userID) AS CHAR) AS enteredBy
 				FROM
-                	applicationHistory ah 
+                	applicationhistory ah 
                 LEFT OUTER JOIN
                 	smg_users u ON u.userID = ah.enteredByID    
                 WHERE
@@ -149,7 +149,7 @@
             <cfquery 
                 datasource="MySQL">
                     INSERT
-                        applicationHistory
+                        applicationhistory
                      (
                         applicationID,
                         foreignTable,

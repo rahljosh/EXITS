@@ -25,10 +25,18 @@
 			// Server is Local - Set Up URL	
 			if ( APPLICATION.isServerLocal ) {
 				// DEVELOPMENT URL				
-				BGCDirectURL = 'https://model.backgroundchecks.com/integration/bgcdirectpost.aspx';	
-				BGCUser = 'smg1';
-				BGCPassword = 'R3d3x##';
-				BGCAccount = '10005542';
+				//BGCDirectURL = 'https://model.backgroundchecks.com/integration/bgcdirectpost.aspx';	
+				//BGCUser = 'smg1';
+				//BGCPassword = 'R3d3x##';
+				//BGCAccount = '10005542';
+				// PRODUCTION URL
+				BGCDirectURL = 'https://direct.backgroundchecks.com/integration/bgcdirectpost.aspx';
+				// stored in the database
+				BGCUser = '';
+				BGCPassword = '';
+				BGCAccount = '';
+			
+			
 			// Server is Live - Set Up URL						
 			} else {
 				// PRODUCTION URL

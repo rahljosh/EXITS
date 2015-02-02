@@ -582,7 +582,7 @@
             <cfquery 
                 datasource="#APPLICATION.DSN#">
                     UPDATE
-                        smg_hostHistory
+                        smg_hosthistory
                     SET
                         <cfif qGetStudentInfo.doublePlace NEQ ARGUMENTS.doublePlace>
 	                        hasDoublePlacementIDChanged = <cfqueryparam cfsqltype="cf_sql_bit" value="1">,
@@ -660,7 +660,7 @@
     	</cfquery>
 
 		<cfscript>
-			// Insert History - It tracks placement statuses only, placement updates are tracked on smg_hostHistory
+			// Insert History - It tracks placement statuses only, placement updates are tracked on smg_hosthistory
 			insertPlacementActionHistory(
 				studentID=ARGUMENTS.studentID,
 				assignedID=ARGUMENTS.assignedID,
@@ -735,7 +735,7 @@
         </cfquery>
         
 		<cfscript>
-			// Insert New History - It tracks placement statuses only, placement updates are tracked on smg_hostHistory
+			// Insert New History - It tracks placement statuses only, placement updates are tracked on smg_hosthistory
 			insertPlacementActionHistory(
 				studentID=ARGUMENTS.studentID,
 				assignedID=ARGUMENTS.assignedID,
@@ -848,7 +848,7 @@
 				// Insert Actions Into Separate Table
 				APPLICATION.CFC.LOOKUPTABLES.insertApplicationHistory(
 					applicationID=APPLICATION.CONSTANTS.TYPE.EXITS,
-					foreignTable='smg_hostHistory',
+					foreignTable='smg_hosthistory',
 					foreignID=vHostHistoryID,
 					enteredByID=VAL(ARGUMENTS.changedBy),
 					actions=vActions
@@ -1401,7 +1401,7 @@
 				// Insert Actions Into Separate Table
 				APPLICATION.CFC.LOOKUPTABLES.insertApplicationHistory(
 					applicationID=APPLICATION.CONSTANTS.TYPE.EXITS,
-					foreignTable='smg_hostHistory',
+					foreignTable='smg_hosthistory',
 					foreignID=vHostHistoryID,
 					enteredByID=VAL(ARGUMENTS.changedBy),
 					actions=vActions
@@ -1617,7 +1617,7 @@
         <cfquery 
 			datasource="#APPLICATION.DSN#">
                 INSERT INTO 
-                    smg_hostHistoryTracking
+                    smg_hosthistorytracking
                 (
                     historyID,
                     studentID,
@@ -1645,7 +1645,7 @@
             <cfquery 
                 datasource="#APPLICATION.DSN#">
                 	UPDATE
-                    	smg_hostHistory
+                    	smg_hosthistory
                     SET
                     	isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
                     WHERE
