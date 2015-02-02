@@ -325,7 +325,7 @@
                     // Get Actions History
                     qGetActionsHistory = APPLICATION.CFC.LOOKUPTABLES.getApplicationHistory(
                         applicationID=APPLICATION.CONSTANTS.TYPE.EXITS,
-                        foreignTable='smg_hostHistory',
+                        foreignTable='smg_hosthistory',
                         foreignID=qGetPlacementHistory.historyID,
                         sortBy='dateCreated',
                         sortOrder='DESC'
@@ -468,7 +468,7 @@
                             // Get Actions History
                             qGetActionsHistory = APPLICATION.CFC.LOOKUPTABLES.getApplicationHistory(
                                 applicationID=APPLICATION.CONSTANTS.TYPE.EXITS,
-                                foreignTable='smg_hostHistory',
+                                foreignTable='smg_hosthistory',
                                 foreignID=qGetPlacementHistory.historyID,
                                 sortBy='dateCreated',
                                 sortOrder='DESC'

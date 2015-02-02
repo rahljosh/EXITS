@@ -1023,8 +1023,13 @@
                 	<label for="doublePlacementID">Double Placement &nbsp; (optional)</label>
                     
                     <cfif VAL(qGetStudentInfo.doublePlace)>
+                    <cfquery name="doubleUniqueID" datasource="smg">
+                    select uniqueid
+                    from smg_students
+                    where studentid = #qGetStudentInfo.doublePlace#
+                    </cfquery>
                         <div class="placementMgmtLinks">
-                            [ <a href="../../index.cfm?curdoc=student_info&studentID=#qGetStudentInfo.doublePlace#" target="_blank">More Information</a> 
+                            [ <a href="../../index.cfm?curdoc=student/student_info&unqid=#doubleUniqueID.uniqueid#" target="_blank">More Information</a> 
                             |
                             <a href="javascript:displayUpdateField('divDoublePlace','doublePlace');">Update</a> ] 
                         </div>
