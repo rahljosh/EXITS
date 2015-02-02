@@ -217,16 +217,12 @@
 						vSendOutEmail = true;
 						
 						// Insert CBC
-						vIsNoSSN = 0;
-						if (NOT LEN(qGetHostFamilyInfo.fatherSSN)) {
-							vIsNoSSN = 1;
-						}
 						APPLICATION.CFC.CBC.insertHostCBC(
 							hostID=qGetHostFamilyInfo.hostID,
 							cbcType="father",
 							seasonID=APPLICATION.CFC.SESSION.getHostSession().seasonID,
 							companyID=qGetHostFamilyInfo.companyID,
-							isNoSSN=vIsNoSSN,
+							isNoSSN=0,
 							dateAuthorized=NOW());
 					} else {
 						// Set Error Message
@@ -258,16 +254,12 @@
 						vSendOutEmail = true;
 						
 						// Insert CBC
-						vIsNoSSN = 0;
-						if (NOT LEN(qGetHostFamilyInfo.motherSSN)) {
-							vIsNoSSN = 1;
-						}
 						APPLICATION.CFC.CBC.insertHostCBC(
 							hostID=qGetHostFamilyInfo.hostID,
 							cbcType="mother",
 							seasonID=APPLICATION.CFC.SESSION.getHostSession().seasonID,
 							companyID=qGetHostFamilyInfo.companyID,
-							isNoSSN=vIsNoSSN,
+							isNoSSN=0,
 							dateAuthorized=NOW());
 					} else {
 						// Set Error Message
@@ -301,17 +293,13 @@
 							vSendOutEmail = true;
 							
 							// Insert CBC
-							vIsNoSSN = 0;
-							if (NOT LEN(qGetCBCQualifiedMembers.SSN[i])) {
-								vIsNoSSN = 1;
-							}
 							APPLICATION.CFC.CBC.insertHostCBC(
 								hostID=qGetHostFamilyInfo.hostID,
 								cbcType="member",
 								familyMemberID=qGetCBCQualifiedMembers.childID[i],
 								seasonID=APPLICATION.CFC.SESSION.getHostSession().seasonID,
 								companyID=qGetHostFamilyInfo.companyID,
-								isNoSSN=vIsNoSSN,
+								isNoSSN=0,
 								dateAuthorized=NOW());
 						} else {
 							// Set Error Message
