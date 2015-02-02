@@ -66,7 +66,7 @@ Program regulations and the DOS Host Family Welcome letter.</p>
 drugs that have not been prescribed to them by a physician.</li>
 <li style="margin-bottom: 30px;">Exchange students may not operate a motorized vehicle while on the exchange program except when
 accompanied by a licensed professional driving instructor. Students may never operate a family vehicle.</li>
-<li style="margin-bottom: 30px;">Exchange students may not travel overnight without host parent accompaniment unless the trip is part of an
+<li style="margin-bottom: 30px;">Exchange students may not travel overnight without host parent accompaniment unless the trip is part of a
 <cfoutput>#hostInfo.companyshort#</cfoutput>, school or other trip authorized in advance by <cfoutput>#hostInfo.companyshort#</cfoutput>.</li>
 <li style="margin-bottom: 30px;">Exchange student's finances should be kept entirely separate from the host family and host family members
 may not lend money to, nor borrow money from exchange students. The host family may not have access to
