@@ -122,7 +122,7 @@ ORDER BY
                     <cfcase value="8"><cfset compId = 'W&T'></cfcase>
                     <cfcase value="9"><cfset compId = 'H2B'></cfcase>
                     <cfcase value="10"><cfset compId = 'CASE'></cfcase>
-                    <cfcase value="13"><cfset comId = 'SMG Canada'></cfcase>
+                    <cfcase value="13"><cfset compId = 'SMG Canada'></cfcase>
                     <cfcase value="14"><cfset compId = 'ESI'></cfcase>
                 </cfswitch>
                 <option value="#programid#">#variables.compId# - #getPrograms.programname#</option>
