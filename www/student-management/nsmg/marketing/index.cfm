@@ -19,7 +19,7 @@ from smg_marketingmaterial
                 </Cfif>
                  </td><td><h2>
                   <Cfif url.type is 'sm'>
-                 Use these materials on your various social media threads:  Facebook, Twitter, Google +, etc. <br /> Once you open the image, save it to your computer and then past as necessary.
+                 Use these materials on your various social media threads:  Facebook, Twitter, Google +, etc. <br /> Once you open the image, save it to your computer and then post as necessary.
                    <cfelse>
                   Generate print quality versions of these materials that you want to hand out or post at various fairs, gatherings, etc.<br />  Once you open the image, save it to your computer and then print as necessary.
                  </Cfif>

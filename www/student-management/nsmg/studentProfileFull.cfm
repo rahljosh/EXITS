@@ -237,7 +237,7 @@ Order by birthdate
 				</cfif>
 				&nbsp - &nbsp  
 				<cfdirectory directory="#AppPath.onlineApp.parentLetter#" name="paletter" filter="#qGetStudentInfo.studentID#.*">
-				<cfif ListFind("jpg,gif", LCase(Right(paletter.name, 3)))>
+				<cfif ListFind("jpg,gif,pdf", LCase(Right(paletter.name, 3)))>
 					<a href="javascript:OpenApp('student_app/print_letter_profile.cfm?studentID=#qGetStudentInfo.studentID#&letter=parents');">Parent's Letter</a>
 				<cfelseif paletter.recordcount>
 					<a href="uploadedfiles/letters/parents/#paletter.name#" target="_blank">Parent's Letter</a>
