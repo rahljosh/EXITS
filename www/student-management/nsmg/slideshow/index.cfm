@@ -128,7 +128,7 @@ $(".paging a").click(function() {
     <div class="window">
         <div class="image_reel">
         <!---<a href="slideshow/pdfs/ISE/Bonus-Sheet.pdf" rel="1" target="_new"> <img src="slideshow/images/ISE/BonusSheet.png" alt="" /></a>---->
-        	<a href="http://iseaarc.org/wordpress/wp-login.php" rel="1" target="_new"> <img src="slideshow/images/ISE/arrcExits.jpg" alt="" /></a>
+        	<a href="http://iseaarc.org/wordpress/wp-login.php" rel="1" target="_new"> <img src="slideshow/images/ISE/arrcExits.png" alt="" /></a>
             <a href="uploadedFiles/Incentive_trip/incentiveTrip_12.pdf" rel="2" target="_new"> <img src="slideshow/images/ISE/dublin.png" alt="" /></a>
             <a href="slideshow/pdfs/ISE/PreAypBonus.pdf" rel="3" target="_new"> <img src="slideshow/images/ISE/slide_1.jpg" alt="" /></a>
            
@@ -137,10 +137,11 @@ $(".paging a").click(function() {
         </div>
     </div>
     <div class="paging">
-   		<a href="http://iseaarc.org/wordpress/wp-login.php" rel="2">2</a>
-        <a href="slideshow/pdfs/ISE/Bonus-Sheet.pdf" rel="2">2</a>
+   		<a href="http://iseaarc.org/wordpress/wp-login.php" rel="1">1</a>
+         <a href="uploadedFiles/Incentive_trip/incentiveTrip_12.pdf" rel="2">2</a>
+        <a href="slideshow/pdfs/ISE/Bonus-Sheet.pdf" rel="3">3</a>
     	 <!---<a href="slideshow/pdfs/ISE/IncentiveTrip.pdf" rel="2">2</a>--->
-         <a href="uploadedFiles/Incentive_trip/incentiveTrip_12.pdf" rel="3">3</a>
+        
 
          
     </div>
@@ -149,15 +150,17 @@ $(".paging a").click(function() {
 <div class="main_view">
     <div class="window">
         <div class="image_reel">
-       <a href="slideshow/pdfs/CASE/CASEincentive(ireland).pdf" rel="1" target="_new"><img src="slideshow/images/CASE/dublin-ireland.png" alt="" /></a>
-       <a href="slideshow/pdfs/CASE/Bonus-Program-Sheet.pdf" rel="2" target="_new"><img src="slideshow/images/CASE/bonus-program.png" alt="" /></a> 
-       <!----<a href="slideshow/pdfs/CASE/JumpStart-dublin.pdf" rel="3" target="_new"> <img src="slideshow/images/CASE/jump-start.png" alt="" /></a>---->
+        <a href="slideshow/pdfs/CASE/PreAypBonus-2015.pdf" rel="1" target="_new"> <img src="slideshow/images/CASE/casePreAyp-EXITSicon.png" alt="" /></a>
+       <a href="slideshow/pdfs/CASE/CASEincentive(ireland).pdf" rel="2" target="_new"><img src="slideshow/images/CASE/dublin-ireland.png" alt="" /></a>
+       <a href="slideshow/pdfs/CASE/Bonus-Program-Sheet.pdf" rel="3" target="_new"><img src="slideshow/images/CASE/bonus-program.png" alt="" /></a> 
+       
        <!----<a href="uploadedFiles/Incentive_trip/incentiveTrip_10.pdf" rel="2" target="_new"> <img src="slideshow/images/CASE/dublin.png" alt="" /></a> ---->
         </div>
     </div>
     <div class="paging">
-   		 <a href="slideshow/pdfs/CASE/CASEincentive(ireland).pdff" rel="1">1</a>
-		 <a href="slideshow/pdfs/CASE/Bonus-Program-Sheet.pdf" rel="2">2</a> 
+    	 <a href="slideshow/pdfs/CASE/PreAypBonus-2015.pdff" rel="1">1</a>
+   		 <a href="slideshow/pdfs/CASE/CASEincentive(ireland).pdff" rel="2">2</a>
+		 <a href="slideshow/pdfs/CASE/Bonus-Program-Sheet.pdf" rel="3">3</a> 
 		 <!----<a href="slideshow/pdfs/CASE/JumpStart-dublin.pdf" rel="3">3</a>---->
        <!---- <a href="uploadedFiles/Incentive_trip/incentiveTrip_10.pdf" rel="4">4</a>---->
         
