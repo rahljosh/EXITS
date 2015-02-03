@@ -883,7 +883,7 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                 <div class="rdholder" style="width:100%; float:right;"> 
                 
                     <div class="rdtop"> 
-                        <span class="rdtitle">Marketing Materials </span> 
+                        <span class="rdtitle">Area Rep Resources</span> 
                         <em></em>
                     </div>
                     
@@ -891,7 +891,7 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                     
                         <table width=95% align="center" cellpadding=6 cellspacng=0>
                         	<tr>
-                            	<td width=50% bgcolor="##F78E1B" colspan="2" align="center"><font color="white">Social Media</td>
+                            	<td width=50% bgcolor="##F78E1B" colspan="2" align="center"><font color="white">ARRC</td>
                                 <td bgcolor="##1f4a79" colspan="2" align="center"><font color="white">Printable Flyers</td>
                             </tr>
                             <!---_Available for All companies --->
@@ -899,7 +899,8 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                            
                                 <tr>
                                 	<td colspan=2 align="center">
-                                       <a href="?curdoc=marketing/index&type=sm"> <img src="marketing/social-media-2.png" /></a><Br />Click Icon to View Materials
+                                       <a href="http://iseaarc.org/wordpress/wp-login.php"> <img src="pics/logos/ARRC_final.jpg" height=60 /></a><Br />
+                                       Click Icon to Vist ARRC
                                    </td>
                                   	<td colspan=2 align="center">
                                       <a href="?curdoc=marketing/index&type=pr">  <img src="marketing/print-2.png" /></a><Br />Click Icon to View Materials
