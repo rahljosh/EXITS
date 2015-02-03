@@ -660,7 +660,7 @@
     	</cfquery>
 
 		<cfscript>
-			// Insert History - It tracks placement statuses only, placement updates are tracked on smg_hosthistory
+			// Insert History - It tracks placement statuses only, placement updates are tracked on smg_hostHistory
 			insertPlacementActionHistory(
 				studentID=ARGUMENTS.studentID,
 				assignedID=ARGUMENTS.assignedID,
@@ -735,7 +735,7 @@
         </cfquery>
         
 		<cfscript>
-			// Insert New History - It tracks placement statuses only, placement updates are tracked on smg_hosthistory
+			// Insert New History - It tracks placement statuses only, placement updates are tracked on smg_hostHistory
 			insertPlacementActionHistory(
 				studentID=ARGUMENTS.studentID,
 				assignedID=ARGUMENTS.assignedID,
