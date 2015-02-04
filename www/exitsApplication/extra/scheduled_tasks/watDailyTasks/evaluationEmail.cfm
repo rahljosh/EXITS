@@ -41,12 +41,12 @@
           	END AS sentType
 		FROM extra_candidates ec
 		INNER JOIN smg_users u ON u.userID = ec.intRep
-		LEFT OUTER JOIN extra_hostCompany eh ON eh.hostCompanyID = ec.hostCompanyID
+		LEFT OUTER JOIN extra_hostcompany eh ON eh.hostCompanyID = ec.hostCompanyID
 		LEFT OUTER JOIN smg_programs p ON p.programID = ec.programID
-		WHERE ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
-		AND ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-		AND ec.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                       
-		AND ec.applicationStatusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,11" list="yes"> )
+		WHERE ec.companyID = 8
+		AND ec.status = 1
+		AND ec.isDeleted = 0                       
+		AND ec.applicationStatusID IN ( 0,11 )
 		AND (
         	CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 20 DAY)
             OR ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 26 DAY) AND watDateEvaluation1 IS NULL )
@@ -84,12 +84,12 @@
           	END AS sentType
 		FROM extra_candidates ec
 		INNER JOIN smg_users u ON u.userID = ec.intRep
-		LEFT OUTER JOIN extra_hostCompany eh ON eh.hostCompanyID = ec.hostCompanyID
+		LEFT OUTER JOIN extra_hostcompany eh ON eh.hostCompanyID = ec.hostCompanyID
 		LEFT OUTER JOIN smg_programs p ON p.programID = ec.programID
-		WHERE ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
-		AND ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-		AND ec.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                       
-		AND ec.applicationStatusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,11" list="yes"> )
+		WHERE ec.companyID = 8
+		AND ec.status = 1
+		AND ec.isDeleted = 0                       
+		AND ec.applicationStatusID IN ( 0,11 )
 		AND (
         	CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 50 DAY)
 			OR ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 56 DAY) AND watDateEvaluation2 IS NULL )
@@ -127,12 +127,12 @@
           	END AS sentType
 		FROM extra_candidates ec
 		INNER JOIN smg_users u ON u.userID = ec.intRep
-		LEFT OUTER JOIN extra_hostCompany eh ON eh.hostCompanyID = ec.hostCompanyID
+		LEFT OUTER JOIN extra_hostcompany eh ON eh.hostCompanyID = ec.hostCompanyID
 		LEFT OUTER JOIN smg_programs p ON p.programID = ec.programID
-		WHERE ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
-		AND ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-		AND ec.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                       
-		AND ec.applicationStatusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,11" list="yes"> )
+		WHERE ec.companyID = 8
+		AND ec.status = 1
+		AND ec.isDeleted = 0                       
+		AND ec.applicationStatusID IN ( 0,11 )
 		AND (
         	CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 80 DAY)
 			OR ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 86 DAY) AND watDateEvaluation3 IS NULL )
@@ -170,12 +170,12 @@
           	END AS sentType
 		FROM extra_candidates ec
 		INNER JOIN smg_users u ON u.userID = ec.intRep
-		LEFT OUTER JOIN extra_hostCompany eh ON eh.hostCompanyID = ec.hostCompanyID
+		LEFT OUTER JOIN extra_hostcompany eh ON eh.hostCompanyID = ec.hostCompanyID
 		LEFT OUTER JOIN smg_programs p ON p.programID = ec.programID
-		WHERE ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
-		AND ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-		AND ec.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                       
-		AND ec.applicationStatusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,11" list="yes"> )
+		WHERE ec.companyID = 8
+		AND ec.status = 1
+		AND ec.isDeleted = 0                       
+		AND ec.applicationStatusID IN ( 0,11 )
 		AND (
         	CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 120 DAY)
 			OR ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 116 DAY) AND watDateEvaluation4 IS NULL )
@@ -210,12 +210,12 @@
 			IFNULL(eh.name, '') AS hostCompanyName
 		FROM extra_candidates ec
 		INNER JOIN smg_users u ON u.userID = ec.intRep
-		LEFT OUTER JOIN extra_hostCompany eh ON eh.hostCompanyID = ec.hostCompanyID
+		LEFT OUTER JOIN extra_hostcompany eh ON eh.hostCompanyID = ec.hostCompanyID
 		LEFT OUTER JOIN smg_programs p ON p.programID = ec.programID
-		WHERE ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
-		AND ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-		AND ec.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                       
-		AND ec.applicationStatusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,11" list="yes"> )
+		WHERE ec.companyID = 8
+		AND ec.status = 1
+		AND ec.isDeleted = 0                       
+		AND ec.applicationStatusID IN ( 0,11 )
 		AND ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 30 DAY) AND watDateEvaluation1 IS NULL )
         ORDER BY
 			ec.lastName,
@@ -246,12 +246,12 @@
 			IFNULL(eh.name, '') AS hostCompanyName
 		FROM extra_candidates ec
 		INNER JOIN smg_users u ON u.userID = ec.intRep
-		LEFT OUTER JOIN extra_hostCompany eh ON eh.hostCompanyID = ec.hostCompanyID
+		LEFT OUTER JOIN extra_hostcompany eh ON eh.hostCompanyID = ec.hostCompanyID
 		LEFT OUTER JOIN smg_programs p ON p.programID = ec.programID
-		WHERE ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
-		AND ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-		AND ec.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                       
-		AND ec.applicationStatusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,11" list="yes"> )
+		WHERE ec.companyID = 8
+		AND ec.status = 1
+		AND ec.isDeleted = 0                       
+		AND ec.applicationStatusID IN ( 0,11 )
 		AND ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 60 DAY) AND watDateEvaluation2 IS NULL )
         ORDER BY
 			ec.lastName,
@@ -282,12 +282,12 @@
 			IFNULL(eh.name, '') AS hostCompanyName
 		FROM extra_candidates ec
 		INNER JOIN smg_users u ON u.userID = ec.intRep
-		LEFT OUTER JOIN extra_hostCompany eh ON eh.hostCompanyID = ec.hostCompanyID
+		LEFT OUTER JOIN extra_hostcompany eh ON eh.hostCompanyID = ec.hostCompanyID
 		LEFT OUTER JOIN smg_programs p ON p.programID = ec.programID
-		WHERE ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
-		AND ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-		AND ec.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                       
-		AND ec.applicationStatusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,11" list="yes"> )
+		WHERE ec.companyID = 8
+		AND ec.status = 1
+		AND ec.isDeleted = 0                       
+		AND ec.applicationStatusID IN ( 0,11 )
 		AND ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 90 DAY) AND watDateEvaluation3 IS NULL )
         ORDER BY
 			ec.lastName,
@@ -318,12 +318,12 @@
 			IFNULL(eh.name, '') AS hostCompanyName
 		FROM extra_candidates ec
 		INNER JOIN smg_users u ON u.userID = ec.intRep
-		LEFT OUTER JOIN extra_hostCompany eh ON eh.hostCompanyID = ec.hostCompanyID
+		LEFT OUTER JOIN extra_hostcompany eh ON eh.hostCompanyID = ec.hostCompanyID
 		LEFT OUTER JOIN smg_programs p ON p.programID = ec.programID
-		WHERE ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
-		AND ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-		AND ec.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                       
-		AND ec.applicationStatusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,11" list="yes"> )
+		WHERE ec.companyID = 8
+		AND ec.status = 1
+		AND ec.isDeleted = 0                       
+		AND ec.applicationStatusID IN ( 0,11 )
 		AND ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 120 DAY) AND watDateEvaluation4 IS NULL )
         ORDER BY
 			ec.lastName,
