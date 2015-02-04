@@ -159,7 +159,7 @@
 		APPLICATION.EMAIL.errors = 'james@iseusa.com';
 
 		// APPLICATION.PATH.base = getDirectoryFromPath(getBaseTemplatePath());	'
-		APPLICATION.PATH.base = 'C:/websites/www/exitsApplication/extra/internal/';
+		APPLICATION.PATH.base = 'C:/websites/exitsApplication/extra/internal/';
 		
 		APPLICATION.KEY.googleMapsAPI = 'ABQIAAAAiT0TfDoNFmmMRtOgGZNu_RQ7SAcFHxXg_-mJGkd4r8IEQsqs-RTA-mZLUkFOvNCYFwvV4y4wGdOOyg'; // URL: http://smg.local
 
@@ -188,7 +188,9 @@
 	
 	// Set Uploaded Files 
 	APPLICATION.PATH.uploadedFiles = APPLICATION.PATH.base & 'uploadedFiles/';
-
+	
+	APPLICATION.PATH.sevis = APPLICATION.PATH.uploadedFiles & 'sevis/';
+	
 	APPLICATION.PATH.pdfFiles = APPLICATION.PATH.uploadedFiles & 'pdf_docs/';
 	
 	APPLICATION.PATH.TRAINEE.pdfDocs = APPLICATION.PATH.pdfFiles & 'trainee/';
