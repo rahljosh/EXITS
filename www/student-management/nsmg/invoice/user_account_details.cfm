@@ -1104,6 +1104,10 @@ WHERE su.userid = #url.userid#
 		<cfset compName = "esi">
 		<cfset emailFrom = 'stacy@exchange-service.org'>
 	</cfcase>
+    <cfcase value="13">
+		<cfset compName = "smgcanada">
+		<cfset emailFrom = 'jennifer@case-usa.org'>
+	</cfcase>
 	<cfdefaultcase>
 		<cfset compName = "ise">
 		<cfset emailFrom = 'jennifer@iseusa.org'>
@@ -1161,10 +1165,14 @@ Please find attached your invoices.<br/>
 <font color="##FF0000"><strong>IMPORTANT</strong></font>: In order to avoid balance differences, please check if everything is being correctly charged. If you find an error, please let me know as soon as possible so that I may adjust your account accordingly.<br/>
 
 <font color="##FF0000"><strong>PAYMENT INSTRUCTION</strong></font>: For every payment remitted, please send me an e-mail with the wire receipt for proper payment identification. Please also include the invoice number and respective amounts being paid on all payment information so that I am able to record the payments correctly.<br/>
-Payments by check should be mailed directly to our office address (Do not mail checks directly to our bank).<br/>
 
+		<cfif FORM.companyID NEQ 13>
+        Payments by check should be mailed directly to our office address (Do not mail checks directly to our bank).<br/>
+        </cfif>
+        
 		<cfif FORM.companyID EQ 14>
-            Please keep in mind that the deposit is required before the districts will release the I-20. Final payment is required before our office will release the I-20 to you.<br/><br/>
+            Please keep in mind that the deposit is required before the districts will release the I-20. Final payment is required before our office will release the 			
+            I-20 to you.<br/><br/>
             
             Thank you for your cooperation,<br/>
             Stacy
@@ -1183,6 +1191,10 @@ Payments by check should be mailed directly to our office address (Do not mail c
             jennifer@iseusa.org<br/><br/>
             
             visit our web site at #CLIENT.exits_url#</small>
+        <cfelseif FORM.companyID EQ 13>
+        	Thank you for your cooperation,<br/><br/>
+            
+            SMG Canada  
        	<cfelse>
         	Thank you for your cooperation,<br/><br/>
             
@@ -1215,6 +1227,9 @@ These confirmations are one more effort to keep both, yours and our records in t
 		<cfif FORM.companyID EQ 14>            
             Thank you for your cooperation,<br/>
             Stacy
+        <cfelseif FORM.companyID EQ 13>
+        	Thank you for your cooperation,<br/>
+            SMG Canada    
         <cfelse>
             Thank you for your cooperation,<br/><br/>
             
