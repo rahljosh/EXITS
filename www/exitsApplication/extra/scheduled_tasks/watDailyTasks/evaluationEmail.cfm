@@ -177,7 +177,7 @@
 		AND ec.isDeleted = 0                       
 		AND ec.applicationStatusID IN ( 0,11 )
 		AND (
-        	CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 120 DAY)
+        	CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 110 DAY)
 			OR ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 116 DAY) AND watDateEvaluation4 IS NULL )
 			OR ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 121 DAY) AND watDateEvaluation4 IS NULL ) )
         ORDER BY
