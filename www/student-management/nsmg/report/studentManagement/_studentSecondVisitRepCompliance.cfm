@@ -281,49 +281,21 @@
                             </cfif>
                             
                     ) AS t
-                WHERE
-                    <!--- Only Approved Placement has a datePlaced --->
-                    datePlaced IS NOT NULL
-                    
-                    <!--- Do not include records that are set as not required / hidden --->
-                    AND
-                        studentID NOT IN ( 
-                            SELECT shr.fk_student 
-                            FROM smg_hide_reports shr 
-                            WHERE shr.fk_host = hostID 
-                        ) 
-                    
-                    <!--- Include Active and students that canceled after arrival date --->
-                    AND
-                        (
-                            active = 1               	 
-                         OR
-                            cancelDate >= dateArrived                  
-                        )
-                        
-                        AND (datePlacedEnded >= dateArrived OR datePlacedEnded IS NULL OR dateArrived IS NULL)
+                WHERE datePlaced IS NOT NULL
+                AND studentID NOT IN ( 
+                    SELECT shr.fk_student 
+                    FROM smg_hide_reports shr 
+                    WHERE shr.fk_host = hostID )
+                AND ( active = 1 OR cancelDate >= dateArrived )
+                AND (datePlacedEnded >= dateArrived OR datePlacedEnded IS NULL OR dateArrived IS NULL)
                 	         
-                GROUP BY
-                    <!--- historyID, ---> <!--- Will get duplicate records but will avoid not displaying students if they have more than one record for the same host family --->
-                    studentID,
+                GROUP BY 
+                	studentID, 
                     hostID
-                
-                <!--- Display present records (current placements) or records with a days diff > 0 --->
-                HAVING
-                
-                (
-                    totalAssignedPeriod IS NULL
-                OR
-                    totalAssignedPeriod > 0
-                )
+                HAVING ( totalAssignedPeriod IS NULL OR totalAssignedPeriod >= complianceWindow )
                 
                 <cfif VAL(FORM.isDueSoon)>
-                    AND
-                        (
-                            remainingDays <= 14
-                        OR
-                            remainingDays IS NULL
-                        )       
+                    AND ( remainingDays <= 14 OR remainingDays IS NULL )       
                 </cfif>
                     
                 ORDER BY
