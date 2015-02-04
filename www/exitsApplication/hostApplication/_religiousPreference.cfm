@@ -245,31 +245,27 @@
             <tr bgcolor="##deeaf3">
                 <td colspan="2">
                     <cfinput type="radio" name="religious_participation" id="religious_participation1" onclick="document.getElementById('showname').style.display='table-row';" checked="#FORM.religious_participation is 'Active'#" value="Active" > 
-                    <label for="religious_participation1">Active (2+ times a week)</label>
-                </td>
+                    <label for="religious_participation1">Two or more times per week</label></td>
             </tr>
             <tr>
                 <td colspan="2">
                 	<cfinput type="radio" name="religious_participation" id="religious_participation2" onclick="document.getElementById('showname').style.display='table-row';" value="Average" checked="#FORM.religious_participation is 'Average'#">
-                    <label for="religious_participation2">Average (1-2x a week)</label>
-                </td>
+                    Once per week</td>
             </tr>
             <tr bgcolor="##deeaf3">
                 <td colspan="2">
                 	<cfinput type="radio" name="religious_participation" id="religious_participation3" onclick="document.getElementById('showname').style.display='table-row';" value="Little Interest" checked="#FORM.religious_participation is 'Little Interest'#">
-                	<label for="religious_participation3">Little Interest (occasionally)</label>
-                </td>
+                	<label for="religious_participation3">Infrequently</label></td>
             </tr>
             <tr>
                 <td colspan="2">
                     <cfinput type="radio" name="religious_participation" id="religious_participation4" value="Inactive" onclick="document.getElementById('showname').style.display='none';" checked="#FORM.religious_participation is 'Inactive'#" >
-                    <label for="religious_participation4">Inactive (Never attend)</label>
-                </td>
+                    <label for="religious_participation4">Do not attend</label></td>
             </tr>
             <tr bgcolor="##deeaf3">
                 <td colspan="2">
                 	<cfinput type="radio" name="religious_participation" id="religious_participation5" onclick="document.getElementById('showname').style.display='table-row';" value="No Interest" checked="#FORM.religious_participation is 'No Interest'#">
-                    <label for="religious_participation5">Holidays</label>
+                    <label for="religious_participation5">Religious Holidays</label>
                 </td>
             </tr>
             <tr colspan="2" id="showname" <cfif FORM.religious_participation EQ "Inactive">class="displayNone"</cfif>>
