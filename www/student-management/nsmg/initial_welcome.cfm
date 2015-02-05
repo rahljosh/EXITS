@@ -895,7 +895,7 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                                 <td bgcolor="##1f4a79" colspan="2" align="center"><font color="white">Printable Flyers</td>
                             </tr>
                             <!---_Available for All companies --->
-                            <cfif ListFind("1,2,3,4,5,12,15", CLIENT.companyID) >
+                            <cfif ListFind("1,2,3,4,5,12", CLIENT.companyID) >
                            
                                 <tr>
                                 	<td colspan=2 align="center">
