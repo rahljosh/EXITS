@@ -823,7 +823,7 @@
                     aps.statusID,
                     count(candidateID) AS total              
                 FROM 
-                    applicationStatus aps               
+                    applicationstatus aps               
                 LEFT OUTER JOIN                
                     extra_candidates ec ON aps.StatusID = ec.applicationStatusID 
                     	AND 
@@ -877,7 +877,7 @@
                 INNER JOIN	
                 	smg_users u ON u.userID = c.intRep
                 LEFT OUTER JOIN                
-                      applicationStatusJn ast ON ast.foreignID = c.candidateID
+                      applicationstatusjn ast ON ast.foreignID = c.candidateID
                       AND
                          ast.foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.foreignTable#"> 
 					  AND 
@@ -1251,7 +1251,7 @@
                     eh.name AS hostCompanyName
                 FROM extra_incident_report eir
                 INNER JOIN extra_candidates ec ON ec.candidateID = eir.candidateID
-				LEFT OUTER JOIN extra_hostCompany eh ON eh.hostCompanyID = eir.hostCompanyID                    
+				LEFT OUTER JOIN extra_hostcompany eh ON eh.hostCompanyID = eir.hostCompanyID                    
                 WHERE 1 = 1 
 
 				<cfif LEN(ARGUMENTS.incidentID)>
@@ -1722,7 +1722,7 @@
 				INNER JOIN
                 	smg_users u ON u.userID = ec.intRep
                 LEFT OUTER JOIN
-                	extra_hostCompany eh ON eh.hostCompanyID = ec.hostCompanyID
+                	extra_hostcompany eh ON eh.hostCompanyID = ec.hostCompanyID
                 LEFT OUTER JOIN
                 	smg_programs p ON p.programID = ec.programID
               	LEFT OUTER JOIN extra_evaluation_tracking t ON t.id = (
@@ -2167,7 +2167,7 @@
                 LEFT OUTER JOIN
                 	smg_programs p ON p.programID = ec.programID
                 LEFT OUTER JOIN
-                	extra_hostCompany eh ON eh.hostCompanyID = ec.hostCompanyID
+                	extra_hostcompany eh ON eh.hostCompanyID = ec.hostCompanyID
                 LEFT OUTER JOIN extra_evaluation ee ON ee.candidateID = ec.candidateID
 						AND ee.monthEvaluation = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.monthEvaluation)#">
 						<!--- This makes sure that we are selecting the most recent evaluation for this month --->
