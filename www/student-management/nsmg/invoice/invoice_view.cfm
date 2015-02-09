@@ -307,12 +307,18 @@
                             <img src="../../nsmg/pics/case_banner.jpg" width="665" height="113" align="center" />
                         </cfcase>
                         
-                        <!--- ESI --->
+                        <!--- SMG Canada --->
+                        <cfcase value="13">
+                            <img src="../../nsmg/pics/Canada_logo_1.png" width="665" height="80" align="center" />
+                        </cfcase>
+                        
+						<!--- ESI --->
                         <cfcase value="14">
                             <img src="../../nsmg/pics/esiBanner.jpg" width="665" height="80" align="center" />
                         </cfcase>
                         
-                        <!--- ISE --->   
+                        
+                  <!--- ISE --->   
                         <cfdefaultcase>
                             <img src="../../nsmg/pics/ise_banner.jpg" align="center" />
                         </cfdefaultcase>
@@ -424,6 +430,23 @@
                             SWIFT code:  CHASUS33<br /><br />
                         </cfcase>
                         
+                         <!--- SMG Canada --->
+                        <cfcase value="13">
+                            <span class="style3">Student Management Group, Inc.</span><br />
+                            Student Management Group, Inc.<br />
+                            119 Cooper St.<br />
+                            Babylon, NY 11702 <br /><br />
+                            <strong>Intermediary Bank</strong><br />
+                            SWIFT/BIC: ROYCCAT2<br />
+                            Royal Bank of Canada, Toronto<br />
+                            Account No: 07172-100-012-4 <br /><br />
+                            <strong>Beneficiary Bank</strong><br />
+                            SWIFT/BIC: CHASCATTCTS<br />
+                            JPMorgan Chase Bank, N.A., Toronto Branch<br />
+                            Account No: 4683000887<br /><br />
+                            <strong>For EFT/ACH Payments </strong> - Transit No. 00012 - Bank No. 270<br /><br />
+                  </cfcase>
+                        
                         <!--- ISE --->
                         <cfdefaultcase>
                             <span class="style3">
@@ -458,7 +481,7 @@
                 #qGetIntlRepInfo.billing_company#<br />
                 #qGetIntlRepInfo.billing_contact#<br />
                 #qGetIntlRepInfo.billing_address#<br />
-                <cfif NOT LEN(qGetIntlRepInfo.billing_address2)>#qGetIntlRepInfo.billing_address2# <br /></cfif>
+              <cfif NOT LEN(qGetIntlRepInfo.billing_address2)>#qGetIntlRepInfo.billing_address2# <br /></cfif>
                 #qGetIntlRepInfo.billing_city# #qGetIntlRepInfo.billcountryname# #qGetIntlRepInfo.billing_zip#<br />
                 E: #qGetIntlRepInfo.billing_email#<br />
                 P: #qGetIntlRepInfo.billing_phone#<br />
@@ -481,7 +504,7 @@
                 <td valign=top class="thin-border-left-bottom-right">
 	                #qGetIntlRepInfo.businessname# (#qGetIntlRepInfo.userid#)<br />
     	            #qGetIntlRepInfo.firstname# #qGetIntlRepInfo.lastname#<br />
-        	        #qGetIntlRepInfo.address#<br />
+   	            #qGetIntlRepInfo.address#<br />
             	    <cfif NOT LEN(qGetIntlRepInfo.address2)>#qGetIntlRepInfo.address2#<br /></cfif>
                 	#qGetIntlRepInfo.city#, #qGetIntlRepInfo.countryname# #qGetIntlRepInfo.zip#<br />
 	                E: #qGetIntlRepInfo.email#<br />
@@ -519,8 +542,7 @@
             <tr>
                 <td></td>
                 <td colspan="3">
-                    <font color="##FF0000">Note: If the charge for Insurance and Sevis is $0.00, it means that they are included in the program fee.</font>
-                </td>
+                    <font color="##FF0000">Note: If the charge for Insurance and Sevis is $0.00, it means that they are included in the program fee, or not relevant to program.</font></td>
             </tr>
         
         </cfif>
@@ -663,15 +685,20 @@
                             <img src="../../nsmg/pics/logos/14.gif" />
                         </cfcase>
                         
+                        <!--- SMG Canada --->
+                        <cfcase value="13">
+                        <img src="../../nsmg/pics/logos/13_header_logo.png" />
+                        </cfcase>
+                        
                         <!--- ISE / CASE --->
                         <cfdefaultcase>
-                            <img src="../../nsmg/pics/logos/#qGetInvoiceInfo.companyid#.gif" height="100"/>
+                        <img src="../../nsmg/pics/logos/#qGetInvoiceInfo.companyid#.gif" height="100"/>
                         </cfdefaultcase>
                     
                     </cfswitch>                        
                 
                 </cfif>
-            </td>
+          </td>
             <td width="300" colspan="7" height="50" align="right" class="thin-border-left-bottom"><strong>SUB - TOTAL:</strong></td>
             <td align="right" class="thin-border-right-bottom"><strong>#LSCurrencyFormat(qTotalDue.total_due,'local')#</td>
         </tr>
