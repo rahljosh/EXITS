@@ -88,15 +88,15 @@ function CheckPrivate() {
 		<td width="26" class="tablecenter"><img src="../pics/students.gif"></td>
 		<td class="tablecenter"><h2>Page [18] - Private School</h2></td>
 		<!--- Do not display for Exchange Service or Canada Application --->
-		<cfif CLIENT.companyID NEQ 14 AND NOT ListFind("14,15,16", get_student_info.app_indicated_program)> 
+		<cfif CLIENT.companyID NEQ 14 AND NOT ListFind("13,14,15", get_student_info.app_indicated_program)> 
 	        <td align="right" class="tablecenter"><a href="" onClick="javascript: win=window.open('section4/page18print.cfm', 'Reports', 'height=600, width=800, location=no, scrollbars=yes, menubars=no, toolbars=yes, resizable=yes'); win.opener=self; return false;"><img src="pics/printhispage.gif" border="0" alt="Click here to print this page"></img></A>&nbsp; &nbsp;</td>
 		</cfif>
         <td width="42" class="tableside"><img src="pics/p_topright.gif" width="42"></td>
 	</tr>
 </table>
 
-<!--- Do not display for ESI or Canada Application --->
-<cfif CLIENT.companyID EQ 14 OR ListFind("14,15,16", get_student_info.app_indicated_program)> 
+<!--- Do not display for ESI, Canada, or DASH Application --->
+<cfif CLIENT.companyID EQ 14 OR ListFind("13,14,15", get_student_info.app_indicated_program)> 
 
 	<div class="section"><br>
         <br><Br><br>

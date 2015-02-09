@@ -20,11 +20,17 @@
         	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.studentid#">
     </cfquery>
 	
-    <cfif client.companyid eq 14>
+    <cfif client.companyid eq 14 or client.companyid eq 15>
     	<cfset progDesig = "F-1">
     <cfelse>
     	<cfset progDesig = "J-1">
     </cfif>
+    
+    <cfif client.companyid eq 15>
+    	<cfset companyName = "DASH, Inc.">
+	<cfelse>
+    	<cfset companyName = "International Student Exchange, Inc.">
+	</cfif>
     
 	<cfparam name="subject" default="son/daughter">
 	<cfparam name="subjectivePronoun" default="he/she">
@@ -121,11 +127,12 @@ The Exchange Student will abide by the federal, state, and local laws of the Uni
 <p>The Exchange Student and his Parents acknowledge that DMD/PHP reserves the right to dismiss any student who fails to uphold any and all of the rules listed above, detailed in the student handbook, or detailed in any government or industry regulation. DMD/PHP also reserves the right to dismiss students for other inappropriate behaviors and/or actions not explicitly stated in the rules above or student handbook, that in DMD/PHP’s reasonable judgment negatively impact the host family, community or program. In the event that a student is dismissed from the program, the parent or natural guardians are responsible for all additional expenses incurred above those of the regular program costs. In the case of early dismissal, program fees will not be reimbursed.</p>
 <p>The Exchange Student and his Parents acknowledge that DMD/PHP is not acting in the capacity of in loco parentis with respect to you, and that your natural parents still retain all of their rights and obligations and are expected to maintain regular and frequent (once or twice per month) contact with you telephonically, electronically or in person (if possible, after five months of your program start date).</p>
 </cfsavecontent>
+
 <!--- Public High School Agreement --->
 <cfsavecontent variable="publicAgreement">
     <p style="font-size:10px; padding-left:10px;">
         In the City of #cityInfo#, country of #countryInfo#, on the #dayInfo# day of #monthInfo# in the year of #yearInfo#, I/We the undersigned parents of #studentInfo# my/our #subject#, 
-        and I, the "Exchange Student", understand and agree that this agreement shall constitute a binding contract between the undersigned and "#client.companyshort#". "#client.companyshort#" is defined to include: International Student Exchange, Inc., its affiliates, and their owners, directors, officers, and employees.
+        and I, the "Exchange Student", understand and agree that this agreement shall constitute a binding contract between the undersigned and "#client.companyshort#". "#client.companyshort#" is defined to include: #companyName#, its affiliates, and their owners, directors, officers, and employees.
     </p>
     
     <ol style="font-size:10px; padding-right:10px;">
