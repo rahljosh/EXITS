@@ -96,7 +96,7 @@ function CheckPrivate() {
 </table>
 
 <!--- Do not display for ESI, Canada, or DASH Application --->
-<cfif CLIENT.companyID EQ 14 OR ListFind("13,14,15", get_student_info.app_indicated_program)> 
+<cfif CLIENT.companyID EQ 15 OR CLIENT.companyID EQ 14 OR CLIENT.companyID EQ 13> 
 
 	<div class="section"><br>
         <br><Br><br>
