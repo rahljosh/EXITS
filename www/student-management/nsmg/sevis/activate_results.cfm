@@ -76,7 +76,7 @@
 			<td align="center" class="style2">#stuID#</td><td align="center" class="style2">#SevisID#</td><td class="style2">&nbsp; OK &nbsp; - &nbsp; Student Active!</td>
 			</cfoutput>
 			<cfquery name="update_active_batch" datasource="MySql">
-				UPDATE smg_students
+				UPDATE extra_candidates
 				SET sevis_activated = '#Right(batchid, 4)#'
 				WHERE studentid = '#stuID#'
 			</cfquery>
@@ -89,7 +89,7 @@
 			</cfoutput>
 			<cfif find("status type is ACTIVE",reason) is '0'> <!--- ANY ERROR --->
 				<cfquery name="update_ds2019" datasource="MySql"> <!--- UPDATE SEVIS ACTIVATED TO 0 --->
-					UPDATE smg_students
+					UPDATE extra_candidates
 					SET sevis_activated ='0'
 					WHERE studentid = '#stuID#'
 				</cfquery>

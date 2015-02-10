@@ -18,10 +18,99 @@
 
     <cfparam name="batch_type" default="activate">
 
-	<cfscript>
-        // Get Programs
-        qGetPrograms = APPCFC.PROGRAM.getPrograms(dateActive=1);
-    </cfscript>
+	<cfquery 
+			name="qGetPrograms" 
+			datasource="#APPLICATION.DSN.Source#">
+                SELECT
+					p.programID,
+                    p.programName,
+                    p.type,
+                    p.startDate,
+                    p.endDate,
+                    p.applicationDeadline,
+                    p.insurance_startDate,
+                    p.insurance_endDate,
+                    p.sevis_startDate,
+                    p.sevis_endDate,
+                    p.preAyp_date,
+                    p.companyID,
+                    p.programFee,
+                    p.application_fee,
+                    p.insurance_w_deduct,
+                    p.insurance_wo_deduct,
+                    p.blank,
+                    p.hold,
+                    p.progress_reports_active,
+                    p.seasonID,
+                    p.smgSeasonID,
+                    p.tripID,
+                    p.active,
+                    p.fieldViewable,
+                    p.insurance_batch,
+                    c.companyName,
+                    c.companyShort,
+                    s.season as seasonname
+                FROM 
+                    smg_programs p
+				LEFT OUTER JOIN
+                	smg_companies c ON c.companyID = p.companyID                    
+                LEFT OUTER JOIN 
+                	smg_seasons s on s.seasonID = p.seasonID
+                WHERE
+                	p.is_deleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+				
+                <!--- Canada and ESI hast it's own programs --->
+            
+                    AND
+                        p.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
+              	    
+                
+				<cfif VAL(ARGUMENTS.programID)>
+                	AND
+                    	p.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#">
+                </cfif>
+                
+                <cfif LEN(ARGUMENTS.programIDList)>
+                	AND
+                    	p.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programIDList#" list="yes"> )
+                </cfif>
+                
+				<cfif LEN(ARGUMENTS.isActive)>
+                	AND
+                    	p.active = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.isActive)#">
+                </cfif>
+
+				<cfif VAL(ARGUMENTS.dateActive)>
+                    AND
+                    	p.startDate <= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('m', 6, now())#">
+                    AND
+                    	p.endDate >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('m', -3, now())#">
+                </cfif>
+
+				<cfif VAL(ARGUMENTS.isEndingSoon)>
+                    AND
+                    	( p.endDate BETWEEN <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('m', -3, now())#"> AND <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('m', 3, now())#"> ) 
+                </cfif>
+
+				<cfif VAL(ARGUMENTS.isFullYear)>
+                    AND
+                    	p.type IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,5" list="yes"> )
+                </cfif>
+
+				<cfif VAL(ARGUMENTS.isUpcomingProgram)>
+                    AND
+                    	p.startDate >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('m', -1, now())#">
+                </cfif>
+				
+				<cfif LEN(ARGUMENTS.seasonIDs)>
+					AND
+						p.seasonID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.seasonIDs#" list="true"> )
+				</cfif>
+				
+                ORDER BY 
+                   p.startDate DESC,
+                   p.programName
+		</cfquery>
 
 	<!-----Company Information----->
     <cfquery name="get_company" datasource="MySQL">

@@ -24,19 +24,20 @@
 		<cfif IsDefined('batch_type')>AND type = '#batch_type#'</cfif>
 	ORDER BY s.batchID DESC
 </cfquery>
-
+<!----Uploads---->
 <!--- https://egov.ice.gov/sbtsevis BETA WEBSITE--->
 <!--- https://egov.ice.gov/sbtsevisbatch/action/batchUpload  BETA SERVER--->
+<!----https://egov.ice.gov/sevisbatch/action/batchUpload  LIVE---->
 
-
+<!----Downloads---->
 <!--- https://egov.ice.gov/sbtsevisbatch/action/batchDownload BETA SERVER--->
-
+<!---- https://egov.ice.gov/sevisbatch/action/batchDownload ---->
 <cfoutput>
 <table cellpadding=6 cellspacing="0" align="center" width="98%">
 <tr><td width="50%">
 	<Table class="nav_bar" cellpadding=6 cellspacing="0" align="center" width="100%">
-		<th align="center" bgcolor="ededed">#CLIENT.DSFormName# - Upload XML File to DS</th></tr>
-		<td><form method="post" enctype="multipart/form-data" action="https://egov.ice.gov/sevisbatch/action/batchUpload">
+		<th align="center" bgcolor="ededed">DS-2019 - Upload XML File to DS</th></tr>
+		<td><form method="post" enctype="multipart/form-data" action="https://egov.ice.gov/sbtsevisbatch/action/batchUpload">
 			XML: <Span Style="Width:10"></Span><input type="file" name="xml" id="xml=" size="18"><br>
 			Batch ID: <span style="width:24"></span>
 				<select name="batchid" id="batchid=">
@@ -55,8 +56,8 @@
 </td>
 <td width="50%" valign="top">
 	<Table class="nav_bar" cellpadding=6 cellspacing="0" align="center" width="100%">
-		<th align="center" bgcolor="ededed">#CLIENT.DSFormName# - Download ZIP File from DS</th></tr>
-		<td><form method="get" enctype="multipart/form-data" action="https://egov.ice.gov/sevisbatch/action/batchDownload"/>
+		<th align="center" bgcolor="ededed">DS-2019 - Download ZIP File from DS</th></tr>
+		<td><form method="get" enctype="multipart/form-data" action="https://egov.ice.gov/sbtsevisbatch/action/batchDownload"/>
 			Batch ID: <span style="width:24"></span>
 				<select name="batchid" id="batchid=">
 					<cfloop query="get_batches">

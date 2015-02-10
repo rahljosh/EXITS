@@ -80,12 +80,12 @@
 			<td align="center" class="style2">#stuID#</td><td align="center" class="style2">#SevisID#</td><td class="style2">&nbsp; OK &nbsp; - &nbsp; System Updated!</td>
 			</cfoutput>
  			<cfquery name="update_ds2019" datasource="MySql">
-				UPDATE smg_students
+				UPDATE extra_candidates
 				SET 
-                	ds2019_no = <cfqueryparam cfsqltype="cf_sql_varchar" value="#SevisID#">, 
+                	ds2019 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#SevisID#">, 
                     sevis_batchid = <cfqueryparam cfsqltype="cf_sql_integer" value="#Right(batchid, 4)#">
 				WHERE
-                	studentid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#stuID#"> <!--- Right(stuID, 5) --->
+                	candidateid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#stuID#"> <!--- Right(stuID, 5) --->
 			</cfquery>
 		<!--- ERROR - DS 2019 WAS NOT CREATED --->	
 		<cfelse> 
@@ -95,7 +95,7 @@
 			<td class="style1" align="center">#stuID#</td><td class="style1" align="center">Error Code: #errorcode#</td><td class="style1">&nbsp; #reason#</td>
 			</cfoutput>
  			<cfquery name="update_ds2019" datasource="MySql"> <!--- UPDATE SEVIS BATCH ID TO 0 STUDENT WILL COME BACK TO THE XML NEXT TIME --->
-				UPDATE smg_students
+				UPDATE extra_candidates
 				SET sevis_batchid ='0'
 				WHERE studentid = '#stuID#'
 			</cfquery>
