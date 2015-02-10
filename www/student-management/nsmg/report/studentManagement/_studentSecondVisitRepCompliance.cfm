@@ -68,14 +68,12 @@
             
             <!--- Get Reports --->
             <cfquery name="qGetResults" datasource="#APPLICATION.DSN#">
-                SELECT 
-                    <!--- Student --->
+                SELECT
                     studentID,
                     familyLastName,
                     studentName,
                     active,
                     cancelDate,
-                    <!--- Host History --->
                     historyID,
                     secondVisitRepID,
                     isWelcomeFamily,
@@ -86,41 +84,31 @@
                     dateArrived,
                     complianceWindow,
                     CASE 
-                    	WHEN datePlaced < dateArrived AND datePlacedEnded IS NULL THEN DATEDIFF(CURDATE(),dateArrived)
-                        WHEN datePlaced < dateArrived AND datePlacedEnded IS NOT NULL THEN DATEDIFF(datePlacedEnded,dateArrived)
+                    	WHEN datePlaced <= dateArrived AND datePlacedEnded IS NULL THEN DATEDIFF(CURDATE(),dateArrived)
+                        WHEN datePlaced <= dateArrived AND datePlacedEnded IS NOT NULL THEN DATEDIFF(datePlacedEnded,dateArrived)
                         WHEN datePlaced > dateArrived AND datePlacedEnded IS NULL THEN DATEDIFF(CURDATE(),datePlaced)
                         WHEN datePlaced > dateArrived AND datePlacedEnded IS NOT NULL THEN DATEDIFF(datePlacedEnded,datePlaced)
                         END AS totalAssignedPeriod,
-                    CASE 
-						<!--- Placement Not Active | Use Date Placed --->
+                    CASE
                         WHEN isActive = 0 THEN datePlaced
-                        <!--- Placement Active | dateStartWindowCompliance ( relocated or arrival ) --->
                         WHEN isActive = 1 THEN dateStartWindowCompliance
                         END AS dateStartWindowCompliance,
                     DATE_ADD(dateStartWindowCompliance, INTERVAL complianceWindow DAY) AS dateEndWindowCompliance,
                     dateCreated,
-                    <!--- Program --->
                     programName,
-                    <!--- Region --->
                     regionID,
                     regionName,
-                    <!--- 2nd Visit Report --->
                     pr_ny_approved_date,
                     dateOfVisit,
-                    <!--- Host Family --->
                     hostID,
                     hostFamilyName,
-                    <!--- Facilitator --->
                     facilitatorName,
-                    CASE 
-						<!--- Days Remaining --->
+                    CASE
                         WHEN dateofVisit IS NOT NULL THEN DATEDIFF( DATE_ADD(dateStartWindowCompliance, INTERVAL complianceWindow DAY), dateofVisit )
-                        <!--- Days Remaining --->
                         WHEN dateofVisit IS NULL THEN DATEDIFF( DATE_ADD(dateStartWindowCompliance, INTERVAL complianceWindow DAY), CURRENT_DATE )
                         END AS remainingDays
                 FROM
                     (		
-                        <!--- Query to Get Approved Reports --->
                         SELECT
                             s.studentID,
                             s.familyLastName,
@@ -136,9 +124,7 @@
                             ht.datePlacedEnded,
                             ht.dateRelocated, 
                             CASE 
-								<!--- Welcome Family - 30 Days --->
                                 WHEN ht.isWelcomeFamily = 1 THEN 30
-                                <!--- Permanent Family - 60 Days --->
                                 WHEN ht.isWelcomeFamily = 0 THEN 60
                                 END AS complianceWindow,
                             (
@@ -190,11 +176,9 @@
                             AND r.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionID#" list="yes"> )
                         INNER JOIN smg_hosts h ON h.hostID = ht.hostID
                         LEFT OUTER JOIN smg_users fac ON fac.userID = r.regionFacilitator
-                
-                        <!--- Query to Get Welcome Family Expired Reports --->   
+                   
                         UNION 
                         
-                        <!--- Query to Get Missing Reports --->
                         SELECT
                             s.studentID,
                             s.familyLastName,
@@ -210,9 +194,7 @@
                             ht.datePlacedEnded,
                             ht.dateRelocated,
                             CASE 
-								<!--- Welcome Family - 30 Days --->
                                 WHEN ht.isWelcomeFamily = 1 THEN 30
-                                <!--- Permanent Family - 60 Days --->
                                 WHEN ht.isWelcomeFamily = 0 THEN 60
                                 END AS complianceWindow,
                             (
@@ -260,25 +242,20 @@
                             AND r.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionID#" list="yes"> )
                         INNER JOIN smg_hosts h ON h.hostID = ht.hostID
                         LEFT OUTER JOIN smg_users fac ON fac.userID = r.regionFacilitator
-                        WHERE 
-                             
-                            <!--- Do not include records with an approved date --->
-                            s.studentID NOT IN (
-                                SELECT pr.fk_student
-                                FROM progress_reports pr
-                                WHERE pr.fk_reportType = 2	
-                                AND pr.fk_host = ht.hostID 
-                                AND pr.pr_ny_approved_date IS NOT NULL         
-                            )
-                            <!--- Regional Advisors --->
-							<cfif LEN(vListOfAdvisorUsers)>
-                                AND
-                                    (
-                                        s.areaRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vListOfAdvisorUsers#" list="yes"> )
-                                    OR
-                                        s.placeRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vListOfAdvisorUsers#" list="yes"> )
-                                    )
-                            </cfif>
+                        WHERE s.studentID NOT IN (
+                            SELECT pr.fk_student
+                            FROM progress_reports pr
+                            WHERE pr.fk_reportType = 2	
+                            AND pr.fk_host = ht.hostID 
+                            AND pr.pr_ny_approved_date IS NOT NULL )
+						<cfif LEN(vListOfAdvisorUsers)>
+                      		AND
+                                (
+                                    s.areaRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vListOfAdvisorUsers#" list="yes"> )
+                                OR
+                                    s.placeRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vListOfAdvisorUsers#" list="yes"> )
+                                )
+                   		</cfif>
                             
                     ) AS t
                 WHERE datePlaced IS NOT NULL
@@ -292,7 +269,7 @@
                 GROUP BY 
                 	studentID, 
                     hostID
-                HAVING ( totalAssignedPeriod IS NULL OR totalAssignedPeriod >= complianceWindow )
+                HAVING ( totalAssignedPeriod IS NULL OR totalAssignedPeriod >= complianceWindow OR datePlacedEnded IS NULL )
                 
                 <cfif VAL(FORM.isDueSoon)>
                     AND ( remainingDays <= 14 OR remainingDays IS NULL )       
