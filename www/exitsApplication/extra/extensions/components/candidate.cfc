@@ -1168,6 +1168,7 @@
                 ecpc.dateTransferConfirmed,
                 ej.ID AS jobID,
                 ej.title AS jobTitle,
+                ej.classification,
                 ec.confirmed,
                 ep.numberPositions,
                 ep.programID,
