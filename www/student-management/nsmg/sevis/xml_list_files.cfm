@@ -46,7 +46,7 @@ function areYouSure() {
 
 <cfoutput>
 
-<cfset currentDirectory = "#AppPath.sevis##get_company.companyshort_nocolor#/#url.type#">
+<cfset currentDirectory = "#APPLICATION.PATH.sevis##get_company.companyshort_nocolor#/#url.type#">
 <!--- Check to see if the Directory exists. --->
 <cfif NOT DirectoryExists(currentDirectory)>
    An error has ocurred. Please contact your system administrator.
@@ -99,10 +99,10 @@ function areYouSure() {
 	
 	<cfloop query="mydirectory">
 	<tr bgcolor="#iif(mydirectory.currentrow MOD 2 ,DE("ffffe6") ,DE("white") )#">
-	  <td><a href="/nsmg/uploadedfiles/sevis/#get_company.companyshort_nocolor#/#url.type#/#name#" target="_blank">#mydirectory.name#</a></td>
+	  <td><a href="/internal/uploadedfiles/sevis/#get_company.companyshort_nocolor#/#url.type#/#name#" target="_blank">#mydirectory.name#</a></td>
 	  <td>#mydirectory.size#</td>
 	  <td>#mydirectory.dateLastModified#</td>
-	  <td align="center"><a href="/nsmg/uploadedfiles/sevis/#get_company.companyshort_nocolor#/#url.type#/#name#" target="_blank"><img src="../virtualfolder/vfolderview.gif" border="0" alt="View File"></img></a></td>
+	  <td align="center"><a href="/internal/uploadedfiles/sevis/#get_company.companyshort_nocolor#/#url.type#/#name#" target="_blank"><img src="../virtualfolder/vfolderview.gif" border="0" alt="View File"></img></a></td>
 	  <cfif client.usertype LTE '4'>
 	  <td align="center">
 		<cfform method="post" action="xml_delete_file.cfm" name="Delete">

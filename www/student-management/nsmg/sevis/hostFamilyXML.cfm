@@ -28,7 +28,7 @@
 		qGetCompany = oCompany.getCompanies(companyID=CLIENT.companyID);
 	</cfscript>
 
-    <cfquery name="qGetStudents" datasource="#APPLICATION.DSN#"> 
+    <cfquery name="qGetStudents" datasource="#APPLICATION.DSN.Source#"> 
         SELECT 	
             s.studentID, 
             s.dateapplication, 

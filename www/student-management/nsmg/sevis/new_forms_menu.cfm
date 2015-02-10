@@ -18,14 +18,82 @@
 
     <cfparam name="batch_type" default="new">
 
-	<cfscript>
-        // Get Programs
-        qGetPrograms = APPCFC.PROGRAM.getPrograms(dateActive=1);
-		
-		// Get Users
-		qGetIntlRep = APPCFC.USER.getIntlRepresentatives();
-    </cfscript>
 
+		   <cfquery 
+			name="qGetPrograms" 
+			datasource="MySql">
+                SELECT
+					p.programID,
+                    p.programName,
+                    p.type,
+                    p.startDate,
+                    p.endDate,
+                    p.applicationDeadline,
+                    p.insurance_startDate,
+                    p.insurance_endDate,
+                    p.sevis_startDate,
+                    p.sevis_endDate,
+                    p.preAyp_date,
+                    p.companyID,
+                    p.programFee,
+                    p.application_fee,
+                    p.insurance_w_deduct,
+                    p.insurance_wo_deduct,
+                    p.blank,
+                    p.hold,
+                    p.progress_reports_active,
+                    p.seasonID,
+                    p.smgSeasonID,
+                    p.tripID,
+                    p.active,
+                    p.fieldViewable,
+                    p.insurance_batch,
+                    c.companyName,
+                    c.companyShort,
+                    s.season as seasonname
+                FROM 
+                    smg_programs p
+				LEFT OUTER JOIN
+                	smg_companies c ON c.companyID = p.companyID                    
+                LEFT OUTER JOIN 
+                	smg_seasons s on s.seasonID = p.seasonID
+                WHERE
+                	p.is_deleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">			
+                    AND
+                        p.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+                    AND
+                    	p.startDate <= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('m', 6, now())#">
+                    AND
+                    	p.endDate >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('m', -3, now())#">
+                ORDER BY 
+                   p.startDate DESC,
+                   p.programName
+		</cfquery>
+		
+          <cfquery 
+			name="qGetIntlRep" 
+			datasource="MySql">
+              SELECT DISTINCT
+					u.*
+                FROM 
+                    smg_users u
+                INNER JOIN
+                	user_access_rights uar ON uar.userID = u.userID
+                INNER JOIN
+                	extra_candidates s ON s.intRep = u.userID
+                    	AND
+                        	s.isDeleted = 0
+						
+                            AND          
+                                s.companyID = 8
+                WHERE
+                    uar.usertype = 8
+                GROUP BY
+                	u.userID 
+                ORDER BY 
+                    u.businessName                  
+			</cfquery>
+            
     <cfquery name="qGetSevisHistory" datasource="MySql">
         SELECT s.batchid, s.companyid, s.createdby, s.datecreated, s.totalstudents, s.totalprint, s.received, 
                 c.companyshort,
@@ -48,12 +116,12 @@
 <!--- CREATING NEW FORMS --->
 <table class="nav_bar" cellpadding=4 cellspacing="0" align="center" width="96%">
 <tr><th bgcolor="ededed">&nbsp; &nbsp; &nbsp; &nbsp; N E W &nbsp; D S - 2 0 1 9 &nbsp; F O R M S</th>
-	<td width="15%" align="right" bgcolor="ededed"><a href="" onClick="javascript: win=window.open('sevis/xml_list_files.cfm?type=new_forms', 'Settings', 'height=600, width=700, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Virtual Folder</a>&nbsp; - &nbsp;<a href="index.cfm?menu=tools&submenu=users&curdoc=sevis/menu"><img src="pics/sevis_menu.gif" border="0"></a></td>
+	<td width="15%" align="right" bgcolor="ededed"><a href="" onClick="javascript: win=window.open('sevis/xml_list_files.cfm?type=new_forms', 'Settings', 'height=600, width=700, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Virtual Folder</a>&nbsp; - &nbsp;<a href="index.cfm?menu=tools&submenu=users&curdoc=sevis/menu"><img src="../pics/sevis_menu.gif" border="0"></a></td>
 </tr>
 </table><br>
 <cfform action="sevis/newFormXML.cfm" method="POST" target="blank">
 <Table class="nav_bar" cellpadding=6 cellspacing="0" align="center" width="96%">
-	<tr><th colspan="2" bgcolor="ededed">#CLIENT.DSFormName# Create XML Files (Up to 250 students)</th></tr>
+	<tr><th colspan="2" bgcolor="ededed">DS-2019 Create XML Files (Up to 250 students)</th></tr>
 	<tr align="left">
 		<td width="15%">Program :</td>
 		<td>
@@ -70,14 +138,14 @@
 			</select>
         </td>
 	</tr>
-	<tr><td colspan="2" align="center" bgcolor="ededed"><input type="image" src="pics/view.gif" align="center" border=0 <cfif client.usertype is not '1'>disabled</cfif>></td></tr>
+	<tr><td colspan="2" align="center" bgcolor="ededed"><input type="image" src="../pics/view.gif" align="center" border=0 <cfif client.usertype is not '1'>disabled</cfif>></td></tr>
 </table><br>
 </cfform>
 <Table class="nav_bar" cellpadding=6 cellspacing="0" align="center" width="96%">
 	<th align="center" bgcolor="ededed">SEVIS Batch Create Forms XML Results Extractor</th></tr>
 	<tr><td bgcolor="ededed"><cfform method="post" action="?curdoc=sevis/new_forms_results" enctype="multipart/form-data">
 		File Name &nbsp; : &nbsp; <input type="text" name="filename" size="50">
-		<div align="center"><input type="submit" value="Update #CLIENT.DSFormName#"></div>
+		<div align="center"><input type="submit" value="Update DS-2019"></div>
 		</cfform></td></tr>
 </table><br>
 </cfoutput>
