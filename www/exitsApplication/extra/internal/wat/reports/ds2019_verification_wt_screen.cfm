@@ -169,6 +169,7 @@
                         <td width=12% valign="top" style="border-bottom:1px solid ##000;"><strong>Country of Residence</strong></td>
                         <td width=10% valign="top" style="border-bottom:1px solid ##000;"><strong>Start Date </strong></td>
                         <td width=10% valign="top" style="border-bottom:1px solid ##000;"><strong>End Date </strong></td>
+                        <td width=10% valign="top" style="border-bottom:1px solid ##000;"><strong>SEVIS Code</strong></td>
                     </tr>      
                     <cfloop query="qGetCandidates">
 						<cfscript>
@@ -187,7 +188,8 @@
                             <td width=10% valign="top">#qGetCandidates.countrycitizen#</td>
                             <td width=12% valign="top">#qGetCandidates.countryresident#</td>
                             <td width=10% valign="top">#DateFormat(qGetCandidates.startdate, 'mm/dd/yyyy')#</td>
-                            <td width=10% valign="top">#DateFormat(qGetCandidates.enddate, 'mm/dd/yyyy')#</td>				
+                            <td width=10% valign="top">#DateFormat(qGetCandidates.enddate, 'mm/dd/yyyy')#</td>	
+                            <td width=10% valign="top">#qGetCandidates.classification#</td>				
                         </tr>
                         <tr bgcolor="#iif(qGetCandidates.currentrow MOD 2 ,DE("ededed") ,DE("white") )#">
                             <td style="border-bottom:1px solid ##000;">&nbsp;</td>
