@@ -210,11 +210,11 @@
 		)
 		VALUES 
         (
-            <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.candidateID#">, 
+            <cfqueryparam cfsqltype="cf_sql_integer" value="#val(FORM.candidateID)#">, 
             <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.reason#">, 
             <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">, 
-            <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">, 
-            <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+            <cfqueryparam cfsqltype="cf_sql_integer" value="#val(FORM.programID)#">, 
+            <cfqueryparam cfsqltype="cf_sql_integer" value="#val(client.userid)#">
         )
 	</cfquery>
     
@@ -228,7 +228,7 @@
         <cfquery name="qGetJobOfferStatus" datasource="#APPLICATION.DSN.Source#">
             SELECT selfJobOfferStatus
             FROM extra_candidate_place_company
-            WHERE candcompid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetAllPlacements.candCompID#">
+            WHERE candcompid = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(qGetAllPlacements.candCompID)#">
         </cfquery>
     
     	<!--- REMOVE SECONDARY PLACEMENT --->
@@ -240,7 +240,7 @@
                	SET
                 	status = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
               	WHERE
-                	candcompid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetAllPlacements.candCompID#">
+                	candcompid = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(qGetAllPlacements.candCompID)#">
             </cfquery>
             
         <!--- UPDATE SECONDARY PLACEMENT --->
@@ -248,7 +248,7 @@
         	
             <cfquery datasource="#APPLICATION.DSN.Source#">
             	UPDATE 
-                    extra_hostCompany
+                    extra_hostcompany
                 SET
                     EIN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM['EIN_#qGetAllPlacements.candCompID#']#">,
                     authentication_secretaryOfState = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM['authentication_secretaryOfState_#qGetAllPlacements.candCompID#'])#">,
@@ -265,7 +265,7 @@
                     WC_policyNumber = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM['WC_policyNumber_#qGetAllPlacements.candCompID#']#">,
                     WCDateExpired = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM['WCDateExpired_#qGetAllPlacements.candCompID#']#" null="#NOT IsDate(FORM['WCDateExpired_#qGetAllPlacements.candCompID#'])#">
                 WHERE
-                    hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetAllPlacements.hostCompanyID#">
+                    hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(qGetAllPlacements.hostCompanyID)#">
             </cfquery>
             
             <cfquery datasource="#APPLICATION.DSN.Source#">
@@ -281,9 +281,9 @@
                 	isTransferHousingAddressReceived = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM['newHousingAddress_#qGetAllPlacements.candCompID#'])#">,                
                 	isTransferSevisUpdated = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM['sevisUpdated_#qGetAllPlacements.candCompID#'])#">
                 WHERE
-                    candcompid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetAllPlacements.candCompID#">
+                    candcompid = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(qGetAllPlacements.candCompID)#">
             </cfquery>
-            
+          
             <!--- Update program related confirmations --->
             <cfscript>
 				APPLICATION.CFC.HOSTCOMPANY.updateInsertProgramConfirmations(
@@ -470,7 +470,7 @@
     
         <cfquery datasource="#APPLICATION.DSN.Source#">
             UPDATE 
-                extra_hostCompany
+                extra_hostcompany
             SET 
                 EIN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.EIN#">
             WHERE
@@ -504,7 +504,7 @@
     
         <cfquery datasource="#APPLICATION.DSN.Source#">
             UPDATE 
-                extra_hostCompany
+                extra_hostcompany
             SET 
                 workmensCompensation = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.workmensCompensation#" null="#NOT IsNumeric(FORM.workmensCompensation)#">
             WHERE
@@ -518,7 +518,7 @@
     
         <cfquery datasource="#APPLICATION.DSN.Source#">
             UPDATE 
-                extra_hostCompany
+                extra_hostcompany
             SET 
                 WCDateExpired = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.WCDateExpired#" null="#NOT IsDate(FORM.WCDateExpired)#">
             WHERE
