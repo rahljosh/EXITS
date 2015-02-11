@@ -416,10 +416,10 @@
                     <td class="subTitleRightNoBorder">Placement Status: <span class="required">*</span></td>
                     <td>
                         <select name="placementStatus" id="placementStatus" class="xLargeField" onChange="showHidePlacementDates('PlacementPaperworkByRegion');" required>
+                            <option value="All">All</option>
                             <option value="Placed">Placed</option>
                             <option value="Pending">Pending</option>
-                            <option value="Rejected">Rejected</option>
-                            <option value="All">All</option>
+                            <option value="Rejected">rejected</option>
                         </select>
                     </td>		
                 </tr>
@@ -744,7 +744,7 @@
                                     </cfif>
         
                                     <cfif VAL(qGetResults.isRelocation)>
-                                        - Relocation
+                                        - <strong>Relocation</strong>
                                     </cfif>
                                 )
                             </span>                            
