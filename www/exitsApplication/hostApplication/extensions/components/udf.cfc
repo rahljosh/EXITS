@@ -32,8 +32,8 @@
 		<cfscript>
 			// Check for local servers
 			if (	
-				FindNoCase("host.local", CGI.http_host) 
-				
+				FindNoCase("host.local", CGI.http_host) OR
+				FindNoCase("developer", server.ColdFusion.ProductLevel)
 			){
 				return(true);
 			} else {
