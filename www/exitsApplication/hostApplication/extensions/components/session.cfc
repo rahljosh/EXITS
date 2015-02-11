@@ -260,7 +260,21 @@
 				SESSION.COMPANY.submitGreyImage = "submitGrey.png";
 				SESSION.COMPANY.submitImage = "submit.png";
 				
-			} else {
+			
+			} else if ( 
+				ListFindNoCase(CGI.SERVER_NAME, "dashf1.com", ".") 
+				OR ListFindNoCase(CGI.SERVER_NAME, "dash.exitsapplication.com") 
+				OR ListFindNoCase(CGI.SERVER_NAME, "smg.dash.local")) {
+				
+				// DASH
+				SESSION.COMPANY.ID = 15;
+				SESSION.COMPANY.exitsURL = "https://dash.exitsapplication.com/";
+				SESSION.COMPANY.logoImage = "logoDASH.png";
+				SESSION.COMPANY.submitGreyImage = "submitGrey.png";
+				SESSION.COMPANY.submitImage = "submit.png";
+				
+			}
+			 else {
 				
 				// ISE
 				SESSION.COMPANY.ID = 1;		
