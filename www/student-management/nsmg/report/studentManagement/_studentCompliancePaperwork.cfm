@@ -229,6 +229,9 @@
                                 p.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#" list="yes"> ) 
                         INNER JOIN
                             smg_hosts h ON h.hostID = sh.hostID
+                            <!--- ISE and CASE Host Families only --->
+                            AND
+                            	h.companyID IN (1,2,3,4,5,10,12) 
                         INNER JOIN
                             smg_regions r ON r.regionID = s.regionAssigned
                             <!--- Region --->
