@@ -30,7 +30,7 @@
             when pr.pr_month_of_report = 12 then 4
         end),
         "Supervision",
-        if(prog.type = 1,80,if(prog.type = 2,85,100)),
+        if(prog.type = 1,100,if(prog.type = 2,100,75)),
         "Auto-processed - ESI",
         (CASE 
             WHEN DAYOFWEEK(CURDATE()) = 3 THEN DATE_ADD(CURDATE(), INTERVAL 2 DAY)           
@@ -108,7 +108,7 @@
             when pr.pr_month_of_report = 12 then 4
         END),
         "Supervision",
-        50,
+        if(prog.type = 1,50,if(prog.type = 2,50,37.5)),
         "Auto-processed - ESI",
         (CASE 
             WHEN DAYOFWEEK(CURDATE()) = 3 THEN DATE_ADD(CURDATE(), INTERVAL 2 DAY)           
