@@ -166,14 +166,12 @@
 
     <cfquery name="qGetResults" datasource="#APPLICATION.DSN#">
         SELECT 
-            <!--- Student --->
             studentID,
             uniqueID,
             familyLastName,
             studentDisplayName,
             active,
             cancelDate,
-            <!--- Host History --->
             historyID,
             isActive,
             isRepCurrentAssigned,
@@ -185,24 +183,12 @@
             dateRelocated,
             dateArrived,
             complianceWindow,
-            (
-                CASE 
-					<!--- Placement Not Active | Use Date Placed --->
-                    WHEN 
-                        isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="0"> 
-                    THEN 
-                        DATEDIFF(datePlacedEnded, datePlaced)
-                    <!--- Placement Active | dateStartWindowCompliance ( relocated or arrival ) --->
-                    WHEN 	
-                        isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">  
-                    THEN 
-                        DATEDIFF(datePlacedEnded, dateStartWindowCompliance)
-                END
-            ) AS totalAssignedPeriod,
+            CASE 
+            	WHEN isActive = 0 THEN DATEDIFF(datePlacedEnded, datePlaced)
+              	WHEN isActive = 1 THEN DATEDIFF(datePlacedEnded, dateStartWindowCompliance)
+                END AS totalAssignedPeriod,
             dateStartWindowCompliance,
-			<!--- Check if we have compliance window --->
             IFNULL(dueToDate, DATE_ADD(dateStartWindowCompliance, INTERVAL complianceWindow DAY) ) AS dateEndWindowCompliance,
-            <!--- 2nd Visit Report --->
             pr_ID,
             fk_sr_user,
             fk_ra_user,
@@ -217,711 +203,390 @@
             dateOfVisit,
             dueFromDate,
             dueToDate,
-			<!--- Program --->
-            programName,            
-            <!--- Host Family --->
+            programName,
             hostID,
             hostFamilyDisplayName,
-            <!--- Second Visit Representative --->
             secondVisitRepDisplayName,
             secondVisitRepLastName,
-            <!--- Regional Advisor --->
             advisorID,
             advisorDisplayName,
             advisorLastName,
-			<!--- Hidden Report --->
             hideReportID,
             dateReportHidden,
             reasonReportHidden,
-            <!--- Hidden By --->
             hiddenByName,
-			<!--- Second Visit Report --->
-            DATEDIFF( DATE_ADD(dateStartWindowCompliance, INTERVAL complianceWindow DAY), CURRENT_DATE ) AS remainingDays
-        FROM
-            (	
-				<!--- Query to get 1st Report of each placement --->	
-                SELECT
-                    s.studentID,
-                    s.uniqueID,
-                    s.familyLastName,
-                    s.active,
-                    s.cancelDate,
-                    CAST(CONCAT(s.firstName, ' ', s.familyLastName,  ' ##', s.studentID) AS CHAR) AS studentDisplayName,
-                    ht.historyID,
-                    ht.isActive,
-                    1 AS isRepCurrentAssigned,
-                    ht.secondVisitRepID,
-                    ht.isWelcomeFamily, 
-                    ht.isRelocation, 
-                    ht.datePlaced,
-                    <!--- If Current Placement - Set program end date as datePlacedEnded --->
-                    IFNULL(ht.datePlacedEnded, p.endDate) AS datePlacedEnded,
-                    ht.dateRelocated, 
-                    (
-                        CASE 
-                            <!--- Welcome Family - 30 Days --->
-                            WHEN 
-                                ht.isWelcomeFamily = <cfqueryparam cfsqltype="cf_sql_bit" value="1"> 
-                            THEN 
-                                30
-                            <!--- Permanent Family - 60 Days --->
-                            WHEN 	
-                                ht.isWelcomeFamily = <cfqueryparam cfsqltype="cf_sql_bit" value="0"> 
-                            THEN 
-                                60
-                        END
-                    ) AS complianceWindow,
-                    (
-                        SELECT 
-                            dep_date 
-                        FROM 
-                            smg_flight_info 
-                        WHERE 
-                            studentID = s.studentID 
-                        AND 
-                            flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival"> 
-                        AND
-                            assignedID = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-                        AND 
-                            isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-                        AND
-                            programID = s.programID
+            DATEDIFF( DATE_ADD(dateStartWindowCompliance, INTERVAL complianceWindow DAY), CURRENT_DATE ) AS remainingDays,
+            advisorID,
+            userID
+        FROM (	
+    		SELECT
+                s.studentID,
+                s.uniqueID,
+                s.familyLastName,
+                s.active,
+                s.cancelDate,
+                CAST(CONCAT(s.firstName, ' ', s.familyLastName,  ' ##', s.studentID) AS CHAR) AS studentDisplayName,
+                ht.historyID,
+                ht.isActive,
+                1 AS isRepCurrentAssigned,
+                ht.secondVisitRepID,
+                ht.isWelcomeFamily, 
+                ht.isRelocation, 
+                ht.datePlaced,
+                IFNULL(ht.datePlacedEnded, p.endDate) AS datePlacedEnded,
+                ht.dateRelocated, 
+              	CASE 
+         			WHEN ht.isWelcomeFamily = 1 THEN 30
+                  	WHEN ht.isWelcomeFamily = 0 THEN 60
+                 	END AS complianceWindow,
+                (
+                    SELECT dep_date 
+                    FROM smg_flight_info 
+                    WHERE studentID = s.studentID 
+                    AND flight_type = "arrival" 
+                    AND assignedID = 0
+                    AND isDeleted = 0
+                    AND programID = s.programID
+                    ORDER BY 
+                        dep_date DESC,
+                        dep_time ASC
+                    LIMIT 1                            
+                ) AS dateArrived, 
+              	CASE 
+                    WHEN dueFromDate IS NOT NULL THEN dueFromDate					
+                    WHEN ht.dateRelocated IS NOT NULL THEN ht.dateRelocated
+                    ELSE (
+                        SELECT dep_date 
+                        FROM smg_flight_info 
+                        WHERE studentID = s.studentID 
+                        AND flight_type = "arrival" 
+                        AND assignedID = 0
+                        AND isDeleted = 0
+                        AND programID = s.programID
                         ORDER BY 
                             dep_date DESC,
                             dep_time ASC
-                        LIMIT 1                            
-                    ) AS dateArrived, 
-                    (
-                        CASE 
-                            <!--- Check if we have compliance window date --->
-                            WHEN
-                                dueFromDate IS NOT NULL
-                            THEN
-                                dueFromDate					
-                            <!--- Check if it's a relocation --->
-                            WHEN 
-                                ht.dateRelocated IS NOT NULL
-                            THEN 
-                                ht.dateRelocated
-                            <!--- Use Flight Arrival as default start date --->
-							ELSE 
-                                (
-                                    SELECT 
-                                        dep_date 
-                                    FROM 
-                                        smg_flight_info 
-                                    WHERE 
-                                        studentID = s.studentID 
-                                    AND 
-                                        flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival"> 
-                                    AND
-                                        assignedID = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-                                    AND 
-                                        isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-                                    AND
-                                        programID = s.programID
-                                    ORDER BY 
-                                        dep_date DESC,
-                                        dep_time ASC
-                                    LIMIT 1                            
-                                )                                  
-                        END
-                    ) AS dateStartWindowCompliance,
-					<!--- 2nd Visit Report --->                   
-                    pr.pr_ID,
-                    pr.fk_sr_user,
-                    pr.fk_ra_user,
-                    pr.fk_rd_user,
-                    pr.fk_ny_user,
-                    pr.fk_secondVisitRep,                   
-                    pr.pr_sr_approved_date,
-                    pr.pr_ra_approved_date,
-                    pr.pr_rd_approved_date,
-                    pr.pr_ny_approved_date,
-                    pr.pr_rejected_date,
-                    sva.dateOfVisit,
-                    sva.dueFromDate,
-                    sva.dueToDate,
-                    <!--- Program --->
-                    p.programName,
-                    <!--- Host Family --->
-                    h.hostID,
-                    CAST(CONCAT(h.familyLastName, ' ##', h.hostID) AS CHAR) AS hostFamilyDisplayName,
-                    <!--- Second Visit Rep --->
-                    CAST(CONCAT(u.firstName, ' ', u.lastName,  ' ##', u.userID) AS CHAR) AS secondVisitRepDisplayName,
-                    u.lastName AS secondVisitRepLastName,
-                    <!--- Regional Advisor --->
-                    advisor.userID AS advisorID,
-                    CAST(CONCAT(advisor.firstName, ' ', advisor.lastName,  ' ##', advisor.userID) AS CHAR) AS advisorDisplayName,
-                    advisor.lastName AS advisorLastName,
-                    <!--- Hidden Report --->
-                    shr.ID AS hideReportID,
-                    shr.dateChanged AS dateReportHidden,
-                    shr.reason AS reasonReportHidden,
-                    <!--- Hidden By --->
-                    CAST(CONCAT(hiddenBy.firstName, ' ', hiddenBy.lastName,  ' ##', hiddenBy.userID) AS CHAR) AS hiddenByName
-                FROM 	
-                    smg_students s
-                INNER JOIN
-                    smg_hosthistory ht ON ht.studentID = s.studentID
-                        AND
-                            ht.assignedID = <cfqueryparam cfsqltype="cf_sql_bit" value="0"> 
-                INNER JOIN 
-                    user_access_rights uar ON uar.userID = ht.secondVisitRepID
-						<cfif APPLICATION.CFC.USER.isOfficeUser()>
-                            AND
-                                uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.pr_regionID#">
-                        <cfelse>
-                            <!--- don't use CLIENT.pr_regionID because if they change access level this is not reset. --->
-                            AND
-                                uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionID#">
-                        </cfif>
-                        AND
-                        	uar.userType IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7,15" list="yes"> )
-                INNER JOIN
-                	smg_programs p on p.programID = s.programID
-                    AND
-                    	p.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-                INNER JOIN
-                    smg_hosts h ON h.hostID = ht.hostID 
-                INNER JOIN 
-                    smg_users u ON u.userID = ht.secondVisitRepID
-                LEFT OUTER JOIN					
-                    progress_reports pr ON pr.fk_student = s.studentID            
-                    AND
-                        pr.fk_reportType = <cfqueryparam cfsqltype="cf_sql_integer" value="2">	
-                    AND
-                        pr.fk_host = ht.hostID
-                LEFT OUTER JOIN
-                    secondvisitanswers sva ON sva.fk_reportID = pr.pr_ID
-                LEFT OUTER JOIN 
-                    smg_users advisor ON advisor.userID = uar.advisorID  
-                LEFT OUTER JOIN 
-                    smg_hide_reports shr ON shr.fk_secondVisitRep = u.userID
-                    AND
-                    	shr.fk_student = ht.studentID
-                    AND
-                    	shr.fk_host = ht.hostID
-				LEFT OUTER JOIN
-                	smg_users hiddenBy ON hiddenBy.userID = shr.fk_userID  
-                WHERE
-                	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-                    
-				<!--- User Access --->
-                <cfswitch expression="#CLIENT.userType#">
-                    
-                    <!--- Regional Advisor --->
-                    <cfcase value="6">
-                        AND (
-                                uar.advisorID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userid)#">
-                            OR 
-                                u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userid)#">           
-                        )
-                    </cfcase>
-                    
-                    <!--- Area Representative / 2nd Visit Representative --->
-                    <cfcase value="7,15">
-                        AND 
-                            u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userid)#">
-                    </cfcase> 
+                        LIMIT 1 )                                  
+                	END AS dateStartWindowCompliance,                  
+                pr.pr_ID,
+                pr.fk_sr_user,
+                pr.fk_ra_user,
+                pr.fk_rd_user,
+                pr.fk_ny_user,
+                pr.fk_secondVisitRep,                   
+                pr.pr_sr_approved_date,
+                pr.pr_ra_approved_date,
+                pr.pr_rd_approved_date,
+                pr.pr_ny_approved_date,
+                pr.pr_rejected_date,
+                sva.dateOfVisit,
+                sva.dueFromDate,
+                sva.dueToDate,
+                p.programName,
+                h.hostID,
+                CAST(CONCAT(h.familyLastName, ' ##', h.hostID) AS CHAR) AS hostFamilyDisplayName,
+                CAST(CONCAT(u.firstName, ' ', u.lastName,  ' ##', u.userID) AS CHAR) AS secondVisitRepDisplayName,
+                u.lastName AS secondVisitRepLastName,
+                advisor.userID AS advisorID,
+                CAST(CONCAT(advisor.firstName, ' ', advisor.lastName,  ' ##', advisor.userID) AS CHAR) AS advisorDisplayName,
+                advisor.lastName AS advisorLastName,
+                shr.ID AS hideReportID,
+                shr.dateChanged AS dateReportHidden,
+                shr.reason AS reasonReportHidden,
+                CAST(CONCAT(hiddenBy.firstName, ' ', hiddenBy.lastName,  ' ##', hiddenBy.userID) AS CHAR) AS hiddenByName,
+            	u.userID
+        	FROM smg_students s
+       		INNER JOIN smg_hosthistory ht ON ht.studentID = s.studentID
+              	AND ht.assignedID = 0 
+         	INNER JOIN user_access_rights uar ON uar.userID = ht.secondVisitRepID
+				<cfif APPLICATION.CFC.USER.isOfficeUser()>
+                    AND uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.pr_regionID#">
+                <cfelse>
+                    AND uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionID#">
+                </cfif>
+             	AND uar.userType IN ( 5,6,7,15 )
+            INNER JOIN smg_programs p on p.programID = s.programID
+                AND p.active = 1
+            INNER JOIN smg_hosts h ON h.hostID = ht.hostID 
+            INNER JOIN smg_users u ON u.userID = ht.secondVisitRepID
+            LEFT OUTER JOIN progress_reports pr ON pr.fk_student = s.studentID            
+                AND pr.fk_reportType = 2
+                AND pr.fk_host = ht.hostID
+            LEFT OUTER JOIN secondvisitanswers sva ON sva.fk_reportID = pr.pr_ID
+            LEFT OUTER JOIN smg_users advisor ON advisor.userID = uar.advisorID  
+            LEFT OUTER JOIN smg_hide_reports shr ON shr.fk_secondVisitRep = u.userID
+                AND shr.fk_student = ht.studentID
+                AND shr.fk_host = ht.hostID
+            LEFT OUTER JOIN smg_users hiddenBy ON hiddenBy.userID = shr.fk_userID
                 
-                </cfswitch>  
-                <!--- End of Query to get 1st Current Second Visit Representative Report --->
+      		UNION
                 
-                UNION
+        	SELECT
+                s.studentID,
+                s.uniqueID,
+                s.familyLastName,
+                s.active,
+                s.cancelDate,
+                CAST(CONCAT(s.firstName, ' ', s.familyLastName,  ' ##', s.studentID) AS CHAR) AS studentDisplayName,
+                ht.historyID,
+                ht.isActive,
+                1 AS isRepCurrentAssigned,
+                ht.secondVisitRepID,
+                ht.isWelcomeFamily, 
+                ht.isRelocation, 
+                ht.datePlaced,
+                IFNULL(ht.datePlacedEnded, p.endDate) AS datePlacedEnded,
+                ht.dateRelocated, 
+                30 AS complianceWindow,
+                (
+                    SELECT dep_date 
+                    FROM smg_flight_info 
+                    WHERE studentID = s.studentID 
+                    AND flight_type = "arrival"
+                    AND assignedID = 0
+                    AND isDeleted = 0
+                    AND programID = s.programID
+                    ORDER BY 
+                        dep_date DESC,
+                        dep_time ASC
+                    LIMIT 1                            
+                ) AS dateArrived,
+                (
+                    SELECT sva2.dateOfVisit
+                    FROM progress_reports pr2
+                    INNER JOIN secondvisitanswers sva2 ON sva2.fk_reportID = pr2.pr_ID
+                    WHERE pr2.fk_student = s.studentID             
+                    AND pr2.fk_reportType = 2	
+                    AND pr2.fk_host = ht.hostID
+                    AND pr_ny_approved_date IS NOT NULL
+                    ORDER BY sva2.dateOfVisit DESC
+                    LIMIT 1                            
+                ) AS dateStartWindowCompliance,
+                pr.pr_ID,
+                pr.fk_sr_user,
+                pr.fk_ra_user,
+                pr.fk_rd_user,
+                pr.fk_ny_user,
+                pr.fk_secondVisitRep,                   
+                pr.pr_sr_approved_date,
+                pr.pr_ra_approved_date,
+                pr.pr_rd_approved_date,
+                pr.pr_ny_approved_date,
+                pr.pr_rejected_date,
+                sva.dateOfVisit,
+                sva.dueFromDate,
+                sva.dueToDate,
+                p.programName,
+                h.hostID,
+                CAST(CONCAT(h.familyLastName, ' ##', h.hostID) AS CHAR) AS hostFamilyDisplayName,
+                CAST(CONCAT(u.firstName, ' ', u.lastName,  ' ##', u.userID) AS CHAR) AS secondVisitRepDisplayName,
+                u.lastName AS secondVisitRepLastName,
+                advisor.userID AS advisorID,
+                CAST(CONCAT(advisor.firstName, ' ', advisor.lastName,  ' ##', advisor.userID) AS CHAR) AS advisorDisplayName,
+                advisor.lastName AS advisorLastName,
+                shr.ID AS hideReportID,
+                shr.dateChanged AS dateReportHidden,
+                shr.reason AS reasonReportHidden,
+                CAST(CONCAT(hiddenBy.firstName, ' ', hiddenBy.lastName,  ' ##', hiddenBy.userID) AS CHAR) AS hiddenByName,
+            	u.userID
+          	FROM smg_students s
+            INNER JOIN smg_hosthistory ht ON ht.studentID = s.studentID
+                AND ht.assignedID = 0 
+                AND ht.isWelcomeFamily = 1
+                AND ht.datePlaced IS NOT NULL
+            INNER JOIN user_access_rights uar ON uar.userID = ht.secondVisitRepID
+				<cfif APPLICATION.CFC.USER.isOfficeUser()>
+                    AND uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.pr_regionID#">
+                <cfelse>
+                    AND uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionID#">
+                </cfif>
+            	AND uar.userType IN ( 5,6,7,15 )
+            INNER JOIN smg_programs p on p.programID = s.programID
+                AND p.active = 1
+            INNER JOIN smg_hosts h ON h.hostID = ht.hostID 
+            INNER JOIN smg_users u ON u.userID = ht.secondVisitRepID
+            LEFT OUTER JOIN progress_reports pr ON pr.fk_student = s.studentID            
+                AND pr.fk_reportType = 2
+                AND pr.fk_host = ht.hostID
+            LEFT OUTER JOIN secondvisitanswers sva ON sva.fk_reportID = pr.pr_ID
+            LEFT OUTER JOIN smg_users advisor ON advisor.userID = uar.advisorID  
+            LEFT OUTER JOIN smg_hide_reports shr ON shr.fk_secondVisitRep = u.userID
+                AND shr.fk_student = ht.studentID
+                AND shr.fk_host = ht.hostID
+            LEFT OUTER JOIN smg_users hiddenBy ON hiddenBy.userID = shr.fk_userID  
+            WHERE s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+          	AND (
+                SELECT COUNT(pr_ID)
+                FROM progress_reports
+                WHERE fk_student = s.studentID             
+                AND fk_reportType = 2
+                AND fk_host = ht.hostID
+                AND pr_ny_approved_date IS NOT NULL ) >= 1  
                 
-                <!--- Query to get Welcome Family - Additional incomplete Report --->
-                SELECT
-                    s.studentID,
-                    s.uniqueID,
-                    s.familyLastName,
-                    s.active,
-                    s.cancelDate,
-                    CAST(CONCAT(s.firstName, ' ', s.familyLastName,  ' ##', s.studentID) AS CHAR) AS studentDisplayName,
-                    ht.historyID,
-                    ht.isActive,
-                    1 AS isRepCurrentAssigned,
-                    ht.secondVisitRepID,
-                    ht.isWelcomeFamily, 
-                    ht.isRelocation, 
-                    ht.datePlaced,
-                    <!--- If Current Placement - Set program end date as datePlacedEnded --->
-                    IFNULL(ht.datePlacedEnded, p.endDate) AS datePlacedEnded,
-                    ht.dateRelocated, 
-                    30 AS complianceWindow,
-                    (
-                        SELECT 
-                            dep_date 
-                        FROM 
-                            smg_flight_info 
-                        WHERE 
-                            studentID = s.studentID 
-                        AND 
-                            flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival"> 
-                        AND
-                            assignedID = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-                        AND 
-                            isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-                        AND
-                            programID = s.programID
-                        ORDER BY 
-                            dep_date DESC,
-                            dep_time ASC
-                        LIMIT 1                            
-                    ) AS dateArrived, 
-                    <!--- Date of Visit from previous approved report is the new dateStartWindowCompliance --->
-                    (
-                        SELECT 
-                            sva2.dateOfVisit
-                        FROM 
-                            progress_reports pr2
-                        INNER JOIN
-                            secondvisitanswers sva2 ON sva2.fk_reportID = pr2.pr_ID
-                        WHERE
-                            pr2.fk_student = s.studentID             
-                        AND
-                            pr2.fk_reportType = <cfqueryparam cfsqltype="cf_sql_integer" value="2">	
-                        AND
-                            pr2.fk_host = ht.hostID
-                        AND	
-                        	pr_ny_approved_date IS NOT NULL
-                        ORDER BY 
-                            sva2.dateOfVisit DESC
-                        LIMIT 1                            
-                    ) AS dateStartWindowCompliance,
-					<!--- 2nd Visit Report --->
-                    pr.pr_ID,
-                    pr.fk_sr_user,
-                    pr.fk_ra_user,
-                    pr.fk_rd_user,
-                    pr.fk_ny_user,
-                    pr.fk_secondVisitRep,                   
-                    pr.pr_sr_approved_date,
-                    pr.pr_ra_approved_date,
-                    pr.pr_rd_approved_date,
-                    pr.pr_ny_approved_date,
-                    pr.pr_rejected_date,
-                    sva.dateOfVisit,
-                    sva.dueFromDate,
-                    sva.dueToDate,
-                    <!--- Program --->
-                    p.programName,
-                    <!--- Host Family --->
-                    h.hostID,
-                    CAST(CONCAT(h.familyLastName, ' ##', h.hostID) AS CHAR) AS hostFamilyDisplayName,
-                    <!--- Second Visit Rep --->
-                    CAST(CONCAT(u.firstName, ' ', u.lastName,  ' ##', u.userID) AS CHAR) AS secondVisitRepDisplayName,
-                    u.lastName AS secondVisitRepLastName,
-                    <!--- Regional Advisor --->
-                    advisor.userID AS advisorID,
-                    CAST(CONCAT(advisor.firstName, ' ', advisor.lastName,  ' ##', advisor.userID) AS CHAR) AS advisorDisplayName,
-                    advisor.lastName AS advisorLastName,
-                    <!--- Hidden Report --->
-                    shr.ID AS hideReportID,
-                    shr.dateChanged AS dateReportHidden,
-                    shr.reason AS reasonReportHidden,
-                    <!--- Hidden By --->
-                    CAST(CONCAT(hiddenBy.firstName, ' ', hiddenBy.lastName,  ' ##', hiddenBy.userID) AS CHAR) AS hiddenByName
-                FROM 	
-                    smg_students s
-                INNER JOIN
-                    smg_hosthistory ht ON ht.studentID = s.studentID
-                        AND
-                            ht.assignedID = <cfqueryparam cfsqltype="cf_sql_bit" value="0"> 
-                        AND
-                        	ht.isWelcomeFamily = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-                        AND
-                        	ht.datePlaced IS NOT NULL
-                INNER JOIN 
-                    user_access_rights uar ON uar.userID = ht.secondVisitRepID
-						<cfif APPLICATION.CFC.USER.isOfficeUser()>
-                            AND
-                                uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.pr_regionID#">
-                        <cfelse>
-                            <!--- don't use CLIENT.pr_regionID because if they change access level this is not reset. --->
-                            AND
-                                uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionID#">
-                        </cfif>
-                        AND
-                        	uar.userType IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7,15" list="yes"> )
-                INNER JOIN
-                	smg_programs p on p.programID = s.programID
-                    AND
-                    	p.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-                INNER JOIN
-                    smg_hosts h ON h.hostID = ht.hostID 
-                INNER JOIN 
-                    smg_users u ON u.userID = ht.secondVisitRepID
-                LEFT OUTER JOIN
-                    progress_reports pr ON pr.fk_student = s.studentID            
-                    AND
-                        pr.fk_reportType = <cfqueryparam cfsqltype="cf_sql_integer" value="2">	
-                    AND
-                        pr.fk_host = ht.hostID
-                LEFT OUTER JOIN
-                    secondvisitanswers sva ON sva.fk_reportID = pr.pr_ID
-                LEFT OUTER JOIN 
-                    smg_users advisor ON advisor.userID = uar.advisorID  
-                LEFT OUTER JOIN 
-                    smg_hide_reports shr ON shr.fk_secondVisitRep = u.userID
-                    AND
-                    	shr.fk_student = ht.studentID
-                    AND
-                    	shr.fk_host = ht.hostID
-				LEFT OUTER JOIN
-                	smg_users hiddenBy ON hiddenBy.userID = shr.fk_userID  
-                WHERE
-					s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-                AND					
-					<!--- Get only records that have already a report approved --->
-					(
-                        SELECT 
-                           COUNT(pr_ID)
-                        FROM 
-                            progress_reports
-                        WHERE
-                            fk_student = s.studentID             
-                        AND
-                            fk_reportType = <cfqueryparam cfsqltype="cf_sql_integer" value="2">	
-                        AND
-                            fk_host = ht.hostID
-                        AND
-                        	pr_ny_approved_date IS NOT NULL
-					) >= <cfqueryparam cfsqltype="cf_sql_integer" value="1">	                    
-                    
-				<!--- User Access --->
-                <cfswitch expression="#CLIENT.userType#">
-                    
-                    <!--- Regional Advisor --->
-                    <cfcase value="6">
-                        AND (
-                                uar.advisorID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userid)#">
-                            OR 
-                                u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userid)#">           
-                        )
-                    </cfcase>
-                    
-                    <!--- Area Representative / 2nd Visit Representative --->
-                    <cfcase value="7,15">
-                        AND 
-                            u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userid)#">
-                    </cfcase> 
-                
-                </cfswitch>  
-                <!--- End of Query to get Welcome Family - Additional incomplete Report --->
-                
-                UNION
+        	UNION
 
-                <!--- Query to Get Previous Assigned Students --->
-                SELECT
-                    s.studentID,
-                    s.uniqueID,
-                    s.familyLastName,
-                    s.active,
-                    s.cancelDate,
-                    CAST(CONCAT(s.firstName, ' ', s.familyLastName,  ' ##', s.studentID) AS CHAR) AS studentDisplayName,
-                    ht.historyID,
-                    ht.isActive,
-                    0 AS isRepCurrentAssigned,
-                    CAST(sht.fieldID AS UNSIGNED) AS secondVisitRepID,
-                    ht.isWelcomeFamily, 
-                    ht.isRelocation, 
-                    ht.datePlaced,
-                    <!--- If Current Placement - Set program end date as datePlacedEnded --->
-                    IFNULL(ht.datePlacedEnded, p.endDate) AS datePlacedEnded,
-                    ht.dateRelocated, 
-                    (
-                        CASE 
-                            <!--- Welcome Family - 30 Days --->
-                            WHEN 
-                                ht.isWelcomeFamily = <cfqueryparam cfsqltype="cf_sql_bit" value="1"> 
-                            THEN 
-                                30
-                            <!--- Permanent Family - 60 Days --->
-                            WHEN 	
-                                ht.isWelcomeFamily = <cfqueryparam cfsqltype="cf_sql_bit" value="0"> 
-                            THEN 
-                                60
-                        END
-                    ) AS complianceWindow,
-                    (
-                        SELECT 
-                            dep_date 
-                        FROM 
-                            smg_flight_info 
-                        WHERE 
-                            studentID = s.studentID 
-                        AND 
-                            flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival"> 
-                        AND
-                            assignedID = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-                        AND 
-                            isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-                        AND
-                            programID = s.programID
+            SELECT
+                s.studentID,
+                s.uniqueID,
+                s.familyLastName,
+                s.active,
+                s.cancelDate,
+                CAST(CONCAT(s.firstName, ' ', s.familyLastName,  ' ##', s.studentID) AS CHAR) AS studentDisplayName,
+                ht.historyID,
+                ht.isActive,
+                0 AS isRepCurrentAssigned,
+                CAST(sht.fieldID AS UNSIGNED) AS secondVisitRepID,
+                ht.isWelcomeFamily, 
+                ht.isRelocation, 
+                ht.datePlaced,
+                IFNULL(ht.datePlacedEnded, p.endDate) AS datePlacedEnded,
+                ht.dateRelocated, 
+               	CASE 
+                    WHEN ht.isWelcomeFamily = 1 THEN 30
+                    WHEN ht.isWelcomeFamily = 0 THEN 60
+                 	END AS complianceWindow,
+                (
+                    SELECT dep_date 
+                    FROM smg_flight_info 
+                    WHERE studentID = s.studentID 
+                    AND flight_type = "arrival"
+                    AND assignedID = 0
+                    AND isDeleted = 0
+                    AND programID = s.programID
+                    ORDER BY 
+                        dep_date DESC,
+                        dep_time ASC
+                    LIMIT 1                            
+                ) AS dateArrived, 
+                CASE 
+                    WHEN dueFromDate IS NOT NULL THEN dueFromDate
+                    WHEN ht.dateRelocated IS NOT NULL THEN ht.dateRelocated
+                    ELSE (
+                        SELECT dep_date 
+                        FROM smg_flight_info 
+                        WHERE studentID = s.studentID 
+                        AND flight_type = "arrival"
+                        AND assignedID = 0
+                        AND isDeleted = 0
+                        AND programID = s.programID
                         ORDER BY 
                             dep_date DESC,
                             dep_time ASC
-                        LIMIT 1                            
-                    ) AS dateArrived, 
-                    (
-                        CASE 
-                            <!--- Check if we have compliance window date --->
-                            WHEN
-                                dueFromDate IS NOT NULL
-                            THEN
-                                dueFromDate					
-                            <!--- Check if it's a relocation --->
-                            WHEN 
-                                ht.dateRelocated IS NOT NULL
-                            THEN 
-                                ht.dateRelocated
-                            <!--- Use Flight Arrival as default start date --->
-							ELSE 
-                                (
-                                    SELECT 
-                                        dep_date 
-                                    FROM 
-                                        smg_flight_info 
-                                    WHERE 
-                                        studentID = s.studentID 
-                                    AND 
-                                        flight_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival"> 
-                                    AND
-                                        assignedID = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-                                    AND 
-                                        isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-                                    AND
-                                        programID = s.programID
-                                    ORDER BY 
-                                        dep_date DESC,
-                                        dep_time ASC
-                                    LIMIT 1                            
-                                )                                  
-                        END
-                    ) AS dateStartWindowCompliance,
-					<!--- 2nd Visit Report --->                   
-                    pr.pr_ID,
-                    pr.fk_sr_user,
-                    pr.fk_ra_user,
-                    pr.fk_rd_user,
-                    pr.fk_ny_user,
-                    pr.fk_secondVisitRep,                   
-                    pr.pr_sr_approved_date,
-                    pr.pr_ra_approved_date,
-                    pr.pr_rd_approved_date,
-                    pr.pr_ny_approved_date,
-                    pr.pr_rejected_date,
-                    sva.dateOfVisit,
-                    sva.dueFromDate,
-                    sva.dueToDate,
-                    <!--- Program --->
-                    p.programName,
-                    <!--- Host Family --->
-                    h.hostID,
-                    CAST(CONCAT(h.familyLastName, ' ##', h.hostID) AS CHAR) AS hostFamilyDisplayName,
-                    <!--- Second Visit Rep --->
-                    CAST(CONCAT(u.firstName, ' ', u.lastName,  ' ##', u.userID) AS CHAR) AS secondVisitRepDisplayName,
-                    u.lastName AS secondVisitRepLastName,
-                    <!--- Regional Advisor --->
-                    advisor.userID AS advisorID,
-                    CAST(CONCAT(advisor.firstName, ' ', advisor.lastName,  ' ##', advisor.userID) AS CHAR) AS advisorDisplayName,
-                    advisor.lastName AS advisorLastName,
-                    <!--- Hidden Report --->
-                    shr.ID AS hideReportID,
-                    shr.dateChanged AS dateReportHidden,
-                    shr.reason AS reasonReportHidden,
-                    <!--- Hidden By --->
-                    CAST(CONCAT(hiddenBy.firstName, ' ', hiddenBy.lastName,  ' ##', hiddenBy.userID) AS CHAR) AS hiddenByName
-                FROM 	
-                    smg_students s
-                INNER JOIN
-                    smg_hosthistory ht ON ht.studentID = s.studentID
-                        AND
-                            ht.assignedID = <cfqueryparam cfsqltype="cf_sql_bit" value="0"> 
-                        AND
-                        	ht.datePlaced IS NOT NULL
-                INNER JOIN
-                	smg_hosthistorytracking sht ON sht.historyID = ht.historyID
-                    AND
-                    	fieldName = <cfqueryparam cfsqltype="cf_sql_varchar" value="secondVisitRepID">
-                    AND
-                    	sht.fieldID != ht.secondVisitRepID                        
-                INNER JOIN 
-                    user_access_rights uar ON uar.userID = sht.fieldID
-						<cfif APPLICATION.CFC.USER.isOfficeUser()>
-                            AND
-                                uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.pr_regionID#">
-                        <cfelse>
-                            <!--- don't use CLIENT.pr_regionID because if they change access level this is not reset. --->
-                            AND
-                                uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionID#">
-                        </cfif>
-                        AND
-                        	uar.userType IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7,15" list="yes"> )
-                INNER JOIN
-                	smg_programs p on p.programID = s.programID
-                    AND
-                    	p.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
-                INNER JOIN
-                    smg_hosts h ON h.hostID = ht.hostID 
-                INNER JOIN 
-                    smg_users u ON u.userID = sht.fieldID
-                LEFT OUTER JOIN					
-                    progress_reports pr ON pr.fk_student = s.studentID            
-                    AND
-                        pr.fk_reportType = <cfqueryparam cfsqltype="cf_sql_integer" value="2">	
-                    AND
-                        pr.fk_host = ht.hostID
-                LEFT OUTER JOIN
-                    secondvisitanswers sva ON sva.fk_reportID = pr.pr_ID
-                LEFT OUTER JOIN 
-                    smg_users advisor ON advisor.userID = uar.advisorID  
-                LEFT OUTER JOIN 
-                    smg_hide_reports shr ON shr.fk_secondVisitRep = sht.fieldID
-                    AND
-                    	shr.fk_student = ht.studentID
-                    AND
-                    	shr.fk_host = ht.hostID
-				LEFT OUTER JOIN
-                	smg_users hiddenBy ON hiddenBy.userID = shr.fk_userID  
-                WHERE
-                	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-
-				<!--- User Access --->
-                <cfswitch expression="#CLIENT.userType#">
-                    
-                    <!--- Regional Advisor --->
-                    <cfcase value="6">
-                        AND (
-                                uar.advisorID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userid)#">
-                            OR 
-                                u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userid)#"> <!--- Second Visit Representative --->          
-                        )
-                    </cfcase>
-                    
-                    <!--- Area Representative / 2nd Visit Representative --->
-                    <cfcase value="7,15">
-                        AND 
-                            u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userid)#"> <!--- Second Visit Representative ---> 
-                    </cfcase> 
-                
-                </cfswitch> 
-                <!--- End of Query to Get Previous Assigned Students --->                 
-                                          
-            ) AS t
-        WHERE
-          
-		<!--- Include Active or students that canceled after arrival date --->
-        (
-            active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">               	 
-         OR
-            cancelDate >= dateArrived                  
-        )
-            
-		<!--- Report Status --->
-        <cfswitch expression="#CLIENT.reportStatus#">
-        
-            <!--- Get incomplete Report Only --->
+                        LIMIT 1 )                                  
+                    END AS dateStartWindowCompliance,                  
+                pr.pr_ID,
+                pr.fk_sr_user,
+                pr.fk_ra_user,
+                pr.fk_rd_user,
+                pr.fk_ny_user,
+                pr.fk_secondVisitRep,                   
+                pr.pr_sr_approved_date,
+                pr.pr_ra_approved_date,
+                pr.pr_rd_approved_date,
+                pr.pr_ny_approved_date,
+                pr.pr_rejected_date,
+                sva.dateOfVisit,
+                sva.dueFromDate,
+                sva.dueToDate,
+                p.programName,
+                h.hostID,
+                CAST(CONCAT(h.familyLastName, ' ##', h.hostID) AS CHAR) AS hostFamilyDisplayName,
+                CAST(CONCAT(u.firstName, ' ', u.lastName,  ' ##', u.userID) AS CHAR) AS secondVisitRepDisplayName,
+                u.lastName AS secondVisitRepLastName,
+                advisor.userID AS advisorID,
+                CAST(CONCAT(advisor.firstName, ' ', advisor.lastName,  ' ##', advisor.userID) AS CHAR) AS advisorDisplayName,
+                advisor.lastName AS advisorLastName,
+                shr.ID AS hideReportID,
+                shr.dateChanged AS dateReportHidden,
+                shr.reason AS reasonReportHidden,
+                CAST(CONCAT(hiddenBy.firstName, ' ', hiddenBy.lastName,  ' ##', hiddenBy.userID) AS CHAR) AS hiddenByName,
+            	u.userID
+         	FROM smg_students s
+            INNER JOIN smg_hosthistory ht ON ht.studentID = s.studentID
+                AND ht.assignedID = 0
+                AND ht.datePlaced IS NOT NULL
+            INNER JOIN smg_hosthistorytracking sht ON sht.historyID = ht.historyID
+                AND fieldName = "secondVisitRepID"
+                AND sht.fieldID != ht.secondVisitRepID                        
+            INNER JOIN user_access_rights uar ON uar.userID = sht.fieldID
+				<cfif APPLICATION.CFC.USER.isOfficeUser()>
+                    AND uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.pr_regionID#">
+                <cfelse>
+                    AND uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionID#">
+                </cfif>
+                AND uar.userType IN ( 5,6,7,15 )
+            INNER JOIN smg_programs p on p.programID = s.programID
+                AND p.active = 1
+            INNER JOIN smg_hosts h ON h.hostID = ht.hostID 
+            INNER JOIN smg_users u ON u.userID = sht.fieldID
+            LEFT OUTER JOIN progress_reports pr ON pr.fk_student = s.studentID            
+                AND pr.fk_reportType = 2	
+                AND pr.fk_host = ht.hostID
+            LEFT OUTER JOIN secondvisitanswers sva ON sva.fk_reportID = pr.pr_ID
+            LEFT OUTER JOIN smg_users advisor ON advisor.userID = uar.advisorID  
+            LEFT OUTER JOIN smg_hide_reports shr ON shr.fk_secondVisitRep = sht.fieldID
+                AND shr.fk_student = ht.studentID
+                AND shr.fk_host = ht.hostID
+            LEFT OUTER JOIN smg_users hiddenBy ON hiddenBy.userID = shr.fk_userID  
+            WHERE s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+			                               
+    	) AS t
+        WHERE ( active = 1 OR cancelDate >= dateArrived )
+        <cfswitch expression="#CLIENT.userType#">
+            <cfcase value="6">
+                AND ( advisorID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userid)#"> OR userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userid)#"> )
+            </cfcase>
+            <cfcase value="7,15">
+                AND userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userid)#">
+            </cfcase>
+        </cfswitch>        
+		<cfswitch expression="#CLIENT.reportStatus#">
             <cfcase value="incomplete">
-                AND
-                    pr_ny_approved_date IS NULL
-                AND	
-                	hideReportID IS NULL
-            </cfcase>
-            
-            <!--- Get Completed Report Only --->
+                AND pr_ny_approved_date IS NULL
+                AND hideReportID IS NULL
+            </cfcase>            
             <cfcase value="completed">
-                AND
-                    pr_ny_approved_date IS NOT NULL
-            </cfcase>
-            
-            <!--- Get Not Required Report Only --->
+                AND pr_ny_approved_date IS NOT NULL
+            </cfcase>            
             <cfcase value="notRequired">
-                AND
-                    hideReportID > <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                AND hideReportID > 0
             </cfcase>
-
-            <!--- Rejected --->
             <cfcase value="rejected">
-                AND
-                    pr_rejected_date IS NOT NULL
-            </cfcase>
-            
-            <!--- incomplete Approval --->
-            <cfcase value="missingApproval">
-            
-                <cfswitch expression="#CLIENT.userType#">
-                
-                    <!--- Office --->
+                AND pr_rejected_date IS NOT NULL
+            </cfcase>            
+            <cfcase value="missingApproval">            
+                AND pr_ny_approved_date IS NULL
+            	<cfswitch expression="#CLIENT.userType#">
                     <cfcase value="1,2,3,4">
-                        AND
-                            pr_ny_approved_date IS NULL
                         AND
                             (
                                 pr_rd_approved_date IS NOT NULL
-                            OR
-                                pr_ra_approved_date IS NOT NULL
-                            OR
-                                pr_sr_approved_date IS NOT NULL
+                                OR pr_ra_approved_date IS NOT NULL
+                                OR pr_sr_approved_date IS NOT NULL
                             )
                     </cfcase>
-                    
-                    <!--- Regional Manager --->
                     <cfcase value="5">
-                        AND
-                        	pr_ny_approved_date IS NULL
-                        AND
-                            pr_rd_approved_date IS NULL
+                        AND pr_rd_approved_date IS NULL
                         AND
                             (
                                 pr_ra_approved_date IS NOT NULL
-                            OR
-                                pr_sr_approved_date IS NOT NULL
+                                OR pr_sr_approved_date IS NOT NULL
                             )
                     </cfcase>
-                    
-                    <!--- Regional Advisor --->
                     <cfcase value="6">
-                        AND
-                        	pr_ny_approved_date IS NULL
-                        AND
-                            pr_ra_approved_date IS NULL
-                        AND
-                            pr_sr_approved_date IS NOT NULL
+                        AND pr_ra_approved_date IS NULL
+                        AND pr_sr_approved_date IS NOT NULL
                     </cfcase>
-                    
-                    <!--- Area Representative / 2nd Visit Representative --->
                     <cfdefaultcase>
-                        AND
-                        	pr_ny_approved_date IS NULL
-                        AND
-                            pr_sr_approved_date IS NULL
-                        AND
-                            pr_ID > <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-                    </cfdefaultcase> 
-                
+                        AND pr_sr_approved_date IS NULL
+                        AND pr_ID > 0
+                    </cfdefaultcase>
                 </cfswitch>
-            
             </cfcase>
-
         </cfswitch>
-		       
-        HAVING
-            (
-                dateArrived IS NULL
-            OR	
-                datePlacedEnded >= dateArrived
-            ) 
-		
-        <!--- Display current placement records or records with a days diff > 0 --->                       
-		AND
-            (
-                totalAssignedPeriod IS NULL
-            OR
-                totalAssignedPeriod > <cfqueryparam cfsqltype="cf_sql_bit" value="0"> 
-            )
-                
+        HAVING ( dateArrived IS NULL OR datePlacedEnded >= dateArrived )                      
+		AND ( totalAssignedPeriod IS NULL OR totalAssignedPeriod >= complianceWindow OR datePlacedEnded IS NULL )
+        
         ORDER BY 
             advisorLastName,
             advisorID, 
