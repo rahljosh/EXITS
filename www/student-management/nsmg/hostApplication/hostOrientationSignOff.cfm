@@ -8,7 +8,8 @@
 		h.fatherLastName, 
         h.motherLastName,
         max(hist.facilitatorDateStatus) AS dateApproved,
-        c.companyshort
+        c.companyshort,
+        c.companyshort_nocolor
 	FROM smg_hosts h
     INNER JOIN smg_companies c ON c.companyID = h.companyID
     LEFT JOIN smg_host_app_history hist ON hist.hostID = h.hostid
@@ -59,15 +60,15 @@
 </div>
 <div style="width: 95%; margin: 50px auto; font-size: 45px;">
 <p>By signing this form you are verifying that the rules of the exchange program have been explained to you during your
-host family orientation and you have received a copy of the <cfoutput>#hostInfo.companyshort#</cfoutput> host family rules, the US DOS Secondary School
+host family orientation and you have received a copy of the <cfoutput>#hostInfo.companyshort_nocolor#</cfoutput> host family rules, the US DOS Secondary School
 Program regulations and the DOS Host Family Welcome letter.</p>
-<p>All policies are detailed in the <cfoutput>#hostInfo.companyshort#</cfoutput> Host Family rules document and specific highlights of the program rules include:</p>
+<p>All policies are detailed in the <cfoutput>#hostInfo.companyshort_nocolor#</cfoutput> Host Family rules document and specific highlights of the program rules include:</p>
 <ul><li style="margin-bottom: 30px;">Exchange students are not allowed to possess or consume alcoholic beverages, illegal drugs or prescription
 drugs that have not been prescribed to them by a physician.</li>
 <li style="margin-bottom: 30px;">Exchange students may not operate a motorized vehicle while on the exchange program except when
 accompanied by a licensed professional driving instructor. Students may never operate a family vehicle.</li>
 <li style="margin-bottom: 30px;">Exchange students may not travel overnight without host parent accompaniment unless the trip is part of a
-<cfoutput>#hostInfo.companyshort#</cfoutput>, school or other trip authorized in advance by <cfoutput>#hostInfo.companyshort#</cfoutput>.</li>
+<cfoutput>#hostInfo.companyshort_nocolor#</cfoutput>, school or other trip authorized in advance by <cfoutput>#hostInfo.companyshort_nocolor#</cfoutput>.</li>
 <li style="margin-bottom: 30px;">Exchange student's finances should be kept entirely separate from the host family and host family members
 may not lend money to, nor borrow money from exchange students. The host family may not have access to
 an exchange student's bank card, credit card or bank PIN.</li>
@@ -75,7 +76,7 @@ an exchange student's bank card, credit card or bank PIN.</li>
 <li style="margin-bottom: 30px;">Exchange students must have their own permanent bed and may share a room with only one other person of
 the same gender.</li>
 <li style="margin-bottom: 30px;">Exchange students may not be deprived of reasonable access to their phone.</li>
-<li style="margin-bottom: 30px;">Exchange students may never be threatened with being sent home. Only <cfoutput>#hostInfo.companyshort#</cfoutput> headquarters staff can decide
+<li style="margin-bottom: 30px;">Exchange students may never be threatened with being sent home. Only <cfoutput>#hostInfo.companyshort_nocolor#</cfoutput> headquarters staff can decide
 to terminate a student's program.</li></ul>
 <p>*I agree to immediately notify my Area Representative of any violation of the program rules.</p>
 </div>
