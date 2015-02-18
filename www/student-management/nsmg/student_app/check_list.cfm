@@ -663,8 +663,8 @@
     
     <!--- PAGE 18 --->
     <tr><td><a href="index.cfm?curdoc=section4/page18&id=4&p=18"><h3>Page [18] - Private School</h3></a></td></tr>
-    <!--- Do not display for ESI or Canada Application --->
-    <cfif CLIENT.companyID EQ 14 OR ListFind("14,15,16", smg_students.app_indicated_program)> 
+    <!--- Do not display for ESI or DASH --->
+    <cfif ( ListFind("14,15,16", smg_students.app_indicated_program) OR ListFind("13,14,15", smg_students.companyid))>
 		<tr><td><font color="0000FF">This page does not apply to your program</font><br></td></tr>
 	<cfelse>        
         <cfloop query="page18">
