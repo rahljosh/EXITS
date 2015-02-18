@@ -1079,7 +1079,7 @@
                 </table>
                 
                 <!--- Update Button --->
-                <cfif qGetHostInfo.applicationStatusID GTE CLIENT.userType>
+                <cfif qGetHostInfo.applicationStatusID GTE CLIENT.userType AND qGetHostInfo.applicationStatusID LTE 7>
                     <table cellpadding="4" align="center">
                         <tr>
                             <td><input type="image" src="pics/buttons/update.png" /></td>
