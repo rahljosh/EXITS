@@ -105,7 +105,13 @@
         <cfif url.all is 'no'>AND s.companyid = #client.companyid#</cfif>
         ORDER BY s.batchID DESC
     </cfquery>
-    
+    <cfquery name="verificationDates" datasource="MySql">
+     SELECT DISTINCT verification_received
+	 FROM extra_candidates
+	 WHERE sevis_batchid = 0
+     AND verification_received > <cfqueryparam cfsqltype="cf_sql_date" value="2015-02-15">
+    </cfquery>
+ 
 </cfsilent>    
 
 <link rel="stylesheet" href="../reports/reports.css" type="text/css">
@@ -122,7 +128,17 @@
 <cfform action="sevis/newFormXML.cfm" method="POST" target="blank">
 <Table class="nav_bar" cellpadding=6 cellspacing="0" align="center" width="96%">
 	<tr><th colspan="2" bgcolor="ededed">DS-2019 Create XML Files (Up to 250 students)</th></tr>
-	<tr align="left">
+	  <tr align="left">
+		<td width="15%">Date of Verificatione :</td>
+		<td>
+        	<select name="verificationDate">	
+            	<option value="">Please select a verification date</option>
+				<cfloop query="verificationDates"><option value="#verification_received#">#DateFormat(verification_received, 'yyyy-mm-dd')#</option></cfloop>
+			</select>
+        </td>
+	</tr>
+    
+    <tr align="left">
 		<td width="15%">Program :</td>
 		<td>
         	<select name="programid" multiple size="8">			
@@ -130,6 +146,7 @@
 			</select>
         </td>
 	</tr>
+  
 	<tr align="left">
 		<td width="15%">Intl. Representative :</td>
 		<td>

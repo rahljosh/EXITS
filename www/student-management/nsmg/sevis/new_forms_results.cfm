@@ -38,7 +38,7 @@
 	</table>
 <cfelse>
 
-	<cffile action="read" file="#AppPath.sevis##get_company.companyshort_nocolor#/new_forms/#form.filename#" variable="myxml">
+	<cffile action="read" file="#APPLICATION.PATH.sevis##get_company.companyshort_nocolor#/new_forms/#form.filename#" variable="myxml">
 
 	<cfset mydoc = XmlParse(myxml)>	
 	<cfset batchid = mydoc.TransactionLog.BatchHeader.BatchID.XmlText> 
@@ -97,7 +97,7 @@
  			<cfquery name="update_ds2019" datasource="MySql"> <!--- UPDATE SEVIS BATCH ID TO 0 STUDENT WILL COME BACK TO THE XML NEXT TIME --->
 				UPDATE extra_candidates
 				SET sevis_batchid ='0'
-				WHERE studentid = '#stuID#'
+				WHERE candidateid = '#stuID#'
 			</cfquery>
 			<cfquery name="delete_history" datasource="MySql">
 				DELETE 
