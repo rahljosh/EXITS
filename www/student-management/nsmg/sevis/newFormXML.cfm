@@ -116,8 +116,8 @@
         AND 
             c.citizen_Country NOT IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="32,232" list="yes"> )
         AND 
-            c.verification_received IS NOT NULL
-        AND 
+            c.verification_received = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.verificationDate#">
+        AND
             c.sevis_batchid = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
         AND 
             c.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programid#" list="yes"> )
@@ -126,10 +126,10 @@
             AND
                 c.intRep IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intRep#" list="yes"> )
        	</cfif>
-         AND
-		
+      
+		 AND 
            c.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-
+	
     
         ORDER BY 
             u.businessname, 
