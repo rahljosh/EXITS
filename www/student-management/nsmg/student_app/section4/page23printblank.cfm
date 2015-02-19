@@ -67,7 +67,7 @@
                         <tr height="33">
                             <td width="8" class="tableside"><img src="#path#pics/p_topleft.gif" width="8"></td>
                             <td width="26" class="tablecenter"><img src="../pics/students.gif"></td>
-                            <td class="tablecenter"><h2>Page [22] - Double Placement Authorization</h2></td>
+                            <td class="tablecenter"><h2>Page [23] - Double Placement Authorization</h2></td>
                             <td align="right" class="tablecenter">
                                 <cfif URL.display EQ "web">
                                     <a href="" onClick="javascript: win=window.open('section4/page23.cfm?display=print', 'Reports', 'height=600, width=800, location=no, scrollbars=yes, menubars=no, toolbars=yes, resizable=yes'); win.opener=self; return false;">
