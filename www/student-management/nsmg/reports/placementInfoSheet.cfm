@@ -843,7 +843,7 @@
             
             <cffile action="write" file="#APPLICATION.PATH.TEMP##qGetStudentInfo.studentID#-placementInfo.pdf" output="#profile#" nameconflict="overwrite">    
             
-            <cfdocument filename="#APPLICATION.PATH.TEMP##qGetStudentInfo.studentID#-idCard.pdf" format="PDF" backgroundvisible="yes" overwrite="yes" fontembed="yes" localurl="no">
+            <cfdocument filename="#APPLICATION.PATH.TEMP##qGetStudentInfo.studentID#-idCard.pdf" format="PDF" backgroundvisible="yes" overwrite="yes" fontembed="yes" localurl="yes">
 
                 <cfscript>
 					// FORM.pr_id and FORM.report_mode are required for the progress report in print mode.
