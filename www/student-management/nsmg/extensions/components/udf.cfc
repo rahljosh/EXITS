@@ -1800,7 +1800,7 @@
       
 	  	<cfset fileName="placementInformationSheet_#qGetStudentInfo.studentID#_#DateFormat(NOW(),'mm-dd-yyyy')#-#TimeFormat(NOW(),'hh-mm')#">
 		<cfoutput>
-            <cfdocument format="pdf" filename="#fileName#.pdf" overwrite="yes" orientation="landscape" name="uploadFile">
+            <cfdocument format="pdf" filename="#fileName#.pdf" overwrite="yes" orientation="landscape" name="uploadFile" localurl="yes">
                 #PlacementInfo#
             </cfdocument>
         </cfoutput>
@@ -1967,7 +1967,7 @@
             
                 <cfset fileName="hostWelcomeLetter_#qGetStudentInfo.studentID#_#DateFormat(NOW(),'mm-dd-yyyy')#-#TimeFormat(NOW(),'hh-mm')#">
          <cfoutput>
-            <cfdocument format="pdf" filename="#fileName#.pdf" overwrite="yes" orientation="landscape" name="uploadFile">
+            <cfdocument format="pdf" filename="#fileName#.pdf" overwrite="yes" orientation="landscape" name="uploadFile" localurl="yes">
             	#letter#
            	</cfdocument>
         </cfoutput>    
@@ -2192,7 +2192,7 @@
 
       <cfset fileName="schoolWelcomeLetter_#qGetStudentInfo.studentID#_#DateFormat(NOW(),'mm-dd-yyyy')#-#TimeFormat(NOW(),'hh-mm')#">
          <cfoutput>
-            <cfdocument format="pdf" filename="#fileName#.pdf" overwrite="yes" orientation="landscape" name="uploadFile">
+            <cfdocument format="pdf" filename="#fileName#.pdf" overwrite="yes" orientation="landscape" name="uploadFile" localurl="yes">
             	#schoolLetter#
            	</cfdocument>
         </cfoutput>    
@@ -2865,7 +2865,7 @@
 </cfsavecontent> 
        <cfset fileName="studentID Card_#qGetStudentInfo.studentID#_#DateFormat(NOW(),'mm-dd-yyyy')#-#TimeFormat(NOW(),'hh-mm')#">
          <cfoutput>
-            <cfdocument format="pdf" filename="#fileName#.pdf" overwrite="yes" orientation="landscape" name="uploadFile">
+            <cfdocument format="pdf" filename="#fileName#.pdf" overwrite="yes" orientation="landscape" name="uploadFile" localurl="yes">
             	#IDCard#
            	</cfdocument>
         </cfoutput>    
