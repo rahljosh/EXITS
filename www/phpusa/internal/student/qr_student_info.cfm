@@ -203,7 +203,7 @@
 
     
     <!--- Email Finance Department --->
-	<cfmail to="#APPLICATION.EMAIL.finance#" 
+	<cfmail to="#APPLICATION.EMAIL.cancellation#" 
     	from="#APPLICATION.EMAIL.support#" 
         subject="PHP Cancelation - #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#) - #qGetStudentInfo.programname# (###qGetStudentInfo.programID#)" 
         type="html" 
