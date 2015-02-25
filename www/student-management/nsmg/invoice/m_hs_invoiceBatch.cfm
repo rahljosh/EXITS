@@ -856,6 +856,12 @@ GROUP BY agentid, testCompid
 			<cfset compName = "case">
 			<cfset emailFrom = 'jennifer@case-usa.org'>
 		</cfcase>
+        
+        <!--- SMG Canada --->
+        <cfcase value="13">
+        	<cfset compName = "smg">
+            <cfset emailFrom = 'jennifer@student-management.com'>
+        </cfcase>
 		
         <!--- ISE --->        
 		<cfdefaultcase>

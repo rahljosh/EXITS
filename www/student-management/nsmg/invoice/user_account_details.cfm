@@ -124,7 +124,7 @@
         LEFT JOIN smg_users su ON su.userid = sch.agentid
         WHERE sch.agentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userid#">
         <cfswitch expression="#client.companyid#">
-            <cfcase value="5,10,14">
+            <cfcase value="5,10,13,14">
                 AND sch.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
             </cfcase>
             <cfcase value="7,8">
@@ -168,7 +168,7 @@
         LEFT JOIN smg_users su ON su.userid = sc.agentid
         WHERE sc.active =1
         <cfswitch expression="#client.companyid#">
-            <cfcase value="5,10,14">
+            <cfcase value="5,10,13,14">
                 AND sc.companyid = #client.companyid#
             </cfcase>
             <cfcase value="7,8">
@@ -1106,7 +1106,7 @@ WHERE su.userid = #url.userid#
 	</cfcase>
     <cfcase value="13">
 		<cfset compName = "smgcanada">
-		<cfset emailFrom = 'jennifer@case-usa.org'>
+		<cfset emailFrom = 'jennifer@student-management.com'>
 	</cfcase>
 	<cfdefaultcase>
 		<cfset compName = "ise">
