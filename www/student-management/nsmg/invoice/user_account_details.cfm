@@ -1105,7 +1105,7 @@ WHERE su.userid = #url.userid#
 		<cfset emailFrom = 'stacy@exchange-service.org'>
 	</cfcase>
     <cfcase value="13">
-		<cfset compName = "smgcanada">
+		<cfset compName = "smg canada">
 		<cfset emailFrom = 'jennifer@student-management.com'>
 	</cfcase>
 	<cfdefaultcase>
