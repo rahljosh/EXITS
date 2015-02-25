@@ -143,6 +143,11 @@ ORDER BY
 						<img src="../../nsmg/pics/case_banner.jpg" width="665" height="113" align="Center">
                     </cfcase>
                     
+                    <!--- SMG Canada --->
+					<cfcase value="13">
+						<img src="../../nsmg/pics/Canada_logo_1.jpg" width="665" height="113" align="Center">
+                    </cfcase>
+                    
                     <!--- ESI --->
                     <cfcase value="14">
                         <img src="../../nsmg/pics/esiBanner.jpg" width="665" height="80" align="center" />
