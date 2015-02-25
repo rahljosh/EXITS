@@ -1219,8 +1219,7 @@ Please find attached your credit notes. <br/>
 
 These are documents that confirm the cancellations that have been processed in your account. There you can verify the invoice number, student id, a brief description and the amount that was canceled. After receiving these credit notes, please update your records accordingly.<br/><br/>
 
-I'll wait for your instructions on how to apply each credit note just as we normally do for a regular payment (just let me know/confirm the invoice number and respective amounts to apply it). <br/>
-Just remember to pay for invoices that belong to the same company as the credit note (ex. an ISE credit note must be used to pay for ISE invoices).<br/><br/>
+I'll wait for your instructions on how to apply each credit note just as we normally do for a regular payment (just let me know/confirm the invoice number and respective amounts to apply it). <br/><br/>
 
 These confirmations are one more effort to keep both, yours and our records in the same page.<br/><br/>
 
