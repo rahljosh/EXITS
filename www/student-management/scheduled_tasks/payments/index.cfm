@@ -82,6 +82,16 @@
 		} catch(any e) {
 			vErrors = vErrors & "<b>*ESI Payments - " & e.message & ":</b> " & e.detail & "<br/>";
 		}
+		try {
+			include "esiPlacementPayments.cfm";
+		} catch(any e) {
+			vErrors = vErrors & "<b>*ESI Payments - " & e.message & ":</b> " & e.detail & "<br/>";
+		}
+		try {
+			include "esiHostApplicationBonus.cfm";
+		} catch(any e) {
+			vErrors = vErrors & "<b>*ESI Payments - " & e.message & ":</b> " & e.detail & "<br/>";
+		}
 	}
 	
 </cfscript>
