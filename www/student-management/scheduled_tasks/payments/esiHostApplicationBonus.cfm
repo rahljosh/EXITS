@@ -32,7 +32,7 @@
         smg_hosts.hostID,    
         0,    
         36,    
-        "Bonus",
+        "Pre-Placement",
         CASE      
             WHEN CURDATE() <= STR_TO_DATE(CONCAT('01,05,',YEAR(smg_seasons.startDate)),'%d,%m,%Y') THEN 150
             WHEN CURDATE() <= STR_TO_DATE(CONCAT('01,06,',YEAR(smg_seasons.startDate)),'%d,%m,%Y') THEN 100
