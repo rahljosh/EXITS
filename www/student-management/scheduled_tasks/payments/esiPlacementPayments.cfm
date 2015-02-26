@@ -23,7 +23,7 @@
         dateCreated,
         dateUpdated,
         isPaid)
-	SELECT DISTINCT
+    SELECT DISTINCT
         smg_students.placerepID,
         smg_students.companyID,
         smg_students.studentID,
@@ -53,12 +53,13 @@
           AND smg_hosthistory.isActive      
           AND NOT smg_hosthistory.isRelocation
           AND smg_hosthistory.compliance_review IS NOT NULL
-          AND smg_hosthistory.datePISEmailed IS NOT NULL      
+          AND smg_hosthistory.datePISEmailed IS NOT NULL
+          AND smg_hosthistory.compliance_school_accept_date IS NOT NULL    
     INNER JOIN smg_hosts ON smg_hosts.hostID = smg_students.hostID
     INNER JOIN smg_users_payments_ranges ON smg_users_payments_ranges.fk_programID = smg_students.programID
           AND smg_users_payments_ranges.companyID = 14      
           AND smg_users_payments_ranges.fk_paymentType = 1     
-    WHERE smg_students.programID > 365
+    WHERE smg_students.programID > 400
     AND smg_students.companyID = 14
     AND smg_students.canceldate IS NULL
     AND NOT EXISTS (
@@ -67,5 +68,5 @@
         WHERE studentID = smg_students.studentID 
         AND paymentType = smg_users_payments_ranges.fk_paymentType 
         AND isDeleted = 0 
-        AND (agentID = smg_students.placeRepID OR hostID = smg_students.hostID))
+        AND (agentID = smg_students.placeRepID OR hostID = smg_students.hostID))    
 </cfquery>
