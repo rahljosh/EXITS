@@ -60,6 +60,7 @@
           AND smg_users_payments_ranges.companyID = 14      
           AND smg_users_payments_ranges.fk_paymentType = 1     
     WHERE smg_students.programID > 400
+    AND smg_students.programID != 417
     AND smg_students.companyID = 14
     AND smg_students.canceldate IS NULL
     AND NOT EXISTS (
