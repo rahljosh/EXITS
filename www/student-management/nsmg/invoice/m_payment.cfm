@@ -537,7 +537,7 @@ ORDER BY businessname
                 AND sch.companyid IN (7,8)
             </cfcase>
             <cfdefaultcase>
-                AND sch.companyid IN (1,2,3,4,5,7,8,10,12)
+                AND sch.companyid IN (1,2,3,4,5,7,8,10,12,13)
             </cfdefaultcase>
             </cfswitch>
             GROUP BY sch.invoiceid
@@ -554,7 +554,7 @@ ORDER BY businessname
                 AND sch.companyid IN (7,8)
             </cfcase>
             <cfdefaultcase>
-                AND sch.companyid IN (1,2,3,4,5,7,8,10,12)
+                AND sch.companyid IN (1,2,3,4,5,7,8,10,12,13)
             </cfdefaultcase>
             </cfswitch>
             GROUP BY sch.invoiceid
