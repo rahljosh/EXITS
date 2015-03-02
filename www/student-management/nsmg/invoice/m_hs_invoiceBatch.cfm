@@ -333,46 +333,6 @@ smg_charges
 						<cfset may = '#thisYear#-05-01'>
 						<cfset october = '#thisYear#-10-01'>
 					   
-						<!--- FOR AUGUST STUDENTS ONLY THAT ARE NOT DIRECT PLACEMENT!!! --->
-						<cfif getHSstud.startdate GT may AND getHSstud.startdate LT october AND getHSstud.direct_placement NEQ 1>
-						
-							<!--- discount for early apps DISCONTINUED starting for AUG10 arriving students --->
-						   <!---  <!--- If app is received before Jan 1st of previous year from Intl Home Stud--->
-							<cfif #getHSstud.dateapplication# LTE #variables.discDeadLine#>
-							   
-								<cfif getHSstud.intrep EQ 33>
-									<cfquery name="insertSpecAgreem" datasource="MySQL">
-									INSERT INTO smg_charges
-										(agentid, stuid, invoiceid, programid, description, type, date, amount_due, amount, userinput, invoicedate, companyid)
-									VALUES
-										(#getHSstud.intrep#, #getHSstud.studentid#, 0, #getHSstud.programid#, 'Application received before Dec 31st', 'special discount', #Now()#, -100, -100, #client.userid#, #Now()#, #getHSstud.companyid#)   
-									</cfquery>                            
-								</cfif>
-							   
-								<!--- If app is received before Dec 31st of previous year from CLS--->
-								<cfif getHSstud.intrep EQ 6381 AND getHSstud.scholarship EQ 0>
-									<cfquery name="insertSpecAgreem" datasource="MySQL">
-									INSERT INTO smg_charges
-										(agentid, stuid, invoiceid, programid, description, type, date, amount_due, amount, userinput, invoicedate, companyid)
-									VALUES
-										(#getHSstud.intrep#, #getHSstud.studentid#, 0, #getHSstud.programid#, 'Application received before Dec 31st', 'special discount', #Now()#, -150, -150, #client.userid#, #Now()#, #getHSstud.companyid#)   
-									</cfquery>                     
-								</cfif>
-							   
-							</cfif> --->
-						   
-							<!--- discount for scholarship students from CLS (DISCOUNT DISCONTINUED FOR FALL 2011 ON, as per Wayne's email Dec 15th 2010)--->
-							<!--- <cfif getHSstud.intrep EQ 6381 AND getHSstud.scholarship EQ 1>
-								<cfquery name="insertScholDisc" datasource="MySQL">
-								INSERT INTO smg_charges
-								(agentid, stuid, invoiceid, programid, description, type, date, amount_due, amount, userinput, invoicedate, companyid)
-								VALUES
-								(#getHSstud.intrep#, #getHSstud.studentid#, 0, #getHSstud.programid#, 'Scholarship Student', 'scholarship discount', #Now()#, -200, -200, #client.userid#, #Now()#, #getHSstud.companyid#)   
-								</cfquery>                               
-							</cfif> --->
-						   
-						</cfif>
-					   
 					</cfif>
 					<!--- END OF: insert charges ONLY IF program fee and insurance cost is not zero (except for the deposit charge, which is entered whenever select --->
 				   
@@ -385,11 +345,38 @@ smg_charges
 								   
 						<cfif getHSstud.insurance_typeid NEQ 1>
 					   
-							 <cfquery name="insertInsurance" datasource="MySQL">
-							INSERT INTO smg_charges
-								(agentid, stuid, invoiceid, programid, description, type, date, amount_due, amount, userinput, invoicedate, companyid)
-							VALUES
-								(#getHSstud.intrep#, #getHSstud.studentid#, 0, #getHSstud.programid#, '#getHSstud.programName#', '#chargeType#', #Now()#, #variables.insurance#, #variables.insurance#, #client.userid#, #Now()#, #getHSstud.companyid#)   
+							 <cfquery name="insertInsurance" datasource="#APPLICATION.DSN#">
+								INSERT INTO smg_charges (
+                                	agentid, 
+                                    stuid, 
+                                    invoiceid, 
+                                    programid, 
+                                    description, 
+                                    type, 
+                                    date, 
+                                    amount_due, 
+                                    amount, 
+                                    userinput, 
+                                    invoicedate, 
+                                    companyid)
+								VALUES (
+                                	<cfqueryparam cfsqltype="cf_sql_integer" value="#getHSStud.intrep#">,
+                                    <cfqueryparam cfsqltype="cf_sql_integer" value="#getHSStud.studentid#">, 
+                                    0,
+                                    <cfqueryparam cfsqltype="cf_sql_integer" value="#getHSStud.programid#">,
+                                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#getHSstud.programName#">,
+                                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#chargeType#">,
+                                    <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
+                                    <cfif LEN(variables.insurance)>
+                                    	<cfqueryparam cfsqltype="cf_sql_decimal" value="#variables.insurance#">,
+                                    	<cfqueryparam cfsqltype="cf_sql_decimal" value="#variables.insurance#">,
+                                   	<cfelse>
+                                    	<cfqueryparam cfsqltype="cf_sql_decimal" value="0.00">,
+                                    	<cfqueryparam cfsqltype="cf_sql_decimal" value="0.00">,
+                                    </cfif>
+                                    <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">,
+                                    <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
+                                    <cfqueryparam cfsqltype="cf_sql_integer" value="#getHSStud.companyid#">)   
 							</cfquery>
 											 
 						</cfif>
