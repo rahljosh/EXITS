@@ -44,6 +44,8 @@
             c.companyID,
             c.hostcompanyid, 
             c.sevis_batchid,
+            c.startdate as sevis_startdate,
+            c.enddate as sevis_enddate,
             
           
             birth.seviscode AS birthseviscode,
@@ -51,8 +53,7 @@
             citizen.seviscode AS citizenseviscode,
             
 			<!--- Program Information --->
-            p.sevis_startdate, 
-            p.sevis_enddate, 
+         
             p.preayp_date, 
             p.type AS programtype,
             
@@ -242,7 +243,7 @@
                     <City>#XMLFormat(qGetStudents.hostCompanycity)#</City> 
                     <State>#XMLFormat(qGetStudents.state)#</State> 
                     <PostalCode>#XMLFormat(qGetStudents.hostCompanyzip)#</PostalCode> 
-                    <SiteName>#XMLFormat(Trim(qGetStudents.hostCompanyname))#</SiteName>
+                    <SiteName>#Left(XMLFormat(Trim(qGetStudents.hostCompanyname)),60)#</SiteName>
                     <PrimarySite>true</PrimarySite>
                     <Remarks>#XMLFormat(qGetStudents.title)#, POC: #XMLFormat(qGetStudents.supervisor)#, POC Phone: #phoneString#</Remarks>
                     
@@ -294,8 +295,8 @@
             <PermanentResidenceCountryCode>#qGetStudents.residentseviscode#</PermanentResidenceCountryCode> 		
         </Biographical>
         <PositionCode>219</PositionCode> 
-        <PrgStartDate>#DateFormat(vSetStartDate, 'yyyy-mm-dd')#</PrgStartDate>  
-        <PrgEndDate>#DateFormat(qGetStudents.enddate, 'yyyy-mm-dd')#</PrgEndDate>
+        <PrgStartDate>#DateFormat(qGetStudents.sevis_startdate, 'yyyy-mm-dd')#</PrgStartDate>  
+        <PrgEndDate>#DateFormat(qGetStudents.sevis_enddate, 'yyyy-mm-dd')#</PrgEndDate>
         <CategoryCode>12</CategoryCode>
         <SubjectField>
             <SubjectFieldCode>#XMLFormat(qGetStudents.classification)#</SubjectFieldCode> 
