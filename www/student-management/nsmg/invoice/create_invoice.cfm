@@ -11,7 +11,8 @@ select max(invoiceid) as last_invoice from smg_charges
 <cfquery name="create_invoice" datasource="MySQL">
 update smg_charges
 	set invoiceid = #invoice_number#,
-		invoicedate = #now()#
+		invoicedate = #now()#,
+        invoice_sent = 1
 	where invoiceid = 0 and 
 	<cfif form.inv_type is 'deposit'>
 	type = '#form.inv_type#' and
