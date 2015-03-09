@@ -715,7 +715,7 @@
             </cfif>
     
             <cfquery name="getNewInvPerAgent" datasource="#APPLICATION.DSN#">
-                SELECT DISTINCT(sc.invoiceid) AS invoiceId, sc.agentID, sc.companyID
+                SELECT DISTINCT(sc.invoiceid) AS invoiceId
                 FROM smg_charges sc
                 LEFT JOIN smg_programs sp ON sp.programid = sc.programid
                 WHERE sc.invoice_sent = 0
