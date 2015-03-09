@@ -56,7 +56,8 @@
 
     <cfquery name="invNumber" datasource="MySQL">
     UPDATE smg_charges
-    SET invoiceid = #variables.invoiceNumb#
+    SET invoiceid = #variables.invoiceNumb#,
+    	invoice_sent = 1
     WHERE agentid = #url.userid#
     AND invoiceid = 0
     </cfquery>  
