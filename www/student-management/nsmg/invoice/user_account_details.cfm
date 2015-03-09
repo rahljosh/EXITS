@@ -722,7 +722,7 @@ GROUP BY
                 RIGHT JOIN smg_charges s ON s.chargeid = spc.chargeid
                 WHERE s.agentid =#url.userid#
                     
-				<cfif (FORM.companyID EQ 5 OR FORM.companyID EQ 10) AND form.view is not 'all'>
+				<cfif (FORM.companyID EQ 5 OR FORM.companyID EQ 10 OR FORM.companyID EQ 13) AND form.view is not 'all'>
 					AND 
 						s.companyid = #FORM.companyID#
 				<cfelse>
@@ -837,8 +837,8 @@ GROUP BY
         sch.agentid = #url.userid#
 		<cfif form.view is not 'all'>
             <cfswitch expression="#FORM.companyID#">
-                <cfcase value="1,2,3,4,12">
-                    and sch.companyid in (1,2,3,4,12)
+                <cfcase value="1,2,3,4,12,13">
+                    and sch.companyid in (1,2,3,4,12,13)
                 </cfcase>
                 <cfdefaultcase>
                     and sch.companyid = #FORM.companyID#
@@ -862,7 +862,7 @@ GROUP BY
 	where paymentref = '#paymentref#'
     and spr.agentid = #url.userid# 
     and paymenttype = '#paymenttype#'
-    and spr.date = #payments_received.date#
+    and spr.date = <cfqueryparam cfsqltype="cf_sql_date" value="#payments_received.date#">
 	<cfif client.companyid EQ 10 OR client.companyid EQ 14>
 		and sc.companyid = #client.companyid#
 	</cfif>
