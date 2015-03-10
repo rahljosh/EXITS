@@ -26,7 +26,7 @@
 	WHERE  	<cfif url.usertype is 'office'> 
 				user_access_rights.usertype <= 4 AND user_access_rights.companyid = '#client.companyid#'
 			<cfelseif url.usertype is 'intagent'> 
-				user_access_rights.usertype = '8' OR '11'
+				(user_access_rights.usertype = '8' OR '11') AND user_access_rights.companyid = '#client.companyid#'
 			<cfelseif url.usertype is 'reps'> 
 				(user_access_rights.usertype = '7' AND user_access_rights.companyid = '#client.companyid#')
 			</cfif>
