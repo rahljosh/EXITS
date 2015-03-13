@@ -14,7 +14,7 @@ Total Number of Applications: #numberofstudents# applications.<br /><br />
 <Cfdump var="#studentXMLFile#">
 
 
-<!----Check if Student has been sumitted---->
+<!----Check if Student has been submitted---->
 <cfquery name="check_soid" datasource="MySQL">
 select studentid, soid, familylastname, firstname, app_current_status, uniqueID
 from smg_students where soid = '#StudentXMLFile.applications.application[i].XmlAttributes.studentid#'
