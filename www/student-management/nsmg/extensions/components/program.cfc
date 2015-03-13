@@ -76,8 +76,8 @@
                 WHERE
                 	p.is_deleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
 				
-                <!--- Canada and ESI hast it's own programs --->
-                <cfif listFind("13,14", CLIENT.companyID)>
+                <!--- Canada, ESI, and DASH have their own programs --->
+                <cfif listFind("13,14,15", CLIENT.companyID)>
                     AND
                         p.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
 				<cfelseif LEN(ARGUMENTS.companyID)>
@@ -217,7 +217,7 @@
                         companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
                 <cfelse>
                     AND
-                        companyid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,6,10,12,13,14" list="yes">)
+                        companyid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,6,10,12,13,14,15" list="yes">)
                 </cfif>	                
                     
 				<cfif LEN(ARGUMENTS.isActive)>
