@@ -219,7 +219,7 @@
                 <tr>               
                     <td class="tableTitleView greyRow" valign="top">Housing Address :</td>
                     <td class="greyRow tableDataView">
-                    	<cfif qGetHostCompany.isHousingProvided EQ 1>
+                    	<cfif ListFind("1,2",qGetHostCompany.isHousingProvided)>
                             #qGetHostCompany.housingAddress#, #qGetHostCompany.housingCity#, #qGetHostCompany.housingStateName# #qGetHostCompany.housingZip#
                         <cfelse>
                             n/a
