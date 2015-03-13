@@ -53,18 +53,19 @@
 		} 
 	}
 	
-	var culturalActivityPopup = function(unqID) {
-		var url = "candidate/culturalActivityReport.cfm?uniqueID=" + unqID;
+	$(document).ready(function() {
+	
+		// JQuery Modal
 		$(".jQueryModal").colorbox( {
 			width:"50%", 
 			height:"60%", 
 			iframe:true,
 			overlayClose:false,
-			escKey:false,
-			href:url,
-			onClosed:function(){}
-		});	
-	}
+			escKey:true,
+			onClosed:function(){ window.location.reload(); }
+		});
+		
+	});
 	
 	var evaluationTrackingPopup = function(unqID, trackID) {
 		var url = "candidate/evaluation_tracking.cfm?uniqueID=" + unqID + "&id=" + trackID;
@@ -340,7 +341,8 @@
                       	<cfelse>
                         	<td class="style5" style="text-align:center;">#daysSinceCheckIn#</td>
                         </cfif>
-                        <td align="center" class="style5"><a href="" onClick="javascript:culturalActivityPopup(#uniqueID#)" class="style4 jQueryModal">Add</a></td>
+                        <td align="center" class="style5">
+                        <a href="../wat/candidate/culturalActivityReport.cfm?uniqueID=#uniqueID#" class="style4 jQueryModal">Add</a></td>
 						<td align="center" class="style5">
                         	<a href="" onClick="javascript:evaluationTrackingPopup(#uniqueID#,#FORM.evaluationID#)" class="style4 jQueryModal">Track</a>
                         	<br/>#comment#
