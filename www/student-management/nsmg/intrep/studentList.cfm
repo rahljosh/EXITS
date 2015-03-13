@@ -122,14 +122,15 @@
                 	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1"> 
                 AND 
                 	(
-                    	sh.hostID IS NULL
+                    	sh.hostID IS NULL 
+                      
+                    
                     OR 
                     	(
                             sh.hostID IS NOT NULL
                         AND 
                             s.host_fam_approved > <cfqueryparam cfsqltype="cf_sql_integer" value="4">	
-                        AND
-                            sh.datePISEmailed IS NULL
+                      
                    		)
                    )
             </cfcase>
@@ -183,7 +184,7 @@
                 [ <a href="?curdoc=intrep/int_php_students">Private High School</a> ] &nbsp; &middot; &nbsp;
                 [ 
 					<span class="<cfif URL.status EQ "placed">edit_link_selected<cfelse>edit_link</cfif>"><a href="?curdoc=intrep/studentList&status=placed">Placed</a></span> &middot;
-                    <span class="<cfif URL.status EQ "pending">edit_link_selected<cfelse>edit_link</cfif>"><a href="?curdoc=intrep/studentList&status=pending">Pending</a></span> &middot;
+          
 					<span class="<cfif URL.status EQ "unplaced">edit_link_selected<cfelse>edit_link</cfif>"><a href="?curdoc=intrep/studentList&status=unplaced">Unplaced</a></span> &middot; 
 					<span class="<cfif URL.status EQ "all">edit_link_selected<cfelse>edit_link</cfif>"><a href="?curdoc=intrep/studentList&status=all">All</a></span> &middot; 
 					<span class="<cfif URL.status EQ "inactive">edit_link_selected<cfelse>edit_link</cfif>"><a href="?curdoc=intrep/studentList&status=inactive">Inactive</a></span> &middot; 
