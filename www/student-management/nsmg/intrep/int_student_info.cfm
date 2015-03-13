@@ -33,7 +33,7 @@
 		// Get Placement History List
 		qGetPlacementHistoryList = APPLICATION.CFC.STUDENT.getPlacementHistory(studentID=qGetStudentInfo.studentID,isActive=1);
 		
-		// Check if student is placed or not (Pending is also considered placed)
+		// Check if student is placed or not (Pending is NOT considered placed)
 		vIsStudentPlaced = false;
 	
 		// Placed Or Pending = Placed
@@ -42,7 +42,7 @@
 			vIsStudentPlaced = true;	
 		} else if ( VAL(qGetPlacementHistoryList.hostID) AND qGetStudentInfo.host_fam_approved GT 4 AND isDate(qGetPlacementHistoryList.datePISEmailed) ) {
 			// Pending Placement - Set as Placed
-			vIsStudentPlaced = true;	
+			vIsStudentPlaced = false;	
 		}
 	</cfscript>
 
