@@ -39,7 +39,7 @@
 	APPLICATION.EMAIL.cancellation = 'luke@phpusa.com;jennifer@student-management.com;bmccready@student-management.com';
 	APPLICATION.EMAIL.programManager = 'luke@phpusa.com';
 	APPLICATION.EMAIL.errors = 'errors@student-management.com';
-	APPLICATION.EMAIL.schoolNotification = 'luke@phpusa.com;tina@phpusa.com;joanna@phpusa.com';
+	APPLICATION.EMAIL.schoolNotification = 'luke@phpusa.com;chris@phpusa.com;joanna@phpusa.com';
 	APPLICATION.EMAIL.hostFamilyNotification = 'bmccready@student-management.com;luke@phpusa.com';
 	
 
