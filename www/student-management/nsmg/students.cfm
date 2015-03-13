@@ -179,7 +179,12 @@
                  AND 
                     p.is_deleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
                 AND 
-                    p.companyID = (<cfqueryparam cfsqltype="cf_sql_integer" value="14" list="yes">)           
+                    p.companyID = (<cfqueryparam cfsqltype="cf_sql_integer" value="14" list="yes">)
+            <cfelseif client.companyID eq 15>
+            	AND 
+                	p.is_deleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                AND 
+                	p.companyID = (<cfqueryparam cfsqltype="cf_sql_integer" value="15" list="yes">)
             <cfelse>
                 AND 
                     p.is_deleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
