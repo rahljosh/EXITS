@@ -6,6 +6,7 @@
 <cfparam name="FORM.seasonID" default="#APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID#">
 <cfparam name="FORM.companyID" default="1">
 <cfparam name="FORM.chooseCharge" default="">
+<cfparam name="FORM.placed" default="1">
 
 <cfsilent>
 
