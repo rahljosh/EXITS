@@ -1,4 +1,4 @@
-<cfsetting requesttimeout="400">
+<cfsetting requesttimeout="600">
 
 <cfscript>
 	vCurrentSeason = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID;
@@ -88,6 +88,9 @@
                 #client.userid#)
         </cfquery>
  	</cfoutput>
+    <cfscript>
+		sleep(3000);
+	</cfscript>
 </cfloop>
 
 <cfquery name="qGetStudentsMissingHostAppAgent" datasource="#APPLICATION.DSN#">
@@ -174,4 +177,7 @@
                 #client.userid#)
         </cfquery>
     </cfoutput>
+    <cfscript>
+		sleep(3000);
+	</cfscript>
 </cfloop>
