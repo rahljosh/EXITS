@@ -45,7 +45,7 @@ where userid = #url.userid#
 </cfquery>
 
 <cfoutput> 
-<form method="post" action="insert_charge_query.cfm">
+<form method="post" action="insert_charge_query.cfm" enctype="multipart/form-data">
 
 <div class="application_section_header">Add Charges to Account</div><br><br>
 <input type="hidden" name=agentid value=#url.userid#>
@@ -70,7 +70,7 @@ Type: 	<select name="type">
  <br>
  </cfoutput>
 
-<form method="post" action="insert_student_charge_query.cfm">
+<form method="post" action="insert_student_charge_query.cfm" enctype="multipart/form-data">
 <cfoutput>
 <input type="hidden" name=agentid value=#url.userid#>
 </cfoutput>
