@@ -111,7 +111,7 @@
 		
     <cfinclude template="../querys/fieldstudy.cfm">
     <cfinclude template="../querys/program.cfm">
-    
+  
     <cfquery name="qGetStateList" datasource="#APPLICATION.DSN.Source#">
         SELECT id, state, stateName
         FROM smg_states
@@ -671,6 +671,8 @@
 
 <cfoutput>
 
+	<cfdirectory action="list" directory="#APPLICATION.PATH.ds2019forms#" filter="*#qGetCandidate.ds2019#*" name="dsforms">
+
 <cfform name="CandidateInfo" method="post" action="?curdoc=candidate/qr_edit_candidate&uniqueid=#qGetCandidate.uniqueid#" onsubmit="return checkHistory();">
 <input type="hidden" name="candidateID" value="#qGetCandidate.candidateID#">
 <input type="hidden" name="submitted" value="1">
@@ -846,6 +848,12 @@
                                         <cfloop query="qGetUploadedDS2019">
                                         	#downloadLink#<br>
                                         </cfloop>
+										<cfif client.usertype lte 3>
+											<cfif val(dsforms.recordcount)>
+                                            <a href="../uploadedfiles/2019Forms/#dsforms.name#" class="style4">[ Download DS-2019 ]</a>
+                                            </cfif>
+                                        </cfif>
+                                      
                                     </div>                                    
                                     
                             	</td>
