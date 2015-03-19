@@ -848,7 +848,7 @@
                                         <cfloop query="qGetUploadedDS2019">
                                         	#downloadLink#<br>
                                         </cfloop>
-										<cfif client.usertype lte 3>
+										<cfif client.usertype lte 4>
 											<cfif val(dsforms.recordcount)>
                                             <a href="../uploadedfiles/2019Forms/#dsforms.name#" class="style4">[ Download DS-2019 ]</a>
                                             </cfif>
