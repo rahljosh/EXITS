@@ -785,24 +785,20 @@ GROUP BY
 <td>&nbsp;</td>
 <td width = 50%>
 
-				<table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
-						<tr valign=middle height=24>
-							<td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
-							<td width=26 background="pics/header_background.gif"></td>
-							<td background="pics/header_background.gif"><h2>Payments Received - <font size=-2>payments from / applied from all companies</font></h2></td><td background="pics/header_background.gif" width=16></td>
-							<td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
-						</tr>
-					</table>
-					<div class=scroll>
-<table width=98% cellpadding=4 cellspacing =0>
 
-
-	<tr>
-		<Td></Td><td>Payment Ref</td><td>Payment Type</td><td>Date Received</td><td>Amount</td>
+<!--- Payments Received --->
+<table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
+	<tr valign=middle height=24>
+        <td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
+        <td width=26 background="pics/header_background.gif"></td>
+        <td background="pics/header_background.gif"><h2>Payments Received - <font size=-2>payments from / applied from all companies</font></h2></td>
+        <td background="pics/header_background.gif" width=16></td>
+		<td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
 	</tr>
-	
-<Cfquery name="payments_received" datasource="#APPLICATION.DSN#">
-    SELECT 
+</table>
+
+<cfquery name="payments_received" datasource="#APPLICATION.DSN#">
+    SELECT
         sch.agentid, 
         su.businessname, 
         sch.programid,                
@@ -819,85 +815,85 @@ GROUP BY
         WHEN sch.companyid = 12 THEN 1
         ELSE sch.companyid
         END) AS testCompId
-    FROM 
-        smg_payment_charges spc
-    LEFT JOIN 
-        smg_charges sch
-    ON 
-        sch.chargeid = spc.chargeid
-    LEFT JOIN 
-        smg_payment_received sp 
-    ON 
-        sp.paymentid = spc.paymentid
-    LEFT JOIN 
-        smg_users su 
-    ON 
-        su.userid = sch.agentid
-    WHERE  
-        sch.agentid = #url.userid#
-		<cfif form.view is not 'all'>
-            <cfswitch expression="#FORM.companyID#">
-                <cfcase value="1,2,3,4,12,13">
-                    and sch.companyid in (1,2,3,4,12,13)
-                </cfcase>
-                <cfdefaultcase>
-                    and sch.companyid = #FORM.companyID#
-                </cfdefaultcase>
-            </cfswitch>
-        <cfelse>
-            and sch.companyid != 14
-        </cfif>
-    GROUP BY 
-        sp.paymentref, sp.date       
-    ORDER BY            
-        sp.date DESC		
+    FROM smg_payment_charges spc
+    LEFT JOIN smg_charges sch ON sch.chargeid = spc.chargeid
+    LEFT JOIN smg_payment_received sp ON sp.paymentid = spc.paymentid
+    LEFT JOIN smg_users su ON su.userid = sch.agentid
+    WHERE sch.agentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userid#">
+	<cfif FORM.view IS NOT 'all'>
+		<cfswitch expression="#FORM.companyID#">
+            <cfcase value="1,2,3,4,12,13">
+                AND sch.companyid in (1,2,3,4,12,13)
+            </cfcase>
+            <cfdefaultcase>
+                AND sch.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.companyID#">
+            </cfdefaultcase>
+        </cfswitch>
+    <cfelse>
+        AND sch.companyid != 14
+    </cfif>
+    GROUP BY sp.paymentref, sp.date       
+    ORDER BY sp.date DESC		
 </Cfquery>
-	
-<cfoutput query="payments_received">
-	<cfquery name="totals" datasource="#APPLICATION.DSN#">
-	select spr.agentid, spr.paymenttype, spr.date, spr.paymentref, spr.paymenttype, sum(spc.amountapplied) as payment_total, sc.companyid
-	from smg_payment_received spr
-	right join smg_payment_charges spc on spc.paymentid = spr.paymentid
-	right join smg_charges sc on sc.chargeid = spc.chargeid
-	where paymentref = '#paymentref#'
-    and spr.agentid = #url.userid# 
-    and paymenttype = '#paymenttype#'
-    and spr.date = <cfqueryparam cfsqltype="cf_sql_date" value="#payments_received.date#">
-	<cfif client.companyid EQ 10 OR client.companyid EQ 14>
-		and sc.companyid = #client.companyid#
-	</cfif>
-	</cfquery>
-
-	<cfloop query="totals">
-		<cfquery name="agent_details" datasource="#APPLICATION.DSN#">
-		select businessname
-		from smg_users
-		where userid = #VAL(totals.agentid)#
-		</cfquery>
-	
-		<Tr <cfif payments_received.currentrow mod 2>bgcolor="ededed"</cfif>>
-			<td>#payments_received.currentrow#</td><td><a class=nav_bar href="" onClick="javascript: win=window.open('invoice/payment_details.cfm?ref=#paymentref#&userid=#url.userid#&dateRec=#DateFormat(date, 'yyyy-mm-dd')#', 'Payment_Details', 'height=395, width=602, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">#paymentref#</a></td><td>#paymenttype#</td><td>#DateFormat(date, 'mm-dd-yyyy')#</td><td>#LSCurrencyFormat(payment_total, 'local')#</td><cfif form.view is 'all'><td></td></cfif>
-		</Tr>
-	</cfloop>
-</cfoutput>
-</table>
+					
+<div class=scroll>
+	<table width=98% cellpadding=4 cellspacing =0>
+		<tr>
+			<td>&nbsp;</td>
+            <td>Payment Ref</td>
+            <td>Payment Type</td>
+            <td>Date Received</td>
+            <td>Amount</td>
+		</tr>
+        <cfoutput query="payments_received">
+            <cfquery name="totals" datasource="#APPLICATION.DSN#">
+                select spr.agentid, spr.paymenttype, spr.date, spr.paymentref, spr.paymenttype, sum(spc.amountapplied) as payment_total, sc.companyid
+                from smg_payment_received spr
+                right join smg_payment_charges spc on spc.paymentid = spr.paymentid
+                right join smg_charges sc on sc.chargeid = spc.chargeid
+                where paymentref = '#paymentref#'
+                and spr.agentid = #url.userid# 
+                and paymenttype = '#paymenttype#'
+                and spr.date = <cfqueryparam cfsqltype="cf_sql_date" value="#payments_received.date#">
+                <cfif client.companyid EQ 10 OR client.companyid EQ 14>
+                    and sc.companyid = #client.companyid#
+                </cfif>
+            </cfquery>
+			<cfloop query="totals">
+                <cfquery name="agent_details" datasource="#APPLICATION.DSN#">
+                    select businessname
+                    from smg_users
+                    where userid = #VAL(totals.agentid)#
+                </cfquery>
+				<tr <cfif payments_received.currentrow mod 2>bgcolor="ededed"</cfif>>
+					<td>#payments_received.currentrow#</td>
+                    <td><a class=nav_bar href="" onClick="javascript: win=window.open('invoice/payment_details.cfm?ref=#paymentref#&userid=#url.userid#&dateRec=#DateFormat(date, 'yyyy-mm-dd')#', 'Payment_Details', 'height=395, width=602, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">#paymentref#</a></td>
+                    <td>#paymenttype#</td>
+                    <td>#DateFormat(date, 'mm-dd-yyyy')#</td>
+                    <td>#LSCurrencyFormat(payment_total, 'local')#</td>
+					<cfif form.view is 'all'>
+                    	<td>&nbsp;</td>
+                    </cfif>
+				</tr>
+			</cfloop>
+		</cfoutput>
+	</table>
 </div>
-				<table width=100% cellpadding=0 cellspacing=0 border=0>
-					<tr valign=bottom >
-						<td width=9 valign="top" height=12><img src="pics/footer_leftcap.gif" ></td>
-						<td width=100% background="pics/header_background_footer.gif"></td>
-						<td width=9 valign="top"><img src="pics/footer_rightcap.gif"></td>
-					</tr>
-				</table>
-		</td>
-	</tr>
-	<tr>
-		<td colspan=3>
-		
-		<br>
 
+<table width=100% cellpadding=0 cellspacing=0 border=0>
+    <tr valign=bottom >
+        <td width=9 valign="top" height=12><img src="pics/footer_leftcap.gif" ></td>
+        <td width=100% background="pics/header_background_footer.gif"></td>
+        <td width=9 valign="top"><img src="pics/footer_rightcap.gif"></td>
+    </tr>
+</table>
 		
+</td>
+</tr>
+<tr>
+<td colspan=3>
 		
+<br>
 
 <!----Unapplied Credits---->
 				
