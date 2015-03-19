@@ -120,7 +120,7 @@ WHERE
 	insert into smg_users_payments (agentID,companyID,studentID,programID,oldID,hostID,paymenttype,transtype,amount,comment,
 								date,inputby,ispaid,dateCreated)
 
-    select
+    SELECT DISTINCT
     pr.fk_secondVisitrep,
     st.companyID,
     st.studentID, 
