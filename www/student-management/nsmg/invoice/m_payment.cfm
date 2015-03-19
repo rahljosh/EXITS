@@ -265,7 +265,7 @@ ORDER BY businessname
 		FROM smg_charges sch
 		WHERE sch.invoiceid = #iInvoiceNumber#
         <cfswitch expression="#client.companyid#">
-        <cfcase value="5,10,13,14">
+        <cfcase value="5,10,13,14,15">
         	AND sch.companyid = #client.companyid#
         </cfcase>
         <cfcase value="7,8">
@@ -282,7 +282,7 @@ ORDER BY businessname
 		LEFT JOIN smg_charges sch ON sch.chargeid = spc.chargeid
 		WHERE sch.invoiceid = #iInvoiceNumber#
         <cfswitch expression="#client.companyid#">
-        <cfcase value="5,10,14">
+        <cfcase value="5,10,14,15">
         	AND sch.companyid = #client.companyid#
         </cfcase>
         <cfcase value="7,8">
@@ -530,7 +530,7 @@ ORDER BY businessname
             FROM smg_charges sch
             WHERE sch.agentid = #FORM.choseNAgent#
             <cfswitch expression="#client.companyid#">
-            <cfcase value="5,10,13,14">
+            <cfcase value="5,10,13,14,15">
                 AND sch.companyid = #client.companyid#
             </cfcase>
             <cfcase value="7,8">
@@ -547,7 +547,7 @@ ORDER BY businessname
             LEFT JOIN smg_charges sch ON sch.chargeid = spc.chargeid
             WHERE sch.agentid = #FORM.choseNAgent#
             <cfswitch expression="#client.companyid#">
-            <cfcase value="5,10,13,14">
+            <cfcase value="5,10,13,14,15">
                 AND sch.companyid = #client.companyid#
             </cfcase>
             <cfcase value="7,8">
