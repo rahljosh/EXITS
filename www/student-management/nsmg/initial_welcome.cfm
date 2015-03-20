@@ -601,7 +601,7 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                                 <!--- Quick Start --->
                                 <cfif ListFind("1,2,3,4,5", CLIENT.userType) AND listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG ,CLIENT.companyID)>
                                     <td width="22"><img src="pics/icons/annualPaperwork.png" /></td>
-                                    <td><a href="uploadedfiles/pdf_docs/ISE/quick-start-manual.pdf" target="_blank">Quick Start Manual</a></td>
+                                    <td><a href="uploadedfiles/pdf_docs/ISE/ar-welcome-packet.pdf" target="_blank">AR Welcome Brochure</a></td>
                                 </cfif>
                             </tr>
                 		</table>
@@ -624,21 +624,21 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                     
                     	<!--- ISE --->
 						<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG,CLIENT.companyID)>
-                         There are currently no available bonuses
-                           <!---- <table width="90%" align="center" cellpadding="4">
+                         <!--- There are currently no available bonuses --->
+                            <table width="90%" align="center" cellpadding="4">
                                 <tr>
                                     <td><img src="pics/icons/bonus.png" /></td>
-                                    <td><a href="uploadedfiles/pdf_docs/ISE/payment/Early%20Placement%20Bonus%20Pay%20Sheet(R)-1.pdf" target="_blank">Early Placement Bonus</a></td>
+                                    <td><a href="uploadedfiles/pdf_docs/ISE/payment/2015-bonus-sheet.pdf" target="_blank">2015 Bonuses</a></td>
                                 </tr>
-                                <tr>
+                                <!--- <tr>
                                     <td><img src="pics/icons/bonus2.png" /></td>
                                     <td><a href="uploadedfiles/pdf_docs/ISE/payment/Fast%20Track%20Placement%20Bonus%20Pay%20Sheet(R).pdf " target="_blank">Fast Track Placement Bonus</a></td>
                                 </tr>
                                 <tr>
                                     <td width="22"><img src="pics/icons/bonus.png" /></td>
                                     <td><a href="uploadedfiles/pdf_docs/ISE/payment/On-Time%20Placement%20Bonus%20Pay%20Sheet(R).pdf" target="_blank">On-Time Placement Bonus</a></td>
-                                </tr>	
-                            </table>---->
+                                </tr> --->	
+                            </table>
                             
                         <cfelse>
                             There are currently no available bonuses
