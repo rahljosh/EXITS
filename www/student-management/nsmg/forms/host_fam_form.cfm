@@ -729,7 +729,7 @@
 		<!--- Table Header --->    
         <gui:tableHeader
             imageName="family.gif"
-            tableTitle="Host Family Infomation"
+            tableTitle="Host Family Information"
             width="95%"
             tableRightTitle='<span class="edit_link">[ <a href="?curdoc=host_fam_info&hostID=#FORM.hostID#">overview</a> ]</span>'
         />
