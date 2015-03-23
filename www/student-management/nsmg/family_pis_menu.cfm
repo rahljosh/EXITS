@@ -14,7 +14,7 @@
  <div id="subMenuNav"> 
     <div id="subMenuLinks">  
     <cfoutput>
-    <a class="nav_bar" href="index.cfm?curdoc=forms/host_fam_form&hostid=#currentHostID#">Host Family Infomation</A>  
+    <a class="nav_bar" href="index.cfm?curdoc=forms/host_fam_form&hostid=#currentHostID#">Host Family Information</A>  
     <a class="nav_bar" href="index.cfm?curdoc=forms/host_fam_mem_form&hostid=#currentHostID#">Other Family Members</A>
     <a class="nav_bar" href="index.cfm?curdoc=forms/host_fam_pis_7&hostid=#currentHostID#">Community Information</a> 
     <a class="nav_bar" href="index.cfm?curdoc=forms/host_fam_pis_5&hostid=#currentHostID#">School Information</a> 
