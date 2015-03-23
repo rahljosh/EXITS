@@ -926,7 +926,7 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                             <!--- ESI ONLY Docs --->
                             <cfif ListFind("14", CLIENT.companyID) >
                             	<tr>
-                                    <td><img src="pics/icons/marketing.png" /></td><td><a href="marketing/ESI_host_flier/HF-Flyer.cfm" target="_blank">Host Family Flier</a></td>
+                                    <td><img src="pics/icons/marketing.png" /></td><td><a href="marketing/ESI_host_flier/NEW_HF_Flier.pdf" target="_blank">Host Family Flier</a></td>
                                     <td></td>
                                 </tr>
                                 <!----
