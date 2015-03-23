@@ -737,7 +737,7 @@
 		<!--- Table Header --->    
         <gui:tableHeader
             imageName="family.gif"
-            tableTitle="Host Family Infomation"
+            tableTitle="Host Family Information"
             width="95%"
         />
     </cfif>
