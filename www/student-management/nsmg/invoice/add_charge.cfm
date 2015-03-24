@@ -144,7 +144,7 @@ This agent does not have any students currently active OR all students have had 
 				</tr>
 			<cfif (onhold_approved gte '5' and onhold_approved lte '7')>
 			<cfelse>
-				<cfif check_depositCharge.recordcount is 0>
+				<cfif check_depositCharge.recordcount is 0 AND NOT ListFind("13,15",CLIENT.companyID)>
 							<tr bgcolor=<cfif students_under_rep_not_charged.currentrow mod 2>ededed<cfelse>ffffff</cfif>>
 								<td bgcolor="ffffff"></td>
                                 <td class="thin-border-left-bottom">Type: 
