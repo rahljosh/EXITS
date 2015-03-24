@@ -134,15 +134,14 @@
     
         ORDER BY 
             u.businessname, 
-            c.firstname,
-            c.LastName,
-            c.candidateID       
+            c.LastName
+                   
         LIMIT 
             250
     </cfquery>
-    
-
-
+<!---    
+<cfdump var="#qGetStudents#">
+---->
 
 <cfif NOT VAL(qGetStudents.recordcount)>
 	Sorry, there were no students to populate the XML file at this time.
