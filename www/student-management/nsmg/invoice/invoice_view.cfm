@@ -30,7 +30,7 @@
 		invBalance = 0;
 	</cfscript>
     
-    <cfquery name="qGetInvoiceInfo" datasource="MySQL">
+    <cfquery name="qGetInvoiceInfo" datasource="#APPLICATION.DSN#">
         SELECT 
             c.chargeID,
             c.agentID,
@@ -107,7 +107,7 @@
             lastname
     </cfquery>
     
-    <cfquery name="qGetInvoicePayments" datasource="MySQL">
+    <cfquery name="qGetInvoicePayments" datasource="#APPLICATION.DSN#">
         SELECT 
             SUM(spc.amountapplied) AS amountapplied,
             spr.paymenttype,
@@ -128,7 +128,7 @@
             spr.date DESC
     </cfquery>
 
-    <cfquery name="qGetIntlRepInfo" datasource="MySQL">
+    <cfquery name="qGetIntlRepInfo" datasource="#APPLICATION.DSN#">
         SELECT 
             u.userID,
             u.businessName,
@@ -163,7 +163,7 @@
     </cfquery>
 
 	<!----Retrieve Total Due from Invoice---->
-    <cfquery name="qTotalDue" datasource="MySQL">
+    <cfquery name="qTotalDue" datasource="#APPLICATION.DSN#">
         SELECT 
         	sum(amount_due) AS total_due 
         FROM 
@@ -445,7 +445,21 @@
                             JPMorgan Chase Bank, N.A., Toronto Branch<br />
                             Account No: 4683000887<br /><br />
                             <strong>For EFT/ACH Payments </strong> - Transit No. 00012 - Bank No. 270<br /><br />
-                  </cfcase>
+                            <strong>All prices are in Canadian Dollars</strong><br/>
+                  		</cfcase>
+                        
+                        <!--- DASH --->
+                        <cfcase value="15">
+                        	<span class="style3">              
+                                DASH<br />
+                                Chase Bank<br />
+                                595 Sunrise Highway<br />
+                                West Babylon, NY 11704<br />
+                                Account: 669927159<br />
+                                ABA/Routing: 021000021<br />
+                                SWIFT code: CHASUS33<br />      
+                            </span>
+                        </cfcase>
                         
                         <!--- ISE --->
                         <cfdefaultcase>
@@ -549,7 +563,7 @@
 
         <cfloop query="qGetInvoiceInfo">
         
-            <cfquery name="qGetChargeCount" datasource="MySQL">
+            <cfquery name="qGetChargeCount" datasource="#APPLICATION.DSN#">
                 SELECT 	
                 	chargeid, 
                     stuid, 
@@ -563,7 +577,7 @@
                 	stuid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetInvoiceInfo.stuid#">
             </cfquery>
             
-            <cfquery name="qGetTotalStudent" datasource="MySQL">
+            <cfquery name="qGetTotalStudent" datasource="#APPLICATION.DSN#">
                 SELECT 
                 	sum(amount) AS total_stu_amount
                 FROM 
@@ -595,7 +609,7 @@
                 </tr>
             </cfloop>
             
-            <cfquery name="qVerifyIfShowDeposit" datasource="MySQL">
+            <cfquery name="qVerifyIfShowDeposit" datasource="#APPLICATION.DSN#">
                 SELECT 
                 	sch.amount_due, 
                     sch.amount
@@ -616,7 +630,7 @@
             <!--- if amount_due is different than amount, it means that there is a deposit invoice --->
             <cfif qVerifyIfShowDeposit.amount_due NEQ qVerifyIfShowDeposit.amount>
             
-                <cfquery name="qFindDepositInvoice" datasource="MySQL">
+                <cfquery name="qFindDepositInvoice" datasource="#APPLICATION.DSN#">
                     SELECT 
                     	sch.invoiceid, 
                         sch.type, 
@@ -720,7 +734,7 @@
 						<cfif qGetInvoicePayments.paymenttype EQ 'apply credit'>
                             credit note
                             
-                            <cfquery name="qGetTotalCreditNote" datasource="MySQL">
+                            <cfquery name="qGetTotalCreditNote" datasource="#APPLICATION.DSN#">
                                 SELECT
                                     SUM(amount) AS amount
                                 FROM
