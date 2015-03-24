@@ -487,6 +487,7 @@
         <cfelse>
             AND smg_charges.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.companyID#">
         </cfif>
+        AND smg_charges.type IN ( <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.chooseCharge#" list="yes"> )
         GROUP BY smg_charges.invoiceid
         ORDER BY smg_users.businessname
 	</cfquery>
