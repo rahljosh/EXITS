@@ -54,7 +54,10 @@
         </cfscript>
 
         <cfcatch type="any">
-        	<p>It seems we have received an invalid XML file from backgroundchecks.com. Please check results for this user at <a href="http://www.backgroundchecks.com/">http://www.backgroundchecks.com/</a></p>
+        	<p>There is an issue with the XML file we received from backgroundchecks.com. You can check results for this user at <a href="http://www.backgroundchecks.com/">http://www.backgroundchecks.com/</a></p>
+           <br /><Br />
+           Here are the raw results, to help determine what the issue might be:  If there is a lot of informaiton, please login to the website to view the formatted results.  For some reason we are not able to format them nicely. 
+           #qGetBatchInfo.xml_received#
         </cfcatch>
     
     </cftry>
