@@ -2464,6 +2464,7 @@
 				areaRepresentativePhone = qGetHostInfo.areaRepresentativePhone,
 				regionalAdvisor = qGetHostInfo.regionalAdvisor,
 				regionalManager = qGetHostInfo.regionalManager,
+				regionName = qGetHostInfo.regionName,
 				facilitator = qGetHostInfo.facilitator,
 				isResubmitted = vIsResubmitted
 			);
@@ -2507,6 +2508,7 @@
         <cfargument name="areaRepresentativePhone" default="" hint="areaRepresentativePhone - Not required">
         <cfargument name="regionalAdvisor" default="" hint="regionalAdvisor - Not required">
         <cfargument name="regionalManager" default="" hint="regionalManager - Not required">
+        <cfargument name="regionName" default="" hint="regionName - Not required">
         <cfargument name="facilitator" default="" hint="facilitator - Not required">
         <cfargument name="isResubmitted" default="false" hint="isResubmitted - Not required">
 		
@@ -2622,9 +2624,10 @@
                         <p>Dear #ARGUMENTS.regionalAdvisor#,</p>
                         
                         <p>
-							This email is being sent to notify you that a Host Family application has been approved by your Area Representative #ARGUMENTS.areaRepresentative#, 
-                            for the #ARGUMENTS.hostFamilyLastName# family. This Area Representative has been notified that you have started the review process and will be 
-                            contacting them if any additional information is required. 
+							This email is being sent to notify you that a Host Family application has been approved by your Area Representative 	
+                            #ARGUMENTS.areaRepresentative#, for the #ARGUMENTS.hostFamilyLastName# family in the #ARGUMENTS.regionName# region. This Area 
+                            Representative has been notified that you have started the review process and will be contacting them if any additional information is 
+                            required. 
                         </p>
                         
                         <p>
@@ -2654,9 +2657,13 @@
                         
                         <p>
 							This email is being sent to notify you that a Host Family application has been approved by your 
-                            <cfif LEN(ARGUMENTS.regionalAdvisor)>Regional Advisor #ARGUMENTS.regionalAdvisor#<cfelse>Area Representative #ARGUMENTS.areaRepresentative#</cfif> 
-                            for the #ARGUMENTS.hostFamilyLastName# family. This representative has been notified that you have started the review process and will be
-                            contacting them if any additional information is required. 
+                            <cfif VAL(ARGUMENTS.regionalAdvisor)>
+                            	Regional Advisor #ARGUMENTS.regionalAdvisor#
+                            <cfelse>
+                            	Area Representative #ARGUMENTS.areaRepresentative#
+                            </cfif> 
+                            for the #ARGUMENTS.hostFamilyLastName# family in the #ARGUMENTS.regionName# region. This representative has been notified that you have 
+                            started the review process and will be contacting them if any additional information is required. 
                         </p>
                         
                         <p>
