@@ -723,7 +723,7 @@
                                     <img src="#client.exits_url#/nsmg/pics/hostAppEmail.jpg" width="200" height="56" border="0">
                                 </a>
                             <cfelse>
-                                <a href="https://www.iseusa.com/hostApplication/" target="_blank">
+                                <a href="https://www.iseusa.com/ISE-Login.cfm" target="_blank">
                                     <img src="#client.exits_url#/nsmg/pics/hostAppEmail.jpg" width="200" height="56" border="0">
                                 </a>
                             </cfif>
