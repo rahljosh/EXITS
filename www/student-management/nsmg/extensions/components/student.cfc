@@ -1107,7 +1107,7 @@
         </cfscript>
         
         <!--- Email host family that the placement is approved (only if there is no date for the PIS) --->
-        <cfif NOT isDate(qGetStudentInfo.datePISEmailed)>
+        <cfif NOT isDate(qGetStudentInfo.datePISEmailed) AND listFind("1,2,3", qGetStudentInfo.host_fam_approved)>
 			<cfscript>
                 qGetHostFamily = APPLICATION.CFC.HOST.getHosts(hostID = qGetStudentInfo.hostID);
                 qGetManager = APPLICATION.CFC.Region.getRegionManagerByRegionID(regionID = qGetStudentInfo.regionAssigned);
@@ -1120,7 +1120,7 @@
                     <p>
                         Congratulations!  The placement of #qGetStudentInfo.firstName# #qGetStudentInfo.familyLastName# with your family has been fully approved.  
                         Your exchange student will be contacting you soon, and if you want to reach out to him/her it is now permissible to do so. 
-                        For any questions, please contact your local area rep ﾖ #qGetStudentInfo.areaRepFirstName# #qGetStudentInfo.areaRepLastName#. 
+                        For any questions, please contact your local area rep #qGetStudentInfo.areaRepFirstName# #qGetStudentInfo.areaRepLastName#. 
                         #qGetCompany.companyshort_nocolor# thanks you for sharing in our mission of making the world a little smaller, one student at a time.
                     </p>
                     <p>
