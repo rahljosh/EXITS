@@ -1107,7 +1107,7 @@
         </cfscript>
         
         <!--- Email host family that the placement is approved (only if there is no date for the PIS) --->
-        <cfif NOT isDate(qGetStudentInfo.datePISEmailed) AND listFind("1,2,3", qGetStudentInfo.host_fam_approved)>
+        <cfif NOT isDate(qGetStudentInfo.datePISEmailed) AND listFind("1,2,3,4", qGetStudentInfo.host_fam_approved)>
 			<cfscript>
                 qGetHostFamily = APPLICATION.CFC.HOST.getHosts(hostID = qGetStudentInfo.hostID);
                 qGetManager = APPLICATION.CFC.Region.getRegionManagerByRegionID(regionID = qGetStudentInfo.regionAssigned);
