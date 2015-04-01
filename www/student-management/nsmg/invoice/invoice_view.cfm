@@ -317,8 +317,12 @@
                             <img src="../../nsmg/pics/esiBanner.jpg" width="665" height="80" align="center" />
                         </cfcase>
                         
+                        <!--- DASH --->
+                        <cfcase value="15">
+                            <img src="../../nsmg/pics/logos/15.jpg" align="center" />
+                        </cfcase>
                         
-                  <!--- ISE --->   
+                  		<!--- ISE --->   
                         <cfdefaultcase>
                             <img src="../../nsmg/pics/ise_banner.jpg" align="center" />
                         </cfdefaultcase>
@@ -702,6 +706,11 @@
                         <!--- SMG Canada --->
                         <cfcase value="13">
                         <img src="../../nsmg/pics/logos/13_header_logo.png" />
+                        </cfcase>
+                        
+                        <!--- DASH --->
+                        <cfcase value="15">
+                            <img src="../../nsmg/pics/logos/15.jpg" align="center" />
                         </cfcase>
                         
                         <!--- ISE / CASE --->

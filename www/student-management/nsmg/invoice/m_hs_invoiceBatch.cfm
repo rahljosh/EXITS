@@ -749,6 +749,12 @@
                     <cfset emailFrom = 'jennifer@student-management.com'>
                 </cfcase>
                 
+                <!--- SMG Canada --->
+                <cfcase value="15">
+                    <cfset compName = "dash">
+                    <cfset emailFrom = 'jennifer@student-management.com'>
+                </cfcase>
+                
                 <!--- ISE --->        
                 <cfdefaultcase>
                     <cfset compName = "ise">
