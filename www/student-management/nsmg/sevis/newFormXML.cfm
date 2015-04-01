@@ -139,9 +139,9 @@
         LIMIT 
             250
     </cfquery>
-<!---    
+    
 <cfdump var="#qGetStudents#">
----->
+
 
 <cfif NOT VAL(qGetStudents.recordcount)>
 	Sorry, there were no students to populate the XML file at this time.
@@ -205,6 +205,7 @@
 	</cfloop>
 </table> <br />
 
+
 <cfxml variable="xmlSevisBatch">
 <SEVISBatchCreateUpdateEV 
 	xmlns:common="http://www.ice.gov/xmlschema/sevisbatch/Common.xsd" 
@@ -242,7 +243,7 @@
                     <City>#XMLFormat(qGetStudents.hostCompanycity)#</City> 
                     <State>#XMLFormat(qGetStudents.state)#</State> 
                     <PostalCode>#XMLFormat(qGetStudents.hostCompanyzip)#</PostalCode> 
-                    <SiteName>#Left(XMLFormat(Trim(qGetStudents.hostCompanyname)),60)#</SiteName>
+                    <SiteName>#XMLFormat(Trim(qGetStudents.hostCompanyname))#</SiteName>
                     <PrimarySite>true</PrimarySite>
                     <Remarks>#XMLFormat(qGetStudents.title)#, POC: #XMLFormat(qGetStudents.supervisor)#, POC Phone: #phoneString#</Remarks>
                     
