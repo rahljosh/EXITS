@@ -2582,7 +2582,7 @@
                           	<cfelseif CLIENT.companyID EQ 14>
                             	<a href="http://exchange-service.org/hostApplication/" target="_blank">http://exchange-service.org/hostApplication/</a>
                             <cfelse>
-                                <a href="https://www.iseusa.com/ISE-Login.cfm" target="_blank">http://www.iseusa.com/hostApplication/</a>
+                                <a href="https://www.iseusa.com/ISE-Login.cfm" target="_blank">https://www.iseusa.com/ISE-Login.cfm</a>
                             </cfif>
                         </p>
 
