@@ -144,7 +144,7 @@
         LEFT JOIN smg_charges sch ON sch.chargeid = spc.chargeid
         LEFT JOIN smg_programs sp ON sp.programid = sch.programid
         LEFT JOIN smg_users su ON su.userid = sch.agentid
-        WHERE  sch.agentid = #url.userid#
+        WHERE  sch.agentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#">
         <cfswitch expression="#client.companyid#">
             <cfcase value="5,10,14">
                 AND sch.companyid = #client.companyid#
@@ -280,6 +280,12 @@
 		padding-bottom:0.1cm;
 		display:none;
 		font-size:11px;
+	}
+	div.scroll {
+		height: 200px;
+		width: 99.8%;
+		overflow: auto;
+		border-left: 2px solid #c6c6c6; background: #Ffffe6;
 	}
 </style>
 		
@@ -484,48 +490,34 @@
 
 </cfoutput>
 
-<!--- test to select which query to run: current_charges OR current_charges_extra --->
-<cfquery name="selectQuery" datasource="#APPLICATION.DSN#">
-SELECT s.stuid, s.programid, sp.type AS progType
-FROM smg_charges s
-LEFT JOIN smg_programs sp ON sp.programid = s.programid
-WHERE s.agentid = #url.userid#
-AND s.invoiceid = 0
-	<cfif form.view is not 'all'>
-    AND s.companyid = #FORM.companyID#
+<cfquery name="qGetCharges" datasource="#APPLICATION.DSN#">
+	SELECT
+    	smg_charges.chargeID,
+        smg_charges.stuID,
+        smg_charges.programID,
+        smg_charges.invoiceID,
+        smg_charges.description,
+        smg_charges.date,
+        smg_charges.amount,
+        smg_charges.type,
+        <cfif ListFind("7,8,9", FORM.companyID)>
+    		extra_candidates.firstname,
+            extra_candidates.lastname
+        <cfelse>
+        	smg_students.firstname,
+            smg_students.familylastname AS lastname
+        </cfif>
+  	FROM smg_charges
+    LEFT JOIN smg_programs ON smg_programs.programID = smg_charges.programID
+    <cfif ListFind("7,8,9", FORM.companyID)>
+    	INNER JOIN extra_candidates ON extra_candidates.candidateID = smg_charges.stuid
+    <cfelse>
+    	INNER JOIN smg_students ON smg_students.studentID = smg_charges.stuid
     </cfif>
+    WHERE smg_charges.invoiceID = 0
+    AND smg_charges.agentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#">
+    AND smg_charges.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.companyID#">
 </cfquery>
-
-<cfoutput query="selectQuery">
-
-    <cfif progType EQ 7 OR progType EQ 8 OR progType EQ 9 OR progType EQ 11 OR progType EQ 22 OR progType EQ 23>
-        
-		<!----Current Charges Work not invoiced---->
-        <cfquery name="current_charges" datasource="#APPLICATION.DSN#">
-        SELECT s.chargeid, s.stuid, s.invoiceid, s.description, s.date, s.amount, s.type, ec.firstname, ec.lastname
-        from smg_charges s
-        INNER JOIN extra_candidates ec ON ec.candidateid = s.stuid
-        where s.agentid = #url.userid# and s.invoiceID = 0
-                    <cfif form.view is not 'all'>
-                    and s.companyid = #FORM.companyID#
-                    </cfif>
-        </cfquery>
-            
-		<cfelse>
-         
-			<!----Current Charges High School not invoiced---->
-            <cfquery name="current_charges" datasource="#APPLICATION.DSN#">
-            SELECT s.chargeid, s.stuid, s.invoiceid, s.description, s.date, s.amount, s.type, ss.firstname, ss.familylastname AS lastname
-            from smg_charges s
-            LEFT JOIN smg_students ss ON ss.studentid = s.stuid
-            where s.agentid = #url.userid# and s.invoiceID = 0
-                        <cfif form.view is not 'all'>
-                        and s.companyid = #FORM.companyID#
-                        </cfif>
-            </cfquery>
-
-	</cfif>	 
-</cfoutput>
 
 <br>
 <!----Sizing table---->
@@ -541,17 +533,14 @@ AND s.invoiceid = 0
                 <td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
             </tr>
         </table>
-							
 		
-								
-							<table width=100% cellpadding=2 cellspacing=0 border=0 class="section" >
-								
-			<tr>
-				<td></td><td>Student</td><td>Description</td><td>Type</td><td>Amount</td>
-			</tr>
-			<cfif selectQuery.recordcount NEQ 0>
-				<cfoutput query="current_charges">
-                    <tr <cfif current_charges.currentrow mod 2>bgcolor="ededed"</cfif>>
+        <table width=100% cellpadding=2 cellspacing=0 border=0 class="section" >
+            <tr>
+                <td></td><td>Student</td><td>Description</td><td>Type</td><td>Amount</td>
+            </tr>
+			<cfif qGetCharges.recordcount NEQ 0>
+				<cfoutput query="qGetCharges">
+                    <tr <cfif qGetCharges.currentrow mod 2>bgcolor="ededed"</cfif>>
                     	<td>
                         	<p>E</p>
                     		<p>D</p>
@@ -620,7 +609,7 @@ AND s.invoiceid = 0
 						<cfquery name="refund_total" datasource="#APPLICATION.DSN#">
 						select sum(smg_credit.amount) as total_amount
 						from smg_invoice_refunds right join smg_credit on smg_invoice_refunds.creditid = smg_credit.creditid
-						where smg_invoice_refunds.agentid =#url.userid#
+						where smg_invoice_refunds.agentid =<cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#">
 						and smg_invoice_refunds.refund_receipt_id = #refund_receipt_id#
 						</cfquery>
 				<tr>
@@ -634,33 +623,17 @@ AND s.invoiceid = 0
 		</table>
 		<!----foter table---->
 		<table width=100% cellpadding=0 cellspacing=0 border=0>
-									<tr valign=bottom >
-										<td width=9 valign="top" height=12><img src="pics/footer_leftcap.gif" ></td>
-										<td width=100% background="pics/header_background_footer.gif"></td>
-										<td width=9 valign="top"><img src="pics/footer_rightcap.gif"></td>
-									</tr>
-								</table>
+            <tr valign=bottom >
+                <td width=9 valign="top" height=12><img src="pics/footer_leftcap.gif" ></td>
+                <td width=100% background="pics/header_background_footer.gif"></td>
+                <td width=9 valign="top"><img src="pics/footer_rightcap.gif"></td>
+            </tr>
+        </table>
 			
 	</td>
 	
 </tr>
 </table>
-
-
-
-
-
-
-<style type="text/css">
-<!--
-div.scroll {
-	height: 200px;
-	width: 99.8%;
-	overflow: auto;
-	border-left: 2px solid #c6c6c6; background: #Ffffe6;
-}
--->
-</style>
 
 <br>
 <table width=100% align="center">
@@ -682,7 +655,7 @@ div.scroll {
 <cfquery name="current_invoices" datasource="#APPLICATION.DSN#">
     SELECT invoiceid, invoicedate, SUM(amount_due) AS invoice_due, companyid 
     FROM smg_charges
-    WHERE agentid = #url.userid#
+    WHERE agentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#">
     AND invoiceid <> 0
 <cfif form.view is not 'all'>
 	<cfswitch expression="#FORM.companyID#">
@@ -720,7 +693,7 @@ GROUP BY
                 SELECT s.invoiceid, SUM(spc.amountapplied) AS total_received
                 FROM smg_payment_charges spc
                 RIGHT JOIN smg_charges s ON s.chargeid = spc.chargeid
-                WHERE s.agentid =#url.userid#
+                WHERE s.agentid =<cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#">
                     
 				<cfif (FORM.companyID EQ 5 OR FORM.companyID EQ 10 OR FORM.companyID EQ 13) AND form.view is not 'all'>
 					AND 
@@ -852,7 +825,7 @@ GROUP BY
                 right join smg_payment_charges spc on spc.paymentid = spr.paymentid
                 right join smg_charges sc on sc.chargeid = spc.chargeid
                 where paymentref = '#paymentref#'
-                and spr.agentid = #url.userid# 
+                and spr.agentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#"> 
                 and paymenttype = '#paymenttype#'
                 and spr.date = <cfqueryparam cfsqltype="cf_sql_date" value="#payments_received.date#">
                 <cfif client.companyid EQ 10 OR client.companyid EQ 14>
@@ -901,7 +874,7 @@ GROUP BY
 select sc.date, sc.type, sc.description, sc.stuid, sc.invoiceid, sc.amount, sc.creditid, sc.amount_applied, sc.credit_type, c.companyshort
 from smg_credit sc
 LEFT JOIN smg_companies c ON c.companyid = sc.companyid
-where agentid = #url.userid# 
+where agentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#"> 
 <cfif form.view is not 'all'>
 	<cfswitch expression="#FORM.companyID#">
 		<cfcase value="1,2,3,4,12">
@@ -980,7 +953,7 @@ ORDER BY sc.creditid DESC, sc.stuid DESC, sc.chargeid ASC
 select sc.date, sc.type, sc.description, sc.stuid, sc.invoiceid, sc.amount, sc.creditid, sc.credit_type, c.companyshort
 from smg_credit sc
 LEFT OUTER JOIN smg_companies c ON c.companyid = sc.companyid
-where agentid = #url.userid#
+where agentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#">
 <cfif form.view is not 'all'>
 	<cfswitch expression="#FORM.companyID#">
 		<cfcase value="1,2,3,4,12">
@@ -1070,20 +1043,20 @@ ORDER BY sc.creditid DESC, sc.stuid DESC, sc.chargeid ASC
 <cfquery name="getAgentInfo" datasource="#APPLICATION.DSN#">
 SELECT *
 FROM smg_users su
-WHERE su.userid = #url.userid#
+WHERE su.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#">
 </cfquery>
 
 <cfif getAgentInfo.email IS NOT "" AND getAgentInfo.billing_email IS "">
 	<cfquery name="getAgentInfoSecRun" datasource="#APPLICATION.DSN#">
 	UPDATE smg_users su
 	SET su.billing_email = su.email
-	WHERE userid = #url.userid#
+	WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#">
 	</cfquery>
 	
 	<cfquery name="getAgentInfo" datasource="#APPLICATION.DSN#">
 	SELECT *
 	FROM smg_users su
-	WHERE su.userid = #url.userid#
+	WHERE su.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#">
 	</cfquery>
 </cfif>
 
@@ -1102,6 +1075,10 @@ WHERE su.userid = #url.userid#
 	</cfcase>
     <cfcase value="13">
 		<cfset compName = "smgcanada">
+		<cfset emailFrom = 'jennifer@student-management.com'>
+	</cfcase>
+    <cfcase value="15">
+		<cfset compName = "dash">
 		<cfset emailFrom = 'jennifer@student-management.com'>
 	</cfcase>
 	<cfdefaultcase>
