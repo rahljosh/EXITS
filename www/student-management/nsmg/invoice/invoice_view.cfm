@@ -647,8 +647,9 @@
                     	sch.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetInvoiceInfo.programid#">
                     AND 
                     	sch.agentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetInvoiceInfo.agentid#">
-                    AND 
-                    	sch.invoiceid < <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetInvoiceInfo.invoiceID#">
+                    AND ( 
+                    	sch.invoiceid < <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetInvoiceInfo.invoiceID#"> 
+                        OR sch.invoicedate < <cfqueryparam cfsqltype="cf_sql_date" value="#qGetInvoiceInfo.invoicedate#"> )
                     AND 
                     	sch.type = <cfqueryparam cfsqltype="cf_sql_varchar" value="deposit">
                     ORDER BY 
