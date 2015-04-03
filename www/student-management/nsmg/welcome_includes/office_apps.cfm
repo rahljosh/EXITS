@@ -66,21 +66,21 @@
                         </cftry>
                     </cfloop>
                     
-                    <cfloop list="07,08,09,10,11,12,13,14,15,16,17,18,19,20,21,23,24,25,26,27" index="i">
+                    <cfloop list="student-management/nsmg/uploadedFiles/online_app/page10,student-management/nsmg/uploadedFiles/online_app/page11,student-management/nsmg/uploadedFiles/online_app/page12,student-management/nsmg/uploadedFiles/online_app/page13,student-management/nsmg/uploadedFiles/online_app/page14,student-management/nsmg/uploadedFiles/online_app/page15,student-management/nsmg/uploadedFiles/online_app/page16,student-management/nsmg/uploadedFiles/online_app/page17,student-management/nsmg/uploadedFiles/online_app/page18,student-management/nsmg/uploadedFiles/online_app/page19,student-management/nsmg/uploadedFiles/online_app/page20,student-management/nsmg/uploadedFiles/online_app/page21,student-management/nsmg/uploadedFiles/online_app/page23,student-management/nsmg/uploadedFiles/online_app/page24,student-management/nsmg/uploadedFiles/online_app/page25,student-management/nsmg/uploadedFiles/online_app/page26,student-management/nsmg/uploadedFiles/online_app/page27,student-management/nsmg/uploadedFiles/letters/parents,student-management/nsmg/uploadedFiles/letters/students" index="i">
                         <cftry>
                             <cfset moved = 0>
                             <cfif 
-                                NOT FileExists("C://websites/student-management/nsmg/uploadedFiles/online_app/page#i#/#FORM.studentID#.jpg")
-                                AND NOT FileExists("C://websites/student-management/nsmg/uploadedFiles/online_app/page#i#/#FORM.studentID#.jpeg")
-                                AND NOT FileExists("C://websites/student-management/nsmg/uploadedFiles/online_app/page#i#/#FORM.studentID#.gif")
-                                AND NOT FileExists("C://websites/student-management/nsmg/uploadedFiles/online_app/page#i#/#FORM.studentID#.tif")
-                                AND NOT FileExists("C://websites/student-management/nsmg/uploadedFiles/online_app/page#i#/#FORM.studentID#.tiff")
-                                AND NOT FileExists("C://websites/student-management/nsmg/uploadedFiles/online_app/page#i#/#FORM.studentID#.png")
-                                AND NOT FileExists("C://websites/student-management/nsmg/uploadedFiles/online_app/page#i#/#FORM.studentID#.pdf")>
+                                NOT FileExists("C://websites/#i#/#FORM.studentID#.jpg")
+                                AND NOT FileExists("C://websites/#i#/#FORM.studentID#.jpeg")
+                                AND NOT FileExists("C://websites/#i#/#FORM.studentID#.gif")
+                                AND NOT FileExists("C://websites/#i#/#FORM.studentID#.tif")
+                                AND NOT FileExists("C://websites/#i#/#FORM.studentID#.tiff")
+                                AND NOT FileExists("C://websites/#i#/#FORM.studentID#.png")
+                                AND NOT FileExists("C://websites/#i#/#FORM.studentID#.pdf")>
                                 <cfset ext = "">
                                 <cfftp 
                                     action="existsfile" 
-                                    remotefile="/student-management/nsmg/uploadedFiles/online_app/page#i#/#FORM.studentID#.jpg"
+                                    remotefile="/#i#/#FORM.studentID#.jpg"
                                     server="204.12.102.11" 
                                     username="jgriffiths" 
                                     password="Is3^2012"
@@ -90,7 +90,7 @@
                                 </cfif>
                                 <cfftp 
                                     action="existsfile" 
-                                    remotefile="/student-management/nsmg/uploadedFiles/online_app/page#i#/#FORM.studentID#.jpeg"
+                                    remotefile="/#i#/#FORM.studentID#.jpeg"
                                     server="204.12.102.11" 
                                     username="jgriffiths" 
                                     password="Is3^2012"
@@ -100,7 +100,7 @@
                                 </cfif>
                                 <cfftp 
                                     action="existsfile" 
-                                    remotefile="/student-management/nsmg/uploadedFiles/online_app/page#i#/#FORM.studentID#.gif"
+                                    remotefile="/#i#/#FORM.studentID#.gif"
                                     server="204.12.102.11" 
                                     username="jgriffiths" 
                                     password="Is3^2012"
@@ -110,7 +110,7 @@
                                 </cfif>
                                 <cfftp 
                                     action="existsfile" 
-                                    remotefile="/student-management/nsmg/uploadedFiles/online_app/page#i#/#FORM.studentID#.tif"
+                                    remotefile="/#i#/#FORM.studentID#.tif"
                                     server="204.12.102.11" 
                                     username="jgriffiths" 
                                     password="Is3^2012"
@@ -120,7 +120,7 @@
                                 </cfif>
                                 <cfftp 
                                     action="existsfile" 
-                                    remotefile="/student-management/nsmg/uploadedFiles/online_app/page#i#/#FORM.studentID#.tiff"
+                                    remotefile="/#i#/#FORM.studentID#.tiff"
                                     server="204.12.102.11" 
                                     username="jgriffiths" 
                                     password="Is3^2012"
@@ -130,7 +130,7 @@
                                 </cfif>
                                 <cfftp 
                                     action="existsfile" 
-                                    remotefile="/student-management/nsmg/uploadedFiles/online_app/page#i#/#FORM.studentID#.png"
+                                    remotefile="/#i#/#FORM.studentID#.png"
                                     server="204.12.102.11" 
                                     username="jgriffiths" 
                                     password="Is3^2012"
@@ -140,7 +140,7 @@
                                 </cfif>
                                 <cfftp 
                                     action="existsfile" 
-                                    remotefile="/student-management/nsmg/uploadedFiles/online_app/page#i#/#FORM.studentID#.pdf"
+                                    remotefile="/#i#/#FORM.studentID#.pdf"
                                     server="204.12.102.11" 
                                     username="jgriffiths" 
                                     password="Is3^2012"
@@ -152,8 +152,8 @@
                                     <cfif movedFiles LTE 40>
                                         <cfftp 
                                             action="getfile" 
-                                            remotefile="/student-management/nsmg/uploadedFiles/online_app/page#i#/#FORM.studentID#.#ext#" 
-                                            localfile="C://websites/student-management/nsmg/uploadedFiles/online_app/page#i#/#FORM.studentID#.#ext#" 
+                                            remotefile="/#i#/#FORM.studentID#.#ext#" 
+                                            localfile="C://websites/#i#/#FORM.studentID#.#ext#" 
                                             server="204.12.102.11" 
                                             username="jgriffiths" 
                                             password="Is3^2012"
