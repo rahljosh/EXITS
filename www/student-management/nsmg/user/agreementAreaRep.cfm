@@ -47,7 +47,7 @@
 <p> 
 	WHEREAS, to further its objectives, #qGetCompanyInfo.companyshort_nocolor# desires to engage the services of the Area
   	Representative to locate and interact with the host families, schools and exchange students as
-  	required by the U.S. State Department and the Council on Standards for International Educational Travel; and
+  	required by the <cfif client.companyid neq 15>U.S. State Department and the </cfif>Council on Standards for International Educational Travel; and
 </p>
   
 <p>  
@@ -70,7 +70,7 @@
         <u>Term</u>
         <p>
             The Term of this Agreement shall commence on the Effective Date and shall cease on #DateFormat(qGetSeason.datePaperworkEnded, 'mmmm d, yyyy')#, <!--- August 31, 2013, --->
-            unless otherwise agreed in writing between the parties or unless earlier terminated pursuant to Section 7 hereof.
+            unless otherwise agreed in writing between the parties or unless earlier terminated pursuant to Section "Termination" hereof.
         </p>
     </li>
 
@@ -81,10 +81,10 @@
             the following services: locate, screen and secure placements in homes of high quality families for #qGetCompanyInfo.companyshort_nocolor#-sponsored 
             students for AYP #qGetSeason.years#; secure school acceptance in writing for those student(s); and supervise designated AYP #qGetSeason.years# student(s) 
             stay in the United States (collectively, the "Services"). 
-            The Area Representative acknowledges that the performance of the Services is subject to the regulations and guidelines of the
-            U.S. State Department ("State Department"), and the Council on Standards for International Educational Travel ("CSIET"). 
+            The Area Representative acknowledges that the performance of the Services is subject to the regulations and guidelines of <cfif client.companyid neq 15>the
+            U.S. State Department ("State Department"), and</cfif> the Council on Standards for International Educational Travel ("CSIET"). 
             All Services shall be performed to the highest professional standard and shall be performed to #qGetCompanyInfo.companyshort_nocolor#'s 
-            reasonable satisfaction in accordance with State Department regulations and CSIET guidelines, which are reviewed during the annual AR training. 
+            reasonable satisfaction in accordance with <cfif client.companyid neq 15>State Department regulations and </cfif>CSIET guidelines, which are reviewed during the annual AR training. 
             Failure to adhere to these standards may result in termination of this Agreement.
         </p>
     </li>
@@ -139,8 +139,7 @@
             <p>
                 #qGetCompanyInfo.companyshort_nocolor# shall designate in writing a supervisor to review the performance and quality of the
                 Services on a discretionary basis and take any necessary steps to ensure performance by the Area Representative of such Services is 
-                commensurate with the standards set forth in Section 3 above and as established by the U.S. Department of State and CSIET.	            
-            </p>
+            commensurate with the standards set forth in Section 3 above and as established by <cfif client.companyid neq 15>the U.S. Department of State and </cfif>CSIET. </p>
         </li>
         
         <li>
@@ -150,7 +149,8 @@
                 shall pay the Area Representative the fee(s) set forth in Schedule 1 attached hereto.
             </p>
         </li>
-                    
+       
+       <cfif client.companyid neq 15>             
         <li>
             <u>Community Service Requirement</u>
             <p>
@@ -160,7 +160,7 @@
                 database by April 20, #Year(qGetSeason.datePaperworkEnded)#. <!--- Date --->
             </p>
         </li>
-            
+        </cfif>    
         <li>
             <u>Training Requirement</u>
             <p>The Area Representative is required to participate in an annual training session, either in person or via internet training.</p>
@@ -261,23 +261,25 @@
     <tr bgcolor="##F8F8F8">
         <td>Placement*</td>
         <td>Paperwork*</td>
-        <td>$175</td>
+        <td><cfif client.companyid eq 15>$300<cfelse>$175</cfif></td>
     </tr>
     <tr>
         <td>Supervision Phase 1**</td>
         <td>October 15</td>
-        <td>$100</td>
+        <td><cfif client.companyid eq 15>$150<cfelse>$100</cfif></td>
     </tr>    
     <tr bgcolor="##F8F8F8">
         <td>Supervision Phase 2</td>
         <td>December 15</td>
-        <td>$100</td>
+        <td><cfif client.companyid eq 15>$150<cfelse>$100</cfif></td>
     </tr>
+   <cfif client.companyid neq 15>
     <tr>
         <td>Supervision Phase 3</td>
         <td>February 15</td>
         <td>$100</td>
     </tr>   
+   </cfif>
 </table> <br />
 
 <strong>Spring Semester</strong><br />
@@ -291,25 +293,27 @@
     <tr bgcolor="##F8F8F8">
         <td>Placement*</td>
         <td>Paperwork*</td>
-        <td>$175</td>
+        <td><cfif client.companyid eq 15>$300<cfelse>$175</cfif></td>
     </tr>
     <tr>
         <td>Supervision Phase 3**</td>
         <td>February 15</td>
-        <td>$100</td>
+        <td><cfif client.companyid eq 15>$150<cfelse>$100</cfif></td>
     </tr>    
     <tr bgcolor="##F8F8F8">
         <td>Supervision Phase 4</td>
         <td>April 15</td>
-        <td>$100</td>
+        <td><cfif client.companyid eq 15>$150<cfelse>$100</cfif></td>
     </tr>  
+    <cfif client.companyid neq 15>
+        <tr>
+            <td>Supervision Phase 5</td>
+            <td>June 15</td>
+            <td>$100</td>
+        </tr>   
+    </cfif>
     <tr>
-        <td>Supervision Phase 5</td>
-        <td>June 15</td>
-        <td>$100</td>
-    </tr>   
-    <tr>
-        <td colspan="3" align="right"><strong>Total Payment for a semester student : $475</strong></td>
+        <td colspan="3" align="right"><strong>Total Payment for a semester student : <cfif client.companyid eq 15>$600<cfelse>$475</cfif></strong></td>
     </tr>
 </table> <br />
 
@@ -324,43 +328,45 @@
     <tr>
         <td>Placement*</td>
         <td>Paperwork*</td>
-        <td>$175</td>
+        <td><cfif client.companyid eq 15>$400<cfelse>$175</cfif></td>
     </tr>
     <tr bgcolor="##F8F8F8">
         <td>Supervision Phase 1**</td>
-        <td>October 15 </td>
-        <td>$80</td>
+        <td>October <cfif client.companyid eq 15>20<cfelse>15</cfif> </td>
+        <td><cfif client.companyid eq 15>$150<cfelse>$80</cfif></td>
     </tr>    
     <tr>
         <td>Supervision Phase 2</td>
-        <td>December 15 </td>
-        <td>$80</td>
+        <td>December <cfif client.companyid eq 15>20<cfelse>15</cfif> </td>
+        <td><cfif client.companyid eq 15>$150<cfelse>$80</cfif></td>
     </tr>
     <tr bgcolor="##F8F8F8">
         <td>Supervision Phase 3</td>
-        <td>February 15 </td>
-        <td>$80</td>
+        <td>February <cfif client.companyid eq 15>20<cfelse>15</cfif> </td>
+        <td><cfif client.companyid eq 15>$150<cfelse>$80</cfif></td>
     </tr> 
     <tr>
         <td>Supervision Phase 4</td>
-        <td>April 15</td>
-        <td>$80</td>
+        <td>April <cfif client.companyid eq 15>20<cfelse>15</cfif></td>
+        <td><cfif client.companyid eq 15>$150<cfelse>$80</cfif></td>
     </tr>  
     <tr bgcolor="##F8F8F8">
         <td>Supervision Phase 5</td>
-        <td>June 15</td>
-        <td>$80</td>
+        <td>June <cfif client.companyid eq 15>20<cfelse>15</cfif></td>
+        <td><cfif client.companyid eq 15>$150<cfelse>$80</cfif></td>
     </tr>  
+    <cfif client.companyid neq 15>
     <tr>
         <td>Departure</td>
         <td>June 30</td>
-        <td>$175</td>
+        <td>$80</td>
     </tr>   
+    </cfif>
     <tr>
-        <td colspan="3" align="right"><strong>Total Payment  : $750</strong></td>
+        <td colspan="3" align="right"><strong>Total Payment  : <Cfif client.companyid eq 15>$1000<cfelse>$750</Cfif></strong></td>
     </tr>
 </table> <br />
-
+<cfif client.companyid neq 15>
 <strong>3. Calendar Year Program (12 months)</strong>
 
 <table width="80%">
@@ -552,6 +558,7 @@
             request form for the AR and the <cfif CLIENT.companyID EQ 10>New Jersey<cfelse>New York</cfif> office approves it.
     </p>
     </li> 
+    </cfif>
     <br />
 
     <li><strong>Terms and Conditions</strong></li> <br />
@@ -585,7 +592,7 @@
         
         <li>
             If #qGetCompanyInfo.companyshort_nocolor# collects a cancellation fee for any placement that is canceled by a student for
-            an inappropriate reason, a $175 placement fee will be paid. In order to receive this payment all placements must have been completed and the signed Host Family
+            an inappropriate reason, a <cfif client.companyid neq 15>$175</cfif> placement fee will be paid. In order to receive this payment all placements must have been completed and the signed Host Family
             Application with pictures, School and Community Profile and School Acceptance Form in the #qGetCompanyInfo.companyshort_nocolor# main office within two weeks of the cancellation.
         </li>
         
@@ -604,11 +611,11 @@
         <ol class="letters">
             <li> 
                 "Placement" means the act of locating and securing a confirmed homestay and school acceptance for an #qGetCompanyInfo.companyshort_nocolor#-sponsored exchange student, as further
-                defined in the State Department regulations and CSIET guidelines.
+                defined in the <cfif client.companyid neq 15>State Department regulations and </cfif>CSIET guidelines.
             </li>
             
             <li> 
-                "Supervise" or "Supervision" means contact with the student(s) placed by the  Area Representative as defined in the State Department Regulations and
+                "Supervise" or "Supervision" means contact with the student(s) placed by the  Area Representative as defined in the <cfif client.companyid neq 15>State Department Regulations and</cfif>
                 CSIET guidelines. This includes conducting the host family and the student orientation, and in-person visitation at least every other month.            
             </li>
             
