@@ -41,7 +41,7 @@ text-align:center;
 		<td>
 		<cfif client.companyid NEQ 14>As mandated by the Department of State, a<cfelse> A</cfif> Criminal Background Check on all Office Staff, Regional Directors/
   Managers, Regional Advisors, Area Representatives and all members of the host family aged 18 and above is 
-  required for involvement with the <cfif client.companyid NEQ 14>J-1 Secondary School</cfif> Exchange <cfif client.companyid NEQ 14>Visitor</cfif> Program.
+  required for involvement with the<cfif client.company <cfif client.companyid EQ 14>Exchange Visitor Program <cfelseif client.companydid EQ 15>Dash Program<cfelse>J-1 Secondary School Program</cfif> 
 		</td>
 	</tr>
 	<tr>
@@ -78,14 +78,14 @@ text-align:center;
 		<td colspan=4>
 		<p>do hereby authorize verification of all information in my application for involvement with International
 Student Exchange programs from all necessary sources and additionally authorize any duly recognized
-agent of IntelliCorp Records, Inc. to obtain the said records and any such disclosures.</p>
-<p>Information appearing on this Authorization will be used exclusively by IntelliCorp Records, Inc. for
+agent of backgroundchecks.com to obtain the said records and any such disclosures.</p>
+<p>Information appearing on this Authorization will be used exclusively by backgroundchecks.com for
 identification purposes and for the release of information that will be considered in determining any
 suitability for participation in the #original_company_info.companyname# programs.</p>
-<p>Upon proper identification and via a request submitted directly to IntelliCorp Records, Inc., I have the
-right to request from IntelliCorp Records, Inc. information about the nature and substance of all records
+<p>Upon proper identification and via a request submitted directly to backgroundchecks.com Records, Inc., I have the
+right to request from backgroundchecks.com  information about the nature and substance of all records
 on file about me at the time of my request. This may include the type of information requested as well
-as those who requested reports from IntelliCorp Records, Inc. within the two-year period preceding my
+as those who requested reports from backgroundchecks.com within the two-year period preceding my
 request.</p>
 		</td>
 	</tr>
