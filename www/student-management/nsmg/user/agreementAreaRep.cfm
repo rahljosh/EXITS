@@ -592,7 +592,7 @@
         
         <li>
             If #qGetCompanyInfo.companyshort_nocolor# collects a cancellation fee for any placement that is canceled by a student for
-            an inappropriate reason, a <cfif client.companyid neq 15>$175</cfif> placement fee will be paid. In order to receive this payment all placements must have been completed and the signed Host Family
+            an inappropriate reason, a <cfif client.companyid neq 15>$175<cfelse>$300 or $400 </cfif> placement fee will be paid <cfif client.companyid eq 15>respectivly</cfif>. In order to receive this payment all placements must have been completed and the signed Host Family
             Application with pictures, School and Community Profile and School Acceptance Form in the #qGetCompanyInfo.companyshort_nocolor# main office within two weeks of the cancellation.
         </li>
         
