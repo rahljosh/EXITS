@@ -214,7 +214,8 @@
             <tr bgcolor="##ffffe6" style="font-weight:bold;">
                 <td style="padding-left:20px;">Name</td>
                 <td>Last Modified</td>
-                <td>Size</td> 
+                <td>Size</td>
+                <td>Expiration Date</td> 
                 <cfif CLIENT.userType LTE 3>
                     <th>Delete</th>
                 </cfif>
@@ -226,7 +227,7 @@
                     <td style="padding-left:20px;"><a href="#setDownloadPath#/#name#" title="#name#" target="_blank">#name#</a></td>
                     <td>#DateFormat(dateLastModified, 'mm/dd/yyyy')#</td>
                     <td>#AppCFC.UDF.displayFileSize(size=size)#</td>
-                	
+                	<td>#DateFormat(DateAdd('d',365,dateLastModified),"mm/dd/yyyy")#</td>
                     <cfif CLIENT.userType LTE 3>
                     <th>
                         <form method="post" action="" name="Delete">

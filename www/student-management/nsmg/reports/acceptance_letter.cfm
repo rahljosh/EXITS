@@ -251,9 +251,9 @@
     	<td>
 			<p>Thanks,</p>
             <p>
-                <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISE, qGetStudentInfo.companyID)>
+                <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, qGetStudentInfo.companyID)>
                     <!---If the Facilitator is Lois show Admissions email --->
-                    <cfif NOT VAL(qRegionAssigned.regionfacilitator)>
+                    <cfif NOT VAL(qRegionAssigned.regionfacilitator) OR qRegionAssigned.regionfacilitator EQ 21485>
                     	Student Admissions Department <br />
                         Lois Culmo<br />
                         <a href="mailto:admissions@iseusa.org">admissions@iseusa.org</a>
