@@ -719,7 +719,7 @@
                                     <img src="#client.exits_url#/nsmg/pics/hostAppEmail.jpg" width="200" height="56" border="0">
                                 </a>
                           	<cfelseif CLIENT.companyID EQ 14>
-                            	<a href="https://exchange-service.org/hostApplication/" target="_blank">
+                            	<a href="https://es.exitsapplication.com/hostApplication/index.cfm?section=login" target="_blank">
                                     <img src="#client.exits_url#/nsmg/pics/hostAppEmail.jpg" width="200" height="56" border="0">
                                 </a>
                             <cfelse>
