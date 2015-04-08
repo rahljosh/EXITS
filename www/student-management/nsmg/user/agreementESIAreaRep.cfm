@@ -273,17 +273,22 @@
             <tr bgcolor="##F8F8F8">
                 <td>Placement*</td>
                 <td>Paperwork*</td>
-                <td>$250</td>
+                <td>$350</td>
             </tr>
             <tr>
                 <td>Supervision Phase 1**</td>
                 <td>October 15</td>
-                <td>$100</td>
-            </tr>   
+                <td>$75</td>
+            </tr>
+            <tr>
+                <td>Supervision Phase 2</td>
+                <td>December 15</td>
+                <td>$75</td>
+            </tr>      
             <tr>
                 <td>Supervision Phase 3</td>
                 <td>February 15 </td>
-                <td>$100</td>
+                <td>$75</td>
             </tr>   
         </table>
         <br /><br />
@@ -312,7 +317,7 @@
                 <td>$100</td>
             </tr>   
             <tr>
-                <td colspan="3" align="right"><strong>Total Payment for a semester student : $450</strong></td>
+                <td colspan="3" align="right"><strong>Total Payment for a semester student : $575</strong></td>
             </tr>
         </table>
 
@@ -327,7 +332,7 @@
             <tr>
                 <td>Placement*</td>
                 <td>Paperwork*</td>
-                <td>$250</td>
+                <td>$350</td>
             </tr>
             <tr bgcolor="##F8F8F8">
                 <td>Supervision Phase 1**</td>
@@ -355,7 +360,7 @@
                 <td>$100</td>
             </tr>  
             <tr>
-                <td colspan="3" align="right"><strong>Total Payment  : $750</strong></td>
+                <td colspan="3" align="right"><strong>Total Payment  : $850</strong></td>
             </tr>
         </table>
 
@@ -369,7 +374,7 @@
             <tr>
                 <td>Placement*</td>
                 <td>Paperwork*</td>
-                <td>$250</td>
+                <td>$350</td>
             </tr>
             <tr bgcolor="##F8F8F8">
                 <td>Supervision Phase 3**</td>
@@ -385,7 +390,12 @@
                 <td>Supervision Phase 5</td>
                 <td>June 15</td>
                 <td>$100</td>
-            </tr>  
+            </tr>
+            <tr>
+                <td>Supervision Phase 6</td>
+                <td>August 15 </td>
+                <td>$100</td>
+            </tr>      
             <tr>
                 <td>Supervision Phase 1</td>
                 <td>October 15 </td>
@@ -397,7 +407,7 @@
                 <td>$100</td>
             </tr>
             <tr>
-                <td colspan="3" align="right"><strong>Total Payment  : $850</strong></td>
+                <td colspan="3" align="right"><strong>Total Payment  : $950</strong></td>
             </tr>
         </table>
 
