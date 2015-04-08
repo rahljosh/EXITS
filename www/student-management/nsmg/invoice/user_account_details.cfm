@@ -123,15 +123,15 @@
         LEFT JOIN smg_programs sp ON sp.programid = sch.programid
         LEFT JOIN smg_users su ON su.userid = sch.agentid
         WHERE sch.agentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userid#">
-        <cfswitch expression="#client.companyid#">
-            <cfcase value="5,10,13,14">
-                AND sch.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
+        <cfswitch expression="#CLIENT.companyID#">
+        	<cfcase value="1,2,3,4,5,12">
+            	AND sch.companyid IN (1,2,3,4,5,12)
             </cfcase>
             <cfcase value="7,8">
-                AND sch.companyid IN (7,8)
+            	AND sch.companyid IN (7,8)
             </cfcase>
             <cfdefaultcase>
-                AND sch.companyid IN (1,2,3,4,5,7,8,10,12)
+            	AND sch.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
             </cfdefaultcase>
         </cfswitch>
 		GROUP BY sch.companyid<!--- testCompId --->
@@ -145,15 +145,15 @@
         LEFT JOIN smg_programs sp ON sp.programid = sch.programid
         LEFT JOIN smg_users su ON su.userid = sch.agentid
         WHERE  sch.agentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#">
-        <cfswitch expression="#client.companyid#">
-            <cfcase value="5,10,14">
-                AND sch.companyid = #client.companyid#
+        <cfswitch expression="#CLIENT.companyID#">
+        	<cfcase value="1,2,3,4,5,12">
+            	AND sch.companyid IN (1,2,3,4,5,12)
             </cfcase>
             <cfcase value="7,8">
-                AND sch.companyid IN (7,8)
+            	AND sch.companyid IN (7,8)
             </cfcase>
             <cfdefaultcase>
-                AND sch.companyid IN (1,2,3,4,5,7,8,10,12)
+            	AND sch.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
             </cfdefaultcase>
         </cfswitch>
 		GROUP BY sch.companyid<!--- testCompId --->
@@ -166,16 +166,16 @@
         LEFT JOIN smg_charges sch ON sch.chargeid = sc.chargeid
         LEFT JOIN smg_programs sp ON sp.programid = sch.programid
         LEFT JOIN smg_users su ON su.userid = sc.agentid
-        WHERE sc.active =1
-        <cfswitch expression="#client.companyid#">
-            <cfcase value="5,10,13,14">
-                AND sc.companyid = #client.companyid#
+        WHERE sc.active = 1
+        <cfswitch expression="#CLIENT.companyID#">
+        	<cfcase value="1,2,3,4,5,12">
+            	AND sch.companyid IN (1,2,3,4,5,12)
             </cfcase>
             <cfcase value="7,8">
-                AND sc.companyid IN (7,8)
+            	AND sch.companyid IN (7,8)
             </cfcase>
             <cfdefaultcase>
-                AND sc.companyid IN (1,2,3,4,5,7,8,10,12)
+            	AND sch.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
             </cfdefaultcase>
         </cfswitch>
         AND sc.agentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userid#">
