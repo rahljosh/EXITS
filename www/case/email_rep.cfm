@@ -51,7 +51,7 @@ Name:#form.firstname# #form.lastname#<Br />
 Address:#form.address#<br />
 City:#form.city#<Br />
 <cfif form.contact_type neq 'stu'>
-State:#state.statename#<br />
+State:#form.state#<br />
 </cfif>
 Zip:#form.zip#<br />
 Phone:#form.phone#<br />
