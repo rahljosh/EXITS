@@ -69,6 +69,7 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
                 <td style="width:1px;">&nbsp;</td>
                 <td style="width:80px; text-align:center; font-weight:bold;">Days</td>
                 <td style="width:300px; text-align:left; font-weight:bold;">Email Address (optional)</td>
+                <td style="width:80px; text-align:left; font-weight:bold;">Gender (F/M)</td>
             </tr>
             
 			<cfloop query="qGetStudentsHistory">
@@ -87,7 +88,8 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
 						<cfelse>
                         	&nbsp;
 						</cfif>
-                    </td>                              
+                    </td>
+                    <td>#qGetStudentsHistory.gender#</td>                              
                 </tr>
                 
 			</cfloop>
