@@ -65,9 +65,10 @@ a:active {
     
     <!----Query to get states and id's---->
 
-<cfquery name="states" datasource="caseusa">
-select id, state
+<cfquery name="states" datasource="smg">
+select id, state, statename
 from smg_states
+where id < 51
 </cfquery>
 
 <cfoutput>
@@ -106,7 +107,7 @@ from smg_states
       <select name="state">
         <option value="0"></option>
         <cfloop query="states">
-          <option value=#id#>#state#</option>
+          <option value=#id#>#state# - #statename#</option>
           </cfloop>
         </select>
       <br />
