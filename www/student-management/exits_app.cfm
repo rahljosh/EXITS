@@ -183,6 +183,11 @@ function launchRemote() {
 	<tr><td valign="top">
 		<cfinclude template="nsmg/student_app/section4/page21print.cfm">
 	</td></tr>
+    
+    <tr><td valign="top">
+        <cfset fileURL = "nsmg">
+        <cfinclude template="nsmg/student_app/section4/page22print.cfm">
+	</td></tr>
  	
 	<!--- Pages 23 - 24 use this variable instead of a separate print page --->
 	<cfset URL.display = "print">
@@ -209,7 +214,7 @@ function launchRemote() {
     <tr><td valign="top">
 		<cfset doc="page27">
         <cfinclude template="nsmg/student_app/print_include_file.cfm">
-	</td></tr>	
+	</td></tr>
 </table>
 
 <cfcatch type="any">
