@@ -625,15 +625,24 @@
                                 </select>               
                             </td>
                         </tr>
-                    <tr>
-                        <td class="reportFieldTitle">Country:</td>
-                        <td><select name="countryID">			
-                            	<option value="0">All Countries</option>
-                            	<cfloop query="get_countries"><option value="#countryID#">#countryname#</option></cfloop>
-                            </select>               
+                        <tr>
+                            <td class="reportFieldTitle">Country:</td>
+                            <td><select name="countryID">			
+                                    <option value="0">All Countries</option>
+                                    <cfloop query="get_countries"><option value="#countryID#">#countryname#</option></cfloop>
+                                </select>               
+                                </td>
+                            </tr>
+                        <tr>
+                    	<tr>
+                        	<td class="reportFieldTitle">Status Type:</td>
+                            <td>
+                            	<select name="statusOption">
+                                	<option value="1">Submitted, Received, On Hold, Approved</option>
+                                    <option value="2">Issued, Active, Future, To Approve</option>
+                                </select>
                             </td>
                         </tr>
-                    <tr>
                         <td colspan="2" class="reportTitle"><input type="image" src="pics/view.gif" align="center" border="0"></td>
                     </tr>
                 </table>
