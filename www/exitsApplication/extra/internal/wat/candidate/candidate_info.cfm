@@ -782,9 +782,9 @@
                                         required="yes">
                                     &nbsp; 
                                     <strong>Sex:</strong> 
-                                    <input type="radio" name="sex" value="M" required="yes" message="You must specify the candidate's sex." <cfif qGetCandidate.sex Eq 'M'>checked="checked"</cfif>>Male 
+                                    <input type="radio" name="sex" value="M" required message="You must specify the candidate's sex." <cfif qGetCandidate.sex Eq 'M'>checked="checked"</cfif>>Male 
                                     &nbsp;
-                                    <input type="radio" name="sex" value="F" required="yes" message="You must specify the candidate's sex." <cfif qGetCandidate.sex Eq 'F'>checked="checked"</cfif>>Female 
+                                    <input type="radio" name="sex" value="F" required message="You must specify the candidate's sex." <cfif qGetCandidate.sex Eq 'F'>checked="checked"</cfif>>Female 
                                 </td>
                             </tr> 
                             <tr>
@@ -2830,6 +2830,13 @@
                                         	<td class="style1" width="70%">
                                             	<span class="readOnly">#qGetCandidate.arrival_address#</span>
                                                 <input type="text" name="arrival_address" id="arrival_address" class="style1 editPage" value="#qGetCandidate.arrival_address#">
+                                            </td>
+                                        </tr>
+                                          <tr>
+                                        	<td class="style1" width="30%" align="right">&nbsp;</td>
+                                        	<td class="style1" width="70%">
+                                            	<span class="readOnly">#qGetCandidate.arrival_address_2#</span>
+                                                <input type="text" name="arrival_address" id="arrival_address" class="style1 editPage" value="#qGetCandidate.arrival_address_2#">
                                             </td>
                                         </tr>
                                         <tr>
