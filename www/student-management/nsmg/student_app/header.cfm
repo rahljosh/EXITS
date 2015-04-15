@@ -34,7 +34,11 @@
 			CLIENT.org_code = CLIENT.companyid;
 			bgcolor ='B5D66E';
 		} else if ( CLIENT.companyid EQ 15 ) {
-			// CANADA
+			// DASH
+			CLIENT.org_code = CLIENT.companyid;
+			bgcolor ='B5D66E';
+		} else if ( CLIENT.companyid EQ 6 ) {
+			// PHP
 			CLIENT.org_code = CLIENT.companyid;
 			bgcolor ='B5D66E';
 		} else {
