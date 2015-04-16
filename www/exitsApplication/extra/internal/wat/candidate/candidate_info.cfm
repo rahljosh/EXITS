@@ -2836,7 +2836,7 @@
                                         	<td class="style1" width="30%" align="right">&nbsp;</td>
                                         	<td class="style1" width="70%">
                                             	<span class="readOnly">#qGetCandidate.arrival_address_2#</span>
-                                                <input type="text" name="arrival_address" id="arrival_address" class="style1 editPage" value="#qGetCandidate.arrival_address_2#">
+                                                <input type="text" name="arrival_address_2" id="arrival_address_2" class="style1 editPage" value="#qGetCandidate.arrival_address_2#">
                                             </td>
                                         </tr>
                                         <tr>
