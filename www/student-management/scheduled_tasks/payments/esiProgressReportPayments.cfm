@@ -62,8 +62,7 @@
     AND hh.dateplaced is not null
 
 	AND (
-		flarr.arrival_date >= date_add(prog.preayp_date, INTERVAL 1 MONTH)
-            AND NOT EXISTS (select ID from smg_users_payments pmt WHERE st.studentID = pmt.studentID AND transtype = "supervision")
+            NOT EXISTS (select ID from smg_users_payments pmt WHERE st.studentID = pmt.studentID AND transtype = "supervision")
             and (
             (pr.pr_month_of_report = 2 and (not EXISTS(select * from smg_users_payments pmt where pmt.paymenttype = 5 
                                             and st.studentID = pmt.studentID)) and
