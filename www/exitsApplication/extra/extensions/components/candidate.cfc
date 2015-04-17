@@ -1583,6 +1583,7 @@
                     ec.ds2019_startdate,
                     ec.us_phone,
                     ec.arrival_address,
+                    ec.arrival_address_2,
                     ec.arrival_city,
                     ec.arrival_state,
                     ec.arrival_zip,
@@ -1645,6 +1646,7 @@
         <cfargument name="candidateID" required="yes" hint="candidateID is required">
         <cfargument name="us_phone" default="" hint="initPhone is not required">
         <cfargument name="arrival_address" default="" hint="arrival_address is not required">
+        <cfargument name="arrival_address_2" default="" hint="arrival_address is not required">
         <cfargument name="arrival_city" default="" hint="arrival_city is not required">
         <cfargument name="arrival_state" default="" hint="arrival_state is not required">
         <cfargument name="arrival_zip" default="" hint="arrival_zip is not required">
@@ -1658,6 +1660,9 @@
                    	</cfif>
                     <cfif LEN(arrival_address)>
                     	arrival_address = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.arrival_address#">,
+                   	</cfif>
+                    <cfif LEN(arrival_address_2)>
+                    	arrival_address_2 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.arrival_address_2#">,
                    	</cfif>
                     <cfif LEN(arrival_city)>
                     	arrival_city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.arrival_city#">,

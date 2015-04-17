@@ -39,7 +39,7 @@
                     dateCreated,
                     dateUpdated
 				FROM
-                	applicationContent
+                	applicationcontent
                 WHERE
                 	contentKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.contentKey#">
         </cfquery> 
