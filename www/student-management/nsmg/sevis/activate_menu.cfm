@@ -18,9 +18,9 @@
 
     <cfparam name="batch_type" default="activate">
 
-	<cfquery 
+	  <cfquery 
 			name="qGetPrograms" 
-			datasource="#APPLICATION.DSN.Source#">
+			datasource="MySql">
                 SELECT
 					p.programID,
                     p.programName,
@@ -57,61 +57,17 @@
                 LEFT OUTER JOIN 
                 	smg_seasons s on s.seasonID = p.seasonID
                 WHERE
-                	p.is_deleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-				
-                <!--- Canada and ESI hast it's own programs --->
-            
+                	p.is_deleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">			
                     AND
-                        p.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
-              	    
-                
-				<cfif VAL(ARGUMENTS.programID)>
-                	AND
-                    	p.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#">
-                </cfif>
-                
-                <cfif LEN(ARGUMENTS.programIDList)>
-                	AND
-                    	p.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programIDList#" list="yes"> )
-                </cfif>
-                
-				<cfif LEN(ARGUMENTS.isActive)>
-                	AND
-                    	p.active = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.isActive)#">
-                </cfif>
-
-				<cfif VAL(ARGUMENTS.dateActive)>
+                        p.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
                     AND
                     	p.startDate <= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('m', 6, now())#">
                     AND
                     	p.endDate >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('m', -3, now())#">
-                </cfif>
-
-				<cfif VAL(ARGUMENTS.isEndingSoon)>
-                    AND
-                    	( p.endDate BETWEEN <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('m', -3, now())#"> AND <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('m', 3, now())#"> ) 
-                </cfif>
-
-				<cfif VAL(ARGUMENTS.isFullYear)>
-                    AND
-                    	p.type IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,5" list="yes"> )
-                </cfif>
-
-				<cfif VAL(ARGUMENTS.isUpcomingProgram)>
-                    AND
-                    	p.startDate >= <cfqueryparam cfsqltype="cf_sql_date" value="#DateAdd('m', -1, now())#">
-                </cfif>
-				
-				<cfif LEN(ARGUMENTS.seasonIDs)>
-					AND
-						p.seasonID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.seasonIDs#" list="true"> )
-				</cfif>
-				
                 ORDER BY 
                    p.startDate DESC,
                    p.programName
 		</cfquery>
-
 	<!-----Company Information----->
     <cfquery name="get_company" datasource="MySQL">
         SELECT 
@@ -139,7 +95,13 @@
         <cfif URL.all is 'no'>AND s.companyid = #client.companyid#</cfif>
         ORDER BY s.batchID DESC
     </cfquery>
-
+	
+    <cfquery name="arrivalDates" datasource="MySql">
+    select distinct watDateCheckedIn
+    from extra_candidates
+    where sevis_activated = <cfqueryparam value="0" cfsqltype="cf_sql_integer">
+    and watDateCheckedIn > <cfqueryparam value="2015-04-15" cfsqltype="cf_sql_date">
+    </cfquery>
 </cfsilent>    
 
 <link rel="stylesheet" href="../reports/reports.css" type="text/css">
@@ -155,18 +117,22 @@
 <!--- ACTIVATE STUDENTS THAT HAVE ALREADY ARRIVED IN THE USA --->
 <cfform action="sevis/activate_xml_arrived.cfm" method="POST" target="blank">
 <Table class="nav_bar" cellpadding=6 cellspacing="0" align="center" width="96%">
-	<tr><th colspan="2" bgcolor="ededed">Active students that have already arrived in the USA according to flight info received - (Up to 250 students)</th></tr>
+	<tr>
+	  <th colspan="2" bgcolor="ededed">Active students that have already arrived in the USA according tocontact update -- (Up to 250 students)</th></tr>
 	<tr align="left">
 		<TD width="15%">Program :</td>
 		<TD><select name="programid" multiple size="8">			
 			<cfloop query="qGetPrograms"><option value="#ProgramID#">#programname#</option></cfloop>
 			</select></td></tr>
-	<tr align="left">
+	<!----<tr align="left">
 		<TD width="15%">Pre-AYP :</td>
-		<TD><input type="checkbox" name="pre_ayp">Only Pre-AYP students</td></tr>
+		<TD><input type="checkbox" name="pre_ayp">Only Pre-AYP students</td></tr>---->
 	<tr align="left">
 		<TD width="15%">Arrival Date : </td>
-		<TD><cfinput type="text" name="arrival_date" size="8" value="#DateFormat(now(), 'mm/dd/yyyy')#" validate="date" required="yes" message="You must include an arrival date" maxlength="10"></td></tr>
+		<TD><select name="watDateCheckedIn">	
+            	<option value="">Please select a verification date</option>
+				<cfloop query="arrivalDates"><option value="#watDateCheckedIn#">#DateFormat(watDateCheckedIn, 'yyyy-mm-dd')#</option></cfloop>
+			</select></td></tr>
 	<tr><td colspan="2" align="center" bgcolor="ededed"><input type="image" src="pics/view.gif" align="center" border=0 <cfif client.usertype is not '1'>disabled</cfif>></td></tr>
 </table><br>
 </cfform>
@@ -180,9 +146,9 @@
 		<TD><select name="programid" multiple size="8">			
 			<cfloop query="qGetPrograms"><option value="#ProgramID#">#programname#</option></cfloop>
 			</select></td></tr>
-	<tr align="left">
+	<!----<tr align="left">
 		<TD width="15%">Pre-AYP :</td>
-		<TD><input type="checkbox" name="pre_ayp">Only Pre-AYP students</td></tr>
+		<TD><input type="checkbox" name="pre_ayp">Only Pre-AYP students</td></tr>---->
 	<tr><td colspan="2" align="center" bgcolor="ededed"><input type="image" src="pics/view.gif" align="center" border=0 <cfif client.usertype is not '1'>disabled</cfif>></td></tr>
 </table><br>
 </cfform>
@@ -192,7 +158,7 @@
 	<th align="center" bgcolor="ededed">SEVIS Batch Activation XML Results Extractor</th></tr>
 	<tr><td bgcolor="ededed"><cfform method="post" action="?curdoc=sevis/activate_results" enctype="multipart/form-data">
 		File Name &nbsp; : &nbsp; <input type="text" name="filename" size="50">
-		<div align="center"><input type="submit" value="Update #CLIENT.DSFormName#"></div>
+		<div align="center"><input type="submit" value="Update DS-2019"></div>
 		</cfform></td></tr>
 </table><br>
 </cfoutput>
