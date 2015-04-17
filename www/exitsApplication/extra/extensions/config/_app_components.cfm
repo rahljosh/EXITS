@@ -51,4 +51,10 @@
 
 	// Store the initialized User Library object in the Application scope
 	APPLICATION.CFC.user = CreateCFC("user").Init();
+	
+	// Store the initialized User Library object in the Application scope
+	APPLICATION.CFC.sevis = CreateCFC("sevis").Init();
+	
+	// Store the initialized User Library object in the Application scope
+	APPLICATION.CFC.company = CreateCFC("company").Init();
 </cfscript>
