@@ -20,76 +20,45 @@
 
 <cfquery name="qGetStudents" datasource="MySql"> 
 	SELECT DISTINCT 
-    	s.studentid, 
-        s.dateapplication, 
-        s.active,
-        s.ds2019_no, 
-        s.firstname, 
-        s.familylastname, 
-        s.companyID, 
-        s.middlename, 
-        s.dob, 
-        s.sex,	
-        s.citybirth, 
-        s.hostid, 
-        s.schoolid, 
-        s.host_fam_approved,
-        s.ayporientation,
-        s.aypenglish,
-        h.familylastname as hostlastname,
-        h.fatherlastname, h.motherlastname,
-        h.address as hostaddress, 
-        h.address2 as hostaddress2, 
-        h.city as hostcity,
-        h.state as hoststate, 
-        h.zip as hostzip,
-        u.businessname
+    	c.candidateid, 
+     	c.watDateCheckedIn,
+        c.ds2019, 
+        c.firstname, 
+        c.lastname, 
+      	c.arrival_address,
+        c.arrival_address_2,
+        c.arrival_city,
+        c.arrival_state,
+        c.arrival_zip,
+        c.intrep,
+      	u.businessname,
+        s.state
 	FROM 
-    	smg_students s
+    	extra_candidates c
 	INNER JOIN 
-    	smg_programs p ON s.programid = p.programid
+    	smg_programs p ON c.programid = p.programid
 	INNER JOIN 
-    	smg_users u ON s.intrep = u.userid
-	INNER JOIN 
-    	smg_flight_info f ON s.studentid = f.studentid 
-        	AND 
-            	f.flight_type IN ( <cfqueryparam cfsqltype="cf_sql_varchar" value="arrival,preAypArrival" list="yes"> )
-            AND
-            	f.dep_date < <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(form.arrival_date)#">
-			AND
-            	f.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                
-	LEFT JOIN 
-    	smg_hosts h ON s.hostid = h.hostid
+    	smg_users u ON c.intrep = u.userid
+    INNER JOIN 
+    	smg_states s ON s.id = c.arrival_state
 	WHERE 
-    	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-    AND 
-    	s.sevis_activated = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-    AND 
-    	s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )
-	AND 
-    	s.ds2019_no != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
     	
-	<cfif IsDefined('form.pre_ayp')>
-	    AND 
-        	(
-        		s.aypenglish != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-            OR 
-            	s.ayporientation != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-            )
-    </cfif>
-
-	<cfif CLIENT.companyID EQ 10>
-        AND
-            s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-    <cfelse>
-        AND
-            s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
-    </cfif>
+    	c.sevis_activated = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+    AND 
+    	c.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )
+	AND 
+    	c.ds2019 != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+	
+	AND
+    	c.watDateCheckedIn = <cfqueryparam cfsqltype="cf_sql_date" value="#form.watDateCheckedIn#" list="yes">
+    AND
+        c.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+ 
     
 	ORDER BY 
-    	u.businessname, 
-        s.familylastname, 
-        s.firstname
+    	
+        c.lastname, 
+        c.firstname
 	LIMIT 250
 </cfquery>
 
@@ -116,7 +85,7 @@ Sorry, there were no students to populate the XML file at this time.
 <th colspan="2"><cfoutput>#qGetCompany.companyshort_nocolor# &nbsp; - &nbsp; Batch ID #qBatchID.batchid# &nbsp; - &nbsp; List of Students &nbsp; - &nbsp; Total of students in this batch: #qGetStudents.recordcount#</cfoutput></th>
 <cfoutput query="qGetStudents">
 <tr bgcolor="#iif(qGetStudents.currentrow MOD 2 ,DE("ededed") ,DE("white") )#">
-	<td width="35%">#businessname#</td><td width="65%">#firstname# #familylastname# (#studentid#)</td>
+	<td width="35%">#businessname#</td><td width="65%">#firstname# #lastname# (#candidateid#)</td>
 </tr>
 </cfoutput>
 </table>
@@ -138,46 +107,42 @@ Sorry, there were no students to populate the XML file at this time.
 	</BatchHeader>
 	<UpdateEV>
 	<cfloop query="qGetStudents">
-		<ExchangeVisitor sevisID="#qGetStudents.ds2019_no#" requestID="#qGetStudents.studentid#" userID="#qGetCompany.sevis_userid#">
+		<ExchangeVisitor sevisID="#qGetStudents.ds2019#" requestID="#qGetStudents.candidateid#" userID="#qGetCompany.sevis_userid#">
 			<Validate>
 				<USAddress>
-				<cfif VAL(qGetStudents.hostid) AND qGetStudents.host_fam_approved LT 5>
-                	<cfset safeHostAddress = ReplaceNoCase(qGetStudents.hostAddress, "&", "and")>
-					<Address1><cfif LEN(qGetStudents.hostlastname)>#qGetStudents.hostlastname#<cfelseif LEN(qGetStudents.fatherlastname)>#qGetStudents.fatherlastname#<cfelseif LEN(motherlastname)>#motherlastname#</cfif> Family</Address1> 	
-					<Address2>#safeHostAddress#</Address2>
-					<City>#qGetStudents.hostcity#</City> 
-					<State>#qGetStudents.hoststate#</State> 
-					<PostalCode>#qGetStudents.hostzip#</PostalCode>
-				<cfelse>
-					<Address1>#qGetCompany.address#</Address1> 
-					<City>#qGetCompany.city#</City> 
-					<State>#qGetCompany.state#</State> 
-					<PostalCode>#qGetCompany.zip#</PostalCode>
-				</cfif>
+				
+			
+					<Address1>#arrival_address#</Address1> 
+                    <cfif len(#arrival_address_2#)>
+                    	<Address2>#arrival_address_2#</Address2> 
+                    </cfif>
+					<City>#arrival_city#</City> 
+					<State>#state#</State> 
+					<PostalCode>#arrival_zip#</PostalCode>
+				
 				</USAddress>
 			</Validate>
 		</ExchangeVisitor>
 		<cfsilent>
             <cfquery datasource="MySql">
             	UPDATE 
-                	smg_students 
+                	extra_candidates
                 SET 
                 	sevis_activated = <cfqueryparam cfsqltype="cf_sql_integer" value="#qBatchID.batchid#"> 
                 WHERE 
-                	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudents.studentid#">
+                	candidateid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudents.candidateid#">
             </cfquery>
             <!--- CREATE NEW HISTORY --->
+           	<!----
             <cfquery name="qGetHistory" datasource="MySql">
                 SELECT 
-                	studentID,
-                    hostID,
-                    school_name, 
-                    start_date, 
+                	candidateid,
+                    start_date,
                     end_date 
                 FROM 
                 	smg_sevis_history  
                 WHERE 
-                	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudents.studentid#">
+                	candidateid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudents.candidateid#">
                 AND
                     isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
                 ORDER BY 
@@ -190,8 +155,6 @@ Sorry, there were no students to populate the XML file at this time.
                     (
                     	batchid, 
                         studentid, 
-                        hostid, 
-                        school_name, 
                         start_date,
                         end_date
                     )	
@@ -213,6 +176,7 @@ Sorry, there were no students to populate the XML file at this time.
 						</cfif>
                     )
             </cfquery>	
+			---->
 		</cfsilent>            
 	</cfloop>
 	</UpdateEV>
@@ -221,10 +185,10 @@ Sorry, there were no students to populate the XML file at this time.
 
 <cfscript>
 	// Get Folder Path 
-	currentDirectory = "#AppPath.sevis##qGetCompany.companyshort_nocolor#/activate/";
+	currentDirectory = "#APPLICATION.PATH.sevis##qGetCompany.companyshort_nocolor#/activate/";
 
 	// Make sure the folder Exists
-	AppCFC.UDF.createFolder(currentDirectory);
+	//AppCFC.UDF.createFolder(currentDirectory);
 </cfscript>
 
 <cffile action="write" file="#currentDirectory##qGetCompany.companyshort_nocolor#_activate_00#qBatchID.batchid#.xml" output="#toString(sevis_batch)#">
