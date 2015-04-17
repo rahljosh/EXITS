@@ -191,11 +191,15 @@
 	
 	APPLICATION.PATH.sevis = APPLICATION.PATH.uploadedFiles & 'sevis/';
 	
+	APPLICATION.PATH.ds2019forms = APPLICATION.PATH.uploadedFiles & '2019forms/';
+	
 	APPLICATION.PATH.pdfFiles = APPLICATION.PATH.uploadedFiles & 'pdf_docs/';
 	
 	APPLICATION.PATH.TRAINEE.pdfDocs = APPLICATION.PATH.pdfFiles & 'trainee/';
 
 	APPLICATION.PATH.WAT.pdfDocs = APPLICATION.PATH.pdfFiles & 'wat/';
+	
+	
 
 	/***************
 		Set up folders used to uplaod documents in the application.
