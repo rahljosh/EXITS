@@ -1587,6 +1587,11 @@
                     ec.arrival_city,
                     ec.arrival_state,
                     ec.arrival_zip,
+                    hostCompany.name as hostCompanyName,
+                    hostCompany.address as hostCompanyAddress,
+                    hostCompany.city as hostCompanyCity,
+                    hostCompany.zip as hostCompanyZip,
+                    states.state as hostCompanyState,
                     ef.departDate,
                     ef.isOvernightFlight,
 					CASE 
@@ -1614,6 +1619,10 @@
                     evaluationNumber = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
                     ORDER BY date DESC 
                     LIMIT 1)
+            	LEFT OUTER JOIN
+                	extra_hostcompany hostCompany ON hostCompany.hostcompanyid = ec.hostcompanyid
+				LEFT OUTER JOIN
+					smg_states states ON states.id = hostCompany.state
                 WHERE ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
                 AND ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
                 AND ec.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                       
