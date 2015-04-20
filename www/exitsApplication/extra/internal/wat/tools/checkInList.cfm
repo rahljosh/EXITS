@@ -91,11 +91,12 @@
 			tableHeader += '<td class="listTitle style2">DS 2019</td>';
 			tableHeader += '<td class="listTitle style2">Program</td>';
 			tableHeader += '<td class="listTitle style2">Intl. Rep.</td>';
-			tableHeader += '<td class="listTitle style2">Program <br /> Start Date</td>';
-			tableHeader += '<td class="listTitle style2">Program <br /> End Date</td>';
+			tableHeader += '<td class="listTitle style2" colspan="2">Employer</td>';
+			
 			tableHeader += '<td class="listTitle style2">Arrival</td>';
 			tableHeader += '<td class="listTitle style2">U.S. Phone</td>';
 			tableHeader += '<td class="listTitle style2">Address</td>';
+			tableHeader += '<td class="listTitle style2">Address 2</td>';
 			tableHeader += '<td class="listTitle style2">City</td>';
 			tableHeader += '<td class="listTitle style2">State</td>';
 			tableHeader += '<td class="listTitle style2">Zip</td>';
@@ -126,8 +127,14 @@
 			var businessName = verList.DATA[i][verList.COLUMNS.findIdx('BUSINESSNAME')];
 			var startDate = verList.DATA[i][verList.COLUMNS.findIdx('STARTDATE')];
 			var endDate = verList.DATA[i][verList.COLUMNS.findIdx('ENDDATE')];
+			var hostCompanyName = verList.DATA[i][verList.COLUMNS.findIdx('HOSTCOMPANYNAME')];
+			var hostCompanyAddress = verList.DATA[i][verList.COLUMNS.findIdx('HOSTCOMPANYADDRESS')];
+			var hostCompanyCity = verList.DATA[i][verList.COLUMNS.findIdx('HOSTCOMPANYCITY')];
+			var hostCompanyState = verList.DATA[i][verList.COLUMNS.findIdx('HOSTCOMPANYSTATE')];
+			var hostCompanyZip = verList.DATA[i][verList.COLUMNS.findIdx('HOSTCOMPANYZIP')];
 			var usPhone = verList.DATA[i][verList.COLUMNS.findIdx('US_PHONE')];
 			var arrival_address = verList.DATA[i][verList.COLUMNS.findIdx('ARRIVAL_ADDRESS')];
+			var arrival_address_2 = verList.DATA[i][verList.COLUMNS.findIdx('ARRIVAL_ADDRESS_2')];
 			var arrival_city = verList.DATA[i][verList.COLUMNS.findIdx('ARRIVAL_CITY')];
 			var arrival_state = verList.DATA[i][verList.COLUMNS.findIdx('ARRIVAL_STATE')];
 			var arrival_zip = verList.DATA[i][verList.COLUMNS.findIdx('ARRIVAL_ZIP')];
@@ -138,6 +145,7 @@
 			}
 			
 			if (arrival_address == null) arrival_address = "";
+			if (arrival_address_2 == null) arrival_address_2 = "";
 			if (arrival_city == null) arrival_city = "";
 			if (arrival_zip == null) arrival_zip = "";
 			
@@ -194,11 +202,12 @@
 				tableBody += '<td class="style5">' + ds2019 + '</td>';
 				tableBody += '<td class="style5">' + programName + '</td>';
 				tableBody += '<td class="style5">' + businessName + '</td>';
-				tableBody += '<td class="style5">' + startDate + '</td>';
-				tableBody += '<td class="style5">' + endDate + '</td>';
+				tableBody += '<td class="style5" colspan=2>' + hostCompanyName + '</td>';
+				
 				tableBody += '<td class="style5">' + arrivalDate + '</td>';
 				tableBody += '<td class="style5"><input type="text" size="12" id="usphone' + candidateID + '" value="' + usPhone + '" onclick="applyPhoneMask(this.id);" /></td>';
 				tableBody += '<td class="style5"><input type="text" size="12" id="arrival_address' + candidateID + '" value="' + arrival_address + '" /></td>';
+				tableBody += '<td class="style5"><input type="text" size="12" id="arrival_address_2' + candidateID + '" value="' + arrival_address_2 + '" /></td>';
 				tableBody += '<td class="style5"><input type="text" size="12" id="arrival_city' + candidateID + '" value="' + arrival_city + '" /></td>';
 				tableBody += '<td class="style5"><select id="arrival_state' + candidateID + '"><option value="0"></option>';
 				<cfoutput query="qGetStateList">
@@ -234,6 +243,7 @@
 		
 		var initPhone = document.getElementById('usphone' + candidateID).value;
 		var initAddress = document.getElementById('arrival_address' + candidateID).value;
+		var initAddress2 = document.getElementById('arrival_address_2' + candidateID).value;
 		var initCity = document.getElementById('arrival_city' + candidateID).value;
 		var initState = document.getElementById('arrival_state' + candidateID).value;
 		var initZip = document.getElementById('arrival_zip' + candidateID).value;		
@@ -243,7 +253,7 @@
 		c.setErrorHandler(myErrorHandler); 
 		
 		// This time, pass the intlRep ID to the getVerificationList CFC function. 
-		c.confirmCheckInReceived(candidateID, initPhone, initAddress, initCity, initState, initZip);
+		c.confirmCheckInReceived(candidateID, initPhone, initAddress, initAddress2, initCity, initState, initZip);
 		
 	}
 	
