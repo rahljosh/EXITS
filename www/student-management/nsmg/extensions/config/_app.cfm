@@ -102,6 +102,8 @@
 	APPLICATION.EMAIL.CASEComplianceTo = 'jana@case-usa.org';
 
 	APPLICATION.EMAIL.PHPContact = 'luke@phpusa.com';
+	
+	APPLICATION.EMAIL.ESIfacilitators = 'caitlin@exchange-service.org;diana@exchange-service.org';
 
 	/*********************************************
 		Replace this with a SESSION.emailSupport
