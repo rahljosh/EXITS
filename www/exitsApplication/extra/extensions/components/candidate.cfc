@@ -2015,7 +2015,12 @@
                     DATE_FORMAT(ec.endDate, '%m/%e/%Y') as endDate,
                     birth.countryName as birthCountry,
                     citizen.countryName as citizenCountry,
-                    resident.countryName as residentCountry
+                    resident.countryName as residentCountry,
+                    hostCompany.name as hostCompanyName,
+                    hostCompany.address as hostCompanyAddress,
+                    hostCompany.city as hostCompanyCity,
+                    hostCompany.zip as hostCompanyZip,
+                    states.state as hostCompanyState
                 FROM 
                     extra_candidates ec
 				INNER JOIN
@@ -2024,6 +2029,10 @@
                 	smg_countrylist birth ON birth.countryID = ec.birth_country
 				LEFT OUTER JOIN
                 	smg_countrylist citizen ON citizen.countryID = ec.citizen_country
+                LEFT OUTER JOIN
+                	extra_hostcompany hostCompany ON hostCompany.hostcompanyid = ec.hostcompanyid
+				LEFT OUTER JOIN
+					smg_states states ON states.id = hostCompany.state
 				LEFT OUTER JOIN
                 	smg_countrylist resident ON resident.countryID = ec.residence_country
                 WHERE
