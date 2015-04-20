@@ -83,9 +83,11 @@
 		// Check if is a PHP student - Email PHP
 		} else if ( qGetStudentInfo.companyid EQ 6 ) {
             emailRecipient = APPLICATION.EMAIL.PHPContact;
-		}
+		// Checki if ESI student - Email all facilitators
+		} else if ( qGetStudentInfo.companyID EQ 14 ) {
+			emailRecipient = APPLICATION.EMAIL.ESIFacilitators;
         // Check if there is a valid facilitator email address
-		else if ( IsValid("email", qGetRegionInfo.email) ) {
+		} else if ( IsValid("email", qGetRegionInfo.email) ) {
             emailRecipient = qGetRegionInfo.email;
         }
 	</cfscript>	

@@ -238,10 +238,12 @@
 					emailRecipient = APPLICATION.EMAIL.support; 	
 				// Check if is a PHP student - Email PHP
 				} else if ( qGetStudentInfo.companyid EQ 6 ) {
-					emailRecipient = APPLICATION.EMAIL.PHPContact; 	
-				}
+					emailRecipient = APPLICATION.EMAIL.PHPContact;
+				// Check if ESI student - Email all facilitators
+				} else if ( qGetStudentInfo.companyid EQ 14 ) {
+					emailRecipient = APPLICATION.EMAIL.ESIFacilitators;
 				// Check if there is a valid facilitator email address and only email the facilitator if they are not the ones uploading the file.
-				else if ( IsValid("email", qGetRegionInfo.email) AND qGetRegionInfo.regionfacilitator NEQ CLIENT.userID ) {
+				} else if ( IsValid("email", qGetRegionInfo.email) AND qGetRegionInfo.regionfacilitator NEQ CLIENT.userID ) {
 					emailRecipient = qGetRegionInfo.email;
 				}
         	</cfscript>	
