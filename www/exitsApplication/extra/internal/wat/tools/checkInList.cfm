@@ -89,10 +89,10 @@
         	tableHeader += '<td class="listTitle style2">Gender</td>';
 			tableHeader += '<td class="listTitle style2">Country</td>';
 			tableHeader += '<td class="listTitle style2">DS 2019</td>';
-			tableHeader += '<td class="listTitle style2">Program</td>';
+		
 			tableHeader += '<td class="listTitle style2">Intl. Rep.</td>';
 			tableHeader += '<td class="listTitle style2" colspan="2">Employer</td>';
-			
+			tableHeader += '<td class="listTitle style2">Start Date</td>';
 			tableHeader += '<td class="listTitle style2">Arrival</td>';
 			tableHeader += '<td class="listTitle style2">U.S. Phone</td>';
 			tableHeader += '<td class="listTitle style2">Address</td>';
@@ -200,10 +200,11 @@
 				tableBody += '<td class="style5">' + sex + '</td>';
 				tableBody += '<td class="style5">' + countryName + '</td>';
 				tableBody += '<td class="style5">' + ds2019 + '</td>';
-				tableBody += '<td class="style5">' + programName + '</td>';
+			
 				tableBody += '<td class="style5">' + businessName + '</td>';
-				tableBody += '<td class="style5" colspan=2>' + hostCompanyName + '</td>';
 				
+				tableBody += '<td class="style5" colspan=2>' + hostCompanyName + '<br>' + hostCompanyAddress + ' ' + hostCompanyCity + ' ' + hostCompanyState + ' ' + hostCompanyZip  +'</td>';
+				tableBody += '<td class="style5">' + startDate + '</td>';
 				tableBody += '<td class="style5">' + arrivalDate + '</td>';
 				tableBody += '<td class="style5"><input type="text" size="12" id="usphone' + candidateID + '" value="' + usPhone + '" onclick="applyPhoneMask(this.id);" /></td>';
 				tableBody += '<td class="style5"><input type="text" size="12" id="arrival_address' + candidateID + '" value="' + arrival_address + '" /></td>';
@@ -360,7 +361,7 @@
 </style>
 
 <cfoutput>
-
+	
 	<!--- Table Header --->    
     <gui:tableHeader
         tableTitle="Check-In List"
