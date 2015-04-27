@@ -33,16 +33,15 @@
     from case_web_contacts
     </cfquery>
 </cfif>
-<cfif isDefined('form.state')>
-    <cfquery name="state" datasource="caseusa">
+
+    <cfquery name="state" datasource="mysql">
     select statename 
     from smg_states
     where id = #form.state#
-    </cfquery>
-</cfif>
+	</cfquery>
 <!----Email the information to Stacy---->
 
-<cfmail to="stacy@case-usa.org" replyto="#form.email#" from="support@case-usa.org" subject="#form.contact_type# Contact from Website" type="html"> 
+<cfmail to="josh@pokytrails.com" replyto="#form.email#" from="support@case-usa.org" subject="#form.contact_type# Contact from Website" type="html"> 
 Information was just submitted via the website! You can view this information here:
 http://www.case-usa.org/internal/index.cfm?curdoc=web_contact_info&id=#contactid.cid#
 
@@ -50,9 +49,8 @@ The info submitted was:<br /><br />
 Name:#form.firstname# #form.lastname#<Br />
 Address:#form.address#<br />
 City:#form.city#<Br />
-<cfif form.contact_type neq 'stu'>
 State:#form.state#<br />
-</cfif>
+
 Zip:#form.zip#<br />
 Phone:#form.phone#<br />
 Cell:#form.cellphone#<Br />
