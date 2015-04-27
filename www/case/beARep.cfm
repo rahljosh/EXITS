@@ -107,7 +107,7 @@ where id < 51
       <select name="state">
         <option value="0"></option>
         <cfloop query="states">
-          <option value=#id#>#state# - #statename#</option>
+          <option value='#statename#'>#state# - #statename#</option>
           </cfloop>
         </select>
       <br />

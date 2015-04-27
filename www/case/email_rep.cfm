@@ -44,7 +44,8 @@ The info submitted was:<br /><br />
 Name:#form.firstname# #form.lastname#<Br />
 Address:#form.address#<br />
 City:#form.city#<Br />
-State:#form.state#<br />
+
+State: <cfif form.contact_type is 'stu'>N/A<cfelse>#form.state#</cfif><br />
 
 Zip:#form.zip#<br />
 Phone:#form.phone#<br />
