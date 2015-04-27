@@ -6,7 +6,7 @@
 <!----Insert Rep info---->
     <cfquery name="insert_rep_info" datasource="caseusa">
     insert into case_web_contacts (firstname, lastname, address, city, state, zip, phone, cellphone, email,date_entered, contact_type, comments, where_learn_case)
-                        values('#form.firstname#','#form.lastname#','#form.address#','#form.city#',#form.state#,'#form.zip#','#form.phone#','#form.cellphone#','#form.email#',#now()#,'#form.contact_type#', '#form.comments#','#learnaboutcase#')			
+                        values('#form.firstname#','#form.lastname#','#form.address#','#form.city#','#form.state#','#form.zip#','#form.phone#','#form.cellphone#','#form.email#',#now()#,'#form.contact_type#', '#form.comments#','#learnaboutcase#')			
     </cfquery>
     <cfquery name="contactid" datasource="caseusa">
     select max(contactid) as cid
@@ -26,7 +26,7 @@
 <!-----Insert Host Info---->
      <cfquery name="insert_host_info" datasource="caseusa">
     insert into case_web_contacts (firstname, lastname, address, city, state, zip, phone, cellphone, email, high_school,date_entered, contact_type, comments, where_learn_case)
-                        values('#form.firstname#','#form.lastname#','#form.address#','#form.city#',#form.state#,'#form.zip#','#form.phone#','#form.cellphone#','#form.email#','#form.highschool#',#now()#,'#form.contact_type#', '#form.comments#', '#form.learnaboutcase#')			
+                        values('#form.firstname#','#form.lastname#','#form.address#','#form.city#','#form.state#','#form.zip#','#form.phone#','#form.cellphone#','#form.email#','#form.highschool#',#now()#,'#form.contact_type#', '#form.comments#', '#form.learnaboutcase#')			
     </cfquery>
     <cfquery name="contactid" datasource="caseusa">
     select max(contactid) as cid
@@ -34,11 +34,6 @@
     </cfquery>
 </cfif>
 
-    <cfquery name="state" datasource="mysql">
-    select statename 
-    from smg_states
-    where id = #form.state#
-	</cfquery>
 <!----Email the information to Stacy---->
 
 <cfmail to="josh@pokytrails.com" replyto="#form.email#" from="support@case-usa.org" subject="#form.contact_type# Contact from Website" type="html"> 
