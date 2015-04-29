@@ -427,7 +427,7 @@ setUserSessionPaperwork
 				} else {
 					SESSION.USER.hostApplicationURL = 'https://www.iseusa.com/hostApplication/';
 					SESSION.USER.emailSupport = 'support@iseusa.org';
-					SESSION.USER.emailCompliance = 'compliance@iseusa.org';
+					SESSION.USER.emailCompliance = 'complianceteam@iseusa.org';
 				}
 				
 			}
