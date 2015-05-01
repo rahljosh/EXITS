@@ -1572,7 +1572,11 @@
                                     & 
                                 </cfif>
                                 #qGetPlacementHistory.motherFirstName[count]# #qGetPlacementHistory.familyLastName[count]# (###qGetPlacementHistory.hostID[count]#)<br />
-                                Amount Owed: $<cfif VAL(amountsOwed[count])>#amountsOwed[count]#<cfelse>0.00</cfif><br />
+                                Amount Owed: <cfif qGetPlacementHistory.payHost == '0'>
+                                				N/A
+                                             <cfelse>
+                                             	VAL(amountsOwed[count])>#amountsOwed[count]#
+                                             </cfif> <br />
                             </p>
                         </cfloop>
                     </cfoutput>
@@ -1694,6 +1698,7 @@
                     <!--- School --->
                     school.schoolName,
                     school.hostFamilyRate,
+                    school.payhost,
                     <!--- Place Rep --->
                     place.firstName AS placeFirstName, 
                     place.lastName AS placeLastName,
