@@ -65,13 +65,18 @@
 	SELECT
     	smg_users.accepts_sevis_fee,
         smg_users.insurance_typeid,
-        <cfif #DateDiff('M', qGetStudents.startdate, qGetStudents.enddate)# gt 6>
-            smg_users.10_month_price as program_fee, 
-            smg_insurance_type.ayp10 as insurance_charge
-        <cfelse>
-            smg_users.5_month_price as program_fee, 
-            smg_insurance_type.ayp5 as insurance_charge
-        </cfif>
+        <cfif VAL(qGetStudents.recordCount)>
+			<cfif #DateDiff('M', qGetStudents.startdate, qGetStudents.enddate)# gt 6>
+                smg_users.10_month_price as program_fee, 
+                smg_insurance_type.ayp10 as insurance_charge
+            <cfelse>
+                smg_users.5_month_price as program_fee, 
+                smg_insurance_type.ayp5 as insurance_charge
+            </cfif>
+		<cfelse>
+			smg_users.10_month_price as program_fee, 
+         	smg_insurance_type.ayp10 as insurance_charge
+		</cfif>
   	FROM smg_users
     INNER JOIN smg_insurance_type ON smg_insurance_type.insutypeid = smg_users.insurance_typeid
     WHERE userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userid#">
