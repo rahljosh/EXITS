@@ -117,7 +117,7 @@
 			final_amount = Evaluate("FORM." & x & "final_amount");
 			if (VAL(final_amount)) {
 				amount_deposit = final_amount;
-				if (ListFind("13,14",CLIENT.companyID)) {
+				if (ListFind("13,14,15",CLIENT.companyID)) {
 					qFindDepositInvoice = getDepositInvoices(
 						agentID = FORM.agentID,
 						stuID = x,
