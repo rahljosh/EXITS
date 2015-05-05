@@ -376,7 +376,7 @@
                             <th align="left" class="#tableTitleClass#" width="8%">Sex</th>
                             <th align="left" class="#tableTitleClass#" width="11%">E-mail</th>
                             <th align="left" class="#tableTitleClass#" width="8%">Start Date</th>
-                            <th align="left" class="#tableTitleClass#" width="8%">End Date</th>
+                            
                             <th align="left" class="#tableTitleClass#" width="8%">Placement Information</th>
                             <th align="left" class="#tableTitleClass#" width="8%">City</th>
                             <th align="left" class="#tableTitleClass#" width="7%">State</th>
@@ -414,14 +414,14 @@
                                 <cfif NOT LEN(ds2019)>
                                     <td class="style1" colspan="2">Awaiting DS-2019</td>
                                 <cfelseif isHousingProvided NEQ 1 AND NOT VAL(housingArrangedPrivately) AND DateAdd("d",15,NOW()) GTE startdate>
-                               		<cfif DateAdd("d",9,NOW()) GTE wat_vacation_start>
+                               		<cfif DateAdd("d",9,NOW()) GTE startdate>
                                         <td class="style1" colspan="2"><font color="red">Alert - program start date: #DateFormat(startdate, 'mm/dd/yyyy')#</font></td>
                                     <cfelse>
                                         <td class="style1" colspan="2"><font color="orange">Alert - program start date: #DateFormat(startdate, 'mm/dd/yyyy')#</font></td>
                                     </cfif>
                                 <cfelse>
                                     <td class="style1">#DateFormat(startdate, 'mm/dd/yyyy')#</td>
-                                    <td class="style1">#DateFormat(startdate, 'mm/dd/yyyy')#</td>
+                                    
                                 </cfif>
                                 <td class="style1"><a href="index.cfm?curdoc=hostCompany/hostCompanyInfo&hostCompanyID=#hostCompanyID#" class="style4">#hostCompanyName#</a></td>
                                 <td class="style1">#city#</td>
