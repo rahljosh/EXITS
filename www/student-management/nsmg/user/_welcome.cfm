@@ -437,8 +437,10 @@
                             </cfif>
                         </table>                                                
                         
+						<!--- Do Not Display for DASH --->
+            				<cfif APPLICATION.SETTINGS.COMPANYLIST.DASH NEQ companyID>
                         <div align="center">
-                        	<p>Click Below to view trainings available</p>
+                            <p>Click Below to view trainings available</p>
                             
                             <a href="index.cfm?curdoc=calendar/index">
                                 <cfif NOT APPLICATION.CFC.USER.getUserSessionPaperwork().isTrainingCompleted>
@@ -447,6 +449,7 @@
                                 <img src="pics/webex-logo.jpg" border="0">
                             </a>
                         </div>                                        
+                            </cfif>
         				
                         <!----
                         <!--- Complete --->
