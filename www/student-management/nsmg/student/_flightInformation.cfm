@@ -94,6 +94,10 @@
 		
 		}		
     </cfscript>
+    
+    
+    <!--- Unblock all flights as per Paul - 5/7/2015 --->
+    <cfset qGetStudentInfo.unblockFlight = 1>
 
 
 	<!--- FORM SUBMITTED | Insert / Update --->
