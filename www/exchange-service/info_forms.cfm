@@ -120,7 +120,7 @@
   <p><strong> Your message was sent!</strong> An ESI representative will be contacting you. Thank you for your interest.</p></div>
 <cfelse>    		
 			<!----Query to get states and id's---->
-<cfquery name="states" datasource="caseusa">
+<cfquery name="states" datasource="mysql">
 select id, state
 from smg_states
 </cfquery>
