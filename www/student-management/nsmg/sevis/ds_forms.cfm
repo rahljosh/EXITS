@@ -37,7 +37,7 @@
 <tr><td width="50%">
 	<Table class="nav_bar" cellpadding=6 cellspacing="0" align="center" width="100%">
 		<th align="center" bgcolor="ededed">DS-2019 - Upload XML File to DS</th></tr>
-		<td><form method="post" enctype="multipart/form-data" action="https://egov.ice.gov/sevisbatch/action/batchUpload">
+		<td><form method="post" enctype="multipart/form-data" action="https://egov.ice.gov/sevisbatch/action/batchUpload ">
 			XML: <Span Style="Width:10"></Span><input type="file" name="xml" id="xml=" size="18"><br>
 			Batch ID: <span style="width:24"></span>
 				<select name="batchid" id="batchid=">

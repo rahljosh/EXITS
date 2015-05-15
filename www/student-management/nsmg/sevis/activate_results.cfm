@@ -39,7 +39,7 @@
 	</table>
 <cfelse>
 
-	<cffile action="read" file="#AppPath.sevis##get_company.companyshort_nocolor#/activate/#form.filename#" variable="myxml">
+	<cffile action="read" file="#APPLICATION.PATH.sevis##get_company.companyshort_nocolor#/activate/#form.filename#" variable="myxml">
 	<cfset mydoc = XmlParse(myxml)>
 	
 	<cfset batchid =#mydoc.TransactionLog.BatchHeader.BatchID.XmlText#> 
@@ -78,7 +78,7 @@
 			<cfquery name="update_active_batch" datasource="MySql">
 				UPDATE extra_candidates
 				SET sevis_activated = '#Right(batchid, 4)#'
-				WHERE studentid = '#stuID#'
+				WHERE candidateid = '#stuID#'
 			</cfquery>
 			
 		<cfelse> <!--- ERROR - STUDENT WAS NOT ACTIVATED --->
