@@ -2871,6 +2871,19 @@
                                                 <input type="text" name="arrival_zip" id="arrival_zip" class="style1 editPage" value="#qGetCandidate.arrival_zip#" size="5" maxlength="5">
                                             </td>
                                         </tr>
+                                        <tr>
+                                        	<td class="style1" width="30%" align="right"><label for="usPhone"><strong>SEVIS Updated:</label></td>
+                                            <td class="style1" width="70%">
+                                                <span class="readOnly">
+                                                	#qGetCandidate.sevis_arrival_updated#
+                                             	</span>                                     
+                                                 <select name="sevis_arrival_updated" id="sevis_arrival_updated" class="style1 editPage">
+                                                    <option value=''>----</option>
+                                                    <option value="manually" <cfif qGetCandidate.sevis_arrival_updated EQ 'manually'>selected="selected"</cfif>>Manually</option>
+                                                    <option value="batch" <cfif qGetCandidate.sevis_arrival_updated EQ 'batch'>selected="selected"</cfif>>Automatically</option>
+                                                </select>
+                                            </td>
+                                        </tr>
                         			</table>
                                     
                                 </td>

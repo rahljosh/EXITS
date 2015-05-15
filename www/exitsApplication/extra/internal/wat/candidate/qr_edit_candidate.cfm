@@ -22,6 +22,7 @@
 <cfparam name="FORM.arrival_city" default="">
 <cfparam name="FORM.arrival_state" default="0">
 <cfparam name="FORM.arrival_zip" default="">
+<cfparam name="FORM.sevis_arrival_updated" default="">
 <cfparam name="FORM.watDateEvaluation1" default="">
 <cfparam name="FORM.watDateEvaluation2" default="">
 <cfparam name="FORM.watDateEvaluation3" default="">
@@ -920,6 +921,7 @@
         arrival_city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.arrival_city#">,
         arrival_state = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.arrival_state#">,
         arrival_zip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.arrival_zip#">,
+        sevis_arrival_updated =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.sevis_arrival_updated#">,
         <!---  Evaluation  --->
         watDateEvaluation1 = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDateEvaluation1#" null="#NOT IsDate(FORM.watDateEvaluation1)#">,
         watDateEvaluation2 = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDateEvaluation2#" null="#NOT IsDate(FORM.watDateEvaluation2)#">,
