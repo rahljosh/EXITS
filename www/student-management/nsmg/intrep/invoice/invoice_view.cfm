@@ -14,8 +14,8 @@
 
 </cfsilent>
 
-<!--- CHECK INVOICE RIGHTS ---->
-<cfinclude template="check_rights.cfm">
+<!--- CHECK INVOICE RIGHTS 
+<cfinclude template="check_rights.cfm">---->
 
 <!--- Include Invoice File --->
 <cfinclude template="../../invoice/invoice_view.cfm">
