@@ -2507,7 +2507,9 @@
         <cfargument name="areaRepresentativeEmail" default="" hint="areaRepresentativeEmail - Not required">
         <cfargument name="areaRepresentativePhone" default="" hint="areaRepresentativePhone - Not required">
         <cfargument name="regionalAdvisor" default="" hint="regionalAdvisor - Not required">
+        <cfargument name="regionalAdvisorEmail" default="regionalAdvisorEmail - Not required">
         <cfargument name="regionalManager" default="" hint="regionalManager - Not required">
+        <cfargument name="regionalManagerEmail" default ="" hint="regionalManagerEmail - Not required">
         <cfargument name="regionName" default="" hint="regionName - Not required">
         <cfargument name="facilitator" default="" hint="facilitator - Not required">
         <cfargument name="isResubmitted" default="false" hint="isResubmitted - Not required">
@@ -2581,6 +2583,8 @@
                                 <a href="http://www.case-usa.org/hostApplication/" target="_blank">http://www.case-usa.org/hostApplication/</a>
                           	<cfelseif CLIENT.companyID EQ 14>
                             	<a href="http://exchange-service.org/hostApplication/" target="_blank">http://exchange-service.org/hostApplication/</a>
+                            <cfelseif CLIENT.companyID EQ 15>
+                            	<a href="http://dash.exitsapplication.com/hostApplication/" target="_blank">https://dash.exitsapplication.com/hostApplication/</a>
                             <cfelse>
                                 <a href="https://www.iseusa.com/ISE-Login.cfm" target="_blank">https://www.iseusa.com/ISE-Login.cfm</a>
                             </cfif>
