@@ -412,12 +412,12 @@
                                 <td class="style1">#sex#</td>
                                 <td class="style1">#email#</td>
                                 <cfif NOT LEN(ds2019)>
-                                    <td class="style1" colspan="2">Awaiting DS-2019</td>
+                                    <td class="style1">Awaiting <br /> DS-2019</td>
                                 <cfelseif isHousingProvided NEQ 1 AND NOT VAL(housingArrangedPrivately) AND DateAdd("d",15,NOW()) GTE startdate>
                                		<cfif DateAdd("d",9,NOW()) GTE startdate>
-                                        <td class="style1" colspan="2"><font color="red">Alert - program start date: #DateFormat(startdate, 'mm/dd/yyyy')#</font></td>
+                                        <td class="style1"><font color="red">Alert!! <BR> #DateFormat(startdate, 'mm/dd/yyyy')#</font></td>
                                     <cfelse>
-                                        <td class="style1" colspan="2"><font color="orange">Alert - program start date: #DateFormat(startdate, 'mm/dd/yyyy')#</font></td>
+                                        <td class="style1"><font color="orange">Alert!! <BR>#DateFormat(startdate, 'mm/dd/yyyy')#</font></td>
                                     </cfif>
                                 <cfelse>
                                     <td class="style1">#DateFormat(startdate, 'mm/dd/yyyy')#</td>

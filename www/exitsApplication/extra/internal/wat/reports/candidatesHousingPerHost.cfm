@@ -63,6 +63,7 @@
                 candidate.lastName, 
                 candidate.firstName, 
                 candidate.sex, 
+                candidate.startdate,
                 candidate.email, 
                 candidate.wat_placement, 
                 candidate.housingArrangedPrivately,
@@ -346,7 +347,7 @@
                         <th align="left" class="#tableTitleClass#" width="10%">Country</th>
                         <th align="left" class="#tableTitleClass#" width="15%">E-mail</th>
                         <th align="left" class="#tableTitleClass#" width="7%">Start Date</th>
-                        <th align="left" class="#tableTitleClass#" width="7%">End Date</th>
+                       
                         <th align="left" class="#tableTitleClass#" width="7%">Intl. Rep.</th>
                         <th align="left" class="#tableTitleClass#" width="7%">Option</th>
                         <th align="left" class="#tableTitleClass#" width="8%">Housing Arranged</th>
@@ -381,16 +382,16 @@
                             <td class="style1">#countryName#</td>
                             <td class="style1">#email#</td>
                             <cfif NOT LEN(ds2019)>
-                                <td class="style1" colspan="2">Awaiting DS-2019</td>
+                                <td class="style1" >Awaiting<br /> DS-2019</td>
                             <cfelseif isHousingProvided NEQ 1 AND NOT VAL(housingArrangedPrivately) AND DateAdd("d",15,NOW()) GTE startDate>
                                 <cfif DateAdd("d",9,NOW()) GTE startDate>
-                                    <td class="style1" colspan="2"><font color="red">Alert - program start date: #DateFormat(startdate, 'mm/dd/yyyy')#</font></td>
+                                    <td class="style1"><font color="red">Alert!!<br /> #DateFormat(startdate, 'mm/dd/yyyy')#</font></td>
                                 <cfelse>
-                                    <td class="style1" colspan="2"><font color="yellow">Alert - program start date: #DateFormat(startdate, 'mm/dd/yyyy')#</font></td>
+                                    <td class="style1"><font color="yellow">Alert!!<br /> #DateFormat(startdate, 'mm/dd/yyyy')#</font></td>
                                 </cfif>
                             <cfelse>
                                 <td class="style1">#DateFormat(startdate, 'mm/dd/yyyy')#</td>
-                                <td class="style1">#DateFormat(enddate, 'mm/dd/yyyy')#</td>
+                             
                             </cfif>
                             <td class="style1">#businessName# (###userID#)</td>
                             <td class="style1">#wat_placement#</td>
