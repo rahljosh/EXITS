@@ -79,7 +79,7 @@
 	qTotalAgentRefund = APPCFC.INVOICE.totalAgentBalance(programChoice = FORM.selectPrograms, balanceType = 0, balanceDate = form.balanceDate, userID = form.userid);		
 </cfscript>
 
-<Cfquery name="get_intl_rep" datasource="MySQL">
+<Cfquery name="get_intl_rep" datasource="#APPLICATION.DSN#">
 	SELECT userid, businessname
 	FROM smg_users
 	WHERE usertype = '8'
@@ -90,7 +90,7 @@
 	ORDER BY businessname
 </Cfquery>
 
-<cfquery name="getPrograms" datasource="MySQL">
+<cfquery name="getPrograms" datasource="#APPLICATION.DSN#">
 SELECT 
 	*
 FROM 
@@ -99,7 +99,7 @@ WHERE
 	<cfif CLIENT.companyid EQ 14>
     	companyID = 14
     <cfelse>
-		companyID IN (1,2,3,4,7,8,9,10,12,14)
+		companyID IN (1,2,3,4,7,8,9,10,12,13,14)
     </cfif>
 AND
 	type NOT IN (6,10,13,14,15,16,17,18,19,20,21)
@@ -151,6 +151,7 @@ ORDER BY
                     <cfcase value="8"><cfset compId = 'W&T'></cfcase>
                     <cfcase value="9"><cfset compId = 'H2B'></cfcase>
 					<cfcase value="10"><cfset compId = 'CASE'></cfcase>
+                    <cfcase value="13"><cfset compId = 'CANADA'></cfcase>
                     <cfcase value="14"><cfset compId = 'ESI'></cfcase>
                 </cfswitch>
                 <option value="#programid#">#variables.compId# - #getPrograms.programname#</option>
@@ -205,7 +206,7 @@ ORDER BY
         
             <cfelse>
             
-                <cfquery name="getProgramsSelected" datasource="MySQL">
+                <cfquery name="getProgramsSelected" datasource="#APPLICATION.DSN#">
                 SELECT *
                 FROM smg_programs sp
 				WHERE sp.programid = #programsSelected#
@@ -224,6 +225,7 @@ ORDER BY
                     <cfcase value="8"><cfset compId = 'W&T'></cfcase>
                     <cfcase value="9"><cfset compId = 'H2B'></cfcase>
 					<cfcase value="10"><cfset compId = 'CASE'></cfcase>
+                    <cfcase value="13"><cfset compId = 'CANADA'></cfcase>
                     <cfcase value="14"><cfset compId = 'ESI'></cfcase>
                 </cfswitch>
                 
@@ -234,42 +236,6 @@ ORDER BY
     </cfif>
     
 </cfloop>
-
-
-<!--- <cfif form.selectPrograms IS NOT "All" AND form.selectPrograms NEQ 0>
-
-    <cfquery name="getProgramsSelected" datasource="MySQL">
-    SELECT *
-    FROM smg_programs sp
-    WHERE (<cfloop list="#form.selectPrograms#" index="programsSelected">
-                sp.programid = #programsSelected#
-            <cfif programsSelected IS NOT #listLast(form.selectPrograms)#>
-                OR
-            </cfif>
-        </cfloop>)
-    ORDER BY companyid ASC, startdate DESC
-    </cfquery>
-    
-	<cfoutput query="getProgramsSelected">
-    
-        <cfswitch expression="#getProgramsSelected.companyid#">
-            <cfcase value="1"><cfset compId = 'Red'></cfcase>
-            <cfcase value="2"><cfset compId = 'Blue'></cfcase>
-            <cfcase value="3"><cfset compId = 'Green'></cfcase>
-            <cfcase value="4"><cfset compId = 'Yellow'></cfcase>
-            <cfcase value="7"><cfset compId = 'Trainee'></cfcase>
-            <cfcase value="8"><cfset compId = 'W&T'></cfcase>
-            <cfcase value="9"><cfset compId = 'H2B'></cfcase>
-        </cfswitch>
-    
-        <small>#variables.compId# - #getProgramsSelected.programname# (###getProgramsSelected.programid#)</small> <br/>
-    </cfoutput>
-    
-    <cfelseif form.selectPrograms EQ 0>
-    	<small>Charges not related to a program</small>
-		<cfelse>
-            <small>All programs were selected</small>    
-</cfif> --->
 
 <br/>
 
@@ -335,6 +301,7 @@ ORDER BY
         <td class="right">H2B</td>
         <td class="right">CASE</td>
         <td class="right">ESI</td>
+        <td class="right">CANADA</td>
         <td class="right">TOTAL</td>
     </tr>    
 
@@ -349,6 +316,7 @@ ORDER BY
 <cfparam name="totalH2bBal" default="0">
 <cfparam name="totalCASEBal" default="0">
 <cfparam name="totalESIBal" default="0">
+<cfparam name="totalCanadaBal" default="0">
 <cfparam name="getBalancePerAgent.totalPerAgent" default="0">    
 <cfparam name="grandTotalBal" default="0">
 
@@ -368,9 +336,10 @@ ORDER BY
     <cfset wandtBal = 0>
     <cfset h2bBal = 0>
 	<cfset caseBal = 0>   
-    <cfset ESIBal = 0>         
+    <cfset ESIBal = 0>
+    <cfset CanadaBal = 0>        
 
-    <cfloop index="indexCompId" list="1,2,3,4,5,6,7,8,9,10,12,14">
+    <cfloop index="indexCompId" list="1,2,3,4,5,6,7,8,9,10,12,13,14">
     
     	<!--- query qProgramBalance returns the balance per agent per program --->
 		<cfscript>
@@ -421,6 +390,10 @@ ORDER BY
                     <cfset caseBal = #qProgramBalance.totalPerAgent#>
                     <cfset totalCaseBal = #variables.totalCaseBal# + #variables.CaseBal#>
                 </cfcase>
+                <cfcase value="13">
+                    <cfset CanadaBal = #qProgramBalance.totalPerAgent#>
+                    <cfset totalCanadaBal = #variables.totalCanadaBal# + #variables.CanadaBal#>
+                </cfcase>
                 <cfcase value="14">
                     <cfset ESIBal = #qProgramBalance.totalPerAgent#>
                     <cfset totalESIBal = #variables.totalESIBal# + #variables.ESIBal#>
@@ -452,6 +425,7 @@ ORDER BY
         <td class="two <cfif variables.h2bBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.h2bBal)#</td>
         <td class="two <cfif variables.caseBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.caseBal)#</td>
         <td class="two <cfif variables.ESIBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.ESIBal)#</td>
+        <td class="two <cfif variables.CanadaBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.CanadaBal)#</td>
         <td class="two <cfif qTotalAgentBalance.totalPerAgent LT 0>style1</cfif>">#LsCurrencyFormat(qTotalAgentBalance.totalPerAgent)#</td>
     </tr>
 
@@ -476,6 +450,7 @@ ORDER BY
         <td class="right">#LsCurrencyFormat(variables.totalH2bBal)#</td>
         <td class="right">#LsCurrencyFormat(variables.totalCaseBal)#</td>
         <td class="right">#LsCurrencyFormat(variables.totalESIBal)#</td>
+        <td class="right">#LsCurrencyFormat(variables.totalCanadaBal)#</td>
         <td class="right">#LsCurrencyFormat(variables.grandTotalBal)#</td>
     </tr>
 
@@ -510,6 +485,7 @@ ORDER BY
         <td class="right">H2B</td>
         <td class="right">CASE</td>
         <td class="right">ESI</td>
+        <td class="right">CANADA</td>
         <td class="right">TOTAL</td>
     </tr>    
 
@@ -524,6 +500,7 @@ ORDER BY
 <cfset totalH2bBal =0>
 <cfset totalCaseBal =0>
 <cfset totalESIBal =0>
+<cfset totalCanadaBal = 0>
 <cfset getBalancePerAgent.totalPerAgent =0>
 <cfset grandTotalBal =0>   
 
@@ -541,9 +518,10 @@ ORDER BY
     <cfset wandtBal = 0>
     <cfset h2bBal = 0>
     <cfset caseBal = 0>
-    <cfset ESIBal = 0>        
+    <cfset ESIBal = 0> 
+    <cfset CanadaBal = 0>       
 
-    <cfloop index="indexCompId" list="1,2,3,4,5,6,7,8,9,10,12,14">
+    <cfloop index="indexCompId" list="1,2,3,4,5,6,7,8,9,10,12,13,14">
     
     	<!--- query qProgramBalance returns the balance per agent per program --->
 		<cfscript>
@@ -594,6 +572,10 @@ ORDER BY
                     <cfset caseBal = #qProgramBalance.totalPerAgent#>
                     <cfset totalCaseBal = #variables.totalCaseBal# + #variables.caseBal#>
                 </cfcase>
+                <cfcase value="13">
+                    <cfset CanadaBal = #qProgramBalance.totalPerAgent#>
+                    <cfset totalCanadaBal = #variables.totalCanadaBal# + #variables.CanadaBal#>
+                </cfcase>
                 <cfcase value="14">
                     <cfset ESIBal = #qProgramBalance.totalPerAgent#>
                     <cfset totalESIBal = #variables.totalESIBal# + #variables.ESIBal#>
@@ -620,6 +602,7 @@ ORDER BY
         <td class="two <cfif variables.h2bBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.h2bBal)#</td>
         <td class="two <cfif variables.caseBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.caseBal)#</td>
         <td class="two <cfif variables.ESIBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.ESIBal)#</td>
+        <td class="two <cfif variables.CanadaBal LT 0>style1</cfif>">#LsCurrencyFormat(variables.CanadaBal)#</td>
         <td class="two <cfif qTotalAgentRefund.totalPerAgent LT 0>style1</cfif>">#LsCurrencyFormat(qTotalAgentRefund.totalPerAgent)#</td>
     </tr>
 
@@ -641,6 +624,7 @@ ORDER BY
         <td class="right">#LsCurrencyFormat(variables.totalH2bBal)#</td>
         <td class="right">#LsCurrencyFormat(variables.totalCaseBal)#</td>
         <td class="right">#LsCurrencyFormat(variables.totalESIBal)#</td>
+        <td class="right">#LsCurrencyFormat(variables.totalCanadaBal)#</td>
         <td class="right">#LsCurrencyFormat(variables.grandTotalBal)#</td>
     </tr>
 
