@@ -100,7 +100,7 @@
 			// Deposits
 			deposit_type = Evaluate('FORM.' & x & 'deposit_type');
 			deposit_description = Evaluate('FORM.' & x & 'deposit_description');
-			deposit_amount = Evaluate('FORM.' & x & 'deposit_amount');
+			deposit_amount = REReplace(Evaluate('FORM.' & x & 'deposit_amount'),',','','all');
 			if (VAL(deposit_amount)) {
 				insertCharge(
 					agentID = FORM.agentID,
@@ -114,7 +114,7 @@
 			// Final Invoices
 			final_type = Evaluate('FORM.' & x & 'final_type');
 			final_description = Evaluate('FORM.' & x & 'final_description');
-			final_amount = Evaluate("FORM." & x & "final_amount");
+			final_amount = REReplace(Evaluate("FORM." & x & "final_amount"),',','','all');
 			if (VAL(final_amount)) {
 				amount_deposit = final_amount;
 				if (ListFind("13,14,15",CLIENT.companyID)) {
@@ -141,7 +141,7 @@
 			// Insurance
 			insurance_type = Evaluate('FORM.' & x & 'insurance_type');
 			insurance_description = Evaluate('FORM.' & x & 'insurance_description');
-			insurance_amount = Evaluate('FORM.' & x & 'insurance_amount');
+			insurance_amount = REReplace(Evaluate('FORM.' & x & 'insurance_amount'),',','','all');
 			if (VAL(insurance_amount)) {
 				insertCharge(
 					agentID = FORM.agentID,
@@ -169,7 +169,7 @@
 			// SEVIS
 			sevis_type = Evaluate('FORM.' & x & 'sevis_type');
 			sevis_description = Evaluate('FORM.' & x & 'sevis_description');
-			sevis_amount = Evaluate('FORM.' & x & 'sevis_amount');
+			sevis_amount = REReplace(Evaluate('FORM.' & x & 'sevis_amount'),',','','all');
 			if (VAL(sevis_amount)) {
 				insertCharge(
 					agentID = FORM.agentID,
@@ -183,7 +183,7 @@
 			// Direct Placement
 			direct_placement = Evaluate('FORM.' & x & 'direct_placement');
 			direct_placement_description = Evaluate('FORM.' & x & 'direct_placement_description');
-			direct_placement_amount = Evaluate('FORM.' & x & 'direct_placement_amount');
+			direct_placement_amount = REReplace(Evaluate('FORM.' & x & 'direct_placement_amount'),',','','all');
 			if (VAL(direct_placement_amount)) {
 				insertCharge(
 					agentID = FORM.agentID,
@@ -197,7 +197,7 @@
 			// Direct Placement Guarantee
 			direct_placement_guarantee_disc = Evaluate('FORM.' & x & 'direct_placement_guarantee_disc');
 			direct_placement_guarantee_disc_desc = Evaluate('FORM.' & x & 'direct_placement_guarantee_disc_desc');
-			direct_placement_guarantee_disc_amount = Evaluate('FORM.' & x & 'direct_placement_guarantee_disc_amount');
+			direct_placement_guarantee_disc_amount = REReplace(Evaluate('FORM.' & x & 'direct_placement_guarantee_disc_amount'),',','','all');
 			if (VAL(direct_placement_guarantee_disc_amount)) {
 				insertCharge(
 					agentID = FORM.agentID,
