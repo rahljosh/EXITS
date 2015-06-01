@@ -155,7 +155,7 @@
 			// Guarantee
 			guarantee_type = Evaluate('FORM.' & x & 'guarantee_type');
 			guarantee_description = Evaluate('FORM.' & x & 'guarantee_description');
-			guarantee_amount = Evaluate('FORM.' & x & 'guarantee_amount');
+			guarantee_amount = REReplace(Evaluate('FORM.' & x & 'guarantee_amount'),',','','all');
 			if (VAL(guarantee_amount)) {
 				insertCharge(
 					agentID = FORM.agentID,
