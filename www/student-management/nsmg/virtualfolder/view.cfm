@@ -167,7 +167,7 @@
 <cfdirectory directory="#flightInfoDirectory#" name="flightDocs" sort="datelastmodified DESC" filter="*.*">
     
     <cfquery name="qGetOtherFiles" datasource="#application.dsn#">
-    	SELECT vf.fileName, vf.dateAdded, vf.filePath, vfc.categoryName, vfd.documentType, u.firstname, u.lastname , u.userid, vf.generatedHow, vf.uploadedBy, vf.vfid,
+    	SELECT vf.fileName, vf.dateAdded, vf.filePath, vfc.categoryName, vfd.documentType, vfd.id as documentTypeID, u.firstname, u.lastname , u.userid, vf.generatedHow, vf.uploadedBy, vf.vfid,
         h.familylastname, vf.fk_hostid, vfd.viewPermissions
         FROM virtualfolder vf
         LEFT JOIN virtualfolderdocuments vfd on vfd.id = vf.fk_documentType
@@ -265,6 +265,7 @@
                 <br />
                 <br />
 
+
     			<table cellpadding=4 cellspacing="0" width=100%>
                     <tr>
                         <th align="left">Document Type</th><th align="left">Document Name</th><th align="left">Upload Date</th><Th align="left">Uploaded By</Th><th align="left">Upload Type</Th>
@@ -276,7 +277,10 @@
                                 <td colspan=6 align="left"><strong>#categoryName#</strong></td>
                             </tr>
        					 </cfif>
-   						<cfif listFind(viewPermissions, client.usertype)>
+   					
+						<cfif listFind(viewPermissions, client.usertype)>
+                            <cfif client.usertype gt 7 and qGetStudentInfo.app_current_status lt 11 and documentTypeID eq 29>
+                            <cfelse>
                             <tr>
                                 <td>#documentType#</td>
                                 <td><a href="#filePath##filename#" target="_blank">#filename# <cfif val(fk_hostID)> - #familyLastName#</cfif></a></td>
@@ -291,7 +295,9 @@
                                     </cfif>
                               	</td>
                             </tr>
+                            </cfif>
   						</cfif>
+                 
     				</cfloop>
 					<!----Flight Info that was auto generated prior to new VF (Feb 26, 2013)---->
 					<cfif not val(form.isDeleted)>
