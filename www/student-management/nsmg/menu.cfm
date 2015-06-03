@@ -75,7 +75,6 @@
                     <a href="index.cfm?curdoc=intrep/studentList">Students</a>
                     <ul>
                         <li><a href="index.cfm?curdoc=intrep/studentList&status=unplaced">Unplaced</a></li>
-                        <li><a href="index.cfm?curdoc=intrep/studentList&status=pending">Pending</a></li>
                         <li><a href="index.cfm?curdoc=intrep/studentList&status=placed">Placed</a></li>
                         <li><a href="index.cfm?curdoc=intrep/studentList&status=all">All</a></li>
                         <li><a href="index.cfm?curdoc=intrep/int_php_students">Private High School</a></li>
