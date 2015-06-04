@@ -37,6 +37,8 @@
                             	<img src="#relative#pics/10_short_profile_headerDouble.jpg" width="800px">
                            	<cfelseif qGetHostInfo.companyID EQ 14>
                             	<img src="#relative#pics/14_short_profile_headerDouble.jpg" width="800px">
+                            <cfelseif qGetHostInfo.companyID EQ 15>
+                            	<img src="#relativve#pics/15_short_profile_headerDouble.jpg" width="800px">
                            	<cfelse>
                             	<img src="#relative#pics/hostAppBanners/Pdf_Headers_02Double.jpg" width="100%">
                           	</cfif>
