@@ -174,7 +174,7 @@
                 
 	            <p><strong>#FORM.firstname# #FORM.lastname# (###qGetUserInfo.userID#)</strong> has made a change to their address.</p>
                 
-				<p><strong>NEW ADDRESSS</strong></p>
+				<p><strong>NEW ADDRESS</strong></p>
            		#FORM.address#<br />
           		<cfif LEN(FORM.address2)>#FORM.address2#<br /></cfif>
            		#FORM.city# #FORM.state# #FORM.zip#<br /><br />
@@ -1167,10 +1167,10 @@
 
         </cfif>
                     
-            <tr>
+            <!--- <tr>
                 <td align="right">Drivers License:</td>
                 <td><cfinput type="text" name="drivers_license" value="#FORM.drivers_license#" size="20" maxlength="50"></td>
-            </tr>
+            </tr> --->
             <tr>
                 <td align="right">Birthdate:</td>
                 <td><cfinput type="text" name="dob" value="#DateFormat(FORM.dob,'mm/dd/yyyy')#" size="10" maxlength="10" mask="99/99/9999" validate="date" message="Please enter a valid Birthdate."> mm/dd/yyyy</td>
