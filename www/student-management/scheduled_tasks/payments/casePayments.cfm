@@ -42,6 +42,8 @@ SELECT DISTINCT
 		WHEN pmtrng.fk_paymenttype =  35 AND NOT sppmt.receives12MOSBonus THEN 0
         WHEN pmtrng.fk_paymenttype = 39 AND sppmt.fk_userID IS NOT NULL AND sppmt.specialPaymentType = "Draw" AND (sppmt.receivesSpecialBonus = 0 OR sppmt.receivesSpecialBonus IS NULL) THEN 0        
         WHEN pmtrng.fk_paymenttype = 39 THEN pmtrng.paymentAmount
+        WHEN pmtrng.fk_paymenttype = 40 AND sppmt.receivesSpecialBonus = 1 THEN pmtrng.paymentAmount
+      	WHEN pmtrng.fk_paymenttype = 40 AND sppmt.receivesSpecialBonus != 1 THEN 0 
 	END, 
 	"Auto-processed - CASE", 
 	CASE 
@@ -96,7 +98,12 @@ WHERE
 				AND st.direct_placement = 0)
 				AND 
 				(
-					(st.aypEnglish > 0 AND pmtrng.fk_paymentType IN (18,19,20) AND hh.datePISEmailed >= pmtrng.paymentStartDate)
+                	(pmtrng.fk_paymenttype = 40 AND st.country IN (46,110,116,215,218,238) AND st.sex = "Male" AND hh.datePISEmailed >= pmtrng.paymentStartDate)
+                	OR (
+                   		pmtrng.fk_paymentType IN (18,19,20) 
+                   		AND st.aypEnglish > 0 
+                   		AND hh.datePISEMailed >= pmtrng.paymentStartDate 
+                   		AND NOT EXISTS(SELECT * FROM smg_users_payments WHERE studentID = st.studentID AND fk_paymentType = 40 AND isDeleted = 0 AND (agentID = st.placerepID OR hostID = st.hostID)))
 					OR (st.aypEnglish > 0 AND st.intrep = 11878 AND pmtrng.fk_paymentType = 24)
 					OR (states.state = hst.state and pmtrng.fk_paymentType = 14)
 					OR (pmtrng.fk_paymenttype = 23 AND hh.dateCreated >= pmtrng.paymentStartDate)

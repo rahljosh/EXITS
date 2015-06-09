@@ -38,18 +38,20 @@
             WHEN pmtrng.fk_paymenttype = 1 and sppmt.receivesPlacementFee = 0 then 0
             WHEN pmtrng.fk_paymenttype IN (18,19,20,38) AND (sppmt.specialPaymentId IS NULL OR sppmt.receivesPreAYPBonus) THEN pmtrng.paymentAmount
             WHEN pmtrng.fk_paymenttype IN (18,19,20,38) AND NOT sppmt.receivesPreAYPBonus THEN 0
-            WHEN pmtrng.fk_paymenttype =  24 AND (sppmt.specialPaymentId IS NULL OR sppmt.receivesPreAYPBonus) THEN pmtrng.paymentAmount
-            WHEN pmtrng.fk_paymenttype =  24 AND NOT sppmt.receivesPreAYPBonus THEN 0 
-            WHEN pmtrng.fk_paymenttype =  14 AND (sppmt.specialPaymentId IS NULL OR sppmt.receivesStateGuarantee) THEN pmtrng.paymentAmount
-            WHEN pmtrng.fk_paymenttype =  14 AND NOT sppmt.receivesStateGuarantee THEN 0
-            WHEN pmtrng.fk_paymenttype =  23 AND (sppmt.specialPaymentId IS NULL OR sppmt.receivesCEOBonus) THEN pmtrng.paymentAmount
-            WHEN pmtrng.fk_paymenttype =  23 AND NOT sppmt.receivesCEOBonus THEN 0
-            WHEN pmtrng.fk_paymenttype =  25 AND (sppmt.specialPaymentId IS NULL OR sppmt.receivesCEOBonus) THEN pmtrng.paymentAmount
-            WHEN pmtrng.fk_paymenttype =  25 AND NOT sppmt.receivesCEOBonus THEN 0
-            WHEN pmtrng.fk_paymenttype =  35 AND (sppmt.receives12MOSBonus IS NULL OR sppmt.receives12MOSBonus) THEN pmtrng.paymentAmount
-            WHEN pmtrng.fk_paymenttype =  35 AND NOT sppmt.receives12MOSBonus THEN 0
+            WHEN pmtrng.fk_paymenttype = 24 AND (sppmt.specialPaymentId IS NULL OR sppmt.receivesPreAYPBonus) THEN pmtrng.paymentAmount
+            WHEN pmtrng.fk_paymenttype = 24 AND NOT sppmt.receivesPreAYPBonus THEN 0 
+            WHEN pmtrng.fk_paymenttype = 14 AND (sppmt.specialPaymentId IS NULL OR sppmt.receivesStateGuarantee) THEN pmtrng.paymentAmount
+            WHEN pmtrng.fk_paymenttype = 14 AND NOT sppmt.receivesStateGuarantee THEN 0
+            WHEN pmtrng.fk_paymenttype = 23 AND (sppmt.specialPaymentId IS NULL OR sppmt.receivesCEOBonus) THEN pmtrng.paymentAmount
+            WHEN pmtrng.fk_paymenttype = 23 AND NOT sppmt.receivesCEOBonus THEN 0
+            WHEN pmtrng.fk_paymenttype = 25 AND (sppmt.specialPaymentId IS NULL OR sppmt.receivesCEOBonus) THEN pmtrng.paymentAmount
+            WHEN pmtrng.fk_paymenttype = 25 AND NOT sppmt.receivesCEOBonus THEN 0
+            WHEN pmtrng.fk_paymenttype = 35 AND (sppmt.receives12MOSBonus IS NULL OR sppmt.receives12MOSBonus) THEN pmtrng.paymentAmount
+            WHEN pmtrng.fk_paymenttype = 35 AND NOT sppmt.receives12MOSBonus THEN 0
             WHEN pmtrng.fk_paymenttype = 39 AND sppmt.receivesSpecialBonus = 1 THEN pmtrng.paymentAmount
-            WHEN pmtrng.fk_paymenttype = 39 AND (sppmt.receivesSpecialBonus = 0 OR sppmt.receivesSpecialBonus IS NULL) THEN 0
+            WHEN pmtrng.fk_paymenttype = 39 AND sppmt.receivesSpecialBonus != 1 THEN 0            
+            WHEN pmtrng.fk_paymenttype = 40 AND sppmt.receivesSpecialBonus = 1 THEN pmtrng.paymentAmount
+            WHEN pmtrng.fk_paymenttype = 40 AND sppmt.receivesSpecialBonus != 1 THEN 0 
         END,
 		"Auto-processed - ISE",
         CASE 
@@ -107,10 +109,15 @@
         	hh.dateplaced IS NOT NULL
             AND (pmtrng.paymentEndDate IS NULL OR hh.datePISEMailed <= pmtrng.paymentEndDate)
             AND st.direct_placement = 0
-        	AND (
-                (st.aypEnglish > 0 AND pmtrng.fk_paymentType IN (18,19,20,38) AND hh.dateCreated >= pmtrng.paymentStartDate)
-                OR (st.aypEnglish > 0 AND st.intrep = 11878 AND pmtrng.fk_paymentType = 24)
-                OR (states.state = hst.state and pmtrng.fk_paymentType = 14)
+        	AND (        
+                (pmtrng.fk_paymenttype = 40 AND st.country IN (46,110,116,215,218,238) AND st.sex = "Male" AND hh.datePISEmailed >= pmtrng.paymentStartDate)
+                OR (
+                   pmtrng.fk_paymentType IN (18,19,20,38) 
+                   AND st.aypEnglish > 0 
+                   AND hh.datePISEMailed >= pmtrng.paymentStartDate 
+                   AND NOT EXISTS(SELECT * FROM smg_users_payments WHERE studentID = st.studentID AND fk_paymentType = 40 AND isDeleted = 0 AND (agentID = st.placerepID OR hostID = st.hostID)))
+                OR (pmtrng.fk_paymentType = 24 AND st.aypEnglish > 0 AND st.intrep = 11878)
+                OR (pmtrng.fk_paymentType = 14 AND states.state = hst.state)
                 OR (pmtrng.fk_paymenttype = 23 AND hh.dateCreated >= pmtrng.paymentStartDate)
                 OR (pmtrng.fk_paymenttype = 25 AND hh.dateCreated >= pmtrng.paymentStartDate AND st.aypenglish = 0)
                 OR (pmtrng.fk_paymenttype = 39 AND hh.dateCreated >= pmtrng.paymentStartDate)
