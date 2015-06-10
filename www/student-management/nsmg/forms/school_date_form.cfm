@@ -157,11 +157,14 @@ function checkForm() {
 			</cfselect>        
         </td>
     </tr>
+    <cfif not ListFind(APPLICATION.SETTINGS.COMPANYLIST.ESI, CLIENT.companyID)>
     <tr>
     	<td class="label">Enrollment/Orientation:</td>
         <td><cfinput type="text" name="enrollment" value="#dateFormat(form.enrollment, 'mm/dd/yyyy')#" class="datePicker" size="10" maxlength="10" mask="99/99/9999" validate="date" message="Please enter a valid Enrollment/Orientation."> mm/dd/yyyy</td>
     </tr>
+    </cfif>
     <tr>
+    
         <td colspan="2">
             At least one of the following combination of dates is required: <span class="redtext">*</span><br />
             &nbsp;&nbsp;&nbsp; 1. Year Begins - Year Ends<br />
