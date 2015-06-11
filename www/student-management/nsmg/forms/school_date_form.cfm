@@ -25,8 +25,8 @@
 
 	<cfif trim(form.seasonid) EQ ''>
 		<cfset errorMsg = "Please select the Season.">
-	<!--- <cfelseif trim(form.enrollment) NEQ '' and not isDate(trim(form.enrollment))>
-		<cfset errorMsg = "Please enter a valid Enrollment/Orientation."> --->
+	<!--- <cfelseif trim(form.enrollment) NEQ '' and not isDate(trim(form.enrollment)) and not ListFind(APPLICATION.SETTINGS.COMPANYLIST.ESI, CLIENT.companyID)>
+		<cfset errorMsg = "Please enter a valid Enrollment/Orientation.">  --->
 	<cfelseif trim(form.year_begins) NEQ '' and not isDate(trim(form.year_begins))>
 		<cfset errorMsg = "Please enter a valid Year Begins.">
 	<cfelseif trim(form.semester_ends) NEQ '' and not isDate(trim(form.semester_ends))>
@@ -59,7 +59,10 @@
                 VALUES (
                 <cfqueryparam cfsqltype="cf_sql_integer" value="#url.schoolid#">,
                 <cfqueryparam cfsqltype="cf_sql_integer" value="#form.seasonid#">,
+                <cfif not ListFind(APPLICATION.SETTINGS.COMPANYLIST.ESI, CLIENT.companyID)>
                 <cfqueryparam cfsqltype="cf_sql_date" value="#form.enrollment#" null="#yesNoFormat(trim(form.enrollment) EQ '')#">,
+                <cfelse> <cfqueryparam cfsqltype="cf_sql_date" value="" >, 
+                </cfif>
                 <cfqueryparam cfsqltype="cf_sql_date" value="#form.year_begins#" null="#yesNoFormat(trim(form.year_begins) EQ '')#">,
                 <cfqueryparam cfsqltype="cf_sql_date" value="#form.semester_ends#" null="#yesNoFormat(trim(form.semester_ends) EQ '')#">,
                 <cfqueryparam cfsqltype="cf_sql_date" value="#form.semester_begins#" null="#yesNoFormat(trim(form.semester_begins) EQ '')#">,
@@ -71,7 +74,11 @@
 			<cfquery datasource="#application.dsn#">
 				UPDATE smg_school_dates SET
                 seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.seasonid#">,
-                enrollment = <cfqueryparam cfsqltype="cf_sql_date" value="#form.enrollment#" null="#yesNoFormat(trim(form.enrollment) EQ '')#">,
+                <cfif not ListFind(APPLICATION.SETTINGS.COMPANYLIST.ESI, CLIENT.companyID)>
+                	enrollment = <cfqueryparam cfsqltype="cf_sql_date" value="#form.enrollment#" null="#yesNoFormat(trim(form.enrollment) EQ '')#">,
+                <cfelse>
+                	enrollment = <cfqueryparam cfsqltype="cf_sql_date" value="" >,
+                </cfif> 
                 year_begins = <cfqueryparam cfsqltype="cf_sql_date" value="#form.year_begins#" null="#yesNoFormat(trim(form.year_begins) EQ '')#">,
                 semester_ends = <cfqueryparam cfsqltype="cf_sql_date" value="#form.semester_ends#" null="#yesNoFormat(trim(form.semester_ends) EQ '')#">,
                 semester_begins = <cfqueryparam cfsqltype="cf_sql_date" value="#form.semester_begins#" null="#yesNoFormat(trim(form.semester_begins) EQ '')#">,
