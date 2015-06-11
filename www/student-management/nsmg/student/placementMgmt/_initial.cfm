@@ -1532,7 +1532,7 @@
                         <div class="placementMgmtLinks">
                             [ <a href="../../index.cfm?curdoc=user_info&userID=#qGetPlacementHistoryByID.placeRepID#" target="_blank">More Information</a> 
                             <!--- Only the facilitator can update the placing representative after the PIS is sent --->
-                            <cfif VAL(qGetRegionAssigned.regionFacilitator) EQ CLIENT.userID OR NOT LEN(qGetPlacementHistoryByID.datePISEmailed)>
+                            <cfif VAL(qGetRegionAssigned.regionFacilitator) EQ CLIENT.userID OR NOT LEN(qGetPlacementHistoryByID.datePISEmailed) OR CLIENT.userID EQ 8743>
                             	|
                                 <a href="javascript:displayUpdateField('divPlaceRepID','placeRepID');">Update</a> 
                             </cfif>
