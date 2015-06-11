@@ -25,8 +25,8 @@
 
 	<cfif trim(form.seasonid) EQ ''>
 		<cfset errorMsg = "Please select the Season.">
-	<cfelseif trim(form.enrollment) NEQ '' and not isDate(trim(form.enrollment))>
-		<cfset errorMsg = "Please enter a valid Enrollment/Orientation.">
+	<!--- <cfelseif trim(form.enrollment) NEQ '' and not isDate(trim(form.enrollment))>
+		<cfset errorMsg = "Please enter a valid Enrollment/Orientation."> --->
 	<cfelseif trim(form.year_begins) NEQ '' and not isDate(trim(form.year_begins))>
 		<cfset errorMsg = "Please enter a valid Year Begins.">
 	<cfelseif trim(form.semester_ends) NEQ '' and not isDate(trim(form.semester_ends))>
