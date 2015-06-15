@@ -1,48 +1,3 @@
-<!--- Temporary code to add files from old server when page is viewed --->
-<cfsetting requesttimeout="60">
-
-<cfquery name="qGetDocs" datasource="#APPLICATION.DSN#">
-    SELECT *
-    FROM virtualfolder
-    WHERE isDeleted = 0
-    AND fk_studentID = (SELECT studentID FROM smg_students WHERE uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#URL.unqID#"> LIMIT 1)
-</cfquery>
-    
-<cfloop query="qGetDocs">
-    <cftry>
-        <cfif NOT FileExists("C://websites/student-management/nsmg/#filePath##fileName#")>
-            <cfftp 
-                action="existsfile" 
-                remotefile="/student-management/nsmg/#filePath##fileName#"
-                server="204.12.102.11" 
-                username="jgriffiths" 
-                password="Is3^2012"
-                passive="yes">
-        	<cfif cfftp.ReturnValue>
-				<cfif NOT DirectoryExists("C://websites/student-management/nsmg/#filePath#")>
-                    <cfdirectory action="create" directory="C://websites/student-management/nsmg/#filePath#">
-                </cfif>
-                <cfftp 
-                    action="getfile" 
-                    remotefile="/student-management/nsmg/#filePath##fileName#" 
-                    localfile="C://websites/student-management/nsmg/#filePath##fileName#" 
-                    server="204.12.102.11" 
-                    username="jgriffiths" 
-                    password="Is3^2012"
-                    passive="yes">
-         	</cfif>
-        </cfif>
-    <cfcatch type="any">
-        
-    </cfcatch>
-    </cftry>
-</cfloop>
-
-
-
-
-
-
 <script src="linked/js/jquery.colorbox.js"></script>
 	
 <!----open window details---->
@@ -167,7 +122,7 @@
 <cfdirectory directory="#flightInfoDirectory#" name="flightDocs" sort="datelastmodified DESC" filter="*.*">
     
     <cfquery name="qGetOtherFiles" datasource="#application.dsn#">
-    	SELECT vf.fileName, vf.dateAdded, vf.filePath, vfc.categoryName, vfd.documentType, vfd.id as documentTypeID, u.firstname, u.lastname , u.userid, vf.generatedHow, vf.uploadedBy, vf.vfid,
+    	SELECT vf.fileName, vf.dateAdded, vf.filePath, vfc.categoryName, vfd.documentType, u.firstname, u.lastname , u.userid, vf.generatedHow, vf.uploadedBy, vf.vfid,
         h.familylastname, vf.fk_hostid, vfd.viewPermissions
         FROM virtualfolder vf
         LEFT JOIN virtualfolderdocuments vfd on vfd.id = vf.fk_documentType
@@ -265,7 +220,6 @@
                 <br />
                 <br />
 
-
     			<table cellpadding=4 cellspacing="0" width=100%>
                     <tr>
                         <th align="left">Document Type</th><th align="left">Document Name</th><th align="left">Upload Date</th><Th align="left">Uploaded By</Th><th align="left">Upload Type</Th>
@@ -277,8 +231,7 @@
                                 <td colspan=6 align="left"><strong>#categoryName#</strong></td>
                             </tr>
        					 </cfif>
-   					
-						<cfif listFind(viewPermissions, client.usertype)>
+   						<cfif listFind(viewPermissions, client.usertype)>
                             <cfif client.usertype gt 7 and qGetStudentInfo.app_current_status lt 11 and documentTypeID eq 29>
                             <cfelse>
                             <tr>
@@ -295,7 +248,7 @@
                                     </cfif>
                               	</td>
                             </tr>
-                            </cfif>
+  						</cfif>
   						</cfif>
                  
     				</cfloop>
