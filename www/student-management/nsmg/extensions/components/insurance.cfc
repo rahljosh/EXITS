@@ -187,7 +187,11 @@
                     s.firstname, 
                     s.familyLastName, 
                     s.dob,
-                    s.email, 
+                    s.email,
+                    CASE
+                    	when (s.sex = 'male') then 'M'
+                        when (s.sex = 'female') then 'F'
+                        END as 'gender', 
                     MIN(fi.dep_date) as dep_date,            
                     it.type,  
                     ic.policycode, 
