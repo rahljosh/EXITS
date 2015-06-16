@@ -46,6 +46,11 @@
 				vAdmissionsEmail = 'info@exchange-serivce.org';
 				vAdmissionsEmailLink = '<a href="mailto:info@exchange-serivce.org">info@exchange-serivce.org</a>';			
 				vAdmissionsInfo = 'Stacy Brewer at <a href="mailto:info@exchange-serivce.org">info@exchange-serivce.org</a>';
+			} else if ( CLIENT.companyID EQ 15 ) {
+				// DASH
+				vAdmissionsName = 'Luke Davis';
+				vAdmissionsEmail = 'luke@phpusa.com';
+				vAdmissionsEmailLink = '<a href="mailto:luke@phpusa.com">luke@phpusa.com</a>';
 			} else {
 				// ISE
 				vAdmissionsName = 'Tom Policastro';
