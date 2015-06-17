@@ -339,8 +339,10 @@
 			emailCC = APPLICATION.CFC.UDF.displayAdmissionsInformation(displayInfo='email');
 			
 			// If there is a valid email, send a copy to the current user
-			if ( IsValid("email", APPLICATION.CFC.USER.getUserByID(userID=CLIENT.userID).email) ) {
+			if ( IsValid("email", APPLICATION.CFC.USER.getUserByID(userID=CLIENT.userID).email) and ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID) ) {
 				emailCC = emailCC & ';merri@iseusa.org;' & APPLICATION.CFC.USER.getUserByID(userID=CLIENT.userID).email;				
+			} else {
+				emailCC = CLIENT.projectmanager_email & ';' & CLIENT.email;
 			}
 			
 			// Display All Emails Involved
