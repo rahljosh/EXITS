@@ -208,7 +208,7 @@
 				<td><cfif #family_info.attendchurch# is 'yes'><input type=radio name="attend_church" value="yes" checked>Yes <input type="radio" name="attend_church" value="no" >No<cfelse><input type=radio name="attend_church" value="yes">Yes <input type="radio" name="attend_church" value="no" checked>No</cfif></td>
 			</tr>
 			<tr bgcolor="e2efc7">
-				<td colspan="2">To what extend do they attend church?</td>
+				<td colspan="2">To what extent do they attend church?</td>
 				<td><select name="religious_participation">
 						<cfif #get_host_religion.religious_participation# is "active" or #get_host_religion.religious_participation# is "4"  ><option value=active selected>Active (2+ times a week)</option><cfelse><option value=active>Active (2+ times a week)</option></cfif>
 						<cfif #get_host_religion.religious_participation# is "average" or #get_host_religion.religious_participation# is "3"><option value=average selected>Average (1-2x a week)</option><cfelse><option value=average>Average (1-2x a week)</option></cfif>
