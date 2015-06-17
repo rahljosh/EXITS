@@ -242,7 +242,7 @@
 	SELECT
     	*
    	FROM
-    	smg_regionHistory
+    	smg_regionhistory
    	WHERE
     	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qStudentInfo.studentID)#">
 </cfquery>
@@ -261,7 +261,7 @@
     
     <cfquery datasource="#APPLICATION.DSN#">
     	INSERT INTO
-        	smg_regionHistory
+        	smg_regionhistory
      		(
         		studentID,
                 regionID,
@@ -289,7 +289,7 @@
 	
     <cfquery datasource="#APPLICATION.DSN#">
     	INSERT INTO
-        	smg_regionHistory
+        	smg_regionhistory
      		(
         		studentID,
                 regionID,

@@ -11,13 +11,13 @@
   	AND
     	s.regionAssigned != 0
   	AND
-    	s.studentID NOT IN (SELECT studentID FROM smg_regionHistory)
+    	s.studentID NOT IN (SELECT studentID FROM smg_regionhistory)
 </cfquery>
 
 <cfoutput query="qGetStudents">
 	<cfquery datasource="#APPLICATION.DSN#">
         INSERT INTO
-            smg_regionHistory
+            smg_regionhistory
             (
                 studentID,
                 regionID,
