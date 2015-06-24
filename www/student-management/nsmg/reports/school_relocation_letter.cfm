@@ -115,7 +115,7 @@ WHERE smg_students.studentid = #client.studentid#
 	<div align="justify">
         <p>
         #companyshort.companyname# would like to thank you for allowing #get_letter_info.firstname# #get_letter_info.familylastname#
-        to attend your school. <cfif client.companyid neq 14>#get_letter_info.firstname# is on an #companyshort.companyname# sponsored J1 visa.</cfif>
+        to attend your school. <cfif client.companyid neq 14>#get_letter_info.firstname# is on an #companyshort.companyname# sponsored <cfif client.companyid EQ 15>F-1 <cfelse>J1</cfif> visa.</cfif>
         </p>
         
         <p>
