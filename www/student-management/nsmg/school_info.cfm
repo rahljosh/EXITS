@@ -199,7 +199,10 @@
 		<cfif CLIENT.companyID EQ 10>
             AND
                 s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-        <cfelse>
+        <cfelseif CLIENT.companyID EQ 14>
+        	AND 
+            	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        <cfelse>   
             AND
                 s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
         </cfif>
@@ -253,6 +256,9 @@
 		<cfif CLIENT.companyID EQ 10>
             AND
                 s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        <cfelseif CLIENT.companyID EQ 14>
+        	AND 
+            	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
         <cfelse>
             AND
                 s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
