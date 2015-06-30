@@ -175,6 +175,9 @@ if (CLIENT.companyid eq 13){
                     <cfif CLIENT.companyID EQ 10>
                     AND
                         smg_students.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+                    <cfelseif CLIENT.companyID EQ 14>
+                    AND
+                    	smg_students.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
                 <cfelse>
                     AND
                         smg_students.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
@@ -186,6 +189,9 @@ if (CLIENT.companyid eq 13){
                     <cfif CLIENT.companyID EQ 10>
                     AND
                         smg_students.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+                    <cfelseif CLIENT.companyID EQ 14>
+                    AND 
+                    	smg_students.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
                 <cfelse>
                     AND
                         smg_students.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
@@ -275,7 +281,7 @@ if (CLIENT.companyid eq 13){
                         <br>
                     </cfif>
                     Displaying #startrow# to #endrow# of #getResults.recordCount#
-                </td>
+              </td>
             </tr>
         </table>
 
@@ -304,10 +310,9 @@ if (CLIENT.companyid eq 13){
             <tr bgcolor="###iif(currentRow MOD 2 ,DE("FFFFE6") ,DE("FFFFFF") )#">
                 <td><a href="?curdoc=school_info&schoolid=#schoolid#">#schoolid#</a></td>
                 <td><a href="?curdoc=school_info&schoolid=#schoolid#">#schoolname#</a></td>
-                <td align="center"> #noStudentsThisYear# 
-               
-					<cfif noStudentsThisYear gte 5>
-                    <cfquery name="dateInfo" datasource="#APPLICATION.dsn#">
+                <td align="center">#noStudentsThisYear#
+                  <cfif noStudentsThisYear gte 5>
+              <cfquery name="dateInfo" datasource="#APPLICATION.dsn#">
                     select fiveStudentAssigned
                     from smg_school_dates
                     where schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#schoolid#">
@@ -330,14 +335,14 @@ if (CLIENT.companyid eq 13){
                          <cfif docUploaded.recordcount eq 0>   	
                             	<img src="pics/warning.png" height=10 border=0 /></a>
                          <cfelse>
-                         		<img src="pics/valid.png" border=0 />
+                         <img src="pics/valid.png" border=0 />
                          </cfif>
                          </cfif>
                      </cfif>
 					
                 </td>
                 <Td align="center">#noStudentsNextYear#
-                <cfif noStudentsNextYear gte 5>
+          <cfif noStudentsNextYear gte 5>
                     <cfquery name="dateInfo" datasource="#APPLICATION.dsn#">
                     select fiveStudentAssigned
                     from smg_school_dates
