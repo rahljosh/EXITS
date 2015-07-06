@@ -131,6 +131,8 @@
                 	r.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#FORM.regionID#"> )
               	AND
                 	r.active = 1
+                GROUP BY
+                	r.regionID
                 ORDER BY
                     c.companyShort,
                     r.regionName
