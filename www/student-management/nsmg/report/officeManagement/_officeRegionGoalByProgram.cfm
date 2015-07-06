@@ -120,7 +120,9 @@
                     AND
                         a.seasonID IN ( SELECT seasonID FROM smg_programs WHERE programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#FORM.programID#"> ) )
                 WHERE
-                	r.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#FORM.regionID#"> )                
+                	r.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#FORM.regionID#"> )
+                GROUP BY
+                	r.regionID                
                 ORDER BY
                     c.companyShort,
                     r.regionName
