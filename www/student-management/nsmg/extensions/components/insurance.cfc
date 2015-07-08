@@ -149,7 +149,7 @@
                     (CASE
                     	when (s.sex = 'male') then 'M'
                         when (s.sex = 'female') then 'F'
-                        end) as 'gender'
+                        end) as 'gender',
                     ib.type,
                     ib.startDate,
                     ib.endDate
