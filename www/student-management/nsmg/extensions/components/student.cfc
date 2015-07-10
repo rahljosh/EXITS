@@ -4583,7 +4583,9 @@
 
             // Get Facilitator Email
             qGetFacilitator = APPLICATION.CFC.REGION.getRegionFacilitatorByRegionID(regionID=qGetStudentFullInformation.regionAssigned);
-						
+			
+			// Get Area Rep Email
+			qGetAreaRep = APPLICATION.CFC.USER.getUserByID(userID = qGetStudentFullInformation.areaRepID);						
 			
 			// Make sure we have valid email addresses, if not use support
 			if ( IsValid("email", qGetCurrentUser.email) ) {
@@ -4623,12 +4625,12 @@
 				// Public Student - Email Regional Manager and send a copy to the current user
 				flightEmailTo = vRMEmailAddress;
 				//flightEmailCC = vCurrentUserEmailAddress;
-
+				flightEmailCC = qGetAreaRep.email;
 			} else {
 				
 				// Public Student - Email Facilitator and send a copy to Regional Manager
                 flightEmailTo = vFacilitatorEmailAddress;
-				flightEmailCC = vRMEmailAddress;
+				flightEmailCC = vRMEmailAddress & ',' & qGetAreaRep.email;
             
 			}
 			
