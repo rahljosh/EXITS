@@ -35,18 +35,26 @@
         smg_programs.blank, 
         smg_programs.hold, 
         smg_programs.programname, 
-        smg_regions.regionname,
         CASE
-            WHEN smg_students.state_guarantee = 0 THEN region_guarantee.regionname
-            ELSE state_guarantee.statename
+        	WHEN smg_students.companyID = 14 THEN smg_regions.regionname
+            ELSE placed_state.region_guarantee
+            END AS regionname,
+        placed_state.statename,
+        CASE
+            WHEN smg_students.state_guarantee = 0 AND smg_students.hostID != 0 THEN 
+            	CASE 
+        			WHEN region_guarantee.subofregion = 0 THEN region_guarantee.regionname                  
+                  	ELSE (SELECT regionname FROM smg_regions WHERE regionID = region_guarantee.subofregion)                  
+                  	END
+            WHEN smg_students.hostID != 0 THEN state_guarantee.statename
             END AS guar_name,
         CASE
             WHEN smg_students.state_guarantee = 0 THEN region_guarantee.regional_guarantee
             ELSE state_guarantee.guarantee_fee
             END AS guar_fee,
        CASE
-            WHEN smg_students.state_guarantee = 0 THEN CONCAT('Regional Guarantee: ' + region_guarantee.regionname)
-            ELSE CONCAT('State Guarantee: ' + state_guarantee.statename)
+            WHEN smg_students.state_guarantee = 0 THEN CONCAT('Regional Guarantee: ',region_guarantee.regionname)
+            ELSE CONCAT('State Guarantee: ',state_guarantee.statename)
             END AS guar_type     
     FROM smg_students
     INNER JOIN smg_programs ON smg_programs.programID = smg_students.programID
@@ -55,6 +63,7 @@
     LEFT JOIN smg_regions ON smg_regions.regionID = smg_students.regionassigned
     LEFT JOIN smg_regions region_guarantee ON region_guarantee.regionID = smg_students.regionalGuarantee
     LEFT JOIN smg_states state_guarantee ON state_guarantee.id = smg_students.state_guarantee
+    LEFT JOIN smg_states placed_state ON placed_state.state = (SELECT state FROM smg_hosts WHERE hostID = smg_students.hostID)
     WHERE smg_students.active = 1
     AND smg_students.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userID#">
     AND smg_students.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
@@ -283,7 +292,7 @@
                                             Student doesn't have a regional or state guarantee
                                         </td>
                                     </tr>
-                                <cfelse>
+                                <cfelseif (qGetStudents.statename EQ qGetStudents.guar_name OR qGetStudents.regionname EQ qGetStudents.guar_name) AND qGetStudents.guar_name NEQ "">
                                     <tr>
                                         <td></td>
                                         <td class="thin-border-left">Type: <input type="hidden" name="#qGetStudents.studentid#guarantee_type" value='guarantee'>Guarantee</td>

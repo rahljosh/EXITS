@@ -38,6 +38,7 @@
                 	END AS status
             FROM v_esi_payments_detail vepd
             INNER JOIN smg_students s ON s.studentID = vepd.StudentID
+            	AND s.app_current_status = 11
             WHERE 1 = 1
             <cfif VAL(FORM.seasonID)>
                 AND vepd.`Season Name` IN (SELECT season FROM smg_seasons WHERE seasonID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#" list="yes">))
