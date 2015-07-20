@@ -377,12 +377,13 @@
                 
                 <!--- Check if we should include SSN --->
                 <cfif NOT VAL(ARGUMENTS.noSSN)>
-
+					
                     <cftry>
                         <cfscript>
                             // Decrypt SSN
                             decryptedSSN = Replace(Decrypt(ARGUMENTS.SSN, decryptKey, decryptAlgorithm, decryptEncoding),"-","","All");
                             decryptedSSN = Replace(decryptedSSN, " ", "", "All");
+							
                         </cfscript>
                
                         <cfcatch type="any">
@@ -400,7 +401,7 @@
                             
                         </cfcatch>
                     </cftry>
-                    
+                   
                     <cfxml variable="requestXML">
                     <BGC>
                         <login>
@@ -485,7 +486,9 @@
                 </cfif> <!--- End of NO SSN --->
                 
 			</cfoutput>
-            
+          <!--- Store XML in a temp file --->
+                    <cffile action="write" file="#APPLICATION.PATH.temp#xmlSent.xml" output="#requestXML#" nameconflict="overwrite" charset="utf-8">
+                    
             <cftry>
             
 				<!--- Submit CBC --->
@@ -537,7 +540,7 @@
                     
                     return batchResult;
                 </cfscript>
-                
+              
                 <cfcatch type="any">
                     
                     <!--- Store XML in a temp file --->
@@ -550,7 +553,7 @@
                         type="html">
 						
                         <cfmailparam file="#APPLICATION.PATH.temp#xmlReceived.xml" type="text">
-                        
+                        <cfmailparam file="#APPLICATION.PATH.temp#xmlSent.xml" type="text">
                     	<p>http://www.phpusa.com/</p>
                     
                         <p>
