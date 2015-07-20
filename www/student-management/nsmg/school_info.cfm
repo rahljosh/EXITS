@@ -160,7 +160,7 @@
 </td></tr>
 </table><br>
 
-<cfif client.usertype LTE 4>
+<cfif client.usertype LTE 5>
 
     <cfquery name="hosting_students" datasource="#application.dsn#">
         SELECT
