@@ -139,7 +139,7 @@
 			var vUserListISE = '7657,9719,7630,1,22010'; // Thea Brewer | Bryan McCready 
 
 			// Stores all IDs so we can check quickly and return a masked SSN - PHP
-			var vAllowedIDList = '7657,9719,7630,1,22010';
+			var vAllowedIDList = '7657,9719,7630,1,22010,11708';
 			
 			// Stores the return variable
 			var vReturnSSN = '';
