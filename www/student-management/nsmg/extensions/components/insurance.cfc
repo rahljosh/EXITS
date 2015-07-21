@@ -278,6 +278,10 @@
                     s.familyLastName, 
                     s.dob, 
                     s.email,
+                    CASE
+                    	when (s.sex = 'male') then 'M'
+                        when (s.sex = 'female') then 'F'
+                        END as 'gender', 
                     "#ARGUMENTS.startDate#" as dep_date,                
                     it.type,  
                     ic.policycode, 
@@ -394,6 +398,10 @@
                     s.familyLastName, 
                     s.dob,
                     s.email,
+                    CASE
+                    	when (s.sex = 'male') then 'M'
+                        when (s.sex = 'female') then 'F'
+                        END as 'gender', 
                     s.cancelDate, 
                     ib.startDate,
                     ib.endDate
@@ -603,6 +611,10 @@
                     s.dob,
                     s.ds2019_no,
                     s.email,
+                    CASE
+                    	when (s.sex = 'male') then 'M'
+                        when (s.sex = 'female') then 'F'
+                        END as 'gender', 
                     s.datePlaced, 
                     u.businessName,
                     p.programName,
