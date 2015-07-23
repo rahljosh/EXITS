@@ -397,6 +397,9 @@
 			// ESI
 			var vListESI = '11364,16761'; // Stacy Brewer | Stacy Brewer
 			
+			// DASH
+			var vListDASH = '9719,7630'; // Bryan McCready | Luke Davis
+			
 			// Stores all IDs so we can check quickly and return a masked SSN
 			var vAllowedIDList = '7657,9719,11364,16761,1';
 			
@@ -424,6 +427,12 @@
 				// ESI - SHOW FOR HOST FAMILY AND USER
 				if ( ListFind(vListESI, CLIENT.userID) AND ListFind(APPLICATION.SETTINGS.COMPANYLIST.ESI, CLIENT.companyID) AND listFind("user,hostFamily", ARGUMENTS.displayType) ) {
 					// return full SSN
+					vReturnSSN = vDecryptedSSN;
+				}
+				
+				// DASH - SHOW ONLY FOR USER
+				if ( ListFind(vListESI, CLIENT.userID) AND ListFind(APPLICATION.SETTINGS.COMPANYLIST.DASH, CLIENT.companyID) AND ARGUMENTS.displayType EQ 'user' ) {
+					//return full SSN
 					vReturnSSN = vDecryptedSSN;
 				}
 				
