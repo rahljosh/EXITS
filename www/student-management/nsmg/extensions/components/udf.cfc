@@ -384,6 +384,9 @@
 				ESI
 					- Host Family - Stacy Brewer is allowed to view full SSN
 					- User - Stacy Brewer is allowed to view full SSN
+				DASH
+					- Host Family - No one is allowed to view full SSN
+					- User - Bryan McCready and Luke Davis are allowed to view full SSN
 			***/
 		
 			// Declare Variables		
@@ -401,7 +404,7 @@
 			var vListDASH = '9719,7630'; // Bryan McCready | Luke Davis
 			
 			// Stores all IDs so we can check quickly and return a masked SSN
-			var vAllowedIDList = '7657,9719,11364,16761,1';
+			var vAllowedIDList = '7657,9719,11364,16761,1,7630';
 			
 			// Stores the return variable
 			var vReturnSSN = '';
@@ -431,7 +434,7 @@
 				}
 				
 				// DASH - SHOW ONLY FOR USER
-				if ( ListFind(vListESI, CLIENT.userID) AND ListFind(APPLICATION.SETTINGS.COMPANYLIST.DASH, CLIENT.companyID) AND ARGUMENTS.displayType EQ 'user' ) {
+				if ( ListFind(vListDASH, CLIENT.userID) AND ListFind(APPLICATION.SETTINGS.COMPANYLIST.DASH, CLIENT.companyID) AND ARGUMENTS.displayType EQ 'user' ) {
 					//return full SSN
 					vReturnSSN = vDecryptedSSN;
 				}
