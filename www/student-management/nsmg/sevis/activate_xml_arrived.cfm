@@ -27,6 +27,7 @@
         c.lastname, 
       	c.arrival_address,
         c.arrival_address_2,
+        c.other_arrival_address_information,
         c.arrival_city,
         c.arrival_state,
         c.arrival_zip,
@@ -48,6 +49,8 @@
     	c.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )
 	AND 
     	c.ds2019 != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+    AND 
+    	c.sevis_arrival_updated != <cfqueryparam cfsqltype="cf_sql_varchar" value="manual">
 	
 	AND
     	c.watDateCheckedIn = <cfqueryparam cfsqltype="cf_sql_date" value="#form.watDateCheckedIn#" list="yes">
@@ -113,8 +116,11 @@ Sorry, there were no students to populate the XML file at this time.
 				
 			
 					<Address1>#arrival_address#</Address1> 
-                    <cfif len(#arrival_address_2#)>
-                    	<Address2>#arrival_address_2#</Address2> 
+                    <cfif len(#other_arrival_address_information#)>
+                    	<Address2>#other_arrival_address_information#</Address2> 
+                    </cfif>
+                   <cfif len(#other_arrival_address_information#)>
+                    	<Address2>#other_arrival_address_information#</Address2> 
                     </cfif>
 					<City>#arrival_city#</City> 
 					<State>#state#</State> 

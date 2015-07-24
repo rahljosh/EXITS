@@ -77,7 +77,8 @@
 			</cfoutput>
 			<cfquery name="update_active_batch" datasource="MySql">
 				UPDATE extra_candidates
-				SET sevis_activated = '#Right(batchid, 4)#'
+				SET sevis_activated = '#Right(batchid, 4)#',
+                	sevis_arrival_updated = <cfqueryparam cfsqltype="cf_sql_varchar" value="batch">
 				WHERE candidateid = '#stuID#'
 			</cfquery>
 			
