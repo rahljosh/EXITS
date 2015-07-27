@@ -43,6 +43,18 @@
 	Where userid = '#get_student_info.arearepid#'
 </cfquery>
 
+<!---Regional Manager --->
+<cfquery name="get_regional_manager" datasource="MySQL">
+	select s.regionassigned, u.userID, u.firstname, u.lastname, u.phone, u.address, u.city, u.state, u.zip, u.email
+    from smg_students s 
+    	left outer join user_access_rights uar on s.regionassigned = uar.regionID
+        left outer join smg_users u on uar.userID = u.userID
+    Where uar.usertype = 5
+    	and uar.regionID = '#get_student_info.regionassigned#'
+    Group by
+    	u.userID
+</cfquery>    
+
 <!-----Facilitator----->
 <cfif get_student_info.regionassigned is not 0>
 	<cfquery name="get_facilitator" datasource="MySQL">
@@ -136,6 +148,7 @@
 
 <CFMAIL SUBJECT="Placement Information Letter for #get_student_info.firstname# #get_student_info.familylastname# ( #get_student_info.studentid# )"
 	TO="#emails#"
+    cc="#get_regional_manager.email#"
 	bcc="#get_current_user.email#"
     failto="#get_current_user.email#" 
 	replyto="""#companyshort.companyname#"" <#get_facilitator.email#>"
