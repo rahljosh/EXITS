@@ -15,7 +15,7 @@
 									6th month		12th month		18th month
 				
 ----- ------------------------------------------------------------------------- --->
-
+<!----- Removal of trainee program, do not send this email out anymore 
 <!--- Kill Extra Output --->
 <cfsilent>
 
@@ -411,3 +411,4 @@
 </table>
 
 </cfoutput>
+--->
