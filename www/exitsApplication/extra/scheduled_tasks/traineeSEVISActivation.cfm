@@ -6,7 +6,7 @@
 	Desc:		Scheduled Task - Sends out an email every week to Intl. Representative
 				
 ----- ------------------------------------------------------------------------- --->
-
+<!--- Remove trainee program 
 <!--- Kill Extra Output --->
 <cfsilent>
 
@@ -158,3 +158,4 @@
 </table>
 
 </cfoutput>
+--->

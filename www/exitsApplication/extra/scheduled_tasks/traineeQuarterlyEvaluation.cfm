@@ -11,7 +11,7 @@
 				December 1st
 				
 ----- ------------------------------------------------------------------------- --->
-
+<!--- Remove trainee program 
 <!--- Kill Extra Output --->
 <cfsilent>
 
@@ -190,3 +190,4 @@
 </table>
 
 </cfoutput>
+--->
