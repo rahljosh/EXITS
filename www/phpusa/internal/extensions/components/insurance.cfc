@@ -93,7 +93,11 @@
                 s.dob,
                 s.email,
                 ib.startDate,
-                ib.endDate
+                ib.endDate,
+                CASE
+                    	when (s.sex = 'male') then 'M'
+                        when (s.sex = 'female') then 'F'
+                        end) as 'gender'
             FROM 
                 php_insurance_batch ib
             INNER JOIN
@@ -125,7 +129,11 @@
                 s.firstname, 
                 s.familyLastName, 
                 s.dob,
-                s.email, 
+                s.email,
+                CASE
+                    	when (s.sex = 'male') then 'M'
+                        when (s.sex = 'female') then 'F'
+                        end) as 'gender', 
                 MIN(fi.dep_date) as dep_date,            
                 it.type,  
                 ic.policycode, 
@@ -206,6 +214,10 @@
                 s.familyLastName, 
                 s.dob, 
                 s.email,
+                CASE
+                    	when (s.sex = 'male') then 'M'
+                        when (s.sex = 'female') then 'F'
+                        end) as 'gender',
                 "#ARGUMENTS.startDate#" as dep_date,                
                 it.type,  
                 ic.policycode, 
