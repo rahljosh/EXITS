@@ -58,7 +58,7 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
             </td>
         </tr>
         <tr>
-            <td colspan="8" style="background-color:##CCCCCC; border:none;">&nbsp;</td>
+            <td colspan="9" style="background-color:##CCCCCC; border:none;">&nbsp;</td>
         </tr>
         <tr>
             <td style="width:200px; text-align:left; font-weight:bold;">Last Name</td>
