@@ -1043,12 +1043,20 @@
         <cfargument name="studentID" hint="studentID is required">
         <cfargument name="changedBy" hint="changedBy is required">
         <cfargument name="userType" hint="userType is required">
+        <cfargument name="regionID" hint="regionID is required">
+        <cfargument name="placeRepID" hint="placeRepID is required">
         <cfargument name="reason" default="" hint="reason is not required">
         <cfargument name="dateRelocated" default="" hint="dateRelocated is not required">
 
         <cfscript>
 			// Get Student Info
 			var qGetStudentInfo = getStudentFullInformationByID(studentID=ARGUMENTS.studentID);
+			
+			// Get Regional Manager Information
+			var qGetRegionalManager = APPLICATION.CFC.USER.getRegionalManager(regionID=ARGUMENTS.regionID)
+			
+			// Get Placing Representative Email Address
+			qGetPlacingRepresentative = APPLICATION.CFC.USER.getUserByID(userID=ARGUMENTS.placeRepID);
 			
 			var vUpdateDatePlaced = 0;
 			
@@ -1132,7 +1140,7 @@
             
             <cfinvoke component="nsmg.cfc.email" method="send_mail">
                 <cfinvokeargument name="email_to" value="#qGetHostFamily.email#">
-                <cfinvokeargument name="email_cc" value="#qGetStudentInfo.areaRepEmail#,#qGetManager.email#">
+                <cfinvokeargument name="email_cc" value="#qGetRegionalManager.email#, #qGetPlacingRepresentative.email#">
                 <cfinvokeargument name="email_subject" value="#qGetCompany.companyshort_nocolor# Placement Approved">
                 <cfinvokeargument name="email_message" value="#vEmailContent#">
                 <cfinvokeargument name="email_from" value="#CLIENT.support_email#">

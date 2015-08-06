@@ -1039,6 +1039,10 @@
                             END
                         ) AS facilitator,
                         fac.email AS facilitatorEmail,
+                         <!--- Company/Program Manager --->
+                        c.team_id AS programManager,
+                        c.pm_email AS programManagerEmail,
+                        c.projectManagerName,
                         <!--- Host Season-based approval status --->
                         smg_host_app_season.applicationStatusID,
                         smg_host_app_season.repNotes,
@@ -1066,6 +1070,9 @@
                     LEFT OUTER JOIN smg_users ra ON ra.userID = uar.advisorID
 					<!--- Facilitator --->
                     LEFT OUTER JOIN smg_users fac ON fac.userID = r.regionFacilitator
+                    <!--- Company/Program Manager Info --->
+                    LEFT OUTER JOIN
+                    	smg_companies c ON c.companyID = h.companyID
                     WHERE 1 = 1 
                     
                     <!--- If hostID is passed ignore active and companyID filters --->
@@ -1281,6 +1288,10 @@
                             END
                         ) AS facilitator,
                         fac.email AS facilitatorEmail,
+                        <!--- Company/Program Manager --->
+                        c.team_id AS programManager,
+                        c.pm_email AS programManagerEmail,
+                        c.projectManagerName,
                         <!--- Host Season-based approval status --->
                         smg_host_app_season.applicationStatusID,
                         smg_host_app_season.repNotes,
@@ -1315,6 +1326,9 @@
 					<!--- Facilitator --->
                     LEFT OUTER JOIN
                         smg_users fac ON fac.userID = r.regionFacilitator
+                    <!--- Company/Program Manager Info --->
+                    LEFT OUTER JOIN
+                    	smg_companies c ON c.companyID = h.companyID
                     WHERE
                         1 = 1 
                     
@@ -2399,6 +2413,10 @@
 							// Copy AR
 							if ( isValid("email", qGetHostInfo.areaRepresentativeEmail) ) {
 								vEmailCC = ListAppend(qGetHostInfo.areaRepresentativeEmail, ";");
+							}
+							//Copy PM
+//							if ( isValid("email", qGetHostInfo.programManagerEmail) ) {
+//								vEmailCC = ListAppend(qGetHostInfo.programManagerEmail, ";");
 							}
 
 							vSetEmailTemplate = "applicationApproved";
