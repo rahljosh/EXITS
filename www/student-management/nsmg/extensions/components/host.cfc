@@ -2404,19 +2404,19 @@
 							
 							// Copy RM
 							if ( isValid("email", qGetHostInfo.regionalManagerEmail) ) {
-								vEmailCC = ListAppend(qGetHostInfo.regionalManagerEmail, ";");
+								vEmailCC = vEmailCC & qGetHostInfo.regionalManagerEmail & ";";
 							}
 							// Copy RA
 							if ( isValid("email", qGetHostInfo.regionalAdvisorEmail) ) {
-								vEmailCC = ListAppend(qGetHostInfo.regionalAdvisorEmail, ";");
+								vEmailCC = vEmailCC & qGetHostInfo.regionalAdvisorEmail & ";";
 							}
 							// Copy AR
 							if ( isValid("email", qGetHostInfo.areaRepresentativeEmail) ) {
-								vEmailCC = ListAppend(qGetHostInfo.areaRepresentativeEmail, ";");
+								vEmailCC = vEmailCC & qGetHostInfo.areaRepresentativeEmail & ";";
 							}
 							//Copy PM
-//							if ( isValid("email", qGetHostInfo.programManagerEmail) ) {
-//								vEmailCC = ListAppend(qGetHostInfo.programManagerEmail, ";");
+							if ( isValid("email", qGetHostInfo.programManagerEmail) ) {
+								vEmailCC = vEmailCC & qGetHostInfo.programManagerEmail & ";";
 							}
 
 							vSetEmailTemplate = "applicationApproved";

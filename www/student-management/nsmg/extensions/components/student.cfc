@@ -1043,8 +1043,6 @@
         <cfargument name="studentID" hint="studentID is required">
         <cfargument name="changedBy" hint="changedBy is required">
         <cfargument name="userType" hint="userType is required">
-        <cfargument name="regionID" hint="regionID is required">
-        <cfargument name="placeRepID" hint="placeRepID is required">
         <cfargument name="reason" default="" hint="reason is not required">
         <cfargument name="dateRelocated" default="" hint="dateRelocated is not required">
 
@@ -1053,10 +1051,10 @@
 			var qGetStudentInfo = getStudentFullInformationByID(studentID=ARGUMENTS.studentID);
 			
 			// Get Regional Manager Information
-			var qGetRegionalManager = APPLICATION.CFC.USER.getRegionalManager(regionID=ARGUMENTS.regionID)
+			var qGetRegionalManager = APPLICATION.CFC.USER.getRegionalManager(regionID=qGetStudentInfo.regionAssigned);
 			
 			// Get Placing Representative Email Address
-			qGetPlacingRepresentative = APPLICATION.CFC.USER.getUserByID(userID=ARGUMENTS.placeRepID);
+			qGetPlacingRepresentative = APPLICATION.CFC.USER.getUserByID(userID=qGetStudentInfo.placeRepID);
 			
 			var vUpdateDatePlaced = 0;
 			
