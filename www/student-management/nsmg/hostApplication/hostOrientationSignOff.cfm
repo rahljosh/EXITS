@@ -60,8 +60,11 @@
 </div>
 <div style="width: 95%; margin: 50px auto; font-size: 45px;">
 <p>By signing this form you are verifying that the rules of the exchange program have been explained to you during your
-host family orientation and you have received a copy of the <cfoutput>#hostInfo.companyshort_nocolor#</cfoutput> host family rules, the US DOS Secondary School
-Program regulations and the DOS Host Family Welcome letter.</p>
+host family orientation and you have received a copy of the <cfoutput>#hostInfo.companyshort_nocolor#</cfoutput> host family rules
+	<cfif client.companyID NEQ 15>
+, the US DOS Secondary School Program regulations and the DOS Host Family Welcome letter
+</cfif>.
+</p>
 <p>All policies are detailed in the <cfoutput>#hostInfo.companyshort_nocolor#</cfoutput> Host Family rules document and specific highlights of the program rules include:</p>
 <ul><li style="margin-bottom: 30px;">Exchange students are not allowed to possess or consume alcoholic beverages, illegal drugs or prescription
 drugs that have not been prescribed to them by a physician.</li>
