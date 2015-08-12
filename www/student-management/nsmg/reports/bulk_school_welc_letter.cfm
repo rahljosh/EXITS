@@ -266,7 +266,7 @@
 			</p>
 			
 			<p>We wish to let you know that #firstname# is being supervised by #ar_firstname# 
-			#ar_lastname#, <cfif companyshort.companyid is 4>a <cfelse>an </cfif>#companyshort.companyshort_nocolor# Area Representative. 
+			#ar_lastname#, <cfif companyshort.companyid in (6,10,13,15)>a <cfelse>an </cfif>#companyshort.companyshort_nocolor# Area Representative. 
 			#companyshort.companyshort_nocolor# Area Representatives act as a counselor to assist the student, school and host family should there be any
 			concerns during #firstname#'<cfif #right(firstname, 1)# is 's'><cfelse>s</cfif> stay in the US.
 			</p>
