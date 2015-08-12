@@ -159,7 +159,7 @@
         	<div align="justify">
                 <p>
                 #companyshort.companyname# would like to thank you for allowing #get_letter_info.firstname# #get_letter_info.lastName#
-                to attend your school. <cfif client.companyid NEQ 14>#companyshort.companyshort_nocolor# has issued a #CLIENT.DSFormName# for #get_letter_info.firstname# and 
+                to attend your school. <cfif client.companyid LTE 13>#companyshort.companyshort_nocolor# has issued a #CLIENT.DSFormName# for #get_letter_info.firstname# and 
                 #get_letter_info.firstname# is now in the process of securing a <cfif client.companyID EQ 15>F-1 <cfelse>J1</cfif>visa. Upon arrival #get_letter_info.firstname# will have 
                 received a visa from the US consulate.</cfif>
                 </p>
@@ -214,7 +214,10 @@
     </table>
     <table width=100%>
         <tr>
-            <td align="center"><font color="##999999"><font size=-2>U.S. Department of State &middot; 2200 C St. NW &middot; Washington D.C. 20037 &middot; 866.283.9090 &middot; jvisas@state.gov</font></font></td>
+            <cfif client.companyID NEQ 15>
+            	<td align="center"><font color="##999999"><font size=-2>U.S. Department of State &middot; 2200 C St. NW &middot; Washington D.C. 20037 &middot; 866.283.9090 &middot; jvisas@state.gov</font></font>	
+            	</td>
+            </cfif>
         </tr>
     </table>
     </Cfif>
