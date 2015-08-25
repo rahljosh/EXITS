@@ -22,6 +22,7 @@
 		param name="FORM.submitted" default=0;
 		param name="FORM.seasonID" default=0;
 		param name="FORM.regionID" default=0;
+		param name="FORM.companyID" default=0;
 		param name="FORM.outputType" default="flashPaper";
 
 		// Set Report Title To Keep Consistency
@@ -53,27 +54,21 @@
                     
             <cfquery name="qGetCompanies" datasource="#APPLICATION.DSN#">
             	SELECT
-                	c.companyName,
-                    c.companyShort,
-                    c.companyID
-              	FROM
-                	smg_companies c
-               	WHERE
-                	c.companyID IN ( SELECT company FROM smg_regions WHERE regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionID#" list="yes"> ) )
+                	companyName,
+                    companyShort,
+                    companyID
+              	FROM smg_companies
+               	WHERE companyID IN ( SELECT company FROM smg_regions WHERE regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionID#" list="yes"> ) )
             </cfquery>
 
 			<cfquery name="qGetTotal" datasource="#APPLICATION.DSN#">
        			SELECT
                 	u.userID,
                     uar.regionID
-                FROM
-                    smg_users u
-              	INNER JOIN
-                	user_access_rights uar ON uar.userID = u.userID
-              	WHERE
-               		uar.userType = <cfqueryparam cfsqltype="cf_sql_integer" value="7">
-               	AND	
-                	uar.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#FORM.regionID#"> )
+                FROM smg_users u
+              	INNER JOIN user_access_rights uar ON uar.userID = u.userID
+              	WHERE uar.userType = <cfqueryparam cfsqltype="cf_sql_integer" value="7">
+               	AND uar.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#FORM.regionID#"> )
               	AND
                 	(
                     	<!--- Users that have started filling out paperwork --->
@@ -81,60 +76,40 @@
                     OR
                     	<!--- Users Created during the season period --->
                         u.dateCreated 
-                        	BETWEEN 
-                            	<cfqueryparam cfsqltype="cf_sql_date" value="#qGetSeasonInfo.datePaperworkStarted#"> 
-                            AND 
-                            	<cfqueryparam cfsqltype="cf_sql_date" value="#qGetSeasonInfo.datePaperworkEnded#"> 
+                        	BETWEEN <cfqueryparam cfsqltype="cf_sql_date" value="#qGetSeasonInfo.datePaperworkStarted#"> 
+                            AND <cfqueryparam cfsqltype="cf_sql_date" value="#qGetSeasonInfo.datePaperworkEnded#"> 
                     )
-                GROUP BY
-                	u.userID
+                GROUP BY u.userID
             </cfquery>
             
             <cfquery name="qGetTotalEnabled" datasource="#APPLICATION.DSN#">
        			SELECT
                 	u.userID,
                     uar.regionID
-                FROM
-                    smg_users u
-              	INNER JOIN
-                	user_access_rights uar ON uar.userID = u.userID
-              	INNER JOIN
-                	smg_users_paperwork p ON p.userID = u.userID
-                     	AND
-                        	p.ar_agreement IS NOT NULL
-                     	AND
-                			<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#"> = ( SELECT MIN(seasonID) FROM smg_users_paperwork WHERE userID = u.userID )
-              	WHERE
-               		uar.userType = <cfqueryparam cfsqltype="cf_sql_integer" value="7">
-              	AND	
-                	uar.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#FORM.regionID#"> )
-              	GROUP BY
-                	u.userID
+                FROM smg_users u
+              	INNER JOIN user_access_rights uar ON uar.userID = u.userID
+              	INNER JOIN smg_users_paperwork p ON p.userID = u.userID
+              		AND p.ar_agreement IS NOT NULL
+                 	AND <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#"> = ( SELECT MIN(seasonID) FROM smg_users_paperwork WHERE userID = u.userID )
+              	WHERE uar.userType = <cfqueryparam cfsqltype="cf_sql_integer" value="7">
+              	AND uar.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#FORM.regionID#"> )
+              	GROUP BY u.userID
             </cfquery>
             
             <cfquery name="qGetTotalWithPlacement" datasource="#APPLICATION.DSN#">
        			SELECT
                 	u.userID,
                     uar.regionID,
-                    count(s.studentID) AS studentsplaced
-                FROM
-                    smg_users u
-              	INNER JOIN
-                	user_access_rights uar ON uar.userID = u.userID
-               	INNER JOIN
-                	smg_students s ON s.placeRepID = u.userID
-                    	AND
-                        	s.programID IN ( SELECT programID FROM smg_programs WHERE seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.seasonID)#"> )
-              	WHERE
-               		uar.userType = <cfqueryparam cfsqltype="cf_sql_integer" value="7">
-              	AND
-                	<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#"> = ( SELECT MIN(seasonID) FROM smg_users_paperwork WHERE userID = u.userID )
-             	AND	
-                	uar.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#FORM.regionID#"> )
-              	GROUP BY
-                	u.userID
+                    COUNT(s.studentID) AS studentsplaced
+                FROM smg_users u
+              	INNER JOIN user_access_rights uar ON uar.userID = u.userID
+               	INNER JOIN smg_students s ON s.placeRepID = u.userID
+               		AND s.programID IN ( SELECT programID FROM smg_programs WHERE seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.seasonID)#"> )
+              	WHERE uar.userType = <cfqueryparam cfsqltype="cf_sql_integer" value="7">
+              	AND <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.seasonID#"> = ( SELECT MIN(seasonID) FROM smg_users_paperwork WHERE userID = u.userID )
+             	AND uar.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" list="yes" value="#FORM.regionID#"> )
+              	GROUP BY u.userID
             </cfquery>
-            
             
 		</cfif> <!--- NOT SESSION.formErrors.length() ---->
 
@@ -241,7 +216,7 @@
                 <td>Percent Contracted</td>
                 <td>Number with a placement</td>
                 <td>Percent with a placement</td>
-                <td>Number of placements</td>
+                <td>Number of Placements in Region</td>
             </tr>
             
             <cfscript>
@@ -258,76 +233,70 @@
                         u.userID,
                         u.firstName,
                         u.lastName
-                    FROM
-                        smg_regions r
-                    LEFT JOIN
-                        user_access_rights uar ON uar.regionID = r.regionID
-                        AND
-                            uar.userType = <cfqueryparam cfsqltype="cf_sql_integer" value="5">
-                    LEFT JOIN
-                        smg_users u ON u.userID = uar.userID
-                        AND
-                            u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1"> 
-                    WHERE
-                        r.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionID#" list="yes"> )
-                    AND
-                        r.company = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCompanies.companyID#">
+                    FROM smg_regions r
+                    LEFT JOIN user_access_rights uar ON uar.regionID = r.regionID
+                        AND uar.userType = <cfqueryparam cfsqltype="cf_sql_integer" value="5">
+                    LEFT JOIN smg_users u ON u.userID = uar.userID
+                        AND u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1"> 
+                    WHERE r.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionID#" list="yes"> )
+                    AND r.company = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCompanies.companyID#">
                 </cfquery>
                 
                 <cfquery name="qGetTotalInCompany" dbtype="query">
-                    SELECT
-                        *
-                    FROM
-                        qGetTotal
-                    WHERE
-                        regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ValueList(qGetRegions.regionID)#" list="yes"> )
+                    SELECT *
+                    FROM qGetTotal
+                    WHERE regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ValueList(qGetRegions.regionID)#" list="yes"> )
                 </cfquery>
                 
                 <cfquery name="qGetTotalInCompanyEnabled" dbtype="query">
-                    SELECT
-                        *
-                    FROM
-                        qGetTotalEnabled
-                    WHERE
-                        regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ValueList(qGetRegions.regionID)#" list="yes"> )
+                    SELECT *
+                    FROM qGetTotalEnabled
+                    WHERE regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ValueList(qGetRegions.regionID)#" list="yes"> )
                 </cfquery>
                 
                 <cfquery name="qGetTotalInCompanyWithPlacement" dbtype="query">
-                    SELECT
-                        *
-                    FROM
-                        qGetTotalWithPlacement
-                    WHERE
-                        regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ValueList(qGetRegions.regionID)#" list="yes"> )
+                    SELECT *
+                    FROM qGetTotalWithPlacement
+                    WHERE regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ValueList(qGetRegions.regionID)#" list="yes"> )
                 </cfquery>
                 
                 <cfloop query="qGetRegions">
+                
+                	<cfquery name="qGetPlacementsInRegion" datasource="#APPLICATION.DSN#">
+                    	SELECT *
+                        FROM smg_students s
+                        WHERE s.programID IN ( SELECT programID FROM smg_programs WHERE seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.seasonID)#"> )
+                        AND s.regionAssigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRegions.regionID#">
+                        AND s.active = 1
+                        AND s.hostID != 0
+                        AND s.placeRepID IN
+                        	(SELECT
+                                    	userID
+                             FROM
+                                     	smg_users
+                             WHERE
+                                     	dateCreated
+                                        	BETWEEN <cfqueryparam cfsqltype="cf_sql_date" value="#qGetSeasonInfo.datePaperworkStarted#">
+                                            AND <cfqueryparam cfsqltype="cf_sql_date" value="#qGetSeasonInfo.datePaperworkEnded#">
+                             ) 
+                    </cfquery>
                         
                     <cfquery name="qGetTotalInRegion" dbtype="query">
-                        SELECT
-                            *
-                        FROM
-                            qGetTotal
-                        WHERE
-                            regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetRegions.regionID)#">
+                        SELECT *
+                        FROM qGetTotal
+                        WHERE regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetRegions.regionID)#">
                     </cfquery>
                     
                     <cfquery name="qGetTotalInRegionEnabled" dbtype="query">
-                        SELECT
-                            *
-                        FROM
-                            qGetTotalEnabled
-                        WHERE
-                            regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetRegions.regionID)#">
+                        SELECT *
+                        FROM qGetTotalEnabled
+                        WHERE regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetRegions.regionID)#">
                     </cfquery>
                     
                     <cfquery name="qGetTotalInRegionWithPlacement" dbtype="query">
-                        SELECT
-                            *
-                        FROM
-                            qGetTotalWithPlacement
-                        WHERE
-                            regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetRegions.regionID)#">
+                        SELECT *
+                        FROM qGetTotalWithPlacement
+                        WHERE regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetRegions.regionID)#">
                     </cfquery>
                     
                     <cfscript>
@@ -360,7 +329,7 @@
                             <td bgcolor="#vRowColor#">#NumberFormat(percentEnabled,'99.99')#%</td>
                             <td bgcolor="#vRowColor#">#qGetTotalInRegionWithPlacement.recordCount#</td>
                             <td bgcolor="#vRowColor#">#NumberFormat(percentWithPlacement,'99.99')#%</td>
-                            <td bgcolor="#vRowColor#">#qGetTotalInRegionWithPlacement.studentsplaced#</td>
+                            <td bgcolor="#vRowColor#">#qGetPlacementsInRegion.recordCount#</td>
                         </tr>
                     </cfoutput>
                     
@@ -396,7 +365,7 @@
                         <td bgcolor="#vRowColor#"><b>#NumberFormat(percentEnabled,'99.99')#%</b></td>
                         <td bgcolor="#vRowColor#"><b>#qGetTotalInCompanyWithPlacement.recordCount#</b></td>
                         <td bgcolor="#vRowColor#"><b>#NumberFormat(percentWithPlacement,'99.99')#%</b></td>
-                        <td bgcolor="#vRowColor#"><b>#qGetTotalInCompanyWithPlacement.studentsplaced#</b></td>
+                        <td bgcolor="#vRowColor#">&nbsp;</td>
                     </tr>
                 </cfoutput>
                 
@@ -432,14 +401,14 @@
 					<td bgcolor="#vRowColor#"><b>#NumberFormat(percentEnabled,'99.99')#%</b></td>
 					<td bgcolor="#vRowColor#"><b>#qGetTotalWithPlacement.recordCount#</b></td>
 					<td bgcolor="#vRowColor#"><b>#NumberFormat(percentWithPlacement,'99.99')#%</b></td>
-                    <td bgcolor="#vRowColor#"><b>#qGetTotalWithPlacement.studentsplaced#</b></td>
+                    <td bgcolor="#vRowColor#">&nbsp;</td>
 				</tr>
 			</cfoutput>
             
      	</table>
     
     <!--- On Screen Report --->
-    <cfelse>
+  <cfelse>
     
     	<cfsavecontent variable="report">
         
@@ -454,55 +423,41 @@
                 
                 <cfloop query="qGetCompanies">
                 
+                	<cfset placementsPerCompany = 0>
+                
                 	<cfquery name="qGetRegions" datasource="#APPLICATION.DSN#">
-                        SELECT
+                       SELECT
                             r.company,
                             r.regionName,
                             r.regionID,
                             u.userID,
                             u.firstName,
                             u.lastName
-                        FROM
-                            smg_regions r
-                      	LEFT JOIN
-                        	user_access_rights uar ON uar.regionID = r.regionID
-                            AND
-                    			uar.userType = <cfqueryparam cfsqltype="cf_sql_integer" value="5">
-                      	LEFT JOIN
-                        	smg_users u ON u.userID = uar.userID
-                            AND
-                    			u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1"> 
-                        WHERE
-                            r.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionID#" list="yes"> )
-                      	AND
-                        	r.company = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCompanies.companyID#">
+                        FROM smg_regions r
+                      	LEFT JOIN user_access_rights uar ON uar.regionID = r.regionID
+                            AND uar.userType = <cfqueryparam cfsqltype="cf_sql_integer" value="5">
+                      	LEFT JOIN smg_users u ON u.userID = uar.userID
+                            AND u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1"> 
+                        WHERE r.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionID#" list="yes"> )
+                      	AND r.company = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCompanies.companyID#">
                     </cfquery>
                     
                     <cfquery name="qGetTotalInCompany" dbtype="query">
-                    	SELECT
-                            *
-                        FROM
-                            qGetTotal
-                        WHERE
-                            regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ValueList(qGetRegions.regionID)#" list="yes"> )
+                    	SELECT *
+                        FROM qGetTotal
+                        WHERE regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ValueList(qGetRegions.regionID)#" list="yes"> )
                     </cfquery>
                     
                     <cfquery name="qGetTotalInCompanyEnabled" dbtype="query">
-                        SELECT
-                            *
-                        FROM
-                            qGetTotalEnabled
-                        WHERE
-                            regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ValueList(qGetRegions.regionID)#" list="yes"> )
+                        SELECT *
+                        FROM qGetTotalEnabled
+                        WHERE regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ValueList(qGetRegions.regionID)#" list="yes"> )
                     </cfquery>
                     
                     <cfquery name="qGetTotalInCompanyWithPlacement" dbtype="query">
-                        SELECT
-                            *
-                        FROM
-                            qGetTotalWithPlacement
-                        WHERE
-                            regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ValueList(qGetRegions.regionID)#" list="yes"> )
+                        SELECT *
+                        FROM qGetTotalWithPlacement
+                        WHERE regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ValueList(qGetRegions.regionID)#" list="yes"> )
                     </cfquery>
                 
                 	<table width="98%" cellpadding="4" cellspacing="0" align="center" class="blueThemeReportTable">
@@ -519,36 +474,48 @@
                             <td class="subTitleCenter" width="20%" style="font-size:10px">Percent Contracted</td>
                             <td class="subTitleCenter" width="20%" style="font-size:10px">Number with a placement</td>
                             <td class="subTitleCenter" width="20%" style="font-size:10px">Percent with a placement</td>
-                            <td class="subTitleCenter" width="20%" style="font-size:10px">Number of placements</td>
+                            <td class="subTitleCenter" width="10%" style="font-size:10px">Number of Placements</td>
                         </tr>
                         
                         <cfloop query="qGetRegions">
                         
+                        	<cfquery name="qGetPlacementsInRegion" datasource="#APPLICATION.DSN#">
+                                SELECT *
+                                FROM smg_students s
+                                WHERE s.programID IN ( SELECT programID FROM smg_programs WHERE seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.seasonID)#"> )
+                                AND s.regionAssigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetRegions.regionID#">
+                                AND s.active = 1
+                                AND s.hostID != 0
+                                AND s.placeRepID IN
+                                	(SELECT
+                                    	userID
+                                     FROM
+                                     	smg_users
+                                     WHERE
+                                     	dateCreated
+                                        	BETWEEN <cfqueryparam cfsqltype="cf_sql_date" value="#qGetSeasonInfo.datePaperworkStarted#"> 
+                                        	AND <cfqueryparam cfsqltype="cf_sql_date" value="#qGetSeasonInfo.datePaperworkEnded#"> 
+                                    )
+                            </cfquery>
+                            
+                            <cfset placementsPerCompany = placementsPerCompany + qGetPlacementsInRegion.recordCount>
+                        
                         	<cfquery name="qGetTotalInRegion" dbtype="query">
-                                SELECT
-                                    *
-                                FROM
-                                    qGetTotal
-                                WHERE
-                                    regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetRegions.regionID)#">
+                                SELECT *
+                                FROM qGetTotal
+                                WHERE regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetRegions.regionID)#">
                             </cfquery>
                             
                             <cfquery name="qGetTotalInRegionEnabled" dbtype="query">
-                                SELECT
-                                    *
-                                FROM
-                                    qGetTotalEnabled
-                                WHERE
-                                    regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetRegions.regionID)#">
+                                SELECT *
+                                FROM qGetTotalEnabled
+                                WHERE regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetRegions.regionID)#">
                             </cfquery>
                             
                             <cfquery name="qGetTotalInRegionWithPlacement" dbtype="query">
-                                SELECT
-                                    *
-                                FROM
-                                    qGetTotalWithPlacement
-                                WHERE
-                                    regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetRegions.regionID)#">
+                                SELECT *
+                                FROM qGetTotalWithPlacement
+                                WHERE regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetRegions.regionID)#">
                             </cfquery>
                             
                             <cfscript>
@@ -571,7 +538,7 @@
                                 <td style="font-size:10px" align="center"><b>#NumberFormat(percentEnabled,'99.99')#%</b></td>
                                 <td style="font-size:10px" align="center"><b>#qGetTotalInRegionWithPlacement.recordCount#</b></td>
                                 <td style="font-size:10px" align="center"><b>#NumberFormat(percentWithPlacement,'99.99')#%</b></td>
-                                <td style="font-size:10px" align="center"><b>#qGetTotalinRegionWithPlacement.studentsplaced#</b></td>
+                                <td style="font-size:10px" align="center"><b>#qGetPlacementsInRegion.recordCount#</b></td>
                             </tr>
                         
                         </cfloop>
@@ -595,7 +562,7 @@
                             <td style="font-size:10px" align="center"><b>#NumberFormat(percentEnabled,'99.99')#%</b></td>
                             <td style="font-size:10px" align="center"><b>#qGetTotalInCompanyWithPlacement.recordCount#</b></td>
                             <td style="font-size:10px" align="center"><b>#NumberFormat(percentWithPlacement,'99.99')#%</b></td>
-                            <td style="font-size:10px" align="center"><b>#qGetTotalinCompanyWithPlacement.studentsplaced#</b></td>
+                            <td style="font-size:10px" align="center"><b>#placementsPerCompany#</b></td>
                         </tr>
                         
                   	</table>
@@ -619,12 +586,12 @@
                         <th class="left" colspan="9">Total</th>
                     </tr>      
                     <tr>
-                        <td class="subTitleCenter" width="20%" style="font-size:10px">Number of New Reps Added</td>	
-                        <td class="subTitleCenter" width="20%" style="font-size:10px">Number Contracted</td>
-                        <td class="subTitleCenter" width="20%" style="font-size:10px">Percent Contracted</td>
-                        <td class="subTitleCenter" width="20%" style="font-size:10px">Number with a placement</td>
-                        <td class="subTitleCenter" width="20%" style="font-size:10px">Percent with a placement</td>
-                        <td class="subTitleCenter" width="20%" style="font-size:10px">Number of placements</td>
+                        <td class="subTitleCenter" width="17%" style="font-size:10px">Number of New Reps Added</td>	
+                        <td class="subTitleCenter" width="17%" style="font-size:10px">Number Contracted</td>
+                        <td class="subTitleCenter" width="17%" style="font-size:10px">Percent Contracted</td>
+                        <td class="subTitleCenter" width="17%" style="font-size:10px">Number with a placement</td>
+                        <td class="subTitleCenter" width="17%" style="font-size:10px">Percent with a placement</td>
+                        <td class="subTitleCenter" width="17%" style="font-size:10px">Number of Placements</td>
                     </tr>
                     <tr>
                         <td style="font-size:10px" align="center"><b>#qGetTotal.recordCount#</b></td>
@@ -632,7 +599,7 @@
                         <td style="font-size:10px" align="center"><b>#NumberFormat(percentEnabled,'99.99')#%</b></td>
                         <td style="font-size:10px" align="center"><b>#qGetTotalWithPlacement.recordCount#</b></td>
                         <td style="font-size:10px" align="center"><b>#NumberFormat(percentWithPlacement,'99.99')#%</b></td>
-                        <td style="font-size:10px" align="center"><b>#qGetTotalWithPlacement.studentsplaced#</b></td>
+                        <td style="font-size:10px" align="center"><b>#placementsPerCompany#</b></td>
                     </tr>
                 </table>
                 
