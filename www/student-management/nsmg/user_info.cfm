@@ -1411,11 +1411,11 @@
         
         </cfif>
  <!----SMG Media Access---->
- <cfif client.userid eq 12313 or client.userid eq 1 or client.userid eq 20748>
+ <cfif client.userid eq 16718 or client.userid eq 1 or client.userid eq 20748>
          <div class="rdholder" style="width:100%;float:right;"> 
 				<div class="rdtop"> 
                 <span class="rdtitle">SMG Media Access</span> 
-                <cfif (client.userid eq 1 or client.userid eq 12313 or client.userid eq 20748)><a href="?curdoc=forms/setMediaRights&userid=#url.userid#"> <img src="pics/buttons/pencilBlue23x29.png" alt="Edit"border="0" class="floatRight"></a></cfif>
+                <cfif (client.userid eq 1 or client.userid eq 16718 or client.userid eq 20748)><a href="?curdoc=forms/setMediaRights&userid=#url.userid#"> <img src="pics/buttons/pencilBlue23x29.png" alt="Edit"border="0" class="floatRight"></a></cfif>
             	</div> <!-- end top --> 
              <div class="rdbox">
              	<table align="center" cellpadding=4 cellspacing = 0>
