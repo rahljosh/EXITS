@@ -2241,7 +2241,7 @@
 				
             }
 			
-			// These are not required for ESI
+			// These are not required for ESI or DASH
 			if ( CLIENT.companyID NEQ 14 or CLIENT.companyID NEQ 15 ){
 			
 				// 2nd Visit Representative
