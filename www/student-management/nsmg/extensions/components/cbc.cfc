@@ -2242,7 +2242,7 @@
             }
 			
 			// These are not required for ESI
-			if ( CLIENT.companyID NEQ 14 ) {
+			if ( CLIENT.companyID NEQ 14 ) or ( CLIENT.companyID NEQ 15 ){
 			
 				// 2nd Visit Representative
 				if ( LEN(ARGUMENTS.secondVisitRepID) AND NOT VAL(ARGUMENTS.secondVisitRepID) ) {
