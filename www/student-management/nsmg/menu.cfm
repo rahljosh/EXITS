@@ -14,7 +14,7 @@
 
 	<cfscript>
 		// Host Family Application
-		allowedUsers = '1,510,12313,7203,1077,17071,17427';
+		allowedUsers = '1,510,16718,7203,1077,17071,17427';
 		
         // Get Company Info
         qGetCompany = APPCFC.COMPANY.getCompanies(companyID=CLIENT.companyID);
@@ -478,8 +478,8 @@
                         <li><a href="index.cfm?curdoc=forms/update_alerts">System Messages</a></li>
     					<li><a href="index.cfm?curdoc=virtualFolder/globalSettings">Virtual Folder Options</a></li>
                         <li><a href="index.cfm?curdoc=tools/smg_welcome_pictures">Welcome Pictures</a></li>
-                        <!--- This tool should only be visible to Brian Hause, Tom Policastro, Paul McLaughlin, James Griffiths, and Global Administrators --->
-						<cfif ListFind("12313,13538,19422,18602,19159,17427",CLIENT.userID) OR CLIENT.userType EQ 1>
+                        <!--- This tool should only be visible to Tal Stanecky, Tom Policastro, Paul McLaughlin, James Griffiths, and Global Administrators --->
+						<cfif ListFind("16718,13538,19422,18602,19159,17427",CLIENT.userID) OR CLIENT.userType EQ 1>
                         	<li><a href="index.cfm?curdoc=tools/incentiveTripPoints">Incentive Trip Points</a></li>
                         </cfif>
                     </ul>

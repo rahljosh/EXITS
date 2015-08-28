@@ -251,7 +251,7 @@
                 insert into smg_notifications (title, message, status, submitID, datePosted)
                 						values('You have reached your allocation of  students.',
                                         	   'The allocation of students for #programType# programs durring the #checkAllocation.programName# season.
-                                               Please contact Brian Hause bhause@iseusa.org to request additional allocations.','Contact Brian Hause',
+                                               Please contact Tal Stanecky tal@student-management.com to request additional allocations.','Contact Tal Stanecky',
                                                '1', <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">)
     
                </cfquery>

@@ -8,7 +8,7 @@
 	Updated:  	
 
 ----- ------------------------------------------------------------------------- --->
-<cfset newPageList = '1,12313,510'>
+<cfset newPageList = '1,16718,510'>
 <!---
 <Cfif listFind(newPageList, client.userid)>
 	<cflocation url="?curdoc=new_initial_welcome" addtoken="no">
@@ -592,7 +592,7 @@
                           
                   </cfif>
                   <!----Available for just ISE companies---->
-                  <Cfif client.userid eq 1 or client.userid eq 12313 or client.userid eq 13251>
+                  <Cfif client.userid eq 1 or client.userid eq 16718 or client.userid eq 13251>
                   <br /><Br />
 				 </Cfif>
                  </td>
