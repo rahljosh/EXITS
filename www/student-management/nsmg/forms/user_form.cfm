@@ -11,7 +11,7 @@
 
 <!--- Kill Extra Output --->
 <cfsilent>
-
+f
 	<cfparam name="URL.userID" default="">
     
 	<!--- Ajax Call to the Component --->
@@ -34,7 +34,7 @@
     <cfparam name="FORM.zipLookup" default="">
 	
     <cfscript>
-		field_list = 'firstname,middlename,lastname,occupation,businessname,address,address2,city,state,zip,country,drivers_license,dob,sex,phone,phone_ext,work_phone,work_ext,cell_phone,emergency_phone,fax,email,email2,skype_id,username,changepass,invoice_access,bypass_checklist,date_contract_received,date_2nd_visit_contract_received,active,dateCancelled,datecreated,usebilling,billing_company,billing_contact,billing_address,billing_address2,billing_city,billing_country,billing_zip,billing_phone,billing_fax,billing_email,comments';
+		field_list = 'firstname,middlename,lastname,occupation,businessname,address,address2,city,state,zip,country,dob,sex,phone,phone_ext,work_phone,work_ext,cell_phone,emergency_phone,fax,email,email2,skype_id,username,changepass,invoice_access,bypass_checklist,date_contract_received,date_2nd_visit_contract_received,active,dateCancelled,datecreated,usebilling,billing_company,billing_contact,billing_address,billing_address2,billing_city,billing_country,billing_zip,billing_phone,billing_fax,billing_email,comments';
 
 		// Set new default value
 		if ( LEN(URL.userID) ) {
@@ -347,7 +347,6 @@
                         state, 
                         zip, 
                         country,
-                    	drivers_license, 
                         dob, 
                         sex, 
                         <!--- SSN --->
@@ -414,7 +413,6 @@
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.state#" null="#yesNoFormat(trim(FORM.state) EQ '')#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.zip#" null="#yesNoFormat(trim(FORM.zip) EQ '')#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.country#" null="#yesNoFormat(trim(FORM.country) EQ '')#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.drivers_license#" null="#yesNoFormat(trim(FORM.drivers_license) EQ '')#">,
                         <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.dob#" null="#yesNoFormat(trim(FORM.dob) EQ '')#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.sex#" null="#yesNoFormat(trim(FORM.sex) EQ '')#">,
 						<!--- SSN --->
@@ -614,7 +612,6 @@
                     city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city#" null="#yesNoFormat(trim(FORM.city) EQ '')#">,
                     state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.state#" null="#yesNoFormat(trim(FORM.state) EQ '')#">,
                     zip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.zip#" null="#yesNoFormat(trim(FORM.zip) EQ '')#">,
-                    drivers_license = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.drivers_license#" null="#yesNoFormat(trim(FORM.drivers_license) EQ '')#">,
                     dob = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.dob#" null="#yesNoFormat(trim(FORM.dob) EQ '')#">,
                     sex = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.sex#" null="#yesNoFormat(trim(FORM.sex) EQ '')#">,
 					<!--- SSN --->
