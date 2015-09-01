@@ -1,5 +1,4 @@
 
-
 <!--- ------------------------------------------------------------------------- ----
 	
 	File:		start_student.cfm
@@ -11,14 +10,9 @@
 
 ----- ------------------------------------------------------------------------- --->
 
-<link rel="stylesheet" href="../linked/chosen/chosen.css">
-<link type="text/css" rel="stylesheet" href="studentApp.css" />
-
-<!----<cfdump var="#qTest4#">---->
 <!--- Kill Extra Output --->
-<!----
 <cfsilent>
-	---->
+	
     <!--- Param Variables --->
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.familyLastName" default="">
@@ -51,8 +45,6 @@
 		
 		// Get Canada Area Choice
 		qGetCanadaAreaChoiceList = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='canadaAreaChoice');
-		
-		
 	</cfscript>
 
 	<!--- Queries --->
@@ -80,7 +72,7 @@
         AND
             companyID LIKE ( <cfqueryparam cfsqltype="cf_sql_varchar" value="%#CLIENT.companyID#%"> )
     </cfquery>
-	
+
     <cfquery name="qAppPrograms" dbtype="query">
         SELECT 
         	app_programID, 
@@ -100,20 +92,6 @@
         WHERE 
         	app_type = <cfqueryparam cfsqltype="cf_sql_varchar" value="additional">
     </cfquery> 
-    
-    <!---user allocations---->
-    <cfquery name="userAllocations" datasource="#application.dsn#">
-    SELECT 
-    	a.augustAllocation, a.januaryAllocation, a.seasonid
-    FROM 
-    	smg_users_allocation a
-    LEFT JOIN 
-    	smg_seasons s on s.seasonid = a.seasonid
-    WHERE 
-    	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#"> 
-    AND 
-    	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-    </cfquery>
     
     <cfquery name="qAppCanadaPrograms" dbtype="query">
         SELECT 
@@ -137,45 +115,7 @@
         WHERE 
         	userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#"> 
     </cfquery>
-	<!----Get Available Programs based on types, etc---->
-    <cfquery name="qAllAvailablePrograms" datasource="#APPLICATION.dsn#">
-   SELECT 
-			p.programID,
-			p.programName,
-            p.startDate,
-            p.endDate,
-            p.type,
-			p.seasonid,
-            p.companyid,
-            p.fk_smg_student_app_programID,
-						(SELECT count(studentid) as NoStudents
-						 FROM smg_students s
-						 WHERE s.programID = p.programid
-                   		 AND  s.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">)  as NoStudents,
-                      (SELECT Month(startdate) as startMonth
-						 FROM smg_programs
-						 WHERE programID = p.programid
-                   		)  as startMonth   
-                        
-        FROM 
-        	smg_programs p
-		
-	
-        WHERE
-			
-            p.applicationDeadline >= <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
-        <cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.publicHS, CLIENT.companyid)> 
-        	AND ( p.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.publicHS#" list="yes"> )
-			OR p.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.php#" list="yes"> ) )
-        <cfelse>
-            AND ( p.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
-			OR p.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.php#" list="yes"> ) )
-        </cfif>
-		
-       
-		
-    </cfquery>
-    
+
 	<!--- FORM SUBMITTED --->
     <cfif FORM.submitted>
   
@@ -219,8 +159,8 @@
 				
 			}
 
-			if ( NOT VAL(FORM.internalProgram) ) {
-				ArrayAppend(Errors.Messages, "Please select a valid program. You must have an available allocation to select a program. ");
+			if ( NOT VAL(FORM.app_indicated_program) ) {
+				ArrayAppend(Errors.Messages, "Please select a program.");
 			}
 			
 			// Not requiring Canada Area
@@ -233,30 +173,7 @@
     
 		<!--- Check if there are no errors --->
 		<cfif NOT VAL(ArrayLen(Errors.Messages))>
-        	 <cfquery name="checkAllocation" dbtype="query">
-           		select *
-                from qAllAvailablePrograms
-                where programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#form.internalProgram#">
-            </cfquery>
-            <cfif DateFormat(checkAllocation.startDate, 'm') is 1>
-				<cfset remainingAllocation = #val(checkAllocation.januaryallocation)# - #checkAllocation.NoStudents#>
-                <cfset programType = 'January'>
-            <cfelseif DateFormat(checkAllocation.startDate, 'm') is 8>
-                <cfset remainingAllocation = #val(checkAllocation.augustallocation)# - #checkAllocation.NoStudents#>
-                <cfset programType = 'December'>
-            </cfif>
-            <cfif remainingAllocation eq 1>
-            	<!----Insert message that allocation has been met.---->
-                <cfquery datasource="#APPLICATION.dsn#">
-                insert into smg_notifications (title, message, status, submitID, datePosted)
-                						values('You have reached your allocation of  students.',
-                                        	   'The allocation of students for #programType# programs durring the #checkAllocation.programName# season.
-                                               Please contact Tal Stanecky tal@student-management.com to request additional allocations.','Contact Tal Stanecky',
-                                               '1', <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">)
-    
-               </cfquery>
-            </cfif>
-            
+        
         	<cfscript>
 				// Set uniqueID
 				uniqueID = createuuid();
@@ -317,7 +234,7 @@
                     app_sent_student, 
                     app_current_status, 
                     <!--- Record Company ID for CASE, WEP, Canada and ESI --->
-					<cfif ListFind("10,11,13,14", CLIENT.companyID)>
+					<cfif ListFind("10,11,13,14,15", CLIENT.companyID)>
                         companyID,
                     </cfif>
                     application_expires
@@ -330,7 +247,7 @@
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#APPLICATION.CFC.UDF.removeAccent(FORM.middlename)#">, 
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email1#">, 
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#">,
-                    <cfqueryparam cfsqltype="cf_sql_integer" value="#checkAllocation.fk_smg_student_app_programID#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.app_indicated_program#">,
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.app_additional_program#">,
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.internalProgram#">, 
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.app_canada_area)#">,
@@ -340,17 +257,12 @@
                     <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(now())#">, 
                     <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(currentStatus)#">, 
                     <!--- Record Company ID for CASE, WEP, Canada and ESI --->
-                    <cfif ListFind("10,11,13,14", CLIENT.companyID)>
+                    <cfif ListFind("10,11,13,14,15", CLIENT.companyID)>
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">, 
                     </cfif>
                     <cfqueryparam cfsqltype="cf_sql_timestamp" value="#expiration_date#">
                 )
             </cfquery>
-            
-            <!----Check if agent has hit allocation limit, and post notification---->
-            
-           
-            
             
 			<!--- Retrieve the students ID number --->
             <cfquery name="qGetStudent" datasource="#APPLICATION.DSN#">
@@ -464,16 +376,14 @@
         </cfif> <!--- NOT VAL(ArrayLen(Errors.Messages)) --->
 
     </cfif> <!--- FORM.submitted --->
-<!----
+
 </cfsilent>
----->
+
 <style>
 	.requiredField {
 		color:#F00;
 		font-style:italic;
-		padding: 5px;
 	}
-	
 </style>
 
 <cfoutput>
@@ -523,188 +433,189 @@
 	</script>
 
 </cfif>
+
 <!---Aplicant information---->
+<table width=100% cellpadding="0" cellspacing="0" border="0" height="24">
+	<tr valign="middle" height="24">
+		<td height="24" width="13" background="pics/header_leftcap.gif">&nbsp;</td>
+		<td width="26" background="pics/header_background.gif"><img src="pics/news.gif"></td>
+		<td background="pics/header_background.gif"><h2>Applicant Information</h2></td>
+		<td width="17" background="pics/header_rightcap.gif">&nbsp;</td>
+	</tr>
+</table>
+
 <cfform name="start_student" action="#cgi.SCRIPT_NAME#?#cgi.QUERY_STRING#" method="post">
 	<input type="hidden" name="submitted" value="1" />
     <input type="hidden" name="option" value="#option#" />
 
-    <table width="100%" border="0" cellpadding="2" cellspacing="0" align="center" id="formBox" class="section" style="padding-top:20px;">	
+    <table width="100%" border="0" cellpadding="2" cellspacing="0" align="center" class="section" style="padding-top:20px;">	
 		
 		<!--- Display Errors --->
         <cfif VAL(ArrayLen(Errors.Messages))>
             <tr>
-        
-                <td colspan="2" style="color:##FF0000; padding-bottom:20px; line-height:20px;">
+                <td width="2%">&nbsp;</td>
+                <td colspan="3" style="color:##FF0000; padding-bottom:20px; line-height:20px;">
                     <strong>*** Please review the following item(s): ***</strong> <br>
                     <cfloop from="1" to="#ArrayLen(Errors.Messages)#" index="i">
                     	#Errors.Messages[i]# <br>        	
                     </cfloop>
                 </td>
-            
+                <td width="2%">&nbsp;</td>
             </tr>
         </cfif>	
         
         <tr>
-            
-            <td colspan="2">
+            <td width="2%">&nbsp;</td>
+            <td colspan="3">
                 <cfif option EQ 2>
-<p>Please enter the basic information to create the students application.  This basic information is needed to set up the next screens where you will fill out the remainder of the students application.</p>
-<p><strong> The student will not receive an automated email with account information.</strong></p>
-<p>Once you have completed the complete online application, you will have the option to notify the student by email that their application has been submitted.  Students will need this account info if you want them to have access to their host family profile after they have been placed.</p>
+                    Please enter the basic information to create the students application.  This basic information is needed to set up the 
+                    next screens where you will fill out the remainder of the students application. <br><br>
+                    <strong> The student will not receive an automated email with account information.</strong><br><br>
+                    Once you have completed the complete online application, you will have the option to notify the student by email
+                    that their application has been submitted.  Students will need this account info if you want them to have access to 
+                    their host family profile after they have been placed.
+                    <br><br>
                 <cfelse>
-<h2>Start Application Process</h2>
-<p>Login information will be sent to the student immedialty upon submitting this form. </p> 
-<p>&nbsp;</p>  
-                  
+                    To start a students application, please fill out the following.  An email will be sent to the student
+                    providing them a link to create an account and fill out an applilcation.  The student will have 30 days to 'activate'
+                    their account. After that time, the account will expire and you will need to re-create an account for them to submit an application. <br><br>
+                    You can always see the status of incoming apps under 'Incoming Apps' on your welcome page.   
+                    <br><br>
                 </cfif>
             </td>
-         
+            <td width="2%">&nbsp;</td>
         </tr>
         <tr>
-            
-            <td><h3 style="color: ##0E5FAC;">Student Information</h3></td>
-            <td><h3 style="color: ##0E5FAC;">Program Information</h3></td>
-           
-        </tr>
-
-        <tr>
-            <td valign="top"><input type="text" name="firstName" value="#FORM.firstName#" maxlength="150" size="30"  placeholder="First Name" style="height: 30px;">
-            </td>
-            <td >
-     
-            <select name="internalProgram" data-placeholder="Select a program..." style="width:275px" class="chosen-select"  >
-           	 <option value=""></option>
-           <cfloop query="qAppPrograms">
-               <cfquery name="specificPrograms" dbtype="query">
-				select *
-                from qAllAvailablePrograms
-                where fk_smg_student_app_programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#app_programID#">
-               </cfquery> 
-               
-               
-            
-           
-               <Cfquery name="programAllocation" dbtype="query">
-               SELECT
-                	augustAllocation, januaryAllocation
-               FROM
-               		userAllocations
-               WHERE
-               		seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(specificPrograms.seasonid)#">
-               </Cfquery>
-         
-              				 <cfif DateFormat(specificPrograms.startDate, 'm') is 1>
-                                <cfquery name="studentCount" dbtype="query">
-                                   select sum(noStudents) as totalStudents
-                                   from  qAllAvailablePrograms
-                                   where seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#specificPrograms.seasonid#"> 
-                                   and startMonth = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-                                   </cfquery>
-                                                 
-                            	<cfset remainingAllocation = #val(programAllocation.januaryallocation)# - #studentCount.totalStudents#>
-                            <cfelseif DateFormat(specificPrograms.startDate, 'm') is 8>
-                            	<cfquery name="studentCount" dbtype="query">
-                                   select sum(noStudents) as totalStudents
-                                   from  qAllAvailablePrograms
-                                   where seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#specificPrograms.seasonid#"> 
-                                   and startMonth = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
-                                   </cfquery>
-                            	<cfset remainingAllocation = #val(programAllocation.augustallocation)# -  #studentCount.totalStudents#>
-                            </cfif>
-                            <cfif remainingAllocation lte 0 ><cfset remainingAllocation = 0></cfif>
-                        
-               		<optgroup label="#app_program# <cfif  ListFind (#APPLICATION.SETTINGS.COMPANYLIST.publicHS#, #specificPrograms.companyID#) > - #remainingAllocation# spots left </cfif>">
-                    	  
-						<cfif #specificPrograms.recordcount# eq 0>
-                            <option value=0 style="color:##ccc;" disabled>no programs available</option>
-                        <cfelse>
-                            <cfloop query="specificPrograms">
-                         
-                           
-							
-							<!----17468E---->
-                            
-                            <cfif  ListFind (#APPLICATION.SETTINGS.COMPANYLIST.publicHS#, #companyID#) >
-                                     
-									<cfif val(remainingAllocation) lte 0>
-                                     <option  style="color:##ccc;font-style: italic;" value="0"> 
-                                    <cfelse>
-                                      <option style="color:##090;font-weight:bold;" value=#programid# >
-                                     </cfif>#programName#</option>
-                             <cfelse>
-                              	<option style="color:##090;font-weight:bold;" value=#programid# >#programName#</option>
-                             </cfif>
-                              
-                            </cfloop>
-                       </cfif>
-             		</optgroup> 
-             
-		   </cfloop>
-		   
-           </select>
-       
-            </td>
+            <td>&nbsp;</td>
+            <td colspan="3"><b>Student information</b></td>
+            <td>&nbsp;</td>
         </tr>
         <tr>
-            <td valign="top"><input type="text" name="middleName" value="#FORM.middleName#" maxlength="150" size="30" placeholder="Middle Name" style="height: 30px;"></td>
-          
-            <td valign="bottom"><em>Additional Optional Programs</em></td>
+            <td>&nbsp;</td>
+            <td><em>Family Name</em> <span class="requiredField">*</span></td>
+            <td><em>First Name</em> <span class="requiredField">*</span></td>
+            <td><em>Middle Name</em></td>	
+            <td>&nbsp;</td>	
         </tr>
+    
         <tr>
-            
-            <td valign="top"><input type="text" name="familyLastName" value="#FORM.familyLastName#" maxlength="150" size="30" placeholder="Family Name" style="height: 30px;"></td>
-            <Td><input type="checkbox" name="selfPlacement" />
-            <span class="formlabel">Self Placement</span></td>
+            <td>&nbsp;</td>
+            <td valign="top"><cfinput type="text" name="familyLastName" value="#FORM.familyLastName#" maxlength="150" size="30" required="yes" message="Family name is required."></td>
+            <td valign="top"><cfinput type="text" name="firstName" value="#FORM.firstName#" maxlength="150" size="30" required="yes" message="First name is required."></td>
+            <td valign="top"><cfinput type="text" name="middleName" value="#FORM.middleName#" maxlength="150" size="30"></td>
+            <td>&nbsp;</td>
         </tr>
         
         <!--- Student Account --->
         <cfif option EQ 1>
-
             <tr>
-                <td><input type="text" name="email1" id="email1" value="#FORM.email1#" maxlength="150" size="30" Placeholder="Email Address" style="height: 30px;"></td>
-                <Td><input type="checkbox" name="preAYP" />
-                <span class="formlabel">Pre - AYP English</span></td>
-            </tr>
-            <tr>
-                <td><input type="text" name="email2" id="email2" value="#FORM.email2#" maxlength="150" size="30" Placeholder="Confirm Email" style="height: 30px;"></td>
-                <Td class="formlabel"><input type="checkbox" name="iff" />
-               International Foreign Family</td>
-               
-               
-            </tr>
-        <cfelse>
-             <tr>
-                <td></Td><td class="formlabel"><input type="checkbox" name="preAYP" />Pre - AYP English</td>
+                <td>&nbsp;</td>
+                <td><em>Email Address &nbsp; <font color="000099">* Username</font></em> <span class="requiredField">*</span></td>
+                <td><em>Confirm Email Address</em> <span class="requiredField">*</span></td>
+                <td><em>Phone Number</em></td>
+                <td>&nbsp;</td>
             </tr>
             <tr>
-                <td></td>
-                <Td><input type="checkbox" name="iff" />
-                <span class="formlabel">International Foreign Family</span></td>
-               
-               
+                <td>&nbsp;</td>
+                <td><cfinput type="text" name="email1" id="email1" value="#FORM.email1#" maxlength="150" size="30" required="yes" message="Email address is required."></td>
+                <td><cfinput type="text" name="email2" id="email2" value="#FORM.email2#" maxlength="150" size="30" required="yes" message="Confirmation email address is required."></td>
+                <td><input type="text" name="phone" value="#FORM.phone#" size="30"></td>
+                <td>&nbsp;</td>
             </tr>
-        	
         </cfif>
+        
+        <tr><td colspan="3">&nbsp;</td></tr>
+        
         <tr>
-        	<td></td>
+            <td>&nbsp;</td>
+            <td colspan="3"><b>Program information</b></td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td><em>Select Program Type</em> <span class="requiredField">*</span></td>
+            <!--- Canada Areas - Only Available for Canada Programs --->
             <td>
                 <div class="canadaAreaDiv" style="display:none">
 	                <em>Please select an area in Canada</em>
                 </div>
             </td>
-     	</tr>
-        
-       
-     
+            <td><em>Additional Programs</em></td>
+            <td>&nbsp;</td>
+        </tr>
         <tr>
-          <td colspan="2"><p>&nbsp;</p>
-                <p> This application will expire on:  <b>#DateFORMat(DateAdd('d','#appDays#','#now()#'), 'mmmm d, yyyy')# </b>.</p>
-                  <p> 
-                <input type="hidden" name="expiration_date" value="#DateFORMat(DateAdd('d','#appDays#','#now()#'), 'yyyy-mm-dd')# #TimeFORMat(DateAdd('d','#appDays#','#now()#'), 'HH:mm:ss')#">
-              Extend deadline now by 
+            <td>&nbsp;</td>
+            <td>
+                <select name="app_indicated_program" id="app_indicated_program" onchange="displayCanada();" class="xLargeField">
+                    <option value="0">To Be Defined</option>
+                    <cfloop query="qAppPrograms">
+                        <option value="#qAppPrograms.app_programID#" <cfif qAppPrograms.app_programID EQ FORM.app_indicated_program> selected="selected" </cfif> >#qAppPrograms.app_program#</option>
+                    </cfloop>
+                </select>
+            </td>
+            <!--- Canada Areas - Only Available for Canada Programs --->
+            <td>
+                <div class="canadaAreaDiv" style="display:none">
+                    <select name="app_canada_area" id="app_canada_area" class="large">
+                        <option value="0"></option>
+                        <cfloop query="qGetCanadaAreaChoiceList">
+                            <option value="#qGetCanadaAreaChoiceList.fieldID#" <cfif qGetCanadaAreaChoiceList.fieldID EQ FORM.app_canada_area> selected="selected" </cfif> >#qGetCanadaAreaChoiceList.name#</option>
+                        </cfloop>
+                    </select>	
+				</div>
+            </td>
+            <td>
+             <table>
+                	<tr>
+                    	<Td><input type="checkbox" name="selfPlacement" /></Td><td>Self Placement</td>
+                    </tr>
+                    <Tr>
+                    	<Td><input type="checkbox" name="preAYP" /></Td><td>Pre - AYP English</td>
+                    </tr>
+                    <Tr>
+                    	<Td><input type="checkbox" name="iff" /></Td><td>International Foreign Family</td>
+                </table>
+            </td>
+            <td>&nbsp;</td>
+        </tr>
+          
+           <tr>
+            <td>&nbsp;</td>
+            <td><em>Select Program</em> </td>
+            <td></td>
+            <td></td>
+            </tr>
+          <tr>
+          	<td></td>
+            <td>
+                <cfselect
+                  name="internalProgram" 
+                  id="internalProgram"
+                  value="programID"
+                  display="programName"
+                  selected="#FORM.programID#"
+                  bindonload="yes"
+                  class="xLargeField"
+                  bind="cfc:nsmg.extensions.components.program.qGetActiveInternalPrograms({app_indicated_program})" />
+            </td>
+            <td></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td colspan="3"><b>Deadline</b></td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td></td>
+            <td colspan="3">
+                <b>Current Expiration: #DateFORMat(DateAdd('d','#appDays#','#now()#'), 'yyyy-mm-dd')# #TimeFORMat(DateAdd('d','#appDays#','#now()#'), 'HH:mm:ss')#
+                <input type="hidden" name="expiration_date" value="#DateFORMat(DateAdd('d','#appDays#','#now()#'), 'yyyy-mm-dd')# #TimeFORMat(DateAdd('d','#appDays#','#now()#'), 'HH:mm:ss')#"></b>
+                <br>Student has #appDays# days to fill out and submit application.
+                <br>Extend Deadline by:
                 <cfif remainingDays GT 1>
                     <select name="extdeadline">
-                        <cfloop index="i" from="0" to="#remainingDays#" step="5">
+                        <cfloop index="i" from="5" to="#remainingDays#" step="5">
                             <option value="#i#">#i#</option>
                         </cfloop>
                     </select>
@@ -712,10 +623,9 @@
                 <cfelse>
                     You can not extend the deadline.
                     <cfinput type="hidden" name="extdeadline" value="0">
-                </cfif></p>
-               <p><em><span style="color:##454647;font-size;font-size:12px"> By default we set an expiration of 15 days for applications.  You can always extend this expiration date up until the application deadline,  either now upon expiration of application.</span></em></p>
-                 
+                </cfif>
             </td>
+            <Td></Td>
         </tr>
         <!---
         <tr><td></td>
@@ -723,13 +633,9 @@
         </tr>
         --->
         <tr>
-         <td colspan="2" align="center"><input type="image" name="submit" value=" Start Application Process " src="pics/start-application-button.png"  class="myButton">
-         </td>
-         </tr>
-        <tr>
-          <td colspan="2">
-         
-   			  
+            <td>&nbsp;</td>
+            <td colspan="3">
+   			   <span class="requiredField">* Required Field</span> <br />
 				
 				<cfif option EQ 2>
                     <br>
@@ -738,30 +644,25 @@
                     You can also get back into the application at any time.</strong><br>
                 </cfif>
                 <br>
-               
+                <div align="center"><cfinput type="submit" name="submit" value=" Start Application Process " onClick="return formValidation();"></div>
             </td>
-           
+            <td>&nbsp;</td>
         </tr>
     </table>
-
 
 </cfform>
 
 </cfoutput>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js" type="text/javascript"></script>
-  <script src="../linked/js/chosen.jquery.js" type="text/javascript"></script>
-  <script src="../linked/js/prism.js" type="text/javascript" charset="utf-8"></script>
-	  <script type="text/javascript">
-    var config = {
-      '.chosen-select' : {disable_search_threshold:100,allow_single_deselect: true,display_disabled_options: false},
 
-    }
-    for (var selector in config) {
-      $(selector).chosen(config[selector]);
-    }
-  </script>
-
-
+<!----footer of table---->
+<table width=100% cellpadding="0" cellspacing="0" border="0">
+	<tr valign="bottom">
+		<td width="9" valign="top" height="12"><img src="pics/footer_leftcap.gif" ></td>
+		<td width=100% background="pics/header_background_footer.gif"></td>
+		<td width="9" valign="top"><img src="pics/footer_rightcap.gif"></td>
+	</tr>
+</table>
 
 </body>
+
 </html>
