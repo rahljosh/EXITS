@@ -274,6 +274,7 @@
                 <cfif ARGUMENTS.isNotExpired>
                 	AND cbc.date_expired > NOW()
                     AND cbc.date_approved IS NOT NULL
+                    AND cbc.requestID != 'Offline CBC'
                 </cfif>
                 ORDER BY date_sent DESC
             </cfquery>
