@@ -11,19 +11,10 @@
 ----- ------------------------------------------------------------------------- --->
 
 <cfscript>
-    if ( structKeyExists(FORM, "fileData") ) {
-
-        // Upload Document		
-        APPLICATION.CFC.DOCUMENT.upload(
-            foreignTable="extra_candidates",
-            foreignID=APPLICATION.CFC.CANDIDATE.getCandidateID(),
-            uploadPath=APPLICATION.CFC.CANDIDATE.getCandidateSession().myUploadFolder
-        );
-    
-	}
-	
-	// We must pass this back otherwise it won't upload multiple files.
-	str.STATUS = 200;
-	str.MESSAGE = "passed";
-	WriteOutput(serializeJSON(str));
+    // Upload Document	
+	APPLICATION.CFC.DOCUMENT.upload(
+		foreignTable="extra_hostCompany",
+		foreignID=5250,
+		uploadPath="#APPLICATION.PATH.uploadedFiles#hostCompany/#URL.hostCompanyID#/",
+		documentTypeID=42);
 </cfscript>

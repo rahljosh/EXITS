@@ -171,12 +171,12 @@
 			var start = new Date(startDate);
 			var startInMillis = start.getTime();
 			var millisInDay = 86400000;
-			// They are non compliant if the program began more than 10 days ago.
+			// They are non compliant if the program began more than 30 days ago.
 			if (nowInMillis - startInMillis < (30*millisInDay)) {
 				nonCompliant = 0;
 			}
-			// They are in a warning state if the program began more than 5 days ago.
-			if ((nowInMillis - startInMillis < (15*millisInDay))) {
+			// They are in a warning state if the program began more than 10 days ago.
+			if ((nowInMillis - startInMillis < (10*millisInDay))) {
 				warning = 0;
 			}
 			// If they are non compliant then they should NOT be in a warning state.
