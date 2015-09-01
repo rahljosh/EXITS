@@ -221,7 +221,7 @@
     </cfquery>
     
     <cfquery name="qGetJobs" datasource="#APPLICATION.DSN.Source#">
-    	SELECT id, title, hours, description, wage, wage_type
+    	SELECT id, title, hours, description, wage, wage_type, classification
         FROM extra_jobs
         WHERE hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostCompanyInfo.hostCompanyID)#">
     </cfquery> 
@@ -1745,7 +1745,7 @@
   		});
 		new AjaxUpload('additional_document', {
 			action: '../wat/hostCompany/addViewRemoveDocuments.cfm?option=upload&hostCompanyID='+hostCompanyID,
-			name: 'image',
+			name: 'fileData',
 			onComplete: function() {
 				window.location.reload();	
 			}
@@ -2095,10 +2095,11 @@
 
                                     <table width="100%" cellpadding="3" cellspacing="3" border="0">
                                         <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
-                                            <td colspan="3" class="style2" bgcolor="##8FB6C9">&nbsp;:: Jobs</td>
+                                            <td colspan="4" class="style2" bgcolor="##8FB6C9">&nbsp;:: Jobs</td>
                                         </tr>
                                         <tr>
                                             <td class="style1"><strong><u>Job Title</u></strong></td>
+                                            <td class="style1"><strong><u>SEVIS</u></strong></td>
                                             <td class="style1"><strong><u>Wage</u></strong></td>
                                             <td class="style1"><strong><u>Hours/Week</u></strong></td>
                                         </tr>
@@ -2106,9 +2107,10 @@
                                             <tr bgcolor="###iif(qGetJobs.currentrow MOD 2 ,DE("E9ECF1") ,DE("FFFFFF") )#">
                                                 <td class="style1">
                                                 	<a href="javascript:openWindow('hostcompany/jobInfo.cfm?ID=#id#&hostCompanyID=#qGetHostCompanyInfo.hostCompanyID#', 300, 600);">
-	                                                    #qGetJobs.title#
+	                                                    #qGetJobs.title# 
                                                     </a>
                                                 </td>
+                                                <td  class="style1">#classification#</td>
                                                 <td class="style1">#qGetJobs.wage# / #qGetJobs.wage_type#</td>
                                                 <td class="style1">#qGetJobs.hours#</td>
                                             </tr>

@@ -61,8 +61,7 @@
 			height:"60%", 
 			iframe:true,
 			overlayClose:false,
-			escKey:true,
-			onClosed:function(){ window.location.reload(); }
+			escKey:true
 		});
 		
 	});
@@ -342,7 +341,7 @@
                         	<td class="style5" style="text-align:center;">#daysSinceCheckIn#</td>
                         </cfif>
                         <td align="center" class="style5">
-                        <a href="../wat/candidate/culturalActivityReport.cfm?uniqueID=#uniqueID#" class="style4 jQueryModal">Add</a></td>
+                        <a href="../wat/candidate/culturalActivityReport.cfm?uniqueID=#uniqueID#&refresh=no" class="style4 jQueryModal">Add</a></td>
 						<td align="center" class="style5">
                         	<a href="" onClick="javascript:evaluationTrackingPopup(#uniqueID#,#FORM.evaluationID#)" class="style4 jQueryModal">Track</a>
                         	<br/>#comment#
