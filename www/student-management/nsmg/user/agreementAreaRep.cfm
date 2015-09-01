@@ -359,7 +359,7 @@
     <tr>
         <td>Departure</td>
         <td>June 30</td>
-        <td>$80</td>
+        <td>$175</td>
     </tr>   
     </cfif>
     <tr>
