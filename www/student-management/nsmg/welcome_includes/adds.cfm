@@ -2,7 +2,7 @@
 
 	<cfscript>
 		tripcount = 7 - vPlacedStudents;
-		vDeadline = CreateDate(Year(NOW()),9,4);
+		vDeadline = CreateDate(Year(NOW()),9,8);
 	</cfscript>
     
 	<cfoutput>
