@@ -407,10 +407,10 @@
                 #tripcount#
                 </Td>
                 <td>
-                 placements away from a trip to <A href="uploadedFiles/Incentive_trip/incentiveTrip_#client.companyid#.pdf" target="_blank">#incentive_trip.trip_place#!</A>
+                 placements away from a trip to <A href="nsmg/uploadedFiles/Incentive_trip/incentiveTrip_#client.companyid#.pdf" target="_blank">#incentive_trip.trip_place#!</A>
                
                 <cfelse>
-                 <td colspan=2>   You've earned a trip to <A href="uploadedFiles/Incentive_trip/incentiveTrip_#client.companyid#.pdf" target="_blank">#incentive_trip.trip_place#!!!</A> 
+                 <td colspan=2>   You've earned a trip to <A href="nsmg/uploadedFiles/Incentive_trip/incentiveTrip_#client.companyid#.pdf" target="_blank">#incentive_trip.trip_place#!!!</A> 
                 </td></cfif>
            
                         
