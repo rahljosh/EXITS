@@ -75,7 +75,8 @@ accompanied by a licensed professional driving instructor. Students may never op
 <li style="margin-bottom: 30px;">Exchange student's finances should be kept entirely separate from the host family and host family members
 may not lend money to, nor borrow money from exchange students. The host family may not have access to
 an exchange student's bank card, credit card or bank PIN.</li>
-<li style="margin-bottom: 30px;">Visits from natural family members are prohibited.</li>
+<li style="margin-bottom: 30px;">Visits from natural family members are <cfif client.companyID EQ 14>strongly discouraged
+	<cfelse> prohibited</cfif>.</li>
 <li style="margin-bottom: 30px;">Exchange students must have their own permanent bed and may share a room with only one other person of
 the same gender.</li>
 <li style="margin-bottom: 30px;">Exchange students may not be deprived of reasonable access to their phone.</li>
