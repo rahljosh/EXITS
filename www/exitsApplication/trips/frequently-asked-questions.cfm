@@ -19,7 +19,7 @@
               <tr>
                   <td>
                     <p>#APPLICATION.MPD.name#and our partner exchange organizations ISE/CASE are proud to offer this year's Student Exchange Trips of exciting adventures across America.</p>
-                      <p>#APPLICATION.MPD.name#will be organizing <strong>9</strong> <strong>trips</strong>, chaperoned and supervised exclusively by our representatives for the <strong>2014-2015</strong> season.</p>
+                      <p>#APPLICATION.MPD.name#will be organizing <strong>10</strong> <strong>trips</strong>, chaperoned and supervised exclusively by our representatives for the <strong>2015-2016</strong> season.</p>
  <div style="border-bottom: 2px; border-bottom-style:dotted; border-bottom-color:##CCC; width: 570px; margin: 5px auto 5px auto;"> &nbsp; </div>
 <div style="border-bottom: 2px; border-bottom-style:dotted; border-bottom-color:##CCC; width: 570px; margin: 5px auto 25px auto;">                   
 <p style="text-align: center; font-size: 16px;">
@@ -155,7 +155,7 @@
                     
 <p class="faq-section"><strong>How are hotel rooms assigned? Can I bring a friend, host brother or host sister?</strong></p>
                         
-<p class="faq-answer">Hotel rooms are (Quad) 4 students assigned to a room &##8211; all same gender. (If you request a host brother or host sister (Must list student on the <strong>Permission Form</strong>) and (of high school age 15-19 of same gender), you can be assigned together. Also, many students do not know anyone before the tour begins, but everyone makes a lot of new friends.</p>
+<p class="faq-answer">Hotel rooms are (Quad) 4 students assigned to a room, with 2 students to a bed, all of the same gender. (If you request a host brother or host sister (Must list student on the <strong>Permission Form</strong>) and (of high school age 15-19 of same gender), you can be assigned together. Also, many students do not know anyone before the tour begins, but everyone makes a lot of new friends.</p>
                         
 <p class="faq-backTop"><a href="##generalQuestions">Back to top</a></p>
                     
@@ -357,6 +357,15 @@
 <p class="faq-section"><strong>What happens if I change my mind about a tour selection or want to cancel a trip?</strong></p>
                         
 <p class="faq-answer">There is a $100.00 cancellation fee up to 60 days prior to your chosen trip. After 60 days there are ABSOLUTELY NO REFUNDS.</strong></p>
+<p class="faq-answer">Flight Itineraries once ticketed become nonrefundable/nontransferable.  
+<ul>
+	<li>If you need to cancel the nonrefundable ticket; you have 1 year to reuse the airline credit with $ 200.00 penalty plus fare differential.</li>
+ 
+<li>If weather causes the cancellation ; the airline will refund the nonrefundable ticket for them.</li>
+ 
+<li>Please note that the airline must be contacted directly to make these arrangements upon cancellation of a flight.</li>
+</ul>
+</p>
 
 <p class="faq-backTop"><a href="##paymentQuestions">Back to top</a></p>
                     
