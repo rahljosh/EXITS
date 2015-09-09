@@ -19,7 +19,7 @@
             <tr>
                 <td>
                     #APPLICATION.MPD.name# and our partner exchange organizations are proud to offer this year's Student Exchange Trips of exciting adventures across America.
-                    #APPLICATION.MPD.name# will be organizing 9 trips, chaperoned and supervised exclusively by our representatives for the 2014-15 season.
+                    #APPLICATION.MPD.name# will be organizing 9 trips, chaperoned and supervised exclusively by our representatives for the 2015-16 season.
                     
                     <img src="extensions/images/webStore_lines_03.gif" width="600" height="15" alt="line" style="margin:10px 0px 10px 0px;" />
                 </td>
