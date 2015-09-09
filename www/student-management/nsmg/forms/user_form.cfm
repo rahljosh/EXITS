@@ -21,7 +21,7 @@ f
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.SSN" default="">
     <cfparam name="FORM.sex" default="">
-    <cfparam name="FORM.changepass" default="1">
+    <cfparam name="FORM.changepass" default="0">
     <cfparam name="FORM.bypass_checklist" default="0">
     <cfparam name="FORM.invoice_access" default="0">
     <cfparam name="FORM.active" default="0">
