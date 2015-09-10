@@ -436,9 +436,11 @@
 			vGetFacilitatorEmail = APPLICATION.CFC.USER.getRegionFacilitator(regionID=qStudentInfo.regionassigned).email;
             if ( ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID) ) {
                 emailCC = "bmccready@iseusa.org;lois@iseusa.org;merri@iseusa.org;jennifer@iseusa.org" & vGetProgramManagerEmail & ";" & vGetFacilitatorEmail & ";" & CLIENT.email;
-            } else { 
+            } else if (NOT ListFind(APPLICATION.SETTINGS.COMPANYLIST.ESI, CLIENT.comapanyID( ){ 
                 emailCC = CLIENT.programmanager_email & ';' & CLIENT.email & ';' & "jennifer@student-management.com;bmccready@student-management.com";
-            }
+            } else {
+				emailCC = CLIENT.programmanager_email & ';' & CLIENT.email & ';' & "bmccready@student-management.com";
+			}
                
             // Display All Emails Involved
             emailList = CLIENT.finance_email & ';' & emailCC;
