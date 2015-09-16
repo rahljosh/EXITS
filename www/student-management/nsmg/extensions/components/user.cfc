@@ -1278,7 +1278,7 @@ setUserSessionPaperwork
 			}
 			
 			// Email Variables
-			var vEmailTo = stUserPaperwork.user.email & ",peter@iseusa.org";
+			var vEmailTo = stUserPaperwork.user.email & ",lstrahs@iseusa.org";
 			var vEmailSubject = "EXITS - Account Fully Enabled";
 			var vEmailMessage = '';
 		</cfscript>
@@ -2420,12 +2420,11 @@ setUserSessionPaperwork
                         <br/>
                         Thanks,<br/>
                         <br/>                
-                        Peter Garuccio<br/>
+                        Lisa Strahs-Lorenc<br/>
                         Director of Training<br/>
                         International Student Exchange<br/>
-                        O: 631-893-4540 ext. 109<br/>
-                        M: 808-721-1685<br/>
-                        peter@iseusa.org<br/>
+                        O: 631-893-4540 ext. 103<br/>
+                        lstrahs@iseusa.org<br/>
                         www.iseusa.org<br/>
                     </p>
               	</cfoutput>
@@ -2434,7 +2433,7 @@ setUserSessionPaperwork
             <cfinvoke component="nsmg.cfc.email" method="send_mail">
                 <cfinvokeargument name="email_to" value="#qGetUserInfo.rmEmail#; #qGetUserInfo.raEmail#">
                 <cfinvokeargument name="email_from" value="#CLIENT.emailfrom# (#CLIENT.companyshort# Support)">
-                <cfinvokeargument name="email_cc" value="peter@iseusa.org">
+                <cfinvokeargument name="email_cc" value="lstrahs@iseusa.org">
                 <cfinvokeargument name="email_subject" value="New Area Rep. Training Completed">
                 <cfinvokeargument name="email_message" value="#vEmailMessage#">
             </cfinvoke>
