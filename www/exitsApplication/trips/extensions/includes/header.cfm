@@ -98,7 +98,7 @@
                         <div class="window">
                         
                             <div class="image_reel">
-                                <img src="extensions/images/header/reel_1.png" alt="" />
+                               
                                 <img src="extensions/images/header/reel_2.png" alt="" />
                                 <img src="extensions/images/header/reel_3.png" alt="" />
                                 <img src="extensions/images/header/reel_4.png" alt="" />
@@ -107,10 +107,10 @@
                         </div> <!-- window -->
                         
                         <div class="paging">
+                         
                             <a href="#" rel="1">1</a>
                             <a href="#" rel="2">2</a>
                             <a href="#" rel="3">3</a>
-                            <a href="#" rel="4">4</a>
                         </div>
                         
                       <div class="blackBar"></div>
