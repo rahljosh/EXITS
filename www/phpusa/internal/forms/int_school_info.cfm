@@ -149,6 +149,7 @@
                         <option></option>
                         <option value="7199"<cfif get_school.supervising_rep eq 7199>selected</cfif>>Tammy Hughes</option>
                         <option value="7201"<cfif get_school.supervising_rep eq 7201>selected</cfif>>Calla Kuehl</option>
+                        <option value="7178"<cfif get_school.supervising_rep eq 7178>selected</cfif>>Julie Maes</option>
                         <option value="7630"<cfif get_school.supervising_rep eq 7630>selected</cfif>>Luke Davis</option>
                     </cfselect>
                 </td>
