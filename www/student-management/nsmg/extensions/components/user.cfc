@@ -2388,55 +2388,7 @@ setUserSessionPaperwork
 		</cfscript>
         
         <!--- New Area Rep Training email --->
-        <cfif ARGUMENTS.trainingID EQ 6 AND CLIENT.companyID = '10'>
-        	<cfquery name="qGetUserInfoCase" datasource="#APPLICATION.DSN#">
-            	SELECT
-                	vuhc.`area rep ID` as `userID`, vuhc.`Area Rep First Name` as `firstname`, vuhc.`Area Rep Last Name` as `lastname`, ar.phone, ar.email, vuhc.`Regional Advisor Email` as `raEmail`,
-                    vuhc.`Regional Manager First Name` as `rmFirstName`, vuh.`Regional Manager Last Name` as `rmLastName`, vuhc.`Regional Manager Email` as `rmEmail`
-                FROM
-                	v_user_hierarchy_case vuhc
-                LEFT JOIN smg_users ar on vuhc.`area rep ID` = ar.userID
-                WHERE userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
-            </cfquery>
-            
-            <cfsavecontent variable="vEmailMessage">
-            	<cfoutput>
-                	 <p>Hello #qGetUserInfoCase.rmFirstName# #qGetUserInfoCase.rmLastName#,</p>
-                    
-                    <p>
-                        This email is to confirm that #qGetUserInfoCase.firstName# #qGetUserInfoCase.lastName# (###qGetUserInfoCase.userID#) 
-                        has completed the New Area Rep. Orientation webex on #DateFormat(ARGUMENTS.dateTrained,'mm/dd/yyyy')#.
-                    </p>
-                    
-                    <p>
-                        Please take a moment to reach out to #qGetUserInfoCase.firstName# to thank them for their participation 
-                        and to provide them with the next steps in getting started!
-                    </p>
-                    #qGetUserInfoCase.firstName# #qGetUserInfoCase.lastName# (###qGetUserInfoCase.userID#)<br/>
-                        #qGetUserInfoCase.phone#<br/>
-                        #qGetUserInfoCase.email#<br/>
-                        <br/>
-                        Thanks,<br/>
-                        <br/>                
-                        <br/>
-                        Director of Training<br/>
-                        Cultural Academic Student Exchange<br/>
-                        P: 800-458-8336 ext. 103<br/>
-                        jana@case-usa.org<br/>
-                        www.case-usa.org/<br/>
-                    <p>                    
-                </cfoutput>
-                </cfsavecontent>
-                
-                <cfinvoke component="nsmg.cfc.email" method="send_mail">
-                	<cfinvokeargument name="email_to" value="#qGetUserInfoCase.rmEmail#; #qGetUserInfoCase.raEmail#">
-                	<cfinvokeargument name="email_from" value="#CLIENT.emailfrom# (#CLIENT.companyshort# Support)">
-                	<cfinvokeargument name="email_cc" value="jana@case-usa.org">
-                	<cfinvokeargument name="email_subject" value="New Area Rep. Training Completed">
-                	<cfinvokeargument name="email_message" value="#vEmailMessage#">
-           	 	</cfinvoke>
-                    
-		<cfelseif ARGUMENTS.trainingID EQ 6 AND CLIENT.companyID EQ APPLICATION.SETTINGS.COMPANYLIST.ISESMG>
+        <cfif ARGUMENTS.trainingID EQ 6>
         
             <cfquery name="qGetUserInfo" datasource="#APPLICATION.DSN#">
                 SELECT 
@@ -2468,11 +2420,8 @@ setUserSessionPaperwork
                         <br/>
                         Thanks,<br/>
                         <br/>                
-                        Lisa Strahs-Lorenc<br/>
-                        Director of Training<br/>
                         International Student Exchange<br/>
-                        O: 631-893-4540 ext. 103<br/>
-                        lstrahs@iseusa.org<br/>
+                        O: 631-893-4540<br/>
                         www.iseusa.org<br/>
                     </p>
               	</cfoutput>
