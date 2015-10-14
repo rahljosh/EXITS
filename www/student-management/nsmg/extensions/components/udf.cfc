@@ -434,7 +434,7 @@
 				}
 				
 				// DASH - SHOW ONLY FOR USER
-				if ( ListFind(vListDASH, CLIENT.userID) AND ListFind(APPLICATION.SETTINGS.COMPANYLIST.DASH, CLIENT.companyID) AND ARGUMENTS.displayType EQ 'user' ) {
+				if ( ListFind(vListDASH, CLIENT.userID) AND ListFind(APPLICATION.SETTINGS.COMPANYLIST.DASH, CLIENT.companyID) AND listFind("user,hostFamily", ARGUMENTS.displayType) ) {
 					//return full SSN
 					vReturnSSN = vDecryptedSSN;
 				}
