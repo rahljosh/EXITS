@@ -2435,7 +2435,41 @@ setUserSessionPaperwork
                 <cfinvokeargument name="email_message" value="#vEmailMessage#">
             </cfinvoke>
             
-       	</cfif>       
+       	</cfif>
+        
+        <!--- New DoS test email --->       
+        <cfif ARGUMENTS.trainingID EQ 2>
+        <cfquery name="qGetUserInfo" datasource="#APPLICATION.DSN#">
+        	SELECT
+            	vuh.`area rep ID` as `userID`, vuh.`Area Rep First Name` as `firstname`, vuh.`Area Rep Last Name` as `lastname`, ar.phone, ar.email, sut.training_id, MAX(sut.id), sut.score as `grade`
+            FROM v_user_hierarchy vuh
+            LEFT JOIN smg_users ar on vuh.`area rep ID` = ar.userid
+            LEFT JOIN smg_users_training sut on vuh.`area rep ID` = sut.user_id
+            WHERE userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
+            	  and sut.training_id = 2
+        </cfquery>
+        
+        <cfsavecontent variable="vEmailMessage">
+        	<cfoutput>
+            	<p>Hello Lisa,</p>
+                
+                <p>This email is to confirm that #qGetUserInfo.firstName# #qGetUserInfo.lastName# (###qGetUserInfo.userID#)
+                	has completed their Department of State exam with a score of #qGetUserInfo.grade#.
+                </p>
+                <br/>
+                Thanks!
+            </cfoutput>
+         </cfsavecontent>
+         
+         <cfinvoke component="nsmg.cfc.email" method="send mail">
+         	<cfinvokeargument name="email_to" value="lstrahs@iseusa.org">
+            <cfinvokeargument name="email_from" value="#CLIENT.emailfrom# (#CLIENT.companyshort# Support)">
+            <cfinvokeargument name="email_cc" value="jon@iseusa.org">
+            <cfinvokeargument name="email_subject" value = "Area Rep Derpartment of State Training Completed">
+            <cfinvokeargument name="email_message" value="#vEmailMessage#">
+         </cfinvoke>   
+        
+        </cfif>
         
 	</cffunction>
 
