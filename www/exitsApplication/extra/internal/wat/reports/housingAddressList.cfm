@@ -192,7 +192,7 @@
             
             	<cfquery name="qGetCandidates" datasource="#APPLICATION.DSN.Source#">
                 	SELECT ec.candidateID, ec.uniqueID, ec.hostCompanyID, ec.lastName, ec.firstName, ec.sex, ec.startDate, ec.endDate, ec.ds2019, ec.wat_placement, ec.watDateCheckedIn,
-                    	ec.arrivalDate, ec.arrival_address, ec.arrival_city, ec.arrival_zip,
+                    	ec.arrivalDate, ec.arrival_address, ec.arrival_address_2, ec.arrival_apt_number, ec.arrival_city, ec.arrival_zip,
                         s.state, ehc.name, eir.subject
                     FROM extra_candidates ec
                     LEFT JOIN smg_states s ON s.id = ec.arrival_state
@@ -283,7 +283,7 @@
                             <td class="style1">#ds2019#</td>
                             <td class="style1">#wat_placement#</td>
                             <td class="style1">#DateFormat(watDateCheckedIn,'mm/dd/yyyy')#</td>
-                            <td class="style1">#arrival_address#<br/>#arrival_city#<cfif state NEQ "">,</cfif> #state# #arrival_zip#</td>
+                            <td class="style1">#arrival_address# <cfif len(arrival_address_2)>#arrival_address_2#</cfif> <cfif len(arrival_apt_number)>## #arrival_apt_number#</cfif><br/>#arrival_city#<cfif state NEQ "">,</cfif> #state# #arrival_zip#</td>
                         </tr>
                     </cfloop>
                 </table>
