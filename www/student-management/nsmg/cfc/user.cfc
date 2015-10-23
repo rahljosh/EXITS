@@ -116,7 +116,13 @@
             <cfset CLIENT.usertype = 10>
             <cfset CLIENT.userID = 0>
             <cfset CLIENT.name = "#qAuhenticateStudent.firstname# #qAuhenticateStudent.familylastname#">
-			
+			<cfquery name="applicationStatus" datasource="#APPLICATION.dsn#">
+            select cancelreason
+            from smg_students
+            where studentid = #CLIENT.studentID#
+            </cfquery>
+            
+            
 			<!--- Check if server is local, if it is do not redirect to SSL --->
             <cfif APPLICATION.IsServerLocal>
 				
@@ -124,9 +130,11 @@
             
             <!--- Production / Force SSL --->    
             <cfelse>
-            	
-                <cflocation url="nsmg/student_app/index.cfm" addtoken="no">
-            	
+            	<Cfif applicationStatus.cancelreason eq 'NEXITS'>
+                	<cflocation url="nsmg/student_app/nexits.cfm" addtoken="no">
+                <cfelse>
+                	<cflocation url="nsmg/student_app/index.cfm" addtoken="no">
+            	</Cfif>
             </cfif>
 		
         	<cfabort>
@@ -380,8 +388,8 @@
             	
             	<cflocation url="/nsmg/student_app/print_application.cfm?uniqid=#url.uniqid#" addtoken="no"> 
             <cfelse>
-          	<cfabort>
-            <cflocation url="#CLIENT.exits_url#/nsmg/index.cfm?curdoc=students" addtoken="no">
+          	
+            <cflocation url="#CLIENT.exits_url#/nsmg/index.cfm?curdoc=initial_welcome" addtoken="no">
 			</Cfif>
         </cfif>
          
