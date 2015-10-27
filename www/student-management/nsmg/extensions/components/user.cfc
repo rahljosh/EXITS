@@ -2461,7 +2461,7 @@ setUserSessionPaperwork
             </cfoutput>
          </cfsavecontent>
          
-         <cfinvoke component="nsmg.cfc.email" method="send mail">
+         <cfinvoke component="nsmg.cfc.email" method="send_mail">
          	<cfinvokeargument name="email_to" value="lstrahs@iseusa.org">
             <cfinvokeargument name="email_from" value="#CLIENT.emailfrom# (#CLIENT.companyshort# Support)">
             <cfinvokeargument name="email_cc" value="jon@iseusa.org">
