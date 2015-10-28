@@ -125,8 +125,8 @@
     </cfquery>
     
     <!--- Temporary fix for issue with season change --->
-    <cfif ListFind("392,393",qGetStudentInfo.programid)>
-    	<cfset qGetStudentInfo.programid = 369>
+    <cfif ListFind("401,402",qGetStudentInfo.programid)>
+    	<cfset qGetStudentInfo.programid = 400>
     </cfif>
     
     <cfquery name="qGetSchoolDates" datasource="#APPLICATION.DSN#">
