@@ -2430,7 +2430,9 @@ setUserSessionPaperwork
             <cfinvoke component="nsmg.cfc.email" method="send_mail">
                 <cfinvokeargument name="email_to" value="#qGetUserInfo.rmEmail#; #qGetUserInfo.raEmail#">
                 <cfinvokeargument name="email_from" value="#CLIENT.emailfrom# (#CLIENT.companyshort# Support)">
-                <cfinvokeargument name="email_cc" value="lstrahs@iseusa.org">
+                <cfif CLIENT.companyID lte 5 OR eq 12> 
+                	<cfinvokeargument name="email_cc" value="lstrahs@iseusa.org">
+                </cfif>
                 <cfinvokeargument name="email_subject" value="New Area Rep. Training Completed">
                 <cfinvokeargument name="email_message" value="#vEmailMessage#">
             </cfinvoke>
