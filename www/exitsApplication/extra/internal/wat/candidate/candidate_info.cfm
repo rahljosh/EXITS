@@ -2832,20 +2832,21 @@
                                                 <input name="arrival_address" type="text" class="style1 editPage" id="arrival_address" value="#qGetCandidate.arrival_address#" maxlength="64" placeholder="Max Length 64">
                                             </td>
                                         </tr>
-                                         <tr>
-                                        	<td class="style1" width="30%" align="right"><label for="usPhone"><strong>Address 2:</strong></label></td>
-                                        	<td class="style1" width="70%">
-                                            	<span class="readOnly">#qGetCandidate.arrival_address_2#</span>
-                                                <input type="text" name="arrival_address_2" id="arrival_address_2" class="style1 editPage" value="#qGetCandidate.arrival_address_2#">
-                                            </td>
-                                        </tr>
-                                         <tr>
+                                          <tr>
                                         	<td class="style1" width="30%" align="right"><label for="usPhone"><strong>Apt. or Suite ##:</strong></label></td>
                                         	<td class="style1" width="70%">
                                             	<span class="readOnly">#qGetCandidate.arrival_apt_number#</span>
                                                 <input name="arrival_apt_number" type="text" class="style1 editPage" id="arrival_apt_number" value="#qGetCandidate.arrival_apt_number#" maxlength="6" placeholder="## Only, Max 6">
                                             </td>
                                         </tr>
+                                         <tr>
+                                        	<td class="style1" width="30%" align="right"><label for="usPhone"><strong>Other:</strong></label></td>
+                                        	<td class="style1" width="70%">
+                                            	<span class="readOnly">#qGetCandidate.arrival_address_2#</span>
+                                                <input type="text" name="arrival_address_2" id="arrival_address_2" class="style1 editPage" value="#qGetCandidate.arrival_address_2#">
+                                            </td>
+                                        </tr>
+                                       <!----
                                         <tr>
                                         	<td class="style1" width="30%" align="right"><label for="usPhone"><strong>Location Info:</strong></label></td>
                                         	<td class="style1" width="70%">
@@ -2853,6 +2854,7 @@
                                                 <input type="text" name="other_arrival_address_information" id="other_arrival_address_information" class="style1 editPage" value="#qGetCandidate.other_arrival_address_information#">
                                             </td>
                                         </tr>
+										---->
                                        
                                         
                                          
