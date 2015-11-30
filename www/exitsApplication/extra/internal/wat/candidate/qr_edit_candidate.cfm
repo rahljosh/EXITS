@@ -19,6 +19,8 @@
 <cfparam name="FORM.usPhone" default="">
 <cfparam name="FORM.arrival_address" default="">
 <cfparam name="FORM.arrival_address_2" default="">
+<cfparam name="FORM.arrival_apt_number" default="">
+<cfparam name="FORM.other_arrival_address_information" default="">
 <cfparam name="FORM.arrival_city" default="">
 <cfparam name="FORM.arrival_state" default="0">
 <cfparam name="FORM.arrival_zip" default="">
@@ -918,6 +920,9 @@
         us_phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.usPhone#">,
         arrival_address = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.arrival_address#">,
         arrival_address_2 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.arrival_address_2#">,
+       	arrival_apt_number =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.arrival_apt_number#">,
+        other_arrival_address_information =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.other_arrival_address_information#">,
+		
         arrival_city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.arrival_city#">,
         arrival_state = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.arrival_state#">,
         arrival_zip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.arrival_zip#">,
@@ -1007,6 +1012,7 @@
         us_phone,
         arrival_address,
         arrival_address_2,
+        arrival_apt_number,
         arrival_city,
         arrival_state,
         arrival_zip,
@@ -1084,6 +1090,7 @@
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.us_phone#">,
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.arrival_address#">,
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.arrival_address_2#">,
+        <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.arrival_apt_number#">,
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.arrival_city#">,
         <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.arrival_state#">,
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.arrival_zip#">,
