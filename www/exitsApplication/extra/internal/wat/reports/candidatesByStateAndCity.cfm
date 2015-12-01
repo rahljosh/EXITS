@@ -216,8 +216,37 @@
                                     lastname
                             </cfquery>
                             
+                            <cfquery name="qGetCityFlyer" datasource="#APPLICATION.DSN.Source#">
+                                SELECT
+                                    *
+                                FROM
+                                    extra_cities
+                                WHERE
+                                    name = <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCities.city#">
+                                    AND stateid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetStates.id#">
+                            </cfquery>
+                            
                             <tr style="font-weight:bold;">
-                                <td colspan="4" style="font-weight:bold; font-size: 8px; font-family:Verdana, Geneva, sans-serif;">&nbsp;&nbsp&nbsp;&nbsp;&nbsp;#qGetCities.city#: #qGetNumCity.recordCount#</td>
+                                <td colspan="4" style="font-weight:bold; font-size: 8px; font-family:Verdana, Geneva, sans-serif;">
+                                	&nbsp;&nbsp&nbsp;&nbsp;&nbsp;#qGetCities.city#: #qGetNumCity.recordCount# &nbsp; &nbsp;
+                                    <cfif qGetCityFlyer.recordCount GT 0>
+                                    	(<a 
+                                                                    href="##"
+                                                                    class="readOnly" 
+                                                                    onclick="printDocumentFile('#qGetCityFlyer.id#')" 
+                                                                    style="cursor:pointer;">
+                                                                    PREVIEW
+                                                                </a>) <input type="hidden" id="flyer_#qGetStates.id#_#qGetCities.city#_upload"/><!--- This is to prevent errors with ajaxUpload --->
+                                    <cfelse>
+                                		(No Flyer Available - <a href="##" 
+                                                                    value="Upload" 
+                                                                    name="flyer_#qGetStates.id#_#qGetCities.city#_upload" 
+                                                                    id="flyer_#qGetStates.id#_#qGetCities.city#_upload" 
+                                                                    style="cursor:pointer">
+                                                                    UPLOAD
+                                                                </a>)  
+                                    </cfif>
+                                </td>
                             </tr>
                             
                             <tr style="background-color:##4F8EA4; color:##FFF; padding:5px; font-weight:bold; font-size: 9px;">
@@ -360,5 +389,48 @@
         </cfswitch>
     
     </cfoutput>
+    
+    <script language="javascript" src="../linked/js/ajaxUpload.js"></script>
+    
+    <script language="JavaScript">
+		$().ready(function() {
+			<cfloop query="qGetStates">
+            	
+                 <cfquery name="qGetNumState" dbtype="query">
+                    SELECT
+                        *
+                    FROM
+                        qGetCandidates
+                    WHERE
+                        qGetCandidates.state = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStates.ID#">
+                </cfquery>
+                
+                <cfquery name="qGetCities" dbtype="query">
+                    SELECT DISTINCT
+                        city
+                    FROM
+                        qGetNumState
+                    ORDER BY
+                        city
+                </cfquery>   
+                   	
+                    <cfif VAL(qGetNumState.recordCount)>
+                       
+                	<cfloop query="qGetCities">
+                        new AjaxUpload('<cfoutput>flyer_#qGetStates.id#_#qGetCities.city#_upload</cfoutput>', {
+                            action: '../wat/hostCompany/addCityFlyer.cfm?option=upload&stateID=<cfoutput>#qGetStates.id#&city=#qGetCities.city#</cfoutput>',
+                            name: 'image'
+                        });
+            		</cfloop>
+            	</cfif>
+           	</cfloop>
+		});
+		
+		// Popup to print image that is referenced by the input file type.
+		var printDocumentFile = function(id) {
+			var printURL = document.URL.substring(0, document.URL.indexOf("/index.cfm")) + "/hostcompany/addCityFlyer.cfm?option=print&fileID="+id;
+			window.open(printURL, "File", "width=800, height=600");
+		}
+	</script>
 	
 </cfif>

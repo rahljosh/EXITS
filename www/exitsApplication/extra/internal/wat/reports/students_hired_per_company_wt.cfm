@@ -368,6 +368,11 @@
                         
                         <!--- Seeking Employment or Exempt from Pre-Placement - Display Reason --->
                         <cfif ListFind("195,4600",qGetHostCompany.hostCompanyID)>
+                        	
+                            <cfscript>
+                            	// Get Seeking Employment Comments
+								qGetSeekingEmploymentComments = APPLICATION.CFC.CANDIDATE.getSeekingEmploymentComments(candidateID=qTotalPerHostCompany.candidateID);
+							</cfscript>
                         
                             <cfquery name="qGetHostHistory" datasource="#APPLICATION.DSN.Source#">
                                 SELECT  
@@ -406,6 +411,19 @@
                                         </cfloop>
                                     </td>
                                 </tr>
+                                
+                                <cfif qGetSeekingEmploymentComments.recordCount GT 0 >
+                                <tr bgcolor="###IIf(qTotalPerHostCompany.currentRow MOD 2 ,DE("FFFFFF") ,DE("E4E4E4") )#">
+                                    <td colspan="17" class="style1" style="border-top:1px solid ###IIf(qTotalPerHostCompany.currentRow MOD 2 ,DE("E4E4E4") ,DE("FFFFFF") )#;">
+										<strong>Comments:</strong> 
+                                        <cfloop query="qGetSeekingEmploymentComments">
+                                            #DateFormat(qGetSeekingEmploymentComments.date, 'mm/dd/yyyy')# - #qGetSeekingEmploymentComments.note#
+                                            <hr style="margin: 5px 10px; border: none; border-bottom: 1px solid ##ccc" />
+                                        </cfloop>
+                                    </td>
+                                </tr>
+                                </cfif>
+                                
                             </cfif>
                            	
                             <tr bgcolor="###IIf(qTotalPerHostCompany.currentRow MOD 2 ,DE("FFFFFF") ,DE("E4E4E4") )#">

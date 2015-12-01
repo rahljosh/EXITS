@@ -41,6 +41,38 @@
         ORDER BY dateAdded ASC
     </cfquery>
     
+    <cfquery name="qGetIncorporationFile" datasource="#APPLICATION.DSN.Source#">
+    	SELECT *
+        FROM extra_hostauthenticationfiles
+        WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.hostID)#">
+        AND authenticationType = <cfqueryparam cfsqltype="cf_sql_varchar" value="incorporation">
+        ORDER BY dateAdded ASC
+    </cfquery>
+    
+    <cfquery name="qGetCertificateOfExistenceFile" datasource="#APPLICATION.DSN.Source#">
+    	SELECT *
+        FROM extra_hostauthenticationfiles
+        WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.hostID)#">
+        AND authenticationType = <cfqueryparam cfsqltype="cf_sql_varchar" value="certificateOfExistence">
+        ORDER BY dateAdded ASC
+    </cfquery>
+    
+    <cfquery name="qGetCertificateOfReinstatementFile" datasource="#APPLICATION.DSN.Source#">
+    	SELECT *
+        FROM extra_hostauthenticationfiles
+        WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.hostID)#">
+        AND authenticationType = <cfqueryparam cfsqltype="cf_sql_varchar" value="certificateOfReinstatement">
+        ORDER BY dateAdded ASC
+    </cfquery>
+    
+    <cfquery name="qGetDepartmentOfStateFile" datasource="#APPLICATION.DSN.Source#">
+    	SELECT *
+        FROM extra_hostauthenticationfiles
+        WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.hostID)#">
+        AND authenticationType = <cfqueryparam cfsqltype="cf_sql_varchar" value="departmentOfState">
+        ORDER BY dateAdded ASC
+    </cfquery>
+    
 </cfsilent>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -91,7 +123,7 @@
                     	<td width="32%" valign="top" style="border:thin solid black">
                         	<table width="100%" border="0" cellpadding="5" cellspacing="0">
                                 <tr>
-                                    <td class="style2" bgcolor="8FB6C9" align="center" colspan="4"><u>Secretary of State</u></td>
+                                    <td class="style2" bgcolor="8FB6C9" align="center" colspan="4"><u>Business License</u></td>
                                 </tr>
                                 <tr>
                                 	<td class="style2" bgcolor="8FB6C9">Date Added</td>
@@ -170,6 +202,124 @@
                             </table>
                         </td>
                         <!--- End Google Earth --->
+                    </tr>
+                    <tr><td colspan="6">&nbsp;</td></tr>
+                    <tr>
+                    	<!--- Incorporation --->
+                    	<td width="32%" valign="top" style="border:thin solid black">
+                        	<table width="100%" border="0" cellpadding="5" cellspacing="0">
+                                <tr>
+                                    <td class="style2" bgcolor="8FB6C9" align="center" colspan="4"><u>Incorporation</u></td>
+                                </tr>
+                                <tr>
+                                	<td class="style2" bgcolor="8FB6C9">Date Added</td>
+                                    <td class="style2" bgcolor="8FB6C9">Date Expired</td>
+                                    <td class="style2" bgcolor="8FB6C9">View</td>
+                                    <td class="style2" bgcolor="8FB6C9">Delete</td>
+                                </tr>
+                                <cfif qGetIncorporationFile.recordcount EQ 0>
+                                    <tr><td colspan="4" align="center" class="style1">There are no uploaded files.</td></tr>
+                                <cfelse>
+                                	<cfloop query="qGetIncorporationFile">
+                                    	<tr bgcolor="#iif(currentrow MOD 2 ,DE("ffffff") ,DE("F7F7F7") )#">
+                                        	<td>#DateFormat(dateAdded,'mm/dd/yyyy')#</td>
+                                            <td>#DateFormat(dateExpires,'mm/dd/yyyy')#</td>
+                                            <td><img src="../../pics/view.gif" alt="view" onClick="printAuthenticationFile('#id#')"/></td>
+                                            <td><img src="../../pics/deletex.gif" alt="delete" onClick="deleteAuthenticationFile('#id#')"/></td>
+                                        </tr>
+                                    </cfloop>
+                                </cfif>
+                            </table>
+                        </td>
+                        <!--- End Incorporation --->
+                        <td width="2%"></td>
+                        <!--- Certificate of Existence --->
+                        <td width="32%" valign="top" style="border:thin solid black">
+                        	<table width="100%" border="0" cellpadding="5" cellspacing="0">
+                                <tr>
+                                    <td class="style2" bgcolor="8FB6C9" align="center" colspan="4"><u>Certificate of Existence</u></td>
+                                </tr>
+                                <tr>
+                                	<td class="style2" bgcolor="8FB6C9">Date Added</td>
+                                    <td class="style2" bgcolor="8FB6C9">Date Expired</td>
+                                    <td class="style2" bgcolor="8FB6C9">View</td>
+                                    <td class="style2" bgcolor="8FB6C9">Delete</td>
+                                </tr>
+                                <cfif qGetCertificateOfExistenceFile.recordcount EQ 0>
+                                    <tr><td colspan="4" align="center" class="style1">There are no uploaded files.</td></tr>
+                                <cfelse>
+                                	<cfloop query="qGetCertificateOfExistenceFile">
+                                    	<tr bgcolor="#iif(currentrow MOD 2 ,DE("ffffff") ,DE("F7F7F7") )#">
+                                        	<td>#DateFormat(dateAdded,'mm/dd/yyyy')#</td>
+                                            <td>#DateFormat(dateExpires,'mm/dd/yyyy')#</td>
+                                            <td><img src="../../pics/view.gif" alt="view" onClick="printAuthenticationFile('#id#')"/></td>
+                                            <td><img src="../../pics/deletex.gif" alt="delete" onClick="deleteAuthenticationFile('#id#')"/></td>
+                                        </tr>
+                                    </cfloop>
+                                </cfif>
+                            </table>
+                        </td>
+                        <!--- End Certificate of Existence --->
+                        <td width="2%"></td>
+                        <!--- Certificate of Reinstatement --->
+                        <td width="32%" valign="top" style="border:thin solid black">
+                        	<table width="100%" border="0" cellpadding="5" cellspacing="0">
+                                <tr>
+                                    <td class="style2" bgcolor="8FB6C9" align="center" colspan="4"><u>Certificate of Reinstatement</u></td>
+                                </tr>
+                                <tr>
+                                	<td class="style2" bgcolor="8FB6C9">Date Added</td>
+                                    <td class="style2" bgcolor="8FB6C9">Date Expired</td>
+                                    <td class="style2" bgcolor="8FB6C9">View</td>
+                                    <td class="style2" bgcolor="8FB6C9">Delete</td>
+                                </tr>
+                                <cfif qGetCertificateOfReinstatementFile.recordcount EQ 0>
+                                    <tr><td colspan="4" align="center" class="style1">There are no uploaded files.</td></tr>
+                                <cfelse>
+                                	<cfloop query="qGetCertificateOfReinstatementFile">
+                                    	<tr bgcolor="#iif(currentrow MOD 2 ,DE("ffffff") ,DE("F7F7F7") )#">
+                                        	<td>#DateFormat(dateAdded,'mm/dd/yyyy')#</td>
+                                            <td>#DateFormat(dateExpires,'mm/dd/yyyy')#</td>
+                                            <td><img src="../../pics/view.gif" alt="view" onClick="printAuthenticationFile('#id#')"/></td>
+                                            <td><img src="../../pics/deletex.gif" alt="delete" onClick="deleteAuthenticationFile('#id#')"/></td>
+                                        </tr>
+                                    </cfloop>
+                                </cfif>
+                            </table>
+                        </td>
+                        <!--- End Certificate of Reinstatement --->
+                    </tr>
+                    <tr><td colspan="6">&nbsp;</td></tr>
+                    <tr>
+                    	<!--- Department of State --->
+                        <td width="32%" valign="top" style="border:thin solid black">
+                        	<table width="100%" border="0" cellpadding="5" cellspacing="0">
+                                <tr>
+                                    <td class="style2" bgcolor="8FB6C9" align="center" colspan="4"><u>Department of State</u></td>
+                                </tr>
+                                <tr>
+                                	<td class="style2" bgcolor="8FB6C9">Date Added</td>
+                                    <td class="style2" bgcolor="8FB6C9">Date Expired</td>
+                                    <td class="style2" bgcolor="8FB6C9">View</td>
+                                    <td class="style2" bgcolor="8FB6C9">Delete</td>
+                                </tr>
+                                <cfif qGetDepartmentOfStateFile.recordcount EQ 0>
+                                    <tr><td colspan="4" align="center" class="style1">There are no uploaded files.</td></tr>
+                                <cfelse>
+                                	<cfloop query="qGetDepartmentOfStateFile">
+                                    	<tr bgcolor="#iif(currentrow MOD 2 ,DE("ffffff") ,DE("F7F7F7") )#">
+                                        	<td>#DateFormat(dateAdded,'mm/dd/yyyy')#</td>
+                                            <td>#DateFormat(dateExpires,'mm/dd/yyyy')#</td>
+                                            <td><img src="../../pics/view.gif" alt="view" onClick="printAuthenticationFile('#id#')"/></td>
+                                            <td><img src="../../pics/deletex.gif" alt="delete" onClick="deleteAuthenticationFile('#id#')"/></td>
+                                        </tr>
+                                    </cfloop>
+                                </cfif>
+                            </table>
+                        </td>
+                        <!--- End Department of State --->
+                        <td colspan="4">
+                        </td>
                     </tr>
                 </table>
                 

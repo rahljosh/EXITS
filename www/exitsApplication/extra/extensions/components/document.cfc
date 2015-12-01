@@ -266,7 +266,7 @@
                     	clientExt != <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.NotClientExt#">
                 </cfif>
               	ORDER BY
-                	serverName
+                	description
 		</cfquery>
 		   
 		<cfreturn qGetDocumentsByFilter>

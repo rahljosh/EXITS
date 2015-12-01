@@ -129,7 +129,7 @@
 		
 	</cfif>
        
-    <form id="section3Form" action="#CGI.SCRIPT_NAME#?action=initial" method="post">
+    <form id="section3Form" action="#CGI.SCRIPT_NAME#?action=initial" method="post" onsubmit="return checkDescriptionLength()">
     <input type="hidden" name="submittedType" value="section3" />
     <input type="hidden" name="currentTabID" value="2" />
     <input type="hidden" name="candidateID" id="candidateID" value="#FORM.candidateID#" />
@@ -278,10 +278,12 @@
      		&nbsp;<font color="red"><b>Attention:</b> This is an official record.</font>
 		</div>
 		<div class="field">
-        	<label for="#qGetQuestions.fieldKey[9]#">&nbsp;<cfif qGetQuestions.isRequired[9]><em>*</em></cfif></label>
+        	
+        	<label for="#qGetQuestions.fieldKey[9]#" style="margin-bottom:50px">&nbsp;<cfif qGetQuestions.isRequired[9]><em>*</em></cfif></label>
             <cfif printApplication>
             	<div class="printField">#FORM[qGetQuestions.fieldKey[9]]# &nbsp;</div>
         	<cfelse>
+            	<font color="red">The narrative must include a minimum of 50 (fifty) words.</font><br />
             	<textarea name="#qGetQuestions.fieldKey[9]#" id="#qGetQuestions.fieldKey[9]#" class="#qGetQuestions.classType[9]#" rows="4" cols="50">#FORM[qGetQuestions.fieldKey[9]]#</textarea>
 			</cfif>
 		</div>
@@ -370,5 +372,17 @@
     </form>
 
 </div><!-- /form-container -->
+
+<script>
+function checkDescriptionLength() {
+	if (($("###qGetQuestions.fieldKey[9]#").val().length > 0) && ($("###qGetQuestions.fieldKey[9]#").val().length < 50)) {
+		alert("The narrative must include a minimum of 50 (fifty) words.");
+		$("###qGetQuestions.fieldKey[9]#").focus();
+		return false;	
+	} else {
+		return true;
+	}
+}
+</script>
 
 </cfoutput>

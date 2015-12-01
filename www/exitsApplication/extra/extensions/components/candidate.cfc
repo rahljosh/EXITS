@@ -1140,6 +1140,7 @@
                 eh.WCDateExpired,
                 eh.supervisor,
                 eh.phone,
+                eh.phoneExt,
                 eh.address,
                 eh.city,
                 eh.zip,
@@ -1397,6 +1398,60 @@
 	------------------------------------------------------------->
     
     
+    
+    <!------------------------------------------------------------
+		Candidate Seeking Employment Comments 
+	------------------------------------------------------------->
+    
+    <cffunction name="getSeekingEmploymentComments" access="public" returntype="query" output="no" hint="Gets notes for seeking employment">
+    	<cfargument name="candidateID" required="yes">
+        
+        <cfquery name="qGetSeekingEmploymentComments" datasource="#APPLICATION.DSN.Source#">
+        	SELECT n.*, u.firstName, u.lastName
+            FROM extra_seeking_employment_notes n
+            LEFT OUTER JOIN smg_users u ON u.userID = n.addedBy
+            WHERE n.candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#">
+            ORDER BY n.date DESC
+        </cfquery>
+        
+        <cfreturn qGetSeekingEmploymentComments>
+        
+    </cffunction>
+    
+    <cffunction name="insertUpdateSeekingEmploymentNotes" access="public" returntype="void" output="no" hint="Inserts or updates an incident note">
+    	<cfargument name="id" default="0" required="no" hint="if nothing is passed in will insert, otherwise will update">
+        <cfargument name="candidateID" default="0" required="no" hint="needed if id is not passed in to insert">
+        <cfargument name="note" default="" required="no">
+        
+        <cfif VAL(ARGUMENTS.id)>
+        	<cfquery datasource="#APPLICATION.DSN.Source#">
+            	UPDATE extra_seeking_employment_notes
+                SET note = <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#ARGUMENTS.note#">
+               	WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.id#">
+            </cfquery>
+        <cfelse>
+        	<cfquery datasource="#APPLICATION.DSN.Source#">
+            	INSERT INTO extra_seeking_employment_notes (
+                	candidateID,
+                    addedBy,
+                    date,
+                    note )
+              	VALUES (
+                	<cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.candidateID#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
+                    <cfqueryparam cfsqltype="cf_sql_timestamp" value="#NOW()#">,
+                    <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#ARGUMENTS.note#"> )
+            </cfquery>
+        </cfif>
+        
+    </cffunction>
+    
+	<!------------------------------------------------------------ 
+		End of Seeking Employment Comments
+	------------------------------------------------------------->
+    
+    
+    
 	<!------------------------------------------------------------
 		Candidate Cultural Activity Report 
 	------------------------------------------------------------->
@@ -1619,7 +1674,7 @@
                     evaluationNumber = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
                     ORDER BY date DESC 
                     LIMIT 1)
-            	LEFT OUTER JOIN
+                LEFT OUTER JOIN
                 	extra_hostcompany hostCompany ON hostCompany.hostcompanyid = ec.hostcompanyid
 				LEFT OUTER JOIN
 					smg_states states ON states.id = hostCompany.state

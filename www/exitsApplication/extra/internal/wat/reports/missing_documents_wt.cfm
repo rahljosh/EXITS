@@ -32,11 +32,15 @@
                 c.wat_doc_job_offer_employer,
                 c.wat_doc_other,
                 c.wat_placement, 
+                c.wat_doc_no_housing_form, 
+                c.wat_doc_housing_arrengements, 
+                c.wat_doc_housing_third_party, 
                 u.companyID, 
                 u.userID,
                 u.businessName,
                 u.email AS intlRepEmail,
-                hc.name AS companyName
+                hc.name AS companyName,
+                hc.isHousingProvided
             FROM 
                 extra_candidates c
             INNER JOIN 
@@ -69,6 +73,26 @@
                     c.wat_doc_orientation = <cfqueryparam cfsqltype="cf_sql_integer" value="0">   
                 OR
                 	c.wat_doc_other != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+                <!--- Check only if isHousingProvided = 0 ---> 
+                OR
+                	(
+                    	hc.isHousingProvided = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                       AND
+                    	c.wat_doc_no_housing_form != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+                    )
+                OR
+                	(
+                    	hc.isHousingProvided = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                       AND
+                    	c.wat_doc_housing_arrengements != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+                    )
+                <!--- Check only if isHousingProvided = 2 ---> 
+                OR
+                	(
+                    	hc.isHousingProvided = <cfqueryparam cfsqltype="cf_sql_integer" value="2">
+                       AND
+                    	c.wat_doc_housing_third_party != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+                    )
 				<!--- Check only if wat_doc_agreement = Walk-In --->                
                 OR                    
                     ( 
@@ -242,6 +266,10 @@
                                 <cfif LEN(qGetCandidates.companyname) AND NOT VAL(qGetCandidates.wat_doc_job_offer_applicant)>- Job Offer Agreement Applicant<br /></cfif>
                                 <cfif LEN(qGetCandidates.companyname) AND NOT VAL(qGetCandidates.wat_doc_job_offer_employer)>- Job Offer Agreement Employer<br /></cfif>
                                 <cfif LEN(qGetCandidates.wat_doc_other)>- #qGetCandidates.wat_doc_other#<br /></cfif>
+                                
+                                <cfif NOT VAL(qGetCandidates.wat_doc_no_housing_form) AND qGetCandidates.isHousingProvided EQ 0>- No Housing Form<br /></cfif>
+                                <cfif NOT VAL(qGetCandidates.wat_doc_housing_arrengements) AND qGetCandidates.isHousingProvided EQ 0>- Housing Arrengements Form<br /></cfif>
+                                <cfif NOT VAL(qGetCandidates.wat_doc_housing_third_party) AND qGetCandidates.isHousingProvided EQ 2>- Third Party Housing Form<br /></cfif>
                             </td>
                             <td valign="top">#qGetCandidates.wat_placement#</td>
                         </tr>

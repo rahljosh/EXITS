@@ -21,6 +21,7 @@
 	<cfparam name="FORM.selfJobOfferStatus" default="">
 	<cfparam name="FORM.printOption" default="1">
     <cfparam name="FORM.submitted" default="0">
+    <cfparam name="FORM.missingPhone" default="0">
 
     <cfscript>
 		// Get Program List
@@ -120,6 +121,7 @@
                     	ecpc.hostCompanyID = ec.hostCompanyID 
 					AND 
                     	ecpc.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                        
             LEFT OUTER JOIN
             	extra_jobs ej ON ej.ID = ecpc.jobID
             LEFT OUTER JOIN 
@@ -130,35 +132,46 @@
                 smg_users u ON u.userid = ec.intrep
             LEFT JOIN
             	extra_confirmations conf ON conf.hostID = ecpc.hostcompanyID
-                	AND
-                    	conf.programID = ec.programID
+                	AND conf.programID = ec.programID
           	LEFT JOIN
             	extra_j1_positions j1 ON j1.hostID = ecpc.hostcompanyID
-                	AND
-                    	j1.programID = ec.programID
+                	AND j1.programID = ec.programID
           	LEFT OUTER JOIN extra_program_confirmations epc ON epc.hostID = ecpc.hostCompanyID
          		AND epc.programID = ec.programID
+                
+            <cfif VAL(FORM.missingPhone)>
+            LEFT JOIN extra_hostauthenticationfiles ehaf
+                   ON (ehaf.hostID = ecpc.hostcompanyid
+                            AND (dateExpires >= <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
+                            	OR dateExpires IS NULL)
+                            AND authenticationType = "workmensCompensation")
+            </cfif>
+            
             WHERE 
                 ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
-            AND 
-                ec.status != <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
-            AND
-            	ec.wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="Self-Placement">
+            AND ec.status != <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
+            AND ec.wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="Self-Placement">
                 
            	<cfif CLIENT.userType EQ 8>
-            	AND
-                	ec.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+            	AND ec.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
             <cfelse>
 				<cfif VAL(FORM.userID)>
-                    AND 
-                        ec.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">
+                    AND  ec.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">
                 </cfif>
           	</cfif>
 			
 			<cfif LEN(FORM.selfJobOfferStatus)>
-            	AND
-                    ecpc.selfJobOfferStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfJobOfferStatus#">                 
+            	AND ecpc.selfJobOfferStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfJobOfferStatus#">                 
 			</cfif>
+            
+            <cfif VAL(FORM.missingPhone)>
+                AND epc.confirmation_phone IS NULL
+                AND (conf.confirmed = 1 OR conf.confirmedDate IS NOT NULL)
+                AND (numberPositions = 0 OR verifiedDate IS NOT NULL)
+                AND ehc.workmensCompensation IS NOT NULL
+                AND ehaf.id > 0
+                AND ecpc.selfEmailConfirmationDate IS NOT NULL
+            </cfif>
             
             GROUP BY ec.candidateID
                        
@@ -166,6 +179,7 @@
             	ehc.name,
                 ec.candidateID            
         </cfquery>
+        
 
         <cfquery name="qTotalFormsIssued" dbtype="query">
             SELECT
@@ -257,6 +271,8 @@
 <cfoutput>
 
 <!--- Form --->
+
+
 <form action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" name="form" onSubmit="return formValidation()">
 <input type="hidden" name="submitted" value="1" />
 
@@ -303,7 +319,13 @@
                 <option value="Rejected" <cfif FORM.selfJobOfferStatus EQ 'Rejected'> selected="selected" </cfif> >Rejected</option>
             </select>
         </td>
-    </tr>    
+    </tr>
+    <tr>
+        <td valign="middle" align="right" class="style1"><b>Missing Only Phone Confirmation:</b></td>
+        <td  class="style1"> 
+        	<input type="checkbox" name="missingPhone" value="1" <cfif FORM.missingPhone EQ '1'>checked="checked"</cfif>> Yes
+        </td>
+    </tr>   
     <Tr>
         <td align="right" class="style1"><b>Format: </b></td>
         <td  class="style1"> 
@@ -396,18 +418,22 @@
                         <th align="left" class="#tableTitleClass#">Job Title</th>
                         <th align="left" class="#tableTitleClass#">Placement Date</th>                        
                         <th align="left" class="#tableTitleClass#">Job Offer Status</th>
-                        <cfif FORM.selfJobOfferStatus NEQ "pending" AND FORM.selfJobOfferStatus NEQ "confirmed" AND FORM.selfJobOfferStatus NEQ "rejected">
+                        <!--- REMOVED - Requested by Anca
+						<cfif FORM.selfJobOfferStatus NEQ "pending" AND FORM.selfJobOfferStatus NEQ "confirmed" AND FORM.selfJobOfferStatus NEQ "rejected">
                         	<th align="left" class="#tableTitleClass#">Contact Date</th>
                         </cfif>
+						--->
                         <th align="left" class="#tableTitleClass#">Contact Name</th>
                         <th align="left" class="#tableTitleClass#">Confirmation of Terms</th>
                         <th align="left" class="#tableTitleClass#">Available J1 Positions</th>
                         <th align="left" class="#tableTitleClass#">Authentication Missing</th>
                         <th align="left" class="#tableTitleClass#">EIN</th>
                         <th align="left" class="#tableTitleClass#">Workmen's Compensation</th>
+                        <!--- REMOVED - Requested by Anca
                         <cfif FORM.selfJobOfferStatus NEQ "pending" AND FORM.selfJobOfferStatus NEQ "confirmed" AND FORM.selfJobOfferStatus NEQ "rejected">
                         	<th align="left" class="#tableTitleClass#">Contact Method</th>
                         </cfif>
+						--->
                         <th align="left" class="#tableTitleClass#">Email Confirmation</th>
                         <th align="left" class="#tableTitleClass#">Phone Confirmation</th>
                         <cfif CLIENT.userType NEQ 8>
@@ -419,6 +445,8 @@
                             <td colspan="9"><img src="../../pics/black_pixel.gif" width="100%" height="2"></td>
                         </tr>
                     </cfif>
+                    
+                    
                     <cfloop query="qTotalPerAgent">
                     
                     	<!--- Get workmans compensation file --->
@@ -431,7 +459,10 @@
                             AND authenticationType = <cfqueryparam cfsqltype="cf_sql_varchar" value="workmensCompensation">
                             ORDER BY dateAdded DESC
                         </cfquery>
-                    
+                        
+                    	
+                        <cfif (NOT VAL(FORM.missingPhone)) OR ( VAL(FORM.missingPhone) AND VAL(qGetWCFile.recordCount))>
+                        
                         <tr <cfif qTotalPerAgent.currentRow mod 2>bgcolor="##E4E4E4"</cfif>>                    
                             <td class="style1">
                                 <a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerAgent.uniqueID#" target="_blank" class="style4">
@@ -446,10 +477,11 @@
                             </td>
                             <td class="style1">#qTotalPerAgent.jobTitle#</td>
                             <td class="style1">#DateFormat(qTotalPerAgent.placement_date, 'mm/dd/yyyy')#</td>                            
-                            <td class="style1">#qTotalPerAgent.selfJobOfferStatus#</td>                            
+                            <td class="style1">#qTotalPerAgent.selfJobOfferStatus#</td>
+                            <!--- REMOVED - Requested by Anca                            
                             <cfif FORM.selfJobOfferStatus NEQ "pending" AND FORM.selfJobOfferStatus NEQ "confirmed" AND FORM.selfJobOfferStatus NEQ "rejected">
 	                            <td class="style1">#DateFormat(qTotalPerAgent.selfConfirmationDate, 'mm/dd/yyyy')#</td>
-                            </cfif>
+                            </cfif>--->
                             <td class="style1">#qTotalPerAgent.selfConfirmationName#</td>
                             <td class="style1">
                             	<cfif qTotalPerAgent.confirmed EQ 1>
@@ -524,9 +556,11 @@
                                 	<font color="red">Missing</font>
                                 </cfif>                                           
 							</td>
+                            <!--- REMOVED - Requested by Anca
                             <cfif FORM.selfJobOfferStatus NEQ "pending" AND FORM.selfJobOfferStatus NEQ "confirmed" AND FORM.selfJobOfferStatus NEQ "rejected">
 	                            <td class="style1">#qTotalPerAgent.selfConfirmationMethod#</td>
                             </cfif>
+							--->
                             <td class="style1">
                             	<cfif LEN(qTotalPerAgent.selfEmailConfirmationDate)>
                                 	#DateFormat(qTotalPerAgent.selfEmailConfirmationDate, 'mm/dd/yyyy')#
@@ -545,6 +579,7 @@
                             	<td class="style1">#qTotalPerAgent.selfConfirmationNotes#</td>
                           	</cfif>
                         </tr>
+                        </cfif>
                     </cfloop>        
 
                     <tr><td colspan="9">&nbsp;</td></tr>

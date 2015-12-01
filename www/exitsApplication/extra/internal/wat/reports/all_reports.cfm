@@ -24,6 +24,8 @@
                             
                             <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/selfPlacementConfirmation" class="style4">- Self Placement Vetting</a></p>
                             
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/csbPlacementConfirmation" class="style4">- CSB Placement Vetting</a></p>
+                            
                             <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/flightInfoByIntlRep" class="style4">- Flight Information</a></p>
                             
                             <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/missingIntlRepDocuments" class="style4">- Missing Intl. Rep. Documents</a></p>
@@ -72,6 +74,8 @@
                             <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/flighInfoByHC" class="style4">- Flight Information</a></p>
                             
                             <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/hostCompanySelfPlacementConfirmation" class="style4">- Self Placement Vetting</a></p>
+                            
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/hostCompanyCsbPlacementConfirmation" class="style4">- CSB Placement Vetting</a></p>
                             
                             <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/candidatesHousingPerHost" class="style4">- Candidate Housing</a></p>
                        </td>

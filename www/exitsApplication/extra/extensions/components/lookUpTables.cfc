@@ -67,7 +67,7 @@
                     sevisCode,
                     continent
 				FROM
-                	smg_countryList
+                	smg_countrylist
                     
 				<cfif LEN(ARGUMENTS.countryID)>
                     WHERE 
@@ -93,7 +93,7 @@
                     sevisCode,
                     continent
 				FROM
-                	smg_countryList
+                	smg_countrylist
                 WHERE 
                     countryID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.ID)#">
         </cfquery> 
@@ -150,7 +150,7 @@
                     dateCreated,
                     dateUpdated
 				FROM
-                	applicationFaq
+                	applicationfaq
 				WHERE
                 	applicationID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.applicationID#">
                 AND	

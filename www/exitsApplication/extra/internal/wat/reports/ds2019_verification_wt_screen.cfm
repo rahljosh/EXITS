@@ -41,7 +41,8 @@
         	c.candidateID, 
             c.lastname, 
             c.firstname,
-            c.middlename, 
+            c.middlename,
+            c.email, 
             c.sex, 
             c.dob, 
             c.birth_city,
@@ -53,6 +54,7 @@
             c.ds2019,
 			c.hostcompanyid,
             c.wat_placement,
+            jobs.classification,
             birth.countryname as countrybirth,
           	resident.countryname as countryresident,
             citizen.countryname as countrycitizen
@@ -60,7 +62,10 @@
         LEFT JOIN smg_countrylist birth ON c.birth_country = birth.countryid
         LEFT JOIN smg_countrylist resident ON c.residence_country = resident.countryid
         LEFT JOIN smg_countrylist citizen ON c.citizen_country = citizen.countryid
+        LEFT JOIN extra_candidate_place_company cpc on cpc.candidateid = c.candidateid
+        LEFT JOIN extra_jobs jobs on jobs.id = cpc.jobid
         WHERE c.verification_received IS <cfqueryparam cfsqltype="cf_sql_date" null="yes">
+        AND cpc.status = <cfqueryparam cfsqltype="cf_sql_varchar" value="1">
         AND c.status = <cfqueryparam cfsqltype="cf_sql_varchar" value="1">
         AND c.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyID)#">
         AND c.programid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.program)#">        
@@ -159,9 +164,10 @@
                     <tr>
                         <td width=3% valign="top" style="border-bottom:1px solid ##000;"><strong>ID</strong></td>                        
                         <td width=14% valign="top" style="border-bottom:1px solid ##000;"><strong>Last Name</strong></td>
-                        <td width=14% valign="top" style="border-bottom:1px solid ##000;"><strong>First Name</strong></td>
-                        <td width=14% valign="top" style="border-bottom:1px solid ##000;"><strong>Middle Name</strong></td>
-                        <td width=6% valign="top" style="border-bottom:1px solid ##000;"><strong>Sex</strong></td>
+                        <td width=12% valign="top" style="border-bottom:1px solid ##000;"><strong>First Name</strong></td>
+                        <td width=12% valign="top" style="border-bottom:1px solid ##000;"><strong>Middle Name</strong></td>
+                        <td width=6% valign="top" style="border-bottom:1px solid ##000;"><strong>Email</strong></td>
+                        <td width=4% valign="top" style="border-bottom:1px solid ##000;"><strong>Sex</strong></td>
                         <td width=9% valign="top" style="border-bottom:1px solid ##000;"><strong>Date of Birth</strong></td>
                         <td width=10% valign="top" style="border-bottom:1px solid ##000;"><strong>City of Birth</strong></td>
                         <td width=10% valign="top" style="border-bottom:1px solid ##000;"><strong>Country of Birth</strong></td>
@@ -169,7 +175,6 @@
                         <td width=12% valign="top" style="border-bottom:1px solid ##000;"><strong>Country of Residence</strong></td>
                         <td width=10% valign="top" style="border-bottom:1px solid ##000;"><strong>Start Date </strong></td>
                         <td width=10% valign="top" style="border-bottom:1px solid ##000;"><strong>End Date </strong></td>
-                        <td width=10% valign="top" style="border-bottom:1px solid ##000;"><strong>SEVIS Code</strong></td>
                     </tr>      
                     <cfloop query="qGetCandidates">
 						<cfscript>
@@ -179,24 +184,26 @@
                         <tr bgcolor="#iif(qGetCandidates.currentrow MOD 2 ,DE("ededed") ,DE("white") )#">
                             <td width=3% valign="top">###qGetCandidates.candidateID#</td>
                             <td width=14% valign="top">#qGetCandidates.lastname#</td>
-                            <td width=14% valign="top">#qGetCandidates.firstname#</td>
-                            <td width=14% valign="top">#qGetCandidates.middlename#</td>
-                            <td width=6% valign="top">#qGetCandidates.sex#</td>
+                            <td width=12% valign="top">#qGetCandidates.firstname#</td>
+                            <td width=12% valign="top">#qGetCandidates.middlename#</td>
+                            <td width=6% valign="top">#qGetCandidates.email#</td>
+                            <td width=4% valign="top">#qGetCandidates.sex#</td>
                             <td width=9% valign="top">#DateFormat(qGetCandidates.dob, 'mm/dd/yyyy')#</td>
                             <td width=10% valign="top">#qGetCandidates.birth_city#</td>
                             <td width=10% valign="top">#qGetCandidates.countrybirth#</td>
                             <td width=10% valign="top">#qGetCandidates.countrycitizen#</td>
                             <td width=12% valign="top">#qGetCandidates.countryresident#</td>
                             <td width=10% valign="top">#DateFormat(qGetCandidates.startdate, 'mm/dd/yyyy')#</td>
-                            <td width=10% valign="top">#DateFormat(qGetCandidates.enddate, 'mm/dd/yyyy')#</td>	
-                            <td width=10% valign="top">#qGetCandidates.classification#</td>				
+                            <td width=10% valign="top">#DateFormat(qGetCandidates.enddate, 'mm/dd/yyyy')#</td>			
                         </tr>
                         <tr bgcolor="#iif(qGetCandidates.currentrow MOD 2 ,DE("ededed") ,DE("white") )#">
                             <td style="border-bottom:1px solid ##000;">&nbsp;</td>
-                        	<td valign="top" colspan="11" style="border-bottom:1px solid ##000;">
+                        	<td valign="top" colspan="12" style="border-bottom:1px solid ##000;">
                             	<strong>Host Company:</strong> #qCandidatePlaceCompany.hostCompanyName#; 
-                                <strong style="padding-left:15px;">Job Title:</strong> #qCandidatePlaceCompany.jobTitle#; 
-                               	<strong style="padding-left:15px;">Placement Type:</strong> #qGetCandidates.wat_placement#;
+                                <strong style="padding-left:15px;">Job Title:</strong> #qCandidatePlaceCompany.jobTitle#; <br />
+                                <strong>Host Address:</strong> #qCandidatePlaceCompany.address# - #qCandidatePlaceCompany.city# / #qCandidatePlaceCompany.state# -#qCandidatePlaceCompany.zip#<br/>
+                                <strong>Placement Type:</strong> #qGetCandidates.wat_placement#;<br />
+                                <strong>SEVIS Code:</strong> #qGetCandidates.classification#;<br />
                             </td>
                         </tr>
                     </cfloop>

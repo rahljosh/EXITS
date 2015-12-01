@@ -21,7 +21,7 @@
     <cfparam name="FORM.emailHostCompany" default="0">
 	<cfparam name="FORM.printOption" default="1">
     <cfparam name="FORM.submitted" default="0">
-
+    <cfparam name="FORM.missingPhone" default="0">
     <cfscript>
 		// Setting to 1 will remove links on the report
 		vSendEmail = 0;
@@ -88,13 +88,35 @@
             LEFT OUTER JOIN
             	smg_countrylist cl ON cl.countryID = ec.residence_country
           	LEFT JOIN
-            	smg_states s ON s.id = ehc.state          
+            	smg_states s ON s.id = ehc.state  
+            LEFT JOIN
+            	extra_confirmations conf ON conf.hostID = ecpc.hostcompanyID
+                	AND conf.programID = ec.programID
+            LEFT OUTER JOIN extra_program_confirmations epc ON epc.hostID = ecpc.hostCompanyID
+         		AND epc.programID = ec.programID       
+            <cfif VAL(FORM.missingPhone)>
+            LEFT JOIN extra_hostauthenticationfiles ehaf
+                   ON (ehaf.hostID = ecpc.hostcompanyid
+                            AND (dateExpires >= <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
+                            	OR dateExpires IS NULL)
+                            AND authenticationType = "workmensCompensation")
+            </cfif> 
             WHERE 
                 ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
             AND 
                 ec.status != <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
             AND
             	ec.wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="Self-Placement">
+            
+            <cfif VAL(FORM.missingPhone)>
+                AND epc.confirmation_phone IS NULL
+                AND (conf.confirmed = 1 OR conf.confirmedDate IS NOT NULL)
+               
+                AND ehc.workmensCompensation IS NOT NULL
+                AND ehaf.id > 0
+                AND ecpc.selfEmailConfirmationDate IS NOT NULL
+            </cfif>
+                
                 
 			<cfif LEN(FORM.selfJobOfferStatus)>
             	AND
@@ -199,6 +221,12 @@
             <input type="radio" name="emailHostCompany" id="emailHostCompany2" value="1" <cfif VAL(FORM.emailHostCompany)> checked </cfif> > <label for="emailHostCompany2">Yes</label> 
         </td>
     </tr>
+    <tr>
+        <td valign="middle" align="right" class="style1"><b>Missing Only Phone Confirmation:</b></td>
+        <td  class="style1"> 
+        	<input type="checkbox" name="missingPhone" value="1" <cfif FORM.missingPhone EQ '1'>checked="checked"</cfif>> Yes
+        </td>
+    </tr>   
     <tr>
         <td align="right" class="style1"><b>Format: </b></td>
         <td  class="style1"> 
