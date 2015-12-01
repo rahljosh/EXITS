@@ -55,6 +55,9 @@
 		// Get Incident Report
 		qGetIncidentReport = APPLICATION.CFC.CANDIDATE.getIncidentReport(candidateID=qGetCandidate.candidateID);
 		
+		// Get Seeking Employment Comments
+		qGetSeekingEmploymentComments = APPLICATION.CFC.CANDIDATE.getSeekingEmploymentComments(candidateID=qGetCandidate.candidateID);
+		
 		// Get Cultural Activity Report
 		qGetCulturalActivityReport = APPLICATION.CFC.CANDIDATE.getCulturalActivityReport(candidateID=qGetCandidate.candidateID);
 		
@@ -111,7 +114,7 @@
 		
     <cfinclude template="../querys/fieldstudy.cfm">
     <cfinclude template="../querys/program.cfm">
-  
+    
     <cfquery name="qGetStateList" datasource="#APPLICATION.DSN.Source#">
         SELECT id, state, stateName
         FROM smg_states
@@ -204,6 +207,24 @@
         	qHostCompanyList
         WHERE 
             hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCandidate.requested_placement)#">
+    </cfquery>
+    
+    
+    <cfquery name="qGetProgramHistoryStartDate" datasource="#APPLICATION.DSN.Source#">
+        SELECT  candidateid, reason
+        FROM extra_program_history
+        WHERE candidateid = '#qGetCandidate.candidateID#'
+        	AND (reason = "Start Date has changed." 
+                OR reason = "Start and End Date has changed.")
+        ORDER BY programhistoryid
+    </cfquery>
+    <cfquery name="qGetProgramHistoryEndDate" datasource="#APPLICATION.DSN.Source#">
+        SELECT  candidateid, reason
+        FROM extra_program_history
+        WHERE candidateid = '#qGetCandidate.candidateID#'
+        	AND (reason = "End Date has changed." 
+                OR reason = "Start and End Date has changed.")
+        ORDER BY programhistoryid
     </cfquery>
 
 </cfsilent>
@@ -329,6 +350,7 @@
 		
 		if ( getHostID > 0 && getHostID != 195) {
 			$(".selfPlacementInfo").fadeIn("fast");
+			$("#seekingEmploymentDIV").fadeOut("fast");
 
 			// Fade out read only values
 			if ( vHideReadOnly == 1 ) {
@@ -349,6 +371,7 @@
 			// Erase self placement data
 			$(".selfPlacementField").val("");
 			$(".selfPlacementInfo").fadeOut("fast");
+			$("#seekingEmploymentDIV").fadeIn("fast");
 			// display deadline field for Seeking Employment
 			if (getHostID == 195) {
 				$("#deadline").fadeIn("fast");
@@ -602,6 +625,32 @@
 		alert("Could not retrieve company information");
 	}
 	
+	//Check J1 Placements Available Positions
+	var checkPlacement = function() {
+		
+		$("#warningNotes").html("");
+		$("#warningStatus").hide();
+		
+		$.ajax({
+			url: "../../extensions/components/hostCompany.cfc?method=getTotalAndActivePlacements",
+			dataType: "json",
+			data: { 
+				programID: $("#programID").val(),
+				hostID: $("#hostCompanyID").val()
+			},
+			success: function(data) {
+				console.log(data);
+				console.log($("#hostCompanyChangeReason").css("display"));
+				if (data.CODE != 0 ) {
+					//alert(data.TEXT);
+					$("#warningNotes").html(data.TEXT);
+					$("#warningStatus").show();
+				}
+				//$("#CandidateInfo").submit();
+			}
+		})
+	}
+	
 	// Check History
 	var checkHistory = function() {
 		// PROGRAM HISTORY
@@ -617,6 +666,7 @@
 			$("#reason_host").focus();
 			return false; 
 		}
+		
 	}
 	
 	// Change values
@@ -671,7 +721,7 @@
 
 <cfoutput>
 
-	<cfdirectory action="list" directory="#APPLICATION.PATH.ds2019forms#" filter="*#qGetCandidate.ds2019#*" name="dsforms">
+<cfdirectory action="list" directory="#APPLICATION.PATH.ds2019forms#" filter="*#qGetCandidate.ds2019#*" name="dsforms">
 
 <cfform name="CandidateInfo" method="post" action="?curdoc=candidate/qr_edit_candidate&uniqueid=#qGetCandidate.uniqueid#" onsubmit="return checkHistory();">
 <input type="hidden" name="candidateID" value="#qGetCandidate.candidateID#">
@@ -848,12 +898,12 @@
                                         <cfloop query="qGetUploadedDS2019">
                                         	#downloadLink#<br>
                                         </cfloop>
-										<cfif client.usertype lte 4>
+                                        
+                                        <cfif client.usertype lte 4>
 											<cfif val(dsforms.recordcount)>
                                             <a href="../uploadedfiles/2019Forms/#dsforms.name#" class="style4">[ Download DS-2019 ]</a>
                                             </cfif>
                                         </cfif>
-                                      
                                     </div>                                    
                                     
                             	</td>
@@ -1259,6 +1309,32 @@
                                                 </div>
                                             </td>
                                         </tr>
+                                        <cfif qCandidatePlaceCompany.isHousingProvided EQ 0>
+                                        <tr>
+                                            <td class="style1">
+                                                <input 
+                                                	type="checkbox" 
+                                                    name="wat_doc_no_housing_form" 
+                                                    id="wat_doc_no_housing_form" 
+                                                    value="1" 
+                                                    class="formField" 
+                                                    disabled 
+													<cfif VAL(qGetCandidate.wat_doc_no_housing_form)> checked </cfif> > 
+                                                <label for="wat_doc_no_housing_form">No Housing Form</label>
+                                            </td>
+                                            <td class="style1">
+                                            <input 
+                                                	type="checkbox" 
+                                                    name="wat_doc_housing_arrengements" 
+                                                    id="wat_doc_housing_arrengements" 
+                                                    value="1" 
+                                                    class="formField" 
+                                                    disabled 
+													<cfif VAL(qGetCandidate.wat_doc_housing_arrengements)> checked </cfif> > 
+                                                <label for="wat_doc_housing_arrengements">Housing Arrengements Form</label>
+                                            </td>
+                                        </tr>
+                                        </cfif>
                                         <tr>
                                             <td class="style1">
                                                 <input 
@@ -1270,9 +1346,23 @@
                                                     disabled 
 													<cfif VAL(qGetCandidate.wat_doc_orientation)> checked </cfif> > 
                                                 <label for="wat_doc_orientation">Orientation Sign Off</label>
-                                            </td>
+                                            </td> 
+                                            <cfif qCandidatePlaceCompany.isHousingProvided EQ 2>
+                                            <td class="style1">
+                                                <input 
+                                                	type="checkbox" 
+                                                    name="wat_doc_housing_third_party" 
+                                                    id="wat_doc_housing_third_party" 
+                                                    value="1" 
+                                                    class="formField" 
+                                                    disabled 
+													<cfif VAL(qGetCandidate.wat_doc_housing_third_party)> checked </cfif> > 
+                                                <label for="wat_doc_housing_third_party">Third Party Housing Form</label>
+                                            </td>  
+                                            <cfelse>
                                             <td class="style1">
                                             </td>
+                                            </cfif>                                     
                                         </tr>
                                         <tr>
                                         	<td class="style1" colspan="4">
@@ -1348,7 +1438,7 @@
                                         	<td class="style1" align="right" width="30%"><strong>Program:</strong></td>
                                             <td class="style1" width="70%">
                                                 <span class="readOnly">#qGetProgramInfo.programName#</span>
-                                                <select name="programid" class="style1 editPage xLargeField" onChange="displayProgramReason(#VAL(qGetCandidate.programid)#, this.value);">
+                                                <select name="programid" id="programID" class="style1 editPage xLargeField" onChange="displayProgramReason(#VAL(qGetCandidate.programid)#, this.value);">
                                                     <option value="0">Unassigned</option>
                                                     <cfloop query="program">
                                                         <option value="#program.programid#" <cfif qGetCandidate.programid EQ program.programid> selected </cfif> >#program.programname#</option>
@@ -1433,14 +1523,17 @@
                                             	<span class="readOnly">#dateFormat(qGetCandidate.startdate, 'mm/dd/yyyy')#</span>
                                             	<input type="text" class="style1 datePicker editPage" name="program_startdate" value="#dateFormat(qGetCandidate.startdate, 'mm/dd/yyyy')#" maxlength="10"> 
                                                 <cfif NOT LEN(qGetCandidate.startdate)><font size="1">(mm/dd/yyyy)</font></cfif>
+                                                <cfif qGetProgramHistoryStartDate.recordCount GT 0><span style="color:red"> - Start Date has changed.</span></cfif>
                                             </td>
                                         </tr>
+                                        
                                         <tr>
                                             <td class="style1" align="right"><strong>End Date:</strong></td>
                                             <td class="style1">
                                                 <span class="readOnly">#dateFormat(qGetCandidate.enddate, 'mm/dd/yyyy')#</span>
                                                 <input type="text" class="style1 datePicker editPage" name="program_enddate" value="#dateFormat(qGetCandidate.enddate, 'mm/dd/yyyy')#" maxlength="10"> 
                                                 <cfif NOT LEN(qGetCandidate.enddate)><font size="1">(mm/dd/yyyy)</font></cfif>
+                                                <cfif qGetProgramHistoryEndDate.recordCount GT 0><span style="color:red"> - End Date has changed.</span></cfif>
                                             </td>
                                         </tr>
                                         <tr>
@@ -1592,7 +1685,7 @@
                                                 	name="hostCompanyID" 
                                                     id="hostCompanyID" 
                                                     class="style1 editPage xLargeField" 
-                                                    onChange="displayHostReason(#VAL(qCandidatePlaceCompany.hostCompanyID)#, this.value, #VAL(qGetCandidate.candidateID)#); displaySelfPlacementInfo(1);">
+                                                    onChange="displayHostReason(#VAL(qCandidatePlaceCompany.hostCompanyID)#, this.value, #VAL(qGetCandidate.candidateID)#); displaySelfPlacementInfo(1); checkPlacement();">
 	                                                <option value="0">Unplaced</option>
                                                     <cfloop query="qHostCompanyList">
                                                     	<option value="#qHostCompanyList.hostCompanyID#" <cfif qCandidatePlaceCompany.hostCompanyID EQ qHostCompanyList.hostCompanyID> selected </cfif> > 
@@ -1630,7 +1723,7 @@
                                         	<td class="style1" align="right" width="30%"><strong>Job Title:</strong></td>
                                             <td class="style1" align="left" width="70%">
                                             	<span class="readOnly">
-                                                	#qCandidatePlaceCompany.jobTitle#, POC: #qCandidatePlaceCompany.supervisor#, POC Phone: #qCandidatePlaceCompany.phone#
+                                                	#qCandidatePlaceCompany.jobTitle#, POC: #qCandidatePlaceCompany.supervisor#, POC Phone: #qCandidatePlaceCompany.phone# <cfif VAL(qCandidatePlaceCompany.phoneExt)>Ext:#qCandidatePlaceCompany.phoneExt#</cfif>
                                               	</span>
                                                 <cfselect 
                                                     name="jobID"
@@ -1698,6 +1791,8 @@
 													<cfif VAL(qGetCandidate.wat_doc_job_offer_employer)> checked </cfif> > 
                                             </td>
                                         </tr>
+                                        
+                                        
                                         <tr class="editPage">
                                         	<td class="style1 cancelSecondaryPlacement" align="right" width="30%">
                                             	<label for="wat_doc_job_offer_employer"><strong>Cancel Placement?</strong></label>
@@ -1887,18 +1982,20 @@
                                         	<td class="style1" align="right"><strong>Confirmation of Terms:</strong></td>
                                             <td class="style1">
                                             	<input type="hidden" id="confirmation" name="confirmation" <cfif qCandidatePlaceCompany.confirmed EQ 1>value="1"<cfelse>value="0"</cfif> />
-                                                <input class="formField" type="checkbox" class="formField" onclick="changeValue('confirmation')" name="confirmationCheckbox" id="confirmationCheckbox" <cfif qCandidatePlaceCompany.confirmed EQ 1>checked="checked"</cfif> />
+                                                <input class="formField2" type="checkbox" onclick="changeValue('confirmation')" name="confirmationCheckbox" disabled="disabled" id="confirmationCheckbox" <cfif qCandidatePlaceCompany.confirmed EQ 1>checked="checked"</cfif> />
                                             </td>
                                         </tr>
                                         <tr class="hiddenField selfPlacementInfo">
                                         	<td class="style1" align="right"><strong>Available J1 Positions:</strong></td>
                                             <td class="style1">
-                                            	<span class="readOnly">#qCandidatePlaceCompany.numberPositions#</span>
-                                                <select class="editPage" id="numberPositionsSelect" name="numberPositionsSelect">
+                                            	<span class="readOnly2">#qCandidatePlaceCompany.numberPositions#</span>
+                                                
+                                                <select class="editPage2" style="display:none" id="numberPositionsSelect" name="numberPositionsSelect">
                                                 	<cfloop from="0" to="99" index="i">
                                                     	<option value="#i#" <cfif qCandidatePlaceCompany.numberPositions EQ i>selected</cfif>>#i#</option>
                                                     </cfloop>
                                                 </select>
+                                                
                                             </td>
                                         </tr>
                                         
@@ -1925,7 +2022,7 @@
                                                             <input
                                                                 id="authentication_businessLicenseNotAvailable" 
                                                                 name="authentication_businessLicenseNotAvailable" 
-                                                                class="formField" 
+                                                                class="formField2" 
                                                                 disabled="disabled"
                                                                 type="checkbox"
                                                                 onclick="changeAuthenticationAvailable()"
@@ -1938,7 +2035,7 @@
                                                                 name="authentication_secretaryOfState" 
                                                                 id="authentication_secretaryOfState" 
                                                                 value="1" 
-                                                                class="formField" 
+                                                                class="formField2" 
                                                                 disabled 
 																<cfif VAL(qCandidatePlaceCompany.authentication_secretaryOfState)> checked </cfif> />
                                                          	<span id="authentication_secretaryOfStateExpiration" style="padding-left:3px;">
@@ -1963,8 +2060,8 @@
                                                                 name="authentication_incorporation" 
                                                                 id="authentication_incorporation" 
                                                                 value="1" 
-                                                                class="formField" 
-                                                                disabled 
+                                                                class="formField2" 
+                                                                disabled="disabled"
 																<cfif VAL(qCandidatePlaceCompany.authentication_incorporation)> checked </cfif> />
                                                           	<span id="authentication_incorporationExpiration" style="padding-left:3px;">
                                                            		<cfif qCandidatePlaceCompany.authentication_incorporationExpiration LT NOW()>
@@ -1987,7 +2084,7 @@
                                                                 name="authentication_certificateOfExistence" 
                                                                 id="authentication_certificateOfExistence" 
                                                                 value="1" 
-                                                                class="formField" 
+                                                                class="formField2" 
                                                                 disabled 
 																<cfif VAL(qCandidatePlaceCompany.authentication_certificateOfExistence)> checked </cfif> />
                                                             <span id="authentication_certificateOfExistenceExpiration" style="padding-left:3px;">
@@ -2011,8 +2108,8 @@
                                                                 name="authentication_certificateOfReinstatement" 
                                                                 id="authentication_certificateOfReinstatement" 
                                                                 value="1" 
-                                                                class="formField" 
-                                                                disabled 
+                                                                class="formField2" 
+                                                                disabled="disabled"
 																<cfif VAL(qCandidatePlaceCompany.authentication_certificateOfReinstatement)> checked </cfif> />
                                                             <span id="authentication_certificateOfReinstatementExpiration" style="padding-left:3px;">
                                                            		<cfif qCandidatePlaceCompany.authentication_certificateOfReinstatementExpiration LT NOW()>
@@ -2035,8 +2132,8 @@
                                                                 name="authentication_departmentOfState" 
                                                                 id="authentication_departmentOfState" 
                                                                 value="1" 
-                                                                class="formField" 
-                                                                disabled 
+                                                                class="formField2" 
+                                                                disabled="disabled" 
 																<cfif VAL(qCandidatePlaceCompany.authentication_departmentOfState)> checked </cfif> />
                                                             <span id="authentication_departmentOfStateExpiration" style="padding-left:3px;">
                                                            		<cfif qCandidatePlaceCompany.authentication_departmentOfStateExpiration LT NOW()>
@@ -2058,8 +2155,8 @@
                                                                 name="authentication_departmentOfLabor" 
                                                                 id="authentication_departmentOfLabor" 
                                                                 value="1" 
-                                                                class="formField" 
-                                                                disabled 
+                                                                class="formField2" 
+                                                                disabled="disabled"
 																<cfif VAL(qCandidatePlaceCompany.authentication_departmentOfLabor)> checked </cfif> />
                                                             <span id="authentication_departmentOfLaborExpiration" style="padding-left:3px;">
                                                            		<cfif qCandidatePlaceCompany.authentication_departmentOfLaborExpiration LT NOW()>
@@ -2080,8 +2177,8 @@
                                                                 name="authentication_googleEarth" 
                                                                 id="authentication_googleEarth" 
                                                                 value="1" 
-                                                                class="formField" 
-                                                                disabled 
+                                                                class="formField2" 
+                                                                disabled="disabled" 
 																<cfif VAL(qCandidatePlaceCompany.authentication_googleEarth)> checked </cfif> />
                                                             <span id="authentication_googleEarthExpiration" style="padding-left:3px;">
                                                            		<cfif qCandidatePlaceCompany.authentication_googleEarthExpiration LT NOW()>
@@ -2104,14 +2201,14 @@
                                         <tr class="hiddenField selfPlacementInfo">
                                             <td class="style1" align="right"><strong>EIN:</strong></td>
                                             <td class="style1">
-                                                <span class="readOnly selfPlacementReadOnly">#qCandidatePlaceCompany.EIN#</span>
-                                                <input type="text" name="EIN" id="EIN" value="#qCandidatePlaceCompany.EIN#" class="style1 editPage mediumField">
+                                                <span class="readOnly2 selfPlacementReadOnly">#qCandidatePlaceCompany.EIN#</span>
+                                                <input type="text" name="EIN" id="EIN" value="#qCandidatePlaceCompany.EIN#" class="style1 editPage2 mediumField" style="display:none" >
                                             </td>
                                         </tr>
                                         <tr class="hiddenField selfPlacementInfo">
                                             <td class="style1" align="right"><strong>Workmen's Compensation:</strong></td>
                                             <td class="style1">
-                                                <span class="readOnly selfPlacementReadOnly">
+                                                <span class="readOnly2 selfPlacementReadOnly">
                                                     <cfif qCandidatePlaceCompany.workmensCompensation EQ 0>
                                                         No
                                                     <cfelseif qCandidatePlaceCompany.workmensCompensation EQ 1>
@@ -2120,7 +2217,7 @@
                                                         N/A
                                                     </cfif>
                                                 </span>
-                                                <select name="workmensCompensation" id="workmensCompensation" class="style1 editPage smallField"> 
+                                                <select name="workmensCompensation" id="workmensCompensation" class="style1 editPage2 smallField"  style="display:none"> 
                                                     <option value="" <cfif NOT LEN(qCandidatePlaceCompany.workmensCompensation)>selected</cfif> ></option>
                                                     <option value="0" <cfif qCandidatePlaceCompany.workmensCompensation EQ 0>selected</cfif> >No</option>
                                                     <option value="1" <cfif qCandidatePlaceCompany.workmensCompensation EQ 1>selected</cfif> >Yes</option>                                                    
@@ -2132,7 +2229,7 @@
                                             <tr class="hiddenField selfPlacementInfo">
                                                 <td class="style1" align="right"><strong>Carrier Name:</strong></td>
                                                 <td class="style1">
-                                                    <span class="readOnly selfPlacementReadOnly">
+                                                    <span class="readOnly2 selfPlacementReadOnly">
                                                         #qCandidatePlaceCompany.WC_carrierName#
                                                     </span>
                                                     <input 
@@ -2140,14 +2237,15 @@
                                                         name="WC_carrierName" 
                                                         id="WC_carrierName" 
                                                         value="#qCandidatePlaceCompany.WC_carrierName#" 
-                                                        class="style1 editPage"
+                                                        class="style1 editPage2"
+                                                         style="display:none"
                                                         size="40">
                                                 </td>
                                             </tr>
                                             <tr class="hiddenField selfPlacementInfo">
                                                 <td class="style1" align="right"><strong>Carrier Phone:</strong></td>
                                                 <td class="style1">
-                                                    <span class="readOnly selfPlacementReadOnly">
+                                                    <span class="readOnly2 selfPlacementReadOnly">
                                                         #qCandidatePlaceCompany.WC_carrierPhone#
                                                     </span>
                                                     <input 
@@ -2155,14 +2253,15 @@
                                                         name="WC_carrierPhone" 
                                                         id="WC_carrierPhone" 
                                                         value="#qCandidatePlaceCompany.WC_carrierPhone#" 
-                                                        class="style1 editPage"
+                                                        class="style1 editPage2"
+                                                         style="display:none"
                                                         size="40">
                                                 </td>
                                             </tr>
                                             <tr class="hiddenField selfPlacementInfo">
                                                 <td class="style1" align="right"><strong>Policy Number:</strong></td>
                                                 <td class="style1">
-                                                    <span class="readOnly selfPlacementReadOnly">
+                                                    <span class="readOnly2 selfPlacementReadOnly">
                                                         #qCandidatePlaceCompany.WC_policyNumber#
                                                     </span>
                                                     <input 
@@ -2170,7 +2269,8 @@
                                                         name="WC_policyNumber" 
                                                         id="WC_policyNumber" 
                                                         value="#qCandidatePlaceCompany.WC_policyNumber#" 
-                                                        class="style1 editPage" 
+                                                        class="style1 editPage2" 
+                                                         style="display:none"
                                                         size="40">
                                                 </td>
                                             </tr>
@@ -2178,7 +2278,7 @@
                                         <tr class="hideForSeeking">
                                         	<td class="style1" align="right"><strong>WC Expiration Date:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
-                                            	<span class="readOnly selfPlacementReadOnly">
+                                            	<span class="readOnly2 selfPlacementReadOnly">
                                                 	<cfif IsDate(qCandidatePlaceCompany.WCDateExpired) AND qCandidatePlaceCompany.WCDateExpired GT NOW()>
                                                     	#DateFormat(qCandidatePlaceCompany.WCDateExpired, 'mm/dd/yyyy')#
                                                   	<cfelseif IsDate(qCandidatePlaceCompany.WCDateExpired)>
@@ -2192,7 +2292,8 @@
                                                     name="WCDateExpired" 
                                                     id="WCDateExpired" 
                                                     value="#DateFormat(qCandidatePlaceCompany.WCDateExpired, 'mm/dd/yyyy')#" 
-                                                    class="style1 datePicker editPage" 
+                                                    class="style1 datePicker editPage2"
+                                                     style="display:none" 
                                                     maxlength="10">
                                             </td>
                                         </tr>
@@ -2285,6 +2386,23 @@
                                                         </cfif>
                                                     </td>
                                               	</tr>
+                                                
+                                                
+                                        <tr class="editPage">
+                                        	<td class="style1" align="right" width="30%">
+                                            	<label for="wat_doc_job_offer_employer"><strong>Make Primary Placement:</strong></label>
+                                           	</td>
+                                            <td class="style1" align="left" width="70%">
+                                                <input 
+                                                	type="checkbox" 
+                                                    name="switch_placements" 
+                                                    id="switch_placements" 
+                                                    value="1" 
+                                                    class="formField" 
+                                                    disabled > 
+                                            </td>
+                                        </tr>
+                                                
                                               	<tr>
                                         			<td class="style1" align="right" width="30%"><strong>Company Name:</strong></td>
                                                     <td class="style1" align="left" width="70%">
@@ -2299,6 +2417,24 @@
                                                         </span>
                                                    	</td>
                                                	</tr>
+                                                
+                                                <tr class="readOnly">
+                                                    <td class="style1" align="right" width="30%"><strong>Address:</strong></td>
+                                                    <td class="style1" align="left" width="70%"><span class="readOnly">#qGetAllPlacements.address#</span></td>
+                                                </tr>
+                                                <tr class="readOnly">
+                                                    <td class="style1" align="right" width="30%"><strong>City:</strong></td>
+                                                    <td class="style1" align="left" width="70%"><span class="readOnly">#qGetAllPlacements.city#</span></td>
+                                                </tr>
+                                                <tr class="readOnly">
+                                                    <td class="style1" align="right" width="30%"><strong>State:</strong></td>
+                                                    <td class="style1" align="left" width="70%"><span class="readOnly">#qGetAllPlacements.state#</span></td>
+                                                </tr>
+                                                <tr class="readOnly">
+                                                    <td class="style1" align="right" width="30%"><strong>Zip:</strong></td>
+                                                    <td class="style1" align="left" width="70%"><span class="readOnly">#qGetAllPlacements.zip#</span></td>
+                                                </tr>
+                                                
                                                  <tr>
                                                     <td class="style1" align="right" width="30%"><strong>Job Title:</strong></td>
                                                     <td class="style1" align="left" width="70%">
@@ -2380,14 +2516,14 @@
                                                     <td class="style1" align="right"><strong>Confirmation of Terms:</strong></td>
                                                     <td class="style1">
                                                     	<input type="hidden" id="confirmation_#qGetAllPlacements.candCompID#" name="confirmation_#qGetAllPlacements.candCompID#" <cfif qGetAllPlacements.confirmed EQ 1>value="1"<cfelse>value="0"</cfif> />
-                                                        <input type="checkbox" onClick="changeValue('confirmation_#qGetAllPlacements.candCompID#')" class="formField" name="confirmationCheckbox_#qGetAllPlacements.candCompID#" id="confirmationCheckbox_#qGetAllPlacements.candCompID#" <cfif qGetAllPlacements.confirmed EQ 1>checked="checked"</cfif> />
+                                                        <input type="checkbox" onClick="changeValue('confirmation_#qGetAllPlacements.candCompID#')" class="formFields" disabled="disabled" name="confirmationCheckbox_#qGetAllPlacements.candCompID#" id="confirmationCheckbox_#qGetAllPlacements.candCompID#" <cfif qGetAllPlacements.confirmed EQ 1>checked="checked"</cfif> />
                                                     </td>
                                                 </tr>
                                                 <tr class="hiddenField selfPlacementInfo">
                                                     <td class="style1" align="right"><strong>Available J1 Positions:</strong></td>
                                                     <td class="style1">
-                                                        <span class="readOnly">#qGetAllPlacements.numberPositions#</span>
-                                                        <select class="editPage" id="numberPositionsSelect_#qGetAllPlacements.candCompID#" name="numberPositionsSelect_#qGetAllPlacements.candCompID#">
+                                                        <span class="readOnly2">#qGetAllPlacements.numberPositions#</span>
+                                                        <select class="editPage2" style="display:none" id="numberPositionsSelect_#qGetAllPlacements.candCompID#" name="numberPositionsSelect_#qGetAllPlacements.candCompID#">
                                                             <cfloop from="0" to="99" index="i">
                                                                 <option value="#i#" <cfif qGetAllPlacements.numberPositions EQ i>selected</cfif>>#i#</option>
                                                             </cfloop>
@@ -2411,7 +2547,7 @@
                                                                     <input
                                                                         id="authentication_businessLicenseNotAvailable_#qGetAllPlacements.candCompID#" 
                                                                         name="authentication_businessLicenseNotAvailable_#qGetAllPlacements.candCompID#" 
-                                                                        class="formField" 
+                                                                        class="formField2" 
                                                                         disabled="disabled"
                                                                         type="checkbox"
                                                                         onclick="changeSecondaryAuthenticationAvailable('#qGetAllPlacements.candCompID#')"
@@ -2424,8 +2560,8 @@
                                                                         name="authentication_secretaryOfState_#qGetAllPlacements.candCompID#" 
                                                                         id="authentication_secretaryOfState_#qGetAllPlacements.candCompID#" 
                                                                         value="1" 
-                                                                        class="formField" 
-                                                                        disabled 
+                                                                        class="formField2" 
+                                                                        disabled="disabled"
 																		<cfif VAL(qGetAllPlacements.authentication_secretaryOfState)> checked </cfif> />
                                                                   	<span style="padding-left:3px;<cfif qGetAllPlacements.authentication_secretaryOfStateExpiration LT NOW()>color:red;</cfif>">
                                                                         #DateFormat(qGetAllPlacements.authentication_secretaryOfStateExpiration,'mm/dd/yyyy')#
@@ -2445,8 +2581,9 @@
                                                                         name="authentication_incorporation_#qGetAllPlacements.candCompID#" 
                                                                         id="authentication_departmentOfLabor_#qGetAllPlacements.candCompID#" 
                                                                         value="1" 
-                                                                        class="formField" 
-                                                                        disabled <cfif VAL(qGetAllPlacements.authentication_incorporation)> checked </cfif> />
+                                                                        disabled="disabled"
+                                                                        class="formField2" 
+                                                                         <cfif VAL(qGetAllPlacements.authentication_incorporation)> checked </cfif> />
                                                                   	<span style="padding-left:3px;<cfif qGetAllPlacements.authentication_incorporationExpiration LT NOW()>color:red;</cfif>">
                                                                         #DateFormat(qGetAllPlacements.authentication_incorporationExpiration,'mm/dd/yyyy')#
                                                                     </span>
@@ -2464,8 +2601,8 @@
                                                                         name="authentication_certificateOfExistence_#qGetAllPlacements.candCompID#" 
                                                                         id="authentication_certificateOfExistence_#qGetAllPlacements.candCompID#" 
                                                                         value="1" 
-                                                                        class="formField" 
-                                                                        disabled 
+                                                                        class="formField2" 
+                                                                        disabled="disabled" 
 																		<cfif VAL(qGetAllPlacements.authentication_certificateOfExistence)> checked </cfif> />
                                                                    	<span style="padding-left:3px;<cfif qGetAllPlacements.authentication_certificateOfExistenceExpiration LT NOW()>color:red;</cfif>">
                                                                         #DateFormat(qGetAllPlacements.authentication_certificateOfExistenceExpiration,'mm/dd/yyyy')#
@@ -2484,8 +2621,8 @@
                                                                         name="authentication_certificateOfReinstatement_#qGetAllPlacements.candCompID#" 
                                                                         id="authentication_certificateOfReinstatement_#qGetAllPlacements.candCompID#" 
                                                                         value="1" 
-                                                                        class="formField" 
-                                                                        disabled 
+                                                                        class="formField2" 
+                                                                        disabled="disabled" 
 																		<cfif VAL(qGetAllPlacements.authentication_certificateOfReinstatement)> checked </cfif> />
                                                                 	<span style="padding-left:3px;<cfif qGetAllPlacements.authentication_certificateOfReinstatementExpiration LT NOW()>color:red;</cfif>">
                                                                         #DateFormat(qGetAllPlacements.authentication_certificateOfReinstatementExpiration,'mm/dd/yyyy')#
@@ -2504,8 +2641,8 @@
                                                                         name="authentication_departmentOfState_#qGetAllPlacements.candCompID#" 
                                                                         id="authentication_departmentOfState_#qGetAllPlacements.candCompID#" 
                                                                         value="1" 
-                                                                        class="formField" 
-                                                                        disabled 
+                                                                        class="formField2" 
+                                                                        disabled="disabled" 
 																		<cfif VAL(qGetAllPlacements.authentication_departmentOfState)> checked </cfif> />
                                                                   	<span style="padding-left:3px;<cfif qGetAllPlacements.authentication_departmentOfStateExpiration LT NOW()>color:red;</cfif>">
                                                                         #DateFormat(qGetAllPlacements.authentication_departmentOfStateExpiration,'mm/dd/yyyy')#
@@ -2521,8 +2658,8 @@
                                                                         name="authentication_departmentOfLabor_#qGetAllPlacements.candCompID#" 
                                                                         id="authentication_departmentOfLabor_#qGetAllPlacements.candCompID#" 
                                                                         value="1" 
-                                                                        class="formField" 
-                                                                        disabled 
+                                                                        class="formField2" 
+                                                                        disabled="disabled" 
 																		<cfif VAL(qGetAllPlacements.authentication_departmentOfLabor)> checked </cfif> />
                                                                     <span style="padding-left:3px;<cfif qGetAllPlacements.authentication_departmentOfLaborExpiration LT NOW()>color:red;</cfif>">
                                                                         #DateFormat(qGetAllPlacements.authentication_departmentOfLaborExpiration,'mm/dd/yyyy')#
@@ -2536,8 +2673,8 @@
                                                                     	type="checkbox" 
                                                                         name="authentication_googleEarth_#qGetAllPlacements.candCompID#" 
                                                                         id="authentication_googleEarth_#qGetAllPlacements.candCompID#" 
-                                                                        value="1" class="formField" 
-                                                                        disabled 
+                                                                        value="1" class="formField2" 
+                                                                        disabled="disabled" 
 																		<cfif VAL(qGetAllPlacements.authentication_googleEarth)> checked </cfif> />
                                                                     <span style="padding-left:3px;<cfif qGetAllPlacements.authentication_googleEarthExpiration LT NOW()>color:red;</cfif>">
                                                                         #DateFormat(qGetAllPlacements.authentication_googleEarthExpiration,'mm/dd/yyyy')#
@@ -2558,7 +2695,7 @@
                                                 <tr class="hiddenField selfPlacementInfo">
                                                     <td class="style1" align="right"><strong>Workmen's Compensation:</strong></td>
                                                     <td class="style1">
-                                                        <span class="readOnly selfPlacementReadOnly">
+                                                        <span class="readOnly2 selfPlacementReadOnly">
                                                             <cfif qGetAllPlacements.workmensCompensation EQ 0>
                                                                 No
                                                             <cfelseif qGetAllPlacements.workmensCompensation EQ 1>
@@ -2567,7 +2704,7 @@
                                                                 N/A
                                                             </cfif>
                                                         </span>
-                                                        <select name="workmensCompensation_#qGetAllPlacements.candCompID#" id="workmensCompensation_#qGetAllPlacements.candCompID#" class="style1 editPage smallField"> 
+                                                        <select name="workmensCompensation_#qGetAllPlacements.candCompID#" id="workmensCompensation_#qGetAllPlacements.candCompID#" class="style1 editPage2 smallField" style="display:none"> 
                                                             <option value="" <cfif NOT LEN(qGetAllPlacements.workmensCompensation)>selected</cfif> ></option>
                                                             <option value="0" <cfif qGetAllPlacements.workmensCompensation EQ 0>selected</cfif> >No</option>
                                                             <option value="1" <cfif qGetAllPlacements.workmensCompensation EQ 1>selected</cfif> >Yes</option>                                                    
@@ -2579,7 +2716,7 @@
                                                     <tr class="hiddenField selfPlacementInfo">
                                                         <td class="style1" align="right"><strong>Carrier Name:</strong></td>
                                                         <td class="style1">
-                                                            <span class="readOnly selfPlacementReadOnly">
+                                                            <span class="readOnly2 selfPlacementReadOnly">
                                                                 #qGetAllPlacements.WC_carrierName#
                                                             </span>
                                                             <input 
@@ -2587,14 +2724,14 @@
                                                                 name="WC_carrierName_#qGetAllPlacements.candCompID#" 
                                                                 id="WC_carrierName_#qGetAllPlacements.candCompID#" 
                                                                 value="#qGetAllPlacements.WC_carrierName#" 
-                                                                class="style1 editPage"
+                                                                class="style1 editPage2" style="display:none"
                                                                 size="40" />
                                                         </td>
                                                     </tr>
                                                     <tr class="hiddenField selfPlacementInfo">
                                                         <td class="style1" align="right"><strong>Carrier Phone:</strong></td>
                                                         <td class="style1">
-                                                            <span class="readOnly selfPlacementReadOnly">
+                                                            <span class="readOnly2 selfPlacementReadOnly">
                                                                 #qGetAllPlacements.WC_carrierPhone#
                                                             </span>
                                                             <input 
@@ -2602,14 +2739,14 @@
                                                                 name="WC_carrierPhone_#qGetAllPlacements.candCompID#" 
                                                                 id="WC_carrierPhone_#qGetAllPlacements.candCompID#" 
                                                                 value="#qGetAllPlacements.WC_carrierPhone#" 
-                                                                class="style1 editPage"
+                                                                class="style1 editPage2" style="display:none"
                                                                 size="40" />
                                                         </td>
                                                     </tr>
                                                     <tr class="hiddenField selfPlacementInfo">
                                                         <td class="style1" align="right"><strong>Policy Number:</strong></td>
                                                         <td class="style1">
-                                                            <span class="readOnly selfPlacementReadOnly">
+                                                            <span class="readOnly2 selfPlacementReadOnly">
                                                                 #qGetAllPlacements.WC_policyNumber#
                                                             </span>
                                                             <input 
@@ -2617,7 +2754,7 @@
                                                                 name="WC_policyNumber_#qGetAllPlacements.candCompID#" 
                                                                 id="WC_policyNumber_#qGetAllPlacements.candCompID#" 
                                                                 value="#qGetAllPlacements.WC_policyNumber#" 
-                                                                class="style1 editPage"
+                                                                class="style1 editPage2" style="display:none"
                                                                 size="40" />
                                                         </td>
                                                     </tr>
@@ -2625,7 +2762,7 @@
                                                 <tr>
                                                     <td class="style1" align="right"><strong>WC Expiration Date:</strong></td>
                                                     <td class="style1" bordercolor="##FFFFFF">
-                                                        <span class="readOnly selfPlacementReadOnly">
+                                                        <span class="readOnly2 selfPlacementReadOnly">
                                                             <cfif IsDate(qGetAllPlacements.WCDateExpired) AND qGetAllPlacements.WCDateExpired GT NOW()>
                                                                 #DateFormat(qGetAllPlacements.WCDateExpired, 'mm/dd/yyyy')#
                                                             <cfelseif IsDate(qGetAllPlacements.WCDateExpired)>
@@ -2634,7 +2771,7 @@
                                                                 Workmen's compensation is missing.
                                                             </cfif>
                                                         </span>
-                                                            <input type="text" name="WCDateExpired_#qGetAllPlacements.candCompID#" id="WCDateExpired_#qGetAllPlacements.candCompID#" value="#DateFormat(qGetAllPlacements.WCDateExpired, 'mm/dd/yyyy')#" class="style1 datePicker editPage" maxlength="10">
+                                                            <input type="text" name="WCDateExpired_#qGetAllPlacements.candCompID#" id="WCDateExpired_#qGetAllPlacements.candCompID#" value="#DateFormat(qGetAllPlacements.WCDateExpired, 'mm/dd/yyyy')#" class="style1 datePicker editPage2"  style="display:none" maxlength="10">
                                                     </td>
                                                 </tr>
                                                 <tr class="hiddenField selfPlacementInfo">
@@ -2662,6 +2799,61 @@
                             </cfif>
                             
                         </cfloop>
+                        
+                        <!--- SHOW ONLY IF "SEEKING EMPLOYMENT" --->
+                        
+                        
+							<!---- SEEKING EMPLOYMENT - COMMENTS --->
+                            <div id="seekingEmploymentDIV" >
+                            <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
+                                <tr>
+                                    <td bordercolor="##FFFFFF">
+                            
+                                        <table width="100%" cellpadding=3 cellspacing="0" border="0">
+                                            <tr bgcolor="##C2D1EF">
+                                                <td colspan="4" class="style2" bgcolor="##8FB6C9">
+                                                    &nbsp;:: Seeking Employment - Comments
+                                                    <span style="float:right; padding-right:20px;">
+                                                        <a href="candidate/seekingEmploymentComments.cfm?uniqueID=#qGetCandidate.uniqueID#" class="style2 jQueryModal">[ New Comment ]</a>
+                                                    </span>
+                                                </td>
+                                            </tr>	
+                                            <tr>
+                                                <td class="style1"><strong>Date</strong></td>
+                                                <td class="style1"><strong>Comment</strong></td>
+                                            </tr>
+                                            
+                                            <cfloop query="qGetSeekingEmploymentComments">
+                                                <tr <cfif qGetSeekingEmploymentComments.currentRow mod 2>bgcolor="##E4E4E4"</cfif>>     
+                                                    <td class="style1" width="15%">
+                                                        <a href="candidate/seekingEmploymentComments.cfm?uniqueID=#qGetCandidate.uniqueID#&incidentID=#qGetIncidentReport.ID#" class="style4 jQueryModal">
+                                                            #DateFormat(qGetSeekingEmploymentComments.date, 'mm/dd/yy')#
+                                                        </a>
+                                                    </td>
+                                                    <td class="style1">
+                                                        <a href="candidate/seekingEmploymentComments.cfm?uniqueID=#qGetCandidate.uniqueID#&incidentID=#qGetIncidentReport.ID#" class="style4 jQueryModal">
+                                                            #qGetSeekingEmploymentComments.note#
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            </cfloop>
+                                            
+                                            <cfif NOT VAL(qGetSeekingEmploymentComments.recordCount)>
+                                                <tr bgcolor="##E4E4E4">
+                                                    <td colspan="4" class="style1" align="center">There are no comments recorded</td>                                                
+                                                </tr>
+                                            </cfif> 
+                                                                                           
+                                        </table>
+                                        
+                                    </td>
+                                </tr>
+                            </table> 
+    						</div>
+                            <br />
+                        
+                        
+                        
                         
                         <!--- DS2019 Form --->
                         <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
@@ -2825,14 +3017,14 @@
                                                 <input type="text" name="usPhone" id="usPhone" class="style1 editPage" value="#qGetCandidate.us_phone#">
                                             </td>
                                         </tr>
-                                         <tr>
+                                        <tr>
                                         	<td class="style1" width="30%" align="right"><label for="usPhone"><strong>Address:</strong></label></td>
                                         	<td class="style1" width="70%">
                                             	<span class="readOnly">#qGetCandidate.arrival_address#</span>
-                                                <input name="arrival_address" type="text" class="style1 editPage" id="arrival_address" value="#qGetCandidate.arrival_address#" maxlength="64" placeholder="Max Length 64">
+                                                <input type="text" name="arrival_address" id="arrival_address" class="style1 editPage" value="#qGetCandidate.arrival_address#">
                                             </td>
                                         </tr>
-                                          <tr>
+                                        <tr>
                                         	<td class="style1" width="30%" align="right"><label for="usPhone"><strong>Apt. or Suite ##:</strong></label></td>
                                         	<td class="style1" width="70%">
                                             	<span class="readOnly">#qGetCandidate.arrival_apt_number#</span>
@@ -2855,9 +3047,6 @@
                                             </td>
                                         </tr>
 										---->
-                                       
-                                        
-                                         
                                         <tr>
                                         	<td class="style1" width="30%" align="right"><label for="usPhone"><strong>City:</strong></label></td>
                                         	<td class="style1" width="70%">
@@ -3139,8 +3328,8 @@
                             </div>
                             
                             <!---- UPDATE BUTTON ----> 
-                            <div class="editPage">                            
-                                <input name="Submit" type="image" src="../pics/update.gif" alt="Update Profile" border="0">
+                            <div class="editPage">  
+                            	<img src="../pics/update.gif" onClick="$('##CandidateInfo').submit();">
                             </div>
                             
                         </td>

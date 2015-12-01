@@ -64,6 +64,11 @@
                                 <cfelse>
                                     #qGetArrivals.departDate#
                                 </cfif>
+                                
+                                <cfset dateDiference = DateDiff("d", qGetArrivals.startDate, qGetArrivals.departDate) >
+                                <cfif dateDiference GTE -7 AND dateDiference LTE 7>
+                                	<span style="color:red">(Program Start Date: #qGetArrivals.startDate#)</span>
+                                </cfif>
                         	</td>
                             <td style="padding:4px 0px 4px 0px;">#qGetArrivals.arriveAirportCode#</td>
                             <td style="padding:4px 0px 4px 0px;">#qGetArrivals.arriveTime# / #qGetArrivals.flightNumber#</td>

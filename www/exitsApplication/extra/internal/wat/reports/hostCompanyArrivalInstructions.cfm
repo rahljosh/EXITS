@@ -41,6 +41,9 @@
                 eh.pickUpContactHours,
                 eh.housingAddress,
                 eh.housingCity,
+                eh.housingProviderName,
+                eh.housingPhone,
+                eh.housingEmail,
                 housingS.stateName AS housingStateName,
                 eh.housingZip,
                 s.stateName, 
@@ -206,6 +209,7 @@
                         </cfif>
                     </td>
                 </tr>
+                <cfif ((qGetHostCompany.isHousingProvided EQ 1) OR (qGetHostCompany.isHousingProvided EQ 2))>
 				<tr>               
                     <td class="tableTitleView" valign="top">Housing Instructions:</td>
                     <td class="tableDataView">
@@ -217,38 +221,51 @@
                     </td>
                 </tr>
                 <tr>               
-                    <td class="tableTitleView greyRow" valign="top">Housing Address :</td>
-                    <td class="greyRow tableDataView">
-                    	<cfif ListFind("1,2",qGetHostCompany.isHousingProvided)>
+                    <td class="tableTitleView greyRow" valign="top">Housing Provider Name:</td>
+                    <td class="greyRow tableDataView">#qGetHostCompany.housingProviderName#</td>
+                </tr>
+                <tr>               
+                    <td class="tableTitleView" valign="top">Housing Phone:</td>
+                    <td class="tableDataView">#qGetHostCompany.housingPhone#</td>
+                </tr>
+                <tr>               
+                    <td class="tableTitleView greyRow" valign="top">Housing Email:</td>
+                    <td class="greyRow tableDataView">#qGetHostCompany.housingEmail#</td>
+                </tr>
+                <tr>               
+                    <td class="tableTitleView" valign="top">Housing Address:</td>
+                    <td class="tableDataView">
+                    	<cfif qGetHostCompany.isHousingProvided EQ 1>
                             #qGetHostCompany.housingAddress#, #qGetHostCompany.housingCity#, #qGetHostCompany.housingStateName# #qGetHostCompany.housingZip#
                         <cfelse>
                             n/a
                         </cfif>
                   	</td>
                 </tr>
+                </cfif>
 				<tr>               
-                    <td class="tableTitleView" valign="top">Pick-Up:</td>
-                    <td class="tableDataView">#YesNoFormat(VAL(qGetHostCompany.isPickUpProvided))#</td>
+                    <td class="tableTitleView <cfif (qGetHostCompany.isHousingProvided NEQ 0)>greyRow</cfif>" valign="top">Pick-Up:</td>
+                    <td class="tableDataView <cfif (qGetHostCompany.isHousingProvided NEQ 0)>greyRow</cfif>">#YesNoFormat(VAL(qGetHostCompany.isPickUpProvided))#</td>
                 </tr>
 				<tr>               
-                    <td class="tableTitleView greyRow" valign="top">Arrival Airport:</td>
-                    <td class="tableDataView greyRow">#qGetHostCompany.arrivalAirport#</td>
+                    <td class="tableTitleView <cfif (qGetHostCompany.isHousingProvided EQ 0)>greyRow</cfif>" valign="top">Arrival Airport:</td>
+                    <td class="tableDataView <cfif (qGetHostCompany.isHousingProvided EQ 0)>greyRow</cfif>">#qGetHostCompany.arrivalAirport#</td>
                 </tr>
 				<tr>               
-                    <td class="tableTitleView" valign="top">Arrival City:</td>
-                    <td class="tableDataView">#qGetHostCompany.arrivalAirportCity#<cfif LEN(qGetHostCompany.arrivalAirportStateCode)>,#qGetHostCompany.arrivalAirportStateCode#</cfif></td>
+                    <td class="tableTitleView <cfif (qGetHostCompany.isHousingProvided NEQ 0)>greyRow</cfif>" valign="top">Arrival City:</td>
+                    <td class="tableDataView <cfif (qGetHostCompany.isHousingProvided NEQ 0)>greyRow</cfif>">#qGetHostCompany.arrivalAirportCity#<cfif LEN(qGetHostCompany.arrivalAirportStateCode)>,#qGetHostCompany.arrivalAirportStateCode#</cfif></td>
                 </tr>
                 <tr>               
-                    <td class="tableTitleView greyRow" valign="top">Days:</td>
-                    <td class="tableDataView greyRow">#qGetHostCompany.arrivalPickUpDays#</td>
+                    <td class="tableTitleView <cfif (qGetHostCompany.isHousingProvided EQ 0)>greyRow</cfif>" valign="top">Days:</td>
+                    <td class="tableDataView <cfif (qGetHostCompany.isHousingProvided EQ 0)>greyRow</cfif>">#qGetHostCompany.arrivalPickUpDays#</td>
                 </tr>
 				<tr>               
-                    <td class="tableTitleView" valign="top">Hours:</td>
-                    <td class="tableDataView">#qGetHostCompany.arrivalPickUpHours#</td>
+                    <td class="tableTitleView <cfif (qGetHostCompany.isHousingProvided NEQ 0)>greyRow</cfif>" valign="top">Hours:</td>
+                    <td class="tableDataView <cfif (qGetHostCompany.isHousingProvided NEQ 0)>greyRow</cfif>">#qGetHostCompany.arrivalPickUpHours#</td>
                 </tr>
 				<tr>               
-                    <td class="tableTitleView greyRow" valign="top">Pick-Up Instructions:</td>
-                    <td class="tableDataView greyRow">
+                    <td class="tableTitleView <cfif (qGetHostCompany.isHousingProvided EQ 0)>greyRow</cfif>" valign="top">Pick-Up Instructions:</td>
+                    <td class="tableDataView <cfif (qGetHostCompany.isHousingProvided EQ 0)>greyRow</cfif>">
                         <cfif LEN(qGetHostCompany.arrivalInstructions)>
                             #qGetHostCompany.arrivalInstructions#
                         <cfelse>
@@ -257,24 +274,24 @@
                     </td>
                 </tr>
                 <tr>               
-                    <td class="tableTitleView" valign="top">Cost:</td>
-                    <td class="tableDataView">#DollarFormat(VAL(qGetHostCompany.arrivalPickUpCost))#</td>
+                    <td class="tableTitleView <cfif (qGetHostCompany.isHousingProvided NEQ 0)>greyRow</cfif>" valign="top">Cost:</td>
+                    <td class="tableDataView <cfif (qGetHostCompany.isHousingProvided NEQ 0)>greyRow</cfif>">#DollarFormat(VAL(qGetHostCompany.arrivalPickUpCost))#</td>
                 </tr>
 				<tr>               
-                    <td class="tableTitleView greyRow" valign="top">Contact Name:</td>
-                    <td class="tableDataView greyRow">#qGetHostCompany.pickUpContactName#</td>
+                    <td class="tableTitleView <cfif (qGetHostCompany.isHousingProvided EQ 0)>greyRow</cfif>" valign="top">Contact Name:</td>
+                    <td class="tableDataView <cfif (qGetHostCompany.isHousingProvided EQ 0)>greyRow</cfif>">#qGetHostCompany.pickUpContactName#</td>
                 </tr>
 				<tr>               
-                    <td class="tableTitleView" valign="top">Contact Phone:</td>
-                    <td class="tableDataView">#qGetHostCompany.pickUpContactPhone#</td>
+                    <td class="tableTitleView <cfif (qGetHostCompany.isHousingProvided NEQ 0)>greyRow</cfif>" valign="top">Contact Phone:</td>
+                    <td class="tableDataView <cfif (qGetHostCompany.isHousingProvided NEQ 0)>greyRow</cfif>">#qGetHostCompany.pickUpContactPhone#</td>
                 </tr>
 				<tr>               
-                    <td class="tableTitleView greyRow" valign="top">Contact Email:</td>
-                    <td class="tableDataView greyRow">#qGetHostCompany.pickUpContactEmail#</td>
+                    <td class="tableTitleView <cfif (qGetHostCompany.isHousingProvided EQ 0)>greyRow</cfif>" valign="top">Contact Email:</td>
+                    <td class="tableDataView <cfif (qGetHostCompany.isHousingProvided EQ 0)>greyRow</cfif>">#qGetHostCompany.pickUpContactEmail#</td>
                 </tr>
 				<tr>               
-                    <td class="tableTitleView" valign="top">Hours of contact:</td>
-                    <td class="tableDataView">#qGetHostCompany.pickUpContactHours#</td>
+                    <td class="tableTitleView <cfif (qGetHostCompany.isHousingProvided NEQ 0)>greyRow</cfif>" valign="top">Hours of contact:</td>
+                    <td class="tableDataView <cfif (qGetHostCompany.isHousingProvided NEQ 0)>greyRow</cfif>">#qGetHostCompany.pickUpContactHours#</td>
                 </tr>
             </table>
             

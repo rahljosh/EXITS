@@ -231,6 +231,12 @@
 	// Authentications
 	APPLICATION.PATH.authentications = APPLICATION.PATH.UploadDocumentRoot & 'authentications/';
 	
+	// Documents Signed (HostCompanies)
+	APPLICATION.PATH.docsSigned = APPLICATION.PATH.UploadDocumentRoot & 'docsSigned/';
+	
+	// Documents Signed (HostCompanies)
+	APPLICATION.PATH.cityFlyers = APPLICATION.PATH.UploadDocumentRoot & 'cityFlyers/';
+	
 	// Workmens Compensation
 	APPLICATION.PATH.workmensCompensation = APPLICATION.PATH.UploadDocumentRoot & 'workmensCompensation/';
 

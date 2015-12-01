@@ -272,5 +272,57 @@
         </cfif>
         
     </cffunction>
+    
+    
+    <cffunction name="getTotalAndActivePlacements" access="remote" returnFormat="json" hint="Gets a list of host companies">
+    	<cfargument name="companyID" default="0" required="yes" />
+        <cfargument name="programID" default="0" required="yes" />
+        
+        <cfset returnValue = "" />
+        
+        <cfquery name="qGetActivePrograms" datasource="#APPLICATION.DSN.Source#">
+            SELECT p.programID, p.startDate, p.programName,
+                j.numberPositions, j.verifiedDate,
+                conf.confirmed, conf.confirmedDate
+            FROM smg_programs p
+            INNER JOIN smg_companies c ON c.companyID = p.companyID
+            LEFT OUTER JOIN extra_j1_positions j ON j.programID = p.programID
+                AND j.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
+            LEFT OUTER JOIN extra_confirmations conf ON conf.programID = p.programID
+                AND conf.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
+            WHERE dateDiff(p.endDate,NOW()) >= <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+            AND p.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+            AND p.is_deleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+            AND p.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyID)#">
+            AND p.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.programID)#">
+            ORDER BY p.startDate ASC
+        </cfquery>
+        
+        
+        <cfquery name="qGetActivePlacements" datasource="#APPLICATION.DSN.Source#">
+            SELECT COUNT(ecpc.candCompID) as total
+            FROM extra_candidate_place_company ecpc
+            INNER JOIN extra_candidates c ON c.candidateID = ecpc.candidateID
+                AND c.cancel_date IS NULL
+            WHERE ecpc.hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
+            AND c.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.programID)#">
+            AND ecpc.status = 1
+        </cfquery>
+        
+        <cfscript>
+			
+			vStudentStruct = structNew();
+			vStudentStruct.code = 0;
+			vStudentStruct.text = "";
+				
+			if ((qGetActivePrograms.numberPositions NEQ "") && (qGetActivePrograms.numberPositions <= qGetActivePlacements.total)) {
+				vStudentStruct.code = 1;
+				vStudentStruct.text = "The Host Company has already reached the total number of available J1 positions!";
+			}
+			
+			return vStudentStruct;
+		</cfscript>
+    
+    </cffunction>
 
 </cfcomponent>

@@ -11,6 +11,13 @@
 <cfparam name="FORM.wat_doc_job_offer_employer" default="0">
 <cfparam name="FORM.wat_doc_other" default="">
 <cfparam name="FORM.wat_doc_other_received" default="">
+
+<cfparam name="FORM.wat_doc_no_housing_form" default="0">
+<cfparam name="FORM.wat_doc_housing_arrengements" default="0">
+<cfparam name="FORM.wat_doc_housing_third_party" default="0">
+
+<cfparam name="FORM.switch_placements" default="0">
+
 <cfparam name="FORM.verification_address" default="0">
 <cfparam name="FORM.verification_address_2" default="0">
 <cfparam name="FORM.verification_sevis" default="0">
@@ -119,7 +126,10 @@
     SELECT 
     	candidateID, 
         programID, 
-        hostCompanyID
+        hostCompanyID,
+        ds2019,
+        startdate,
+        enddate
     FROM 
     	extra_candidates
     WHERE 
@@ -201,27 +211,90 @@
 
     
 <!---- PROGRAM HISTORY ---->
-<cfif qGetCandidateInfo.programID NEQ FORM.programID>
+<cfif (qGetCandidateInfo.programID NEQ FORM.programID) 
+	 OR (qGetCandidateInfo.ds2019 NEQ "" AND qGetCandidateInfo.startdate NEQ FORM.program_startdate)
+	 OR (qGetCandidateInfo.ds2019 NEQ "" AND qGetCandidateInfo.enddate   NEQ FORM.program_enddate)
+	 OR (FORM.ds2019 NEQ "") >
+     
+     <cfset saveHistory = 0 />
+     
+     <cfif qGetCandidateInfo.startdate NEQ FORM.program_startdate AND qGetCandidateInfo.enddate NEQ FORM.program_enddate>
+     	<cfset reason_text = "Start and End Date has changed." />
+        <cfset saveHistory = 1 />
+	 <cfelseif qGetCandidateInfo.startdate NEQ FORM.program_startdate >
+     	<cfset reason_text = "Start Date has changed." />
+        <cfset saveHistory = 1 />
+     <cfelseif qGetCandidateInfo.enddate  NEQ FORM.program_enddate >
+     	<cfset reason_text = "End Date has changed." />
+        <cfset saveHistory = 1 />
+     <cfelseif qGetCandidateInfo.programID NEQ FORM.programID>
+     	<cfset reason_text = FORM.reason />
+        <cfset saveHistory = 1 />
+     </cfif>
+     
+     <!--- Check if the user has a history --->
+     <cfquery name="getHistory" datasource="#APPLICATION.DSN.Source#">
+		SELECT programhistoryid
+        FROM extra_program_history
+		WHERE candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.candidateID#">
+            AND programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
+            AND startdate IS NOT NULL
+            AND enddate IS NOT NULL
+	 </cfquery>
+     
+      <!--- If there's no history and the ds2019 field was filled on the form, save the first history to save the dates --->
+     <cfif FORM.ds2019 NEQ "" AND getHistory.RecordCount EQ 0 >
+     	
+        <cfquery datasource="#APPLICATION.DSN.Source#">
+            INSERT INTO 
+                extra_program_history
+            (
+                candidateID, 
+                reason,
+                startdate,
+                enddate,
+                date, 
+                programID, 
+                userid 
+            ) VALUES (
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.candidateID#">, 
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="First dates after DS2019 number has been added.">,
+                <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.startdate#" null="#NOT IsDate(qGetCandidateInfo.startdate)#">,
+                <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.enddate#" null="#NOT IsDate(qGetCandidateInfo.enddate)#">,
+                <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">, 
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">, 
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+            )
+        </cfquery>
+     
+     </cfif>
 	
-    <cfquery datasource="#APPLICATION.DSN.Source#">
-		INSERT INTO 
-        	extra_program_history
-		(
-        	candidateID, 
-            reason, 
-            date, 
-            programID, 
-            userid 
-		)
-		VALUES 
-        (
-            <cfqueryparam cfsqltype="cf_sql_integer" value="#val(FORM.candidateID)#">, 
-            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.reason#">, 
-            <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">, 
-            <cfqueryparam cfsqltype="cf_sql_integer" value="#val(FORM.programID)#">, 
-            <cfqueryparam cfsqltype="cf_sql_integer" value="#val(client.userid)#">
-        )
-	</cfquery>
+    <cfif VAL(saveHistory) >
+    
+        <cfquery datasource="#APPLICATION.DSN.Source#">
+            INSERT INTO 
+                extra_program_history
+            (
+                candidateID, 
+                reason,
+                startdate,
+                enddate,
+                date, 
+                programID, 
+                userid 
+            )
+            VALUES 
+            (
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.candidateID#">, 
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#reason_text#">,
+                <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.program_startdate#" null="#NOT IsDate(FORM.program_startdate)#">,
+                <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.program_enddate#" null="#NOT IsDate(FORM.program_enddate)#">,
+                <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">, 
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">, 
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+            )
+        </cfquery>
+    </cfif>
     
 </cfif>
 
@@ -251,6 +324,7 @@
         <!--- UPDATE SECONDARY PLACEMENT --->
         <cfelse>
         	
+            <!---
             <cfquery datasource="#APPLICATION.DSN.Source#">
             	UPDATE 
                     extra_hostcompany
@@ -272,6 +346,14 @@
                 WHERE
                     hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(qGetAllPlacements.hostCompanyID)#">
             </cfquery>
+			--->
+            
+            <cfif FORM.switch_placements EQ 1>
+				<cfscript>
+                    // Add user and time stamp to reason_host
+                    reason_host_secondary = qGetAllPlacements.reason_host & '<br />- Switched to Primary Placement by ' & CLIENT.firstName & ' ' & CLIENT.lastName & ' on ' & DateFormat(now(), 'mm/dd/yyyy') & ' at ' & TimeFormat(now(), 'hh:mm tt');		
+                </cfscript>
+            </cfif>
             
             <cfquery datasource="#APPLICATION.DSN.Source#">
             	UPDATE 
@@ -285,10 +367,14 @@
                     isTransferJobOfferReceived = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM['newJobOffer_#qGetAllPlacements.candCompID#'])#">,
                 	isTransferHousingAddressReceived = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM['newHousingAddress_#qGetAllPlacements.candCompID#'])#">,                
                 	isTransferSevisUpdated = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM['sevisUpdated_#qGetAllPlacements.candCompID#'])#">
+                    <cfif FORM.switch_placements EQ 1>
+                    , isSecondary = 0
+                    , reason_host = <cfqueryparam cfsqltype="cf_sql_varchar" value="#reason_host_secondary#">
+                </cfif>
                 WHERE
                     candcompid = <cfqueryparam cfsqltype="cf_sql_integer" value="#val(qGetAllPlacements.candCompID)#">
             </cfquery>
-          
+            
             <!--- Update program related confirmations --->
             <cfscript>
 				APPLICATION.CFC.HOSTCOMPANY.updateInsertProgramConfirmations(
@@ -470,7 +556,7 @@
         WHERE candcompid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCurrentPlacement.candCompID)#">
     </cfquery>
 
-	<!--- Update EIN on Host Company Table --->
+	<!--- Update EIN on Host Company Table 
     <cfif LEN(FORM.EIN)>
     
         <cfquery datasource="#APPLICATION.DSN.Source#">
@@ -483,8 +569,9 @@
         </cfquery> 
 
 	</cfif>
-    
-    <!--- Update authentications on Host Company Table --->
+	--->
+
+    <!--- Update authentications on Host Company Table 
     <cfquery datasource="#APPLICATION.DSN.Source#">
     	UPDATE 
         	extra_hostcompany
@@ -503,8 +590,9 @@
       	WHERE
        		hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">	
     </cfquery>
+	--->
     
-	<!--- Update workmensCompensation on Host Company Table --->
+	<!--- Update workmensCompensation on Host Company Table 
     <cfif LEN(FORM.workmensCompensation)>
     
         <cfquery datasource="#APPLICATION.DSN.Source#">
@@ -517,8 +605,9 @@
         </cfquery> 
 
 	</cfif>
+	--->
     
-    <!--- Update WCExpirationDate on Host Company Table --->
+    <!--- Update WCExpirationDate on Host Company Table 
     <cfif LEN(FORM.WCDateExpired)>
     
         <cfquery datasource="#APPLICATION.DSN.Source#">
@@ -531,6 +620,7 @@
         </cfquery> 
 
 	</cfif>
+	--->
         
   	<cfscript>
 		hostCompanies = valueList(qGetAllPlacements.hostCompanyID);
@@ -628,6 +718,13 @@
         </cfscript>
         
     <cfelse>
+    	
+        <cfif FORM.switch_placements EQ 1>
+			<cfscript>
+                // Add user and time stamp to reason_host
+                FORM.reason_host = FORM.reason_host & '<br /> - Switched to Secondary Placement by ' & CLIENT.firstName & ' ' & CLIENT.lastName & ' on ' & DateFormat(now(), 'mm/dd/yyyy') & ' at ' & TimeFormat(now(), 'hh:mm tt');		
+            </cfscript>
+        </cfif>
         
         <!--- Update Current Host Company Information --->
         <cfquery datasource="#APPLICATION.DSN.Source#">
@@ -650,6 +747,10 @@
                 isTransferHousingAddressReceived = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isTransferHousingAddressReceived)#">,                
                 isTransferSevisUpdated = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.isTransferSevisUpdated)#">,
                 seekingDeadline = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.seekingDeadline#">
+                <cfif FORM.switch_placements EQ 1>
+                    , isSecondary = 1
+                    , reason_host = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.reason_host#">
+                </cfif>
             WHERE 
                 candcompid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCurrentPlacement.candCompID#">
         </cfquery>
@@ -889,6 +990,10 @@
         wat_doc_job_offer_employer = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_job_offer_employer#">,
 		wat_doc_other = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.wat_doc_other#">,
         wat_doc_other_received = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.wat_doc_other_received#">,
+        
+        wat_doc_no_housing_form = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_no_housing_form#">,
+        wat_doc_housing_arrengements = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_housing_arrengements#">,
+        wat_doc_housing_third_party = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_housing_third_party#">,
 		
 		<!---- form DS-2019 ---->
         verification_received = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.verification_received#" null="#NOT IsDate(FORM.verification_received)#">,
@@ -922,7 +1027,6 @@
         arrival_address_2 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.arrival_address_2#">,
        	arrival_apt_number =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.arrival_apt_number#">,
         other_arrival_address_information =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.other_arrival_address_information#">,
-		
         arrival_city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.arrival_city#">,
         arrival_state = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.arrival_state#">,
         arrival_zip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.arrival_zip#">,
@@ -994,6 +1098,10 @@
         wat_doc_job_offer_employer,
         wat_doc_other,
         wat_doc_other_received,
+        wat_doc_no_housing_form,
+        wat_doc_housing_arrengements,
+        wat_doc_housing_third_party,
+        
         verification_received,
         ds2019,
         dateGenericDocumentsSent,
@@ -1021,24 +1129,24 @@
         watDateEvaluation3,
         watDateEvaluation4 )
   	VALUES (
-    	<cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.candidateID#">,
+    	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCandidateInfo.candidateID)#">,
         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
         <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
-        <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.hostcompanyID#">,
+        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCandidateInfo.hostcompanyID)#">,
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.firstname#">, 
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.lastname#">, 
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.middlename#">,
         <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.dob#" null="#NOT IsDate(qGetCandidateInfo.dob)#">,
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.sex#">, 
-        <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.intrep#">,
+        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCandidateInfo.intrep)#">,
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.birth_city#">, 
-        <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.birth_country#">, 
-        <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.citizen_country#">, 
-        <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.residence_country#">, 
+        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCandidateInfo.birth_country)#">, 
+        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCandidateInfo.citizen_country)#">, 
+        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCandidateInfo.residence_country)#">, 
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.home_address#">, 
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.home_city#">, 
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.home_zip#">,	
-        <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.home_country#">,
+        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCandidateInfo.home_country)#">,
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.home_phone#">,
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.email#">, 
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.englishAssessment#">,
@@ -1048,7 +1156,7 @@
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.emergency_phone#">,
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.emergency_email#">,
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.passport_number#">,
-        <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.programID#">,         
+        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCandidateInfo.programID)#">,         
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.SSN#">,
         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCandidateInfo.wat_participation)#">,
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.wat_participation_info#">,
@@ -1065,13 +1173,18 @@
         <cfqueryparam cfsqltype="cf_sql_bit" value="#qGetCandidateInfo.wat_doc_college_letter_translation#">,
         <cfqueryparam cfsqltype="cf_sql_bit" value="#qGetCandidateInfo.wat_doc_job_offer_applicant#">,
         <cfqueryparam cfsqltype="cf_sql_bit" value="#qGetCandidateInfo.wat_doc_job_offer_employer#">,
-		<cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.wat_doc_other#">,
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.wat_doc_other#">,
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.wat_doc_other_received#">,
+        
+        <cfqueryparam cfsqltype="cf_sql_bit" value="#qGetCandidateInfo.wat_doc_no_housing_form#">,
+        <cfqueryparam cfsqltype="cf_sql_bit" value="#qGetCandidateInfo.wat_doc_housing_arrengements#">,
+        <cfqueryparam cfsqltype="cf_sql_bit" value="#qGetCandidateInfo.wat_doc_housing_third_party#">,
+        
 		<cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.verification_received#" null="#NOT IsDate(qGetCandidateInfo.verification_received)#">,
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.ds2019#">,
         <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.dateGenericDocumentsSent#" null="#NOT IsDate(qGetCandidateInfo.dateGenericDocumentsSent)#">,
         <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.dateIDSent#" null="#NOT IsDate(qGetCandidateInfo.dateIDSent)#">,
-		<cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.requested_placement#">,
+		<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCandidateInfo.requested_placement)#">,
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.change_requested_comment#">,
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.status#">, 
 		<cfif isDate(qGetCandidateInfo.cancel_date) AND qGetCandidateInfo.status EQ 'canceled'>
@@ -1090,9 +1203,9 @@
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.us_phone#">,
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.arrival_address#">,
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.arrival_address_2#">,
-        <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.arrival_apt_number#">,
+        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCandidateInfo.arrival_apt_number)#">,
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.arrival_city#">,
-        <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.arrival_state#">,
+        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCandidateInfo.arrival_state)#">,
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.arrival_zip#">,
         <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.watDateEvaluation1#" null="#NOT IsDate(qGetCandidateInfo.watDateEvaluation1)#">,
         <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.watDateEvaluation2#" null="#NOT IsDate(qGetCandidateInfo.watDateEvaluation2)#">,

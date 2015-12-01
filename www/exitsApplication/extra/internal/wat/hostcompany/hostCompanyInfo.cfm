@@ -46,6 +46,9 @@
     <cfparam name="FORM.housingCity" default="">
     <cfparam name="FORM.housingState" default="">
     <cfparam name="FORM.housingZip" default="">
+    <cfparam name="FORM.housingProviderName" default="">
+    <cfparam name="FORM.housingPhone" default="">
+    <cfparam name="FORM.housingEmail" default="">
 	<!--- Primary Contact --->  
     <cfparam name="FORM.owner" default="">  
     <cfparam name="FORM.supervisor" default="">
@@ -180,6 +183,9 @@
             eh.housing_options, 
             eh.housing_cost, 
             eh.housing_deposit,
+            eh.housingProviderName,
+            eh.housingPhone,
+            eh.housingEmail,
             eh.picture_type,
             eh.enteredBy, 
             eh.entryDate, 
@@ -266,6 +272,7 @@
         AND p.is_deleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
         AND p.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyID)#">
         GROUP BY p.programID
+        ORDER BY p.startDate ASC
     </cfquery>
     
     <cfquery name="qGetProgramParticipation" datasource="#APPLICATION.DSN.Source#">
@@ -276,6 +283,7 @@
         AND c.cancel_date IS NULL
         AND ecpc.hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostCompanyInfo.hostCompanyID)#">
         GROUP BY p.programName
+        ORDER BY p.startDate DESC
     </cfquery>
     
     <!--- Get database records for authentication files --->
@@ -439,6 +447,7 @@
         <cfif NOT SESSION.formErrors.length()>
         
 			<cfif VAL(FORM.hostCompanyID)>
+            
 
                 <!--- Update --->
                 <cfquery datasource="#APPLICATION.DSN.Source#">
@@ -458,15 +467,18 @@
                         hqState = <cfqueryparam cfsqltype="cf_sql_integer" value="#TRIM(FORM.hqState)#">,
                         hqZip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.hqZip)#">,
                         <!--- Housing Information --->
-                        isHousingProvided = <cfqueryparam cfsqltype="cf_sql_tinyint" value="#FORM.isHousingProvided#">,
+                        isHousingProvided = <cfqueryparam cfsqltype="cf_sql_tinyint" value="#VAL(FORM.isHousingProvided)#">,
                         housingProvidedInstructions = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housingProvidedInstructions#">,
                         housing_options = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housing_options#">,
                         housing_cost = <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(FORM.housing_cost)#">,
                         housing_deposit = <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(FORM.housing_deposit)#">,
                         housingAddress = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.housingAddress)#">,
                         housingCity = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.housingCity)#">,
-                        housingState = <cfqueryparam cfsqltype="cf_sql_integer" value="#TRIM(FORM.housingState)#">,
+                        housingState = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.housingState)#">,
                         housingZip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.housingZip)#">,
+                        housingProviderName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.housingProviderName)#">,
+                        housingPhone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.housingPhone)#">,
+                        housingEmail = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.housingEmail)#">,
                         <!--- Contact --->
                         owner = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.owner#">,
                         supervisor = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor#">,
@@ -527,6 +539,7 @@
                     WHERE
                         hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostCompanyID#">
                 </cfquery>
+                
                 
                 <!--- Update previously added supervisors --->
                 <cfloop query="qGetAdditionalSupervisors">
@@ -923,6 +936,9 @@
                         housingCity,
                         housingState,
                         housingZip,
+                        housingProviderName,
+                        housingPhone,
+                        housingEmail,
                         <!--- Contact --->
                         supervisor,
                         phone,
@@ -1009,6 +1025,9 @@
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.housingCity)#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#TRIM(FORM.housingState)#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.housingZip)#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.housingProviderName)#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.housingPhone)#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.housingEmail)#">,
                         <!--- Contact --->
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.supervisor#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#">,
@@ -1189,7 +1208,7 @@
                         <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_certificateOfExistenceExpiration#">,
                         <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_certificateOfReinstatementExpiration#">,
                         <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.authentication_departmentOfStateExpiration#">,
-                        <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.authentication_businessLicenseNotAvailable#"> )
+                        <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.authentication_businessLicenseNotAvailable#">)
                 </cfquery>
                 <!--- End Add History Record --->
                 
@@ -1237,6 +1256,9 @@
 			FORM.housingCity = qGetHostCompanyInfo.housingCity;
 			FORM.housingState = qGetHostCompanyInfo.housingState;
 			FORM.housingZip = qGetHostCompanyInfo.housingZip;
+			FORM.housingProviderName = qGetHostCompanyInfo.housingProviderName;
+			FORM.housingPhone = qGetHostCompanyInfo.housingPhone;
+			FORM.housingEmail = qGetHostCompanyInfo.housingEmail;
 			// Primary Contact
 			FORM.owner = qGetHostCompanyInfo.owner;
 			FORM.supervisor = qGetHostCompanyInfo.supervisor;
@@ -1332,6 +1354,10 @@
 
 	$(document).ready(function() {
 		// $(".formField").attr("disabled","disabled");
+		
+		
+    	checkHousingOnLoad();
+
 		
 		showHideBusinessTypeOther();
 		displayPickUpInfo();
@@ -1913,6 +1939,8 @@
                                 <td width="40%" align="right" class="style1"><strong>Business Type:</strong></td>
                                 <td class="style1">#qGetHostCompanyInfo.typebusiness#</td>
                             </tr>
+                            <!--- Office View Only ---> 
+							<cfif ListFind("1,2,3,4", CLIENT.userType)>
                             <tr>
                                 <td align="right" class="style1"><strong>Date of Entry:</strong></td>
                                 <td class="style1">#DateFormat(qGetHostCompanyInfo.entrydate, "mm/dd/yyyy")#</td>
@@ -1921,6 +1949,7 @@
                                 <td align="right" class="style1"><strong>Entered by:</strong></td>
                                 <td class="style1">#qGetenteredBy.firstname# #qGetenteredBy.lastname#</td>
                             </tr>
+                            </cfif>
                         </table>
 
                         <!--- HOST COMPANY INFO - EDIT PAGE --->
@@ -2106,9 +2135,14 @@
                                         <cfloop query="qGetJobs">
                                             <tr bgcolor="###iif(qGetJobs.currentrow MOD 2 ,DE("E9ECF1") ,DE("FFFFFF") )#">
                                                 <td class="style1">
-                                                	<a href="javascript:openWindow('hostcompany/jobInfo.cfm?ID=#id#&hostCompanyID=#qGetHostCompanyInfo.hostCompanyID#', 300, 600);">
-	                                                    #qGetJobs.title# 
+                                                	<!--- REMOVED - Requested by Anca --->
+                                                    <cfif ListFind("1,2,3,4", CLIENT.userType)>
+													<a href="javascript:openWindow('hostcompany/jobInfo.cfm?ID=#id#&hostCompanyID=#qGetHostCompanyInfo.hostCompanyID#', 300, 600);">
+                                                    </cfif>
+	                                                    #qGetJobs.title#
+                                                    <cfif ListFind("1,2,3,4", CLIENT.userType)>
                                                     </a>
+                                                    </cfif>
                                                 </td>
                                                 <td  class="style1">#classification#</td>
                                                 <td class="style1">#qGetJobs.wage# / #qGetJobs.wage_type#</td>
@@ -2156,7 +2190,7 @@
                                                     name="isHousingProvided" 
                                                     id="isHousingProvidedNo" 
                                                     value="0" 
-                                                    class="style1 editPage" 
+                                                    class="style1 editPage" onchange="checkHousingOnChange()"
 													<cfif FORM.isHousingProvided EQ 0> checked="checked" </cfif> /> 
                                                 <label class="style1 editPage" for="isHousingProvidedNo">No</label>
                                                 <input 
@@ -2164,7 +2198,7 @@
                                                     name="isHousingProvided" 
                                                     id="isHousingProvidedYes" 
                                                     value="1" 
-                                                    class="style1 editPage" 
+                                                    class="style1 editPage" onchange="checkHousingOnChange()"
 													<cfif FORM.isHousingProvided EQ 1> checked="checked" </cfif> /> 
                                                 <label class="style1 editPage" for="isHousingProvidedYes">Yes</label>
                                                 <input 
@@ -2172,7 +2206,7 @@
                                                 name="isHousingProvided" 
                                                 id="isHousingProvidedWillAssist" 
                                                 value="2" 
-                                                class="style1 editPage" 
+                                                class="style1 editPage"  onchange="checkHousingOnChange()"
 												<cfif FORM.isHousingProvided EQ 2> checked="checked" </cfif> /> 
                                                 <label class="style1 editPage" for="isHousingProvidedWillAssist">Other (third party)</label>
                                             </td>
@@ -2199,6 +2233,28 @@
                                                 </table>
                                             </td>
                                       	</tr>
+                                        </table>
+                                        
+                                        <div id="HousingDIV">
+                                        <table>
+                                        <tr>
+                                            <td class="style1" align="right" valign="top"><strong>Provider Name:</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                            	<span class="readOnly">#FORM.housingProviderName#</span>
+                                                <input type="text" name="housingProviderName" id="housingProviderName" value="#FORM.housingProviderName#" class="style1 editPage" size="35" maxlength="100"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="style1" align="right" valign="top"><strong>Email:</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                            	<span class="readOnly">#FORM.housingEmail#</span>
+                                                <input type="text" name="housingEmail" id="housingEmail" value="#FORM.housingEmail#" class="style1 editPage" size="35" maxlength="100"></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="style1" align="right" valign="top"><strong>Phone:</strong></td>
+                                            <td class="style1" bordercolor="##FFFFFF">
+                                            	<span class="readOnly">#FORM.housingPhone#</span>
+                                                <input type="text" name="housingPhone" id="housingPhone" value="#FORM.housingPhone#" class="style1 editPage" size="35" maxlength="100"></td>
+                                        </tr>
                                         <tr>
                                             <td width="35%" class="style1" align="right"><strong>Address:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
@@ -2247,6 +2303,11 @@
                                                 <textarea name="housingProvidedInstructions" id="housingProvidedInstructions" class="style1 editPage" cols="35" rows="4">#Trim(FORM.housingProvidedInstructions)#</textarea>
                                             </td>
                                         </tr>
+                                        </table>
+                                        </div>
+                                        
+                                        
+                                        <table width="100%">
                                         <tr>
                                             <td width="35%" class="style1" align="right"><strong>Cost/Week:</strong></td>
                                             <td class="style1">
@@ -3363,6 +3424,7 @@
                                                     </table>
                                                 </td>
                                             </tr>
+                                            
                                             <tr>
                                                 <td class="style1" align="right"><strong>EIN:</strong></td>
                                                 <td class="style1" bordercolor="##FFFFFF">
@@ -3546,30 +3608,45 @@
                                                     ORDER BY i.subject
                                                 </cfquery>
                                                 <!--- Determines if this host company was a primary, secondary, or both placement types for this program. --->
-                                                <cfquery name="qGetPlacementType" datasource="#APPLICATION.DSN.Source#">
-                                                    SELECT 
-                                                        CASE 
-                                                            WHEN SUM(ecpc.isSecondary) = 0 AND SUM(ecpc.status) = 0 THEN "Primary Placement (Inactive)"
-                                                            WHEN SUM(ecpc.isSecondary) = 0 AND SUM(ecpc.status) = COUNT(ecpc.candidateID) THEN "Primary Placement (Active)"
-                                                            WHEN SUM(ecpc.isSecondary) = 0 AND SUM(ecpc.status) != 0 AND SUM(ecpc.status) != COUNT(ecpc.candidateID) THEN "Primary Placement (Both)"      
-                                                            WHEN SUM(ecpc.isSecondary) = COUNT(ecpc.candidateID) AND SUM(ecpc.status) = 0 THEN "Secondary Placement (Inactive)"
-                                                            WHEN SUM(ecpc.isSecondary) = COUNT(ecpc.candidateID) AND SUM(ecpc.status) = COUNT(ecpc.candidateID) THEN "Secondary Placement (Active)"
-                                                            WHEN SUM(ecpc.isSecondary) = COUNT(ecpc.candidateID) AND SUM(ecpc.status) != 0 AND SUM(ecpc.status) != COUNT(ecpc.candidateID) THEN "Secondary Placement (Active/Inactive)"
-                                                            WHEN SUM(ecpc.isSecondary) != 0 AND SUM(ecpc.isSecondary) != COUNT(ecpc.candidateID) AND SUM(ecpc.status) = 0 THEN "Primary/Secondary Placement (Inactive)"
-                                                            WHEN SUM(ecpc.isSecondary) != 0 AND SUM(ecpc.isSecondary) != COUNT(ecpc.candidateID) AND SUM(ecpc.status) = COUNT(ecpc.candidateID) THEN "Primary/Secondary Placement (Active)"
-                                                            ELSE "Primary/Secondary Placement (Active/Inactive)"            
-                                                        END AS "placementType"
+                                                                                               
+                                                <cfquery name="qGetPlacements" datasource="#APPLICATION.DSN.Source#">
+                                                    SELECT ecpc.candCompID, c.status, ecpc.isSecondary
                                                     FROM extra_candidate_place_company ecpc
                                                     INNER JOIN extra_candidates c ON c.candidateID = ecpc.candidateID
                                                         AND c.cancel_date IS NULL
                                                     WHERE ecpc.hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostCompanyInfo.hostCompanyID#">
                                                     AND c.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetProgramParticipation.programID#">
+                                                    AND ecpc.status = 1
                                                 </cfquery>
                                                 <tr>
                                                     <td class="style1" valign="top">
                                                         <a href="index.cfm?curdoc=reports/students_hired_per_company_wt&hostCompanyID=#qGetHostCompanyInfo.hostCompanyID#&programID=#programID#">#programName#</a>
                                                         <br/>
-                                                        #qGetPlacementType.placementType#
+                                                        
+                                                        <cfset placementType = "" />
+                                                        <cfset placementActive = 0 />
+                                                        <cfset placementInactive = 0 />
+                                                        
+                                                        <cfloop query="qGetPlacements" >
+                                                        	<cfif qGetPlacements.isSecondary EQ 0 AND placementType EQ "" >
+                                                        		<cfset placementType = "Primary Placement" />
+                                                            <cfelseif qGetPlacements.isSecondary EQ 1 AND placementType EQ "" >
+                                                            	<cfset placementType = "Secondary Placement" />
+                                                            <cfelseif qGetPlacements.isSecondary EQ 0 AND placementType EQ "Secondary Placement" >
+                                                        		<cfset placementType = "Primary/Secondary Placement" />
+                                                            <cfelseif qGetPlacements.isSecondary EQ 1 AND placementType EQ "Primary Placement" >
+                                                            	<cfset placementType = "Primary/Secondary Placement" />
+                                                            </cfif>
+                                                            
+                                                            <cfif qGetPlacements.status EQ 0 >
+                                                            	<cfset placementInactive = placementInactive + 1 />
+                                                            <cfelse>
+                                                            	<cfset placementActive = placementActive + 1 />
+                                                            </cfif>
+                                                        </cfloop>
+                                                        
+                                                        	#placementType# (Active: #placementActive# / Inactive: #placementInactive#)
+                                                                                                              
                                                     </td>
                                                     <td class="style1" valign="top">
                                                         <a href="index.cfm?curdoc=reports/incidentReport&hostCompanyID=#qGetHostCompanyInfo.hostCompanyID#&programID=#programID#">
@@ -3631,6 +3708,51 @@
                                 </tr>
                             </table>
                                             
+                            <br />
+                            
+                            <!--- Vetting --->
+                            <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
+                                <tr>
+                                    <td>
+                                        <table width="100%" cellpadding="3" cellspacing="3" border="0">
+                                            <tr bgcolor="##C2D1EF" bordercolor="##FFFFFF">
+                                                <td colspan="3" class="style2" bgcolor="##8FB6C9">&nbsp;:: Vetting</td>
+                                            </tr>
+                                            <cfset vettingTotal = 0 />
+                                            <cfloop query="qGetProgramParticipation">
+                                                <tr <cfif vettingTotal GT 0>style="display:none" class="vettingAllSeasons"</cfif>>
+                                                    <td class="style1" valign="top">
+                                                        #programName#
+                                                    </td>
+                                                    <td class="style1" valign="top">
+                                                    	<form></form>
+														<form action="index.cfm?curdoc=reports/hostCompanySelfPlacementConfirmation" method="post" id="hostCompanyReportForm">
+															<input type="hidden" name="hostCompanyID" value="#qGetHostCompanyInfo.hostCompanyID#" />
+                                                            <input type="hidden" name="programID" value="#programID#" />
+															<input type="hidden" name="submitted" value="1" />
+                                                        </form>
+                                                        <a href="##" onclick="document.getElementById('hostCompanyReportForm').submit(); return false;">Host Company Report</a>
+                                                    </td>
+                                                    <td class="style1" valign="top">
+                                                    	<form action="index.cfm?curdoc=reports/selfPlacementConfirmation" method="post" id="intRepReportForm">
+                                                            <input type="hidden" name="programID" value="#programID#" />
+															<input type="hidden" name="submitted" value="1" />
+                                                        </form>
+                                                        <a href="##" onclick="document.getElementById('intRepReportForm').submit(); return false;">Int. Rep. Report</a>
+                                                    </td>
+                                                </tr>
+                                                <cfif vettingTotal EQ 0>
+                                                <tr id="btnvettingAllSeasons">
+                                                	<td class="style1" valign="top" style="text-align:center" colspan="3"><a href="" onclick="$('.vettingAllSeasons').toggle(); $('##btnvettingAllSeasons').hide();  return false;" >Show All Seasons</a></td>
+                                                </tr>
+                                                </cfif>
+                                                <cfset vettingTotal = vettingTotal + 1 />
+                                            </cfloop>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                            
                             <br />
                             
                             <!--- Host Company Warning --->
@@ -3702,3 +3824,25 @@
 <!--- END OF TABLE HOLDER --->
 
 </cfoutput>
+
+<script>
+function checkHousingOnChange() {
+	if ($("input[name=isHousingProvided]:checked").val() == 0) {
+		$("#HousingDIV").css("display","none");
+	} else {
+		$("#HousingDIV").css("display","block");
+	}
+	$(".readOnly").css("display","none");
+}
+function checkHousingOnLoad() {
+	if ($("input[name=isHousingProvided]:checked").val() == 0) {
+		$("#HousingDIV").css("display","none");
+	} else {
+		$("#HousingDIV").css("display","block");
+	}
+}
+
+
+
+</script>
+

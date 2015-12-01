@@ -384,7 +384,24 @@
                                                     </a>
                                                     <cfelse>
                                                         #qGetAllPlacements.name#
-                                                    </cfif>
+                                                    </cfif><br />
+                                                    <cfscript>
+														qGetSeekingEmploymentComments = APPLICATION.CFC.CANDIDATE.getSeekingEmploymentComments(candidateID=qTotalPerAgent.candidateID);
+													</cfscript>
+													<cfif VAL(qGetSeekingEmploymentComments.recordCount) AND qGetAllPlacements.hostCompanyID EQ 195>
+														<table>
+															<tr>
+																<td><strong><u>Comments:</u></strong><br />
+																	<cfloop query="qGetSeekingEmploymentComments">
+																		<b>On #DateFormat(date,'mm/dd/yyyy')# at #TimeFormat(date,'h:mm tt')# by #firstName# #lastName#</b>
+																		<br/>
+																		#note#
+																		<br/>
+																	</cfloop>
+																</td>
+															</tr>
+														</table>
+													</cfif>
                                                 </td>
                                                 <td width="20%">
                                                     #qGetAllPlacements.jobTitle#
