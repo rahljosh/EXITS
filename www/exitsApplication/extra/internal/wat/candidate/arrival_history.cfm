@@ -43,6 +43,8 @@
                         <td class="style2" bgcolor="8FB6C9">Changed By</td>
                         <td class="style2" bgcolor="8FB6C9">U.S. Phone</td>
                         <td class="style2" bgcolor="8FB6C9">Address</td>
+                        <td class="style2" bgcolor="8FB6C9">Suite/Apt ## </td>
+                        <td class="style2" bgcolor="8FB6C9">Other</td>
                         <td class="style2" bgcolor="8FB6C9">City</td>
                         <td class="style2" bgcolor="8FB6C9">State</td>
                         <td class="style2" bgcolor="8FB6C9">Zip</td>
@@ -60,11 +62,13 @@
                                     	#uFirstName# #uLastName# (###changedBy#)
                                    	</cfif>
                                	</td>
-                                <td align="left" class="style5">#us_phone#</td>
-                                <td align="left" class="style5">#arrival_address#</td>
-                                <td align="left" class="style5">#arrival_city#</td>
-                                <td align="left" class="style5">#sState#</td>
-                                <td align="left" class="style5">#arrival_zip#</td>
+                                <td align="left" class="style5" align="top">#us_phone#</td>
+                                <td align="left" class="style5" align="top">#arrival_address#  </td>
+                                <td align="left" class="style5" align="top"><cfif val(#arrival_apt_number#)>#arrival_apt_number#</cfif></td>
+                                <td align="left" class="style5" align="top"> #arrival_address_2#</td>
+                                <td align="left" class="style5" align="top">#arrival_city#</td>
+                                <td align="left" class="style5" align="top">#sState#</td>
+                                <td align="left" class="style5" align="top">#arrival_zip#</td>
                             </tr>
                         </cfloop>
                     </cfif>
