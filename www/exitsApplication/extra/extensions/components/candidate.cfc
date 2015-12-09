@@ -488,7 +488,7 @@
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.us_phone#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.arrival_address#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.arrival_address2#">,
-                <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.arrival_apt_number#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.arrival_apt_number#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.arrival_city#">,
                 <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.arrival_state#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.arrival_zip#">,
@@ -1735,7 +1735,7 @@
                     	arrival_address_2 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.arrival_address_2#">,
                    	</cfif>
                       <cfif LEN(arrival_apt_number)>
-                    	arrival_apt_number = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.arrival_apt_number#">,
+                    	arrival_apt_number = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.arrival_apt_number#">,
                    	</cfif>
                     <cfif LEN(arrival_city)>
                     	arrival_city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.arrival_city#">,
