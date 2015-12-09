@@ -411,6 +411,8 @@
                 watDateCheckedIn,
                 us_phone,
                 arrival_address,
+                arrival_address_2,
+                arrival_apt_number,
                 arrival_city,
                 arrival_state,
                 arrival_zip,
@@ -485,6 +487,8 @@
                 <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.watDateCheckedIn#" null="#NOT IsDate(qGetCandidateInfo.watDateCheckedIn)#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.us_phone#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.arrival_address#">,
+                <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.arrival_address2#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.arrival_apt_number#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.arrival_city#">,
                 <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.arrival_state#">,
                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.arrival_zip#">,
@@ -1639,6 +1643,7 @@
                     ec.us_phone,
                     ec.arrival_address,
                     ec.arrival_address_2,
+                    ec.arrival_apt_number,
                     ec.arrival_city,
                     ec.arrival_state,
                     ec.arrival_zip,
@@ -1711,6 +1716,7 @@
         <cfargument name="us_phone" default="" hint="initPhone is not required">
         <cfargument name="arrival_address" default="" hint="arrival_address is not required">
         <cfargument name="arrival_address_2" default="" hint="arrival_address is not required">
+         <cfargument name="arrival_apt_number" default="" hint="arrival_apt is not required">
         <cfargument name="arrival_city" default="" hint="arrival_city is not required">
         <cfargument name="arrival_state" default="" hint="arrival_state is not required">
         <cfargument name="arrival_zip" default="" hint="arrival_zip is not required">
@@ -1727,6 +1733,9 @@
                    	</cfif>
                     <cfif LEN(arrival_address_2)>
                     	arrival_address_2 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.arrival_address_2#">,
+                   	</cfif>
+                      <cfif LEN(arrival_apt_number)>
+                    	arrival_apt_number = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.arrival_apt_number#">,
                    	</cfif>
                     <cfif LEN(arrival_city)>
                     	arrival_city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.arrival_city#">,
