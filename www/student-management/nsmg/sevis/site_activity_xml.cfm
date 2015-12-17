@@ -21,7 +21,7 @@
     	s.studentid, 
         s.dateapplication, 
         s.firstname, 
-        S.familylastname, 
+        s.familylastname, 
         s.ds2019_no, 
         s.companyID,
         s.middlename, 
@@ -171,6 +171,8 @@
 					<City>#schoolcity#</City> 
 					<State>#schoolstate#</State> 
 					<PostalCode>#schoolzip#</PostalCode> 
+                    <ExplanationCode>OO</ExplanationCode>
+                	<Explanation>Verified with host family.</Explanation>
 					<SiteName>#qGetHistory.school_name#</SiteName>
 					<NewSiteName>#schoolname#</NewSiteName>
 					<PrimarySite>true</PrimarySite>
