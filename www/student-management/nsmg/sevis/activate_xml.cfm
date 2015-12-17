@@ -15,21 +15,78 @@
 </cfquery>
 
 
-<cfquery name="qGetCandidates" datasource="MySql"> 
-	select candidateid, firstname, lastname, middlename, ds2019, arrivaldate, startdate, enddate, dob, sex,
-	birth_country, birth_city, citizen_country, residence_country, email, verification_received, ds2019_position, ds2019_subject, programRemarks
-	from extra_candidates
-	where candidateid = 22642
+<cfquery name="qGetStudents" datasource="MySql"> 
+	SELECT 	
+    	s.studentid, 
+        s.dateapplication, 
+        s.active, 
+        s.ds2019_no, 
+        s.firstname, 
+        s.familylastname, 
+        s.companyID,
+        s.middlename, 
+        s.dob, 
+        s.sex,	
+        s.citybirth, 
+        s.hostid, 
+        s.schoolid, 
+        s.host_fam_approved,
+        s.ayporientation, 
+        s.aypenglish,
+        h.address as hostaddress, 
+        h.address2 as hostaddress2, 
+        h.city as hostcity, 
+        h.state as hoststate, 
+        h.zip as hostzip,
+        u.businessname
+	FROM 
+    	smg_students s
+	INNER JOIN 
+    	smg_programs p ON s.programid = p.programid
+	INNER JOIN 
+    	smg_users u ON s.intrep = u.userid
+	LEFT JOIN 
+    	smg_hosts h ON s.hostid = h.hostid
+	WHERE 
+    	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+    AND 
+    	s.sevis_activated = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+    AND 
+    	s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )
+	AND	
+    	s.ds2019_no LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="N%">
+	<cfif IsDefined('form.pre_ayp')>
+	    AND 
+        	(
+        		s.aypenglish != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+            OR 
+            	s.ayporientation != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+            )
+    </cfif>
+
+	<cfif CLIENT.companyID EQ 10>
+    AND
+    	s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+    <cfelse>
+    AND
+    	s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
+    </cfif>
+
+	ORDER BY 
+    	u.businessname, 
+        s.familylastname, 
+        s.firstname
+	LIMIT 250
 </cfquery>
-<cfdump var="#qGetCandidates#">
-<cfif qGetStudents.qGetCandidates is '0'>
-Sorry, there were no candidates to populate the XML file at this time.
+<cfdump var="#qGetStudents#">
+<cfif qGetStudents.recordcount is '0'>
+Sorry, there were no students to populate the XML file at this time.
 <cfabort>
 </cfif>
 
 <cfquery datasource="MySqL">
 	INSERT INTO smg_sevis (companyid, createdby, datecreated, totalstudents, type)
-	VALUES ('#get_company.companyid#', '#client.userid#', #CreateODBCDateTime(now())#, '#qGetCandidates.recordcount#', 'activate')
+	VALUES ('#get_company.companyid#', '#client.userid#', #CreateODBCDateTime(now())#, '#qGetStudents.recordcount#', 'activate')
 </cfquery>
 
 <!--- BATCH ID MUST BE UNIQUE --->
@@ -50,7 +107,7 @@ Sorry, there were no candidates to populate the XML file at this time.
 </cfoutput>
 </table>
 <br><br><br>
-<cfabort>
+
 <cfoutput>
 
 <!-- Create an XML document object containing the data -->
