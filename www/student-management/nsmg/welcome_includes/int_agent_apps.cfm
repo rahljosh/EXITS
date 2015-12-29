@@ -85,7 +85,7 @@
 					</cfif>
                     
 					<!--- INTO Germany / Into Austria / XML Upload Feature --->
-					<cfif ListFind('28,15310,20,109,628,9106,115,21,6584,15130,15330', client.userid)>
+					<cfif ListFind('1,28,15310,20,109,628,9106,115,21,6584,15130,15330,10659', client.userid)>
                         <br />
                         <a href="index.cfm?curdoc=xml/upload_form&novelaro">Try the XML upload feature.</a>
                     </cfif>
