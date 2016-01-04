@@ -516,10 +516,13 @@
 
                         <!--- January (return December dates) --->
                     	<cfcase value="1">
-                        
-                            <!--- This should have the same Year as the previous year program start date for Jan reports only.--->
-                     		<cfset vReportDate = '12/01/#Year(qGetResults.endDate) - 1#'>	
-                            
+                        	<cfif #Year(qGetResults.endDate)# lt #year(now())# and #month(now())# eq 12>
+                            <!--- Jan - Dec has a dec end date, where all other programs have a jan end date.  Throws off the date calculation in Decemeber, so we compensate for that here.--->
+                                <cfset vReportDate = '12/01/#Year(qGetResults.endDate)#'>	
+                            <cfelse>
+								<!--- This should have the same Year as the previous year program start date for Jan reports only.--->
+                                <cfset vReportDate = '12/01/#Year(qGetResults.endDate) - 1#'>	
+                            </cfif>
                         </cfcase>
 
                         <!--- February (return January dates - work out issue with 12 month program) --->
@@ -570,6 +573,7 @@
                            <cfelse>
                            &nbsp;
                            </Cfif>
+                           
                        </td>
                         <td>
                         	<a name=#qGetResults.studentID#>
