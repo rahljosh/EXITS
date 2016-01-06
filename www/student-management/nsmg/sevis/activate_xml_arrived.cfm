@@ -11,7 +11,8 @@
         address,
         city,
         state,
-        zip
+        zip,
+        phone
     FROM 
         smg_companies
     WHERE 
@@ -36,6 +37,7 @@
         s.host_fam_approved,
         s.ayporientation,
         s.aypenglish,
+        s.email,
         h.familylastname as hostlastname,
         h.fatherlastname, h.motherlastname,
         h.address as hostaddress, 
@@ -43,6 +45,7 @@
         h.city as hostcity,
         h.state as hoststate, 
         h.zip as hostzip,
+        h.phone,
         u.businessname
 	FROM 
     	smg_students s
@@ -148,6 +151,8 @@ Sorry, there were no students to populate the XML file at this time.
 					<City>#qGetStudents.hostcity#</City> 
 					<State>#qGetStudents.hoststate#</State> 
 					<PostalCode>#qGetStudents.hostzip#</PostalCode>
+                	<ExplanationCode>OO</ExplanationCode>
+                	<Explanation>Verified with host family.</Explanation>
 				<cfelse>
 					<Address1>#qGetCompany.address#</Address1> 
 					<City>#qGetCompany.city#</City> 
@@ -155,6 +160,14 @@ Sorry, there were no students to populate the XML file at this time.
 					<PostalCode>#qGetCompany.zip#</PostalCode>
 				</cfif>
 				</USAddress>
+                <EmailAddress>#Trim(qGetStudents.email)#</EmailAddress>
+                 <cfif LEN(qGetStudents.phone) gt 0> 
+                	<PhoneNumber>#Right(ReReplaceNoCase(qGetStudents.phone, "[^0-9]","","all"),10)#</PhoneNumber>
+                 <cfelse>
+                	 <PhoneNumber>#Right(ReReplaceNoCase(qGetCompany.phone, "[^0-9]","","all"),10)#</PhoneNumber>
+                 </cfif> 
+                 
+               
 			</Validate>
 		</ExchangeVisitor>
 		<cfsilent>

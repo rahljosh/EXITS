@@ -133,6 +133,8 @@ Sorry, there were no students to populate the XML file at this time.
 					<City>#hostcity#</City> 
 					<State>#hoststate#</State> 
 					<PostalCode>#hostzip#</PostalCode>
+                    <ExplanationCode>OO</ExplanationCode>
+                	<Explanation>Verified with host family.</Explanation>
 				<cfelse>
 					<Address1>#get_company.address#</Address1> 
 					<City>#get_company.city#</City> 
