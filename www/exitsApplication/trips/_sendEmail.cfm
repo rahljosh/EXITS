@@ -53,7 +53,7 @@
 <cfoutput>	
 	
     <!--- Trip Permission --->
-    <cfdocument format="PDF" filename="#APPLICATION.PATH.TEMP#permissionForm_#VAL(qGetStudentInfo.studentID)#.pdf" overwrite="yes" margintop="0.2" marginbottom="0.2">
+    <cfdocument format="PDF" filename="#APPLICATION.PATH.TEMP#permissionForm_#VAL(qGetStudentInfo.studentID)#.pdf" overwrite="yes" margintop="0.2" marginbottom="0.2" localUrl="true">
 		
         <cfinclude template="_tripPermission.cfm">
         

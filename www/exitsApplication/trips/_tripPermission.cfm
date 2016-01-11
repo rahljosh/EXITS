@@ -157,20 +157,27 @@
 	}
 	-->
 </style>
-
+<!----
+<cfif ListFind('1,2,3,4,5,12',qGetStudentFullInformation.companyID)>
+            	<img src="http://ise.exitsapplication.com/nsmg/pics/1_trips_header.jpg" width=800 />
+    		<cfelse>
+            </cfif>
+---->
 <cfoutput>
 
 <div align="Center">
-            <cfif ListFind('1,2,3,4,5,12',qGetStudentFullInformation.companyID)>
-            	<img src="https://ise.exitsapplication.com/nsmg/pics/1_trips_header.jpg" width=800 />
+            
+            	<cfif ListFind('1,2,3,4,5,12',qGetStudentFullInformation.companyID)>
+            	<img src="http://ise.exitsapplication.com/nsmg/pics/1_trips_header.jpg" width=800 />
     		<cfelse>
-            	<img src="https://ise.exitsapplication.com/nsmg/pics/#qGetStudentFullInformation.companyID#_trips_header.jpg" width=800  />
+           	   <img src="http://ise.exitsapplication.com/nsmg/pics/#qGetStudentFullInformation.companyID#_trips_header.jpg" width=800 />
             </cfif>
+            
  </div>
      
     <table width="800" align="center" border="0" cellpadding="3" cellspacing="0">
         <tr>           
-            <td colspan="2" align="center"><img src="https://ise.exitsapplication.com/nsmg/pics/student.jpg" /></td>
+            <td colspan="2" align="center"><img src="http://ise.exitsapplication.com/nsmg/pics/student.jpg" /></td>
         </tr>
         <tr>
             <td valign="top" width="50%">
@@ -239,7 +246,7 @@
     
     <table width="800" align="center" border="0" cellpadding="3" cellspacing="0">
         <tr>           
-            <td colspan="2" align="center"><img src="https://ise.exitsapplication.com/nsmg/pics/HFbanner.png" /></td>
+            <td colspan="2" align="center"><img src="http://ise.exitsapplication.com/nsmg/pics/HFbanner.png" /></td>
         </tr>
         <tr>
             <td valign="top" width="50%">
@@ -318,7 +325,7 @@
                 <!--- Medical Information --->
                 <table width="100%">
                     <tr>
-                        <td colspan="2" align="center"><img src="https://ise.exitsapplication.com/nsmg/pics/medicalAllergysm.jpg" /></td>
+                        <td colspan="2" align="center"><img src="http://ise.exitsapplication.com/nsmg/pics/medicalAllergysm.jpg" /></td>
                     </tr>
                     <tr>
                         <td colspan="2" align="center" bgcolor="##FFFFCC"><em>You MUST carry your insurance card on the trip.</em></td>
@@ -340,7 +347,7 @@
                 <!--- Tour Details --->
                 <table width="100%">
                     <tr>
-                        <td colspan="2" align="center"><img src="https://ise.exitsapplication.com/nsmg/pics/detailssm.jpg" /></td>
+                        <td colspan="2" align="center"><img src="http://ise.exitsapplication.com/nsmg/pics/detailssm.jpg" /></td>
                     </tr>
                     <tr>
                         <td><span class="title">Tour Name:</span></td>
@@ -371,7 +378,7 @@
     <br /><br />
     <table width="800" align="center" border="0" cellpadding="3" cellspacing="0">
         <tr>           
-            <td align="center"><img src="https://ise.exitsapplication.com/nsmg/pics/signatures.jpg" /></td>
+            <td align="center"><img src="http://ise.exitsapplication.com/nsmg/pics/signatures.jpg" /></td>
         </tr>
         <tr>
         	<td>
