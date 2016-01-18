@@ -116,6 +116,10 @@
         LEFT JOIN smg_countrylist c ON smg_students.countryresident = c.countryid
         WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostInfo.hostID)#">
         AND smg_students.active = 1
+        <cfif (CLIENT.companyID LTE 5 or CLIENT.companyID EQ 12 or CLIENT.companyID eq 10)>
+                AND          
+                    smg_students.companyid != 6
+        </cfif>
         ORDER BY familylastname
     </cfquery>
     
