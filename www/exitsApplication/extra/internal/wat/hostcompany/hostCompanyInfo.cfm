@@ -1956,7 +1956,7 @@
                         <table width="100%" align="center" cellpadding="2" class="editPage">
                             <tr>
                                 <td width="40%" align="right" class="style1"><strong>Business Name:</strong> </td>
-                                <td><input type="text" id="name" name="name" value="#FORM.name#" class="style1" size="50" maxlength="250"></td>
+                                <td><input type="text" id="name" name="name" value="#FORM.name#" class="style1" size="50" maxlength="60"></td>
                             </tr>
                             <tr>
                                 <td align="right" class="style1"><strong>Business Type:</strong></td>
