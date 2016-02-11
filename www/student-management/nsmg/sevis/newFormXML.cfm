@@ -10,7 +10,7 @@
 ----- ------------------------------------------------------------------------- --->
 
 <!--- Kill Extra Output --->
-<cfsilent>
+
 	
     <cfsetting requesttimeout="9999">
 
@@ -20,139 +20,131 @@
     
     <cfscript>
 		// Create SEVIS Object
-		oSevis = createObject("component","nsmg.extensions.components.sevis");
+		oSevis = createObject("component","extensions.components.sevis");
 		
 		// Create Company Object
-		oCompany = createObject("component","nsmg.extensions.components.company");
+		oCompany = createObject("component","extensions.components.company");
 		
 		qGetCompany = oCompany.getCompanies(companyID=CLIENT.companyID);
 	</cfscript>
     
-    <cfquery name="qGetStudents" datasource="#APPLICATION.DSN#"> 
+    <cfquery name="qGetStudents" datasource="#APPLICATION.DSN.Source#"> 
         SELECT 	
-            s.studentid, 
-            s.ds2019_no, 
-            s.firstname, 
-            s.familylastname, 
-            s.middlename, 
-            s.dob, 
-            s.sex, 
-            s.citybirth, 
-            s.companyID,
-            s.ayporientation, 
-            s.aypenglish, 
-            s.hostID, 
-            s.schoolID, 
-            s.host_fam_approved, 
-            s.email,
+            c.candidateid, 
+            c.ds2019, 
+            c.firstname, 
+            c.lastname, 
+            c.middlename, 
+            c.dob, 
+            c.sex, 
+            c.birth_city, 
+            c.birth_country,
+            c.residence_country,
+            c.citizen_country,
+            c.companyID,
+            c.hostcompanyid, 
+            c.sevis_batchid,
+            c.startdate as sevis_startdate,
+            c.enddate as sevis_enddate,
+            c.email,
+            
+          
             birth.seviscode AS birthseviscode,
             resident.seviscode AS residentseviscode,
             citizen.seviscode AS citizenseviscode,
-            <!--- Program Information --->
-            p.sevis_startdate, 
-            p.sevis_enddate, 
+            
+			<!--- Program Information --->
+         
             p.preayp_date, 
             p.type AS programtype,
-            <!--- Intl. Rep Information --->
+            
+			<!--- Intl. Rep Information --->
             u.businessname,
-            <!--- Host Family Information --->
-            h.familylastname AS hostlastname, 
-            h.fatherFirstName,            
-            h.fatherlastname, 
-            h.motherFirstName,
-            h.motherlastname, 
-            h.address AS hostaddress, 
-            h.address2 AS hostaddress2,
-            h.city AS hostcity, 
-            h.state AS hoststate, 
-            h.zip AS hostzip,
-            h.phone AS hostPhone, 
-            <!--- School Information --->
-            sc.schoolname, 
-            sc.address AS schooladdress, 
-            sc.address2 AS schooladdress2, 
-            sc.city AS schoolcity,
-            sc.state AS schoolstate, 
-            sc.zip AS schoolzip,
-            <!--- Area Representative Information --->
+            
+            <!--- Company Information ---->
+            hc.name as hostCompanyName, 
+            hc.address AS hostCompanyAddress, 
+            hc.address2 AS hostCompanyAddress2, 
+            hc.city AS hostCompanyCity,
+            hc.state AS hostCompanyState, 
+            hc.zip AS hostCompanyZip,
+            hc.supervisor,
+            hc.phone,
+            
+            cpc.startDate,
+            cpc.endDate,
+            cpc.placement_date,
+            cpc.jobid,
+            
+            jobs.classification,
+            jobs.title,
+            
+            smg_states.state
+       
+			 
+            <!--- Area Representative Information
             areaRep.firstName AS areaRepFirstName,
             areaRep.lastName AS areaRepLastName
+			 --->
         FROM 
-            smg_students s 
+            extra_candidates c 
         INNER JOIN 
-            smg_programs p ON s.programid = p.programid
+            smg_programs p ON c.programid = p.programid
         INNER JOIN 
-            smg_users u ON s.intrep = u.userid
+            smg_users u ON c.intrep = u.userid
         INNER JOIN 
-            smg_countrylist birth ON s.countrybirth = birth.countryid
+            smg_countrylist birth ON c.birth_country = birth.countryid
         INNER JOIN 
-            smg_countrylist resident ON s.countryresident = resident.countryid
+            smg_countrylist resident ON c.residence_country = resident.countryid
         INNER JOIN 
-            smg_countrylist citizen ON s.countrycitizen = citizen.countryid
-        LEFT OUTER JOIN 
-            smg_hosts h ON s.hostID = h.hostID
-        LEFT OUTER JOIN 
-            smg_schools sc ON s.schoolID = sc.schoolID
-        LEFT OUTER JOIN
-        	smg_users areaRep ON s.areaRepID = areaRep.userID
+            smg_countrylist citizen ON c.citizen_country = citizen.countryid
+		INNER JOIN
+        	extra_hostcompany hc on c.hostcompanyid = hc.hostcompanyid
+		INNER JOIN 
+        	extra_candidate_place_company cpc on cpc.candidateid = c.candidateid      
+        INNER JOIN
+        	extra_jobs jobs on jobs.id = cpc.jobid
+        LEFT JOIN
+        	 smg_states on smg_states.id = hc.state
         WHERE 
-            s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+            c.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0"> 
         AND 
-            s.ds2019_no = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+            c.ds2019 = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+        AND 
+        	cpc.isSecondary = <cfqueryparam cfsqltype="cf_sql_bit" value="0"> 
         <!--- US or Canada --->
         AND 
-            s.countrybirth NOT IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="32,232" list="yes"> )
+            c.birth_country NOT IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="32,232" list="yes"> )
         AND 
-            s.countryresident NOT IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="32,232" list="yes"> )
+            c.residence_country NOT IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="32,232" list="yes"> )
         AND 
-            s.countrycitizen NOT IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="32,232" list="yes"> )
+            c.citizen_Country NOT IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="32,232" list="yes"> )
         AND 
-            s.verification_received IS NOT NULL
+            c.verification_received = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.verificationDate#">
+        AND
+            c.sevis_batchid = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
         AND 
-            s.sevis_batchid = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-        AND 
-            s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programid#" list="yes"> )
+            c.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programid#" list="yes"> )
 		
 		<cfif LEN(FORM.intRep)>
             AND
-                s.intRep IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intRep#" list="yes"> )
+                c.intRep IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intRep#" list="yes"> )
        	</cfif>
-         AND
-		<Cfif client.companyid lte 4 or client.companyid eq 12>
-          ( s.companyID < <cfqueryparam cfsqltype="cf_sql_integer" value="5"> or s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="12">)
-        <cfelse>
-           s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-        </Cfif>
-       
-           
-    
-        <!--- Get Current Division Students --->
-        <!---
-        AND
-            s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-        --->
-        
-        <!--- Get ISE students --->
-        <!---
-        <cfif CLIENT.companyID EQ 10>
-        AND
-            s.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
-        <cfelse>
-        AND
-            s.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISE#" list="yes"> )
-        </cfif>
-        --->
+      
+		 AND 
+           c.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+	
     
         ORDER BY 
             u.businessname, 
-            s.firstname,
-            s.familyLastName,
-            s.studentID       
+            c.LastName
+                   
         LIMIT 
             250
     </cfquery>
     
-</cfsilent>   
+<cfdump var="#qGetStudents#">
+
 
 <cfif NOT VAL(qGetStudents.recordcount)>
 	Sorry, there were no students to populate the XML file at this time.
@@ -174,7 +166,7 @@
 <table align="center" width="100%" frame="box">
 	<tr>
     	<th colspan="5">
-    		#qGetCompany.companyshort_nocolor# &nbsp; - &nbsp; Batch ID #sBatchInfo.newRecord# 
+    		#qGetCompany.companyshort_nocolor# &nbsp; - &nbsp; Batch ID <!----#sBatchInfo.newRecord# ---->
             &nbsp; - &nbsp; 
             List of Students 
             &nbsp; - &nbsp; 
@@ -184,48 +176,38 @@
     <tr>
 		<td>Record</td>
         <td>Intl. Representative</td>
-        <td>Student</td>
+        <td>Candidate</td>
         <td>Start Date</td>
-        <td>School</td>
+        <td>Company</td>
 	</tr>
 	<cfloop query="qGetStudents">
         <tr bgcolor="#iif(qGetStudents.currentrow MOD 2 ,DE("ededed") ,DE("ffffff") )#">
             <td>#qGetStudents.currentrow#</td>
             <td>#qGetStudents.businessname#</td>
-            <td>#qGetStudents.firstname# #qGetStudents.familylastname# (###qGetStudents.studentid#)</td>
+            <td>#qGetStudents.firstname# #qGetStudents.lastname# (###qGetStudents.candidateid#)</td>
             <td>
                 <cfif DateFormat(now(), 'mm/dd/yyyy') GT DateFormat(qGetStudents.sevis_startdate, 'mm/dd/yyyy')> <!--- Start Date after program start date --->
                     #DateFormat(now()+1, 'yyyy-mm-dd')#
                 <cfelse>
-                    <!----<cfif DateDiff('yyyy', qGetStudents.dob, qGetStudents.sevis_startdate) LT 15> <!--- Student has not completed 15 by the program start date --->
-                        #dateformat (now(), 'yyyy')#-#dateformat (qGetStudents.dob, 'mm-dd')# ---->
-                    <cfif qGetStudents.ayporientation NEQ 0 OR qGetStudents.aypenglish NEQ 0> <!--- Pre AYP student - get Pre Ayp Dates --->
-                        #dateformat (qGetStudents.preayp_date, 'yyyy-mm-dd')# 
-                    <cfelse> <!--- Get SEVIS start/end date --->
-                        #DateFormat(qGetStudents.sevis_startdate, 'yyyy-mm-dd')#
-                    </cfif>
+         
+                    #DateFormat(qGetStudents.sevis_startdate, 'yyyy-mm-dd')#
+                    
                 </cfif>
             </td>
             <td>
-                <cfif VAL(qGetStudents.schoolID) AND qGetStudents.host_fam_approved LT 5>
-                    <Address1>#qGetStudents.schooladdress#</Address1>
-                    <cfif NOT LEN(qGetStudents.schooladdress2)><Address2>#qGetStudents.schooladdress2#</Address2></cfif>
-                    <City>#qGetStudents.schoolcity#</City> 
-                    <State>#qGetStudents.schoolstate#</State> 
-                    <PostalCode>#qGetStudents.schoolzip#</PostalCode> 
-                    <SiteName>#qGetStudents.schoolname#</SiteName>
-                <cfelse>
-                    <Address1>#qGetCompany.address#</Address1> 
-                    <cfif NOT LEN(schooladdress2)><Address2>#schooladdress2#</Address2></cfif>
-                    <City>#qGetCompany.city#</City> 
-                    <State>#qGetCompany.state#</State> 
-                    <PostalCode>#qGetCompany.zip#</PostalCode> 
-                    <SiteName>#qGetCompany.companyname#</SiteName>
-                </cfif>
+                    <SiteName>#LEFT(qGetStudents.hostCompanyname, 60)#</SiteName>
+                    <Address1>#qGetStudents.hostCompanyAddress#</Address1>
+                    <cfif NOT LEN(qGetStudents.hostCompanyaddress2)><Address2>#qGetStudents.hostCompanyaddress2#</Address2></cfif>
+                    <City>#qGetStudents.hostCompanycity#</City> 
+                    <State>#qGetStudents.state#</State> 
+                    <PostalCode>#qGetStudents.hostCompanyzip#</PostalCode> 
+                   
+            
             </td>
         </tr>
 	</cfloop>
 </table> <br />
+
 
 <cfxml variable="xmlSevisBatch">
 <SEVISBatchCreateUpdateEV 
@@ -234,156 +216,107 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xsi:noNamespaceSchemaLocation="http://www.ice.gov/xmlschema/sevisbatch/Create-UpdateExchangeVisitor.xsd"
 	userID='#qGetCompany.sevis_userid#'>
+
+    
 <BatchHeader>
 	<BatchID>#sBatchInfo.sevisBatchID#</BatchID>
 	<OrgID>#qGetCompany.iap_auth#</OrgID> 
 </BatchHeader>
 <CreateEV>
 <cfloop query="qGetStudents">
+<cfset phoneString = ReReplaceNoCase(phone,"[^0-9]","","ALL")>
+<cfset phoneString = Insert('.',phoneString,3)>
+<cfset phoneString = Insert('.',phoneString,7)>
 	<cfsilent>
     	
-        <!--- Host Family Address --->
-        <cfif VAL(qGetStudents.hostID) AND qGetStudents.host_fam_approved LT 5>
-        	
-        	<!--- Student Placed --->
-            <cfset vSetHostID = qGetStudents.hostID>
-            
-            <cfsavecontent variable="vHostFamilyAddress">
-                <Address1>#XMLFormat(oSevis.displayHostFamilyName(fatherFirstName=qGetStudents.fatherFirstName,fatherLastName=qGetStudents.fatherLastName,motherFirstName=qGetStudents.motherFirstName,motherLastName=qGetStudents.motherLastName))#</Address1> 	
-                <Address2>#XMLFormat(qGetStudents.hostaddress)#</Address2> 					
-                <City>#XMLFormat(qGetStudents.hostcity)#</City> 
-                <State>#XMLFormat(qGetStudents.hoststate)#</State> 
-                <PostalCode>#XMLFormat(qGetStudents.hostzip)#</PostalCode>
-			</cfsavecontent>  
-           
-        <cfelse>
-        
-        	<!--- Student Not Placed --->
-            <cfset vSetHostID = 0>
-            
-        	<cfsavecontent variable="vHostFamilyAddress">
-                <Address1>#qGetCompany.address#</Address1> 
-                <City>#qGetCompany.city#</City> 
-                <State>#qGetCompany.state#</State> 
-                <PostalCode>#qGetCompany.zip#</PostalCode>
-            </cfsavecontent>
-		
-        </cfif>
+        <!--- Host COmpany Address --->
+       
+  	
+            <!--- Home Placement Placed --->
+ 
 
 		<!--- Site of Activity --->
-		<cfif VAL(qGetStudents.schoolID) AND qGetStudents.host_fam_approved LT 5>
+	
         
-        	<!--- Student Placed --->
-            <cfset vSetSchoolName = XMLFormat(TRIM(qGetStudents.schoolname))>
-            
+            <cfset vSetHostID = qGetStudents.hostcompanyid>
+        	<cfset vSetSchoolName = XMLFormat(TRIM(LEFT(qGetStudents.hostCompanyname, 60)))>
         	<cfsavecontent variable="vSiteOfActivity">
-                <Address1>#XMLFormat(qGetStudents.schooladdress)#</Address1> <cfif LEN(qGetStudents.schooladdress2)><Address2>#XMLFormat(qGetStudents.schooladdress2)#</Address2></cfif>
-                <City>#XMLFormat(qGetStudents.schoolcity)#</City> 
-                <State>#XMLFormat(qGetStudents.schoolstate)#</State> 
-                <PostalCode>#XMLFormat(qGetStudents.schoolzip)#</PostalCode> 
-                <SiteName>#XMLFormat(TRIM(qGetStudents.schoolname))#</SiteName>
-                <PrimarySite>true</PrimarySite>
+                    <Address1>#XMLFormat(qGetStudents.hostCompanyAddress)#</Address1>
+                    <cfif LEN(trim(qGetStudents.hostCompanyaddress2))><Address2>#XMLFormat(qGetStudents.hostCompanyaddress2)#</Address2></cfif>
+                    <City>#XMLFormat(qGetStudents.hostCompanycity)#</City> 
+                    <State>#XMLFormat(qGetStudents.state)#</State> 
+                    <PostalCode>#XMLFormat(qGetStudents.hostCompanyzip)#</PostalCode> 
+                    <SiteName>#XMLFormat(Trim(qGetStudents.hostCompanyname))#</SiteName>
+                    <PrimarySite>true</PrimarySite>
+                    <Remarks>#XMLFormat(qGetStudents.title)#, POC: #XMLFormat(qGetStudents.supervisor)#, POC Phone: #phoneString#</Remarks>
+                    
 			</cfsavecontent>  
                           
-        <cfelse>
-        
-        	<!--- Student Not Placed --->
-            <cfset vSetSchoolName = qGetCompany.companyname>
-
-        	<cfsavecontent variable="vSiteOfActivity">
-                <Address1>#qGetCompany.address#</Address1> <cfif LEN(schooladdress2)><Address2>#schooladdress2#</Address2></cfif>
-                <City>#qGetCompany.city#</City> 
-                <State>#qGetCompany.state#</State> 
-                <PostalCode>#qGetCompany.zip#</PostalCode> 
-                <SiteName>#qGetCompany.companyname#</SiteName>
-                <PrimarySite>true</PrimarySite>
-			</cfsavecontent>  
-                          
-        </cfif>
+      
 
         <cfscript>
 			// Set Start Date
 			vSetStartDate = '';
 			
-			if ( DateFormat(now(), 'mm/dd/yyyy') GT DateFormat(qGetStudents.sevis_startdate, 'mm/dd/yyyy') ) {
-				//Start Date after program start date 
-				vSetStartDate = DateFormat(now()+1, 'yyyy-mm-dd');
-			//} else if ( DateDiff('yyyy', qGetStudents.dob, qGetStudents.sevis_startdate) LT 15 ) {
-				// Student has not completed 15 by the program start date
-		  //		vSetStartDate = '#dateformat (now(), 'yyyy')#-#dateformat (qGetStudents.dob, 'mm-dd')#';
-			} else if ( VAL(qGetStudents.ayporientation) OR VAL(qGetStudents.aypenglish) ) {
-				// Pre AYP student - get Pre Ayp Dates
-				vSetStartDate = dateformat (qGetStudents.preayp_date, 'yyyy-mm-dd');
-			} else {
-				// Get SEVIS start/end date
-				vSetStartDate = DateFormat(qGetStudents.sevis_startdate, 'yyyy-mm-dd');
-			}
+			
+				//vSetStartDate = DateFormat(qGetStudents.sevis_startdate, 'yyyy-mm-dd');
+				vSetStartDate = DateFormat(qGetStudents.startdate, 'yyyy-mm-dd');
 			
 			// Insert Batch History
 			oSevis.insertBatchHistory(
 				batchID=sBatchInfo.newRecord,
-				studentID=qGetStudents.studentID,
+				studentID=qGetStudents.candidateID,
 				hostID=vSetHostID,
 				schoolName=vSetSchoolName,
 				startDate=vSetStartDate,
-				endDate=sevis_enddate
+				endDate=enddate
 			);
 		</cfscript>
         
-        <cfquery datasource="#APPLICATION.DSN#">
+        <cfquery datasource="#APPLICATION.DSN.Source#">
             UPDATE 
-                smg_students 
+               extra_candidates
             SET 
-                sevis_batchid = <cfqueryparam cfsqltype="cf_sql_integer" value="#sBatchInfo.newRecord#"> 
+                sevis_batchid = <cfqueryparam cfsqltype="cf_sql_integer" value="#sBatchInfo.newRecord#">
             WHERE 
-                studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudents.studentid#">
+                candidateid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudents.candidateid#">
         </cfquery>
     </cfsilent>
-    <ExchangeVisitor requestID="#qGetStudents.currentRow#_#qGetStudents.studentid#" printForm="true" userID="#qGetCompany.sevis_userid#">
-        <UserDefinedA>#qGetStudents.studentid#</UserDefinedA>
+    <ExchangeVisitor requestID="#qGetStudents.currentRow#_#qGetStudents.candidateid#" printForm="true" userID="#qGetCompany.sevis_userid#">
+        <UserDefinedA>#qGetStudents.candidateid#</UserDefinedA>
         <Biographical>
             <FullName>
-                <LastName>#XMLFormat(qGetStudents.familylastname)#</LastName> 
-                <FirstName>#XMLFormat(qGetStudents.firstname)#<cfif LEN(qGetStudents.middlename)> #XMLFormat(qGetStudents.middlename)#</cfif></FirstName> 		
+                <LastName>#XMLFormat(qGetStudents.lastname)#</LastName> 
+                <FirstName>#XMLFormat(qGetStudents.firstname)# <cfif LEN(qGetStudents.middlename)> #XMLFormat(qGetStudents.middlename)#</cfif></FirstName> 
+				
             </FullName>
             <BirthDate>#DateFormat(qGetStudents.dob, 'yyyy-mm-dd')#</BirthDate> 
-            <Gender><cfif qGetStudents.sex EQ 'male'>M<cfelse>F</cfif></Gender> 
-            <BirthCity>#XMLFormat(qGetStudents.citybirth)#</BirthCity> 
+            <Gender><cfif qGetStudents.sex EQ 'M'>M<cfelse>F</cfif></Gender> 
+            <BirthCity>#XMLFormat(qGetStudents.birth_city)#</BirthCity> 
             <BirthCountryCode>#qGetStudents.birthseviscode#</BirthCountryCode> 
             <CitizenshipCountryCode>#qGetStudents.citizenseviscode#</CitizenshipCountryCode> 
             <PermanentResidenceCountryCode>#qGetStudents.residentseviscode#</PermanentResidenceCountryCode> 
-            <EmailAddress>#XMLFormat(qGetStudents.email)#</EmailAddress>	
+            <EmailAddress>#qGetStudents.email#</EmailAddress>		
         </Biographical>
-        <PositionCode>223</PositionCode> 
-        <PrgStartDate>#DateFormat(vSetStartDate, 'yyyy-mm-dd')#</PrgStartDate>  
+        <PositionCode>219</PositionCode> 
+        <PrgStartDate>#DateFormat(qGetStudents.sevis_startdate, 'yyyy-mm-dd')#</PrgStartDate>  
         <PrgEndDate>#DateFormat(qGetStudents.sevis_enddate, 'yyyy-mm-dd')#</PrgEndDate>
-        <CategoryCode>1A</CategoryCode>
+        <CategoryCode>12</CategoryCode>
         <SubjectField>
-            <SubjectFieldCode>53.0299</SubjectFieldCode> 
-            <Remarks>none</Remarks> 
+            <SubjectFieldCode>#XMLFormat(qGetStudents.classification)#</SubjectFieldCode> 
+            <Remarks>#XMLFormat(qGetStudents.title)#</Remarks> 
         </SubjectField>
-        <USAddress>#TRIM(vHostFamilyAddress)#</USAddress>
+        
         <FinancialInfo>
             <ReceivedUSGovtFunds>false</ReceivedUSGovtFunds> 
             <OtherFunds>
-                <Personal>3000</Personal> 
+                <Personal>1000</Personal> 
             </OtherFunds>
         </FinancialInfo>
         <AddSiteOfActivity>
             <SiteOfActivity xsi:type="SOA">#TRIM(vSiteOfActivity)#</SiteOfActivity>
         </AddSiteOfActivity>
-        <cfif VAL(vSetHostID)> <!--- Residential Address Information --->
-        	#oSevis.getResidentialAddressInformation(
-                hostFatherFirstName=qGetStudents.fatherFirstName,
-                hostFatherLastName=qGetStudents.fatherLastName,
-                hostMotherFirstName=qGetStudents.motherFirstName,
-                hostMotherLastName=qGetStudents.motherLastName,
-                hostPhone=APPLICATION.CFC.UDF.formatPhoneNumber(qGetStudents.hostPhone),
-                localCoordinatorFirstName=qGetStudents.areaRepFirstName,
-                localCoordinatorLastName=qGetStudents.areaRepLastName
-            )#
-		</cfif>
-        
+       
 	</ExchangeVisitor>
 </cfloop>
 </CreateEV>
@@ -394,13 +327,13 @@
 
 <cfscript>
 	// Get Folder Path 
-	currentDirectory = "#AppPath.sevis##qGetCompany.companyshort_nocolor#/new_forms/";
+	//currentDirectory = "#AppPath.sevis##qGetCompany.companyshort_nocolor#/new_forms/";
 
 	// Make sure the folder Exists
-	APPLICATION.CFC.UDF.createFolder(currentDirectory);
+	//APPLICATION.CFC.UDF.createFolder(currentDirectory);
 </cfscript>
 
-<cffile action="write" file="#currentDirectory#/#qGetCompany.companyshort_nocolor#_new_00#sBatchInfo.newRecord#.xml" output="#toString(TRIM(xmlSevisBatch))#">
+<cffile action="write" file="C:/websites/exitsApplication/extra/internal/uploadedfiles/sevis/csb/new_forms/#qGetCompany.companyshort_nocolor#_new_00#sBatchInfo.newRecord#.xml" output="#toString(TRIM(xmlSevisBatch))#">
 
 <table align="center" width="100%" frame="box">
 	<th>#qGetCompany.companyshort_nocolor# &nbsp; - &nbsp; Batch ID #sBatchInfo.newRecord# &nbsp; - &nbsp; Total of students in this batch: #qGetStudents.recordcount#</th>
