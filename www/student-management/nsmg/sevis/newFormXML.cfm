@@ -195,7 +195,7 @@
                 </cfif>
             </td>
             <td>
-                    <SiteName>#LEFT(qGetStudents.hostCompanyname, 60)#</SiteName>
+                    <SiteName>#Trim(LEFT(qGetStudents.hostCompanyname, 60))#</SiteName>
                     <Address1>#qGetStudents.hostCompanyAddress#</Address1>
                     <cfif NOT LEN(qGetStudents.hostCompanyaddress2)><Address2>#qGetStudents.hostCompanyaddress2#</Address2></cfif>
                     <City>#qGetStudents.hostCompanycity#</City> 
@@ -246,7 +246,7 @@
                     <City>#XMLFormat(qGetStudents.hostCompanycity)#</City> 
                     <State>#XMLFormat(qGetStudents.state)#</State> 
                     <PostalCode>#XMLFormat(qGetStudents.hostCompanyzip)#</PostalCode> 
-                    <SiteName>#XMLFormat(Trim(qGetStudents.hostCompanyname))#</SiteName>
+                    <SiteName>#XMLFormat(Trim(LEFT(qGetStudents.hostCompanyname,60)))#</SiteName>
                     <PrimarySite>true</PrimarySite>
                     <Remarks>#XMLFormat(qGetStudents.title)#, POC: #XMLFormat(qGetStudents.supervisor)#, POC Phone: #phoneString#</Remarks>
                     
