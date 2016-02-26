@@ -32,7 +32,7 @@
         LEFT JOIN smg_programs ON smg_programs.programid = stu_prog.programid 
         LEFT JOIN smg_users u on u.userid = s.intrep 
         LEFT JOIN php_schools sc ON sc.schoolid = stu_prog.schoolid
-        LEFT OUTER JOIN applicationLookUp alp ON alp.fieldID = stu_prog.return_student
+        LEFT OUTER JOIN applicationlookup alp ON alp.fieldID = stu_prog.return_student
        		AND fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="PHPReturnOptions">
 		
 		<cfif client.usertype eq 7>
