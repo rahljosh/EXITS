@@ -394,7 +394,7 @@
 
 
 				<!--- Do not display for ESI --->
-                <cfif APPLICATION.SETTINGS.COMPANYLIST.ESI NEQ companyID>
+                <cfif APPLICATION.SETTINGS.COMPANYLIST.ESI NEQ companyID OR APPLICATION.SETTINGS.COMPANYLIST.DASH NEQ companyID>
                     <div class="subSectionLarge">
                         
                         <div class="title"> 
