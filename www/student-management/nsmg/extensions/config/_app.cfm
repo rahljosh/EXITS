@@ -103,7 +103,7 @@
 
 	APPLICATION.EMAIL.PHPContact = 'luke@phpusa.com';
 	
-	APPLICATION.EMAIL.ESIfacilitators = 'caitlin@exchange-service.org;diana@exchange-service.org';
+	APPLICATION.EMAIL.ESIfacilitators = 'caitlin@exchange-service.org;jana@exchange-service.org';
 
 	/*********************************************
 		Replace this with a SESSION.emailSupport
