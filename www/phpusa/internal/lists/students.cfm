@@ -61,7 +61,11 @@
             AND s.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
         </cfif>
         
-        <cfif client.usertype EQ 12>
+        <cfif client.usertype EQ 11>
+        	AND s.branchID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+        </cfif>
+		
+		<cfif client.usertype EQ 12>
 	        AND stu_prog.schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
         </cfif>
         
