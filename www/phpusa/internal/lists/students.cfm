@@ -4,6 +4,115 @@
 	<cfparam name="URL.status" default="active">
 	<cfparam name="URL.order" default="familylastname">
 	<cfparam name="URL.placed" default="All">
+    
+    <cfquery name="qGetStudentList" datasource="MySql">
+        SELECT DISTINCT
+        	s.studentid,
+            s.uniqueid,
+            s.firstname, 
+            s.familylastname, 
+            s.sex, 
+            s.country, 
+            u.userid, 
+            u.businessname,
+            sc.schoolid, 
+            sc.schoolname,
+            smg_countrylist.countryname, 
+            smg_programs.programname,
+            stu_prog.programid, 
+            stu_prog.assignedid, 
+            IFNULL(alp.name, 'n/a') AS PHPReturnOption
+        FROM 
+        	smg_students s
+        INNER JOIN 
+        	php_students_in_program stu_prog ON stu_prog.studentid = s.studentid
+        LEFT JOIN 
+        	smg_countrylist ON smg_countrylist.countryid = s.country  
+        LEFT JOIN 
+        	smg_programs ON smg_programs.programid = stu_prog.programid 
+        LEFT JOIN 
+        	smg_users u on u.userid = s.intrep 
+        LEFT JOIN 
+        	php_schools sc ON sc.schoolid = stu_prog.schoolid
+        LEFT OUTER JOIN
+        	applicationlookup alp ON alp.fieldID = stu_prog.return_student
+            	 AND
+                 	fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="PHPReturnOptions">
+		
+		<cfif client.usertype eq 7>
+        LEFT JOIN 
+        	php_school_contacts on php_school_contacts.schoolid = stu_prog.schoolid
+        </cfif>
+        
+        WHERE 
+        	stu_prog.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#">
+            
+		<cfif url.status EQ 'active'>
+            AND 
+                stu_prog.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+            AND 
+                stu_prog.canceldate IS NULL
+        <cfelseif url.status EQ 'inactive'>
+            AND 
+                stu_prog.active = <cfqueryparam cfsqltype="cf_sql_integer" value="0">            
+            AND 
+                stu_prog.canceldate IS NULL
+        <cfelseif url.status EQ 'cancelled'>
+            AND
+                stu_prog.active = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
+            AND 
+                stu_prog.canceldate IS NOT NULL
+        </cfif>
+        
+        <cfif url.placed EQ 'yes'>
+            AND 
+                stu_prog.hostid != '0'	
+        </cfif>
+        
+        <!----Limit by User---->
+        <cfif client.usertype EQ 8>
+            AND 
+                s.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+        </cfif>
+        
+        <cfif client.usertype EQ 11>
+        	AND
+            	s.branchID = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+        </cfif>
+		
+		<cfif client.usertype EQ 12>
+	        AND 
+            	stu_prog.schoolid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+        </cfif>
+        
+        <cfif client.usertype EQ 7>
+        	AND  
+            	php_school_contacts.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.userid#">
+        </cfif>
+        
+        ORDER BY 
+        	#url.order# 
+			<cfif url.order EQ 'familylastname'>, firstname</cfif>
+    </cfquery>
+    
+</cfsilent>
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Student List</title>
+
+
+
+</html>=======
+<!--- Kill Extra Output --->
+<cfsilent>
+
+	<cfparam name="URL.status" default="active">
+	<cfparam name="URL.order" default="familylastname">
+	<cfparam name="URL.placed" default="All">
     <cfparam name="URL.programID" default="0">
     <cfparam name="URL.schoolID" default="0">
     <cfparam name="URL.userID" default="0">
