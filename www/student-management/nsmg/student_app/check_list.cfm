@@ -202,7 +202,12 @@
     <cfloop list="08,09,10,11,12,13,14,15,16,17,18,19,20,21,23,24,25,26,27" index="i">
         <cfdirectory directory="#AppPath.onlineApp.inserts#page#i#" name="check_#i#_upload" filter="#smg_students.studentID#.*">	
     </cfloop>
-    
+    <!---Program Types---->
+    <cfquery name="program_type" datasource="#APPLICATION.DSN#">
+    select type
+    from smg_programs 
+    where programid = #get_student_info.programid#
+    </cfquery>
 </cfsilent>
 
 <!--- HEADER OF TABLE --->
@@ -780,7 +785,12 @@
   
     <cfif ListFind("14,15,16", smg_students.app_indicated_program) OR ListFind("13,15", smg_students.companyid)> 
 		<tr><td><font color="0000FF">This page does not apply to your program</font><br></td></tr>
-	
+	<cfelseif program_type.type EQ 27>
+    	<cfif VAL(qESIDistrictChoice.option1)>
+    		<tr><td><font color="0000FF">Complete  </font><br></td></tr>
+		<cfelse>
+       	     <tr><td><font color="0000FF">No district selected.  </font><br></td></tr>
+        </cfif>
 	<cfelseif CLIENT.companyID EQ 14>
 		
 		<!--- Exchange Service International Application --->
