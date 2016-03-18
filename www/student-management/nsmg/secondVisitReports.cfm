@@ -35,7 +35,7 @@
     
     <cfscript>
 		// Users allowed to add/hide reports
-		vAllowedUsers = "8731,1,510,17427,12431,16718,12389,16652,8743,11364,13799,16552";
+		vAllowedUsers = "8731,1,510,17427,12431,16718,12389,16652,8743,11364,13799,16552,24206";
 		
 		// Get Regions
 		qGetRegionList = APPLICATION.CFC.REGION.getUserRegions(companyID=CLIENT.companyID, userID=CLIENT.userID, usertype=CLIENT.usertype);
