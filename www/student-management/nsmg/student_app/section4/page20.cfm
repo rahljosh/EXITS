@@ -85,7 +85,13 @@ function NextPage() {
 //-->
 </SCRIPT>
 
+<cfscript>
+	// Get List of Canada Districts
+	qGetESIDistrictChoice = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='ESIDistrictChoice-ShortTerm',sortBy='sortOrder');
+</cfscript>
+
 <cfinclude template="../querys/get_student_info.cfm">
+
 <!----Get Regions that have been canceled for students Program---->
 <Cfquery name="unAvailableRegions" datasource="#APPLICATION.DSN#">
 select fk_regionID
@@ -144,6 +150,7 @@ and sc.fk_companyid = #client.companyid#
 	</tr>
 </table>
 <!--- If student has selected a state Preference, don't show regional Preference --->
+
 <Cfif (checkStates.recordcount neq 0) > 
 	<cfif (checkStates.state1 neq 0 AND checkStates.state2 nEQ 0 AND checkStates.state3 nEQ 0)>
 	<div class="section"><br><br>
@@ -172,7 +179,7 @@ and sc.fk_companyid = #client.companyid#
 	<cfabort>	
 </cfif>
 <!----Regional Choice doesn't apply to ESI---->
-<cfif ( ListFind("13,15", client.companyid))> 
+<cfif ( ListFind("13,14,15", client.companyid))> 
 	<div class="section"><br><br>
 	<table width="670" cellpadding=2 cellspacing=0 align="center">
 		<tr>
@@ -261,9 +268,26 @@ and sc.fk_companyid = #client.companyid#
                 <td>
                     <b>Note: There will be additional charges if you make a regional choice, please contact your representative for details.</b><br><br>
             	
-                    
-                    <div id ="1" style="display:none">
-           
+                    <cfif client.companyid eq 14>
+                    	<div id ="1" style="display:none">
+           				<cfif program_type.type eq 27>
+                   		 	<img src="pics/pinMap_short-term.png" width="650" height="380" align="middle"><br>
+                    </cfif>    
+                     
+                       
+                        <table cellpadding="2" cellspacing="2" style="margin:10px;">
+                            <tr>
+                                <td>1st Choice:</td>
+                                <td><select name="option1"  onClick="DataChanged();" onChange="changeValues();">
+                                        <option value="0">Nothing Selected </option>
+                                         <cfloop query="qGetESIDistrictChoice">
+                                         	<option value="#qGetESIDistrictChoice.fieldID#" >#qGetESIDistrictChoice.name#</option>
+                                         </cfloop>
+                                    </select>
+                                </td>
+                            </tr>
+                         </table>
+                    <cfelse>
                     
                     <table width=670 border=0 cellpadding=0 cellspacing=0 align="center">
                         <tr><td colspan="3"><h1>Select your regions below, then click Next:</h1><br><br></td></tr>
@@ -288,11 +312,12 @@ and sc.fk_companyid = #client.companyid#
                             <Td align="Center"><input type="radio" name="region_choice" value="9" onChange="DataChanged();" <cfif ListFind(closedList, 9)>disabled</cfif> <cfif check_guarantee.app_region_guarantee EQ '9'>checked</cfif>> I'd like the be placed in the <strong>East</strong> Region.</Td>
                         </tr>
                     </table>	
-          			
+          			</cfif>
                     </div>
                 </td>
             </tr>
         </table><br><br>
+       
 	
     </div>
 
