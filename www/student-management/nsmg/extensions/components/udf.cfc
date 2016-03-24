@@ -1817,7 +1817,7 @@
       
 	  	<cfset fileName="placementInformationSheet_#qGetStudentInfo.studentID#_#DateFormat(NOW(),'mm-dd-yyyy')#-#TimeFormat(NOW(),'hh-mm')#">
 		<cfoutput>
-            <cfdocument format="pdf" filename="#fileName#.pdf" overwrite="yes" orientation="landscape" name="uploadFile" localurl="yes">
+            <cfdocument format="pdf" filename="#fileName#.pdf" overwrite="yes" orientation="landscape" name="uploadFile" localurl="yes" backgroundvisible="yes">
                 #PlacementInfo#
             </cfdocument>
         </cfoutput>
