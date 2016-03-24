@@ -112,6 +112,8 @@
             c.ds2019 = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
         AND 
         	cpc.isSecondary = <cfqueryparam cfsqltype="cf_sql_bit" value="0"> 
+         AND 
+        	cpc.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1"> 
         <!--- US or Canada --->
         AND 
             c.birth_country NOT IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="32,232" list="yes"> )
