@@ -372,10 +372,14 @@
 				<!--- this cfif is good as long as the trainee invoices are not automated, which they will be in the future. THE CFELSE PART SHOULD BE GOOD AT ALL TIMES --->
                 <cfif qGetInvoiceInfo.type EQ 'trainee program'>
                 	
-                    <!--- EXTRA - Trainee --->  
+                    <!--- EXTRA - Trainee --->
+                        International Student Exchange, Inc.<br />
+                        119 Cooper Street <br />
+                        Babylon, NY 11702<br />  
                     <span class="style3">
-                        Please note our new bank information <br />  <br />               
-                        International Student Exchange<br />
+                        Please note our new bank information: <br />                
+                        International Student Exchange<br /> </span>
+                    <span class="style3">
                         Chase Bank<br />
                         595 Sunrise Highway<br />
                         West Babylon, NY 11704<br />
@@ -390,7 +394,10 @@
 
 						<!--- EXTRA - Trainee --->                
                         <cfcase value="7">
-                            <span class="style3">
+                            International Student Exchange, Inc.<br />
+                        	119 Cooper Street <br />
+                        	Babylon, NY 11702<br />  
+<span class="style3">
                                 Please note our new bank information <br />  <br />               
                                 International Student Exchange<br />
                                 Chase Bank<br />
@@ -454,7 +461,10 @@
                         
                         <!--- DASH --->
                         <cfcase value="15">
-                        	<span class="style3">              
+                        		Discovery Academic Student Homestay<br />
+                        		119 Cooper Street <br />
+                        		Babylon, NY 11702<br />  
+                            <span class="style3">              
                                 DASH<br />
                                 Chase Bank<br />
                                 595 Sunrise Highway<br />
@@ -492,7 +502,7 @@
                     
                     </cfswitch>  
                 
-				</cfif>
+			  </cfif>
             </td>
             <td>&nbsp;</td>
             <td valign=top class="thin-border-left-bottom-right">
