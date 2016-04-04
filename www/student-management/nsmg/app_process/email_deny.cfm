@@ -156,6 +156,7 @@ FROM="""#companyshort.companyshort# Support"" <#client.support_email#>"
 		<tr><td colspan="2"><br>Sincerely,</td></tr>
 		<tr><td colspan="2">#get_current_user.firstname# #get_current_user.lastname#</td></tr>
 		<tr><td colspan="2">#companyshort.companyname#</td></tr>
+        <tr><td colspan="2">#get_current_user.email#</td></tr>
 	</table>
 	</body>
 	</html>
