@@ -264,7 +264,13 @@
 						) 
 					AS CHAR) LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.search#%">
                	<!--- Check if family is approved --->
-                <cfif NOT ListFind("13",CLIENT.companyID)>
+                <cfif ListFind("15",CLIENT.companyID)>
+                	AND hostID IN (
+                        SELECT hostID 
+                        FROM smg_host_app_season 
+                        WHERE applicationStatusID < 9 
+                        AND seasonID >= <cfqueryparam cfsqltype="cf_sql_integer" value="#vSeasonID#"> )
+                <cfelseif NOT ListFind("13",CLIENT.companyID)>
                     AND hostID IN (
                         SELECT hostID 
                         FROM smg_host_app_season 
@@ -720,6 +726,10 @@
                                 </a>
                           	<cfelseif CLIENT.companyID EQ 14>
                             	<a href="https://es.exitsapplication.com/hostApplication/index.cfm?section=login" target="_blank">
+                                    <img src="#client.exits_url#/nsmg/pics/hostAppEmail.jpg" width="200" height="56" border="0">
+                                </a>
+                            <cfelseif CLIENT.companyID EQ 15>
+                            	<a href="https://dash.exitsapplication.com/hostApplication/" target="_blank">
                                     <img src="#client.exits_url#/nsmg/pics/hostAppEmail.jpg" width="200" height="56" border="0">
                                 </a>
                             <cfelse>
