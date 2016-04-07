@@ -556,8 +556,12 @@
 		<cfargument name="Text" type="string" required="Yes" />
 		
 		<cfscript>
-			return(REReplace(LCase(ARGUMENTS.Text), "(\b[a-z]{1,1})", "\U\1", "ALL"));
+			
+			return(reReplace(ARGUMENTS.Text,"(^[a-z])","\U\1","ALL"));
 		</cfscript>
+		<!----<cfscript>
+			return(REReplace(LCase(ARGUMENTS.Text), "(\b[a-z]{1,1})", "\U\1", "ALL"));
+		</cfscript>---->
 	</cffunction>
 
 
