@@ -726,8 +726,8 @@
     <cfelseif smg_student_app_state_requested.state1 GT 0 or smg_student_app_state_requested.state2 GT 0 or smg_student_app_state_requested.state3 GT 0>
     	<tr><td>You've requested a state preference, therefore a region preference is not available. </td></tr>
     <cfelse>    
-		<cfif (DateFormat(now(), 'mm') EQ 4 OR dateFormat(now(), 'mm') EQ 5) AND (get_student_info.app_indicated_program EQ 1 OR get_student_info.app_indicated_program EQ '2')> 
-            <tr><td><font color="0000FF">This page is not available in April or May.</font><br></td></tr> 
+		<cfif (DateFormat(now(), 'mm') EQ 5 OR dateFormat(now(), 'mm') EQ 5) AND (get_student_info.app_indicated_program EQ 1 OR get_student_info.app_indicated_program EQ '2')> 
+            <tr><td><font color="0000FF">This page is not available in May.</font><br></td></tr> 
         <cfelse>
             <!--- HIDE GUARANTEE FOR EF AND INTERSTUDIES 8318 --->
             <cfif IsDefined('CLIENT.usertype') AND CLIENT.usertype EQ 10 AND (smg_students.master_accountid EQ 10115 OR smg_students.intrep EQ 10115 OR smg_students.intrep EQ 8318)>
@@ -854,8 +854,8 @@
         
     <cfelse>
 		<!--- Not Available in April or May - PROGRAM TYPES 1 = AYP 10 AUG / 2 = AYP 5 AUG / 3 = AYP 5 JAN / 4 = AYP 12 JAN --->
-        <cfif (DateFormat(now(), 'mm') EQ 4 OR dateFormat(now(), 'mm') EQ 5)<!---- AND (get_student_info.app_indicated_program EQ 1 OR get_student_info.app_indicated_program EQ '2')---->> 
-            <tr><td><font color="0000FF">This page is not available in April or May.</font><br></td></tr> 
+        <cfif (DateFormat(now(), 'mm') EQ 5 OR dateFormat(now(), 'mm') EQ 5)<!---- AND (get_student_info.app_indicated_program EQ 1 OR get_student_info.app_indicated_program EQ '2')---->> 
+            <tr><td><font color="0000FF">This page is not available in May.</font><br></td></tr> 
         <cfelse>
             <!--- HIDE GUARANTEE FOR EF AND INTERSTUDIES 8318 --->
             <cfif IsDefined('CLIENT.usertype') AND CLIENT.usertype EQ 10 AND (smg_students.master_accountid EQ 10115 OR smg_students.intrep EQ 10115 OR smg_students.intrep EQ 8318)>
