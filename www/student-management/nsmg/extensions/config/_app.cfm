@@ -88,11 +88,11 @@
 	// Set a short name for the APPLICATION.EMAIL
 	AppEmail = APPLICATION.EMAIL;
 	APPLICATION.EMAIL.errors = 'errors@student-management.com';
-	if (APPLICATION.SETTINGS.COMPANYLIST.ISESMG) {
-		APPLICATION.EMAIL.finance = 'jennifer@iseusa.org;bmccready@iseusa.org';	
-	} else {
-		APPLICATION.EMAIL.finance = 'jennifer@student-management.com;bmccready@student-management.com';
-	}
+	if (listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, client.companyid) ) {
+			APPLICATION.EMAIL.finance = 'jennifer@iseusa.org;bmccready@iseusa.org';	
+		} else { 
+			APPLICATION.EMAIL.finance = 'jennifer@student-management.com;bmccready@student-management.com';
+		}
 	APPLICATION.EMAIL.cbcNotifications = 'support@iseusa.org;bill@iseusa.org;gary@iseusa.org;merri@iseusa.org;tal@student-management.com;jan@iseusa.org;stephen@iseusa.org';
 	APPLICATION.EMAIL.cbcCaseNotifications = 'support@student-management.com;jana@case-usa.org';
 	APPLICATION.EMAIL.hostLeadNotifications = 'lamonica@iseusa.org';
