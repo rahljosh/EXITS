@@ -87,6 +87,8 @@
                 
                     <cfif CLIENT.companyID EQ 14>
                         <cfinclude template="agreementESIAreaRep.cfm">
+                    <cfelseif CLIENT.companyID EQ 15>
+                    	<cfinclude template="agreementDASHAreaRep.cfm">
                     <cfelse>
                         <cfinclude template="agreementAreaRep.cfm">
                     </cfif>
