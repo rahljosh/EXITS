@@ -186,7 +186,7 @@
         <tr bgcolor="#iif(qGetStudents.currentrow MOD 2 ,DE("ededed") ,DE("ffffff") )#">
             <td>#qGetStudents.currentrow#</td>
             <td>#qGetStudents.businessname#</td>
-            <td>#qGetStudents.firstname# #qGetStudents.lastname# (###qGetStudents.candidateid#)</td>
+            <td>#REReplace(qGetStudents.firstname, "[^\w ]", "", "all")# #REReplace(qGetStudents.lastname, "[^\w ]", "", "all")# (###qGetStudents.candidateid#)</td>
             <td>
                 <cfif DateFormat(now(), 'mm/dd/yyyy') GT DateFormat(qGetStudents.sevis_startdate, 'mm/dd/yyyy')> <!--- Start Date after program start date --->
                     #DateFormat(now()+1, 'yyyy-mm-dd')#
@@ -248,6 +248,8 @@
                     <City>#XMLFormat(qGetStudents.hostCompanycity)#</City> 
                     <State>#XMLFormat(qGetStudents.state)#</State> 
                     <PostalCode>#XMLFormat(qGetStudents.hostCompanyzip)#</PostalCode> 
+                    <ExplanationCode>OO</ExplanationCode>
+                	<Explanation>Verified with employer.</Explanation>
                     <SiteName>#XMLFormat(Trim(LEFT(qGetStudents.hostCompanyname,60)))#</SiteName>
                     <PrimarySite>true</PrimarySite>
                     <Remarks>#XMLFormat(qGetStudents.title)#, POC: #XMLFormat(qGetStudents.supervisor)#, POC Phone: #phoneString#</Remarks>
