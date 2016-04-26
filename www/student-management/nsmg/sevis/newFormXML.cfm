@@ -192,7 +192,9 @@
         <tr bgcolor="#iif(qGetStudents.currentrow MOD 2 ,DE("ededed") ,DE("ffffff") )#">
             <td>#qGetStudents.currentrow#</td>
             <td>#qGetStudents.businessname#</td>
-            <td>#qGetStudents.firstname# #qGetStudents.familylastname# (###qGetStudents.studentid#)</td>
+            <td>
+            #REReplace(qGetStudents.firstname, "[^\w ]", "", "all")# #REReplace(qGetStudents.familylastname, "[^\w ]", "", "all")#
+             (###qGetStudents.studentid#)</td>
             <td>
                 <cfif DateFormat(now(), 'mm/dd/yyyy') GT DateFormat(qGetStudents.sevis_startdate, 'mm/dd/yyyy')> <!--- Start Date after program start date --->
                     #DateFormat(now()+1, 'yyyy-mm-dd')#
@@ -212,7 +214,7 @@
                     <cfif NOT LEN(qGetStudents.schooladdress2)><Address2>#qGetStudents.schooladdress2#</Address2></cfif>
                     <City>#qGetStudents.schoolcity#</City> 
                     <State>#qGetStudents.schoolstate#</State> 
-                    <PostalCode>#qGetStudents.schoolzip#</PostalCode> 
+                    <PostalCode>#Left(qGetStudents.schoolzip,5)#</PostalCode> 
                     <SiteName>#qGetStudents.schoolname#</SiteName>
                 <cfelse>
                     <Address1>#qGetCompany.address#</Address1> 
@@ -249,11 +251,11 @@
             <cfset vSetHostID = qGetStudents.hostID>
             
             <cfsavecontent variable="vHostFamilyAddress">
-                <Address1>#XMLFormat(oSevis.displayHostFamilyName(fatherFirstName=qGetStudents.fatherFirstName,fatherLastName=qGetStudents.fatherLastName,motherFirstName=qGetStudents.motherFirstName,motherLastName=qGetStudents.motherLastName))#</Address1> 	
-                <Address2>#XMLFormat(qGetStudents.hostaddress)#</Address2> 					
+               <!--- <Address1>#XMLFormat(oSevis.displayHostFamilyName(fatherFirstName=qGetStudents.fatherFirstName,fatherLastName=qGetStudents.fatherLastName,motherFirstName=qGetStudents.motherFirstName,motherLastName=qGetStudents.motherLastName))#</Address1> 	---->
+                <Address1>#XMLFormat(qGetStudents.hostaddress)#</Address1> 					
                 <City>#XMLFormat(qGetStudents.hostcity)#</City> 
                 <State>#XMLFormat(qGetStudents.hoststate)#</State> 
-                <PostalCode>#XMLFormat(qGetStudents.hostzip)#</PostalCode>
+                <PostalCode>#XMLFormat(Left(qGetStudents.hostzip,5))#</PostalCode>
                 <ExplanationCode>OO</ExplanationCode>
                 <Explanation>Verified with host family.</Explanation>
 			</cfsavecontent>  
@@ -296,7 +298,7 @@
                 <Address1>#qGetCompany.address#</Address1> <cfif LEN(schooladdress2)><Address2>#schooladdress2#</Address2></cfif>
                 <City>#qGetCompany.city#</City> 
                 <State>#qGetCompany.state#</State> 
-                <PostalCode>#qGetCompany.zip#</PostalCode> 
+                <PostalCode>#Left(qGetCompany.zip,5)#</PostalCode> 
                 <SiteName>#qGetCompany.companyname#</SiteName>
                 <PrimarySite>true</PrimarySite>
 			</cfsavecontent>  
@@ -345,8 +347,10 @@
         <UserDefinedA>#qGetStudents.studentid#</UserDefinedA>
         <Biographical>
             <FullName>
-                <LastName>#XMLFormat(qGetStudents.familylastname)#</LastName> 
-                <FirstName>#XMLFormat(qGetStudents.firstname)#<cfif LEN(qGetStudents.middlename)> #XMLFormat(qGetStudents.middlename)#</cfif></FirstName> 		
+            
+            
+                <LastName>#REReplace(qGetStudents.familylastname, "[^\w ]", "", "all")#</LastName> 
+                <FirstName>#REReplace(qGetStudents.firstname, "[^\w ]", "", "all")# <cfif LEN(qGetStudents.middlename)> #REReplace(qGetStudents.middlename, "[^\w ]", "", "all")#</cfif></FirstName> 		
             </FullName>
             <BirthDate>#DateFormat(qGetStudents.dob, 'yyyy-mm-dd')#</BirthDate> 
             <Gender><cfif qGetStudents.sex EQ 'male'>M<cfelse>F</cfif></Gender> 
@@ -354,7 +358,7 @@
             <BirthCountryCode>#qGetStudents.birthseviscode#</BirthCountryCode> 
             <CitizenshipCountryCode>#qGetStudents.citizenseviscode#</CitizenshipCountryCode> 
             <PermanentResidenceCountryCode>#qGetStudents.residentseviscode#</PermanentResidenceCountryCode> 
-            <EmailAddress>#XMLFormat(qGetStudents.email)#</EmailAddress>	
+            <EmailAddress>#XMLFormat(TRIM(qGetStudents.email))#</EmailAddress>	
         </Biographical>
         <PositionCode>223</PositionCode> 
         <PrgStartDate>#DateFormat(vSetStartDate, 'yyyy-mm-dd')#</PrgStartDate>  
