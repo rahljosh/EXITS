@@ -22,6 +22,7 @@
             CASE 
             	WHEN ADDDATE(c.startDate, INTERVAL 5 DAY) = CURDATE() THEN "WARNING"         
                 WHEN ADDDATE(c.startDate, INTERVAL 10 DAY) = CURDATE() THEN "NON-COMPLIANT"
+                WHEN ADDDATE(c.startDate, INTERVAL 12 DAY) = CURDATE() THEN "NON-COMPLIANT"
                 ELSE ""        
             	END AS compliantStatus
      	FROM extra_candidates c
@@ -34,7 +35,7 @@
         AND c.companyID = 8
         AND c.ds2019 != ""        
         AND c.ds2019 IS NOT NULL
-        AND (ADDDATE(c.startDate, INTERVAL 5 DAY) = CURDATE() OR ADDDATE(c.startDate, INTERVAL 10 DAY) = CURDATE())
+        AND (ADDDATE(c.startDate, INTERVAL 5 DAY) = CURDATE() OR ADDDATE(c.startDate, INTERVAL 10 DAY) = CURDATE() OR ADDDATE(c.startDate, INTERVAL 12 DAY) = CURDATE()))
     </cfquery>
     
 </cfsilent>
