@@ -323,7 +323,7 @@
                             <td>#qGetResults.lastname#</td>
                             <td>#qGetResults.firstname#</td>
                             <td>#qGetResults.email#</td>
-                            <td>DS-2019</td>
+                            <td>#qGetResults.ds2019#</td>
                         </tr>
                     </cfloop>
                 </table>
