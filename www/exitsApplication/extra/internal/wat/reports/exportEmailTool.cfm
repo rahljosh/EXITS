@@ -45,7 +45,8 @@
                         ec.candidateID,
                         ec.firstname,             
                         ec.lastname,
-                        ec.email
+                        ec.email,
+                        ec.ds2019
                     FROM   
                         extra_candidates ec
                     WHERE 
@@ -314,6 +315,7 @@
                         <td>Last Name</Td>
                         <td>First Name</Td>
                         <td>Email Address</td>
+                        <td>DS-2019</td>
                     </tr>
                     <cfloop query="qGetResults">
                         <tr>
@@ -321,6 +323,7 @@
                             <td>#qGetResults.lastname#</td>
                             <td>#qGetResults.firstname#</td>
                             <td>#qGetResults.email#</td>
+                            <td>DS-2019</td>
                         </tr>
                     </cfloop>
                 </table>
