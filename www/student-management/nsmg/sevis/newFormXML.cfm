@@ -287,6 +287,8 @@
                 <PostalCode>#XMLFormat(qGetStudents.schoolzip)#</PostalCode> 
                 <SiteName>#XMLFormat(TRIM(qGetStudents.schoolname))#</SiteName>
                 <PrimarySite>true</PrimarySite>
+                <ExplanationCode>OO</ExplanationCode>
+                <Explanation>Verified with host family.</Explanation>
 			</cfsavecontent>  
                           
         <cfelse>
