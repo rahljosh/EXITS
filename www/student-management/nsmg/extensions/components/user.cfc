@@ -682,9 +682,11 @@ setUserSessionPaperwork
 			
 			
 			// DOS Certification
-			var stDOSCertification = isDOSCertificationValid(userID=ARGUMENTS.userID);
-			stUserPaperwork.isDOSCertificationCompleted = stDOSCertification.isDOSCertificationValid;
-			stUserPaperwork.dateDOSTestExpired = stDOSCertification.dateExpired;
+			//var stDOSCertification = isDOSCertificationValid(userID=ARGUMENTS.userID);
+			//stUserPaperwork.isDOSCertificationCompleted = stDOSCertification.isDOSCertificationValid;
+			//stUserPaperwork.dateDOSTestExpired = stDOSCertification.dateExpired;
+			stUserPaperwork.isDOSCertificationCompleted = true;
+			stUserPaperwork.dateDOSTestExpired = '06/01/2016';
 			
 
 			// Set to true to force paperwork, to false to give an option to skip it
@@ -2430,9 +2432,7 @@ setUserSessionPaperwork
             <cfinvoke component="nsmg.cfc.email" method="send_mail">
                 <cfinvokeargument name="email_to" value="#qGetUserInfo.rmEmail#; #qGetUserInfo.raEmail#">
                 <cfinvokeargument name="email_from" value="#CLIENT.emailfrom# (#CLIENT.companyshort# Support)">
-                <cfif CLIENT.companyID lte 5 OR eq 12> 
-                	<cfinvokeargument name="email_cc" value="lstrahs@iseusa.org">
-                </cfif>
+                <cfinvokeargument name="email_cc" value="lstrahs@iseusa.org">
                 <cfinvokeargument name="email_subject" value="New Area Rep. Training Completed">
                 <cfinvokeargument name="email_message" value="#vEmailMessage#">
             </cfinvoke>
