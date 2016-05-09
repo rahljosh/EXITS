@@ -69,6 +69,7 @@
                 c.intRep,                
                 c.wat_placement,
                 c.startDate,
+                c.ds2019,
                 ehc.name AS hostCompanyName,
                 country.countryname
             FROM   
@@ -89,13 +90,16 @@
                     extra_flight_information efi ON efi.candidateID = c.candidateID 
                 AND
                     efi.flightType = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.flightType#">
-            </cfif>    
+            </cfif>  
+           
             WHERE 
                 c.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">    
             AND 
                 c.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
             AND 
                 c.status != <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
+            AND
+            	c.ds2019 !=   <cfqueryparam cfsqltype="cf_sql_varchar" value="">
            <cfif VAL(FORM.userID)> 
                 AND
                     c.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">                               
@@ -133,7 +137,7 @@
             
             <cfreturn qFilterGetAllCandidates>
         </cffunction>
-
+		
 		<cfscript>
 			// Get Overall Results
 			totalCSBPlacements = filterGetAllCandidates(placementType='CSB-Placement').recordCount;
@@ -249,7 +253,22 @@
 	</cfscript>
 
 	<cfsavecontent variable="reportContent">
-		
+		    
+		<cfoutput>  
+      
+        
+        <div class="style1"><strong>&nbsp; &nbsp; CSB-Placement:</strong> #totalCSBPlacements#</div>	
+        <div class="style1"><strong>&nbsp; &nbsp; Self-Placement:</strong> #totalSelfPlacements#</div>
+        <div class="style1"><strong>&nbsp; &nbsp; Walk-In:</strong> #totalWalkInPlacements#</div>
+        <div class="style1"><strong>&nbsp; &nbsp; ----------------------------------</strong></div>
+        <div class="style1"><strong>&nbsp; &nbsp; Total Number of Students:</strong> #qGetAllCandidates.recordCount#</div>
+        <div class="style1"><strong>&nbsp; &nbsp; ----------------------------------</strong></div>  	
+  
+        
+		</cfoutput>    
+        
+        <img src="../../pics/black_pixel.gif" width="100%" height="2">
+        
         <cfloop query="qGetIntlRep">
 			            
 			<cfscript>
@@ -300,6 +319,7 @@
                         <td width="15%" align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Last Name</Td>
                         <td width="15%" align="left" bgcolor="4F8EA4" class="#tableTitleClass#">First Name</Td>
                         <td width="15%" align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Country</td>
+                        <td width="15%" align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Start Date</td>
                         <td width="15%" align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Host Company</td>
                         <td width="35%" align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Flight Information</td>
                     </tr>
@@ -314,6 +334,13 @@
                             <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerIntlRep.uniqueID#" target="_blank" class="style4">#qTotalPerIntlRep.lastname#</a></td>
                             <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerIntlRep.uniqueID#" target="_blank" class="style4">#qTotalPerIntlRep.firstname#</a></td>
                             <td><span class="style1">#qTotalPerIntlRep.countryname#</span></td>
+                            <td><span class="style1">
+                            	<cfif qTotalPerIntlRep.ds2019 is ''>
+                                	Awaiting DS-2019
+                                <cfelse>
+                                	#DateFormat(qTotalPerIntlRep.startdate,'mm/dd/yyyy')#
+                                </cfif> 
+                                </span></td>
                             <td><span class="style1">#qTotalPerIntlRep.hostCompanyName#</span></td>                        
                             <td>
                                 <span class="style1">
@@ -369,12 +396,7 @@
          
 		</cfloop>
             
-        <div class="style1"><strong>&nbsp; &nbsp; CSB-Placement:</strong> #totalCSBPlacements#</div>	
-        <div class="style1"><strong>&nbsp; &nbsp; Self-Placement:</strong> #totalSelfPlacements#</div>
-        <div class="style1"><strong>&nbsp; &nbsp; Walk-In:</strong> #totalWalkInPlacements#</div>
-        <div class="style1"><strong>&nbsp; &nbsp; ----------------------------------</strong></div>
-        <div class="style1"><strong>&nbsp; &nbsp; Total Number of Students:</strong> #qGetAllCandidates.recordCount#</div>
-        <div class="style1"><strong>&nbsp; &nbsp; ----------------------------------</strong></div>  		
+	
 		    	
     </cfsavecontent>
 
