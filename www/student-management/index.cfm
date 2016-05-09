@@ -1,4 +1,7 @@
 <!--- Relocate to Login Page if we are not at www.student-management.com --->
+<cfif CGI.SERVER_PORT NEQ 443>
+	<cflocation url="https://#cgi.HTTP_HOST#">
+ </cfif>
 <cfif CGI.HTTP_HOST NEQ 'www.student-management.com'>
 
 	<!--- Redirect to Login Page --->
