@@ -89,7 +89,7 @@
 			} else if ( CGI.HTTP_HOST EQ '204.12.118.245' ) { // go daddy remedy
 				CLIENT.exits_url = "https://204.12.118.245";
 			} else {
-				CLIENT.exits_url = "http://" & submitting_info.url_ref;	
+				CLIENT.exits_url = "https://" & submitting_info.url_ref;	
 			}
 			
 			APPLICATION.company_short = submitting_info.website;
