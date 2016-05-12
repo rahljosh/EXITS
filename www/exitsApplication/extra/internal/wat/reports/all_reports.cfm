@@ -18,7 +18,7 @@
                         
                             <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/all_students_enrolled_wt" class="style4">- All Participating Candidates</a></p>
                             
-                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/all_canceled_students_enrolled_wt" class="style4">- All Cancelled Candidates</a></p>
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/all_canceled_students_enrolled_wt" class="style4">- Cancelled Candidates</a></p>
                             
                             <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/ds2019_verification_wt" class="style4">- DS-2019 Verification Report</a></p>
                             
@@ -38,7 +38,7 @@
                         
                         	<p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/all_students_enrolled_wt" class="style4">- All Participating Candidates</a></p>
                             
-                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/all_canceled_students_enrolled_wt" class="style4">- All Cancelled Candidates</a></p>
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/all_canceled_students_enrolled_wt" class="style4">- Cancelled Candidates</a></p>
                             
                             <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/selfPlacementConfirmation" class="style4">- Self Placement Vetting</a></p>
                             
@@ -67,7 +67,7 @@
     
                             <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/students_hired_per_company_wt" class="style4">- All Participating Candidates</a></p>
                             
-                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/all_canceled_students_hc_wt" class="style4">- All Cancelled Candidates</a></p>
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/all_canceled_students_hc_wt" class="style4">- Cancelled Candidates</a></p>
                             
                             <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/hostCompanyArrivalInstructions" class="style4">- Arrival Instructions</a></p>                        
                             
