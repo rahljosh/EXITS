@@ -15,28 +15,35 @@
                     <td bordercolor="FFFFFF">
                         <cfif CLIENT.userType LTE 4>
                         	<span class="style1"><strong>1. International Representative Reports</strong></span><br />
-                        
+                            
+                            
+                            
                             <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/all_students_enrolled_wt" class="style4">- All Participating Candidates</a></p>
                             
-                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/all_canceled_students_enrolled_wt" class="style4">- Cancelled Candidates</a></p>
-                            
-                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/ds2019_verification_wt" class="style4">- DS-2019 Verification Report</a></p>
-                            
-                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/selfPlacementConfirmation" class="style4">- Self Placement Vetting</a></p>
-                            
-                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/csbPlacementConfirmation" class="style4">- CSB Placement Vetting</a></p>
-                            
-                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/flightInfoByIntlRep" class="style4">- Flight Information</a></p>
-                            
-                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/missingIntlRepDocuments" class="style4">- Missing Intl. Rep. Documents</a></p>
+							<p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/all_canceled_students_enrolled_wt" class="style4">- Cancelled Candidates</a></p>
                             
                             <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/all_students_wt_country" class="style4">- Candidate by Citizenship and Residence</a></p>
+
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/csbPlacementConfirmation" class="style4">- CSB-Placement Vetting Status</a></p>
+
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/ds2019_verification_wt" class="style4">- DS-2019 Verification Report</a></p>
+
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/flightInfoByIntlRep" class="style4">- Flight Information</a></p>
+
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/candidatesHousingPerRep" class="style4">- Housing Availability Tracking</a></p>
+
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/missingIntlRepDocuments" class="style4">- Missing Intl. Rep. Documents</a></p>
                             
-                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/candidatesHousingPerRep" class="style4">- Candidate Housing</a></p>
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/selfPlacementConfirmation" class="style4">- Self-Placement Vetting Status</a></p>
+                            
+                            
+                            
                       	<cfelseif CLIENT.userType EQ 8>
                         	<span class="style1"><strong>Available Reports</strong></span><br />
                         
-                        	<p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/all_students_enrolled_wt" class="style4">- All Participating Candidates</a></p>
+                        	
+
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/all_students_enrolled_wt" class="style4">- All Participating Candidates</a></p>
                             
                             <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/all_canceled_students_enrolled_wt" class="style4">- Cancelled Candidates</a></p>
                             
@@ -65,19 +72,24 @@
                         <td bordercolor="FFFFFF">
                             <span class="style1"><strong>2. Host Company Reports</strong></span><br />
     
+                            
+
                             <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/students_hired_per_company_wt" class="style4">- All Participating Candidates</a></p>
                             
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/hostCompanyArrivalInstructions" class="style4">- Arrival Instructions</a></p>
+                            
                             <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/all_canceled_students_hc_wt" class="style4">- Cancelled Candidates</a></p>
-                            
-                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/hostCompanyArrivalInstructions" class="style4">- Arrival Instructions</a></p>                        
-                            
+
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/hostCompanyCsbPlacementConfirmation" class="style4">- CSB-Placement Vetting Email</a></p>    
+
                             <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/flighInfoByHC" class="style4">- Flight Information</a></p>
+
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/candidatesHousingPerHost" class="style4">- Housing Availability Tracking</a></p>
                             
-                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/hostCompanySelfPlacementConfirmation" class="style4">- Self Placement Vetting</a></p>
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/hostCompanySelfPlacementConfirmation" class="style4">- Self-Placement Vetting Email</a></p>
+
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/selfPlacementConfirmationHosts" class="style4">- Self-Placement Vetting Status</a></p>
                             
-                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/hostCompanyCsbPlacementConfirmation" class="style4">- CSB Placement Vetting</a></p>
-                            
-                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/candidatesHousingPerHost" class="style4">- Candidate Housing</a></p>
                        </td>
                     </tr>
                 </table>
@@ -100,29 +112,34 @@
                         <td bordercolor="FFFFFF">
                             <span class="style1"><strong>3. Program Reports</strong></span><br />
                             
-                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/incidentReport"  class="style4">- Incident Report</a></p>
-                            
-                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/terminatedListReport"  class="style4">- Terminated List</a></p>
-                            
-                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/culturalActivityReport"  class="style4">- Cultural Activity Report</a></p>
-                            
-                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/missing_documents_wt"  class="style4">- Missing Documents</a></p>
-                            
-                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/missing_transfer_docs"  class="style4">- Missing Replacement/Secondary Documents</a></p>
-                            
-                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/unplaced_students_wt" class="style4">- List of Unplaced Candidates</a></p>
-                            
-                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/list_students_work_study_wt" class="style4">- List of Candidates for DOS</a></p>
-                            
-                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/list_foreign_entity" class="style4">- List of Foreign Entities for DOS</a></p>
-                            
                             <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/candidatesByStateAndCity" class="style4">- Candidates by State and City</a></p>
+
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/checkinReport" class="style4">- Check-in</a></p>
+
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/culturalActivityReport"  class="style4">- Cultural Activity Report</a></p>
+
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/list_students_work_study_wt" class="style4">- DOS List of Candidates</a></p>
                             
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/list_foreign_entity" class="style4">- DOS List of Foreign Entities</a></p>
+
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/evaluationStatus" class="style4">- Evaluation Status</a></p>
+
                             <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/housingAddressList" class="style4">- Housing Address List</a></p>
+
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/incidentReport"  class="style4">- Incident Report</a></p>
+
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/unplaced_students_wt" class="style4">- List of Unplaced Candidates</a></p>
+
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/missing_documents_wt"  class="style4">- Missing Documents</a></p>
+
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/missing_transfer_docs"  class="style4">- Missing Replacement/Secondary Documents</a></p>
+
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/taxback" class="style4">- Taxback Report</a></p>
+
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/terminatedListReport"  class="style4">- Terminated List</a></p>
+
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/visaInterview" class="style4">- Visa Interview</a></p>
                             
-                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/evaluationStatus" class="style4">- Evaluation Status Report</a></p>
-                            
-                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/taxback" class="style4">- Report for Taxback</a></p>
                       </td>
                     </tr>
                 </table>
