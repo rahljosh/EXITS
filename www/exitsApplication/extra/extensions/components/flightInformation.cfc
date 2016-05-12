@@ -57,13 +57,11 @@
 
 				<cfif ARGUMENTS.getLastLeg>
                     ORDER BY	
-                        departDate DESC,
-                        departTime DESC            
+                        ID DESC      
 					LIMIT 1
 				<cfelse>
                     ORDER BY	
-                        departDate,
-                        departTime             
+                        ID ASC           
                 </cfif> 
                                           		
 		</cfquery>
@@ -90,6 +88,7 @@
 					efi.ID,
                     efi.programID,
                     efi.flightType,
+                    p.startDate,
                     DATE_FORMAT(efi.departDate, '%c/%e/%Y') AS departDate,
                     efi.departCity,
                     efi.departAirportCode,
@@ -111,6 +110,8 @@
                 	smg_users u ON u.userID = ec.intRep
 				LEFT JOIN                 
                     extra_hostcompany eh ON ec.hostcompanyID = eh.hostcompanyID
+                	Left JOIN 
+                	smg_programs p on p.programid = efi.programid
                 WHERE
                     flightType = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.flightType)#">
 				<cfif VAL(ARGUMENTS.companyID)>
@@ -162,8 +163,7 @@
                 AND
                     flightType = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.flightType)#">
 				ORDER BY	
-                	departDate DESC,
-                    departTime DESC                   
+                	ID ASC                 
 		</cfquery>
 
         <cfscript>
