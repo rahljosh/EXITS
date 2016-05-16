@@ -733,7 +733,7 @@
                                     <img src="#client.exits_url#/nsmg/pics/hostAppEmail.jpg" width="200" height="56" border="0">
                                 </a>
                             <cfelse>
-                                <a href="https://www.iseusa.com/ISE-Login.cfm" target="_blank">
+                                <a href="https://ise.exitsapplication.com/hostApplication/index.cfm?section=login" target="_blank">
                                     <img src="#client.exits_url#/nsmg/pics/hostAppEmail.jpg" width="200" height="56" border="0">
                                 </a>
                             </cfif>
@@ -2614,7 +2614,7 @@
                             <cfelseif CLIENT.companyID EQ 15>
                             	<a href="http://dash.exitsapplication.com/hostApplication/" target="_blank">https://dash.exitsapplication.com/hostApplication/</a>
                             <cfelse>
-                                <a href="https://www.iseusa.com/ISE-Login.cfm" target="_blank">https://www.iseusa.com/ISE-Login.cfm</a>
+                                <a href="https://ise.exitsapplication.com/hostApplication/index.cfm?section=login" target="_blank">			https://ise.exitsapplication.com/hostApplication/index.cfm?section=login</a>
                             </cfif>
                         </p>
 
