@@ -2757,9 +2757,11 @@
                         
                         <p>Everyone here is excited about your decision to host next season and looks forward to sharing the experience with you.</p>
                         <p>
-                        	Please review these two handbooks to help familiarize yourself with the many aspects of becoming a host family. 
+                        	Please review these documents to help familiarize yourself with the many aspects of becoming a host family. 
                             - <a href="#CLIENT.site_URL#/pdfs/HostFamilyHandbook.pdf">Host Family Handbook</a>
                             - <a href="#CLIENT.site_URL#/pdfs/student-handbook.pdf">Student Handbook</a>
+                            - <a href="#CLIENT.site_URL#/pdfs/hostfamilyadvisoryletter2016.pdf"> </a>
+                            - <a href="#CLIENT.site_URL#/pdfs/studentadvisoryletter2016.pdf"> </a>
                         </p>
                         <p>If you have any questions, you should always contact your Area Rep first. In an emergency, you can contact us, here at the headquarters.</p>
                         
