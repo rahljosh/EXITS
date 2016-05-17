@@ -44,7 +44,8 @@
             hours,
             avail_position, 
             sex, 
-            low_wage
+            low_wage,
+            classification
         FROM 
         	extra_jobs
         WHERE
@@ -52,7 +53,12 @@
 		AND
         	hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#hostCompanyID#">           
     </cfquery>     
-
+	
+    <cfquery name="qSEVISJobClassification" datasource="MySql">
+    select *
+    from extra_sevis_sub_fieldstudy
+    order by subfieldid 
+    </cfquery>
     <cfif FORM.submitted>
 
         <!--- Data Validation --->
@@ -82,7 +88,9 @@
                         description = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.description#">,
                         wage = <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(FORM.wage)#">,
                         hours = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hours#">, 
-                        sex = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.sex#">       
+                        sex = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.sex#">,
+                        classification = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.SEVISclassification#">
+                            
                     WHERE 
                         extra_jobs.id = <cfqueryparam cfsqltype="cf_sql_integer" value="#ID#">
                 </cfquery>    
@@ -103,7 +111,9 @@
                         description,
                         wage,
                         hours, 
-                        sex       
+                        sex,
+                        classification
+                         
                     )
                     VALUES
                     (
@@ -112,7 +122,8 @@
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.description#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(FORM.wage)#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.hours#">, 
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.sex#">       
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.sex#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.SEVISclassification#">    
                     )
                 </cfquery>    
 
@@ -134,6 +145,7 @@
 			FORM.wage = qGetJobInfo.wage;
 			FORM.hours = qGetJobInfo.hours;
 			FORM.sex = qGetJobInfo.sex;
+			FORM.SEVISclassification = qGetJobInfo.classification;
 		</cfscript>
     
     </cfif>
@@ -227,13 +239,15 @@
                     <tr>
                         <td class="style1" width="15%" align="right"><strong>Job Title:&nbsp;</strong></td>
                         <td class="style1"><input type="text" name="title" value="#FORM.title#" class="style1" size="35" maxlength="100" tabindex="1"></td>
-                    	<td class="style1" align="right"><strong>Gender:&nbsp;</strong></td>
+                    	
+                        <td class="style1" align="right"><strong>Gender:&nbsp;</strong></td>
                         <td class="style1">
                             <input type="radio" name="sex" id="genderEither" value="0" <cfif NOT VAL(FORM.sex)> checked="checked" </cfif> tabindex="2" /><label for="genderEither">Either</label>
                             <input type="radio" name="sex" id="genderMale" value="1" <cfif FORM.sex EQ 1> checked="checked" </cfif> /><label for="genderMale">Male</label>
                             <input type="radio" name="sex" id="genderFemale" value="2" <cfif FORM.sex EQ 2> checked="checked" </cfif> /><label for="genderFemale">Female</label>
                         </td>
                     </tr>
+                   
                     <tr>
                     	<td class="style1" align="right"><strong>Wage/Hour:&nbsp;</strong></td>
                         <td class="style1"><input type="text" name="wage" value="#FORM.wage#" class="style1" size="35" maxlength="100" tabindex="4"></td>
@@ -244,6 +258,18 @@
                         <td class="style1" width="15%" align="right"><strong>Hours/Week:&nbsp;</strong></td>
                         <td class="style1"><input type="text" name="hours" value="#FORM.hours#" class="style1" size="35" maxlength="100" tabindex="6"></td>
                     </tr>
+                    </table>
+                    <table width="100%" cellpadding="3" cellspacing="3" border="0">
+                     <Tr>
+                    <td class="style1" width="15%" align="right"><strong>SEVIS Classification:</strong> </td>
+                   <td class="style1" colspan=5>
+                        <select name="SEVISclassification">
+                        <option value=""></option>
+                        <cfloop query="qSEVISJobClassification">
+                        <option value="#code#" <cfif FORM.SEVISclassification eq #code#>selected</cfif>>#code# - #subfield#</option>
+                        </cfloop>
+                        </td>
+                    </Tr>
                 </table>
 				
                 <!--- Add/Edit Buttons --->

@@ -76,6 +76,13 @@
 			}
 		}
 	}
+
+    $(document).ready(function() {
+        $("#totalStudents").html("Total Number of Students: " + $('#totalStudentsCount').val());
+        $("#totalCheckedIn").html("Checked-in: " + $('#totalCheckedInCount').val());
+        $("#pendingCheckedIn").html("Pending to be Checked-in: " + $('#pendingCheckedInCount').val());
+    });
+
 </script>
 
 <style type="text/css">
@@ -89,6 +96,7 @@
 </style>
 
 <cfoutput>
+
 	
     <form action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" name="form" onSubmit="return formValidation()">
 		<input type="hidden" name="submitted" value="1" />
@@ -177,6 +185,14 @@
     
     <!--- Print --->
 	<cfif FORM.submitted>
+
+        <span style="font-size:11px">
+            <div id="totalStudents"></div>
+            --------------------------------------<br />
+            <div id="totalCheckedIn"></div>
+            <div id="pendingCheckedIn"></div>
+            -------------------------------------- <br /><br />
+        </span>
         
         <cfscript>
             if (FORM.printOption EQ 1) {
@@ -185,13 +201,17 @@
                 tableTitleClass = 'style2';
             }
         </cfscript>
+
+        <cfset totalStudentsCount = 0 />
+        <cfset totalCheckedInCount = 0 />
+        <cfset pendingCheckedInCount = 0 />
         
         <cfsavecontent variable="reportContent">
         
         	<cfloop query="qGetIntlReps">
             
             	<cfquery name="qGetCandidates" datasource="#APPLICATION.DSN.Source#">
-                	SELECT ec.candidateID, ec.uniqueID, ec.hostCompanyID, ec.lastName, ec.firstName, ec.sex, ec.startDate, ec.endDate, ec.ds2019, ec.wat_placement, ec.watDateCheckedIn,
+                	SELECT ec.candidateID, ec.uniqueID, ec.hostCompanyID, ec.lastName, ec.firstName, ec.sex, ec.email, ec.startDate, ec.endDate, ec.ds2019, ec.wat_placement, ec.watDateCheckedIn,
                     	ec.arrivalDate, ec.arrival_address, ec.arrival_address_2, ec.arrival_apt_number, ec.arrival_city, ec.arrival_zip,
                         s.state, ehc.name, eir.subject
                     FROM extra_candidates ec
@@ -231,6 +251,7 @@
                     <tr>
                         <th align="left" class="#tableTitleClass#" width="16%">Candidate</Th>
                         <th align="left" class="#tableTitleClass#" width="4%">Sex</th>
+                        <th align="left" class="#tableTitleClass#" width="4%">Email</th>
                         <th align="left" class="#tableTitleClass#" width="8%">Start Date</th>
                         <th align="left" class="#tableTitleClass#" width="8%">End Date</th>
                         <th align="left" class="#tableTitleClass#" width="24%">Placement Information</th>
@@ -243,6 +264,12 @@
                         <tr><td colspan="11"><img src="../../pics/black_pixel.gif" width="100%" height="2"></td></tr>
                     </cfif>
                     <cfloop query="qGetCandidates">
+                        <cfset totalStudentsCount = totalStudentsCount + 1 />
+                        <cfif val(watDateCheckedIn) >
+                            <cfset totalCheckedInCount = totalCheckedInCount + 1 />
+                        <cfelse>
+                            <cfset pendingCheckedInCount = pendingCheckedInCount + 1 />
+                        </cfif>
                     	<cfif FORM.hostCompany NEQ "primary">
                             <cfquery name="qGetSecondaryPlacements" datasource="#APPLICATION.DSN.Source#">
                                 SELECT ecpc.hostCompanyID, h.name
@@ -263,6 +290,7 @@
                                 </cfif>
                            	</td>
                             <td class="style1">#sex#</td>
+                            <td class="style1"><a href="#email#">#email#</a></td>
                             <td class="style1">#DateFormat(startDate,'mm/dd/yyyy')#</td>
                             <td class="style1">#DateFormat(endDate,'mm/dd/yyyy')#</td>
                             <td class="style1">
@@ -283,12 +311,16 @@
                             <td class="style1">#ds2019#</td>
                             <td class="style1">#wat_placement#</td>
                             <td class="style1">#DateFormat(watDateCheckedIn,'mm/dd/yyyy')#</td>
-                            <td class="style1">#arrival_address# <cfif len(arrival_address_2)>#arrival_address_2#</cfif> <cfif len(arrival_apt_number)>## #arrival_apt_number#</cfif><br/>#arrival_city#<cfif state NEQ "">,</cfif> #state# #arrival_zip#</td>
+                            <td class="style1">#arrival_address#  <cfif len(arrival_apt_number)>## #arrival_apt_number#</cfif><cfif len(arrival_address_2)><br />#arrival_address_2#</cfif><br/>#arrival_city#<cfif state NEQ "">,</cfif> #state# #arrival_zip#</td>
                         </tr>
                     </cfloop>
                 </table>
             
             </cfloop>
+
+            <input type="hidden" id="totalStudentsCount" value="#totalStudentsCount#" />
+            <input type="hidden" id="totalCheckedInCount" value="#totalCheckedInCount#" />
+            <input type="hidden" id="pendingCheckedInCount" value="#pendingCheckedInCount#" />
         
         </cfsavecontent>
         

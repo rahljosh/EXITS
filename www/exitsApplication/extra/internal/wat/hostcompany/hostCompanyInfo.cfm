@@ -283,7 +283,7 @@
         AND c.cancel_date IS NULL
         AND ecpc.hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostCompanyInfo.hostCompanyID)#">
         GROUP BY p.programName
-        ORDER BY p.startDate DESC
+        ORDER BY p.startDate ASC
     </cfquery>
     
     <!--- Get database records for authentication files --->
@@ -1956,7 +1956,7 @@
                         <table width="100%" align="center" cellpadding="2" class="editPage">
                             <tr>
                                 <td width="40%" align="right" class="style1"><strong>Business Name:</strong> </td>
-                                <td><input type="text" id="name" name="name" value="#FORM.name#" class="style1" size="50" maxlength="60"></td>
+                                <td><input type="text" id="name" name="name" value="#FORM.name#" class="style1" size="50" maxlength="250"></td>
                             </tr>
                             <tr>
                                 <td align="right" class="style1"><strong>Business Type:</strong></td>
@@ -2211,6 +2211,12 @@
                                                 <label class="style1 editPage" for="isHousingProvidedWillAssist">Other (third party)</label>
                                             </td>
                                         </tr>
+                                        </table>
+                                        
+                                        
+                                        
+                                        <div id="HousingDIV">
+                                        <table>
                                         <tr>
                                             <td class="style1" align="right" valign="top"><strong>Type:</strong></td>
                                             <td>
@@ -2233,10 +2239,6 @@
                                                 </table>
                                             </td>
                                       	</tr>
-                                        </table>
-                                        
-                                        <div id="HousingDIV">
-                                        <table>
                                         <tr>
                                             <td class="style1" align="right" valign="top"><strong>Provider Name:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
@@ -2253,7 +2255,7 @@
                                             <td class="style1" align="right" valign="top"><strong>Phone:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                             	<span class="readOnly">#FORM.housingPhone#</span>
-                                                <input type="text" name="housingPhone" id="housingPhone" value="#FORM.housingPhone#" class="style1 editPage" size="35" maxlength="100"></td>
+                                                <input type="text" name="housingPhone" id="housingPhone" value="#FORM.housingPhone#" class="style1 editPage phone" size="35" maxlength="100"></td>
                                         </tr>
                                         <tr>
                                             <td width="35%" class="style1" align="right"><strong>Address:</strong></td>
@@ -2303,11 +2305,7 @@
                                                 <textarea name="housingProvidedInstructions" id="housingProvidedInstructions" class="style1 editPage" cols="35" rows="4">#Trim(FORM.housingProvidedInstructions)#</textarea>
                                             </td>
                                         </tr>
-                                        </table>
-                                        </div>
                                         
-                                        
-                                        <table width="100%">
                                         <tr>
                                             <td width="35%" class="style1" align="right"><strong>Cost/Week:</strong></td>
                                             <td class="style1">
@@ -2325,8 +2323,11 @@
                                                 </span>
                                                 <input type="text" name="housing_deposit" value="#FORM.housing_deposit#" class="style1 editPage" size="35" maxlength="10">
                                             </td>
-										</tr>                                      
-                                    </table>
+										</tr>
+                                        </table>
+                                        </div>
+                                        
+                                        
 
                                 </td>
                             </tr>

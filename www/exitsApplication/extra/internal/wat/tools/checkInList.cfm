@@ -58,6 +58,8 @@
 	// Use an asynchronous call to get the candidate details. The function is called when the user selects a candidate. 
 	var getVerificationList = function() { 
 
+		$("#loadingDiv").show();
+
 		// Create an instance of the proxy. 
 		var c = new candidate();
 		
@@ -96,7 +98,8 @@
 			tableHeader += '<td class="listTitle style2">Arrival</td>';
 			tableHeader += '<td class="listTitle style2">U.S. Phone</td>';
 			tableHeader += '<td class="listTitle style2">Address</td>';
-			tableHeader += '<td class="listTitle style2">Address 2</td>';
+			tableHeader += '<td class="listTitle style2">Unit</td>';
+			tableHeader += '<td class="listTitle style2">Other</td>';
 			tableHeader += '<td class="listTitle style2">City</td>';
 			tableHeader += '<td class="listTitle style2">State</td>';
 			tableHeader += '<td class="listTitle style2">Zip</td>';
@@ -134,6 +137,7 @@
 			var hostCompanyZip = verList.DATA[i][verList.COLUMNS.findIdx('HOSTCOMPANYZIP')];
 			var usPhone = verList.DATA[i][verList.COLUMNS.findIdx('US_PHONE')];
 			var arrival_address = verList.DATA[i][verList.COLUMNS.findIdx('ARRIVAL_ADDRESS')];
+			var arrival_apt_number = verList.DATA[i][verList.COLUMNS.findIdx('ARRIVAL_APT_NUMBER')];
 			var arrival_address_2 = verList.DATA[i][verList.COLUMNS.findIdx('ARRIVAL_ADDRESS_2')];
 			var arrival_city = verList.DATA[i][verList.COLUMNS.findIdx('ARRIVAL_CITY')];
 			var arrival_state = verList.DATA[i][verList.COLUMNS.findIdx('ARRIVAL_STATE')];
@@ -146,6 +150,7 @@
 			
 			if (arrival_address == null) arrival_address = "";
 			if (arrival_address_2 == null) arrival_address_2 = "";
+			if (arrival_apt_number == null) arrival_apt_number = "";
 			if (arrival_city == null) arrival_city = "";
 			if (arrival_zip == null) arrival_zip = "";
 			
@@ -171,12 +176,12 @@
 			var start = new Date(startDate);
 			var startInMillis = start.getTime();
 			var millisInDay = 86400000;
-			// They are non compliant if the program began more than 30 days ago.
+			// They are non compliant if the program began more than 10 days ago.
 			if (nowInMillis - startInMillis < (30*millisInDay)) {
 				nonCompliant = 0;
 			}
-			// They are in a warning state if the program began more than 10 days ago.
-			if ((nowInMillis - startInMillis < (10*millisInDay))) {
+			// They are in a warning state if the program began more than 5 days ago.
+			if ((nowInMillis - startInMillis < (15*millisInDay))) {
 				warning = 0;
 			}
 			// If they are non compliant then they should NOT be in a warning state.
@@ -203,12 +208,14 @@
 			
 				tableBody += '<td class="style5">' + businessName + '</td>';
 				
-				tableBody += '<td class="style5" colspan=2>' + hostCompanyName + '<br>' + hostCompanyAddress + ' ' + hostCompanyCity + ' ' + hostCompanyState + ' ' + hostCompanyZip  +'</td>';
+				tableBody += '<td class="style5" colspan=2>' + hostCompanyName + '<br><font color="#999999">' + hostCompanyAddress + ' ' + hostCompanyCity + ' ' + hostCompanyState + ' ' + hostCompanyZip  +'</font></td>';
 				tableBody += '<td class="style5">' + startDate + '</td>';
 				tableBody += '<td class="style5">' + arrivalDate + '</td>';
-				tableBody += '<td class="style5"><input type="text" size="12" id="usphone' + candidateID + '" value="' + usPhone + '" onclick="applyPhoneMask(this.id);" /></td>';
+				tableBody += '<td class="style5"><input type="text" size="12" id="usphone' + candidateID + '" value="' + usPhone + '" class="phoneMask" /></td>';
 				tableBody += '<td class="style5"><input type="text" size="12" id="arrival_address' + candidateID + '" value="' + arrival_address + '" /></td>';
+				tableBody += '<td class="style5"><input type="text" size="12" id="arrival_apt_number' + candidateID + '" value="' + arrival_apt_number + '" /></td>';
 				tableBody += '<td class="style5"><input type="text" size="12" id="arrival_address_2' + candidateID + '" value="' + arrival_address_2 + '" /></td>';
+	
 				tableBody += '<td class="style5"><input type="text" size="12" id="arrival_city' + candidateID + '" value="' + arrival_city + '" /></td>';
 				tableBody += '<td class="style5"><select id="arrival_state' + candidateID + '"><option value="0"></option>';
 				<cfoutput query="qGetStateList">
@@ -228,10 +235,16 @@
 				tableBody += '</tr>';
 				// Append table rows
 				$("#verificationList").append(tableBody);
+
+				if (i % 4 == 3) {
+					$("#verificationList").append(tableHeader);
+				}
 			}
+
 			
 		} 
-		
+		$("#loadingDiv").hide();
+		$(".phoneMask").mask("9-999-999-9999");
 	}
 	// --- END OF VERIFICATION LIST --- //
 
@@ -245,6 +258,7 @@
 		var initPhone = document.getElementById('usphone' + candidateID).value;
 		var initAddress = document.getElementById('arrival_address' + candidateID).value;
 		var initAddress2 = document.getElementById('arrival_address_2' + candidateID).value;
+		var initAptNumber = document.getElementById('arrival_apt_number' + candidateID).value;
 		var initCity = document.getElementById('arrival_city' + candidateID).value;
 		var initState = document.getElementById('arrival_state' + candidateID).value;
 		var initZip = document.getElementById('arrival_zip' + candidateID).value;		
@@ -254,7 +268,7 @@
 		c.setErrorHandler(myErrorHandler); 
 		
 		// This time, pass the intlRep ID to the getVerificationList CFC function. 
-		c.confirmCheckInReceived(candidateID, initPhone, initAddress, initAddress2, initCity, initState, initZip);
+		c.confirmCheckInReceived(candidateID, initPhone, initAddress, initAddress2, initAptNumber, initCity, initState, initZip);
 		
 	}
 	
@@ -287,9 +301,9 @@
 		alert('Status: ' + statusCode + ', ' + statusMsg); 
 	}
 	
-	var applyPhoneMask = function(usPhoneID) {
+	/*var applyPhoneMask = function(usPhoneID) {
 		$("#" + usPhoneID).mask("9-999-999-9999");
-	}
+	}*/
 	
 </script>
 
@@ -405,8 +419,10 @@
          
     </table>
 
+    <div id="loadingDiv" style="background-color:##efefef; padding:20px; text-align: center; margin:20px 40px; display:none"><img src="../pics/onlineApp/loading.gif" /> Loading...</div>
     <!--- Verification List --->
-    <table id="verificationList" cellpadding="4" cellspacing="0" align="center" class="section" width="95%"></table>
+    <table id="verificationList" cellpadding="4" cellspacing="0" align="center" class="section" width="95%">
+    </table>
                                             
     <!--- Table Footer --->    
     <gui:tableFooter />

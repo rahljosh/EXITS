@@ -12,6 +12,8 @@
 <cfparam name="FORM.wat_doc_other" default="">
 <cfparam name="FORM.wat_doc_other_received" default="">
 
+<cfparam name="FORM.wat_doc_itemized_price_list" default="0">
+
 <cfparam name="FORM.wat_doc_no_housing_form" default="0">
 <cfparam name="FORM.wat_doc_housing_arrengements" default="0">
 <cfparam name="FORM.wat_doc_housing_third_party" default="0">
@@ -990,6 +992,8 @@
         wat_doc_job_offer_employer = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_job_offer_employer#">,
 		wat_doc_other = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.wat_doc_other#">,
         wat_doc_other_received = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.wat_doc_other_received#">,
+
+        wat_doc_itemized_price_list = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_itemized_price_list#">,
         
         wat_doc_no_housing_form = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_no_housing_form#">,
         wat_doc_housing_arrengements = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.wat_doc_housing_arrengements#">,
@@ -1101,6 +1105,8 @@
         wat_doc_no_housing_form,
         wat_doc_housing_arrengements,
         wat_doc_housing_third_party,
+
+        wat_doc_itemized_price_list,
         
         verification_received,
         ds2019,
@@ -1175,6 +1181,8 @@
         <cfqueryparam cfsqltype="cf_sql_bit" value="#qGetCandidateInfo.wat_doc_job_offer_employer#">,
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.wat_doc_other#">,
         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetCandidateInfo.wat_doc_other_received#">,
+
+        <cfqueryparam cfsqltype="cf_sql_bit" value="#qGetCandidateInfo.wat_doc_itemized_price_list#">,
         
         <cfqueryparam cfsqltype="cf_sql_bit" value="#qGetCandidateInfo.wat_doc_no_housing_form#">,
         <cfqueryparam cfsqltype="cf_sql_bit" value="#qGetCandidateInfo.wat_doc_housing_arrengements#">,

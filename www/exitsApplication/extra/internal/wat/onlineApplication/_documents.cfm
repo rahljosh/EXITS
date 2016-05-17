@@ -71,7 +71,7 @@
                     9.  No Housing Form (if housing is not offered on premises) <br />
                     10. Housing Arrangements Form (if housing is not on premises, it must be submitted with 15 days before arrival) <br />  
                     11.	Orientation Sign-Off on CSB Template (after the orientation has taken place) <br /> 
-                    12.	Other (if applicable) - e.g. Third Party Forms (if housing and/or pick-up is offered by a third party) <br /> 
+                    12.	Other (if applicable) - e.g. Itemized Price List, Third Party Forms (if housing and/or pick-up is offered by a third party). If available, please choose alternative appropriate category for the uploaded file. <br /> 
                 </p>
                 
                 <!--- Upload Documents --->    

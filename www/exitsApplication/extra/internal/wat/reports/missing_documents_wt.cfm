@@ -29,12 +29,13 @@
                 c.wat_doc_college_letter,
                 c.wat_doc_college_letter_translation,
                 c.wat_doc_job_offer_applicant,
-                c.wat_doc_job_offer_employer,
+                
                 c.wat_doc_other,
                 c.wat_placement, 
                 c.wat_doc_no_housing_form, 
                 c.wat_doc_housing_arrengements, 
                 c.wat_doc_housing_third_party, 
+                c.wat_doc_itemized_price_list,
                 u.companyID, 
                 u.userID,
                 u.businessName,
@@ -63,8 +64,8 @@
                     c.wat_doc_college_letter_translation = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
                 OR 
                     c.wat_doc_signed_assessment = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
-                OR 
-                    (hc.name != "" AND c.wat_doc_job_offer_employer = <cfqueryparam cfsqltype="cf_sql_integer" value="0">)
+                OR
+                    c.wat_doc_itemized_price_list = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
                 OR 
                     (hc.name != "" AND c.wat_doc_job_offer_applicant = <cfqueryparam cfsqltype="cf_sql_integer" value="0">)
                 OR
@@ -78,20 +79,20 @@
                 	(
                     	hc.isHousingProvided = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
                        AND
-                    	c.wat_doc_no_housing_form != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+                    	c.wat_doc_no_housing_form != <cfqueryparam cfsqltype="cf_sql_varchar" value="1">
                     )
                 OR
                 	(
                     	hc.isHousingProvided = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
                        AND
-                    	c.wat_doc_housing_arrengements != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+                    	c.wat_doc_housing_arrengements != <cfqueryparam cfsqltype="cf_sql_varchar" value="1">
                     )
                 <!--- Check only if isHousingProvided = 2 ---> 
                 OR
                 	(
                     	hc.isHousingProvided = <cfqueryparam cfsqltype="cf_sql_integer" value="2">
                        AND
-                    	c.wat_doc_housing_third_party != <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+                    	c.wat_doc_housing_third_party != <cfqueryparam cfsqltype="cf_sql_varchar" value="1">
                     )
 				<!--- Check only if wat_doc_agreement = Walk-In --->                
                 OR                    
@@ -264,12 +265,14 @@
                                 <cfif NOT VAL(qGetCandidates.wat_doc_college_letter)>- College Letter<br /></cfif>
                                 <cfif NOT VAL(qGetCandidates.wat_doc_college_letter_translation)>- College Letter (translation)<br /></cfif>
                                 <cfif LEN(qGetCandidates.companyname) AND NOT VAL(qGetCandidates.wat_doc_job_offer_applicant)>- Job Offer Agreement Applicant<br /></cfif>
-                                <cfif LEN(qGetCandidates.companyname) AND NOT VAL(qGetCandidates.wat_doc_job_offer_employer)>- Job Offer Agreement Employer<br /></cfif>
+                                
                                 <cfif LEN(qGetCandidates.wat_doc_other)>- #qGetCandidates.wat_doc_other#<br /></cfif>
                                 
                                 <cfif NOT VAL(qGetCandidates.wat_doc_no_housing_form) AND qGetCandidates.isHousingProvided EQ 0>- No Housing Form<br /></cfif>
                                 <cfif NOT VAL(qGetCandidates.wat_doc_housing_arrengements) AND qGetCandidates.isHousingProvided EQ 0>- Housing Arrengements Form<br /></cfif>
                                 <cfif NOT VAL(qGetCandidates.wat_doc_housing_third_party) AND qGetCandidates.isHousingProvided EQ 2>- Third Party Housing Form<br /></cfif>
+
+                                <cfif NOT VAL(qGetCandidates.wat_doc_itemized_price_list)>- Itemized Price List<br /></cfif>
                             </td>
                             <td valign="top">#qGetCandidates.wat_placement#</td>
                         </tr>

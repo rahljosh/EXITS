@@ -73,12 +73,15 @@
 		AND c.ds2019 = ""
 		AND c.hostcompanyid != 1
 		AND c.wat_doc_job_offer_applicant = 1
-		AND c.wat_doc_job_offer_employer = 1
+		
       	AND c.wat_doc_agreement = 1
         AND c.wat_doc_signed_assessment = 1
         AND c.wat_doc_college_letter = 1
         AND c.wat_doc_college_letter_translation = 1
         AND c.wat_doc_passport_copy = 1
+
+        AND c.wat_doc_itemized_price_list = 1
+
         AND (
         	(c.wat_placement = "Walk-In" AND c.wat_doc_walk_in_agreement = 1)
             OR (c.wat_placement = "CSB-Placement" AND c.wat_doc_cv = 1)
@@ -116,12 +119,14 @@
         
             <table width=100% align="center" border=0 bgcolor="FFFFFF">
                 <tr>
-                    <td  valign="top" width=90>
+                    <td  valign="top" width=120>
                         <span id="titleleft">
                             <span class="style1">
                                 TO:<br>
                                 FAX:<br>
-                                E-MAIL:<br><br><br>		
+                                E-MAIL:<br><br>
+                                Date issued:<br>
+                                Date processed:	
                             </span>
                         </span>                    
                     </td>
@@ -129,12 +134,14 @@
                         <span id="titleleft">
                             <cfif len(qGetIntlAgent.businessname) gt 40>#Left(qGetIntlAgent.businessname,40)#...<cfelse>#qGetIntlAgent.businessname#</cfif><br>
                             #qGetIntlAgent.fax#<br>
-                            <a href="mailto:#qGetIntlAgent.email#">#qGetIntlAgent.email#</a><br><br><br>
+                            <a href="mailto:#qGetIntlAgent.email#">#qGetIntlAgent.email#</a><br><br>
                             #DateFormat(now(), 'dddd, mmmm dd, yyyy')#<br>	
+                             ____/____/________ (for CSB use)
                         </span>
                     </td>
                     <td class="style1">
-                        <img src="../../../../#APPLICATION.CSB[setSponsor].logo#" />
+                        <img src="../../../../#APPLICATION.CSB[setSponsor].logo#" /><br />
+                        Total number of participants on this report: #qGetCandidates.RecordCount#
                     </td>	
                     <td align="right" valign="top" class="style1"> 
                         <div align="right">
@@ -181,7 +188,7 @@
 							// Get Placement Information
 							qCandidatePlaceCompany = APPLICATION.CFC.CANDIDATE.getCandidatePlacementInformation(candidateID=qGetCandidates.candidateID);
                         </cfscript>
-                        <tr bgcolor="#iif(qGetCandidates.currentrow MOD 2 ,DE("ededed") ,DE("white") )#">
+                        <tr style="background-color: <cfif qGetCandidates.currentrow MOD 2 > ##ededed <cfelse> ##ffffff</cfif>">
                             <td width=3% valign="top">###qGetCandidates.candidateID#</td>
                             <td width=14% valign="top">#qGetCandidates.lastname#</td>
                             <td width=12% valign="top">#qGetCandidates.firstname#</td>
@@ -196,9 +203,9 @@
                             <td width=10% valign="top">#DateFormat(qGetCandidates.startdate, 'mm/dd/yyyy')#</td>
                             <td width=10% valign="top">#DateFormat(qGetCandidates.enddate, 'mm/dd/yyyy')#</td>			
                         </tr>
-                        <tr bgcolor="#iif(qGetCandidates.currentrow MOD 2 ,DE("ededed") ,DE("white") )#">
-                            <td style="border-bottom:1px solid ##000;">&nbsp;</td>
-                        	<td valign="top" colspan="12" style="border-bottom:1px solid ##000;">
+                        <tr style="background-color: <cfif qGetCandidates.currentrow MOD 2 > ##ededed <cfelse> ##ffffff</cfif>">
+                            <td style="border-bottom:2px solid ##000;">&nbsp;</td>
+                        	<td valign="top" colspan="12" style="border-bottom:2px solid ##000;">
                             	<strong>Host Company:</strong> #qCandidatePlaceCompany.hostCompanyName#; 
                                 <strong style="padding-left:15px;">Job Title:</strong> #qCandidatePlaceCompany.jobTitle#; <br />
                                 <strong>Host Address:</strong> #qCandidatePlaceCompany.address# - #qCandidatePlaceCompany.city# / #qCandidatePlaceCompany.state# -#qCandidatePlaceCompany.zip#<br/>

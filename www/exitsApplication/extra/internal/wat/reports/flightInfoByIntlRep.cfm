@@ -98,8 +98,7 @@
                 c.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
             AND 
                 c.status != <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
-            AND
-            	c.ds2019 !=   <cfqueryparam cfsqltype="cf_sql_varchar" value="">
+           
            <cfif VAL(FORM.userID)> 
                 AND
                     c.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">                               
@@ -358,11 +357,11 @@
                                             <br />
                                         </cfloop>   
                                     <!--- Alert Arrival Missing --->
-                                    <cfelseif qTotalPerIntlRep.wat_placement EQ 'CSB-Placement' AND DateAdd("d", -14, qTotalPerIntlRep.startDate) LTE now() AND FORM.flightType EQ 'arrival'>
+                                    <cfelseif qTotalPerIntlRep.wat_placement EQ 'CSB-Placement' AND DateAdd("d", -14, qTotalPerIntlRep.startDate) LTE now() AND FORM.flightType EQ 'arrival' and qTotalPerIntlRep.ds2019 is not ''>
                                         <span style="color:##F00; font-weight:bold;">
                                             Alert Arrival Missing (CSB-Placement) - Program Start Date: #DateFormat(qTotalPerIntlRep.startDate, 'mm/dd/yy')#
                                         </span>
-                                    <cfelseif qTotalPerIntlRep.wat_placement EQ 'Self-Placement' AND DateAdd("d", -14, qTotalPerIntlRep.startDate) LTE now() AND FORM.flightType EQ 'arrival'>
+                                    <cfelseif qTotalPerIntlRep.wat_placement EQ 'Self-Placement' AND DateAdd("d", -14, qTotalPerIntlRep.startDate) LTE now() AND FORM.flightType EQ 'arrival' and qTotalPerIntlRep.ds2019 is not ''>
                                         <span style="color:##F90; font-weight:bold;">
                                             Alert Arrival Missing (Self-Placement) - Program Start Date: #DateFormat(qTotalPerIntlRep.startDate, 'mm/dd/yy')#
                                         </span>

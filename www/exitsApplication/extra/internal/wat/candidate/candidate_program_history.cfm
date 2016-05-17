@@ -19,7 +19,7 @@
 </cfquery>
 
 <cfquery name="program_history" datasource="MySql">
-	SELECT  programhistoryid, candidateid, extra_program_history.programid, extra_program_history.userid, date, reason,
+	SELECT  programhistoryid, candidateid, extra_program_history.programid, extra_program_history.userid, date, reason, extra_program_history.startdate, extra_program_history.enddate,
 			p.programname, p.programid,
 			u.firstname, u.lastname, u.userid
 	FROM extra_program_history
@@ -48,6 +48,8 @@
 					<td class="style2" bgcolor="8FB6C9">Assigned On</td>
 					<td class="style2" bgcolor="8FB6C9">Program</td>
 					<td class="style2" bgcolor="8FB6C9">Reason</td>
+                    <td class="style2" bgcolor="8FB6C9">Start Date</td>
+                    <td class="style2" bgcolor="8FB6C9">End Date</td>
 					<td class="style2" bgcolor="8FB6C9">Assigned By</td>
 				</tr>
 				<cfif program_history.recordcount EQ '0'>
@@ -58,6 +60,8 @@
 							<td align="left" class="style5">#DateFormat(date, 'mm/dd/yyyy')#</td>
 							<td align="left" class="style5"><cfif programname EQ ''>Unassigned<cfelse>#programname# (###programid#)</cfif></td>
 							<td align="left" class="style5">#reason#</td>
+                            <td align="left" class="style5">#dateFormat(startdate, 'mm/dd/yyyy')#</td>
+                            <td align="left" class="style5">#dateFormat(enddate, 'mm/dd/yyyy')#</td>
 							<td align="left" class="style5">#firstname# #lastname# (#userid#)</td>
 						</tr>
 					</cfloop>
