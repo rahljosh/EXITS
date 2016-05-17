@@ -122,7 +122,7 @@
 	
 	/***** Create APPLICATION.EMAIL structure / Stores Email Information *****/
 	APPLICATION.EMAIL = StructNew();		
-	APPLICATION.EMAIL.flightReport = 'anca@csb-usa.com;ryan@csb-usa.com';
+	APPLICATION.EMAIL.flightReport = 'anca@csb-usa.com;emily@csb-usa.com';
 	APPLICATION.EMAIL.traineeFlightReport = 'ryan@iseusa.com';
 	APPLICATION.EMAIL.watMissingDocuments = 'elena@csb-usa.com';
 	

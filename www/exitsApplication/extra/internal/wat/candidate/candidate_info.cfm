@@ -380,6 +380,11 @@
 				$("#deadline").fadeOut("fast");		
 			}
 		}
+
+		//alert(getHostID);
+		if( getHostID == 0 ) {
+			$("#seekingEmploymentDIV").fadeOut("fast");
+		}
 	}
 
 
@@ -639,8 +644,8 @@
 				hostID: $("#hostCompanyID").val()
 			},
 			success: function(data) {
-				console.log(data);
-				console.log($("#hostCompanyChangeReason").css("display"));
+				//console.log(data);
+				//console.log($("#hostCompanyChangeReason").css("display"));
 				if (data.CODE != 0 ) {
 					//alert(data.TEXT);
 					$("#warningNotes").html(data.TEXT);
@@ -774,9 +779,63 @@
                             </tr>
                             <tr>
                                 <td align="center" colspan="2" class="style1">
-                                    <cfif NOT LEN(qGetCandidate.dob)>N/A<cfelse>#dateFormat(qGetCandidate.dob, 'mm/dd/yyyy')# - #datediff('yyyy',qGetCandidate.dob,now())# year old</cfif> 
+                                    <cfif NOT LEN(qGetCandidate.dob)>
+                                    	N/A
+                                    <cfelse>
+                                    	
+                                        <cfset dateDiference = DateDiff("yyyy", qGetCandidate.dob, qGetCandidate.entrydate) >
+
+                                        <cfif dateDiference GTE 26 >
+                                            <span style="color:red">
+                                                #dateFormat(qGetCandidate.dob, 'mm/dd/yyyy')# - #datediff('yyyy',qGetCandidate.dob,now())# year old
+                                            </span>
+                                        <cfelse>
+                                            #dateFormat(qGetCandidate.dob, 'mm/dd/yyyy')# - #datediff('yyyy',qGetCandidate.dob,now())# year old
+                                        </cfif>
+                                    </cfif> 
                                     - 
                                     <cfif qGetCandidate.sex EQ 'm'>Male<cfelse>Female</cfif>
+
+
+                                    <!--- OFFICE VIEW ONLY --->
+                                    <cfif ListFind("1,2,3,4", CLIENT.userType)>
+	                                    <cfset hasPreviousProgram = false />
+	                                    <!--- Query to check if the candidate re-applied --->
+	                                    <cfquery name="previous_program" datasource="MySql">
+											SELECT  candidateID
+											FROM extra_candidates
+											WHERE firstname = '#qGetCandidate.firstname#'
+												AND lastname = '#qGetCandidate.lastname#'
+												AND dob = '#qGetCandidate.dob#'
+												AND programID <= '#qGetCandidate.programid#'
+												AND candidateID <> '#qGetCandidate.candidateID#'
+	 									</cfquery>
+
+										<cfset isTerminated = false />
+										<cfset hasIncident = false />
+										<cfif previous_program.recordCount GT 0 >
+											
+											<cfloop query="previous_program" >
+												<cfset qGetOldIncidentReport = APPLICATION.CFC.CANDIDATE.getIncidentReport(candidateID=previous_program.candidateID) />
+
+												<cfif qGetOldIncidentReport.recordCount GT 0 >
+													<cfset hasIncident = true />
+													<cfloop query="qGetOldIncidentReport">
+			                                    		<cfif qGetOldIncidentReport.subject EQ "Terminated">
+			                                    			<cfset isTerminated = true />
+			                                    		</cfif>
+			                                    	</cfloop>
+												</cfif>
+											</cfloop>
+
+											<cfif isTerminated AND qGetCandidate.status NEQ 0>
+	                                    		<font style="color:red; font-weight:bold">- Terminated previously.</font>
+	                                    	<cfelseif hasIncident AND qGetCandidate.status NEQ 0>
+	                                    		<font style="color:red; font-weight:bold">- Incident(s) on file. Review eligibility.</font>
+	                                    	</cfif>
+											
+										</cfif>
+									</cfif>
                                 </td>
                             </tr> 
                             <tr>
@@ -1347,7 +1406,23 @@
 													<cfif VAL(qGetCandidate.wat_doc_orientation)> checked </cfif> > 
                                                 <label for="wat_doc_orientation">Orientation Sign Off</label>
                                             </td> 
-                                            <cfif qCandidatePlaceCompany.isHousingProvided EQ 2>
+
+
+                                            <td class="style1">
+                                                <input 
+                                                	type="checkbox" 
+                                                    name="wat_doc_itemized_price_list" 
+                                                    id="wat_doc_itemized_price_list" 
+                                                    value="1" 
+                                                    class="formField" 
+                                                    disabled 
+													<cfif VAL(qGetCandidate.wat_doc_itemized_price_list)> checked </cfif> >
+                                                <label for="wat_doc_itemized_price_list">Itemized Price List</label>
+                                            </td>  
+                                        </tr>
+
+                                        <tr>
+                                        	<cfif qCandidatePlaceCompany.isHousingProvided EQ 2>
                                             <td class="style1">
                                                 <input 
                                                 	type="checkbox" 
@@ -1362,7 +1437,9 @@
                                             <cfelse>
                                             <td class="style1">
                                             </td>
-                                            </cfif>                                     
+                                            </cfif>
+                                            <td class="style1">
+                                            </td>
                                         </tr>
                                         <tr>
                                         	<td class="style1" colspan="4">
@@ -1776,21 +1853,23 @@
                                             </tr>
                                         </cfif>
                                         
-                                        <tr class="notReplacement">
-                                        	<td class="style1" align="right" width="30%">
-                                            	<label for="wat_doc_job_offer_employer"><strong>Job Offer Agreement Employer:</strong></label>
-                                           	</td>
-                                            <td class="style1" align="left" width="70%">
-                                                <input 
-                                                	type="checkbox" 
-                                                    name="wat_doc_job_offer_employer" 
-                                                    id="wat_doc_job_offer_employer" 
-                                                    value="1" 
-                                                    class="formField" 
-                                                    disabled 
-													<cfif VAL(qGetCandidate.wat_doc_job_offer_employer)> checked </cfif> > 
-                                            </td>
-                                        </tr>
+                                        <cfif (FORM.hostCompanyID NEQ 0 AND FORM.hostCompanyID NEQ 195) AND (qCandidatePlaceCompany.RecordCount NEQ 0 AND qCandidatePlaceCompany.hostCompanyID NEQ 195)>
+	                                        <tr class="notReplacement">
+	                                        	<td class="style1" align="right" width="30%">
+	                                            	<label for="wat_doc_job_offer_employer"><strong>Job Offer Agreement Employer:</strong></label>
+	                                           	</td>
+	                                            <td class="style1" align="left" width="70%">
+	                                                <input 
+	                                                	type="checkbox" 
+	                                                    name="wat_doc_job_offer_employer" 
+	                                                    id="wat_doc_job_offer_employer" 
+	                                                    value="1" 
+	                                                    class="formField" 
+	                                                    disabled 
+														<cfif VAL(qGetCandidate.wat_doc_job_offer_employer)> checked </cfif> > 
+	                                            </td>
+	                                        </tr>
+                                        </cfif>
                                         
                                         
                                         <tr class="editPage">
@@ -2899,6 +2978,9 @@
                                                 <input type="text" name="visaInterview" class="editPage datePicker" value="#DateFormat(qGetCandidate.visaInterview,'mm/dd/yyyy')#">
                                             </td>
                                         </tr>
+
+                                        <!--- Office View Only ---> 
+										<cfif ListFind("1,2,3,4", CLIENT.userType)>
                                         <tr>
                                         	<td class="style1" align="right"><strong>Generic Arrival Package Sent:</strong></td>
                                             <td class="style1">
@@ -2913,6 +2995,7 @@
                                                 <input type="text" name="dateIDSent" class="editPage datePicker" value="#DateFormat(qGetCandidate.dateIDSent,'mm/dd/yyyy')#">
                                             </td>
                                         </tr>
+                                        </cfif>
                                     </table>
                         
                                 </td>

@@ -22,6 +22,7 @@
 	<cfparam name="FORM.printOption" default="1">
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.missingPhone" default="0">
+    <cfparam name="FORM.missingDocs" default="0">
 
     <cfscript>
 		// Get Program List
@@ -112,6 +113,9 @@
                 conf.confirmedDate,
                 j1.numberPositions,
                 j1.verifiedDate,
+                <cfif VAL(FORM.missingPhone) OR VAL(FORM.missingDocs)>
+                    ehaf.id AS EhaFID, 
+                </cfif>
                 epc.confirmation_phone
             FROM
                 extra_candidates ec
@@ -139,7 +143,7 @@
           	LEFT OUTER JOIN extra_program_confirmations epc ON epc.hostID = ecpc.hostCompanyID
          		AND epc.programID = ec.programID
                 
-            <cfif VAL(FORM.missingPhone)>
+            <cfif VAL(FORM.missingPhone) OR VAL(FORM.missingDocs)>
             LEFT JOIN extra_hostauthenticationfiles ehaf
                    ON (ehaf.hostID = ecpc.hostcompanyid
                             AND (dateExpires >= <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
@@ -169,8 +173,22 @@
                 AND (conf.confirmed = 1 OR conf.confirmedDate IS NOT NULL)
                 AND (numberPositions = 0 OR verifiedDate IS NOT NULL)
                 AND ehc.workmensCompensation IS NOT NULL
+                AND ehc.authentication_secretaryOfState > 0
                 AND ehaf.id > 0
                 AND ecpc.selfEmailConfirmationDate IS NOT NULL
+            <cfelseif VAL(FORM.missingDocs) >
+                AND (ehc.authentication_secretaryOfState = 0
+                    OR ehc.authentication_departmentOfLabor = 0
+                    OR ehc.authentication_googleEarth = 0
+                    OR ehc.EIN IS NULL
+                    OR ehc.EIN = ''
+                    OR ehaf.ID = ''
+                    OR ehaf.ID IS NULL
+                    )
+                
+                AND epc.confirmation_phone IS NOT NULL
+                AND ecpc.selfEmailConfirmationDate IS NOT NULL
+                AND (numberPositions = 0 OR verifiedDate IS NOT NULL)
             </cfif>
             
             GROUP BY ec.candidateID
@@ -325,7 +343,13 @@
         <td  class="style1"> 
         	<input type="checkbox" name="missingPhone" value="1" <cfif FORM.missingPhone EQ '1'>checked="checked"</cfif>> Yes
         </td>
-    </tr>   
+    </tr>
+    <tr>
+        <td valign="middle" align="right" class="style1"><b>Missing Only Documents:</b></td>
+        <td  class="style1"> 
+            <input type="checkbox" name="missingDocs" value="1" <cfif FORM.missingDocs EQ '1'>checked="checked"</cfif>> Yes
+        </td>
+    </tr>
     <Tr>
         <td align="right" class="style1"><b>Format: </b></td>
         <td  class="style1"> 

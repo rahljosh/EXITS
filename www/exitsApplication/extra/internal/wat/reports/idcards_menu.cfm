@@ -52,7 +52,7 @@
                                                         multiple="yes"
                                                         class="style1"
                                                         value="programID"
-                                                        display="programName"
+                                                        display="programname"
                                                         selected="#FORM.programID#"
                                                         bind="cfc:extensions.components.program.getProgramsRemote()" 
                                                         bindonload="true" /> 

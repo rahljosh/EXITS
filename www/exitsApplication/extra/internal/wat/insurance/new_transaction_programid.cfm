@@ -93,6 +93,7 @@
             c.verification_received IN ( <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.verification_received#" list="yes"> )
         AND 
             c.programid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programid#" list="yes"> )
+
         <cfif VAL(FORM.intrep)>
             AND 
                 c.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intrep#">
@@ -208,7 +209,7 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
                     <td>&nbsp;</td>
                     <td>
                         <cfif IsDate(vStartDate) AND IsDate(vEndDate)>
-                            #DateDiff("d", vStartDate, vEndDate)#
+                            #DateDiff("d", vStartDate, vEndDate)+1#
                         </cfif>             
                     </td>            
                     <td>

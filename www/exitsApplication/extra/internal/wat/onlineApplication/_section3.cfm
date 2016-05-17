@@ -311,7 +311,10 @@
 		<!--- Interviewer Signature --->
         <div class="field">
             <label>Interviewer Signature <em>*</em></label> 
-            <div class="printField"> &nbsp; </div>
+            <div class="printField" style="width:270px; float:left; margin-left: 0px"> &nbsp; </div>
+            <label style="float:left; width:50px">Stamp <em>*</em></label> 
+            <div class="printField" style="width:220px; float:left; margin-left: 0px"> &nbsp; </div>
+            <br clear="all" />
         </div>
        
         <!--- Date --->

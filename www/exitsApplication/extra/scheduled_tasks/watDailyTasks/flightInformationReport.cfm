@@ -33,7 +33,10 @@
 	</cfquery>
     
 </cfsilent>
-
+Arrivals:<br />
+	<Cfdump var="#qGetArrivals#">
+    Departures:<br />
+	<Cfdump var="#qGetDepartures#">
 <cfsavecontent variable="flightReport">
 
 	<!--- Arrival Information --->

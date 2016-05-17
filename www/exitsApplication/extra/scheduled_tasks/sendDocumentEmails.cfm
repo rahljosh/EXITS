@@ -11,12 +11,14 @@
 <cfquery name="qGetCandidatesMissingGenericDocuments" datasource="#APPLICATION.DSN.Source#">
 	SELECT *
     FROM extra_candidates
+    INNER JOIN
+            extra_hostcompany h ON extra_candidates.hostCompanyID = h.hostCompanyID
     WHERE status = 1
-    AND isDeleted = 0
-    AND ds2019 IS NOT NULL
-    AND ds2019 != ""
-    AND (dateGenericDocumentsSent IS NULL OR dateGenericDocumentsSent = "")
-    AND programID >= 378
+        AND isDeleted = 0
+        AND ds2019 IS NOT NULL
+        AND ds2019 != ""
+        AND (dateGenericDocumentsSent IS NULL OR dateGenericDocumentsSent = "")
+        AND programID >= 378
 </cfquery>
 
 <cfquery name="qGetCandidatesMissingIDs" datasource="#APPLICATION.DSN.Source#">
@@ -77,6 +79,21 @@
                       	</a>
                   	</li>
                 </cfloop>
+
+                <cfquery name="qGetFile" datasource="MySql">
+                    SELECT *
+                    FROM extra_cities
+                    WHERE stateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#state#">
+                        AND name = <cfqueryparam cfsqltype="cf_sql_char" value="#city#">
+                </cfquery>
+
+                <cfif state NEQ "" AND city NEQ "" AND qGetFile.recordCount GT 0>
+                    <li>
+                        <a href="#APPLICATION.SITE.URL.main#internal/wat/hostcompany/CityFlyer.cfm?stateID=#state#&city=#city#" class="itemLinks" title="Download the City Flyer">
+                            City Flyer
+                        </a> 
+                    </li>
+                </cfif>
             </ul>
         </p>
         
@@ -109,7 +126,7 @@
     </cfsavecontent>
     
     <cftry>
-    
+        
 		<cfscript>
             APPLICATION.CFC.EMAIL.sendEmail(
                 emailFrom="support@csb-usa.com",
@@ -129,6 +146,7 @@
         </cfcatch>
         
  	</cftry>
+
 </cfoutput>
 
 <cfoutput query="qGetCandidatesMissingIDs">

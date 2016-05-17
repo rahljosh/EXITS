@@ -193,8 +193,8 @@
                                     <p class="style2">US Department of State:</p>
                                     <p class="style2">1-866-283-9090</p>
                                     <p class="style2">&nbsp;</p>	
-                                    <p class="style2">Medical Plan - United Healthcare:</p>															
-                                    <p class="style2">1-800-251-1712</p>
+                                    <p class="style2">Medical Plan - Policy LF003933</p>															
+                                    <p class="style2">1-800-314-3938</p>
                                 </td>
                             </tr>
                         </table>

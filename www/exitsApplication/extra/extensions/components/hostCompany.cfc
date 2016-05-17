@@ -315,7 +315,7 @@
 			vStudentStruct.code = 0;
 			vStudentStruct.text = "";
 				
-			if ((qGetActivePrograms.numberPositions NEQ "") && (qGetActivePrograms.numberPositions <= qGetActivePlacements.total)) {
+			if ((qGetActivePrograms.numberPositions NEQ "") && (qGetActivePrograms.numberPositions NEQ 0) && (qGetActivePrograms.numberPositions <= qGetActivePlacements.total)) {
 				vStudentStruct.code = 1;
 				vStudentStruct.text = "The Host Company has already reached the total number of available J1 positions!";
 			}

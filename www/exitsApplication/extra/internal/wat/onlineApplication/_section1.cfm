@@ -75,7 +75,7 @@
     <cfparam name="FORM.wat_participation" default="">
     <cfparam name="FORM.wat_participation_info" default="">
     <cfparam name="FORM.SSN" default="">
-
+	
 	<!--- Candidate Picture --->
     <cfdirectory name="candidatePicture" directory="#APPLICATION.PATH.uploadCandidatePicture#" filter="#FORM.candidateID#.*">
     

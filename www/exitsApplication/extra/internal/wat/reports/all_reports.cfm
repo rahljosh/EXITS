@@ -16,12 +16,10 @@
                         <cfif CLIENT.userType LTE 4>
                         	<span class="style1"><strong>1. International Representative Reports</strong></span><br />
                             
-                            
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/all_canceled_students_enrolled_wt" class="style4">- All Cancelled Candidates</a></p>
                             
                             <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/all_students_enrolled_wt" class="style4">- All Participating Candidates</a></p>
-                            
-							<p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/all_canceled_students_enrolled_wt" class="style4">- Cancelled Candidates</a></p>
-                            
+
                             <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/all_students_wt_country" class="style4">- Candidate by Citizenship and Residence</a></p>
 
                             <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/csbPlacementConfirmation" class="style4">- CSB-Placement Vetting Status</a></p>
@@ -41,11 +39,9 @@
                       	<cfelseif CLIENT.userType EQ 8>
                         	<span class="style1"><strong>Available Reports</strong></span><br />
                         
-                        	
+                        	<p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/all_canceled_students_enrolled_wt" class="style4">- All Cancelled Candidates</a></p>
 
                             <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/all_students_enrolled_wt" class="style4">- All Participating Candidates</a></p>
-                            
-                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/all_canceled_students_enrolled_wt" class="style4">- Cancelled Candidates</a></p>
                             
                             <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/selfPlacementConfirmation" class="style4">- Self Placement Vetting</a></p>
                             
@@ -72,13 +68,11 @@
                         <td bordercolor="FFFFFF">
                             <span class="style1"><strong>2. Host Company Reports</strong></span><br />
     
-                            
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/all_canceled_students_hc_wt" class="style4">- All Cancelled Candidates</a></p>
 
                             <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/students_hired_per_company_wt" class="style4">- All Participating Candidates</a></p>
                             
                             <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/hostCompanyArrivalInstructions" class="style4">- Arrival Instructions</a></p>
-                            
-                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/all_canceled_students_hc_wt" class="style4">- Cancelled Candidates</a></p>
 
                             <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/hostCompanyCsbPlacementConfirmation" class="style4">- CSB-Placement Vetting Email</a></p>    
 

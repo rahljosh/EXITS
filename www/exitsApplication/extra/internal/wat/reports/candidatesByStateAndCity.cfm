@@ -38,7 +38,6 @@
             c.enddate,
             c.wat_placement,
             c.hostCompanyID,
-            c.ds2019,
             h.city,
             h.state,
             cntry.countryName AS country,
@@ -264,7 +263,6 @@
                                     <td width="20%">Placement Info</td>
                                     <td width="8%">Option</td>
                                     <td width="15%">Intl. Rep.</td>
-                                     <td width="15%">DS-2019</td>
                                 <cfelse>
                                     <td>ID</Td>
                                     <td>Last Name</td>
@@ -277,7 +275,6 @@
                                     <td>Placement Info</td>
                                     <td>Option</td>
                                     <td>Intl. Rep</td>
-                                    <td>DS-2019</td>
                                 </cfif>
                             </tr>
                         
@@ -328,7 +325,6 @@
                                     <td><cfloop query="qGetPlacements">(#qGetPlacements.currentRow#) #name# - #title#<cfif qGetPlacements.currentRow NEQ qGetPlacements.recordCount><br /></cfif></cfloop></td>
                                     <td>#qGetNumCity.wat_placement#</td>
                                     <td>#qGetNumCity.businessName#</td>
-                                    <Td>#qGetNumState.ds2019#</Td>
                                 </tr>
                                 
                             </cfloop>

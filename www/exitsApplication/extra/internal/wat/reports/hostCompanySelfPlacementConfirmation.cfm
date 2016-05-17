@@ -22,6 +22,8 @@
 	<cfparam name="FORM.printOption" default="1">
     <cfparam name="FORM.submitted" default="0">
     <cfparam name="FORM.missingPhone" default="0">
+    <cfparam name="FORM.missingDocs" default="0">
+
     <cfscript>
 		// Setting to 1 will remove links on the report
 		vSendEmail = 0;
@@ -53,6 +55,20 @@
                 ec.ds2019,
                 ec.startdate, 
                 ec.enddate,
+ec.intrep, 
+                ec.wat_placement,
+                ehc.hostCompanyID,
+                ehc.authentication_secretaryOfState,
+                ehc.authentication_departmentOfLabor,
+                ehc.authentication_googleEarth,
+                ehc.authentication_incorporation,
+                ehc.authentication_certificateOfExistence,
+                ehc.authentication_certificateOfReinstatement,
+                ehc.authentication_departmentOfState,
+                ehc.authentication_businessLicenseNotAvailable,
+                ehc.name,
+                ehc.EIN, 
+                ehc.workmensCompensation,
                 ecpc.jobID AS jobTitleID,
                 ej.title AS jobTitle,
                 <!--- Host Company --->
@@ -93,13 +109,17 @@
             	extra_confirmations conf ON conf.hostID = ecpc.hostcompanyID
                 	AND conf.programID = ec.programID
             LEFT OUTER JOIN extra_program_confirmations epc ON epc.hostID = ecpc.hostCompanyID
-         		AND epc.programID = ec.programID       
-            <cfif VAL(FORM.missingPhone)>
+         		AND epc.programID = ec.programID
+                
+            <cfif VAL(FORM.missingPhone) OR VAL(FORM.missingDocs)>
             LEFT JOIN extra_hostauthenticationfiles ehaf
                    ON (ehaf.hostID = ecpc.hostcompanyid
                             AND (dateExpires >= <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
                             	OR dateExpires IS NULL)
                             AND authenticationType = "workmensCompensation")
+            LEFT JOIN
+                extra_j1_positions j1 ON j1.hostID = ecpc.hostcompanyID
+                    AND j1.programID = ec.programID
             </cfif> 
             WHERE 
                 ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
@@ -111,10 +131,23 @@
             <cfif VAL(FORM.missingPhone)>
                 AND epc.confirmation_phone IS NULL
                 AND (conf.confirmed = 1 OR conf.confirmedDate IS NOT NULL)
-               
+                AND (numberPositions = 0 OR verifiedDate IS NOT NULL)
                 AND ehc.workmensCompensation IS NOT NULL
+                AND ehc.authentication_secretaryOfState > 0
                 AND ehaf.id > 0
                 AND ecpc.selfEmailConfirmationDate IS NOT NULL
+            <cfelseif VAL(FORM.missingDocs) >
+                AND (ehc.authentication_secretaryOfState = 0
+                    OR ehc.authentication_departmentOfLabor = 0
+                    OR ehc.authentication_googleEarth = 0
+                    OR ehc.EIN IS NULL
+                    OR ehc.EIN = ''
+                    OR ehaf.ID = ''
+                    OR ehaf.ID IS NULL)
+                
+                AND epc.confirmation_phone IS NOT NULL
+                AND ecpc.selfEmailConfirmationDate IS NOT NULL
+                AND (numberPositions = 0 OR verifiedDate IS NOT NULL)
             </cfif>
                 
                 
@@ -227,6 +260,12 @@
         	<input type="checkbox" name="missingPhone" value="1" <cfif FORM.missingPhone EQ '1'>checked="checked"</cfif>> Yes
         </td>
     </tr>   
+    <tr>
+        <td valign="middle" align="right" class="style1"><b>Missing Only Documents:</b></td>
+        <td  class="style1"> 
+            <input type="checkbox" name="missingDocs" value="1" <cfif FORM.missingDocs EQ '1'>checked="checked"</cfif>> Yes
+        </td>
+    </tr>
     <tr>
         <td align="right" class="style1"><b>Format: </b></td>
         <td  class="style1"> 
@@ -451,7 +490,10 @@
                         <br />
                         1. If the job offer is cancelled or revoked due to any circumstances / conditions, please notify CSB immediately.
                         <br />
-                        2. If during the program there are any changes or deviations in the job placement extended to this participant, please promptly notify CSB.
+                        2. It is crucial to <strong>always maintain contact with CSB</strong> with questions and concerns <strong>throughout the duration of the program</strong>. You have the choice <strong>to contact CSB by email</strong> or phone to <strong>inform us of any changes</strong> that include but are not limited to: <strong>participant is  fired, late, poor performance, job title change and worksite location</strong>.
+                        <br />
+                        3. Do you have any program questions? Please take a look at the <a href="https://extra.exitsapplication.com/internal/uploadedfiles/wat/SWT_Host_Employer_Manual.pdf">Host Employer Manual</a>.
+                        <br />
                     </font>
                 </p>
                 

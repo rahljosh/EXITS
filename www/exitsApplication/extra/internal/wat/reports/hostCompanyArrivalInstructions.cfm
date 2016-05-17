@@ -235,7 +235,7 @@
                 <tr>               
                     <td class="tableTitleView" valign="top">Housing Address:</td>
                     <td class="tableDataView">
-                    	<cfif qGetHostCompany.isHousingProvided EQ 1>
+                    	<cfif qGetHostCompany.isHousingProvided EQ 1 OR qGetHostCompany.isHousingProvided EQ 2>
                             #qGetHostCompany.housingAddress#, #qGetHostCompany.housingCity#, #qGetHostCompany.housingStateName# #qGetHostCompany.housingZip#
                         <cfelse>
                             n/a
