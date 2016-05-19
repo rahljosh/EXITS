@@ -44,8 +44,28 @@
             <a href="https://iseusa1.webex.com/iseusa1/lsr.php?RCID=5d09651fee3e22a25290d4b05a6be210" target="_blank">Department of State Regulations</a> 
             
             &nbsp; &nbsp; | &nbsp; &nbsp;
-
-            <a href="https://iseusa1.webex.com/iseusa1/lsr.php?AT=pb&SP=EC&rID=3469892&rKey=c358e2605164895e" target="_blank">Host Family Recruitment</a>
+            
+            <a href="https://iseusa1.webex.com/iseusa1/lsr.php?RCID=b778af8ab65efb03707587e3e796f3e7" target="_blank">Effective Recruitment</a>
+            
+            &nbsp; &nbsp; | &nbsp; &nbsp;
+            
+            <a href="https://iseusa1.webex.com/iseusa1/lsr.php?RCID=f13fea953adaedd873eea733064d6d15" target="_blank">Networking Your Way to Placements</a>
+            
+            &nbsp; &nbsp; | &nbsp; &nbsp;
+            
+            <a href="https://iseusa1.webex.com/iseusa1/lsr.php?RCID=5320c05c9c6376b761689d0e29dc7008" target="_blank">Quick Start</a>
+            
+            &nbsp; &nbsp; | &nbsp; &nbsp;
+            
+            <a href="https://iseusa1.webex.com/iseusa1/lsr.php?RCID=4bbb1e667fed8c66de5321d92813120f" target="_blank">LinkedIn - Part 1 </a>
+            
+            &nbsp; &nbsp; | &nbsp; &nbsp;
+            
+            <a href="https://iseusa1.webex.com/iseusa1/lsr.php?RCID=c6616b74c6283158f8ad7040b7588cfa" target="_blank">LinkedIn - Part 2 </a>
+            
+            &nbsp; &nbsp; | &nbsp; &nbsp;
+            
+            <a href="https://iseusa1.webex.com/iseusa1/lsr.php?RCID=21427cc3dbb0b68a164ba06950365786" target="_blank">Facebook Marketing Tips </a>
             
             <!--- Removed as Per Paul Session Request - 09/28/2012
             &nbsp; &nbsp; | &nbsp; &nbsp;
