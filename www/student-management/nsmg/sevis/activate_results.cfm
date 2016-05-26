@@ -92,7 +92,7 @@
 				<cfquery name="update_ds2019" datasource="MySql"> <!--- UPDATE SEVIS ACTIVATED TO 0 --->
 					UPDATE extra_candidates
 					SET sevis_activated ='0'
-					WHERE studentid = '#stuID#'
+					WHERE candidateid = '#stuID#'
 				</cfquery>
 				<cfquery name="delete_history" datasource="MySql">
 					DELETE 
