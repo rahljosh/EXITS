@@ -320,7 +320,7 @@ a:active {
           <cfif qGetCompany.companyid neq 14>
           <tr>
           	<td colspan=2>Host Families: 
-				<cfif qGetCompany.companyid eq 10>  <a href="https://www.case-usa.org/hostApp">
+				<cfif qGetCompany.companyid eq 10>  <a href="https://case.exitsapplication.com/hostApplication/">
                 	<cfelseif qGetCompany.companyID eq 15> <a href="https://dash.exitsapplication.com/hostApplication/index.cfm?section=login">
                     <Cfelse><a href="https://www.iseusa.org/hostApp">
                 </cfif>Click Here!</a></td>
