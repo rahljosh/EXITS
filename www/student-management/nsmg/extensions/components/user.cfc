@@ -12,7 +12,6 @@
 	output="false" 
 	hint="A collection of functions for the company">
 
-setUserSessionPaperwork
 	<!--- Return the initialized Company object --->
 	<cffunction name="Init" access="public" returntype="user" output="false" hint="Returns the initialized User object">
 		
@@ -2799,53 +2798,68 @@ setUserSessionPaperwork
 		
 		<cfscript>
 			/***************************************************************************************************
-			http://doslocalcoordinatortraining.traincaster.com/app/clients/doslocalcoordinatortraining/Login.pm
-			---------------------------------------------------------------
-			Accepts seven parameters (all required; order doesn't matter) 
-			---------------------------------------------------------------
-			person_id (up to 36 chars) 
-			first_name (up to 50 chars) 
-			last_name (up to 50 chars) 
-			program_sponsor (up to 100 chars) 
-			timestamp (integer) 
-			email (up to 50 characters)
-			digest (hex hash key)
-			---------------------------------------------------------------
-			The process for creating the digest would look similar to this: 
-			hash = sha1(<person_id> + 'password' + <timestamp>) 
-			---------------------------------------------------------------
-			timestamp must be ± 60 seconds of our calculation of time.  
-			---------------------------------------------------------------
-			Entering above url for the first time creates the account and logs the user in to TrainCaster.  
-			Subsequent accesses to the URL causes the user account information to be updated and then logs the user into TrainCaster.			
+			ISE
+				Key - F73DE6496539
+				Secret - dhxGOomiHdiDMt6TrNSPgGsoo4QZcQllF+wo9hhCtUWKjN1gdxYEE2AAWYbFXwgDELsiqzD6p5oygKTo
+				OrgCode – ISE
+				Supervisor code – Manager Group: International Student Exchange
+
+			Cultural Academic
+				Key - C1AFDE13043B
+				Secret - LgmCVP79Gv0Go+JBBC5GJsf19w9SkiMBLTzhbT8ghQTmQry3DSsIwG4eqvCSEi86+fzwVr2vHosDXShr
+				OrgCode – CASE
+				Supervisor Code - Manager Group: CULTURAL ACADEMIC STUDENT EXCHANGE, INC.			
 			***************************************************************************************************/		
 		
 			// Get User Information
             qGetUserInfo = getUserByID(uniqueID=ARGUMENTS.uniqueID);
-            
-            var vTrainCasterURL = "http://doslocalcoordinatortraining.traincaster.com/app/clients/doslocalcoordinatortraining/Login.pm";
-			var vProgramSponsor = "";
-            var vTrainCasterPassword = "";
+            </cfscript>
+           
+            <cfset training_link = "https://dos.gyrus.com/gyrusaim/auth/externallogin?externalToken=">
+		
+			<cfif CLIENT.companyID EQ 10 >
+				<cfset clientKey= "C1AFDE13043B">
+				<cfset clientSecret = "LgmCVP79Gv0Go+JBBC5GJsf19w9SkiMBLTzhbT8ghQTmQry3DSsIwG4eqvCSEi86+fzwVr2vHosDXShr">
+			<cfelse> 
+				<cfset clientKey= "F73DE6496539">
+				<cfset clientSecret = "dhxGOomiHdiDMt6TrNSPgGsoo4QZcQllF+wo9hhCtUWKjN1gdxYEE2AAWYbFXwgDELsiqzD6p5oygKTo">
+			</cfif>
 			
-			// CASE
-			if ( CLIENT.companyID EQ 10 ) {
-				vProgramSponsor = "CULTURAL ACADEMIC STUDENT EXCHANGE, INC.";
-				vTrainCasterPassword = "45RdPmWVrZtG6TCkSxVBbmkxPnqq2cr6Q3zJtSMp";
-			// ISE
-			} else if ( ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID) ) {
-				vProgramSponsor = "International Student Exchange";	
-				vTrainCasterPassword = "ZG2qK3vJgTHkhbSxQ6nxH273NKVS5T7Dwztm5k4B";
-			}
+    		<cfprocessingdirective suppresswhitespace="Yes"> 
+			<cfcontent type="text/xml; charset=utf-8"> 
+			<cfxml variable="xmlobject"> 
+			<Root>
+				<EmployeeNumber><cfoutput>#qGetUserInfo.userid#</cfoutput></EmployeeNumber>
+				<FirstName><cfoutput>#qGetUserInfo.firstname#</cfoutput></FirstName>
+                <LastName><cfoutput>#qGetUserInfo.lastname#</cfoutput></LastName>
+                <Username><cfoutput>#qGetUserInfo.userid#</cfoutput></Username>
+                <Email><cfoutput>#qGetUserInfo.email#</cfoutput></Email>
+				<Token>
+					 <ClientKey><cfoutput>#clientKey#</cfoutput></ClientKey>
+					 <ClientSecret><cfoutput>#clientSecret#</cfoutput></ClientSecret>
+				</Token>
+			</Root>
+			</cfxml> 
+			</cfprocessingdirective>
 			
-            vUnixTimeStamp = int(now().getTime()/1000);
-            
-            vSetDigest = lCase(Hash(qGetUserInfo.userID & vTrainCasterPassword & vUnixTimeStamp, "SHA-1"));
-            
-			// Store date account was created
+			<cfhttp
+				url="http://dos.gyrus.com/gyrusaim/api/assessment/GetSubmittedAssessment"
+				method="POST"
+				result="objGet">
 			
-			// Build Login URL
-            return "#vTraincasterURL#?timestamp=#vUnixTimeStamp#&person_id=#qGetUserInfo.userID#&first_name=#qGetUserInfo.firstName#&last_name=#qGetUserInfo.lastName#&email=#qGetUserInfo.email#&program_sponsor=#vProgramSponsor#&digest=#vSetDigest#";
-        </cfscript>
+			
+				<cfhttpparam
+					type="XML"
+					value="#xmlobject#"
+					/>
+			</cfhttp>       
+            <cfset Results = XMLParse(objGet.FileContent)>
+	
+			<cfset training_link = ListAppend(training_link, #Results.ExternalLogin.ExternalToken.xmlText#)>
+			
+            <cfreturn training_link>
+        
+        
         
 	</cffunction>
     
