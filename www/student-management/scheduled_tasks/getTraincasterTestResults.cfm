@@ -11,30 +11,18 @@
 ----- ------------------------------------------------------------------------- --->
 
 <!--- Kill Extra Output --->
-<cfsilent>
+
 	
     <cfsetting requesttimeout="9999">
     
     <cfscript>
-		// Param FORM Variables
-		param name="URL.date" default="";	
-		
-		// Make sure we have a valid date
-		if ( NOT isDate(URL.date) ) {
-			URL.date = DateFormat(now(), 'yyyy-mm-dd');
-		}
 	
 		// ISE
-	    vTraincasterISEMessage = APPLICATION.CFC.USER.importTraincasterTestResults(companyID=1,date=URL.date);
+	    vTraincasterISEMessage = APPLICATION.CFC.USER.importTraincasterTestResults(companyID=1);
 		
 		// CASE
-	    vTraincasterCaseMessage = APPLICATION.CFC.USER.importTraincasterTestResults(companyID=10,date=URL.date);
+	   vTraincasterCaseMessage = APPLICATION.CFC.USER.importGyrusAimTestResults(companyID=10);
 	</cfscript>
     
-</cfsilent>
 
-<cfoutput>
-	#vTraincasterISEMessage#
-    
-    #vTraincasterCaseMessage#
-</cfoutput>
+
