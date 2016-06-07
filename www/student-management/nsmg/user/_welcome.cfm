@@ -270,14 +270,13 @@
                         <div align="center" style="padding-top:7px;"><img src="pics/buttons/complete.png" border="0" /></div>
                     <!--- Need Info --->
                     <cfelse>
-                   
-                        <p>The DOS trainging system is currently unavailable.<br /><br />
-                        <!----  Please see this <a href="temp/dos_training_message.cfm" target="_new">page</a> for more detailed information.---->  </p>
+                   <p>Our records indicate that you have NOT completed the DOS Certification , please click on the link below to complete the training.</p>
+                       
                         <div align="center">
-                           <!---- <a href="user/index.cfm?uniqueID=#CLIENT.uniqueID#&action=trainCasterLogin" target="_blank" title="Click Here to Take the DOS Test">
-                                <img src="pics/buttons/needInformation.png" border="0" /> 
-                                <!--- <img src="pics/buttons/DOScertification.png" border="0" title="Click Here to Take the DOS Certification Test" /> --->
-                            </a>---->
+                           <a href="user/index.cfm?uniqueID=#CLIENT.uniqueID#&action=trainCasterLogin" target="_blank" title="Click Here to Take the DOS Test">
+                                 <!----<img src="pics/buttons/needInformation.png" border="0" /> ---->
+                                 <img src="pics/buttons/DOScertification.png" border="0" title="Click Here to Take the DOS Certification Test" /> 
+                            </a>
                         </div>                    
                     </cfif> 
                     
