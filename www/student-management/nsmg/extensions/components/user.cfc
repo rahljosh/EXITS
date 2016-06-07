@@ -679,14 +679,18 @@
 			stUserPaperwork.isTrainingCompleted = stUserTraining.isTrainingCompleted;
 			stUserPaperwork.dateTrained = stUserTraining.dateTrained;
 			
-			
+			if (qGetUserInfo.userID neq 19159){
 			// DOS Certification
 			//var stDOSCertification = isDOSCertificationValid(userID=ARGUMENTS.userID);
 			//stUserPaperwork.isDOSCertificationCompleted = stDOSCertification.isDOSCertificationValid;
 			//stUserPaperwork.dateDOSTestExpired = stDOSCertification.dateExpired;
 			stUserPaperwork.isDOSCertificationCompleted = true;
 			stUserPaperwork.dateDOSTestExpired = '06/01/2016';
-			
+			} else {
+				var stDOSCertification = isDOSCertificationValid(userID=ARGUMENTS.userID);
+				stUserPaperwork.isDOSCertificationCompleted = stDOSCertification.isDOSCertificationValid;
+				stUserPaperwork.dateDOSTestExpired = stDOSCertification.dateExpired;
+			}
 
 			// Set to true to force paperwork, to false to give an option to skip it
 			if ( now() GTE qGetCurrentSeason.datePaperworkRequired ) {
@@ -2812,18 +2816,14 @@
 			***************************************************************************************************/		
 		
 			// Get User Information
-           // qGetUserInfo = getUserByID(uniqueID=ARGUMENTS.uniqueID);
+           	qGetUserInfo = getUserByID(uniqueID=ARGUMENTS.uniqueID);
             </cfscript>
-               <cfquery name="qGetUserInfo" datasource="MySQL">
-               select *
-               from smg_users 
-               where userid = '7178'
-               </cfquery>
+          
     
-           <cfset companyid = 1>
+          
             <cfset training_link = "https://dos.gyrus.com/gyrusaim/auth/externallogin?externalToken">
 		
-			<cfif companyID EQ 10 >
+			<cfif CLIENT.companyID EQ 10 >
 				<cfset clientKey= "C1AFDE13043B">
 				<cfset clientSecret = "LgmCVP79Gv0Go+JBBC5GJsf19w9SkiMBLTzhbT8ghQTmQry3DSsIwG4eqvCSEi86+fzwVr2vHosDXShr">
                 <cfset OrgCode = "CASE">
@@ -2881,7 +2881,7 @@
                         <EmployeeNumber><cfoutput>#qGetUserInfo.userID#</cfoutput></EmployeeNumber>
 						<FirstName><cfoutput>#qGetUserInfo.firstname#</cfoutput></FirstName>
                			<LastName><cfoutput>#qGetUserInfo.lastname#</cfoutput></LastName>
-                        <Username><cfoutput>#qGetUserInfo.userID#</cfoutput></Username>
+                        <UserName><cfoutput>#qGetUserInfo.userID#</cfoutput></UserName>
                         <Email><cfoutput>#qGetUserInfo.email#</cfoutput></Email>
                         <OrganizationCode><cfoutput>#OrgCode#</cfoutput></OrganizationCode>
                          <Supervisors>
@@ -2985,10 +2985,9 @@
         <cfcontent type="text/xml; charset=utf-8"> 
         <cfxml variable="xmlobject"> 
         <Root>
-             <StartDate><cfoutput>#DateFormat(now(), 'yyyy-dd-mm')#</cfoutput></StartDate>
-             <EndDate><cfoutput>#DateFormat(now(), 'yyyy-dd-mm')#</cfoutput></EndDate>
-        
-             
+             <StartDate><cfoutput>#DateFormat(DateAdd('d',-1,now()), 'mm/dd/yyyy')#</cfoutput></StartDate>
+             <EndDate><cfoutput>#DateFormat(DateAdd('d',1,now()), 'mm/dd/yyyy')#</cfoutput></EndDate>
+
             <Token>
                  <ClientKey><cfoutput>#clientKey#</cfoutput></ClientKey>
                  <ClientSecret><cfoutput>clientSecret</cfoutput></ClientSecret>
