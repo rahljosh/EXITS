@@ -2812,38 +2812,50 @@
 			***************************************************************************************************/		
 		
 			// Get User Information
-            qGetUserInfo = getUserByID(uniqueID=ARGUMENTS.uniqueID);
+           // qGetUserInfo = getUserByID(uniqueID=ARGUMENTS.uniqueID);
             </cfscript>
-           
-            <cfset training_link = "https://dos.gyrus.com/gyrusaim/auth/externallogin?externalToken=">
+               <cfquery name="qGetUserInfo" datasource="MySQL">
+               select *
+               from smg_users 
+               where userid = '7178'
+               </cfquery>
+    
+           <cfset companyid = 1>
+            <cfset training_link = "https://dos.gyrus.com/gyrusaim/auth/externallogin?externalToken">
 		
-			<cfif CLIENT.companyID EQ 10 >
+			<cfif companyID EQ 10 >
 				<cfset clientKey= "C1AFDE13043B">
 				<cfset clientSecret = "LgmCVP79Gv0Go+JBBC5GJsf19w9SkiMBLTzhbT8ghQTmQry3DSsIwG4eqvCSEi86+fzwVr2vHosDXShr">
+                <cfset OrgCode = "CASE">
+                <cfset SuperviserCode = "Manager Group: CULTURAL ACADEMIC STUDENT EXCHANGE, INC.">
 			<cfelse> 
 				<cfset clientKey= "F73DE6496539">
 				<cfset clientSecret = "dhxGOomiHdiDMt6TrNSPgGsoo4QZcQllF+wo9hhCtUWKjN1gdxYEE2AAWYbFXwgDELsiqzD6p5oygKTo">
+                <cfset OrgCode = "ISE">
+                <cfset SuperviserCode = "Manager Group: International Student Exchange">
 			</cfif>
-			
+		
     		<cfprocessingdirective suppresswhitespace="Yes"> 
 			<cfcontent type="text/xml; charset=utf-8"> 
 			<cfxml variable="xmlobject"> 
 			<Root>
-				<EmployeeNumber><cfoutput>#qGetUserInfo.userid#</cfoutput></EmployeeNumber>
+            	<EmployeeNumber><cfoutput>#qGetUserInfo.userID#</cfoutput></EmployeeNumber>
 				<FirstName><cfoutput>#qGetUserInfo.firstname#</cfoutput></FirstName>
                 <LastName><cfoutput>#qGetUserInfo.lastname#</cfoutput></LastName>
-                <Username><cfoutput>#qGetUserInfo.userid#</cfoutput></Username>
+                <Username><cfoutput>#qGetUserInfo.userID#</cfoutput></Username>
                 <Email><cfoutput>#qGetUserInfo.email#</cfoutput></Email>
+               
 				<Token>
 					 <ClientKey><cfoutput>#clientKey#</cfoutput></ClientKey>
 					 <ClientSecret><cfoutput>#clientSecret#</cfoutput></ClientSecret>
 				</Token>
 			</Root>
+          
 			</cfxml> 
 			</cfprocessingdirective>
 			
 			<cfhttp
-				url="http://dos.gyrus.com/gyrusaim/api/assessment/GetSubmittedAssessment"
+				url="http://dos.gyrus.com/gyrusaim/api/auth/token"
 				method="POST"
 				result="objGet">
 			
@@ -2852,150 +2864,227 @@
 					type="XML"
 					value="#xmlobject#"
 					/>
-			</cfhttp>       
+			</cfhttp>
+            
+            
             <cfset Results = XMLParse(objGet.FileContent)>
-	
-			<cfset training_link = ListAppend(training_link, #Results.ExternalLogin.ExternalToken.xmlText#)>
-			
-            <cfreturn training_link>
-        
-        
+           
+              <cfif structKeyExists(Results, "ExternalLogin")>
+            	<cfset training_link = ListAppend(training_link, #Results.ExternalLogin.ExternalToken.xmlText#,'=')>
+           <cfelse>
+          
+           		<cfprocessingdirective suppresswhitespace="Yes"> 
+                <cfcontent type="text/xml; charset=utf-8"> 
+                <cfxml variable="xmlobject"> 
+                <Root>
+                	<Employee>
+                        <EmployeeNumber><cfoutput>#qGetUserInfo.userID#</cfoutput></EmployeeNumber>
+						<FirstName><cfoutput>#qGetUserInfo.firstname#</cfoutput></FirstName>
+               			<LastName><cfoutput>#qGetUserInfo.lastname#</cfoutput></LastName>
+                        <Username><cfoutput>#qGetUserInfo.userID#</cfoutput></Username>
+                        <Email><cfoutput>#qGetUserInfo.email#</cfoutput></Email>
+                        <OrganizationCode><cfoutput>#OrgCode#</cfoutput></OrganizationCode>
+                         <Supervisors>
+                            <Supervisor>
+                                <EmployeeNumber><cfoutput>#SuperviserCode#</cfoutput></EmployeeNumber>
+                            </Supervisor>
+                        </Supervisors>
+                    </Employee>
+                    <Token>
+                         <ClientKey><cfoutput>#clientKey#</cfoutput></ClientKey>
+                         <ClientSecret><cfoutput>#clientSecret#</cfoutput></ClientSecret>
+                    </Token>
+                </Root>
+                </cfxml> 
+                </cfprocessingdirective>
+                <cfhttp
+                    url="http://dos.gyrus.com/gyrusaim/api/employee/insert"
+                    method="POST"
+                    result="objGet">
+                
+                
+                    <cfhttpparam
+                        type="XML"
+                        value="#xmlobject#"
+                        />
+                </cfhttp>
+           		
+                
+                <cfprocessingdirective suppresswhitespace="Yes"> 
+                <cfcontent type="text/xml; charset=utf-8"> 
+                <cfxml variable="xmlobject"> 
+                <Root>
+                    <EmployeeNumber><cfoutput>#qGetUserInfo.userID#</cfoutput></EmployeeNumber>
+                    <FirstName><cfoutput>#qGetUserInfo.firstname#</cfoutput></FirstName>
+                    <LastName><cfoutput>#qGetUserInfo.lastname#</cfoutput></LastName>
+                    <Username><cfoutput>#qGetUserInfo.userID#</cfoutput></Username>
+                    <Email><cfoutput>#qGetUserInfo.email#</cfoutput></Email>
+                   
+                    <Token>
+                         <ClientKey><cfoutput>#clientKey#</cfoutput></ClientKey>
+                         <ClientSecret><cfoutput>#clientSecret#</cfoutput></ClientSecret>
+                    </Token>
+                </Root>
+              
+                </cfxml> 
+                </cfprocessingdirective>
+                
+                <cfhttp
+                    url="http://dos.gyrus.com/gyrusaim/api/auth/token"
+                    method="POST"
+                    result="objGet">
+                
+                
+                    <cfhttpparam
+                        type="XML"
+                        value="#xmlobject#"
+                        />
+                </cfhttp>
+                
+            
+            <cfset Results = XMLParse(objGet.FileContent)>
+            <cfif structKeyExists(Results, "ExternalLogin")>
+            	<cfset training_link = ListAppend(training_link, #Results.ExternalLogin.ExternalToken.xmlText#,'=')>
+            </cfif>
+        </cfif>
+		
+        <cfreturn training_link>
         
 	</cffunction>
     
 
 	<cffunction name="importTraincasterTestResults" access="public" returntype="string" output="No" hint="Download results from traincaster and inserts them into the database">
-        <cfargument name="date" default="#DateFormat(now(), 'yyyy-mm-dd')#" hint="Date is NOT required yyyy-mm-dd">
-		<cfargument name="companyID" default="#CLIENT.companyID#" hint="company ID is required">
-        
-		<cfscript>
-			/***************************************************************************************************
-			The URL and parameters for extracting training completion records from TrainCaster:
-			---------------------------------------------------------------
-			https://doslocalcoordinatortraining.traincaster.com/app/clients/doslocalcoordinatortraining/Training_Recs.pm
-			---------------------------------------------------------------
-			Accepts three parameters (all required; order doesn't matter)
-			---------------------------------------------------------------
-			date in yyyy-mm-dd format (passing a date of 2011-1-1 will return all records from the beginning of the year)
-			program_sponsor 
-			token (the token is <provided upon request>)
-			---------------------------------------------------------------
-			Accessing this will return one tab delimited string per training completion record generated on or after date that will have the following five fields in this order:
-			course name
-			person_id
-			date completed
-			passed or failed
-			score
+    <!----
+  	  /***************************************************************************************************
+			ISE
+				Key - F73DE6496539
+				Secret - dhxGOomiHdiDMt6TrNSPgGsoo4QZcQllF+wo9hhCtUWKjN1gdxYEE2AAWYbFXwgDELsiqzD6p5oygKTo
+				OrgCode – ISE
+				Supervisor code – Manager Group: International Student Exchange
+
+			Cultural Academic
+				Key - C1AFDE13043B
+				Secret - LgmCVP79Gv0Go+JBBC5GJsf19w9SkiMBLTzhbT8ghQTmQry3DSsIwG4eqvCSEi86+fzwVr2vHosDXShr
+				OrgCode – CASE
+				Supervisor Code - Manager Group: CULTURAL ACADEMIC STUDENT EXCHANGE, INC.			
 			***************************************************************************************************/	
 			
-			var vTrainCasterURL = "https://doslocalcoordinatortraining.traincaster.com/app/clients/doslocalcoordinatortraining/Training_Recs.pm";
-			var vProgramSponsor = "";
-			var vTrainCasterToken = "";
-			
-			// Make sure we have a valid date
-			if ( NOT isDate(ARGUMENTS.date) ) {
-				ARGUMENTS.date = DateFormat(now(), 'yyyy-dd-mm');	
-			}
-			
-			// Make sure we have a valid Company
-			if ( NOT VAL(ARGUMENTS.companyID) ) {
-				ARGUMENTS.companyID = CLIENT.companyID;			 
-			}
-
-			// ISE
-			if ( ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, ARGUMENTS.companyID) ) {
-				vProgramSponsor = "International Student Exchange";	
-				vTrainCasterToken = "VtGxtRJTV33nVK2qZk8H";
-			// CASE
-			} else if ( ARGUMENTS.companyID EQ 10 ) {
-				vProgramSponsor = "CULTURAL ACADEMIC STUDENT EXCHANGE, INC.";
-				vTrainCasterToken = "Q8FKFmpFvzPZJX7jVSnn";
-			}
-
-			/* create new http service */ 
-		    vHTTPService = new http(); 			
-
-			/* set attributes using implicit setters */ 
-			vHTTPService.setMethod("post"); 
-			vHTTPService.setCharset("utf-8"); 
-			vHTTPService.setUrl(vTrainCasterURL); 
-			
-			/* add httpparams using addParam() */ 
-			vHTTPService.addParam(type="formfield",name="token",value=vTrainCasterToken); 
-			vHTTPService.addParam(type="formfield",name="program_sponsor",value=vProgramSponsor); 
-			vHTTPService.addParam(type="formfield",name="date",value=ARGUMENTS.date); 
-			
-			/* make the http call to the URL using send() */ 
-			vResult = vHTTPService.send().getPrefix(); 
-			
-			/* process the filecontent returned */  //Transform list result to array | Chr(10) --> line break
-			vArray = listToArray(vResult.filecontent,chr(10)); 
-
-			// Loop Through Rows | Chr(9) --> tab
-            for (row = 1; row <= arrayLen(vArray); row++) {
-                
-				// Default Values
-                vCourseName = '';
-                vPersonID = '';
-                vDateCompleted = '';
-                vPassedOrFailed = '';
-                vScore = '';
-                
-                // Loop Through Columns - chr(9) Tab Delimited List
-                for (col = 1; col <= listLen(vArray[row], Chr(9)); col++) { 
-				
-                    switch (col) {
-                        
-                        case 1:
-                            vCourseName = listGetAt(vArray[row], col, chr(9));
-                        break;
+			---->
+        <cfargument name="date" default="#DateFormat(now(), 'yyyy-mm-dd')#" hint="Date is NOT required yyyy-mm-dd">
+		<cfargument name="companyID" default="#CLIENT.companyID#" hint="company ID is required">
     
-                        case 2:
-                            vPersonID = listGetAt(vArray[row], col, chr(9));
-                        break;
-    
-                        case 3:
-                            vDateCompleted = listGetAt(vArray[row], col, chr(9));
-                        break;
-    
-                        case 4:
-                            vPassedOrFailed = listGetAt(vArray[row], col, chr(9));
-                        break;
-    
-                        case 5:
-                            vScore = listGetAt(vArray[row], col, chr(9));
-                        break;
-                        
-                    }
-                    
-                }
-                
-                if ( VAL(vPersonID) AND isDate(vDateCompleted) AND isNumeric(vScore) ) {
-                
-                    // Insert Training
-                    insertTraining(
-                        userID=vPersonID,
-						companyID=ARGUMENTS.companyID,
-                        trainingID=2,
-                        dateTrained=vDateCompleted,
-                        score=vScore
-                    );
-                
-                }
-                
-            }
-			
-			// ISE
-			if ( ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, ARGUMENTS.companyID) ) {
-				return "<p>ISE - Traincaster Test Results - Total of #arrayLen(vArray)# records</p>";
-			// CASE
-			} else if ( ARGUMENTS.companyID EQ 10 ) {
-				return "<p>CASE - Traincaster Test Results - Total of #arrayLen(vArray)# records</p>";
-			} else {
-				return "<p>No Company - Traincaster Test Results - Total of #arrayLen(vArray)# records</p>";
-			}
-        </cfscript>
+            <cfif CLIENT.companyID EQ 10 >
+				<cfset clientKey= "C1AFDE13043B">
+				<cfset clientSecret = "LgmCVP79Gv0Go+JBBC5GJsf19w9SkiMBLTzhbT8ghQTmQry3DSsIwG4eqvCSEi86+fzwVr2vHosDXShr">
+			<cfelse> 
+				<cfset clientKey= "F73DE6496539">
+				<cfset clientSecret = "dhxGOomiHdiDMt6TrNSPgGsoo4QZcQllF+wo9hhCtUWKjN1gdxYEE2AAWYbFXwgDELsiqzD6p5oygKTo">
+			</cfif>
+            
+		<cfprocessingdirective suppresswhitespace="Yes"> 
+        <cfcontent type="text/xml; charset=utf-8"> 
+        <cfxml variable="xmlobject"> 
+        <Root>
+             <StartDate><cfoutput>#DateFormat(now(), 'yyyy-dd-mm')#</cfoutput></StartDate>
+             <EndDate><cfoutput>#DateFormat(now(), 'yyyy-dd-mm')#</cfoutput></EndDate>
         
+             
+            <Token>
+                 <ClientKey><cfoutput>#clientKey#</cfoutput></ClientKey>
+                 <ClientSecret><cfoutput>clientSecret</cfoutput></ClientSecret>
+            </Token>
+            <Paging>
+                <PageIndex>0</PageIndex>
+                <PageSize>1000</PageSize>
+            </Paging>
+            
+        </Root>
+        </cfxml> 
+        </cfprocessingdirective>
+        
+        <cfhttp
+            url="http://dos.gyrus.com/gyrusaim/api/assessment/GetSubmittedAssessment"
+            method="POST"
+            result="objGet">
+        
+        
+            <cfhttpparam
+                type="XML"
+                value="#xmlobject#"
+                />
+        </cfhttp>
+   
+      
+        <cfset Results = XMLParse(objGet.FileContent)>
+         <cfif structKeyExists(Results, "Assessments")>
+			<cfset numberOfResults = ArrayLen(#Results.Assessments.Assessment#)>
+            <cfloop from="1" to="#numberOfResults#" index="i">
+            <Cfif #Results.Assessments.Assessment[i].IsPassed.xmlText# is 'true'>
+                <cfset hasPassed = 1>
+            <cfelse>
+                <cfset hasPassed = 0>
+            </Cfif>
+            
+            <cfset score = #Results.Assessments.Assessment[i].Score.xmlText# / 30>
+            <cfquery name="insertTraining" datasource="mysql">
+             INSERT INTO 
+                                smg_users_training
+                            (
+                                user_id,
+                                company_id,
+                                office_user_id,
+                                training_id,
+                                season_id,
+                                date_trained,
+                                score,
+                                has_passed,
+                                date_created,
+                                date_updated
+                            )
+                            SELECT 
+                                <cfqueryparam cfsqltype="cf_sql_integer" value="#Results.Assessments.Assessment[i].EmployeeNumber.xmlText#">,
+                                <cfqueryparam cfsqltype="cf_sql_integer" value="1">,
+                                <cfqueryparam cfsqltype="cf_sql_integer" value="#Results.Assessments.Assessment[i].EmployeeNumber.xmlText#">,
+                                <cfqueryparam cfsqltype="cf_sql_integer" value="2">,
+                               <cfqueryparam cfsqltype="cf_sql_integer" value="1313">,
+                                <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(Left(Results.Assessments.Assessment[i].DateCompleted.xmlText,10))#">,
+                                <cfqueryparam cfsqltype="cf_sql_float" value="#score#">,
+                                <cfqueryparam cfsqltype="cf_sql_bit" value="#hasPassed#">,
+                                <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(now())#">,
+                                <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(now())#">
+                            FROM 
+                                DUAL
+                            <!--- DO NOT INSERT IF ITS ALREADY EXISTS --->
+                            WHERE 
+                                NOT EXISTS 
+                                    (	
+                                        SELECT
+                                            ID
+                                        FROM	
+                                            smg_users_training
+                                        WHERE
+                                            user_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#Results.Assessments.Assessment[i].EmployeeNumber.xmlText#">
+                                        AND
+                                            training_id = <cfqueryparam cfsqltype="cf_sql_integer" value="2">
+                                        AND
+                                            date_trained = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(Left(Results.Assessments.Assessment[i].DateCompleted.xmlText,10))#">
+                                        AND
+                                            score = <cfqueryparam cfsqltype="cf_sql_float" value="#score#">
+                                    )   
+                    </cfquery>
+                </cfloop>
+                    <cfscript>   
+                    // ISE
+                    if ( ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, ARGUMENTS.companyID) ) {
+                        return "<p>ISE - Traincaster Test Results - Total of #arrayLen(vArray)# records</p>";
+                    // CASE
+                    } else if ( ARGUMENTS.companyID EQ 10 ) {
+                        return "<p>CASE - Traincaster Test Results - Total of #arrayLen(vArray)# records</p>";
+                    } else {
+                        return "<p>No Company - Traincaster Test Results - Total of #arrayLen(vArray)# records</p>";
+                    }
+                </cfscript>
+        </cfif>
 	</cffunction>
     
 	<!--- ------------------------------------------------------------------------- ----
