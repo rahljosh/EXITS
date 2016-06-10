@@ -131,6 +131,12 @@
                     areaRep.lastName AS areaRepLastName,
 					areaRep.email AS areaRepEmail,
                     areaRep.work_phone AS areaRepPhone
+                    <!--- Placing Representative --->
+                    placeRep.userID AS placeRepUserID,
+                    placeRep.firstname AS placeRepFirstName,
+                    placeRep.lastname AS placeRepLastName,
+                    placeRep.email AS placeRepEmail,
+                    placeRep.work_phone AS placeRepPhone
                 FROM 
                     smg_students s
                 INNER JOIN
@@ -143,6 +149,8 @@
                 	smg_regions r ON r.regionID = s.regionAssigned                                 
 				LEFT OUTER JOIN
                 	smg_users areaRep ON areaRep.userID = s.areaRepID
+                LEFT OUTER JOIN
+                	smg_users placeRep ON placeRep.userID = s.placeRepID
                 WHERE
                 	1 = 1
 

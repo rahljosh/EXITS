@@ -122,11 +122,12 @@
 	<!----Emails Possibly Sent---->
     <cfparam name="FORM.rmEmail" default="">
     <cfparam name="FORM.arEmail" default="">
+    <cfparam name="FORM.prEmail" default="">
 	<cfparam name="FORM.ccEmail" default="">
 	<cfparam name="FORM.otherEmail" default="">
     <cfparam name="FORM.stuNameID" default="">
 	
-    <cfset tempEmail = "#form.rmEmail#, #form.arEmail#, #FORM.ccEmail#, #FORM.otherEMail#">
+    <cfset tempEmail = "#form.rmEmail#, #form.arEmail#, #form.prEmail#, #FORM.ccEmail#, #FORM.otherEMail#">
 	<cfset FORM.email_to = rereplace(tempEmail, " , ", "", "all")> 
     <cfset FORM.logMessage = "Log sent to #FORM.email_to#">
     <cfscript>
@@ -1754,7 +1755,7 @@
                         <tr id="showList" style="display: none;">
                         	<td class="reportTitleLeftClean" width="5%">&nbsp;</td>
                             <td colspan=2><input name='rmEmail' type="checkbox" value='#RegionalManager.email#' id='rmEmail' checked="checked" />#RegionalManager.firstname# #RegionalManager.lastname# (#RegionalManager.email#) <br />
-                            	<input name='arEmail' type="checkbox" value='#qGetStudentInfo.areaRepEmail#' id='arEmail' checked="checked" />#qGetStudentInfo.areaRepFirstName# #qGetStudentInfo.areaRepLastName# (#qGetStudentInfo.areaRepEmail#) </td>
+                            	<input name='prEmail' type="checkbox" value='#qGetStudentInfo.placeRepEmail#' id='prEmail' checked="checked" />#qGetStudentInfo.placeRepFirstName# #qGetStudentInfo.placeRepLastName# (#qGetStudentInfo.placeRepEmail#) </td>
                             <td>
                             <input name='ccEmail' type="checkbox" value='#client.email#' id='ccEmail' />#client.name# (#client.email#)<br />
                             Add'l Email(s):<input type="text" name='otherEmail' id='otherEmail' size=10/>
