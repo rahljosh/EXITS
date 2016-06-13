@@ -679,18 +679,18 @@
 			stUserPaperwork.isTrainingCompleted = stUserTraining.isTrainingCompleted;
 			stUserPaperwork.dateTrained = stUserTraining.dateTrained;
 			
-			if (qGetUserInfo.userID neq 19159){
+			
 			// DOS Certification
-			//var stDOSCertification = isDOSCertificationValid(userID=ARGUMENTS.userID);
-			//stUserPaperwork.isDOSCertificationCompleted = stDOSCertification.isDOSCertificationValid;
-			//stUserPaperwork.dateDOSTestExpired = stDOSCertification.dateExpired;
-			stUserPaperwork.isDOSCertificationCompleted = true;
-			stUserPaperwork.dateDOSTestExpired = '06/01/2016';
-			} else {
+			var stDOSCertification = isDOSCertificationValid(userID=ARGUMENTS.userID);
+			stUserPaperwork.isDOSCertificationCompleted = stDOSCertification.isDOSCertificationValid;
+			stUserPaperwork.dateDOSTestExpired = stDOSCertification.dateExpired;
+			//stUserPaperwork.isDOSCertificationCompleted = true;
+			//stUserPaperwork.dateDOSTestExpired = '06/01/2016';
+			<!----} else {
 				var stDOSCertification = isDOSCertificationValid(userID=ARGUMENTS.userID);
 				stUserPaperwork.isDOSCertificationCompleted = stDOSCertification.isDOSCertificationValid;
 				stUserPaperwork.dateDOSTestExpired = stDOSCertification.dateExpired;
-			}
+			}---->
 
 			// Set to true to force paperwork, to false to give an option to skip it
 			if ( now() GTE qGetCurrentSeason.datePaperworkRequired ) {
@@ -2817,6 +2817,7 @@
 		
 			// Get User Information
            	qGetUserInfo = getUserByID(uniqueID=ARGUMENTS.uniqueID);
+			training_link = '';
             </cfscript>
           
     
@@ -2834,7 +2835,126 @@
                 <cfset OrgCode = "ISE">
                 <cfset SuperviserCode = "Manager Group: International Student Exchange">
 			</cfif>
-		
+			<!----Check if User exists, if they do, reset the password to match what we think it should.---->
+            <cfprocessingdirective suppresswhitespace="Yes"> 
+			<cfcontent type="text/xml; charset=utf-8"> 
+			<cfxml variable="xmlobject"> 
+                <Root>
+                    <Filters>
+                        <IncludeExpired>true</IncludeExpired>
+                        <EmployeeNumber><cfoutput>#qGetUserInfo.userID#</cfoutput></EmployeeNumber>
+                    </Filters>
+    
+                    <Token>
+                         <ClientKey><cfoutput>#clientKey#</cfoutput></ClientKey>
+                         <ClientSecret><cfoutput>#clientSecret#</cfoutput></ClientSecret>
+                    </Token>
+                </Root>
+			</cfxml> 
+			</cfprocessingdirective>
+			
+			<cfhttp
+				url="http://dos.gyrus.com/gyrusaim/api/employee/list"
+				method="POST"
+				result="objGet">
+			
+			
+				<cfhttpparam
+					type="XML"
+					value="#xmlobject#"
+					/>
+			</cfhttp>
+            
+            <!----This is where we are checking if soemthing is found.   If found, update password, if not, insert a new record---->
+            <cfset Results = XMLParse(objGet.FileContent)>
+          
+           	 <cfif structKeyExists(Results.Employees, "Employee")>
+            		<!----Updated the users info ---->
+ 					<cfprocessingdirective suppresswhitespace="Yes"> 
+                        <cfcontent type="text/xml; charset=utf-8"> 
+                        <cfxml variable="xmlobject"> 
+                            <Root>
+                                <Employee>
+                                    <EmployeeNumber><cfoutput>#qGetUserInfo.userID#</cfoutput></EmployeeNumber>
+                                    <FirstName><cfoutput>#qGetUserInfo.firstname#</cfoutput></FirstName>
+                                    <LastName><cfoutput>#qGetUserInfo.lastname#</cfoutput></LastName>
+                                    <UserName><cfoutput>#qGetUserInfo.userID#</cfoutput></UserName>
+                                    <Email><cfoutput>#qGetUserInfo.email#</cfoutput></Email>
+                                    <ExpirationDate>12/31/9999</ExpirationDate>
+                                    <OrganizationCode><cfoutput>#OrgCode#</cfoutput></OrganizationCode>
+                                     <Supervisors>
+                                        <Supervisor>
+                                            <EmployeeNumber><cfoutput>#SuperviserCode#</cfoutput></EmployeeNumber>
+                                        </Supervisor>
+                                    </Supervisors>
+                                </Employee>
+                
+                                <Token>
+                                     <ClientKey><cfoutput>#clientKey#</cfoutput></ClientKey>
+                                     <ClientSecret><cfoutput>#clientSecret#</cfoutput></ClientSecret>
+                                </Token>
+                            </Root>
+                        </cfxml> 
+                        </cfprocessingdirective>
+                        
+                        <cfhttp
+                            url="http://dos.gyrus.com/gyrusaim/api/employee/update"
+                            method="POST"
+                            result="objGet">
+                        
+                        
+                            <cfhttpparam
+                                type="XML"
+                                value="#xmlobject#"
+                                />
+                        </cfhttp>
+                        
+            <cfset Results = XMLParse(objGet.FileContent)>
+			
+              <cfelse>
+              		<!----insert the user record---->
+                        <cfprocessingdirective suppresswhitespace="Yes"> 
+                        <cfcontent type="text/xml; charset=utf-8"> 
+                        <cfxml variable="xmlobject"> 
+                        <Root>
+                            <Employee>
+                                <EmployeeNumber><cfoutput>#qGetUserInfo.userID#</cfoutput></EmployeeNumber>
+                                <FirstName><cfoutput>#qGetUserInfo.firstname#</cfoutput></FirstName>
+                                <LastName><cfoutput>#qGetUserInfo.lastname#</cfoutput></LastName>
+                                <UserName><cfoutput>#qGetUserInfo.userID#</cfoutput></UserName>
+                                <Email><cfoutput>#qGetUserInfo.email#</cfoutput></Email>
+                                <ExpirationDate>12/31/9999</ExpirationDate>
+                                <OrganizationCode><cfoutput>#OrgCode#</cfoutput></OrganizationCode>
+                                 <Supervisors>
+                                    <Supervisor>
+                                        <EmployeeNumber><cfoutput>#SuperviserCode#</cfoutput></EmployeeNumber>
+                                    </Supervisor>
+                                </Supervisors>
+                            </Employee>
+                            <Token>
+                                 <ClientKey><cfoutput>#clientKey#</cfoutput></ClientKey>
+                                 <ClientSecret><cfoutput>#clientSecret#</cfoutput></ClientSecret>
+                            </Token>
+                        </Root>
+                        </cfxml> 
+                        </cfprocessingdirective>
+                        <cfhttp
+                            url="http://dos.gyrus.com/gyrusaim/api/employee/insert"
+                            method="POST"
+                            result="objGet">
+                        
+                        
+                            <cfhttpparam
+                                type="XML"
+                                value="#xmlobject#"
+                                />
+                        </cfhttp>
+             </cfif>
+            
+            
+            
+            <!----Get the Token for the user---->
+            
     		<cfprocessingdirective suppresswhitespace="Yes"> 
 			<cfcontent type="text/xml; charset=utf-8"> 
 			<cfxml variable="xmlobject"> 
@@ -2866,87 +2986,11 @@
 					/>
 			</cfhttp>
             
-            
             <cfset Results = XMLParse(objGet.FileContent)>
            
               <cfif structKeyExists(Results, "ExternalLogin")>
             	<cfset training_link = ListAppend(training_link, #Results.ExternalLogin.ExternalToken.xmlText#,'=')>
-           <cfelse>
-          
-           		<cfprocessingdirective suppresswhitespace="Yes"> 
-                <cfcontent type="text/xml; charset=utf-8"> 
-                <cfxml variable="xmlobject"> 
-                <Root>
-                	<Employee>
-                        <EmployeeNumber><cfoutput>#qGetUserInfo.userID#</cfoutput></EmployeeNumber>
-						<FirstName><cfoutput>#qGetUserInfo.firstname#</cfoutput></FirstName>
-               			<LastName><cfoutput>#qGetUserInfo.lastname#</cfoutput></LastName>
-                        <UserName><cfoutput>#qGetUserInfo.userID#</cfoutput></UserName>
-                        <Email><cfoutput>#qGetUserInfo.email#</cfoutput></Email>
-                        <OrganizationCode><cfoutput>#OrgCode#</cfoutput></OrganizationCode>
-                         <Supervisors>
-                            <Supervisor>
-                                <EmployeeNumber><cfoutput>#SuperviserCode#</cfoutput></EmployeeNumber>
-                            </Supervisor>
-                        </Supervisors>
-                    </Employee>
-                    <Token>
-                         <ClientKey><cfoutput>#clientKey#</cfoutput></ClientKey>
-                         <ClientSecret><cfoutput>#clientSecret#</cfoutput></ClientSecret>
-                    </Token>
-                </Root>
-                </cfxml> 
-                </cfprocessingdirective>
-                <cfhttp
-                    url="http://dos.gyrus.com/gyrusaim/api/employee/insert"
-                    method="POST"
-                    result="objGet">
-                
-                
-                    <cfhttpparam
-                        type="XML"
-                        value="#xmlobject#"
-                        />
-                </cfhttp>
-           		
-                
-                <cfprocessingdirective suppresswhitespace="Yes"> 
-                <cfcontent type="text/xml; charset=utf-8"> 
-                <cfxml variable="xmlobject"> 
-                <Root>
-                    <EmployeeNumber><cfoutput>#qGetUserInfo.userID#</cfoutput></EmployeeNumber>
-                    <FirstName><cfoutput>#qGetUserInfo.firstname#</cfoutput></FirstName>
-                    <LastName><cfoutput>#qGetUserInfo.lastname#</cfoutput></LastName>
-                    <Username><cfoutput>#qGetUserInfo.userID#</cfoutput></Username>
-                    <Email><cfoutput>#qGetUserInfo.email#</cfoutput></Email>
-                   
-                    <Token>
-                         <ClientKey><cfoutput>#clientKey#</cfoutput></ClientKey>
-                         <ClientSecret><cfoutput>#clientSecret#</cfoutput></ClientSecret>
-                    </Token>
-                </Root>
-              
-                </cfxml> 
-                </cfprocessingdirective>
-                
-                <cfhttp
-                    url="http://dos.gyrus.com/gyrusaim/api/auth/token"
-                    method="POST"
-                    result="objGet">
-                
-                
-                    <cfhttpparam
-                        type="XML"
-                        value="#xmlobject#"
-                        />
-                </cfhttp>
-                
-            
-            <cfset Results = XMLParse(objGet.FileContent)>
-            <cfif structKeyExists(Results, "ExternalLogin")>
-            	<cfset training_link = ListAppend(training_link, #Results.ExternalLogin.ExternalToken.xmlText#,'=')>
-            </cfif>
-        </cfif>
+       		  </cfif>
 		
         <cfreturn training_link>
         
@@ -2970,52 +3014,63 @@
 			***************************************************************************************************/	
 			
 			---->
-        <cfargument name="date" default="#DateFormat(now(), 'yyyy-mm-dd')#" hint="Date is NOT required yyyy-mm-dd">
+       
 		<cfargument name="companyID" default="#CLIENT.companyID#" hint="company ID is required">
     
-            <cfif CLIENT.companyID EQ 10 >
+            <cfif ARGUMENTS.companyID EQ 10 >
 				<cfset clientKey= "C1AFDE13043B">
 				<cfset clientSecret = "LgmCVP79Gv0Go+JBBC5GJsf19w9SkiMBLTzhbT8ghQTmQry3DSsIwG4eqvCSEi86+fzwVr2vHosDXShr">
+                <cfset OrgCode = "CASE">
+                <cfset SuperviserCode = "Manager Group: CULTURAL ACADEMIC STUDENT EXCHANGE, INC.">
 			<cfelse> 
 				<cfset clientKey= "F73DE6496539">
 				<cfset clientSecret = "dhxGOomiHdiDMt6TrNSPgGsoo4QZcQllF+wo9hhCtUWKjN1gdxYEE2AAWYbFXwgDELsiqzD6p5oygKTo">
-			</cfif>
+                <cfset OrgCode = "ISE">
+                <cfset SuperviserCode = "Manager Group: International Student Exchange">
+			 </cfif>
             
 		<cfprocessingdirective suppresswhitespace="Yes"> 
-        <cfcontent type="text/xml; charset=utf-8"> 
-        <cfxml variable="xmlobject"> 
-        <Root>
-             <StartDate><cfoutput>#DateFormat(DateAdd('d',-1,now()), 'mm/dd/yyyy')#</cfoutput></StartDate>
+			<cfcontent type="text/xml; charset=utf-8"> 
+			<cfxml variable="xmlobject"> 
+			<Root>
+ 
+            <StartDate><cfoutput>#DateFormat(DateAdd('d',-1,now()), 'mm/dd/yyyy')#</cfoutput></StartDate>
              <EndDate><cfoutput>#DateFormat(DateAdd('d',1,now()), 'mm/dd/yyyy')#</cfoutput></EndDate>
-
-            <Token>
-                 <ClientKey><cfoutput>#clientKey#</cfoutput></ClientKey>
-                 <ClientSecret><cfoutput>clientSecret</cfoutput></ClientSecret>
-            </Token>
+        
+         
             <Paging>
                 <PageIndex>0</PageIndex>
                 <PageSize>1000</PageSize>
             </Paging>
+
+				<Token>
+					 <ClientKey><cfoutput>#clientKey#</cfoutput></ClientKey>
+					 <ClientSecret><cfoutput>#clientSecret#</cfoutput></ClientSecret>
+				</Token>
+			</Root>
             
-        </Root>
-        </cfxml> 
-        </cfprocessingdirective>
-        
-        <cfhttp
-            url="http://dos.gyrus.com/gyrusaim/api/assessment/GetSubmittedAssessment"
-            method="POST"
-            result="objGet">
-        
-        
-            <cfhttpparam
-                type="XML"
-                value="#xmlobject#"
-                />
-        </cfhttp>
-   
+  
+          
+			</cfxml> 
+			</cfprocessingdirective>
+			
+			<cfhttp
+				url="http://dos.gyrus.com/gyrusaim/api/assessment/GetSubmittedAssessment"
+				method="POST"
+				result="objGet">
+			
+			
+				<cfhttpparam
+					type="XML"
+					value="#xmlobject#"
+					/>
+			</cfhttp>
+            
       
         <cfset Results = XMLParse(objGet.FileContent)>
-         <cfif structKeyExists(Results, "Assessments")>
+        
+     
+         <cfif structKeyExists(Results.Assessments, "Assessment")>
 			<cfset numberOfResults = ArrayLen(#Results.Assessments.Assessment#)>
             <cfloop from="1" to="#numberOfResults#" index="i">
             <Cfif #Results.Assessments.Assessment[i].IsPassed.xmlText# is 'true'>
@@ -3024,7 +3079,7 @@
                 <cfset hasPassed = 0>
             </Cfif>
             
-            <cfset score = #Results.Assessments.Assessment[i].Score.xmlText# / 30>
+            <cfset score = (#Results.Assessments.Assessment[i].Score.xmlText# / 30) * 100>
             <cfquery name="insertTraining" datasource="mysql">
              INSERT INTO 
                                 smg_users_training
@@ -3042,12 +3097,12 @@
                             )
                             SELECT 
                                 <cfqueryparam cfsqltype="cf_sql_integer" value="#Results.Assessments.Assessment[i].EmployeeNumber.xmlText#">,
-                                <cfqueryparam cfsqltype="cf_sql_integer" value="1">,
-                                <cfqueryparam cfsqltype="cf_sql_integer" value="#Results.Assessments.Assessment[i].EmployeeNumber.xmlText#">,
+                                <cfqueryparam cfsqltype="cf_sql_integer" value="#companyID#">,
+                                <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
                                 <cfqueryparam cfsqltype="cf_sql_integer" value="2">,
-                               <cfqueryparam cfsqltype="cf_sql_integer" value="1313">,
+                               <cfqueryparam cfsqltype="cf_sql_integer" value="13">,
                                 <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(Left(Results.Assessments.Assessment[i].DateCompleted.xmlText,10))#">,
-                                <cfqueryparam cfsqltype="cf_sql_float" value="#score#">,
+                                <cfqueryparam cfsqltype="cf_sql_float" value="#DecimalFormat(score)#">,
                                 <cfqueryparam cfsqltype="cf_sql_bit" value="#hasPassed#">,
                                 <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(now())#">,
                                 <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(now())#">
@@ -3068,22 +3123,14 @@
                                         AND
                                             date_trained = <cfqueryparam cfsqltype="cf_sql_date" value="#CreateODBCDate(Left(Results.Assessments.Assessment[i].DateCompleted.xmlText,10))#">
                                         AND
-                                            score = <cfqueryparam cfsqltype="cf_sql_float" value="#score#">
+                                            score = <cfqueryparam cfsqltype="cf_sql_float" value="#DecimalFormat(score)#">
                                     )   
                     </cfquery>
-                </cfloop>
-                    <cfscript>   
-                    // ISE
-                    if ( ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, ARGUMENTS.companyID) ) {
-                        return "<p>ISE - Traincaster Test Results - Total of #arrayLen(vArray)# records</p>";
-                    // CASE
-                    } else if ( ARGUMENTS.companyID EQ 10 ) {
-                        return "<p>CASE - Traincaster Test Results - Total of #arrayLen(vArray)# records</p>";
-                    } else {
-                        return "<p>No Company - Traincaster Test Results - Total of #arrayLen(vArray)# records</p>";
-                    }
-                </cfscript>
+                </cfloop>      
+     
         </cfif>
+        
+        <cfreturn Results>
 	</cffunction>
     
 	<!--- ------------------------------------------------------------------------- ----
