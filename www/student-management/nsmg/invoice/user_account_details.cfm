@@ -1148,7 +1148,14 @@ Please find attached your invoices.<br/>
             I-20 to you.<br/><br/>
             
             Thank you for your cooperation,<br/>
-            Stacy
+            Stacy Brewer <br/>
+            
+			Exchange Service International<br/> 
+			211 Bellevue Avenue, Suite 205<br/> 
+			Montclair, NJ 07043 <br/>
+            800-458-8336 - Toll Free<br/>
+            stacy@exchange-service.org<br/><br/>
+            
         <cfelseif ListFind("1,2,3,4,5,12",FORM.companyID)>
             Thank you for your cooperation,<br/><br/>
             
