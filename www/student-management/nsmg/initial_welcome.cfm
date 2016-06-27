@@ -700,7 +700,42 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
             
 				<!--- Student Applications / Field Bonuses --->
                 <div class="rdholder" style="width:100%; float:right;"> 
-                    
+                    <Cfif client.companyid lt 13 >
+                    	<cfif isDate('#APPLICATION.CFC.USER.getUserSessionPaperwork().dateDOSTestExpired#')>
+                   			<cfif #now()# gt #DateAdd('m','-1','#APPLICATION.CFC.USER.getUserSessionPaperwork().dateDOSTestExpired#')#>
+								<cfset daysToExpire = #dateDiff('d','#now()#','#APPLICATION.CFC.USER.getUserSessionPaperwork().dateDOSTestExpired#')#>
+                     			<div class="rdtop"> 
+                            		<span class="rdtitle">DOS Certification Expiring</span> 
+                        		</div> <!-- end top --> 
+                        		<div class="rdbox" style="background-color: ##fef3b9;">
+                        			<div align="center">
+                                                                			Your DOS Certification expires in #daysToExpire# day<cfif daysToExpire gt 1 or daysToExpire lt 1>s</cfif>.  You can re-certify by clicking the link below.<br /><br />
+                           				<a href="user/index.cfm?uniqueID=#CLIENT.uniqueID#&action=trainCasterLogin" target="_blank" title="Click Here to Take the DOS Test">
+                                 			<img src="pics/buttons/DOScertification.png" border="0" title="Click Here to Take the DOS Certification Test" />
+                            			</a>
+                                       
+                           			</div>
+                        		</div>
+                        		<div class="rdbottom" style="background-color: ##fef3b9;"></div> <!-- end bottom --> 
+                    			<br /><br />
+                    		</cfif>
+                      	<cfelse>
+                        	<div class="rdtop"> 
+                                <span class="rdtitle">DOS Certification Not Completed</span> 
+                            </div> <!-- end top --> 
+                            <div class="rdbox" style="background-color: ##fef3b9;">
+                                <div align="center">
+                                
+                                   Your DOS Certification has not been completed.<br /><br />
+                                    <a href="user/index.cfm?uniqueID=#CLIENT.uniqueID#&action=trainCasterLogin" target="_blank" title="Click Here to Take the DOS Test">
+                                        <img src="pics/buttons/DOScertification.png" border="0" title="Click Here to Take the DOS Certification Test" />
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="rdbottom" style="background-color: ##fef3b9;"></div> <!-- end bottom --> 
+                            <br /><br />
+                      	</cfif>
+                       </Cfif>
 					<!--- Office - Student Applications --->
                     <cfif APPLICATION.CFC.USER.isOfficeUser()>                        
 
@@ -716,40 +751,7 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                         
 					<!--- Bonuses for the Field --->    
                     <cfelse>
-                    	<Cfif client.companyid lt 13 >
-                    	<cfif isDate('#APPLICATION.CFC.USER.getUserSessionPaperwork().dateDOSTestExpired#')>
-                   			<cfif #now()# gt #DateAdd('m','-1','#APPLICATION.CFC.USER.getUserSessionPaperwork().dateDOSTestExpired#')#>
-								<cfset daysToExpire = #dateDiff('d','#now()#','#APPLICATION.CFC.USER.getUserSessionPaperwork().dateDOSTestExpired#')#>
-                     			<div class="rdtop"> 
-                            		<span class="rdtitle">DOS Certification Expiring</span> 
-                        		</div> <!-- end top --> 
-                        		<div class="rdbox" style="background-color: ##fef3b9;">
-                        			<div align="center">
-                            			Your DOS Certification expires in #daysToExpire# day<cfif daysToExpire gt 1>s</cfif>.  You can re-certify by clicking the link below.<br /><br />
-                           				<a href="user/index.cfm?uniqueID=#CLIENT.uniqueID#&action=trainCasterLogin" target="_blank" title="Click Here to Take the DOS Test">
-                                 			<img src="pics/buttons/DOScertification.png" border="0" title="Click Here to Take the DOS Certification Test" />
-                            			</a>
-                           			</div>
-                        		</div>
-                        		<div class="rdbottom" style="background-color: ##fef3b9;"></div> <!-- end bottom --> 
-                    			<br /><br />
-                    		</cfif>
-                      	<cfelse>
-                        	<div class="rdtop"> 
-                                <span class="rdtitle">DOS Certification Not Completed</span> 
-                            </div> <!-- end top --> 
-                            <div class="rdbox" style="background-color: ##fef3b9;">
-                                <div align="center">
-                                    Your DOS Certification has not been completed.<br /><br />
-                                    <a href="user/index.cfm?uniqueID=#CLIENT.uniqueID#&action=trainCasterLogin" target="_blank" title="Click Here to Take the DOS Test">
-                                        <img src="pics/buttons/DOScertification.png" border="0" title="Click Here to Take the DOS Certification Test" />
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="rdbottom" style="background-color: ##fef3b9;"></div> <!-- end bottom --> 
-                            <br /><br />
-                      	</cfif>
-                       </Cfif>
+                    	
                     
                         <div class="rdtop"> 
                             <span class="rdtitle">Bonuses</span> 
@@ -891,15 +893,17 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                     
                         <table width=95% align="center" cellpadding=6 cellspacng=0>
                         	<tr>
+                            <cfif CLIENT.companyid NEQ 14>
                             	<td width=50% bgcolor="##F78E1B" colspan="2" align="center"><font color="white">ARRC</td>
-                                <td bgcolor="##1f4a79" colspan="2" align="center"><font color="white">Printable Flyers</td>
+                            </cfif>
+                                <td bgcolor="##1f4a79" <cfif client.companyid eq 14> colspan="4" <cfelse> colspan="4"</cfif> align="center"><font color="white">Printable Flyers</td>
                             </tr>
                             <!---_Available for All companies --->
                             <cfif ListFind("1,2,3,4,5,12", CLIENT.companyID) >
                            
                                 <tr>
                                 	<td colspan=2 align="center">
-                                       <a href="http://iseaarc.org/wordpress/wp-login.php"> <img src="pics/logos/ARRC_final.jpg" height=60 /></a><Br />
+                                       <a href="http://iseaarc.org/wordpress"> <img src="pics/logos/ARRC_final.jpg" height=60 /></a><Br />
                                        Click Icon to Vist ARRC
                                    </td>
                                   	<td colspan=2 align="center">
@@ -926,8 +930,8 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                             <!--- ESI ONLY Docs --->
                             <cfif ListFind("14", CLIENT.companyID) >
                             	<tr>
-                                    <td><img src="pics/icons/marketing.png" /></td><td><a href="marketing/ESI_host_flier/NEW_HF_Flier.pdf" target="_blank">Host Family Flier</a></td>
-                                    <td></td>
+                                    <td><img src="pics/icons/marketing.png" /></td><td><a href="marketing/ESI_host_flier/Host-Family-Flier-Screen.cfm" target="_blank">Host Flier Preview</a></td>
+                                    <td><img src="pics/icons/marketing.png" /></td><td><a href="marketing/ESI_host_flier/Host-Family-Flier-Print.cfm" target="_blank">Host Flier Print</a></td>
                                 </tr>
                                 <!----
                                 <tr>
@@ -1607,5 +1611,5 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
         </cfdefaultcase>
     
     </cfswitch>
-    
+   
 </cfoutput>
