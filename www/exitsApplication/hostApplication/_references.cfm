@@ -246,7 +246,7 @@
 	<em><strong>PLEASE NOTE:</strong> The Department of State now requires a second home visit which will be conducted by someone other than your local Area Representative.</em> <br /><br />
     
 	Please provide at least <cfif qGetHostFamilyInfo.totalFamilyMembers EQ 1>six (6)&dagger;<cfelse>four (4)&dagger;</cfif> references. References can <strong>not</strong> 
-    be relatives, must have visited you <strong>inside</strong> your home, and must live in the same community or general vicinity of the host family <br /><br />
+    be relatives, must have visited you <strong>inside</strong> your home, and must live in the same community or general vicinity of the host family. References must be within 60 minutes of the host family home.  <br /><br />
 
     <table width="100%" cellspacing="0" cellpadding="4" class="border">
         <tr bgcolor="##deeaf3"> 
