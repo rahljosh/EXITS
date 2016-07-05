@@ -681,17 +681,10 @@
 			
 			
 			// DOS Certification
-			var stDOSCertification = isDOSCertificationValid(userID=ARGUMENTS.userID);
-			stUserPaperwork.isDOSCertificationCompleted = stDOSCertification.isDOSCertificationValid;
-			stUserPaperwork.dateDOSTestExpired = stDOSCertification.dateExpired;
-			//stUserPaperwork.isDOSCertificationCompleted = true;
-			//stUserPaperwork.dateDOSTestExpired = '06/01/2016';
-			<!----} else {
 				var stDOSCertification = isDOSCertificationValid(userID=ARGUMENTS.userID);
 				stUserPaperwork.isDOSCertificationCompleted = stDOSCertification.isDOSCertificationValid;
 				stUserPaperwork.dateDOSTestExpired = stDOSCertification.dateExpired;
-			}---->
-
+			
 			// Set to true to force paperwork, to false to give an option to skip it
 			if ( now() GTE qGetCurrentSeason.datePaperworkRequired ) {
 				stUserPaperwork.isPaperworkRequired = true;
@@ -2842,7 +2835,7 @@
                 <Root>
                     <Filters>
                         <IncludeExpired>true</IncludeExpired>
-                        <EmployeeNumber><cfoutput>#qGetUserInfo.userID#</cfoutput></EmployeeNumber>
+                        <EmployeeNumber><cfoutput>#qGetUserInfo.email#</cfoutput></EmployeeNumber>
                     </Filters>
     
                     <Token>
@@ -2875,10 +2868,10 @@
                         <cfxml variable="xmlobject"> 
                             <Root>
                                 <Employee>
-                                    <EmployeeNumber><cfoutput>#qGetUserInfo.userID#</cfoutput></EmployeeNumber>
+                                    <EmployeeNumber><cfoutput>#qGetUserInfo.email#</cfoutput></EmployeeNumber>
                                     <FirstName><cfoutput>#qGetUserInfo.firstname#</cfoutput></FirstName>
                                     <LastName><cfoutput>#qGetUserInfo.lastname#</cfoutput></LastName>
-                                    <UserName><cfoutput>#qGetUserInfo.userID#</cfoutput></UserName>
+                                    <UserName><cfoutput>#qGetUserInfo.email#</cfoutput></UserName>
                                     <Email><cfoutput>#qGetUserInfo.email#</cfoutput></Email>
                                     <ExpirationDate>12/31/9999</ExpirationDate>
                                     <OrganizationCode><cfoutput>#OrgCode#</cfoutput></OrganizationCode>
@@ -2918,10 +2911,10 @@
                         <cfxml variable="xmlobject"> 
                         <Root>
                             <Employee>
-                                <EmployeeNumber><cfoutput>#qGetUserInfo.userID#</cfoutput></EmployeeNumber>
+                                <EmployeeNumber><cfoutput>#qGetUserInfo.email#</cfoutput></EmployeeNumber>
                                 <FirstName><cfoutput>#qGetUserInfo.firstname#</cfoutput></FirstName>
                                 <LastName><cfoutput>#qGetUserInfo.lastname#</cfoutput></LastName>
-                                <UserName><cfoutput>#qGetUserInfo.userID#</cfoutput></UserName>
+                                <UserName><cfoutput>#qGetUserInfo.email#</cfoutput></UserName>
                                 <Email><cfoutput>#qGetUserInfo.email#</cfoutput></Email>
                                 <ExpirationDate>12/31/9999</ExpirationDate>
                                 <OrganizationCode><cfoutput>#OrgCode#</cfoutput></OrganizationCode>
@@ -2951,18 +2944,16 @@
                         </cfhttp>
              </cfif>
             
-            
-            
             <!----Get the Token for the user---->
             
     		<cfprocessingdirective suppresswhitespace="Yes"> 
 			<cfcontent type="text/xml; charset=utf-8"> 
 			<cfxml variable="xmlobject"> 
 			<Root>
-            	<EmployeeNumber><cfoutput>#qGetUserInfo.userID#</cfoutput></EmployeeNumber>
+            	<EmployeeNumber><cfoutput>#qGetUserInfo.email#</cfoutput></EmployeeNumber>
 				<FirstName><cfoutput>#qGetUserInfo.firstname#</cfoutput></FirstName>
                 <LastName><cfoutput>#qGetUserInfo.lastname#</cfoutput></LastName>
-                <Username><cfoutput>#qGetUserInfo.userID#</cfoutput></Username>
+                <Username><cfoutput>#qGetUserInfo.email#</cfoutput></Username>
                 <Email><cfoutput>#qGetUserInfo.email#</cfoutput></Email>
                
 				<Token>
@@ -3080,6 +3071,19 @@
             </Cfif>
             
             <cfset score = (#Results.Assessments.Assessment[i].Score.xmlText# / 30) * 100>
+           <cfif isNumeric(#Results.Assessments.Assessment[i].EmployeeNumber.xmlText#)>
+              	<cfset userid = #Results.Assessments.Assessment[i].EmployeeNumber.xmlText#>
+               
+             <cfelse>
+              <cfquery name="getUser" datasource="mysql">
+                    select userid 
+                    from smg_users
+                    where email = "#Results.Assessments.Assessment[i].EmployeeNumber.xmlText#"
+                    and active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                </cfquery>
+                <Cfset userid = #getUser.userid#>
+            </cfif>
+        
             <cfquery name="insertTraining" datasource="mysql">
              INSERT INTO 
                                 smg_users_training
@@ -3096,11 +3100,11 @@
                                 date_updated
                             )
                             SELECT 
-                                <cfqueryparam cfsqltype="cf_sql_integer" value="#Results.Assessments.Assessment[i].EmployeeNumber.xmlText#">,
+                                <cfqueryparam cfsqltype="cf_sql_integer" value="#userid#">,
                                 <cfqueryparam cfsqltype="cf_sql_integer" value="#companyID#">,
                                 <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
                                 <cfqueryparam cfsqltype="cf_sql_integer" value="2">,
-                               <cfqueryparam cfsqltype="cf_sql_integer" value="13">,
+                               <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID)#">,
                                 <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(Left(Results.Assessments.Assessment[i].DateCompleted.xmlText,10))#">,
                                 <cfqueryparam cfsqltype="cf_sql_float" value="#DecimalFormat(score)#">,
                                 <cfqueryparam cfsqltype="cf_sql_bit" value="#hasPassed#">,
@@ -3117,7 +3121,7 @@
                                         FROM	
                                             smg_users_training
                                         WHERE
-                                            user_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#Results.Assessments.Assessment[i].EmployeeNumber.xmlText#">
+                                            user_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#userid#">
                                         AND
                                             training_id = <cfqueryparam cfsqltype="cf_sql_integer" value="2">
                                         AND
