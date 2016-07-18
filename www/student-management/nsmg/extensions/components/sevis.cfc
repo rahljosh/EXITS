@@ -187,7 +187,8 @@
         <cfargument name="hostPhone" default="" hint="hostPhone">
     	<cfargument name="localCoordinatorFirstName" default="" hint="localCoordinatorFirstName">
         <cfargument name="localCoordinatorLastName" default="" hint="localCoordinatorLastName">
-
+        <cfargument name="localCoordinatorPostalCode" default="" hint="localCoordinatorLastName">
+		<cfargument name="hostFamilyIndicator" default="" hint="hostFamilyIndicator">		
 		<cfscript>
 			// Declare Variables	
 			var xmlHostContactInfo = '';
@@ -204,10 +205,7 @@
                     <LastName>#XMLFormat(Left(ARGUMENTS.hostFatherLastName, 40))#</LastName> <!--- Data Length 40 --->
                     <FirstName>#XMLFormat(Left(ARGUMENTS.hostFatherFirstName, 40))#</FirstName> <!--- Data Length 40 --->
                 </PContact>   
-                <SContact>
-                    <LastName>#XMLFormat(Left(ARGUMENTS.hostMotherFirstName, 40))#</LastName> <!--- Data Length 40 --->
-                    <FirstName>#XMLFormat(Left(ARGUMENTS.hostMotherLastName, 40))#</FirstName> <!--- Data Length 40 --->
-                </SContact>
+              
             </cfsavecontent>
             
         <!--- Single Father Parent --->
@@ -237,10 +235,16 @@
                 <LCCoordinator>
                     <LastName>#XMLFormat(Left(ARGUMENTS.localCoordinatorLastName, 40))#</LastName> <!--- Data Length 40 --->
                     <FirstName>#XMLFormat(Left(ARGUMENTS.localCoordinatorFirstName, 40))#</FirstName> <!--- Data Length 40 --->
+                	<PostalCode>#XMLFormat(Left(ARGUMENTS.localCoordinatorPostalCode, 5))#</PostalCode> <!--- Data Length 5 --->
                 </LCCoordinator>
                 <ResidentialType>HST</ResidentialType>
+                #TRIM(xmlHostContactInfo)#
                 <HostFamily>
-                    #TRIM(xmlHostContactInfo)#
+                <HostFamilyInd>#XMLFormat(ARGUMENTS.hostFamilyIndicator)#</HostFamilyInd>
+                  <SContact>
+                    <LastName>#XMLFormat(Left(ARGUMENTS.hostMotherFirstName, 40))#</LastName> <!--- Data Length 40 --->
+                    <FirstName>#XMLFormat(Left(ARGUMENTS.hostMotherLastName, 40))#</FirstName> <!--- Data Length 40 --->
+                </SContact>
                     <cfif LEN(ARGUMENTS.hostPhone) EQ 12><Phone>#XMLFormat(ARGUMENTS.hostPhone)#</Phone></cfif> <!--- Data Length 12 - format xxx-xxx-xx-xx ---> 
                 </HostFamily>  
             </ResidentialAddress> 
