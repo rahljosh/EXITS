@@ -67,6 +67,7 @@
             h.state AS hoststate, 
             h.zip AS hostzip,
             h.phone AS hostPhone, 
+            hostHistory.isWelcomeFamily,
             <!--- School Information --->
             sc.schoolname, 
             sc.address AS schooladdress, 
@@ -76,7 +77,8 @@
             sc.zip AS schoolzip,
             <!--- Area Representative Information --->
             areaRep.firstName AS areaRepFirstName,
-            areaRep.lastName AS areaRepLastName
+            areaRep.lastName AS areaRepLastName,
+            areaRep.zip as areaRepPostalCode
         FROM 
             smg_students s 
         INNER JOIN 
@@ -95,6 +97,8 @@
             smg_schools sc ON s.schoolID = sc.schoolID
         LEFT OUTER JOIN
         	smg_users areaRep ON s.areaRepID = areaRep.userID
+        LEFT OUTER JOIN
+        	smg_hosthistory hostHistory ON s.studentid = hostHistory.studentid
         WHERE 
             s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
         AND 
@@ -108,6 +112,8 @@
             s.countrycitizen NOT IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="32,232" list="yes"> )
         AND 
             s.verification_received IS NOT NULL
+        AND
+        	hostHistory.isActive = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
         AND 
             s.sevis_batchid = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
         AND 
@@ -189,6 +195,7 @@
         <td>School</td>
 	</tr>
 	<cfloop query="qGetStudents">
+    	
         <tr bgcolor="#iif(qGetStudents.currentrow MOD 2 ,DE("ededed") ,DE("ffffff") )#">
             <td>#qGetStudents.currentrow#</td>
             <td>#qGetStudents.businessname#</td>
@@ -242,7 +249,19 @@
 </BatchHeader>
 <CreateEV>
 <cfloop query="qGetStudents">
-	<cfsilent>
+     <cfquery name="hostStatus" datasource="#APPLICATION.DSN#"> 
+        select isWelcomeFamily
+        from smg_hosthistory
+        where studentid = #qGetStudents.studentid# and isActive = 1
+    </cfquery>
+            <cfif #hostStatus.isWelcomeFamily# eq 1>
+            	<cfset hostFamilyInd = 'ARRV'>
+			<cfelseif qGetStudents.host_fam_approved LT 5>
+            	<cfset hostFamilyInd = 'TEMP'>
+            <cfelse>
+            	<cfset hostFamilyInd = 'PERM'>
+            </cfif>
+    <cfsilent>
     	
         <!--- Host Family Address --->
         <cfif VAL(qGetStudents.hostID) AND qGetStudents.host_fam_approved LT 5>
@@ -285,10 +304,11 @@
                 <City>#XMLFormat(qGetStudents.schoolcity)#</City> 
                 <State>#XMLFormat(qGetStudents.schoolstate)#</State> 
                 <PostalCode>#XMLFormat(qGetStudents.schoolzip)#</PostalCode> 
-                <SiteName>#XMLFormat(TRIM(qGetStudents.schoolname))#</SiteName>
-                <PrimarySite>true</PrimarySite>
                 <ExplanationCode>OO</ExplanationCode>
                 <Explanation>Verified with host family.</Explanation>
+                <SiteName>#XMLFormat(TRIM(qGetStudents.schoolname))#</SiteName>
+                <PrimarySite>true</PrimarySite>
+                
 			</cfsavecontent>  
                           
         <cfelse>
@@ -300,9 +320,10 @@
                 <Address1>#qGetCompany.address#</Address1> <cfif LEN(schooladdress2)><Address2>#schooladdress2#</Address2></cfif>
                 <City>#qGetCompany.city#</City> 
                 <State>#qGetCompany.state#</State> 
-                <PostalCode>#Left(qGetCompany.zip,5)#</PostalCode> 
+                <PostalCode>#Left(qGetCompany.zip,5)#</PostalCode>
                 <SiteName>#qGetCompany.companyname#</SiteName>
                 <PrimarySite>true</PrimarySite>
+                
 			</cfsavecontent>  
                           
         </cfif>
@@ -335,7 +356,7 @@
 				endDate=sevis_enddate
 			);
 		</cfscript>
-        
+    
         <cfquery datasource="#APPLICATION.DSN#">
             UPDATE 
                 smg_students 
@@ -388,7 +409,9 @@
                 hostMotherLastName=qGetStudents.motherLastName,
                 hostPhone=APPLICATION.CFC.UDF.formatPhoneNumber(qGetStudents.hostPhone),
                 localCoordinatorFirstName=qGetStudents.areaRepFirstName,
-                localCoordinatorLastName=qGetStudents.areaRepLastName
+                localCoordinatorLastName=qGetStudents.areaRepLastName,
+                localCoordinatorPostalCode=qGetStudents.areaRepPostalCode,
+                hostFamilyIndicator = hostFamilyInd
             )#
 		</cfif>
         
