@@ -121,8 +121,26 @@
 						<tr><td colspan="2" class="submitButton"><input type="image" src="pics/view.gif" align="center" border="0"></td></tr>
 					</table>
 				</form>
-
-			</td>
+				
+                <!--- Schools --->
+				<form action="reports/constantContactSchools.cfm" method="post" target="_blank">
+					<table class="reportTableRight" cellpadding="4" cellspacing="0">
+						<tr><th colspan="2" class="title">Schools</th></tr>
+						<tr>
+							<td class="fieldTitle">Program:</td>
+							<td>
+								<select name="ProgramID" class="mediumField" multiple size="4">
+									<cfloop query="qGetProgramList">
+										<option value="#qGetProgramList.ProgramID#">#qGetProgramList.programname#</option>
+									</cfloop>
+								</select>
+							</td>
+						</tr>		
+						<tr><td colspan="2" class="submitButton"><input type="image" src="pics/view.gif" align="center" border="0"></td></tr>
+					</table>
+				</form>
+                
+			</td> 
 		</tr>
 	</table> <!--- end of main table --->
 	
