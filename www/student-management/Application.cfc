@@ -155,10 +155,12 @@
 						
 						Location("index.cfm?curdoc=forms/change_password", "no");
 				
-					// Force New Paperwork Section - Not for Canada
+					// Force New Paperwork Section - Not for Canada or DASH
 					} else if ( listFind("5,6,7,15", CLIENT.userType) 
 							AND 
-								CGI.SERVER_NAME NEQ "canada.exitsapplication.com" 
+								CGI.SERVER_NAME NEQ "canada.exitsapplication.com"
+							AND
+								CGI.SERVER_NAME NEQ "dash.exitsapplication.com"
 							AND 
 								VAL(APPLICATION.CFC.USER.getUserSession().ID) 
 							AND 
