@@ -3083,7 +3083,7 @@
                 </cfquery>
                 <Cfset userid = #getUser.userid#>
             </cfif>
-        
+          <cfif val(userid)>
             <cfquery name="insertTraining" datasource="mysql">
              INSERT INTO 
                                 smg_users_training
@@ -3130,6 +3130,41 @@
                                             score = <cfqueryparam cfsqltype="cf_sql_float" value="#DecimalFormat(score)#">
                                     )   
                     </cfquery>
+                    <cfelse>
+				
+                    <cfquery datasource="mysql">
+                    	 INSERT INTO 
+                                gyrus_issues
+                            (
+                            	email,
+                                score,
+                                date_trained
+                            )
+                            SELECT 
+                                <cfqueryparam cfsqltype="cf_sql_varchar" value="#Results.Assessments.Assessment[i].EmployeeNumber.xmlText#">,
+                          
+                                <cfqueryparam cfsqltype="cf_sql_float" value="#DecimalFormat(score)#">,
+                                
+                                <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(Left(Results.Assessments.Assessment[i].DateCompleted.xmlText,10))#">
+                            FROM 
+                                DUAL
+                            <!--- DO NOT INSERT IF ITS ALREADY EXISTS --->
+                            WHERE 
+                                NOT EXISTS 
+                                    (	
+                                        SELECT
+                                            email
+                                        FROM	
+                                            gyrus_issues
+                                        WHERE
+                                            email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#Results.Assessments.Assessment[i].EmployeeNumber.xmlText#">
+                                     
+                                    )  
+                    </cfquery>
+                    
+                  
+                
+                    </cfif>
                 </cfloop>      
      
         </cfif>
