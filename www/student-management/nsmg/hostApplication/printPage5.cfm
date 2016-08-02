@@ -140,22 +140,9 @@
                                     	<span class="title">Will the student share a bedroom?</span>
                                         <span class="formNote">(The student may share a bedroom with someone of the same sex and within a reasonable age difference, but must have his/her own bed.)</span>
                                     </td>
-                            		<td valign="top" class="answer">#YesNoFormat(VAL(qGetHostInfo.isStudentSharingBedroom))#</td>
+                            		<td valign="top" class="answer"> <cfif qGetHostInfo.sharingBedroom EQ "Neither">No<cfelse>Yes</cfif></td>
                             	</tr>
-                                <cfif VAL(qGetHostInfo.isStudentSharingBedroom)>
-                                    <tr>
-                                        <td><span class="title">Who will they share a room with?</span></td>
-                                        <td valign="top" class="answer">
-                                        	<cfif qGetHostInfo.sharingBedroomOptions EQ "member">
-                                        		#qGetWhoIsSharingRoom.name#
-                                         	<cfelseif qGetHostInfo.sharingBedroomOptions EQ "student">
-                                            	With another exchange student
-                                         	<cfelseif qGetHostInfo.sharingBedroomOptions EQ "depends">
-                                            	Depends on student's gender
-                                            </cfif>
-                                     	</td>
-                                    </tr>
-                                </cfif>
+                              
                             </table> 
 						</td>
 					</tr>                                                                         
