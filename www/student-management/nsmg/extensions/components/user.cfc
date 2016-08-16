@@ -3132,20 +3132,57 @@
                     </cfquery>
                     <cfelse>
 				
+                	<!---Get Gyrus User Info---->
+                     <cfprocessingdirective suppresswhitespace="Yes"> 
+                    <cfcontent type="text/xml; charset=utf-8"> 
+                    <cfxml variable="xmlobject"> 
+                        <Root>
+                            <Filters>
+                                <IncludeExpired>true</IncludeExpired>
+                                <EmployeeNumber><cfoutput>#Results.Assessments.Assessment[i].EmployeeNumber.xmlText#</cfoutput></EmployeeNumber>
+                            </Filters>
+            
+                            <Token>
+                                 <ClientKey><cfoutput>#clientKey#</cfoutput></ClientKey>
+                                 <ClientSecret><cfoutput>#clientSecret#</cfoutput></ClientSecret>
+                            </Token>
+                        </Root>
+                    </cfxml> 
+                    </cfprocessingdirective>
+                    
+                    <cfhttp
+                        url="http://dos.gyrus.com/gyrusaim/api/employee/list"
+                        method="POST"
+                        result="objGet">
+                    
+                    
+                        <cfhttpparam
+                            type="XML"
+                            value="#xmlobject#"
+                            />
+                    </cfhttp>
+                    
+              
+                <cfset User_Results = XMLParse(objGet.FileContent)>
+                	
                     <cfquery datasource="mysql">
                     	 INSERT INTO 
                                 gyrus_issues
                             (
                             	email,
                                 score,
-                                date_trained
+                                date_trained,
+                                first_name,
+                                last_name
                             )
                             SELECT 
                                 <cfqueryparam cfsqltype="cf_sql_varchar" value="#Results.Assessments.Assessment[i].EmployeeNumber.xmlText#">,
                           
                                 <cfqueryparam cfsqltype="cf_sql_float" value="#DecimalFormat(score)#">,
                                 
-                                <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(Left(Results.Assessments.Assessment[i].DateCompleted.xmlText,10))#">
+                                <cfqueryparam cfsqltype="cf_sql_timestamp" value="#CreateODBCDate(Left(Results.Assessments.Assessment.DateCompleted.xmlText,10))#">,
+                                <cfqueryparam cfsqltype="cf_sql_varchar" value="#User_Results.Employees.Employee.FirstName.xmlText#">,
+                                <cfqueryparam cfsqltype="cf_sql_varchar" value="#User_Results.Employees.Employee.LastName.xmlText#">
                             FROM 
                                 DUAL
                             <!--- DO NOT INSERT IF ITS ALREADY EXISTS --->
