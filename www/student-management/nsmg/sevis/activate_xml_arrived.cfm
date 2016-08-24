@@ -1,3 +1,8 @@
+
+ <cfscript>
+		// Create SEVIS Object
+		oSevis = createObject("component","nsmg.extensions.components.sevis");
+</cfscript>
 <!-- get company info -->
 <cfquery name="qGetCompany" datasource="MySQL">
     SELECT 
@@ -38,15 +43,22 @@
         s.ayporientation,
         s.aypenglish,
         s.email,
+        s.phone,
         h.familylastname as hostlastname,
+        h.fatherfirstname, h.motherfirstname,
         h.fatherlastname, h.motherlastname,
         h.address as hostaddress, 
         h.address2 as hostaddress2, 
+        
         h.city as hostcity,
         h.state as hoststate, 
         h.zip as hostzip,
-        h.phone,
-        u.businessname
+        h.phone as hostPhone,
+        u.businessname,
+           <!--- Area Representative Information --->
+            areaRep.firstName AS areaRepFirstName,
+            areaRep.lastName AS areaRepLastName,
+            areaRep.zip as areaRepPostalCode
 	FROM 
     	smg_students s
 	INNER JOIN 
@@ -63,10 +75,14 @@
             	f.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                
 	LEFT JOIN 
     	smg_hosts h ON s.hostid = h.hostid
+    LEFT OUTER JOIN
+      	smg_users areaRep ON s.areaRepID = areaRep.userID
 	WHERE 
     	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
     AND 
     	s.sevis_activated = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+    AND
+    	s.sevis_address_added > <cfqueryparam cfsqltype="cf_sql_integer" value="0">
     AND 
     	s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#form.programid#" list="yes"> )
 	AND 
@@ -141,19 +157,60 @@ Sorry, there were no students to populate the XML file at this time.
 	</BatchHeader>
 	<UpdateEV>
 	<cfloop query="qGetStudents">
+       <cfquery name="hostStatus" datasource="#APPLICATION.DSN#"> 
+        select isWelcomeFamily
+        from smg_hosthistory
+        where studentid = #qGetStudents.studentid# and isActive = 1
+    </cfquery>
+          
+            
+            <cfif VAL(qGetStudents.hostid) AND qGetStudents.host_fam_approved LT 5>
+            	<cfset student_phone = #APPLICATION.CFC.UDF.formatPhoneNumber(qGetStudents.hostPhone)#>
+            <cfelse>
+            	<cfset student_phone = #APPLICATION.CFC.UDF.formatPhoneNumber(qGetCompany.phone)#>
+            </cfif>
 		<ExchangeVisitor sevisID="#qGetStudents.ds2019_no#" requestID="#qGetStudents.studentid#" userID="#qGetCompany.sevis_userid#">
+         <Validate>
+				
+		     
+        		<USAddress>
+				<cfif VAL(qGetStudents.hostid) AND qGetStudents.host_fam_approved LT 5>
+                	<cfset safeHostAddress = ReplaceNoCase(qGetStudents.hostAddress, "&", "and")>
+                    <Address1>#safeHostAddress#</Address1>
+                    <cfif len(#hostaddress2#)><Address2>#hostaddress2#</Address2></cfif>
+					<City>#qGetStudents.hostcity#</City> 
+					<State>#qGetStudents.hoststate#</State> 
+					<PostalCode>#Left(qGetStudents.hostzip,5)#</PostalCode>
+                	<ExplanationCode>OO</ExplanationCode>
+                	<Explanation>Verified with host family.</Explanation>
+				<cfelse>
+					<Address1>#qGetCompany.address#</Address1> 
+					<City>#qGetCompany.city#</City> 
+					<State>#qGetCompany.state#</State> 
+					<PostalCode>#qGetCompany.zip#</PostalCode>
+				</cfif>
+				</USAddress>
+                <EmailAddress>#Trim(qGetStudents.email)#</EmailAddress>
+                 <cfif LEN(qGetStudents.phone) gt 0> 
+                	<PhoneNumber>#Right(ReReplaceNoCase(qGetStudents.hostPhone, "[^0-9]","","all"),10)#</PhoneNumber>
+                 <cfelse>
+                	 <PhoneNumber>#Right(ReReplaceNoCase(qGetCompany.phone, "[^0-9]","","all"),10)#</PhoneNumber>
+                 </cfif> 
+			</Validate>
+        	<!----
 			<Validate>
 				<USAddress>
 				<cfif VAL(qGetStudents.hostid) AND qGetStudents.host_fam_approved LT 5>
                 	<cfset safeHostAddress = ReplaceNoCase(qGetStudents.hostAddress, "&", "and")>
-						
-					<Address1>#safeHostAddress#</Address1>
-                    <Address2>#hostaddress2#</Address2>
+                    <Address1>#safeHostAddress#</Address1>
+                    <cfif len(#hostaddress2#)><Address2>#hostaddress2#</Address2></cfif>
 					<City>#qGetStudents.hostcity#</City> 
 					<State>#qGetStudents.hoststate#</State> 
 					<PostalCode>#qGetStudents.hostzip#</PostalCode>
                 	<ExplanationCode>OO</ExplanationCode>
                 	<Explanation>Verified with host family.</Explanation>
+				
+			
 				<cfelse>
 					<Address1>#qGetCompany.address#</Address1> 
 					<City>#qGetCompany.city#</City> 
@@ -167,9 +224,21 @@ Sorry, there were no students to populate the XML file at this time.
                  <cfelse>
                 	 <PhoneNumber>#Right(ReReplaceNoCase(qGetCompany.phone, "[^0-9]","","all"),10)#</PhoneNumber>
                  </cfif> 
-                 
+                  <cfif VAL(qGetStudents.hostid)> <!--- Residential Address Information --->
+        	#oSevis.getResidentialAddressInformation(
+                hostFatherFirstName=qGetStudents.fatherFirstName,
+                hostFatherLastName=qGetStudents.fatherLastName,
+                hostMotherFirstName=qGetStudents.motherFirstName,
+                hostMotherLastName=qGetStudents.motherLastName,
+                hostPhone=APPLICATION.CFC.UDF.formatPhoneNumber(qGetStudents.hostPhone),
+                localCoordinatorFirstName=qGetStudents.areaRepFirstName,
+                localCoordinatorLastName=qGetStudents.areaRepLastName,
+                localCoordinatorPostalCode=qGetStudents.areaRepPostalCode,
+                hostFamilyIndicator = hostFamilyInd
+            )#
+		</cfif>
                
-			</Validate>
+			</Validate>---->
 		</ExchangeVisitor>
 		<cfsilent>
             <cfquery datasource="MySql">
