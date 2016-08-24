@@ -39,7 +39,7 @@
 	</table>
 <cfelse>
 
-	<cffile action="read" file="#APPLICATION.PATH.sevis##get_company.companyshort_nocolor#/activate/#form.filename#" variable="myxml">
+	<cffile action="read" file="#AppPath.sevis##get_company.companyshort_nocolor#/activate/#form.filename#" variable="myxml">
 	<cfset mydoc = XmlParse(myxml)>
 	
 	<cfset batchid =#mydoc.TransactionLog.BatchHeader.BatchID.XmlText#> 
@@ -76,10 +76,9 @@
 			<td align="center" class="style2">#stuID#</td><td align="center" class="style2">#SevisID#</td><td class="style2">&nbsp; OK &nbsp; - &nbsp; Student Active!</td>
 			</cfoutput>
 			<cfquery name="update_active_batch" datasource="MySql">
-				UPDATE extra_candidates
-				SET sevis_activated = '#Right(batchid, 4)#',
-                	sevis_arrival_updated = <cfqueryparam cfsqltype="cf_sql_varchar" value="batch">
-				WHERE candidateid = '#stuID#'
+				UPDATE smg_students
+				SET sevis_activated = '#Right(batchid, 4)#'
+				WHERE studentid = '#stuID#'
 			</cfquery>
 			
 		<cfelse> <!--- ERROR - STUDENT WAS NOT ACTIVATED --->
@@ -90,9 +89,9 @@
 			</cfoutput>
 			<cfif find("status type is ACTIVE",reason) is '0'> <!--- ANY ERROR --->
 				<cfquery name="update_ds2019" datasource="MySql"> <!--- UPDATE SEVIS ACTIVATED TO 0 --->
-					UPDATE extra_candidates
+					UPDATE smg_students
 					SET sevis_activated ='0'
-					WHERE candidateid = '#stuID#'
+					WHERE studentid = '#stuID#'
 				</cfquery>
 				<cfquery name="delete_history" datasource="MySql">
 					DELETE 
