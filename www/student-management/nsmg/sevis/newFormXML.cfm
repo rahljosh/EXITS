@@ -414,7 +414,19 @@
                 hostFamilyIndicator = hostFamilyInd
             )#
 		</cfif>
-        
+        	<!--- Residential Address Information --->
+                    #oSevis.getResidentialAddressInformation(
+                        hostFatherFirstName=qGetStudents.fatherFirstName,
+                        hostFatherLastName=qGetStudents.fatherLastName,
+                        hostMotherFirstName=qGetStudents.motherFirstName,
+                        hostMotherLastName=qGetStudents.motherLastName,
+                        hostPhone=APPLICATION.CFC.UDF.formatPhoneNumber(qGetStudents.hostPhone),
+                        localCoordinatorFirstName=qGetStudents.areaRepFirstName,
+                        localCoordinatorLastName=qGetStudents.areaRepLastName,
+                        localCoordinatorPostalCode=qGetStudents.areaRepPostalCode,
+                        hostFamilyIndicator = hostFamilyInd
+                    )#
+	
 	</ExchangeVisitor>
 </cfloop>
 </CreateEV>
