@@ -36,7 +36,7 @@
     <cfparam name="searchStudentID" default="">
     <cfparam name="adv_search" default="0">
     <cfparam name="familyLastName" default="">
-    <cfparam name="firstName" default="">
+    <cfparam name="studentFirstName" default="">
     <cfparam name="preayp" default="">
     <cfparam name="direct" default="">
     <cfparam name="age" default="">
@@ -298,7 +298,7 @@
                                     <select name="orderby">
                                         <option value="studentID" <cfif orderby EQ 'studentID'>selected</cfif>>ID</option>
                                         <option value="familyLastName" <cfif orderby EQ 'familyLastName'>selected</cfif>>Last Name</option>
-                                        <option value="firstName" <cfif orderby EQ 'firstName'>selected</cfif>>First Name</option>
+                                        <option value="studentFirstName" <cfif orderby EQ 'studentFirstName'>selected</cfif>>First Name</option>
                                         <option value="sex" <cfif orderby EQ 'sex'>selected</cfif>>Sex</option>
                                         <option value="country" <cfif orderby EQ 'country'>selected</cfif>>Country</option>
                                         <option value="regionName" <cfif orderby EQ 'regionName'>selected</cfif>>Region</option>
@@ -336,7 +336,7 @@
                                     </td>
                                     <td>
                                         First Name<br />
-                                        <input type="text" name="firstName" value="#firstName#" size="10" maxlength="50">
+                                        <input type="text" name="studentFirstName" value="#studentFirstName#" size="10" maxlength="50">
                                     </td>
                                      <td>
                                         Age<br />
@@ -515,7 +515,7 @@
             s.uniqueid, 
             s.programID,
             s.hostID,
-            s.firstName,
+            s.FirstName,
             s.familyLastName, 
             s.sex, 
             s.active, 
@@ -673,7 +673,7 @@
                 OR 
                 	s.familyLastName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(keyword)#%">
                 OR 
-                	s.firstName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(keyword)#%">
+                	s.FirstName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(keyword)#%">
                 OR 
                 	c.countryname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(keyword)#%">
                 OR 
@@ -693,9 +693,9 @@
                 	s.familyLastName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(familyLastName)#%">
             </cfif>
             
-            <cfif LEN(firstName)>
+            <cfif LEN(studentFirstName)>
                 AND 
-                	s.firstName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(firstName)#%">
+                	s.FirstName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(studentFirstName)#%">
             </cfif>
             
             <cfif LEN(direct)>
@@ -792,7 +792,7 @@
         	
             <cfswitch expression="#orderBy#">
             
-            	<cfcase value="studentID,familyLastName,firstName,sex,regionName,programID,hostID,companyShort">
+            	<cfcase value="studentID,familyLastName,studentFirstName,sex,regionName,programID,hostID,companyShort">
                 	#orderby#	
                 </cfcase>
                 
@@ -827,7 +827,7 @@
 			urlVariables = "submitted=1&adv_search=#adv_search#&regionID=#regionID#&keyword=#urlEncodedFormat(keyword)#&placed=#placed#&cancelled=#cancelled#&active=#active#&orderby=#orderby#&recordsToShow=#recordsToShow#";
 			
 			if ( adv_search ) {
-				urlVariables = "#urlVariables#&familyLastName=#urlEncodedFormat(familyLastName)#&firstName=#urlEncodedFormat(firstName)#&preayp=#preayp#&direct=#direct#&age=#age#&sex=#sex#&grade=#grade#&graduate=#graduate#&religionid=#religionid#&interestid=#interestid#&sports=#sports#&interests_other=#urlEncodedFormat(interests_other)#&placementStatus=#placementStatus#&countryID=#countryID#&intrep=#intrep#&stateid=#stateid#&programID=#programID#";
+				urlVariables = "#urlVariables#&familyLastName=#urlEncodedFormat(familyLastName)#&studentFirstName=#urlEncodedFormat(studentFirstName)#&preayp=#preayp#&direct=#direct#&age=#age#&sex=#sex#&grade=#grade#&graduate=#graduate#&religionid=#religionid#&interestid=#interestid#&sports=#sports#&interests_other=#urlEncodedFormat(interests_other)#&placementStatus=#placementStatus#&countryID=#countryID#&intrep=#intrep#&stateid=#stateid#&programID=#programID#";
 			}
 		</cfscript>
     
@@ -895,7 +895,7 @@
                         </cfif>
                     </td>
                     <td>#familyLastName#</td>
-                    <td>#firstName#</td>
+                    <td>#FirstName#</td>
                     <td>#sex#</td>
                     <td>#countryname#</td>
                     <td>
