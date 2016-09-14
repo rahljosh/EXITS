@@ -2847,7 +2847,7 @@
 			</cfprocessingdirective>
 			
 			<cfhttp
-				url="http://dos.gyrus.com/gyrusaim/api/employee/list"
+				url="https://dos.gyrus.com/gyrusaim/api/employee/list"
 				method="POST"
 				result="objGet">
 			
@@ -2891,7 +2891,7 @@
                         </cfprocessingdirective>
                         
                         <cfhttp
-                            url="http://dos.gyrus.com/gyrusaim/api/employee/update"
+                            url="https://dos.gyrus.com/gyrusaim/api/employee/update"
                             method="POST"
                             result="objGet">
                         
@@ -2932,7 +2932,7 @@
                         </cfxml> 
                         </cfprocessingdirective>
                         <cfhttp
-                            url="http://dos.gyrus.com/gyrusaim/api/employee/insert"
+                            url="https://dos.gyrus.com/gyrusaim/api/employee/insert"
                             method="POST"
                             result="objGet">
                         
@@ -2966,7 +2966,7 @@
 			</cfprocessingdirective>
 			
 			<cfhttp
-				url="http://dos.gyrus.com/gyrusaim/api/auth/token"
+				url="https://dos.gyrus.com/gyrusaim/api/auth/token"
 				method="POST"
 				result="objGet">
 			
@@ -3046,7 +3046,7 @@
 			</cfprocessingdirective>
 			
 			<cfhttp
-				url="http://dos.gyrus.com/gyrusaim/api/assessment/GetSubmittedAssessment"
+				url="https://dos.gyrus.com/gyrusaim/api/assessment/GetSubmittedAssessment"
 				method="POST"
 				result="objGet">
 			
@@ -3151,7 +3151,7 @@
                     </cfprocessingdirective>
                     
                     <cfhttp
-                        url="http://dos.gyrus.com/gyrusaim/api/employee/list"
+                        url="https://dos.gyrus.com/gyrusaim/api/employee/list"
                         method="POST"
                         result="objGet">
                     
@@ -3462,27 +3462,30 @@
 					vRemainingPlacements = vRemainingPlacements - 6;
 				}
 			}
-			
-			// Cost of this additional trip - after 2 trips there are only 6 placements required per trip
-			if (vTotalTrips LT 2) {
+
+			if(vTotalTrips < 2) {
+				// Cost of this additional trip
 				for (j = 1; j LTE vRemainingPlacements; j = j + 1) {
-					if (ListFind("1,3,4,5",j)) {
+					if (ListFind("1,3,4",j)) {
 						vCost = vCost - 300;
 					} else {
 						vCost = vCost - 200;
 					}
 				}
 			} else {
+				// Cost of this additional trip
 				for (j = 1; j LTE vRemainingPlacements; j = j + 1) {
-					if (j EQ 1) {
+					if (ListFind("1",j)) {
 						vCost = vCost - 500;
-					} else if (ListFind("2,3,4",j)) {
+					} else if (ListFind("2,3",j)) {
 						vCost = vCost - 300;
 					} else {
 						vCost = vCost - 200;
 					}
 				}
 			}
+			
+			
 			
 			return vCost;
 		</cfscript>
