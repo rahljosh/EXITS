@@ -709,6 +709,7 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                         		</div> <!-- end top --> 
                         		<div class="rdbox" style="background-color: ##fef3b9;">
                         			<div align="center">
+                                    <strong>CONNECTIVITY TO GYRUS FOR DOS TESTING IS CURRENTLY NOT WORKING<br />GYRUS is looking at this and hopefully this will be updatd shortly.<br /></strong>
                                                                 			Your DOS Certification expires in #daysToExpire# day<cfif daysToExpire gt 1 or daysToExpire lt 1>s</cfif>.  You can re-certify by clicking the link below.<br /><br />
                            				<a href="user/index.cfm?uniqueID=#CLIENT.uniqueID#&action=trainCasterLogin" target="_blank" title="Click Here to Take the DOS Test">
                                  			<img src="pics/buttons/DOScertification.png" border="0" title="Click Here to Take the DOS Certification Test" />
@@ -725,7 +726,7 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                             </div> <!-- end top --> 
                             <div class="rdbox" style="background-color: ##fef3b9;">
                                 <div align="center">
-                                
+                                <strong>CONNECTIVITY TO GYRUS FOR DOS TESTING IS CURRENTLY NOT WORKING<br />GYRUS is looking at this and hopefully this will be updatd shortly.<br /></strong>
                                    Your DOS Certification has not been completed.<br /><br />
                                     <a href="user/index.cfm?uniqueID=#CLIENT.uniqueID#&action=trainCasterLogin" target="_blank" title="Click Here to Take the DOS Test">
                                         <img src="pics/buttons/DOScertification.png" border="0" title="Click Here to Take the DOS Certification Test" />
