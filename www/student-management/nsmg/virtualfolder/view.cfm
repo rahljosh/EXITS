@@ -11,7 +11,7 @@
 	
 	});
     
-	// Reloads with the chosen placement (assumes that unqID is the only other url variable)
+	// Reloads with the chosen placement (assumes that uniqueid is the only other url variable)
 	function changePlacement(selected) {
 		var place = selected.options[selected.selectedIndex].value;
 		var newLocation = window.location.href;
@@ -37,7 +37,7 @@
 </script>
 
 <!--- Import CustomTag --->
-<cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
+<cfimport taglib="/extensions/customTags/gui/" prefix="gui" />	
     
 <style type="text/css">    
     .alert{
@@ -56,7 +56,7 @@
 </style>
 
 <!--- Param URL Variables --->
-<cfparam name="URL.unqID" type="string" default="">
+<cfparam name="URL.uniqueid" type="string" default="">
 <cfparam name="URL.placement" type="integer" default="0">
 <cfparam name="URL.hostid" type="integer" default="0">
 <cfparam name="FORM.isDeleted" type="integer" default="0">
@@ -72,72 +72,73 @@
 	
 <cfif val(url.vfid)>
 	<cfif ((userid eq client.userid) OR (client.usertype lte 2)) AND url.how is not 'auto'>
-		<cfquery datasource="#application.dsn#">
-            update virtualfolder
-            set isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+		<cfquery datasource="MySql">
+            update extra_virtualfolder
+            set isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="1">,
+            	expires = <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
             where vfid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.vfid#">
                 <Cfset fileDeleted = "#url.vfid#">
         </cfquery>
 		<cfif val(url.unDelete)>
-            <cfquery datasource="#application.dsn#">
-                update virtualfolder
+            <cfquery datasource="MySql">
+                update extra_virtualfolder
                 set isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
                 where vfid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.vfid#">
             </cfquery>
-        	<cflocation url="index.cfm?curdoc=virtualFolder/view&unqid=#url.unqid#">
+        	<cflocation url="index.cfm?curdoc=virtualFolder/view&uniqueid=#url.uniqueid#">
         </cfif>
 	</cfif>
 </cfif>
     
 <cfscript>
-	// Get Student Info
-	qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(uniqueID=URL.unqID);
+	// Get User Info
+	qGetUserInfo = APPLICATION.CFC.USER.getUserByUniqueID(uniqueID=URL.uniqueID);
 </cfscript>
     
-<cfif url.unqID is ''>
-	<cfset url.unqid =  "#qGetStudentInfo.uniqueID#">
+<cfif url.uniqueid is ''>
+	<cfset url.uniqueid =  "#qGetUserInfo.uniqueID#">
 </cfif>
     
 <cfscript>
 	// Get Student Placements
-	qGetStudentPlacements = APPLICATION.CFC.STUDENT.getPlacementHistory(studentID=qGetStudentInfo.studentID);
+	//qGetStudentPlacements = APPLICATION.CFC.STUDENT.getPlacementHistory(studentID=qGetUserInfo.studentID);
 	
 	// Set the currently selected placement
-	if (URL.placement EQ 0) {
-		selectedPlacement = qGetStudentPlacements.historyID; // Select the first returned placement if nothing is selected.
-	} else {
-		selectedPlacement = URL.placement;
-	}
+	//if (URL.placement EQ 0) {
+	//	selectedPlacement = qGetStudentPlacements.historyID; // Select the first returned placement if nothing is selected.
+	//} else {
+	//		selectedPlacement = URL.placement;
+	//}
 	
 	// Get Selected Placement details
-	qGetSelectedPlacementDetails = APPLICATION.CFC.STUDENT.getPlacementHistory(studentID=qGetStudentInfo.studentID,historyID=selectedPlacement);
+	//qGetSelectedPlacementDetails = APPLICATION.CFC.STUDENT.getPlacementHistory(studentID=qGetUserInfo.studentID,historyID=selectedPlacement);
 
 	// Get Folder Path 
-	flightInfoDirectory = "#APPLICATION.PATH.onlineApp.internalVirtualFolder##qGetStudentInfo.studentid#/#selectedPlacement#/flightInformation";
+	//flightInfoDirectory = "#APPLICATION.PATH.onlineApp.internalVirtualFolder##qGetUserInfo.userID#/#selectedPlacement#/flightInformation";
 
 	// Make sure the folder Exists
-	AppCFC.UDF.createFolder(flightInfoDirectory);
+	//AppCFC.UDF.createFolder(flightInfoDirectory);
 </cfscript>
 
-<cfdirectory directory="#flightInfoDirectory#" name="flightDocs" sort="datelastmodified DESC" filter="*.*">
-    
-    <cfquery name="qGetOtherFiles" datasource="#application.dsn#">
-    	SELECT vf.fileName, vf.dateAdded, vf.filePath, vfc.categoryName, vfd.documentType, u.firstname, u.lastname , u.userid, vf.generatedHow, vf.uploadedBy, vf.vfid,
-        h.familylastname, vf.fk_hostid, vfd.viewPermissions
-        FROM virtualfolder vf
-        LEFT JOIN virtualfolderdocuments vfd on vfd.id = vf.fk_documentType
-        LEFT JOIN virtualfoldercategory vfc on vfc.categoryID = vfd.fk_category
+<!----<cfdirectory directory="#flightInfoDirectory#" name="flightDocs" sort="datelastmodified DESC" filter="*.*">---->
+ 
+    <cfquery name="qGetOtherFiles" datasource="MySql">
+    	SELECT vf.fileName, vf.dateAdded, vf.expires, vf.filePath, vfc.categoryName, vfd.documentType, u.firstname, u.lastname , u.userid, vf.generatedHow, vf.uploadedBy, vf.vfid,
+         vf.fk_hostid, vfd.viewPermissions, approved.firstname as approvedFirst, approved.lastname as approvedLast, vf.approvedBy
+        FROM extra_virtualfolder vf
+        LEFT JOIN extra_virtualfolderdocuments vfd on vfd.id = vf.fk_documentType
+        LEFT JOIN extra_virtualfoldercategory vfc on vfc.categoryID = vfd.fk_category
         LEFT JOIN smg_users u on u.userid = vf.uploadedBy
-        LEFT JOIN smg_hosts h on h.hostid = vf.fk_hostID
-        WHERE vf.fk_studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.studentID#">
-       <cfif val(url.hostID)> AND vf.fk_hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostID#"></cfif>
+        LEFT JOIN smg_users approved on approved.userid = vf.approvedBy
+        WHERE vf.fk_studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetUserInfo.userID#">
+       
        and isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.isDeleted#">
         ORDER by categoryName
     </cfquery>
     <cfif VAL(url.placement)>
-    	<cfset currentDirectory = "#AppPath.onlineApp.virtualFolder##qGetStudentInfo.studentID#/#qGetStudentInfo.hostID#">
+    	<cfset currentDirectory = "#Application.Path.virtualFolder##qGetUserInfo.userid#/#qGetUserInfo.hostID#">
    	<cfelse>
-    	<cfset currentDirectory = "#AppPath.onlineApp.virtualFolder##qGetStudentInfo.studentID#">
+    	<cfset currentDirectory = "#Application.Path.virtualFolder##qGetUserInfo.userID#">
     </cfif>
 	<!--- Check to see if the Directory exists. --->
     <cfif NOT DirectoryExists(currentDirectory)>
@@ -145,23 +146,20 @@
        <cfdirectory action = "create" directory = "#currentDirectory#" mode="777">
     </cfif>
     <cfdirectory directory="#currentDirectory#" name="mydirectory" sort="datelastmodified DESC" filter="*.*">
-    <cfquery name="qGetUploadedFiles" datasource="#APPLICATION.DSN#">
-    	SELECT v.fileName, v.dateAdded, v.filePath,  v.generatedHow, v.uploadedBy, v.vfid, v.fk_hostid, u.userID, u.firstName, u.lastName,  vfd.documentType, vfc.categoryName
-        FROM virtualfolder v
-        LEFT JOIN virtualfolderdocuments vfd on vfd.id = v.fk_documentType
-        LEFT JOIN virtualfoldercategory vfc on vfc.categoryID = vfd.fk_category
+    <cfquery name="qGetUploadedFiles"datasource="MySql">
+    	SELECT v.fileName, v.dateAdded, v.filePath, v.expires, v.generatedHow, v.uploadedBy, v.vfid, v.fk_hostid, u.userID, u.firstName, u.lastName,  vfd.documentType, vfc.categoryName, approved.firstname as approvedFirst, approved.lastname as approvedLast
+        FROM extra_virtualfolder v
+        LEFT JOIN extra_virtualfolderdocuments vfd on vfd.id = v.fk_documentType
+        LEFT JOIN extra_virtualfoldercategory vfc on vfc.categoryID = vfd.fk_category
         LEFT JOIN smg_users u on u.userID = v.uploadedBy
-        WHERE v.fk_studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.studentID#">
+        LEFT JOIN smg_users approved on approved.userid = v.approvedby
+        WHERE v.fk_studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetUserInfo.userID#">
         <cfif VAL(URL.hostID)>
         	AND v.fk_hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostID#">
         </cfif>
         AND <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userType)#"> IN (SELECT categoryAccessList FROM virtualfoldercategory WHERE categoryID = v.fk_categoryID)
     </cfquery>
-    <cfquery name="check_allergies" datasource="#application.dsn#">
-        select has_an_allergy
-        from smg_student_app_health
-        where studentid = #qGetStudentInfo.studentID#
-    </cfquery>
+   
 
 <!--- Page Header --->
 <div class="rdholder" style="width:100%; float:right;"> 
@@ -171,7 +169,7 @@
 		<!--- Page Messages --->
         <cfif val(form.isDeleted)>
             <div class="alert">
-                <em>You are viewing files that have been deleted.</em>
+                <em>You are viewing files that have been deleted or expired.</em>
             </div>
         </cfif>
 
@@ -179,7 +177,7 @@
             <div class="alert">
                 <em>
                     A file was recently deleted. You can still undelete this file if you didn't mean to delete it. 
-                    <a href="index.cfm?curdoc=virtualFolder/view&unqid=#url.unqid#&vfid=#vfid#&unDelete=1">Undo Delete</a>
+                    <a href="index.cfm?curdoc=virtualFolder/view&uniqueid=#url.uniqueid#&vfid=#vfid#&unDelete=1">Undo Delete</a>
                 </em>
             </div>
         </cfif>
@@ -189,40 +187,44 @@
  		<cfset currentCategory = ''>             
     
     	<div class="rdtop"> 
-        	<span class="rdtitle">Virtual Folder  &nbsp; - &nbsp; #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentid#) </span> 
-        	<cfif client.usertype eq 8>
-        		<em><a href="?curdoc=intrep/int_student_info&unqid=#qGetStudentInfo.uniqueid#">back to student profile</a></em>
-        	<cfelse>
-        		<em><a href="?curdoc=student_info&studentID=#qGetStudentInfo.studentid#">back to student profile</a></em>
-    		</cfif>
-        	<cfif client.usertype lte 2>
-        		<a href="?curdoc=virtualFolder/view&deleted=<cfif form.isDeleted eq 0>1<cfelse>0</cfif>&unqid=#url.unqid#" class="floatRight"><img src="pics/buttons/trash23x23.png" border="0" /></a>
+        	<span class="rdtitle">#qGetUserInfo.firstname# #qGetUserInfo.lastname# (###qGetUserInfo.userID#) - #qGetUserInfo.businessname#  </span> 
+        	
+        		<em>
+                <cfif client.usertype eq 8>
+                <a href="?curdoc=user/user_info&uniqueid=#qGetUserInfo.uniqueid#">back to  profile</a>
+                <cfelse>
+                <a href="?curdoc=intRep/intlRepInfo&uniqueid=#qGetUserInfo.uniqueid#">back to  profile</a>
+                </cfif>
+                </em>
+        	
+        	<cfif client.usertype lt 8>
+        		<a href="?curdoc=virtualFolder/view&deleted=<cfif form.isDeleted eq 0>1<cfelse>0</cfif>&uniqueid=#url.uniqueid#" class="floatRight"><img src="pics/hour_glass.png" border="0" height=23 /></a>
     		</cfif>
     	</div>
     
     	<div class="rdbox">
         	<form method="post" action="index.cfm?curdoc=virtualFolder/createEdit">
 				<cfset currentCategory = ''>
-				<table>
+				<!----<table>
                     <tr>
                         <td align="left">Host Family</td>
                         <td>
                             <select name="hostFamily" onchange="changePlacement(this)">
-                                <option value="0&unqid=#url.unqid#">All</option>
+                                <option value="0&uniqueid=#url.uniqueid#">All</option>
                                 <cfloop query="qGetStudentPlacements">
-                                    <option value="#historyID#&hostID=#hostID#&unqid=#url.unqid#" <cfif url.hostID eq hostID>selected</cfif>>#familylastname# (#hostid#)</option>
+                                    <option value="#historyID#&hostID=#hostID#&uniqueid=#url.uniqueid#" <cfif url.hostID eq hostID>selected</cfif>>#familylastname# (#hostid#)</option>
                                 </cfloop>
                             </select>
                         </td>
                     </tr>
-                </table>
+                </table>---->
 
                 <br />
                 <br />
 
     			<table cellpadding=4 cellspacing="0" width=100%>
                     <tr>
-                        <th align="left">Document Type</th><th align="left">Document Name</th><th align="left">Upload Date</th><Th align="left">Uploaded By</Th><th align="left">Upload Type</Th>
+                        <th align="left">Document Type</th><Th align="left">Expires</Th><th align="left">Document Name</th><th align="left">Upload Date</th><Th align="left">Uploaded By</Th><th align="left">Approved By</Th>
                      </tr>
      				<cfloop query="qGetOtherFiles">
      					<cfif currentCategory neq #categoryName#>
@@ -232,75 +234,57 @@
                             </tr>
        					 </cfif>
    						<cfif listFind(viewPermissions, client.usertype)>
-                            <cfif client.usertype gt 7 and qGetStudentInfo.app_current_status lt 11 and documentTypeID eq 29>
-                            <cfelse>
+                           
                             <tr>
                                 <td>#documentType#</td>
-                                <td><a href="#filePath##filename#" target="_blank">#filename# <cfif val(fk_hostID)> - #familyLastName#</cfif></a></td>
+                                <td><cfif val(expires)>#DateFormat(expires, 'mm/dd/yyyy')#<cfelse><font color=##ccc>Awaiting Review</font></cfif></td>
+                                <td><a href="../#filePath##filename#" target="_blank">#filename# </a></td>
                                 <td>#DateFormat(dateAdded, 'mmm d, yyyy')#</td>
                                 <td><cfif NOT VAL(uploadedBy) AND generatedHow EQ "auto">System<cfelse>#firstname# #lastname#</cfif></td>
-                                <td>#generatedHow#</td>
+                                <td><cfif val(approvedBy)>#approvedFirst# #approvedLast#<cfelse><font color=##ccc>Awaiting Review</font></cfif></td>
                                 <td>
                            			<cfif ((userid eq client.userid) OR (client.usertype lte 4)) AND generatedHow is not 'auto'>
-                                		<a href="index.cfm?curdoc=virtualFolder/view&unqid=#url.unqid#&vfid=#vfid#&how=#generatedHow#&undelete=<cfif form.isDeleted eq 0>0<cfelse>1</cfif>">
+                                		<a href="index.cfm?curdoc=virtualFolder/view&uniqueid=#url.uniqueid#&vfid=#vfid#&how=#generatedHow#&undelete=<cfif form.isDeleted eq 0>0<cfelse>1</cfif>">
                                     		<img src="pics/deletex.gif" height="10" border=0/>
                                  		</a>
                                     </cfif>
                               	</td>
                             </tr>
-  						</cfif>
+  						
   						</cfif>
                  
     				</cfloop>
 					<!----Flight Info that was auto generated prior to new VF (Feb 26, 2013)---->
 					<cfif not val(form.isDeleted)>
-    					<cfif flightDocs.recordcount gt 0>
+    				<!----	<cfif flightDocs.recordcount gt 0>
                             <tr bgcolor="##CCCCCC">
                                 <td colspan=6 align="left" ><strong>Pre-AYP 12/13 Flight Info</strong></td>
                             </tr>
          					<cfloop query="flightDocs">
                 				<tr>
                                 	<td>Flight Information</td>
-                                    <td><a href="uploadedfiles/internalVirtualFolder/#qGetStudentInfo.studentID#/#selectedPlacement#/flightInformation/#name#" target="_blank">#name#</a></td> 	
+                                    <td><a href="uploadedfiles/internalVirtualFolder/#qGetUserInfo.userID#/#selectedPlacement#/flightInformation/#name#" target="_blank">#name#</a></td> 	
                                     <td>#DateFormat(dateLastModified,'mmm d, yyyy')#</td>
                                     <td>System</td>
                                     <td>Auto</td>
                               	</tr>
             				</cfloop>
-     					</cfif>
-                        <cfif VAL(mydirectory.recordcount)>
-                            <tr bgcolor="##CCCCCC">
-                                <td colspan=6 align="left"><strong>Supplements on Student App</strong></td>
-                            </tr> 
-							<cfif VAL(check_allergies.has_an_allergy)>
-                                <tr>
-                                    <td><a href="?curdoc=student_app/section3/allergy_info_request">Allergy Clarification Form</a></td>
-                                </tr>
-                            </cfif>
-           					<cfloop query="qGetUploadedFiles">
-                				<tr>
-                                    <td>#documentType#</td>
-                                    <td><a href="javascript:OpenApp('#filePath#/#fileName#');" target="_blank">#fileName#</a></td>
-                                    <td>#DateFormat(dateAdded,'mmm d, yyyy')#</td>
-                                    <td>
-                                        <cfif generatedHow EQ "auto">
-                                            System
-                                        <cfelse>
-                                            #firstName# #lastName# (###userID#)
-                                        </cfif>
-                                    </td>
-                    				<td>#generatedHow#</td>	
-                				</tr>
-            				</cfloop>
-        				</cfif>
+     					</cfif>---->
+                       
     				</cfif>
 				</table>
     
     			<div align="center">
      				<table>
      					<tr>
-                        	<td><a href="?curdoc=student_info&studentID=#qGetStudentInfo.studentid#"><img src="pics/buttons/close.png" alt="Close Window" border=0></a></td>
-            				<td><a class='iframe' href="virtualFolder/uploadEdit.cfm?unqid=#qGetStudentInfo.uniqueID#"><img src="pics/buttons/uploadNewDoc.png" alt="New Document Type" border=0></a></td>
+                        	<td>
+                            <cfif client.usertype eq 8>
+                             <a href="?curdoc=user/user_info&uniqueID=#qGetUserInfo.uniqueID#"><img src="pics/buttons/close.png" alt="Close Window" border=0></a>
+                            <cfelse>
+                             <a href="?curdoc=intRep/intlRepInfo&uniqueID=#qGetUserInfo.uniqueID#"><img src="pics/buttons/close.png" alt="Close Window" border=0></a>
+                            </cfif>
+                           </td>
+            				<td><a class='iframe' href="virtualFolder/uploadEdit.cfm?uniqueid=#qGetUserInfo.uniqueID#"><img src="pics/buttons/uploadNewDoc.png" alt="New Document Type" border=0></a></td>
       					</tr>
     				</table>
      			</div>
