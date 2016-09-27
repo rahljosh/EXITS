@@ -130,6 +130,7 @@
 	APPLICATION.PATH = StructNew();	
 	APPLICATION.PATH.TRAINEE = StructNew();		
 	APPLICATION.PATH.WAT = StructNew();		
+	
 
 	/* jQuery Latest Version 
 	http://code.jquery.com/jquery-latest.min.js  /  http://code.jquery.com/jquery.js */		
@@ -137,6 +138,8 @@
 	APPLICATION.PATH.jQueryUI = 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js';
 	APPLICATION.PATH.jQueryTheme = 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.6/themes/excite-bike/jquery-ui.css';
 	// 	APPLICATION.PATH.jQueryTheme = 'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.6/themes/redmond/jquery-ui.css';
+
+
 
 	/***** Set Settings based on Live or Dev Servers *****/
 	
@@ -189,6 +192,8 @@
 	// Set Uploaded Files 
 	APPLICATION.PATH.uploadedFiles = APPLICATION.PATH.base & 'uploadedFiles/';
 	
+	APPLICATION.PATH.virtualFolder = APPLICATION.PATH.uploadedFiles & "virtualfolder/";
+		
 	APPLICATION.PATH.sevis = APPLICATION.PATH.uploadedFiles & 'sevis/';
 	
 	APPLICATION.PATH.ds2019forms = APPLICATION.PATH.uploadedFiles & '2019forms/';
@@ -215,7 +220,8 @@
 	APPLICATION.PATH.pdfDocs = APPLICATION.PATH.UploadDocumentRoot & 'pdf_docs/wat/';
 	APPLICATION.PATH.candidatePicture = APPLICATION.PATH.UploadDocumentRoot & "web-candidates/";
 	*/
-	
+	// Virtual Folder
+	APPLICATION.PATH.virtualFolder = APPLICATION.PATH.UploadDocumentRoot & "virtualfolder/";
 	// Host Company Logo
 	APPLICATION.PATH.hostLogo = APPLICATION.PATH.UploadDocumentRoot & 'web-hostlogo/';
 
