@@ -10,7 +10,7 @@
 ----- ------------------------------------------------------------------------- --->
 
 <!--- Kill Extra Output --->
-<cfsilent>
+
 
 	<!--- Import CustomTag --->
     <cfimport taglib="../../../extensions/customTags/gui/" prefix="gui" />	
@@ -101,7 +101,12 @@
 		qGetBillingCountry = APPLICATION.CFC.LOOKUPTABLES.getCountry(countryID=VAL(qGetIntlRepInfo.billing_country));
 		
 	</cfscript>
-           
+    <cfquery name="documentControl" datasource="MySQL">
+        select vfd.documentType, vf.fileName, vf.fk_studentID, vf.expires, vf.isDeleted, vf.filepath, vf.vfid
+        from extra_virtualfolderdocuments vfd 
+        left outer JOIN extra_virtualfolder vf on  vf.fk_documentType = vfd.id
+        where (vf.fk_studentID = <cfqueryparam cfsqltype="cf_sql_integer" value=" #qGetIntlRepInfo.userid#"> or vf.fk_studentid IS NULL)
+    </cfquery>
     <!--- FORM Submitted --->
     <cfif FORM.submitted>
     
@@ -286,8 +291,8 @@
                         billing_fax = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.billing_fax#">,
                         <!--- Login Information --->
                         username = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.username#">,
-                        password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.password#">,
-                        <!--- Documents Control --->
+                        password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.password#">
+                        <!--- Documents Control 
                         watDocBusinessLicense = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocBusinessLicense#">,
                         watDocBusinessLicenseExpiration = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDocBusinessLicenseExpiration#">,
                         watDocEnglishBusinessLicense = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocEnglishBusinessLicense#">,
@@ -309,16 +314,35 @@
                         watDocOriginalAdvertisingMaterialExpiration = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDocOriginalAdvertisingMaterialExpiration#">,
                         watDocEnglishAdvertisingMaterialExpiration = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDocEnglishAdvertisingMaterialExpiration#">,
                         watDocLetterNotEngageThirdParties = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocLetterNotEngageThirdParties#">
+						--->
                     WHERE
                         uniqueID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.uniqueID#">
                 </cfquery>
-                
+             
+                   <cfloop query="documentControl">
+                	<cfif isDeleted eq 0>
+					<cfif val(fk_studentID)>
+						<cfif len(#Evaluate("FORM." & vfid)#)>
+                        
+                                <cfquery datasource="MySQL">
+                                    update extra_virtualfolder
+                                    set expires = <cfqueryparam cfsqltype="cf_sql_date" value="#Evaluate("FORM." & vfid)#">,
+                                        approvedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
+                                    where vfid = <cfqueryparam cfsqltype="cf_sql_integer" value="#vfid#">
+                                </cfquery>
+                            </cfif>
+                        </cfif>
+                    </cfif>
+                </cfloop>
+            
             <cfelse>
 				
                 <cfscript>
 					// Set new host company ID
 					FORM.uniqueID = CreateUUID();
 				</cfscript>
+                
+             
                 
 				<!--- Insert Intl. Rep. --->                  
                 <cfquery result="newRecord" datasource="MySql">
@@ -364,7 +388,7 @@
                         <!--- Login Information --->
                         username,
                         password,
-                        <!--- Documents Control --->
+                        <!--- Documents Control
                         watDocBusinessLicense,
                         watDocBusinessLicenseExpiration,
                         watDocEnglishBusinessLicense,
@@ -386,6 +410,7 @@
                         watDocOriginalAdvertisingMaterialExpiration,
                         watDocEnglishAdvertisingMaterialExpiration,
                         watDocLetterNotEngageThirdParties,
+						 --->
                         whoCreated,
                         datecreated
                     )                
@@ -434,7 +459,7 @@
                         <!--- Login Information --->
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.username#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.password#">,
-                        <!--- Documents Control --->
+                        <!--- Documents Control 
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocBusinessLicense#">,
                         <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDocBusinessLicenseExpiration#">,
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocEnglishBusinessLicense#">,
@@ -456,6 +481,7 @@
                         <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDocOriginalAdvertisingMaterialExpiration#">,
                         <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDocEnglishAdvertisingMaterialExpiration#">,
                         <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.watDocLetterNotEngageThirdParties#">,
+						--->
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">,
                         <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
                     )
@@ -569,7 +595,7 @@
     
     </cfif>
 
-</cfsilent>
+
 
 <script language="JavaScript"> 
 	$(document).ready(function() {
@@ -905,291 +931,50 @@
                                     <table width="100%" cellpadding="3" cellspacing="3" border="0">
                                         <tr bgcolor="##C2D1EF">
                                             <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Documents Control</td>
+                                            
                                         </tr>
-                                        <tr>
-                                        	<td width="5%" class="fieldTitle">
-                                            	<input type="checkbox" name="watDocBusinessLicense" id="watDocBusinessLicense" value="1" class="formField" disabled <cfif VAL(FORM.watDocBusinessLicense)> checked </cfif> >
-                                            </td>
-                                            <td width="95%" class="style1">
-                                                <label for="watDocBusinessLicense">Original business license</label>
-                                                <br />&nbsp;&nbsp;Expiration Date: 
-                                                <span class="readOnly"
-                                                    <cfif isDate(FORM.watDocBusinessLicenseExpiration)>
-                                                        <cfif DateCompare(FORM.watDocBusinessLicenseExpiration, NOW(), "d") EQ -1> 
-                                                            style="color:red;"
-                                                        </cfif>
+                                        
+                                       <cfloop query="documentControl">
+                                       <cfif isDeleted neq 1>
+                                       <tr>
+                                       		 <td class="style1" colspan=2>
+                                               
+													<cfif fileName is not '' and isDeleted eq 0>
+                                                   <strong> <A href="../#filePath#/#fileName#" target="_new">#documentType#</A></strong>
+                                                    <cfelse>
+                                                    #documentType#
                                                     </cfif>
-                                                >
-                                                    #DateFormat(FORM.watDocBusinessLicenseExpiration, "mm/dd/yyyy")#
-                                                </span>
-                                                <input type="text" name="watDocBusinessLicenseExpiration" id="watDocBusinessLicenseExpiration" value="#DateFormat(FORM.watDocBusinessLicenseExpiration, 'mm/dd/yyyy')#" class="datePicker style1 editPage" />
-                                            </td>
-                                        </tr>	
-                                        <tr>
-                                        	<td width="5%" class="fieldTitle">
-                                            	<input type="checkbox" name="watDocEnglishBusinessLicense" id="watDocEnglishBusinessLicense" value="1" class="formField" disabled onclick="changeEnglishBusinessLicenseExpirationDate()" <cfif VAL(FORM.watDocEnglishBusinessLicense)> checked </cfif> >
-                                            </td>
-                                            <td width="95%" class="style1">
-                                                <label for="watDocEnglishBusinessLicense">English business license </label>
-                                                <br />&nbsp;&nbsp;Expiration Date: 
-                                                <span class="readOnly"
-                                                    <cfif isDate(FORM.watDocEnglishBusinessLicenseExpiration)>
-                                                        <cfif DateCompare(FORM.watDocEnglishBusinessLicenseExpiration, NOW(), "d") EQ -1> 
-                                                            style="color:red;"
-                                                        </cfif>
-                                                    </cfif>
-                                                >
-                                                    #DateFormat(FORM.watDocEnglishBusinessLicenseExpiration, "mm/dd/yyyy")#
-                                                </span>
-                                                <input type="text" name="watDocEnglishBusinessLicenseExpiration" id="watDocEnglishBusinessLicenseExpiration" value="#DateFormat(FORM.watDocEnglishBusinessLicenseExpiration, 'mm/dd/yyyy')#" class="datePicker style1 editPage" />
-                                                <input type="hidden" id="hiddenEnglishBusinessLicenseExpiration" />
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                        	<td width="5%" class="fieldTitle">
-                                            	<input 
-                                                	type="checkbox" 
-                                                    name="watDocNotarizedFinancialStatementExpirationCB" 
-                                                    id="watDocNotarizedFinancialStatementExpirationCB" 
-                                                    value="1" 
-                                                    class="formField" 
-                                                    onChange="removeDate(this,'watDocNotarizedFinancialStatementExpiration');" 
-                                                    disabled 
-													<cfif isDate(FORM.watDocNotarizedFinancialStatementExpiration)>
-														<cfif DateCompare(FORM.watDocNotarizedFinancialStatementExpiration, NOW(), "d") NEQ -1> checked </cfif>
-                                                  	</cfif> >
-                                            </td>
-                                            <td width="95%" class="style1">
-                                                <label for="watDocNotarizedFinancialStatementExpiration">Notarized Recent Financial Statement </label><br />
-                                                	&nbsp;&nbsp;Expiration Date: 
-                                                    <span class="readOnly"
-                                                    	<cfif isDate(FORM.watDocNotarizedFinancialStatementExpiration)>
-															<cfif DateCompare(FORM.watDocNotarizedFinancialStatementExpiration, NOW(), "d") EQ -1> 
-                                                                style="color:red;"
-                                                            </cfif>
-                                                      	</cfif>
-                                                  	>
-                                                    	#DateFormat(watDocNotarizedFinancialStatementExpiration,"mm/dd/yyyy")#
-                                    				</span>
-                                                	<input 
-                                                    	type="text" 
-                                                        name="watDocNotarizedFinancialStatementExpiration" 
-                                                        id="watDocNotarizedFinancialStatementExpiration" 
-                                                        value="#DateFormat(FORM.watDocNotarizedFinancialStatementExpiration, 'mm/dd/yyyy')#" 
+                                                    <br />
+                                             
+                                                &nbsp;&nbsp;Expiration Date: 
+													<Cfif fileName is not '' >
+                                                     <span class="readOnly">
+                                                        <cfif isDate(expires)>
+                                                          #DateFormat(expires, 'mm/dd/yyyy')#
+                                                        <cfelse>
+                                                         <font color=##ccc>Waiting for Review</font>
+                                                        </cfif> 
+                                                        
+                                                    </span>
+                                                     <input 
+                                                        type="text" 
+                                                        name="#vfid#" 
+                                                        id="#vfid#" 
+                                                        value="#DateFormat(expires, 'mm/dd/yyyy')#" 
                                                         class="datePicker style1 editPage" />
+
+                                                    <cfelse>
+                                                    	Missing Document
+                                                    </Cfif>
+                                               
+                                                
+                                             
                                             </td>
-                                        </tr>	
-                                        <tr>
-                                        	<td class="fieldTitle">
-                                            	<input 
-                                                	type="checkbox" 
-                                                    name="watDocBankruptcyDisclosureExpirationCB" 
-                                                    id="watDocBankruptcyDisclosureExpirationCB" 
-                                                    value="1" 
-                                                    class="formField" 
-                                                    onChange="removeDate(this,'watDocBankruptcyDisclosureExpiration');" 
-                                                    disabled 
-													<cfif isDate(FORM.watDocBankruptcyDisclosureExpiration)>
-														<cfif DateCompare(FORM.watDocBankruptcyDisclosureExpiration, NOW(), "d") NEQ -1> checked </cfif>
-                                                   	</cfif> >
-                                            </td>
-                                            <td class="style1">
-                                            	<label for="watDocBankruptcyDisclosureExpiration">Disclosure of any previous bankruptcy and of any pending legal actions </label><br />
-                                                	&nbsp;&nbsp;Expiration Date: 
-                                                    <span class="readOnly"
-                                                    	<cfif isDate(FORM.watDocBankruptcyDisclosureExpiration)>
-															<cfif DateCompare(FORM.watDocBankruptcyDisclosureExpiration, NOW(), "d") EQ -1> 
-                                                                style="color:red;"
-                                                            </cfif>
-                                                      	</cfif>
-                                                  	>
-                                                    	#DateFormat(watDocBankruptcyDisclosureExpiration,"mm/dd/yyyy")#
-                                    				</span>
-                                                	<input 
-                                                    	type="text" 
-                                                        name="watDocBankruptcyDisclosureExpiration" 
-                                                        id="watDocBankruptcyDisclosureExpiration" 
-                                                        value="#DateFormat(FORM.watDocBankruptcyDisclosureExpiration, 'mm/dd/yyyy')#" 
-                                                        class="datePicker style1 editPage" />
-                                            </td>
-                                        </tr>	
-                                        <tr>
-                                        	<td class="fieldTitle">
-                                            	<input type="checkbox" name="watDocWrittenReference1" id="watDocWrittenReference1" value="1" class="formField" disabled <cfif VAL(FORM.watDocWrittenReference1)> checked </cfif> >
-                                            </td>
-                                            <td class="style1">
-                                                <label for="watDocWrittenReference1">Written references from current business associates or partner organizations</label>
-                                                <br />&nbsp;&nbsp;Expiration Date: 
-                                                <span class="readOnly"
-                                                    <cfif isDate(FORM.watDocWrittenReference1Expiration)>
-                                                        <cfif DateCompare(FORM.watDocWrittenReference1Expiration, NOW(), "d") EQ -1> 
-                                                            style="color:red;"
-                                                        </cfif>
-                                                    </cfif>
-                                                >
-                                                    #DateFormat(FORM.watDocWrittenReference1Expiration, "mm/dd/yyyy")#
-                                                </span>
-                                                <input type="text" name="watDocWrittenReference1Expiration" id="watDocWrittenReference1Expiration" value="#DateFormat(FORM.watDocWrittenReference1Expiration, 'mm/dd/yyyy')#" class="datePicker style1 editPage" />
-                                            </td>
-                                        </tr>	
-                                        <tr>
-                                        	<td class="fieldTitle">
-                                            	<input type="checkbox" name="watDocWrittenReference2" id="watDocWrittenReference2" value="1" class="formField" disabled <cfif VAL(FORM.watDocWrittenReference2)> checked </cfif> >
-                                            </td>
-                                            <td class="style1">
-                                                <label for="watDocWrittenReference2">Written references from current business associates or partner organizations</label>
-                                                <br />&nbsp;&nbsp;Expiration Date: 
-                                                <span class="readOnly"
-                                                    <cfif isDate(FORM.watDocWrittenReference2Expiration)>
-                                                        <cfif DateCompare(FORM.watDocWrittenReference2Expiration, NOW(), "d") EQ -1> 
-                                                            style="color:red;"
-                                                        </cfif>
-                                                    </cfif>
-                                                >
-                                                    #DateFormat(FORM.watDocWrittenReference2Expiration, "mm/dd/yyyy")#
-                                                </span>
-                                                <input type="text" name="watDocWrittenReference2Expiration" id="watDocWrittenReference2Expiration" value="#DateFormat(FORM.watDocWrittenReference2Expiration, 'mm/dd/yyyy')#" class="datePicker style1 editPage" />
-                                            </td>
-                                        </tr>	
-                                        <tr>
-                                        	<td class="fieldTitle">
-                                            	<input type="checkbox" name="watDocWrittenReference3" id="watDocWrittenReference3" value="1" class="formField" disabled <cfif VAL(FORM.watDocWrittenReference3)> checked </cfif> >
-                                            </td>
-                                            <td class="style1">
-                                                <label for="watDocWrittenReference3">Written references from current business associates or partner organizations</label>
-                                                <br />&nbsp;&nbsp;Expiration Date: 
-                                                <span class="readOnly"
-                                                    <cfif isDate(FORM.watDocWrittenReference3Expiration)>
-                                                        <cfif DateCompare(FORM.watDocWrittenReference3Expiration, NOW(), "d") EQ -1> 
-                                                            style="color:red;"
-                                                        </cfif>
-                                                    </cfif>
-                                                >
-                                                    #DateFormat(FORM.watDocWrittenReference3Expiration, "mm/dd/yyyy")#
-                                                </span>
-                                                <input type="text" name="watDocWrittenReference3Expiration" id="watDocWrittenReference3Expiration" value="#DateFormat(FORM.watDocWrittenReference3Expiration, 'mm/dd/yyyy')#" class="datePicker style1 editPage" />
-                                            </td>
-                                        </tr>	
-                                        <tr>
-                                        	<td class="fieldTitle">
-                                            	<input type="checkbox" name="watDocPreviousExperience" id="watDocPreviousExperience" value="1" class="formField" disabled <cfif VAL(FORM.watDocPreviousExperience)> checked </cfif> >
-                                            </td>
-                                            <td class="style1">
-                                                <label for="watDocPreviousExperience">Summary of previous experience conducting J-1 exchange visitor program activities</label>
-                                                <br />&nbsp;&nbsp;Expiration Date: 
-                                                <span class="readOnly"
-                                                    <cfif isDate(FORM.watDocPreviousExperienceExpiration)>
-                                                        <cfif DateCompare(FORM.watDocPreviousExperienceExpiration, NOW(), "d") EQ -1> 
-                                                            style="color:red;"
-                                                        </cfif>
-                                                    </cfif>
-                                                >
-                                                    #DateFormat(FORM.watDocPreviousExperienceExpiration, "mm/dd/yyyy")#
-                                                </span>
-                                                <input type="text" name="watDocPreviousExperienceExpiration" id="watDocPreviousExperienceExpiration" value="#DateFormat(FORM.watDocPreviousExperienceExpiration, 'mm/dd/yyyy')#" class="datePicker style1 editPage" />
-                                            </td>
-                                        </tr>	
-                                        <tr>
-                                        	<td class="fieldTitle">
-                                            	<input 
-                                                	type="checkbox" 
-                                                    name="watDocOriginalCBC" 
-                                                    id="watDocOriginalCBC" 
-                                                    value="1" 
-                                                    class="formField" 
-                                                    disabled 
-													<cfif VAL(FORM.watDocOriginalCBC)> 
-                                                    	checked 
-													</cfif> >
-                                            </td>
-                                            <td class="style1">
-                                                <label for="watDocOriginalCBC">Original criminal background check</label>
-                                                <br />
-                                                &nbsp;&nbsp;Expiration Date: 
-                                                <span class="readOnly"
-                                                	<cfif isDate(FORM.watDocOriginalCBCExpiration)>
-                                                    	<cfif DateCompare(FORM.watDocOriginalCBCExpiration, NOW(), "d") EQ -1>
-                                                        	style="color:red;"
-                                                        </cfif>
-                                                    </cfif>
-                                               	>
-                                                	#DateFormat(watDocOriginalCBCExpiration, "mm/dd/yyyy")#
-                                                </span>
-                                                <input
-                                                	type="text"
-                                                    name="watDocOriginalCBCExpiration"
-                                                    id="watDocOriginalCBCExpiration"
-                                                    value="#DateFormat(FORM.watDocOriginalCBCExpiration, 'mm/dd/yyyy')#"
-                                                    class="datePicker style1 editPage"  />
-                                            </td>
-                                        </tr>	
-                                        <tr>
-                                        	<td class="fieldTitle">
-                                            	<input 
-                                                	type="checkbox" 
-                                                    name="watDocEnglishCBC" 
-                                                    id="watDocEnglishCBC" 
-                                                    value="1" 
-                                                    class="formField" 
-                                                    disabled 
-													<cfif VAL(FORM.watDocEnglishCBC)> 
-                                                    	checked 
-													</cfif> >
-                                            </td>
-                                            <td class="style1">
-                                                <label for="watDocOriginalCBC">English criminal background check</label>
-                                                <br />
-                                                &nbsp;&nbsp;Expiration Date: 
-                                                <span class="readOnly"
-                                                	<cfif isDate(FORM.watDocEnglishCBCExpiration)>
-                                                    	<cfif DateCompare(FORM.watDocEnglishCBCExpiration, NOW(), "d") EQ -1>
-                                                        	style="color:red;"
-                                                        </cfif>
-                                                    </cfif>
-                                               	>
-                                                	#DateFormat(watDocEnglishCBCExpiration, "mm/dd/yyyy")#
-                                                </span>
-                                                <input
-                                                	type="text"
-                                                    name="watDocEnglishCBCExpiration"
-                                                    id="watDocEnglishCBCExpiration"
-                                                    value="#DateFormat(FORM.watDocEnglishCBCExpiration, 'mm/dd/yyyy')#"
-                                                    class="datePicker style1 editPage"  />
-                                            </td>
-                                        </tr>	
-                                        <tr>
-                                        	<td class="fieldTitle">
-                                            	<input 
-                                                	type="checkbox" 
-                                                    name="watDocOriginalAdvertisingMaterialExpirationCB" 
-                                                    id="watDocOriginalAdvertisingMaterialExpirationCB" 
-                                                    value="1" 
-                                                    class="formField" 
-                                                    onChange="removeDate(this,'watDocOriginalAdvertisingMaterialExpiration');" 
-                                                    disabled 
-													<cfif isDate(FORM.watDocOriginalAdvertisingMaterialExpiration)>
-														<cfif DateCompare(FORM.watDocOriginalAdvertisingMaterialExpiration, NOW(), "d") NEQ -1> checked </cfif>
-                                                   	</cfif> >
-                                            </td>
-                                            <td class="style1">
-                                                <label for="watDocOriginalAdvertisingMaterialExpiration">Original sponsor-approved advertising materials </label><br />
-                                                &nbsp;&nbsp;Expiration Date: 
-                                                <span class="readOnly"
-                                                	<cfif isDate(FORM.watDocOriginalAdvertisingMaterialExpiration)> 
-														<cfif DateCompare(FORM.watDocOriginalAdvertisingMaterialExpiration, NOW(), "d") EQ -1>
-                                                        	style="color:red;"
-														</cfif>
-                                                   	</cfif> >
-                                                    #DateFormat(watDocOriginalAdvertisingMaterialExpiration,"mm/dd/yyyy")#
-                                                </span>
-                                                <input 
-                                                	type="text" 
-                                                    name="watDocOriginalAdvertisingMaterialExpiration" 
-                                                    id="watDocOriginalAdvertisingMaterialExpiration" 
-                                                    value="#DateFormat(FORM.watDocOriginalAdvertisingMaterialExpiration, 'mm/dd/yyyy')#" 
-                                                    class="datePicker style1 editPage" />
-                                            </td>
-                                        </tr>	
+                                       </tr>
+                                        </cfif>
+                                       </cfloop>
+                                       
+                                       <!----
                                         <tr>
                                         	<td class="fieldTitle">
                                             	<input 
@@ -1223,9 +1008,12 @@
                                                     class="datePicker style1 editPage" />
                                             </td>
                                         </tr>
+										---->
                                         <tr>
                                         	<td colspan="2" style="font-size:9px;"><i>These documents will expire at the end of the recruitment year. They must be renewed and maintained annually (IFR 2012).</i></td>
                                         </tr>	
+                                        <tr>
+                                        	<td colspan="2"><a href="?curdoc=virtualfolder/view&uniqueID=#URL.uniqueID#">Manage Documents</a></td>
                                     </table>
                                     
                                 </td>
