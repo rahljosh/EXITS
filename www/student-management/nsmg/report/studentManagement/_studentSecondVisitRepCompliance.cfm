@@ -693,7 +693,7 @@
                                     
                                     <!--- Include CSS on the body of email --->
                                     <style type="text/css">
-                                        <cfinclude template="../linked/css/baseStyle.css">
+                                        <cfinclude template="../../linked/css/baseStyle.css">
                                     </style>                    
                                     
                                     <!--- Display Report Header --->
