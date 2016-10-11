@@ -261,7 +261,10 @@
                     active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                 AND
                     applicationDeadline >= <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
-                
+                AND 
+                 <cfif listFind("1,2,3,4,5,12", CLIENT.companyID)>
+                	hold = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                </cfif>
 				<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.publicHS, ARGUMENTS.companyid)> 
                     AND ( companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.publicHS#" list="yes"> )
 						OR companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.php#" list="yes"> ) )
