@@ -237,6 +237,7 @@
     	<cfargument name="programTypeID" default="0" hint="programTypeID is not required">
         <cfargument name="currentprogramID" default="0" hint="currentprogramID is not required">
         <cfargument name="companyID" default="#CLIENT.companyID#" hint="pass in companyid if only need specific company">
+        <cfargument name="studentID" default="" hint="pass in student id if from within app.">
 		
         <cfquery 
 			name="qGetActiveInternalPrograms" 
@@ -261,9 +262,12 @@
                     active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                 AND
                     applicationDeadline >= <cfqueryparam cfsqltype="cf_sql_date" value="#now()#">
-                AND 
-                 <cfif listFind("1,2,3,4,5,12", CLIENT.companyID)>
-                	hold = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                <cfif NOT VAL(ARGUMENTS.studentID)>
+					<cfif listFind("1,2,3,4,5,12", CLIENT.companyID)>
+                    AND 
+                    
+                        hold = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                    </cfif>
                 </cfif>
 				<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.publicHS, ARGUMENTS.companyid)> 
                     AND ( companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.publicHS#" list="yes"> )
