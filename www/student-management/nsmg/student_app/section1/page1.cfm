@@ -260,7 +260,7 @@
                               display="programName"
                               selected="#programID#"
                               bindonload="yes"
-                              bind="cfc:nsmg.extensions.components.program.qGetActiveInternalPrograms(programTypeID={app_indicated_program}, currentProgramID=#get_student_info.programID#,companyid=#client.companyid#)" />
+                              bind="cfc:nsmg.extensions.components.program.qGetActiveInternalPrograms(programTypeID={app_indicated_program}, currentProgramID=#get_student_info.programID#,companyid=#client.companyid#,studentID=#get_student_info.studentid#)" />
                               
                               
                       </cfif>
