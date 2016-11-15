@@ -172,8 +172,8 @@
                 <cfloop query="qGetHostApplications">
                     <tr <cfif qGetHostApplications.currentrow MOD 2>bgcolor="##efefef"</cfif>>
                         <td><a href="index.cfm?curdoc=hostApplication/toDoList&hostID=#qGetHostApplications.hostID#" title="View Details">#qGetHostApplications.displayHostFamily#</a></td>
-                        <td>#qGetHostApplications.city#, #qGetHostApplications.state#</td>
-                        <td>#qGetHostApplications.email#</td>
+                        <td>#qGetHostApplications.hostCity#, #qGetHostApplications.hostState#</td>
+                        <td>#qGetHostApplications.hostEmail#</td>
                         <td>#qGetHostApplications.regionName#</td>
                         <td>#qGetHostApplications.areaRepresentative#</td>
                         <td>#qGetHostApplications.regionalAdvisor#</td> 
