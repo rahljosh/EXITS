@@ -134,7 +134,10 @@
 				ArrayAppend(Errors.Messages, "The email address #FORM.email1# is alredy registered for another student account. 
 							You must enter a different e-mail address in order to create an account for your student.");	
 			}
-
+			
+			if (NOT VAL(FORM.internalProgram) ){
+				ArrayAppend(Errors.Messages, "Please select a specific program.");	
+			}
 			if ( NOT LEN(FORM.familyLastName) ) {
 				ArrayAppend(Errors.Messages, "Please enter a family name.");
 			}
@@ -436,11 +439,11 @@
 
 <!---Aplicant information---->
 <table width=100% cellpadding="0" cellspacing="0" border="0" height="24">
-	<tr valign="middle" height="24">
-		<td height="24" width="13" background="pics/header_leftcap.gif">&nbsp;</td>
-		<td width="26" background="pics/header_background.gif"><img src="pics/news.gif"></td>
-		<td background="pics/header_background.gif"><h2>Applicant Information</h2></td>
-		<td width="17" background="pics/header_rightcap.gif">&nbsp;</td>
+	<tr valign="middle" height="24" bgcolor="##CCCCCC">
+	
+	
+		<td><h2>Applicant Information</h2></td>
+	
 	</tr>
 </table>
 
@@ -525,7 +528,15 @@
         </cfif>
         
         <tr><td colspan="3">&nbsp;</td></tr>
-        
+        <cfif (client.companyid eq 1 or client.companyid eq 2 or client.companyid eq 3 or client.companyid eq 4 or client.companyid eq 5 or client.companyid eq 12)>
+          <tr bgcolor="##FFCC99">
+             <td></td>
+                <td colspan="3">
+             <strong>Please Note:</strong>	 We are transitioning to our new application system NEXITS.  Therefore you won't be able to create any new applications for ISE programs starting in August of 2017  in EXITS. All other programs, you can still start below.  Please contact paul@iseusa.org for assistance with August 2017 programs. 
+             </td>
+                <td></td>
+            </tr>
+        </cfif>
         <tr>
             <td>&nbsp;</td>
             <td colspan="3"><b>Program information</b></td>
@@ -549,7 +560,16 @@
                 <select name="app_indicated_program" id="app_indicated_program" onchange="displayCanada();" class="xLargeField">
                     <option value="0">To Be Defined</option>
                     <cfloop query="qAppPrograms">
-                        <option value="#qAppPrograms.app_programID#" <cfif qAppPrograms.app_programID EQ FORM.app_indicated_program> selected="selected" </cfif> >#qAppPrograms.app_program#</option>
+                    
+                    <cfif ((client.companyid eq 1 or client.companyid eq 2 or client.companyid eq 3 or client.companyid eq 4 or client.companyid eq 5 or client.companyid eq 12)
+                        AND (qAppPrograms.app_programID eq 1 or  qAppPrograms.app_programID eq 2 ))>
+                        
+                    <cfelse>
+						<option value="#qAppPrograms.app_programID#" <cfif qAppPrograms.app_programID EQ FORM.app_indicated_program> selected="selected" </cfif> >#qAppPrograms.app_program#</option>
+                    
+                  
+                    </cfif>
+                    
                     </cfloop>
                 </select>
             </td>
@@ -655,13 +675,7 @@
 </cfoutput>
 
 <!----footer of table---->
-<table width=100% cellpadding="0" cellspacing="0" border="0">
-	<tr valign="bottom">
-		<td width="9" valign="top" height="12"><img src="pics/footer_leftcap.gif" ></td>
-		<td width=100% background="pics/header_background_footer.gif"></td>
-		<td width="9" valign="top"><img src="pics/footer_rightcap.gif"></td>
-	</tr>
-</table>
+
 
 </body>
 
