@@ -269,13 +269,13 @@
                         SELECT hostID 
                         FROM smg_host_app_season 
                         WHERE applicationStatusID < 9 
-                        AND seasonID >= <cfqueryparam cfsqltype="cf_sql_integer" value="#vSeasonID#"> )
+                        AND seasonID IN (13,14) )
                 <cfelseif NOT ListFind("13",CLIENT.companyID)>
                     AND hostID IN (
                         SELECT hostID 
                         FROM smg_host_app_season 
                         WHERE applicationStatusID < 4 
-                        AND seasonID >= <cfqueryparam cfsqltype="cf_sql_integer" value="#vSeasonID#"> )
+                        AND seasonID IN (13,14) )
                	</cfif>
                 ORDER BY familyLastName
         </cfquery>
@@ -1357,6 +1357,8 @@
                         	h.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
                       	AND
                         	h.isHosting = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                        AND 
+                        	h.isNotQualifiedToHost = 0
                     
 						<!--- ISE - Displays all apps |  OR APPLICATION.CFC.USER.isOfficeUser()---> 
 						<cfif ARGUMENTS.companyID EQ 5>
@@ -2834,7 +2836,7 @@
                         
                         <p>
 	                        This email is intended to notify you that your Regional Advisor or Manager #ARGUMENTS.submittedBy# has requested additional information in order to 
-                            approve the #ARGUMENTS.hostFamilyLastName# family’s Host Application. 
+                            approve the #ARGUMENTS.hostFamilyLastName# familyï¾’s Host Application. 
                         </p>
                         
                         <p>Please find a list of requested updates below.</p>
@@ -2868,7 +2870,7 @@
                         
                         <p>
 	                        This email is intended to notify you that your Regional Manager #ARGUMENTS.submittedBy# has requested additional information in order to 
-                            approve the #ARGUMENTS.hostFamilyLastName# family’s Host Application. 
+                            approve the #ARGUMENTS.hostFamilyLastName# familyï¾’s Host Application. 
                         </p>
                         
                         <p>Please find a list of requested updates below.</p>
@@ -2902,7 +2904,7 @@
                         
                         <p>
 	                        This email is intended to notify you that your Facilitator #ARGUMENTS.submittedBy# has requested additional information in order to 
-                            approve the #ARGUMENTS.hostFamilyLastName# family’s Host Application. 
+                            approve the #ARGUMENTS.hostFamilyLastName# familyï¾’s Host Application. 
                         </p>
                         
                         <p>Please find a list of requested updates below.</p>
