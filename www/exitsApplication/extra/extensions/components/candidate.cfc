@@ -873,6 +873,7 @@
                     c.email,
                     c.password,
                     c.wat_placement,
+                    aa.answer as requestedPlacment,
                     u.businessName,
                     branch.businessName as branchName,
                     ast.dateCreated
@@ -888,6 +889,10 @@
                     	ast.applicationStatusID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.applicationStatusID#">                                              
 				LEFT OUTER JOIN 
         			smg_users branch ON branch.userid = c.branchid                
+                    
+                LEFT OUTER JOIN 
+        			applicationanswer aa ON aa.foreignID = c.candidateID                
+                
                 WHERE            
                     c.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
 				AND
@@ -898,6 +903,8 @@
                 	AND	
                     	c.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.intRep#">
                 </cfif>
+                AND 
+					aa.fieldkey = 'requestedPlacement'
                 GROUP BY
                 	c.candidateID
                 ORDER BY            
@@ -1189,7 +1196,7 @@
           	LEFT OUTER JOIN extra_j1_positions ep ON ep.hostID = eh.hostCompanyID
        			AND ep.programID = (SELECT programID FROM extra_candidates WHERE candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#"> LIMIT 1)
           	LEFT OUTER JOIN extra_program_confirmations epc ON epc.hostID = ecpc.hostCompanyID
-         		AND epc.programID = ep.programID
+         		AND epc.programID = (SELECT programID FROM extra_candidates WHERE candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#"> LIMIT 1)
           	LEFT OUTER JOIN document d ON d.foreignID = ecpc.candCompID
             	AND d.foreignTable = "extra_candidate_place_company"
                 AND d.documentTypeID = 41
@@ -1452,6 +1459,59 @@
     
 	<!------------------------------------------------------------ 
 		End of Seeking Employment Comments
+	------------------------------------------------------------->
+
+
+
+	<!------------------------------------------------------------
+		Candidate Exempt Of Pre-Placement Comments 
+	------------------------------------------------------------->
+    
+    <cffunction name="getExemptFromPrePlacement" access="public" returntype="query" output="no" hint="Gets notes for exempt of pre-placement">
+    	<cfargument name="candidateID" required="yes">
+        
+        <cfquery name="qGetExemptFromPrePlacement" datasource="#APPLICATION.DSN.Source#">
+        	SELECT n.*, u.firstName, u.lastName
+            FROM extra_exempt_pre_placement_notes n
+            LEFT OUTER JOIN smg_users u ON u.userID = n.addedBy
+            WHERE n.candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#">
+            ORDER BY n.date DESC
+        </cfquery>
+        
+        <cfreturn qGetExemptFromPrePlacement>
+        
+    </cffunction>
+    
+    <cffunction name="insertUpdateExemptFromPrePlacementNotes" access="public" returntype="void" output="no" hint="Inserts or updates an incident note">
+    	<cfargument name="id" default="0" required="no" hint="if nothing is passed in will insert, otherwise will update">
+        <cfargument name="candidateID" default="0" required="no" hint="needed if id is not passed in to insert">
+        <cfargument name="note" default="" required="no">
+        
+        <cfif VAL(ARGUMENTS.id)>
+        	<cfquery datasource="#APPLICATION.DSN.Source#">
+            	UPDATE extra_exempt_pre_placement_notes
+                SET note = <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#ARGUMENTS.note#">
+               	WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.id#">
+            </cfquery>
+        <cfelse>
+        	<cfquery datasource="#APPLICATION.DSN.Source#">
+            	INSERT INTO extra_exempt_pre_placement_notes (
+                	candidateID,
+                    addedBy,
+                    date,
+                    note )
+              	VALUES (
+                	<cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.candidateID#">,
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
+                    <cfqueryparam cfsqltype="cf_sql_timestamp" value="#NOW()#">,
+                    <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#ARGUMENTS.note#"> )
+            </cfquery>
+        </cfif>
+        
+    </cffunction>
+    
+	<!------------------------------------------------------------ 
+		End of Exempt Of Pre-Placement Comments
 	------------------------------------------------------------->
     
     
@@ -2432,6 +2492,24 @@
                 <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.evaluationNumber)#">,
                 <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.date#">,
                 <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#ARGUMENTS.comment#"> )
+        </cfquery>
+    </cffunction>
+
+
+    <cffunction name="setEmailTracking" access="public" returntype="void" output="no">
+    	<cfargument name="candidate_id" type="numeric" required="yes">
+        <cfargument name="email_id" type="numeric" required="yes">
+        <cfargument name="date" default="#NOW()#" required="no">
+        
+        <cfquery datasource="#APPLICATION.DSN.Source#">
+            INSERT INTO extra_emails_tracking (
+                candidate_id,
+                email_id,
+                date)
+            VALUES (
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidate_id)#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.email_id)#">,
+                <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.date#">)
         </cfquery>
     </cffunction>
 
