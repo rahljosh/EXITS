@@ -125,13 +125,14 @@
             <th width="5%" class="style2" align="left">Gender</th>
             <th width="16%" class="style2" align="left">Email</th>
             <th width="10%" class="style2" align="left">Submitted</th>	
+            
             <cfif ListFind("1,2,3,4", VAL(CLIENT.userType))>
             	<th width="18%" class="style2" align="left">Intl. Rep.</th>
             <cfelse>
             	<th width="18%" class="style2" align="left">Created By</th>
 			</cfif>  
             <th width="10%" class="style2" align="left">Program Option</th>		
-            <th width="12%" class="style2" align="left">Actions</th>              
+            <th width="12%" class="style2" align="left">Requested Placement</th>              
         </tr>
         
 		<cfif NOT qGetCandidates.recordCount>
@@ -141,13 +142,23 @@
         </cfif>
         
         <cfloop query="qGetCandidates">
+        <cfquery name = "rP" datasource="#APPLICATION.DSN.Source#">
+        	SELECT answer
+            FROM applicationanswer
+            WHERE fieldkey = 'requestedPlacement'
+            AND foreignid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidates.candidateid#">
+            
+        </cfquery>
+        
+        
             <tr bgcolor="###iif(qGetCandidates.currentrow MOD 2 ,DE("E9ECF1") ,DE("FFFFFF") )#">
                 <td><a href="onlineApplication/index.cfm?action=initial&uniqueID=#qGetCandidates.uniqueID#" class="style4 popUpOnlineApplication">#qGetCandidates.candidateID#</a></td>
                 <td><a href="onlineApplication/index.cfm?action=initial&uniqueID=#qGetCandidates.uniqueID#" class="style4 popUpOnlineApplication">#qGetCandidates.lastName#</a></td>
                 <td><a href="onlineApplication/index.cfm?action=initial&uniqueID=#qGetCandidates.uniqueID#" class="style4 popUpOnlineApplication">#qGetCandidates.firstName#</a></td>
                 <td class="style5"><cfif qGetCandidates.sex EQ 'm'>Male<cfelse>Female</cfif></td>
                 <td class="style5">#qGetCandidates.email#</td>
-                <td class="style5">#DateFormat(qGetCandidates.dateCreated, 'mm/dd/yyyy')#</td>		
+                <td class="style5">#DateFormat(qGetCandidates.dateCreated, 'mm/dd/yyyy')#</td>	
+                	
 				<cfif ListFind("1,2,3,4", VAL(CLIENT.userType))>
                     <td class="style5">#qGetCandidates.businessName#</td>
                 <cfelse>
@@ -161,16 +172,19 @@
                 </cfif>                
                 <td class="style5">#qGetCandidates.wat_placement#</td>
                 <td class="style5">
-                    <a href="onlineApplication/index.cfm?action=displayLogin&uniqueID=#qGetCandidates.uniqueID#" class="style4 popUpDisplayLogin">[View Login]</a>
+                 <cfif len(rP.answer)>#rP.answer#</cfif>
+                   <!--- <a href="onlineApplication/index.cfm?action=displayLogin&uniqueID=#qGetCandidates.uniqueID#" class="style4 popUpDisplayLogin">[View Login]</a>
 					
                     <!--- Do not allow Agents to [delete] applications once submitted --->                    
                     <cfif qGetCandidates.applicationStatusID LT 7 OR ( ListFind("7,8,9,10,11", qGetCandidates.applicationStatusID) AND ListFind("1,2,3,4", CLIENT.userType) )> 
                         &nbsp;
                         <a href="index.cfm?curdoc=onlineApplication/index&action=#URL.action#&statusID=#URL.statusID#&uniqueID=#qGetCandidates.uniqueID#" onclick="return confirmReceived();" class="style4">[Delete]</a>
                 	</cfif>
+					---->
                 </td>
             </tr>
         </cfloop>
+      
 	</table>
     
     <br /><br />
