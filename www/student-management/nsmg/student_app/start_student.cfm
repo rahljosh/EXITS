@@ -430,7 +430,7 @@
 		<cfif option EQ 1>
 			location.replace("index.cfm?curdoc=initial_welcome");
 		<cfelse>
-			location.replace("student_app/rep_start_app.cfm");						
+			location.replace("/nsmg/student_app/rep_start_app.cfm");						
 		</cfif>
 		-->
 	</script>
