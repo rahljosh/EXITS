@@ -12,7 +12,7 @@
 
 
 </cfoutput>
-<cfsilent>
+
 
 	<!--- Import CustomTag Used for Page Messages and Form Errors --->
     <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
@@ -64,8 +64,8 @@
             DATE_ADD(endDate, INTERVAL 31 DAY) >= CURRENT_DATE
     </cfquery>
     --->
-	
-    <!--- Use program start/end dates instead of season --->
+    
+	<!--- Use program start/end dates instead of season --->
     <cfquery name="qGetSeasonDateRange" datasource="#APPLICATION.DSN#">
         SELECT 
             p.startDate,
@@ -83,9 +83,9 @@
     <!--- Loop Through Months in a season | July needs to be included here --->
     <cfloop from="#qGetSeasonDateRange.startDate#" to="#qGetSeasonDateRange.endDate#" index="i" step="#CreateTimeSpan(31,0,0,0)#">
 
-   		<!--- This may have been a fix for full year programs, It wasn't working for January programs
-		<cfset i = DateAdd('m', -1, i)>--->
-        
+   		<!--- This may have been a fix for full year programs, It wasn't working for January programs--->
+		<cfset i = DateAdd('m', +1, i)>
+        <cfoutput> #DatePart('m', i)#</cfoutput>
         <cfif CLIENT.pr_rmonth EQ DatePart('m', i)>
 			<cfset vSetStartDate =  DateAdd('m', -1, DatePart("yyyy", i) & '-' & DatePart("m", i) & '-01')>
             <cfset vSetEndDate = CreateDate(year(vSetStartDate), month(vSetStartDate), DaysInMonth(vSetStartDate))>
@@ -94,7 +94,6 @@
          
     </cfloop>
 
-</cfsilent>
 
 <cfif NOT LEN(FORM.prdate_id)>
 
