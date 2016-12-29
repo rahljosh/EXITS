@@ -69,6 +69,14 @@
                     <a class="item2" href="?curdoc=tools/labels_select_pro">Labels</a>
                     <a class="item2" href="?curdoc=tools/monthlyEvaluations">Monthly Evaluation Tool</a>
                     <a class="item2" href="?curdoc=tools/programs">Programs</a>
+                    <a class="item2" href="index.cfm?curdoc=sevis/menu">SEVIS Batch</a>					
+                            <!--- SEVIS Dev Access --->
+                            <cfif CLIENT.usertype EQ 1>
+                              
+                                    <li><a class="item2" href="index.cfm?curdoc=sevis_test/menu">SEVIS Batch Dev</a></li>
+                                
+                            </cfif>					
+                        
                 </div>
             </td>
             <td bgcolor="##8FB6C9">
