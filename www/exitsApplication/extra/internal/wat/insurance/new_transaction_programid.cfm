@@ -67,6 +67,7 @@
             u.businessname, 
             u.extra_insurance_typeid,
             country.countrycode,
+            country.countryname,
             comp.orgcode,
             insu_codes.policycode
         FROM 
@@ -140,8 +141,8 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
             <td style="border:none;">
             Any e-mail information collected will be used solely for communication and marketing purposes and will not be sold to any third party.
             </td>
-            <td style="border:none;">
-            &nbsp;
+            <td style="border:none;">&nbsp;
+            
             </td>
         </tr>
         <tr>
@@ -157,6 +158,7 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
             <td style="width:80px; text-align:center; font-weight:bold;">Days</td>
             <td style="width:300px; text-align:left; font-weight:bold;">Email Address (optional)</td>
             <td style="width:60px; text-align:left; font-weight:bold;">Gender (M/F)</td>
+            <td style="width:60px; text-align:left; font-weight:bold;">Home Country</td>
         </tr>
         <cfloop query="qGetCandidates">
             
@@ -221,9 +223,12 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
                     </td>
                     <td>
                     	#qGetCandidates.sex#
-                    </td>                              
+                    </td> 
+                    <td>
+                    	#qGetCandidates.countryname#
+                    </td>                                
                 </tr>
-				
+				<!---
                 <cfquery datasource="MySql">
                     UPDATE 
                         extra_candidates 
@@ -268,7 +273,7 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
                         <cfqueryparam cfsqltype="cf_sql_timestamp" value="#vInsuranceDate#">
                     );	
                 </cfquery>
-                
+                ---->
             </cfif>
             
         </cfloop>
