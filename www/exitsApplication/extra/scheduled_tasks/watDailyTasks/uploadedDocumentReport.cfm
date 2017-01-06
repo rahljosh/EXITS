@@ -34,7 +34,7 @@
 			<cfoutput query="qGetUploadedDocs" group="candidateID">
                 
                 <div style="color: ##666; font-weight: bold; padding-bottom:5px; text-transform:uppercase;">
-                    #qGetUploadedDocs.firstName# #qGetUploadedDocs.lastName# (###qGetUploadedDocs.candidateID#) - #qGetUploadedDocs.businessName#
+                  <a href="http://extra.exitsapplication.com/internal/wat/index.cfm?curdoc=candidate/candidate_info&uniqueid=#qGetUploadedDocs.uniqueid#">#qGetUploadedDocs.firstName# #qGetUploadedDocs.lastName#</a> (###qGetUploadedDocs.candidateID#) - #qGetUploadedDocs.businessName#
                 </div>
                 
                 <table cellspacing="1" style="width: 100%; border:1px solid ##0069aa; margin-bottom:15px; padding:0px;">	
