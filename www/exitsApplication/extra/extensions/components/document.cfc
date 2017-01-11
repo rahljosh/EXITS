@@ -211,6 +211,7 @@
         <cfargument name="documentTypeID" default="" hint="documentTypeID is not required">
         <cfargument name="clientExt" default="" hint="clientExt is not required">
 		<cfargument name="NotClientExt" default="" hint="Get extensions that are not this type">
+        <cfargument name="orderBy" default="" hint="Get extensions that are not this type">
         
         <cfquery 
 			name="qGetDocumentsByFilter" 
@@ -265,8 +266,13 @@
                 	AND
                     	clientExt != <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.NotClientExt#">
                 </cfif>
+               
               	ORDER BY
-                	description
+                	<cfif LEN(ARGUMENTS.orderBy)>
+                	#ARGUMENTS.orderBy#
+                    <cfelse>
+                    description
+                    </cfif>
 		</cfquery>
 		   
 		<cfreturn qGetDocumentsByFilter>
@@ -476,11 +482,15 @@
                     c.candidateID,
                     c.firstName,
                     c.lastName,
-                    u.businessName
+                    c.uniqueid,
+                    u.businessName,
+                    apsJN.dateCreated
                 FROM 
                     document d
 				LEFT OUTER JOIN                      
                 	documenttype dt ON dt.ID = d.documentTypeID
+                LEFT JOIN
+                	applicationstatusjn apsJN on apsJN.foreignID = c.candidateid
                 INNER JOIN
                 	extra_candidates c ON c.candidateID = d.foreignID
 						AND
@@ -493,6 +503,8 @@
                 	d.isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
                 AND    
                     d.foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.foreignTable#">
+                 AND 
+        	apsJN.applicationStatusID = <cfqueryparam cfsqltype="cf_sql_integer" value="11">
 				AND
                    	d.dateUpdated >= DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL -25 HOUR)                     
                 ORDER BY
