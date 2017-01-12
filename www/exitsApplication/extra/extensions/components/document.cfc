@@ -476,6 +476,7 @@
                     d.fileSize,
                     d.location,
                     d.dateCreated,
+                    d.uploadedBy,
                     DATE_FORMAT(d.dateCreated, '%m/%d/%y') as displayDateCreated,
                     CONVERT(CONCAT('<a href=''#APPLICATION.SITE.URL.main#internal/wat/onlineApplication/publicDocument.cfm?ID=', d.ID, '&Key=', d.hashID, '''>[ Download ]</a> ') USING latin1) AS action,
                     dt.name as documentType,
@@ -484,13 +485,13 @@
                     c.lastName,
                     c.uniqueid,
                     u.businessName,
-                    apsJN.dateCreated
+                    apsJN.dateCreated as AppApproved
+                   
                 FROM 
                     document d
 				LEFT OUTER JOIN                      
                 	documenttype dt ON dt.ID = d.documentTypeID
-                LEFT JOIN
-                	applicationstatusjn apsJN on apsJN.foreignID = c.candidateid
+              
                 INNER JOIN
                 	extra_candidates c ON c.candidateID = d.foreignID
 						AND
@@ -499,14 +500,17 @@
                         	c.applicationStatusID = <cfqueryparam cfsqltype="cf_sql_integer" value="11">
                 INNER JOIN
                 	smg_users u ON u.userID = c.intRep
+                 LEFT JOIN 
+        			applicationstatusjn apsJN on apsJN.foreignID = c.candidateid
                 WHERE 
                 	d.isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
                 AND    
                     d.foreignTable = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.foreignTable#">
-                 AND 
-        	apsJN.applicationStatusID = <cfqueryparam cfsqltype="cf_sql_integer" value="11">
+                
 				AND
-                   	d.dateUpdated >= DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL -25 HOUR)                     
+                   	d.dateUpdated >= DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL -25 HOUR)  
+               	AND 
+        			apsJN.applicationStatusID = 11                   
                 ORDER BY
                     c.candidateID,
                     d.dateCreated DESC     
