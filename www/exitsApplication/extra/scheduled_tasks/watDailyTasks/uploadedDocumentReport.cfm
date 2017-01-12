@@ -25,16 +25,23 @@
 <cfif qGetUploadedDocs.recordCount>
 
     <cfsavecontent variable="documentReport">
-    
+   
         <!--- Arrival Information --->
         <fieldset style="margin: 5px 0px 20px 0px; padding: 10px; border: ##DDD 1px solid;">
             
             <legend style="color: ##666; font-weight: bold; padding-bottom:5px; text-transform:uppercase;">UPLOADED DOCUMENTS REPORT</legend>
     
 			<cfoutput query="qGetUploadedDocs" group="candidateID">
+            <cfif val(qGetUploadedDocs.uploadedBy)>
+            	<cfquery name="uploadedBy" datasource="#Application.DSN.Source#">
+                select firstname, lastname
+                from smg_users
+                where userid = #qGetUploadedDocs.uploadedBy#
+                </cfquery>
+            </cfif>
                 
                 <div style="color: ##666; font-weight: bold; padding-bottom:5px; text-transform:uppercase;">
-                  <a href="http://extra.exitsapplication.com/internal/wat/index.cfm?curdoc=candidate/candidate_info&uniqueid=#qGetUploadedDocs.uniqueid#">#qGetUploadedDocs.firstName# #qGetUploadedDocs.lastName#</a> (###qGetUploadedDocs.candidateID#) - #qGetUploadedDocs.businessName#
+                  <a href="http://extra.exitsapplication.com/internal/wat/index.cfm?curdoc=candidate/candidate_info&uniqueid=#qGetUploadedDocs.uniqueid#">#qGetUploadedDocs.firstName# #qGetUploadedDocs.lastName#</a> (###qGetUploadedDocs.candidateID#)  - #qGetUploadedDocs.businessName#<br />Approved: #DateFormat(qGetUploadedDocs.appApproved, 'mm/dd/yyyy')# @ #TimeFormat(qGetUploadedDocs.appApproved, 'hh:mm tt')#
                 </div>
                 
                 <table cellspacing="1" style="width: 100%; border:1px solid ##0069aa; margin-bottom:15px; padding:0px;">	
@@ -44,14 +51,16 @@
                         <td style="padding:4px 0px 4px 0px;">File Name</td>
                         <td style="padding:4px 0px 4px 0px;">Size</td>
                         <td style="padding:4px 0px 4px 0px;">Actions</td>
+                        <td style="padding:4px 0px 4px 0px;">Uploaded By</td>
                     </tr>                                
                     <cfoutput>
                         <tr style="text-align:center; <cfif qGetUploadedDocs.currentRow MOD 2>background-color: ##EEEEEE;</cfif> ">
-                            <td style="padding:4px 0px 4px 0px;">#qGetUploadedDocs.displayDateCreated#</td>
+                            <td style="padding:4px 0px 4px 0px;">#qGetUploadedDocs.displayDateCreated# #TimeFormat(qGetUploadedDocs.dateCreated, "hh:mm tt")# </td>
                             <td style="padding:4px 0px 4px 0px;">#qGetUploadedDocs.documentType#</td>
                             <td style="padding:4px 0px 4px 0px;">#qGetUploadedDocs.fileName#</td>
                             <td style="padding:4px 0px 4px 0px;">#qGetUploadedDocs.fileSize#</td>
                             <td style="padding:4px 0px 4px 0px;">#qGetUploadedDocs.action#</td>
+                            <td style="padding:4px 0px 4px 0px;"><cfif val(qGetUploadedDocs.uploadedBy)> #uploadedBy.firstname# #uploadedBy.lastname# </cfif></td>
                         </tr>                         
                     </cfoutput>    						
                 </table>
@@ -69,9 +78,9 @@
                 Uploaded Document Report Sent On #DateFormat(now(), 'mm/dd/yyyy')# at #TimeFormat(now(), 'hh:mm:ss tt')# 
             </div>
         </cfoutput>
-            
+       
     </cfsavecontent>
-
+	
 	<cfscript>
 		APPLICATION.CFC.EMAIL.sendEmail(
 			emailTo='anca@csb-usa.com,joanna@csb-usa.com',
