@@ -18,7 +18,9 @@
     	<!--- Update paperwork --->
         <cfquery datasource="#APPLICATION.DSN#">
         	UPDATE smg_hosts
-            SET php_orientationSignOff = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.orientationSignOff#">
+            SET php_orientationSignOff = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.orientationSignOff#">,
+            father_W9 = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.father_W9#">,
+            mother_W9 = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.mother_W9#">
             where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostid#">
         </cfquery>
         
@@ -50,8 +52,18 @@
                             <td align="left">Orientation Sign-off</td>
                             <td align="right"><input name="orientationSignOff" type="text" class="datePicker" value="#DateFormat(family_info.php_orientationSignOff,'mm/dd/yyyy')#" /></td>
                         </tr>
+                      
                         <tr>
-                            <td colspan="5" align="center"><input type="image" src="../images/buttons/submit.png" /></td>
+                            <td align="left">Father W-9</td>
+                            <td align="right"><input name="father_W9" type="text" class="datePicker" value="#DateFormat(family_info.father_W9,'mm/dd/yyyy')#" /></td>
+                        </tr>
+                     
+                        <tr>
+                            <td align="left">Mother W-9</td>
+                            <td align="right"><input name="mother_W9" type="text" class="datePicker" value="#DateFormat(family_info.mother_W9,'mm/dd/yyyy')#" /></td>
+                        </tr>
+                        <tr>
+                            <td colspan="5" align="center"><input type="submit" value="Submit" /></td>
                         </tr>
                     </table>
                 </td>
