@@ -163,11 +163,17 @@
                         <p class="style1">#c_city#, #c_state# &nbsp; #c_zip#</p>
                         <p class="style1">#APPLICATION.CSB[setSponsor].phoneIDCard#</p>
                         <p class="style5">&nbsp;</p>
-                        <p class="style3">Student: <b>#Firstname# #lastname# (###candidateid#)</b></p>
+                       
                     </td>
                 </tr>
             </table>
-            
+            <table border="0" width="100%">
+            	<tr>
+                	<Td>
+                     <p class="style3">Student: <b>#Firstname# #lastname# (###candidateid#)</b></p>
+                    </Td>
+                </tr>
+            </table>
             <!--- BODY --->
             <table border="0" width="100%">
                 <tr>
