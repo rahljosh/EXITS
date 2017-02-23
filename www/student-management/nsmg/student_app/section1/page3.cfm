@@ -58,11 +58,8 @@ function CheckFields() {
          Counter++;
       }
    }
-   if (Counter > 6){
-      alert("You have selected " +Counter+ " interests.\n\You must select at least 3 and no more than 6.");
-      return false;
-   } else if ((Counter != 0) && (Counter < 3)) {
-      alert("You have selected " +Counter+ " interests.\n\You must select at least 3 and no more than 6.");
+   if ((Counter != 0) && (Counter < 3)) {
+      alert("You have selected " +Counter+ " interests.\n\You must select at least 3.");
       return false;
    } 
 }
