@@ -105,7 +105,8 @@
 					seasonID=FORM.motherSeasonID, 
 					companyID=FORM.mothercompanyID,
 					dateAuthorized=FORM.motherdate_authorized,
-					isNoSSN=FORM.motherIsNoSSN
+					isNoSSN=FORM.motherIsNoSSN,
+					dateNexitsApproved = FORM.motherdate_nexits_approved
 				);		
 			}
 			
@@ -119,7 +120,8 @@
                     seasonID=FORM.fatherSeasonID, 
                     companyID=FORM.fathercompanyID,
                     dateAuthorized=FORM.fatherdate_authorized,
-					isNoSSN=FORM.fatherIsNoSSN
+					isNoSSN=FORM.fatherIsNoSSN,
+					dateNexitsApproved = FORM.fatherdate_nexits_approved
                 );	
             }
         </cfscript>
@@ -147,6 +149,7 @@
                             seasonID=FORM[id & 'seasonID'],
                             companyID=FORM[id & 'companyID'],
                             dateAuthorized=FORM[id & "date_authorized"],
+							dateNexitsApproved=FORM[id & "date_nexits_approved"],
                             isNoSSN=FORM[id & "isNoSSN"]
                         );
                     }
@@ -520,17 +523,18 @@
         <table border="0" cellpadding="4" cellspacing="2" width="100%" class="section">
             <tr>
                 <th colspan="10" bgcolor="##e2efc7">H O S T &nbsp; P A R E N T S</th>
-                <th bgcolor="##e2efc7"><a href="cbc/hostParentsInfo.cfm?hostID=#qGetHost.hostID#" class="jQueryModal">Edit Host Parents Info</a></th>
+                <th bgcolor="##e2efc7" colspan=2><a href="cbc/hostParentsInfo.cfm?hostID=#qGetHost.hostID#" class="jQueryModal">Edit Host Parents Info</a></th>
             </tr>
             <tr><td colspan="9">&nbsp;</td></tr>
             
             <!--- HOST MOTHER --->
             <cfif LEN(qGetHost.motherfirstname) AND LEN(qGetHost.motherlastname)>
-                <tr><td colspan="11" bgcolor="##e2efc7"><b>Primary Host Parent - #qGetHost.motherfirstname# #qGetHost.motherlastname#</b></td></tr>
+                <tr><td colspan="12" bgcolor="##e2efc7"><b>Primary Host Parent - #qGetHost.motherfirstname# #qGetHost.motherlastname#</b></td></tr>
                 <tr>
                     <td class="columnHeader">Company</td>
                     <td class="columnHeader">Season</td>		
-                    <td class="columnHeader">Authorization Received <br><font size="-2">mm/dd/yyyy</font></td>		
+                    <td class="columnHeader">Authorization Received <br><font size="-2">mm/dd/yyyy</font></td>	
+                    <td class="columnHeader">Approved In NEXITS</td>
                     <td class="columnHeader">CBC Submitted <br><font size="-2">mm/dd/yyyy</font></td>
                     <td class="columnHeader">Expiration Date <br><font size="-2">mm/dd/yyyy</font></td>		
                     <td class="columnHeader">Request ID</td>
@@ -545,6 +549,7 @@
                         <td>#qGetCBCMother.companyshort#</td>
                         <td>#qGetCBCMother.season#</td>
                         <td>#DateFormat(qGetCBCMother.date_authorized, 'mm/dd/yyyy')#</td>
+                        <td><cfif isDate(qGetCBCMother.nexits_approved)>#DateFormat(qGetCBCMother.nexits_approved, 'mm/dd/yyyy')#</cfif></td>
                         <td><cfif isDate(qGetCBCMother.date_sent)>#DateFormat(qGetCBCMother.date_sent, 'mm/dd/yyyy')#<cfelse>in process</cfif></td>
                         <td><cfif isDate(qGetCBCMother.date_expired)>#DateFormat(qGetCBCMother.date_expired, 'mm/dd/yyyy')#<cfelse>n/a</cfif></td>
                         <td><a href="cbc/view_host_cbc.cfm?hostID=#qGetCBCMother.hostID#&CBCFamID=#qGetCBCMother.CBCFamID#&file=batch_#qGetCBCMother.batchid#_host_mother_#qGetCBCMother.hostid#_rec.xml" target="_blank">#qGetCBCMother.requestID#</a></td>
@@ -594,7 +599,7 @@
                             </select>
                         </td>
                         <td><input type="text" name="motherdate_authorized" value="" maxlength="10" class="datePicker"></td>
-                        <td>n/a</td>
+                        <td><input type="text" name="motherdate_nexits_approved" value="" maxlength="10" class="datePicker"></td>
                         <td>n/a</td>
                         <td>n/a</td>
                         <td>n/a</td>
@@ -609,11 +614,12 @@
             
             <!--- HOST FATHER --->
             <cfif LEN(qGetHost.fatherfirstname)>
-                <tr><td colspan="11" bgcolor="##e2efc7"><b>Other Host Parent - #qGetHost.fatherfirstname# #qGetHost.fatherlastname#</b></td></tr>
+                <tr><td colspan="12" bgcolor="##e2efc7"><b>Other Host Parent - #qGetHost.fatherfirstname# #qGetHost.fatherlastname#</b></td></tr>
                 <tr>
                     <td class="columnHeader">Company</td>
                     <td class="columnHeader">Season</td>		
                     <td class="columnHeader">Authorization Received <br><font size="-2">mm/dd/yyyy</font></td>		
+                    <td class="columnHeader">Approved In NEXITS</td>	
                     <td class="columnHeader">CBC Submitted <br><font size="-2">mm/dd/yyyy</font></td>	
                     <td class="columnHeader">Expiration Date <br><font size="-2">mm/dd/yyyy</font></td>		
                     <td class="columnHeader">Request ID</td>
@@ -627,7 +633,8 @@
                     <tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
                         <td>#qGetCBCFather.companyshort#</td>
                         <td>#qGetCBCFather.season#</td>
-                        <td>#DateFormat(qGetCBCFather.date_authorized, 'mm/dd/yyyy')#</td>
+                        <td>#DateFormat(qGetCBCFather.date_authorized, 'mm/dd/yyyy')#></td>
+                        <td><cfif isDate(qGetCBCFather.nexits_approved)>#DateFormat(qGetCBCFather.nexits_approved, 'mm/dd/yyyy')#</cfif></td>
                         <td><cfif isDate(qGetCBCFather.date_sent)>#DateFormat(qGetCBCFather.date_sent, 'mm/dd/yyyy')#<cfelse>processing</cfif></td>
                         <td><cfif isDate(qGetCBCFather.date_expired)>#DateFormat(qGetCBCFather.date_expired, 'mm/dd/yyyy')#<cfelse>n/a</cfif></td>
                         <td><a href="cbc/view_host_cbc.cfm?hostID=#qGetCBCFather.hostID#&CBCFamID=#qGetCBCFather.CBCFamID#&file=batch_#qGetCBCFather.batchid#_host_mother_#qGetCBCFather.hostid#_rec.xml" target="_blank">#qGetCBCFather.requestID#</a></td>
@@ -675,7 +682,7 @@
                             </select>
                         </td>
                         <td><input type="Text" name="fatherdate_authorized" value="" maxlength="10" class="datePicker"></td>
-                        <td>n/a</td>
+                        <td><input type="Text" name="fatherdate_nexits_approved" value="" maxlength="10" class="datePicker"></td>
                         <td>n/a</td>
                         <td>n/a</td>
                         <td>n/a</td>
@@ -691,7 +698,7 @@
             <!--- OTHER FAMILY MEMBERS ---> 	
             <tr>
                 <th colspan="10" bgcolor="##e2efc7">O T H E R &nbsp; F A M I L Y &nbsp; M E M B E R S &nbsp; O V E R &nbsp; 16 &nbsp; Y E A R S &nbsp; O L D &nbsp; (Living at Home)</th>
-                <th bgcolor="##e2efc7"><a href="cbc/hostMemberInfo.cfm?hostID=#qGetHost.hostID#" class="jQueryModal">Edit Family Members Info</a></th>
+                <th bgcolor="##e2efc7" colspan=2><a href="cbc/hostMemberInfo.cfm?hostID=#qGetHost.hostID#" class="jQueryModal">Edit Family Members Info</a></th>
             </tr>
             <tr><td colspan="7">&nbsp;</td></tr>
             <cfif NOT VAL(qGetHostMembers.recordcount)>
@@ -717,12 +724,14 @@
                     
                     <cfinput type="hidden" name="#familyID#count" value="#qGetCBCMember.recordcount#">
        
-                    <tr><td colspan="11" bgcolor="##e2efc7"><b>#name# #lastname#</b></td></tr>
+                    <tr><td colspan="12" bgcolor="##e2efc7"><b>#name# #lastname#</b></td></tr>
                     <tr>
                         <td class="columnHeader">Company</td>
                         <td class="columnHeader">Season</td>		
-                        <td class="columnHeader">Authorization Received <br><font size="-2">mm/dd/yyyy</font></td>		
-                        <td class="columnHeader">CBC Submitted <br><font size="-2">mm/dd/yyyy</font></td>
+                        <td class="columnHeader">Authorization Received <br><font size="-2">mm/dd/yyyy</font></td>	
+                        <td class="columnHeader">Approved In NEXITS<br>
+                      <font size="-2">mm/dd/yyyy</font></td>			
+                      <td class="columnHeader">CBC Submitted <br><font size="-2">mm/dd/yyyy</font></td>
                         <td class="columnHeader">Expiration Date <br><font size="-2">mm/dd/yyyy</font></td>		
                         <td class="columnHeader">Request ID</td>
                        <td class="columnHeader">Flag</td>
@@ -739,6 +748,7 @@
                             <td>#qGetCBCMember.companyshort#</td>
                             <td>#qGetCBCMember.season#</td>
                             <td>#DateFormat(qGetCBCMember.date_authorized, 'mm/dd/yyyy')#</td>
+                            <td><cfif isDate(qGetCBCMember.nexits_approved)>#DateFormat(qGetCBCMember.nexits_approved, 'mm/dd/yyyy')#</cfif></td>
                             <td><cfif isDate(qGetCBCMember.date_sent)>#DateFormat(qGetCBCMember.date_sent, 'mm/dd/yyyy')#<cfelse>processing</cfif></td>
                             <td><cfif isDate(qGetCBCMember.date_expired)>#DateFormat(qGetCBCMember.date_expired, 'mm/dd/yyyy')#<cfelse>n/a</cfif></td>
                             <td><a href="cbc/view_host_cbc.cfm?hostID=#qGetCBCMember.hostID#&CBCFamID=#qGetCBCMember.CBCFamID#&file=batch_#qGetCBCMember.batchid#_host_mother_#qGetCBCMember.hostid#_rec.xml" target="_blank">#qGetCBCMember.requestID#</a></td>
@@ -788,7 +798,7 @@
                                 </cfselect>
                             </td>
                             <td><input type="Text" name="#familyID#date_authorized" value="" maxlength="10" class="datePicker"></td>
-                            <td>n/a</td>
+                            <td><input type="Text" name="#familyID#date_nexits_approved" value="" maxlength="10" class="datePicker"></td>
                             <td>n/a</td>
                             <td>n/a</td>
                             <td>n/a</td>
