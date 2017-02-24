@@ -90,6 +90,56 @@
 	</cfscript>
     
     <!--- FORM Submitted --->
+    
+      <!----
+            // Living Room
+            if ( NOT LEN(TRIM(FORM.livingRoom)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please describe the living room.");
+            }
+            ---->
+			<!----
+            // Dining Room
+            if ( NOT LEN(TRIM(FORM.diningRoom)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please describe the dining room.");
+            }
+            ---->
+            <!----
+            // Exchange Interest
+            if ( NOT LEN(TRIM(FORM.exchangeInterest)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please indicate if family shows interest in the exchange program.");
+            }
+           ---->
+           	<!----
+            // Fam Reservations
+            if ( NOT LEN(TRIM(FORM.famReservations)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please indicate any reservations you have about this family.");
+            }
+			---->
+			<!----
+			// Bedroom
+            if ( NOT LEN(TRIM(FORM.ownBed)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please indicate if student will have their own bed.");
+            }
+            ---->
+			<!----
+            // Bathroom
+            if ( NOT LEN(TRIM(FORM.bathRoom)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please indicate if student will have access to a bathroom.");
+            }
+            ---->
+            <!----
+            // Privacy
+            if ( NOT LEN(TRIM(FORM.privacy)) ) {
+                // Get all the missing items in a list
+                SESSION.formErrors.Add("Please indicate if student will have privacy.");
+            }
+           ---->
     <cfif FORM.submitted>
 
 		<cfscript>
@@ -154,20 +204,7 @@
                 // Get all the missing items in a list
                 SESSION.formErrors.Add("Please indicate the number of bathrooms.");
             }
-            <!----
-            // Living Room
-            if ( NOT LEN(TRIM(FORM.livingRoom)) ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please describe the living room.");
-            }
-            ---->
-			<!----
-            // Dining Room
-            if ( NOT LEN(TRIM(FORM.diningRoom)) ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please describe the dining room.");
-            }
-            ---->
+          
             // Kitchen
             if ( NOT LEN(TRIM(FORM.kitchen)) ) {
                 // Get all the missing items in a list
@@ -179,40 +216,14 @@
                 // Get all the missing items in a list
                 SESSION.formErrors.Add("Please indicate if family is affectionate and interested in hosting a student.");
             }
-            <!----
-            // Exchange Interest
-            if ( NOT LEN(TRIM(FORM.exchangeInterest)) ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please indicate if family shows interest in the exchange program.");
-            }
-           ---->
+            
             // Living Year
             if ( NOT LEN(TRIM(FORM.livingYear)) ) {
                 // Get all the missing items in a list
                 SESSION.formErrors.Add("Please indicate if you would feel comfortable having your child live with this family.");
             }
 			
-			<!----
-            // Fam Reservations
-            if ( NOT LEN(TRIM(FORM.famReservations)) ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please indicate any reservations you have about this family.");
-            }
-			---->
-			<!----
-			// Bedroom
-            if ( NOT LEN(TRIM(FORM.ownBed)) ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please indicate if student will have their own bed.");
-            }
-            ---->
-			<!----
-            // Bathroom
-            if ( NOT LEN(TRIM(FORM.bathRoom)) ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please indicate if student will have access to a bathroom.");
-            }
-            ---->
+		
             // Outdoors from Bedroom
             if ( NOT LEN(TRIM(FORM.outdoorsFromBedroom)) ) {
                 // Get all the missing items in a list
@@ -231,13 +242,7 @@
                 SESSION.formErrors.Add("Please indicate if student will have adequte space to study.");
             }
             
-			<!----
-            // Privacy
-            if ( NOT LEN(TRIM(FORM.privacy)) ) {
-                // Get all the missing items in a list
-                SESSION.formErrors.Add("Please indicate if student will have privacy.");
-            }
-           ---->
+			
             //  Pets
             if ( NOT LEN(TRIM(FORM.pets)) ) {
                 // Get all the missing items in a list
@@ -1001,8 +1006,10 @@
                 <cfelse>
                     #FORM.pets#
                 </cfif>
-        <!----   
-         <br /><br /><br /><br />
+        
+         <br /><br />
+          <!----  
+		  <br /><br />
           <span class="title">
                Other Comments
           </span>
