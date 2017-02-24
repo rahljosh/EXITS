@@ -96,7 +96,7 @@
         <table width="100%" cellspacing="0" cellpadding="2" class="border">
             <tr bgcolor="##deeaf3">
                 <td align="center">
-                    <textarea cols="75" rows="25" name="familyLetter">#FORM.familyLetter#</textarea>
+                    <textarea cols="75" rows="25" name="familyLetter">#Replace(FORM.familyLetter,"<br>","#chr(10)#","all")#</textarea>
                 </td>
             </tr>
         </table>
