@@ -125,30 +125,30 @@
         <table width="100%" cellspacing="0" cellpadding="2" class="border">
             <tr>
                 <td class="label" valign="top"><h3>Curfew on school nights <span class="required">*</span></h3></td>
-                <td><textarea cols="50" rows="4" name="houserules_curfewweeknights">#FORM.houserules_curfewweeknights#</textarea></td>
+                <td><textarea cols="50" rows="4" name="houserules_curfewweeknights">#Replace(FORM.houserules_curfewweeknights,"<br>","#chr(10)#","all")# </textarea></td>
             </tr>   
             <tr  bgcolor="##deeaf3">
                 <td class="label" valign="top"><h3>Curfew on weekends <span class="required">*</span></h3></td>
-                <td><textarea cols="50" rows="4" name="houserules_curfewweekends">#FORM.houserules_curfewweekends#</textarea></td>
+                <td><textarea cols="50" rows="4" name="houserules_curfewweekends">#Replace(FORM.houserules_curfewweekends,"<br>","#chr(10)#","all")#</textarea></td>
             </tr> 
             <tr>
                 <td class="label" valign="top"><h3>Chores <span class="required">*</span></h3></td>
-                <td><textarea cols="50" rows="4" name="houserules_chores">#FORM.houserules_chores#</textarea></td>
+                <td><textarea cols="50" rows="4" name="houserules_chores">#Replace(FORM.houserules_chores,"<br>","#chr(10)#","all")# </textarea></td>
             </tr> 
             <tr  bgcolor="##deeaf3">
                 <td class="label" valign="top"><h3>Computer, Internet, and Email Usage <span class="required">*</span></h3> </td>
-                <td><textarea cols="50" rows="4" name="houserules_inet">#FORM.houserules_inet# </textarea></td>
+                <td><textarea cols="50" rows="4" name="houserules_inet">#Replace(FORM.houserules_inet,"<br>","#chr(10)#","all")# </textarea></td>
             </tr> 
             <tr>
                 <td class="label" valign="top">
                 	<h3>Expenses <span class="required">*</span></h3>
                 	<i>personal expenses expected to be paid by the students</i>
                 </td>
-                <td><textarea cols="50" rows="4" name="houserules_expenses"  placeholder="toiletries, eating out with friends, etc">#FORM.houserules_expenses#</textarea></td>
+                <td><textarea cols="50" rows="4" name="houserules_expenses"  placeholder="toiletries, eating out with friends, etc">#Replace(FORM.houserules_expenses,"<br>","#chr(10)#","all")# </textarea></td>
             </tr> 
             <tr bgcolor="##deeaf3">
                 <td class="label" valign="top"><h3>Other</h3> <i>please include any other rules or expectations you will have of your exchange student</i></td>
-                <td><textarea cols="50" rows="4" name="houserules_other" placeholder="Homework, access to food, etc">#FORM.houserules_other#</textarea></td>
+                <td><textarea cols="50" rows="4" name="houserules_other" placeholder="Homework, access to food, etc"> #Replace(FORM.houserules_other,"<br>","#chr(10)#","all")#</textarea></td>
             </tr> 
         </table>
 
