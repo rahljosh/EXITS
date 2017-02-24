@@ -154,19 +154,20 @@
                 // Get all the missing items in a list
                 SESSION.formErrors.Add("Please indicate the number of bathrooms.");
             }
-            
+            <!----
             // Living Room
             if ( NOT LEN(TRIM(FORM.livingRoom)) ) {
                 // Get all the missing items in a list
                 SESSION.formErrors.Add("Please describe the living room.");
             }
-            
+            ---->
+			<!----
             // Dining Room
             if ( NOT LEN(TRIM(FORM.diningRoom)) ) {
                 // Get all the missing items in a list
                 SESSION.formErrors.Add("Please describe the dining room.");
             }
-            
+            ---->
             // Kitchen
             if ( NOT LEN(TRIM(FORM.kitchen)) ) {
                 // Get all the missing items in a list
@@ -178,38 +179,40 @@
                 // Get all the missing items in a list
                 SESSION.formErrors.Add("Please indicate if family is affectionate and interested in hosting a student.");
             }
-            
+            <!----
             // Exchange Interest
             if ( NOT LEN(TRIM(FORM.exchangeInterest)) ) {
                 // Get all the missing items in a list
                 SESSION.formErrors.Add("Please indicate if family shows interest in the exchange program.");
             }
-           
+           ---->
             // Living Year
             if ( NOT LEN(TRIM(FORM.livingYear)) ) {
                 // Get all the missing items in a list
                 SESSION.formErrors.Add("Please indicate if you would feel comfortable having your child live with this family.");
             }
 			
+			<!----
             // Fam Reservations
             if ( NOT LEN(TRIM(FORM.famReservations)) ) {
                 // Get all the missing items in a list
                 SESSION.formErrors.Add("Please indicate any reservations you have about this family.");
             }
-			
-			
+			---->
+			<!----
 			// Bedroom
             if ( NOT LEN(TRIM(FORM.ownBed)) ) {
                 // Get all the missing items in a list
                 SESSION.formErrors.Add("Please indicate if student will have their own bed.");
             }
-            
+            ---->
+			<!----
             // Bathroom
             if ( NOT LEN(TRIM(FORM.bathRoom)) ) {
                 // Get all the missing items in a list
                 SESSION.formErrors.Add("Please indicate if student will have access to a bathroom.");
             }
-            
+            ---->
             // Outdoors from Bedroom
             if ( NOT LEN(TRIM(FORM.outdoorsFromBedroom)) ) {
                 // Get all the missing items in a list
@@ -228,12 +231,13 @@
                 SESSION.formErrors.Add("Please indicate if student will have adequte space to study.");
             }
             
+			<!----
             // Privacy
             if ( NOT LEN(TRIM(FORM.privacy)) ) {
                 // Get all the missing items in a list
                 SESSION.formErrors.Add("Please indicate if student will have privacy.");
             }
-           
+           ---->
             //  Pets
             if ( NOT LEN(TRIM(FORM.pets)) ) {
                 // Get all the missing items in a list
@@ -808,7 +812,7 @@
                 </cfif>
                 
                 <br />
-                
+                <!----
                 <label for="livingRoom" class="rightItem">Living Room <span class="required">*</span></label>
 				<cfif vIsEditAllowed>
                     <input type="text" name="livingRoom" id="livingRoom" class="xLargeField" value="#FORM.livingRoom#"/>
@@ -826,7 +830,7 @@
                 </cfif>
                 
                 <br />
-                
+                ---->
                 <label for="kitchen" class="rightItem">Kitchen <span class="required">*</span></label>
                 <cfif vIsEditAllowed>
                     <input type="text" name="kitchen" id="kitchen" class="xLargeField"  value="#FORM.kitchen#"/>
@@ -856,7 +860,7 @@
                 </cfif>
                 
                 <br /><br /><br /><br />
-                
+                <!----
                 <span class="title">
                 	Do all family members (including children) show interest in the exchange program? <span class="required">*</span>
                 	<span class="small"></span>
@@ -868,7 +872,7 @@
                 </cfif>
                 
                 <br /><br /><br /><br />
-                
+                ---->
                 <span class="title">
                 	Would you feel comfortable having your child live with this family for up to one year? <span class="required">*</span>
                     <span class="small"></span>
@@ -880,7 +884,7 @@
                 </cfif>
                 
                 <br /><br /><br /><br />
-                
+                <!----
                 <span class="title">
                 	What reservations do you have, if any, about these people as a potential host family? <span class="required">*</span>
                 	<span class="small"></span>
@@ -925,7 +929,7 @@
                 </cfif>
          
          <br /><br /><br /><br />
-    
+    ---->
           <span class="title">
                Will exchange student have access to the outdoors from their bedroom?<span class="required">*</span> 
                     <span class="small">i.e. a door or window</span>
@@ -957,7 +961,7 @@
                      
                  <br /><br /><br /><br />
                  <br /><br />
-            
+           <!---- 
            <span class="title">
                Will the exchange student have privacy?<span class="required">*</span>
                     <span class="small">i.e. a door on their room</span>
@@ -970,7 +974,7 @@
                 </cfif>
           
          <br /><br /><br /><br />
-
+	---->
             <span class="title">
                Will the exchange student have adequate study space?<span class="required">*</span>
             </span>
@@ -997,7 +1001,7 @@
                 <cfelse>
                     #FORM.pets#
                 </cfif>
-           
+        <!----   
          <br /><br /><br /><br />
           <span class="title">
                Other Comments
@@ -1007,7 +1011,7 @@
                 <cfelse>
                     #FORM.other#
                 </cfif>
-         
+         ---->
 
     	
                 
