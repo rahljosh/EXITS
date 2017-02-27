@@ -124,6 +124,7 @@
         <cfquery name="qGetResults" datasource="#application.dsn#">
             SELECT 
             	h.hostid, 
+                h.nexits_id,
                 h.familylastname, 
                 h.fatherfirstname, 
                 h.motherfirstname, 
@@ -266,6 +267,7 @@
                 h.fatherfirstname, 
                 h.motherfirstname, 
                 h.hostid, 
+                h.nexits_id,
                 h.city, 
                 h.state
             FROM 
@@ -347,6 +349,7 @@
         <table width=100% class="section">
             <tr align="left">
                 <th>ID</th>
+                <th>NEXITS ID</th>
                 <th>Last Name</th>
                 <th>Father</th>
                 <th>Mother</th>
@@ -355,7 +358,7 @@
             </tr>
             <cfloop query="qGetResults" startrow="#startrow#" endrow="#endrow#">
             <tr bgcolor="#iif(currentRow MOD 2 ,DE("ffffe6") ,DE("white") )#">
-                <td><a href="?curdoc=host_fam_info&hostid=#hostid#">#hostid#</a></td>
+                <td><a href="?curdoc=host_fam_info&hostid=#hostid#">#hostid#</a></td>				<td><cfif val(#nexits_id#)>#nexits_id#<cfelse>n/a</cfif></td>
                 <td>#familylastname#</td>
                 <td>#fatherfirstname#</td>
                 <td>#motherfirstname#</td>

@@ -404,7 +404,7 @@ div.scroll2 {
                 </tr>
             </table>
             <table width="100%" border=0 cellpadding=4 cellspacing=0 class="section">
-                <tr><td>Family Name:</td><td>#qGetHostInfo.familylastname#</td><td>ID:</td><td>#qGetHostInfo.hostID#</td></tr>
+                <tr><td>Family Name:</td><td>#qGetHostInfo.familylastname#</td><td><p>ID:<cfif val(#qGetHostInfo.nexits_id#)><br />NEXITS ID:</cfif></p></td><td>#qGetHostInfo.hostID#<cfif val(#qGetHostInfo.nexits_id#)><br />#qGetHostInfo.nexits_id#</cfif></td></tr>
                 <tr><td>Address:</td><td>#qGetHostInfo.address#<br />#qGetHostInfo.address2#</td></tr>
                 <tr><td>City:</td><td>#qGetHostInfo.city#</td></tr>
                 <tr><td>State:</td><td>#qGetHostInfo.state#</td><td>ZIP:</td><td>#qGetHostInfo.zip#</td></tr>
@@ -572,7 +572,7 @@ div.scroll2 {
                 <cfif qGetCBCMother.recordcount EQ '0' AND qCheckCBCMother.recordcount EQ '0' AND qGetCBCFather.recordcount EQ '0' AND qCheckCBCFather.recordcount EQ '0'>
                     <tr><td align="center" colspan="5">No CBC has been submitted.</td></tr>
                 <cfelse>
-                    <tr><td colspan="6"><strong>Primary Host Parent:</strong></td></tr>
+                    <tr><td colspan="6"><strong>Host Parent:</strong></td></tr>
                     <cfloop query="qGetCBCMother">
                     <tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
                         <td style="padding-left:20px;">#qGetHostInfo.motherfirstname# #qGetHostInfo.motherlastname#</td>
@@ -640,7 +640,7 @@ div.scroll2 {
                         </tr>
                     </cfloop>
                     
-                    <tr bgcolor="e2efc7"><td colspan="7"><strong>Other Host Parent:</strong></td></tr>
+                    <tr bgcolor="e2efc7"><td colspan="7"><strong> Host Parent:</strong></td></tr>
                     <cfloop query="qGetCBCFather">
                     <tr bgcolor="#iif(currentrow MOD 2 ,DE("white") ,DE("ffffe6") )#"> 
                         <td style="padding-left:20px;">#qGetHostInfo.fatherfirstname# #qGetHostInfo.fatherlastname#</td>
