@@ -512,6 +512,7 @@
     <cfquery name="qGetResults" datasource="#application.dsn#">
         SELECT  
         	s.studentID, 
+            s.nexits_id,
             s.uniqueid, 
             s.programID,
             s.hostID,
@@ -861,6 +862,7 @@
         <table width="100%" class="section">
             <tr style="font-weight:bold;">
                 <td>ID</td>
+                <td>NEXITS ID</td>
                 <td>Last Name</td>
                 <td>First Name</td>
                 <td>Sex</td>
@@ -894,6 +896,7 @@
                         	<a href="index.cfm?curdoc=student_info&studentID=#studentID#">#studentID#</a>
                         </cfif>
                     </td>
+                    <td><cfif val(#nexits_id#)>#nexits_id#<cfelse>n/a</cfif></td>
                     <td>#familyLastName#</td>
                     <td>#FirstName#</td>
                     <td>#sex#</td>
