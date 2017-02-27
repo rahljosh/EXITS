@@ -574,6 +574,9 @@
                         <table width="100%" cellpadding="2">
 							
                             <tr><td align="center" colspan="2"><h1>#firstname# #middlename# #familylastname# (###studentID#)</h1></td></tr>
+                            <cfif val(#nexits_id#)>
+                            <tr><td align="center" colspan="2">NEXITS ID: (###nexits_id#)</td></tr>
+                            </cfif>
 							<tr>
                             	<td align="center" colspan="2">
                             		<font size=-1><span class="edit_link">
