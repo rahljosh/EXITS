@@ -45,8 +45,8 @@
             WHEN DAYOFWEEK(CURDATE()) = 2 THEN DATE_ADD(CURDATE(), INTERVAL 0 DAY)
             END,
         "9999999",
-        CURRENT_DATE,
-        CURRENT_DATE,
+        NOW(),
+        NOW(),
         0    
     FROM smg_students
     INNER JOIN smg_hosthistory ON smg_hosthistory.studentID = smg_students.studentID

@@ -34,9 +34,9 @@
         36,    
         "Pre-Placement",
         CASE      
-            WHEN CURDATE() <= STR_TO_DATE(CONCAT('01,05,',YEAR(smg_seasons.startDate)),'%d,%m,%Y') THEN 150
-            WHEN CURDATE() <= STR_TO_DATE(CONCAT('01,06,',YEAR(smg_seasons.startDate)),'%d,%m,%Y') THEN 100
-            WHEN CURDATE() <= STR_TO_DATE(CONCAT('01,07,',YEAR(smg_seasons.startDate)),'%d,%m,%Y') THEN 50
+            WHEN CURDATE() <= '2017-05-01' THEN 150            
+            WHEN CURDATE() <= '2017-06-01' THEN 100
+            WHEN CURDATE() <= '2017-07-01' THEN 50
             END,  
         "Auto-processed - ESI",    
         CASE 

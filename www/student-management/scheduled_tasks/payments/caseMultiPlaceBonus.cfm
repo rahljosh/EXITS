@@ -119,14 +119,15 @@
                     WHEN DAYOFWEEK(CURDATE()) = 2 THEN DATE_ADD(CURDATE(), INTERVAL 0 DAY)
                 	END, 
                 "9999999", 
-                CURRENT_DATE,
-                CURRENT_DATE,
+                NOW(),
+                NOW(),
                 0
          	FROM smg_users_payments_ranges pmtrng
             WHERE pmtrng.fk_programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#programID#">
             AND pmtrng.fk_paymenttype IN (9,15,17)
             AND pmtrng.paymentStartDate <= <cfqueryparam cfsqltype="cf_sql_date" value="#PISDate.maxPISDate#">
             AND pmtrng.paymentEndDate >= <cfqueryparam cfsqltype="cf_sql_date" value="#PISDate.maxPISDate#">
+            AND pmtrng.companyID = 10
         </cfquery>
         
     </cfif>

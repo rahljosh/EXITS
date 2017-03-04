@@ -23,9 +23,9 @@ SELECT DISTINCT
        "Placement",      
        175,       
        "Auto Uploaded",     
-       CURDATE(),       
+       NOW(),       
        99999999,       
-       CURDATE()
+       NOW()
 FROM smg_students s
 INNER JOIN smg_hosts h ON s.hostID = h.hostID
 INNER JOIN smg_hosthistory hh ON s.studentID = hh.studentID

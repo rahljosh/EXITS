@@ -44,7 +44,7 @@ if(prog.type = 1,80,if(prog.type = 2,85,100)),
 END),
 "999999",
 0,
-CURRENT_DATE
+NOW()
 
 from smg_students st
 inner join progress_reports pr on st.studentID = pr.fk_student and pr.fk_reporttype = 1
@@ -144,7 +144,7 @@ and (
         END),
         "999999",
         0,
-        CURRENT_DATE
+        NOW()
 
 from smg_students st
 INNER JOIN progress_reports pr ON st.studentID = pr.fk_student AND pr.fk_reporttype = 1
@@ -191,4 +191,5 @@ and (
 	EXISTS(select * from progress_reports pr where st.studentID = pr.fk_student and pr.pr_month_of_report = 11 and pr.fk_reporttype = 1 and pr.pr_ny_approved_date is not null) and
 	EXISTS(select * from progress_reports pr where st.studentID = pr.fk_student and pr.pr_month_of_report = 12 and pr.fk_reporttype = 1 and pr.pr_ny_approved_date is not null))
 	)
+AND NOT EXISTS (SELECT * FROM smg_users_payments WHERE hostID = st.hostID and studentID = st.studentID AND paymenttype = 29 AND pr.pr_month_of_report = 9 AND oldID = 0)
 </cfquery>
