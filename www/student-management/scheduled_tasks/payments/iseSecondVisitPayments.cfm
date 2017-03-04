@@ -36,7 +36,7 @@
         END, 
         "999999", 
         0,
-        CURRENT_DATE
+        NOW()
    	FROM smg_students st
     INNER JOIN smg_hosthistory hh on st.studentID = hh.studentID
     INNER JOIN smg_hosts hst on hh.hostID = hst.hostID
@@ -47,6 +47,7 @@
         AND pr.fk_reporttype = 2 
 	WHERE hh.isActive = 1
     AND st.programID > 341
+    AND st.programID NOT IN(400,402)
     AND st.companyid IN (1,2,3,4,5,12)
     AND hh.isactive
     AND not EXISTS(

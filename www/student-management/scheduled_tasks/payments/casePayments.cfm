@@ -94,7 +94,7 @@ AND
     pmtrng.fk_paymentType = 1
     OR
     (
-        (hh.iswelcomeFamily = 0 AND hh.dateplaced IS NOT NULL
+        (hh.dateplaced IS NOT NULL
         AND (pmtrng.paymentEndDate IS NULL OR hh.datePISEMailed <= pmtrng.paymentEndDate)
         AND st.direct_placement = 0)
         AND 

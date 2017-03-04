@@ -52,6 +52,7 @@
               
               ) AS hhx ON bonus.placerepID = hhx.placerepID
 	INNER JOIN smg_students st on hhx.studentID = st.studentID and hhx.isactive
+    WHERE bonus.placerepID != 7910
       ORDER BY bonus.placerepID, hhx.datePISEmailed
 </cfquery>
 
@@ -119,14 +120,15 @@
                     WHEN DAYOFWEEK(CURDATE()) = 2 THEN DATE_ADD(CURDATE(), INTERVAL 0 DAY)
                     END, 
                 "9999999", 
-                CURRENT_DATE,
-                CURRENT_DATE,
+                NOW(),
+                NOW(),
                 0
          	FROM smg_users_payments_ranges pmtrng
             WHERE pmtrng.fk_programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#programID#">
             AND pmtrng.fk_paymenttype IN (9,15,17)
             AND pmtrng.paymentStartDate <= <cfqueryparam cfsqltype="cf_sql_date" value="#PISDate.maxPISDate#">
             AND pmtrng.paymentEndDate >= <cfqueryparam cfsqltype="cf_sql_date" value="#PISDate.maxPISDate#">
+            AND pmtrng.companyID IN (1,2,3,4,5,12)
         </cfquery>
         
     </cfif>

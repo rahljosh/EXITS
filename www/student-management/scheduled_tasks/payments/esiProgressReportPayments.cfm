@@ -43,7 +43,7 @@
         END),
         "999999",
         0,
-        CURRENT_DATE
+        NOW()
 	FROM smg_students st
     INNER JOIN progress_reports pr on st.studentID = pr.fk_student and pr.fk_reporttype = 1
     INNER JOIN smg_programs prog on st.programID = prog.programID
@@ -120,7 +120,7 @@
         END),
         "999999",
         0,
-        CURRENT_DATE
+        NOW()
 	FROM smg_students st
 	INNER JOIN progress_reports pr ON st.studentID = pr.fk_student
     	AND pr.fk_reporttype = 1

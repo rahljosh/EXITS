@@ -34,6 +34,7 @@
 		pmtrng.fk_paymentType,
 		"Placement",
 		CASE
+            WHEN pmtrng.fk_paymenttype = 1 AND st.regionassigned IN (1653,1652,1654) THEN 500
             WHEN pmtrng.fk_paymenttype = 1 AND (sppmt.specialPaymentID IS NULL OR sppmt.receivesPlacementFee) THEN pmtrng.paymentAmount
             WHEN pmtrng.fk_paymenttype = 1 AND NOT sppmt.receivesPlacementFee THEN 0
             WHEN pmtrng.fk_paymenttype IN (18,19,20,38) AND (sppmt.specialPaymentId IS NULL OR sppmt.receivesPreAYPBonus) THEN pmtrng.paymentAmount
