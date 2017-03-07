@@ -269,13 +269,13 @@
                         SELECT hostID 
                         FROM smg_host_app_season 
                         WHERE applicationStatusID < 9 
-                        AND seasonID IN (13,14) )
+                        AND seasonID >= <cfqueryparam cfsqltype="cf_sql_integer" value="#vSeasonID#"> )
                 <cfelseif NOT ListFind("13",CLIENT.companyID)>
                     AND hostID IN (
                         SELECT hostID 
                         FROM smg_host_app_season 
                         WHERE applicationStatusID < 4 
-                        AND seasonID IN (13,14) )
+                        AND seasonID >= <cfqueryparam cfsqltype="cf_sql_integer" value="#vSeasonID#"> )
                	</cfif>
                 ORDER BY familyLastName
         </cfquery>
@@ -2836,7 +2836,7 @@
                         
                         <p>
 	                        This email is intended to notify you that your Regional Advisor or Manager #ARGUMENTS.submittedBy# has requested additional information in order to 
-                            approve the #ARGUMENTS.hostFamilyLastName# familyﾒs Host Application. 
+                            approve the #ARGUMENTS.hostFamilyLastName# family's Host Application. 
                         </p>
                         
                         <p>Please find a list of requested updates below.</p>
@@ -2870,7 +2870,7 @@
                         
                         <p>
 	                        This email is intended to notify you that your Regional Manager #ARGUMENTS.submittedBy# has requested additional information in order to 
-                            approve the #ARGUMENTS.hostFamilyLastName# familyﾒs Host Application. 
+                            approve the #ARGUMENTS.hostFamilyLastName# family's Host Application. 
                         </p>
                         
                         <p>Please find a list of requested updates below.</p>
@@ -2903,8 +2903,7 @@
                         <p>Dear #ARGUMENTS.regionalManager#,</p>
                         
                         <p>
-	                        This email is intended to notify you that your Facilitator #ARGUMENTS.submittedBy# has requested additional information in order to 
-                            approve the #ARGUMENTS.hostFamilyLastName# familyﾒs Host Application. 
+	                        This email is intended to notify you that the Compliance Department has requested additional information in order to approve the #ARGUMENTS.hostFamilyLastName# family's Host Application. 
                         </p>
                         
                         <p>Please find a list of requested updates below.</p>
