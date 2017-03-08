@@ -52,6 +52,7 @@
 
 <table width=100% border=0 cellpadding=4 cellspacing=0 class="section">
 	<tr>
+		<td><b>ID</b></td>
 		<td><b>Status</b></td>
 		<td><b>Field View</b></td>
 		<td><b>Program Name</b></td>
@@ -67,6 +68,7 @@
 	</tr>
 	<cfoutput query="programs">
 	<tr bgcolor="#iif(programs.currentrow MOD 2 ,DE("ffffe6") ,DE("e2efc7") )#">
+		<td>#programid#</td>
 		<Td><cfif enddate lt now()><font color="red">expired<cfelseif hold is 1><font color="##3300CC">hold</font><cfelseif #enddate# gt #now()#><Font color="green">active</cfif></Font></Td>
 		<td><cfif fieldviewable is 1>Yes<cfelse>No</cfif></td>
 		<td><a href="?curdoc=tools/change_programs&progid=#programid#">#programname#</a></td>
