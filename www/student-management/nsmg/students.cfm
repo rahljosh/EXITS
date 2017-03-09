@@ -27,9 +27,9 @@
         <cfparam name="active" default="1">    
     <cfelse>
         <!--- Office USERS --->
-        <cfparam name="placed" default="">
-        <cfparam name="cancelled" default="">
-        <cfparam name="active" default="">
+        <cfparam name="placed" default="0">
+        <cfparam name="cancelled" default="0">
+        <cfparam name="active" default="1">
     </cfif>
     
     <!--- advanced search items. --->
@@ -523,6 +523,8 @@
             s.dateassigned, 
             s.regionguar,
             s.state_guarantee, 
+            s.app_additional_program,
+            s.app_region_guarantee,
             s.aypenglish, 
             s.ayporientation, 
             s.scholarship, 
@@ -532,6 +534,7 @@
             smg_g.regionName as r_guarantee, 
             smg_states.state,             
             p.programname,
+            p2.app_program as add_program, 
             c.countryname, 
             co.companyShort, 
             smg_hosts.familyLastName AS hostname
@@ -551,6 +554,8 @@
         	smg_hosts ON s.hostID = smg_hosts.hostID
         LEFT OUTER JOIN 
         	smg_programs p ON s.programID = p.programID
+         LEFT JOIN 
+        	smg_student_app_programs p2 ON p2.app_programid = s.app_additional_program
             
 		<!--- advanced search item. --->
 		<cfif preayp EQ 'english'>
@@ -867,6 +872,7 @@
                 <td>First Name</td>
                 <td>Sex</td>
                 <td>Country</td>
+                <td>Requests</td>
                 <td>Region</td>
                 <td>Program</td>
                 <td>Family</td>
@@ -875,6 +881,40 @@
                 </cfif>
             </tr>
             <cfloop query="qGetResults" startrow="#startrow#" endrow="#endrow#">
+            
+               <Cfquery name="stateGuarantee" datasource="MySQL">
+                select state1, state2, state3
+                from smg_student_app_state_requested
+                where studentid = <Cfqueryparam cfsqltype="cf_sql_integer" value="#qGetResults.studentid#">
+                </Cfquery>
+                <cfset statename1 = ''>
+                <cfset statename2 = ''>
+                <cfset statename3 = ''>
+                <cfif val(stateGuarantee.state1)>
+                    <cfquery name="stateName1" datasource="MySQL">
+                    select state 
+                    from smg_states
+                    where id = #stateGuarantee.state1#
+                    </cfquery>
+                    <cfset statename1 = '#stateName1.state#'>
+				</cfif>
+                <cfif val(stateGuarantee.state2)>
+                    <cfquery name="stateName2" datasource="MySQL">
+                    select state 
+                    from smg_states
+                    where id = #stateGuarantee.state2#
+                    </cfquery>
+                    <cfset statename2 = '#stateName2.state#'>
+				</cfif>
+                <cfif val(stateGuarantee.state3)>
+                    <cfquery name="stateName3" datasource="MySQL">
+                    select state 
+                    from smg_states
+                    where id = #stateGuarantee.state3#
+                    </cfquery>
+                    <cfset statename3 = '#stateName3.state#'>
+				</cfif>
+            
 				<cfif dateassigned NEQ '' AND dateassigned GT CLIENT.lastlogin>
                     <cfset bgcolor="e2efc7">
                 <cfelseif dateassigned NEQ '' AND DateDiff('d',dateassigned, now()) GTE 25 AND DateDiff('d',dateassigned, now()) LTE 34 AND hostID EQ 0 AND active EQ 1>
@@ -901,6 +941,11 @@
                     <td>#FirstName#</td>
                     <td>#sex#</td>
                     <td>#countryname#</td>
+                     <td>#statename1# #statename2# #statename3# #add_program#
+                      <cfif app_region_guarantee eq 6>West Region</cfif> 
+                      <cfif app_region_guarantee eq 7>Central Region</cfif>  					
+                      <cfif app_region_guarantee eq 8>South Region</cfif> 
+                      <cfif app_region_guarantee eq 9>East Region</cfif></td>
                     <td>
                     	#regionName#
 
@@ -942,6 +987,8 @@
                         <td>#companyShort#</td>
                     </cfif>
                 </tr>
+                
+                
             </cfloop>
         </table>
     
