@@ -468,7 +468,7 @@ ec.intrep,
                 <p class="style1">
                     Please review the below and <font color="##FF0000">reply with complete answers</font> within <font color="##FF0000">5 (five) business days</font> of receiving this note.
                     <ol class="style1">
-                    	<li>Was the extended job offer reviewd and <strong>signed personally</strong> by <strong>#qGetResults.personJobOfferName#</strong>? Please also confirm the address where the participant will work.</li>
+                    	<li>Was the extended job offer reviewed and <strong>signed personally</strong> by <strong>#qGetResults.personJobOfferName#</strong>? Please also confirm the address where the participant will work.</li>
                         <li>Please confirm the <strong>employment availability</strong> for the above participant(s) <strong>and the number of hours of paid employment you have agreed to provide to each</strong>.</li>
                         <li>Please verify <strong>the job title, the start date and the end date.</strong> Please inform CSB of any corrections needed.</li>
                         <cfif NOT VAL(qGetJ1Positions.recordCount)>
