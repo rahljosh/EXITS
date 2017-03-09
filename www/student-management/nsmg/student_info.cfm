@@ -1020,7 +1020,7 @@
 				</tr>
 				<tr>
 					<td><cfif ayporientation EQ 0><input type="checkbox" name="orientation_check" value="0" <cfif FORM.edit EQ 'no'>disabled</cfif>>	<cfelse><input type="checkbox" name="orientation_check" value="1" checked <cfif FORM.edit EQ 'no'>disabled</cfif>>	</cfif></td>
-					<td>Pre-AYP Orientation Camp:  &nbsp;
+					<td>Orientation Camp:  &nbsp;
 					    <select name="ayp_orientation" <cfif FORM.edit EQ 'no'>disabled</cfif>>
                             <option value="0"></option>
                             <cfloop query="qAYPOrientationCamps">
