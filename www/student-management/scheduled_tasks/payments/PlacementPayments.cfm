@@ -65,8 +65,8 @@
             WHEN DAYOFWEEK(CURDATE()) = 2 THEN DATE_ADD(CURDATE(), INTERVAL 0 DAY)
         END,
         "9999999",
-        CURRENT_DATE,
-        CURRENT_DATE,
+        NOW(),
+        NOW(),
         0
 	FROM smg_students st
     INNER JOIN smg_hosthistory hh ON st.studentID = hh.studentID AND hh.isactive
@@ -76,7 +76,7 @@
     INNER JOIN smg_users_payments_ranges pmtrng ON st.programID = pmtrng.fk_programID
     LEFT OUTER JOIN smg_user_payment_special sppmt ON st.placeRepID = sppmt.fk_userID AND sppmt.specialPaymentType = "draw"
     LEFT OUTER JOIN smg_states states ON st.state_guarantee = states.id AND st.state_guarantee > 0
-	WHERE st.programID > 370
+	WHERE st.programID > 422
 	AND st.companyid IN (1,2,3,4,5,12)
 	AND pmtrng.companyID = 1
 	AND NOT EXISTS(
@@ -95,6 +95,7 @@
 		(
         	(hst.motherlastname <> "" AND fatherlastname <> "") 
             OR ctch.numChildren IS NOT NULL
+           
       	)
 		OR (
         	hh.doc_single_parents_sign_date IS NOT NULL
@@ -104,6 +105,7 @@
 	)
 	AND st.programID = pmtrng.fk_programID
 	AND NOT hh.isrelocation
+	AND hh.dateplaced IS NOT NULL
 	AND (
 		pmtrng.fk_paymentType = 1
 		OR (
@@ -113,20 +115,18 @@
         	AND (        
                 (pmtrng.fk_paymentType = 14 AND states.state = hst.state)
                 OR (pmtrng.fk_paymentType = 24 AND st.aypEnglish > 0 AND st.intrep = 11878) 
-                OR (pmtrng.fk_paymenttype IN (23,25,35,39) AND hh.dateCreated >= pmtrng.paymentStartDate)                
+                OR ((pmtrng.fk_paymenttype IN (23,25,35,39) AND hh.dateCreated >= 
+							(SELECT min(pmtrng2.paymentStartDate) from smg_users_payments_ranges pmtrng2 
+								where pmtrng2.fk_programID = st.programID 
+								and pmtrng2.fk_paymentType = pmtrng.fk_paymentType)) AND (hh.datePISEMailed >= pmtrng.paymentStartDate))                 
                 OR (
                     pmtrng.fk_paymenttype IN (18,19,20,38)
                     AND hh.datePISEMailed >= pmtrng.paymentStartDate 
-                    AND st.aypEnglish > 0                     
-                    AND NOT ( 
-                        st.sex = "Male" 
-                        AND st.country IN (46,110,116,215,218,238) 
-                        AND hh.datePISEmailed >= (SELECT paymentStartDate FROM smg_users_payments_ranges WHERE programID = st.programID AND hh.dateCreated >= paymentStartDate AND fk_paymentType = 40 LIMIT 1) 
-                    )                   
+                    AND st.aypEnglish > 0                  
                 )                
                 OR (pmtrng.fk_paymenttype = 40 AND hh.dateCreated >= pmtrng.paymentStartDate AND hh.datePISEmailed >= pmtrng.paymentStartDate AND st.sex = "Male" AND st.country IN (46,110,116,215,218,238))
      		)
             AND (hh.isWelcomeFamily = 0 OR pmtrng.fk_paymenttype = 35)
       	)
-  	) 
+  	)
 </cfquery>
