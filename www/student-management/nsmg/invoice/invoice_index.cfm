@@ -105,6 +105,10 @@ Click on Business Name or enter Agent ID to add charges, see current charges, cr
                                     <a href="invoice/reports/outstanding_balances.cfm">Balance Report</a><br />
                                     <a href="?curdoc=invoice/reports/balance_report_options">Balance Report w/ options</a><br />
                                     <a href="invoice/m_balanceReport.cfm?RequestTimeout=3000" target="_blank">Balance Report per Program</a><br />
+                                    <a href="invoice/reports/deposit_invoice_list.cfm" target="_blank">Missing Deposit Invoice List</a><br/>
+                                    <a href="invoice/reports/final_invoice_list.cfm" target="_blank">Missing Final Invoice List</a><br/>
+                                    <a href="invoice/reports/region_guarantee_list.cfm" targe="_blank">Missing Region Charges List</a><br/>
+                                    <a href="invoice/reports/state_guarantee_list.cfm" targe="_blank">Missing State Charges List</a><br/>
                                 </td>
                                 <td valign="top"><!----Tools---->
                                     <a href="?curdoc=invoice/int_rep_rates&userid=all&compid=1">International Rep Rates</a><br />
@@ -140,6 +144,7 @@ Click on Business Name or enter Agent ID to add charges, see current charges, cr
     SELECT  distinct smg_users.userid, smg_users.firstname, smg_users.lastname, smg_users.businessname, smg_users.userid, smg_users.usertype
     FROM smg_users
     WHERE smg_users.usertype = 8
+
     ORDER BY businessname
 </cfquery>
 
@@ -154,16 +159,16 @@ Click on Business Name or enter Agent ID to add charges, see current charges, cr
 		left:auto;
 	}
 </style>
-
+<cfoutput>
 <table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
     <tr valign=middle height=24>
         <td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
         <td width=26 background="pics/header_background.gif"><img src="pics/$.gif"><img src="pics/$.gif"><img src="pics/$.gif"></td>
-        <td background="pics/header_background.gif"><h2>All International Agents</td><td background="pics/header_background.gif" align="right" ><h2>Totals for <cfoutput>#client.programmanager#</cfoutput></td>
+        <td background="pics/header_background.gif"><h2>All International Agents</td><td background="pics/header_background.gif" align="right" ><h2>Totals for #client.programmanager#</td>
         <td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
     </tr>
 </table>
-
+</cfoutput>
 <div class="scroll2">
 	<table width=100% cellpadding=4 cellspacing=0 border=0 >
 
@@ -172,7 +177,24 @@ Click on Business Name or enter Agent ID to add charges, see current charges, cr
         </tr>
 	
 		<cfoutput query="get_int_reps">
+        
+            <cfquery name="last_invoice_date" datasource="#APPLICATION.DSN#">
+            	select max(date) as last_date
+                from egom_invoice
+                where intrepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(userID)#">
+            </cfquery>
             
+            <Cfset showAgent = 0>
+            <cfif last_invoice_date.last_date is not ''>
+            	 
+		  		<Cfif DateDiff('yyyy',now(),#last_invoice_date.last_date#) lte 7>
+                	<cfset showAgent = 1>
+                </Cfif>
+            </cfif>
+           
+          <!----Only show invoices within 7 years---->
+         	<cfif val(showAgent)>
+           
             <cfquery name="total_Due" datasource="#APPLICATION.DSN#">
                 SELECT IFNULL(sum(amount_due),0) as amount_due
                 FROM smg_charges
@@ -299,7 +321,9 @@ Click on Business Name or enter Agent ID to add charges, see current charges, cr
                 <td><cfif total_credit is ''>N/A <cfset credit_Amount = 0><cfelse>#LSCurrencyFormat(total_credit, 'local')#<Cfset credit_amount = #total_credit#></cfif></td>
                 <td>#LSCurrencyFormat(balance_due, 'local')#</td>
             </tr>
-    
+   
+     </cfif> 
+	    
         </cfoutput>
            
 		<tr>
@@ -318,7 +342,7 @@ Click on Business Name or enter Agent ID to add charges, see current charges, cr
                 	WHERE companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyID)#">
                 </cfif>
             </cfquery>
-            
+      
 			<cfoutput>
           		<td align="right">Totals</td>
                 <td></td>

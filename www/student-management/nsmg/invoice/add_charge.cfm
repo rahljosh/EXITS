@@ -42,9 +42,11 @@
         placed_state.statename,
         CASE
             WHEN smg_students.state_guarantee = 0 AND smg_students.hostID != 0 THEN 
-            	CASE 
-        			WHEN region_guarantee.subofregion = 0 THEN region_guarantee.regionname                  
-                  	ELSE (SELECT regionname FROM smg_regions WHERE regionID = region_guarantee.subofregion)                  
+            	CASE
+                	WHEN (smg_students.app_region_guarantee = 6 AND (SELECT region_guarantee FROM smg_states WHERE state = (SELECT state FROM smg_hosts WHERE hostID = smg_students.hostID) LIMIT 1) = "West") THEN "West"
+                    WHEN (smg_students.app_region_guarantee = 7 AND (SELECT region_guarantee FROM smg_states WHERE state = (SELECT state FROM smg_hosts WHERE hostID = smg_students.hostID) LIMIT 1) = "Central") THEN "Central"
+                    WHEN (smg_students.app_region_guarantee = 8 AND (SELECT region_guarantee FROM smg_states WHERE state = (SELECT state FROM smg_hosts WHERE hostID = smg_students.hostID) LIMIT 1) = "South") THEN "South"
+                    WHEN (smg_students.app_region_guarantee = 9 AND (SELECT region_guarantee FROM smg_states WHERE state = (SELECT state FROM smg_hosts WHERE hostID = smg_students.hostID) LIMIT 1) = "East") THEN "East"
                   	END
             WHEN smg_students.hostID != 0 THEN state_guarantee.statename
             END AS guar_name,
@@ -163,6 +165,24 @@
                     ORDER BY type
                 </cfquery>
                 
+                <cfquery name="qGetStudentCharges" datasource="#APPLICATION.DSN#">
+                	SELECT
+                        smg_users.insurance_typeid
+                        <cfif #DateDiff('M', qGetStudents.startdate, qGetStudents.enddate)# gt 10>
+                        	,smg_users.12_month_price as program_fee 
+                            ,smg_insurance_type.ayp12 as insurance_charge
+						<cfelseif #DateDiff('M', qGetStudents.startdate, qGetStudents.enddate)# gt 6>
+                            ,smg_users.10_month_price as program_fee 
+                            ,smg_insurance_type.ayp10 as insurance_charge
+                        <cfelse>
+                            ,smg_users.5_month_price as program_fee
+                            ,smg_insurance_type.ayp5 as insurance_charge
+                        </cfif>
+                    FROM smg_users
+                    INNER JOIN smg_insurance_type ON smg_insurance_type.insutypeid = smg_users.insurance_typeid
+                    WHERE userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.userid#">
+                </cfquery>
+                
                 <cfquery name="check_depositCharge" dbtype="query">
                     SELECT *
                     FROM check_charges
@@ -185,11 +205,13 @@
                                 </cfif>
                             >
                         </td>
-                        <td class="thin-border-top">#firstname# #familylastname# (#studentid#)</td>
+                        <td class="thin-border-top">#firstname# #familylastname# (#studentid#
+                         <cfif val(#nexits_id#)><em><font color="##ccc">N:#nexits_id#</font></em></cfif>)
+					    </td>
                         <td class="thin-border-top">#qGetStudents.programname#</td>
                         <td class="thin-border-top">
                             <cfif verification_received is ''>
-                                Not Verified
+                                DS 2019 Verification Not Received
                             <cfelseif hostid is '' or hostid is 0>
                                 Unplaced
                             <cfelse>
@@ -224,7 +246,7 @@
                                     Type: Deposit
                                 </td>
                                 <td class="thin-border-bottom">
-                                    Charge: <input type="text" name="#studentid#deposit_amount" value=500 size="6">
+                                    Charge: <input type="text" name="#studentid#deposit_amount" value=750 size="6">
                                 </td>
                                 <td class="thin-border-bottom">
                                     Desc: <input type="text" size="14" name="#studentid#deposit_description" value='#qGetStudents.programname#'>
@@ -255,7 +277,7 @@
                                 <tr>
                                     <td></td>
                                     <td class="thin-border-left">Type: Program Fee</td>
-                                    <td>Charge: <input type="text" name="#qGetStudents.studentid#final_amount" value="#qGetUser.program_fee#" size="6"></td>
+                                    <td>Charge: <input type="text" name="#qGetStudents.studentid#final_amount" value="#qGetStudentCharges.program_fee#" size="6"></td>
                                     <td> Desc: <input type="text" size="14" name="#qGetStudents.studentid#final_description" value='#qGetStudents.programname#'></td>
                                     <td class="thin-border-right"></td>
                                 </tr>
@@ -276,7 +298,7 @@
                                     <tr>
                                         <td>&nbsp;</td>
                                         <td class="thin-border-left">Type: <input type="hidden" name="#qGetStudents.studentid#insurance_type" value='insurance'>Insurance</td>
-                                        <td>Charge: <input type="text" name="#qGetStudents.studentid#insurance_amount" value="#qGetUser.insurance_charge#" size="6"></td>
+                                        <td>Charge: <input type="text" name="#qGetStudents.studentid#insurance_amount" value="#qGetStudentCharges.insurance_charge#" size="6"></td>
                                         <td> Desc: <input type="text" size="14" name="#qGetStudents.studentid#insurance_description" value='#qGetStudents.programname#'></td>	
                                         <td class="thin-border-right">&nbsp;</td>							
                                     </tr>
@@ -284,8 +306,8 @@
                             </cfif>
                             
                             <!----Guarantee Charge---->
-                            <cfif NOT ListContainsNoCase(charge_list, 'guarantee')>
-                                <cfif qGetStudents.regionguar is 'no' AND qGetStudents.state_guarantee EQ 0>
+                            <cfif NOT ListContainsNoCase(charge_list, 'guarantee') AND ListFind('1,2,3,4',qGetStudents.host_fam_approved)>
+                                <cfif qGetStudents.app_region_guarantee EQ 0 AND qGetStudents.state_guarantee EQ 0>
                                     <tr>
                                         <td></td>
                                         <td colspan = 5 class="thin-border-left-right">
@@ -387,12 +409,12 @@
                     </cfif>
 
                 </cfif>
-                
+                <!----
                 <tr>
                     <td>&nbsp;</td>
                     <td colspan=5 class="thin-border-top">&nbsp;</td>
                 </tr>
-                
+                ---->
           	</cfoutput>
             
      	</table>
