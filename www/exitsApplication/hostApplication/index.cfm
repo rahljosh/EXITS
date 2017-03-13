@@ -8,11 +8,9 @@
 	Updated:	
 
 ----- ------------------------------------------------------------------------- --->
-<cfif CGI.REMOTE_ADDR is '73.3.102.155'>
-<Cfdump var="#session#">
-</cfif>
+
 <cfsilent>
-	
+
     <cfscript>
 		// If Host is logged in skip the login page
 		if ( VAL(APPLICATION.CFC.SESSION.getHostSession().ID) AND URL.section EQ "login" ) {
