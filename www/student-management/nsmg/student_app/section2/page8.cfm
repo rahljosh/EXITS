@@ -97,6 +97,8 @@
                 <tr>
                     <td align="center"><b>TRANSCRIPT OF GRADES</b></td>
                 </tr>
+               
+               
                 <tr>
                     <td>&nbsp;</td>
                 </tr>
@@ -725,9 +727,11 @@
                             </tr>
                         </cfloop>		
                     </table>	
-                </td>
+							</td>
+						
             </tr>
         </table>
+		
         <br>
         <br>
         <table width="670" border=0 cellpadding=1 cellspacing=0 align="center">
