@@ -14,7 +14,7 @@
 	
 	// Param SESSION Variables
 	param name="SESSION.started" default=now();	
-	param name="SESSION.expires" default=DateAdd('h', 12, now());	
+	param name="SESSION.expires" default=DateAdd('n', 20, now());	
 
 	// Param SESSION Struct Variables
 	param name="SESSION.EMAIL" default="struct";	
