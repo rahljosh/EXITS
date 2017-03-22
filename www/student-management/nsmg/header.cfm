@@ -315,13 +315,15 @@
         
             <cfif CLIENT.usertype EQ 8>
                 <td>		
-                    <!-- http://www.LiveZilla.net Chat Button Link Code -->
+                   <!----
+				    <!-- http://www.LiveZilla.net Chat Button Link Code -->
                     <a href="javascript:void(window.open('http://www.exitsapplication.com/livezilla/livezilla.php','','width=600,height=600,left=0,top=0,resizable=yes,menubar=no,location=yes,status=yes,scrollbars=yes'))"><img src="http://www.exitsapplication.com/livezilla/image.php?id=04" width="128" height="42" border="0" alt="LiveZilla Live Help"></a>
                     <noscript><div></div></noscript>
                     <!-- http://www.LiveZilla.net Chat Button Link Code --><!-- http://www.LiveZilla.net Tracking Code -->
                     <div id="livezilla_tracking" style="display:none"></div>
 					<script language="JavaScript" type="text/javascript">var script = document.createElement("script");script.type="text/javascript";var src = "http://www.exitsapplication.com/livezilla/server.php?request=track&output=jcrpt&nse="+Math.random();setTimeout("script.src=src;document.getElementById('livezilla_tracking').appendChild(script)",1);</script>
                     <!-- http://www.LiveZilla.net Tracking Code -->
+					---->
 				</td>
 			<!----
 			<cfelse>		
