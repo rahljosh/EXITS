@@ -156,6 +156,12 @@
         <cfargument name="intRep" default="0">
         <cfargument name="programID" default="0" hint="Get Intl. Reps. Based on a list of program ids">
 
+        <cfif NOT Val(#CLIENT.companyid#)>
+        	<cfset companyId = 8 />
+        <cfelse>
+        	<cfset companyId = #CLIENT.companyid# />
+        </cfif>
+
         <cfquery 
 			name="qGetVerificationDate" 
 			datasource="#APPLICATION.DSN.Source#">
@@ -165,7 +171,7 @@
                 FROM 
                     extra_candidates
                 WHERE 
-                    companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
+                    companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#companyId#">
                 AND 
                     verification_received IS NOT NULL
                 <cfif VAL(ARGUMENTS.intRep)>
@@ -582,5 +588,124 @@
         </cfscript>
 
     </cffunction>
+
+
+    <cffunction name="getMailTrackingIntReps" access="public" returntype="query" output="false" hint="Gets users with Mail Tracking">
+    	<cfargument name="intRep" default="0">
+        <cfargument name="programID" default="0" hint="Get Intl. Reps. Based on a list of program ids">
+              
+        <cfquery 
+			name="qGetUsers" 
+			datasource="#APPLICATION.DSN.Source#">
+                SELECT *
+                FROM smg_users su
+                INNER JOIN extra_mail_tracking emt ON (emt.user_id = su.userID)
+                <cfif VAL(ARGUMENTS.intRep) AND VAL(ARGUMENTS.programID)>
+                	WHERE userID = <cfqueryparam cfsqltype="cf_sql_int" value="#ARGUMENTS.intRep#">
+                		AND emt.program_id = <cfqueryparam cfsqltype="cf_sql_int" value="#ARGUMENTS.programID#">
+				<cfelseif VAL(ARGUMENTS.intRep)>                    
+                    WHERE userID = <cfqueryparam cfsqltype="cf_sql_int" value="#ARGUMENTS.intRep#">
+                <cfelseif VAL(ARGUMENTS.programID)>                    
+                    WHERE emt.program_id = <cfqueryparam cfsqltype="cf_sql_int" value="#ARGUMENTS.programID#">
+                </cfif> 
+                GROUP BY userID
+		</cfquery>
+		   
+		<cfreturn qGetUsers>
+	</cffunction>
+
+	<cffunction name="getMailTracking" access="public" returntype="query" output="false" hint="Gets a user with Mail Tracking">
+    	<cfargument name="intRep" default="0">
+    	<cfargument name="programID" default="0">
+              
+        <cfquery 
+			name="qGetUser" 
+			datasource="#APPLICATION.DSN.Source#">
+                SELECT *
+                FROM smg_users su
+                INNER JOIN extra_mail_tracking emt ON (emt.user_id = su.userID)
+                WHERE userID = <cfqueryparam cfsqltype="cf_sql_int" value="#ARGUMENTS.intRep#">
+                	<cfif VAL(programID)>
+                		AND emt.program_id = <cfqueryparam cfsqltype="cf_sql_int" value="#ARGUMENTS.programID#">
+                	</cfif>
+		</cfquery>
+		   
+		<cfreturn qGetUser>
+	</cffunction>
+
+	<cffunction name="setMailTracking" access="remote" returntype="void" hint="Set new Mail Tracking">
+    	<cfargument name="userID" default="0">
+    	<cfargument name="programID" default="0">
+    	<cfargument name="ds2019date" default="0">
+    	<cfargument name="date" default="">
+    	<cfargument name="tracking" default="">
+    	<cfargument name="extra_cost" default="0.00">
+              
+        <cfquery 
+			name="setNewMailTracking" 
+			datasource="#APPLICATION.DSN.Source#"> 
+                INSERT INTO
+                    extra_mail_tracking
+				(
+                	user_id,
+                	program_id,
+                    date,
+                    tracking,
+                    extra_cost,
+                    ds2019_date
+                )
+                VALUES 
+                (
+                	<cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">,
+                	<cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#">,
+                	<cfqueryparam cfsqltype="cf_sql_date" value="#DateFormat(ARGUMENTS.date, 'yyyyy-mm-dd')#">,
+                	<cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.tracking#">,
+                	<cfqueryparam cfsqltype="cf_sql_decimal" scale="2" value="#ARGUMENTS.extra_cost#">,
+                	<cfqueryparam cfsqltype="cf_sql_date" value="#DateFormat(ARGUMENTS.ds2019date, 'yyyyy-mm-dd')#">
+                	
+                )  
+		</cfquery>
+
+
+		<cfquery 
+			name="qGetUser" 
+			datasource="#APPLICATION.DSN.Source#">
+                SELECT email,
+                		businessName
+                FROM smg_users su
+                WHERE userID = <cfqueryparam cfsqltype="cf_sql_int" value="#ARGUMENTS.userID#">
+		</cfquery>
+
+		<cfsavecontent variable="emailMessage" >
+			<cfoutput>
+
+			<p><strong>Dear #qGetUser.businessName#,</strong></p>
+
+			<p>The visa documents for the participant(s) included on the <strong>DS verification Report</strong> batch <strong>#DateFormat(ARGUMENTS.ds2019date, 'mm/dd/yyyy')#</strong> have been successfully issued.</p>
+
+			<p>The payment was received - thank you. The DHL tracking number for the package with the original documents is per below:</p>
+
+			<p><a href="http://www.dhl.com">www.dhl.com</a><br />
+			Tracking: #ARGUMENTS.tracking#</p>
+
+			</cfoutput>
+		</cfsavecontent>
+
+		<cfscript>
+			APPLICATION.CFC.EMAIL.sendEmail(
+	            emailFrom="#APPLICATION.EMAIL.contactUs# (#CLIENT.firstName# #CLIENT.lastName# CSB-USA)",
+	            emailTo='#qGetUser.email#',
+				emailReplyTo=CLIENT.email,
+	            emailSubject='SWT/CSB - New Mail Tracking',
+				emailMessage=emailMessage,
+	            companyID=CLIENT.companyID,
+	            footerType='emailRegular',
+				displayEmailLogoHeader=1
+	        );	
+        </cfscript>
+		   
+		
+	</cffunction>
+
 
 </cfcomponent>

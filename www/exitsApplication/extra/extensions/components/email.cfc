@@ -236,6 +236,25 @@
                     </cfsavecontent>
                 
                 </cfcase>
+
+                <cfcase value="newAccountOffice">
+                    
+                    <cfscript>
+                        stEmailStructure.subject = csbEmailSubject & ' - Account Created | Activation Required';
+                    </cfscript>
+                    
+                    <cfsavecontent variable="stEmailStructure.message">
+                        <p>Dear #qGetCandidateInfo.firstName# #qGetCandidateInfo.lastName#-</p>
+    
+                        #accountCreatedMessage#                        
+    
+                        Please click on 
+                        <a href="#APPLICATION.SITE.URL.activation#?uniqueID=#qGetCandidateInfo.uniqueID#" style="text-decoration:none; color:##0069aa;">
+                            #APPLICATION.SITE.URL.activation#?uniqueID=#qGetCandidateInfo.uniqueID#
+                        </a> to activate your account. <br /><br />
+                    </cfsavecontent>
+                
+                </cfcase>
                 
                 <!--- statusID=2 - Account Activated --->
                 <cfcase value="activateAccount">
@@ -475,6 +494,8 @@
         <cfargument name="footerType" type="string" default="email" hint="email / emailRegular">
         <cfargument name="businessName" type="string" default="" hint="Intl. Rep. Business Name">
         <cfargument name="displayEmailLogoHeader" type="numeric" default="1" hint="Set to 1 to include logo header">
+        <cfargument name="attachmentMessage" type="string" default="" hint="Not required">
+        <cfargument name="attachmentMessageName" type="string" default="" hint="Not required">
 		
 		<!--- Import CustomTag --->
 		<cfimport taglib="../../extensions/customTags/gui/" prefix="gui" />	
@@ -511,7 +532,8 @@
 				if ( ListFind("1,2,3", CLIENT.userType) ) {
 					ARGUMENTS.emailTo = CLIENT.email;	  
 				} else {
-					ARGUMENTS.emailTo = APPLICATION.EMAIL.support;
+					//ARGUMENTS.emailTo = APPLICATION.EMAIL.support;
+                    ARGUMENTS.emailTo = "bruno@brunolopes.com";
 				}
 				
 				if ( LEN(ARGUMENTS.emailCC) ) {
@@ -548,6 +570,11 @@
             <!--- Attach File --->
 			<cfif LEN(ARGUMENTS.emailFilePath) AND APPLICATION.CFC.DOCUMENT.checkFileExists(filePath=ARGUMENTS.emailFilePath)>
 				<cfmailparam disposition="attachment" file="#ARGUMENTS.emailFilePath#">                
+            </cfif>
+
+            <!--- Attach Message --->
+            <cfif LEN(ARGUMENTS.attachmentMessage)>
+                <cfmailparam file="#attachmentMessageName#" content="#ARGUMENTS.attachmentMessage#" type="html">                
             </cfif>
 
 			<!--- Page Header --->
