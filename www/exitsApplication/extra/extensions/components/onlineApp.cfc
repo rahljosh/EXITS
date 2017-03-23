@@ -231,7 +231,7 @@
 				AND
                 	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
                 ORDER BY
-                	statusID                    
+                	orderNumber                    
 		</cfquery>
 		
 		<cfreturn qGetApplicationStatus /> 
@@ -501,6 +501,23 @@
 				// Approved By NY Office
 				case 11: {
 					// Do Nothing
+					break;
+				}
+
+				// Office user - validate email
+				case 12: {
+					// Application activated by candidate
+					newApplicationStatusID = 5;
+					// Set Email Template
+					emailTemplate = 'activateAccount';
+					/*** 
+						Set extra_candidates as the foreignTable. Candidates alwayas activate themselves.
+						These are defined in the internal/wat/application.cfm since we are calling from / we need to set them.
+					***/
+					APPLICATION.applicationID = 4;
+					APPLICATION.foreignTable = 'extra_candidates';
+					setSubmittedBy.foreignTable = 'extra_candidates';
+					ARGUMENTS.comments = getApplicationStatusByID(statusID=newApplicationStatusID).description;
 					break;
 				}
 				

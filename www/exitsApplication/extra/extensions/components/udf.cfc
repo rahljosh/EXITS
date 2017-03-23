@@ -33,6 +33,7 @@
 			// Check for local servers
 			if (	
 				FindNoCase("dev.extra.exitsApplication.com", CGI.http_host) OR 
+				FindNoCase("extra.exitsdev.com", CGI.http_host) OR 
 				FindNoCase("developer", server.ColdFusion.ProductLevel) OR
 				FindNoCase("119cooper", CGI.http_host) OR
 				FindNoCase("111cooper", CGI.http_host)

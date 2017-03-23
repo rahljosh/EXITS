@@ -664,14 +664,15 @@
 			// Set Application Status Based on who is creating the application
 			} else if ( ARGUMENTS.type EQ 'Office') {
 				
+				var applicationStatusID = 12;
 				
-				if ( ARGUMENTS.userType EQ 8 ) {
+				/*if ( ARGUMENTS.userType EQ 8 ) {
 					// Intl. Rep.
 					applicationStatusID = 5;
 				} else if ( ARGUMENTS.userType EQ 11 ) {
 					// Branch
 					applicationStatusID = 3;
-				}
+				}*/
 			
 			}
 		</cfscript>
@@ -727,6 +728,15 @@
 					companyID=ARGUMENTS.companyID
 				);
 	
+			} else if ( ARGUMENTS.type EQ 'Office' ) {
+
+				APPLICATION.CFC.EMAIL.sendEmail(
+					emailTo=APPLICATION.CFC.UDF.removeAccent(TRIM(ARGUMENTS.email)),
+					emailTemplate='newAccountOffice',
+					candidateID=newRecord.GENERATED_KEY,
+					companyID=ARGUMENTS.companyID
+				);
+				
 			}
 			
 			// Insert History
@@ -849,7 +859,7 @@
                 GROUP BY            
                 	statusID                                   
                 ORDER BY            
-                	aps.statusID  
+                	aps.orderNumber  
 		</cfquery>
 		   
 		<cfreturn qGetTotalByStatus>
@@ -1196,7 +1206,7 @@
           	LEFT OUTER JOIN extra_j1_positions ep ON ep.hostID = eh.hostCompanyID
        			AND ep.programID = (SELECT programID FROM extra_candidates WHERE candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#"> LIMIT 1)
           	LEFT OUTER JOIN extra_program_confirmations epc ON epc.hostID = ecpc.hostCompanyID
-         		AND epc.programID = (SELECT programID FROM extra_candidates WHERE candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.candidateID)#"> LIMIT 1)
+         		AND epc.programID = ep.programID
           	LEFT OUTER JOIN document d ON d.foreignID = ecpc.candCompID
             	AND d.foreignTable = "extra_candidate_place_company"
                 AND d.documentTypeID = 41
@@ -2026,6 +2036,20 @@
 	<!------------------------------------------------------------ 
 		End of Monthly Evaluation Tool
 	------------------------------------------------------------->
+
+
+	<cffunction name="getQuizAnswers" access="public" returntype="query" output="no" hint="Returns Quiz answers">
+    	<cfargument name="candidateID" default="0" required="yes">
+        
+        <cfquery name="qGetQuiz" datasource="#APPLICATION.DSN.Source#">
+        	SELECT *
+            FROM extra_quiz_answers
+            WHERE candidate_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.candidateID#">
+        </cfquery>
+        
+        <cfreturn qGetQuiz>
+        
+    </cffunction>
 
 
 	<!------------------------------------------------------------ 

@@ -57,6 +57,9 @@
 		
 		// Get Seeking Employment Comments
 		qGetSeekingEmploymentComments = APPLICATION.CFC.CANDIDATE.getSeekingEmploymentComments(candidateID=qGetCandidate.candidateID);
+
+		// Get Exempt of Pre-Placement Comments
+		qGetExemptFromPrePlacement = APPLICATION.CFC.CANDIDATE.getExemptFromPrePlacement(candidateID=qGetCandidate.candidateID);
 		
 		// Get Cultural Activity Report
 		qGetCulturalActivityReport = APPLICATION.CFC.CANDIDATE.getCulturalActivityReport(candidateID=qGetCandidate.candidateID);
@@ -110,10 +113,21 @@
 		qGetEvaluation2 = APPLICATION.CFC.CANDIDATE.getEvaluationAnswers(candidateID=qGetCandidate.candidateID,evaluationID=2);
 		qGetEvaluation3 = APPLICATION.CFC.CANDIDATE.getEvaluationAnswers(candidateID=qGetCandidate.candidateID,evaluationID=3);
 		qGetEvaluation4 = APPLICATION.CFC.CANDIDATE.getEvaluationAnswers(candidateID=qGetCandidate.candidateID,evaluationID=4);
+
+		// Get quiz
+		qGetQuiz = APPLICATION.CFC.CANDIDATE.getQuizAnswers(candidateID=qGetCandidate.candidateID);	
 	</cfscript>
 		
     <cfinclude template="../querys/fieldstudy.cfm">
     <cfinclude template="../querys/program.cfm">
+
+    <cfquery name="qGetEmailTracking" datasource="#APPLICATION.DSN.Source#">
+        SELECT ee.id, ee.name, eet.date
+        FROM extra_emails_tracking eet
+        INNER JOIN extra_emails ee ON (eet.email_id = ee.id)
+        WHERE candidate_id = '#qGetCandidate.candidateID#'
+      	ORDER BY date
+    </cfquery>
     
     <cfquery name="qGetStateList" datasource="#APPLICATION.DSN.Source#">
         SELECT id, state, stateName
@@ -167,6 +181,13 @@
 			qGetCountryList
 		WHERE
         	countryID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCandidate.residence_country)#">
+    </cfquery>
+
+    <cfquery name="qGetHousing" datasource="#APPLICATION.DSN.Source#">
+    	SELECT ID, type
+        FROM extra_housing
+        WHERE isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+        ORDER BY type					
     </cfquery>
 
     <!--- Intl Rep. --->
@@ -231,6 +252,8 @@
 
 <script type='text/javaScript'>
 	$(document).ready(function() {
+
+		checkHousingOnLoad();
 		
 		// Disable forms
 		$(".formField").attr("disabled","disabled");
@@ -351,6 +374,7 @@
 		if ( getHostID > 0 && getHostID != 195) {
 			$(".selfPlacementInfo").fadeIn("fast");
 			$("#seekingEmploymentDIV").fadeOut("fast");
+			$("#exemptPrePlacementDIV").fadeOut("fast");
 
 			// Fade out read only values
 			if ( vHideReadOnly == 1 ) {
@@ -367,10 +391,16 @@
 			
 			$(".hideForSeeking").fadeIn("fast");
 
+			if (getHostID == 4600) {
+				$("#exemptPrePlacementDIV").fadeIn("fast");
+				$(".selfPlacementInfo").fadeOut("fast");
+				$(".hideForExempt").fadeOut("fast");
+			}
 		} else {
 			// Erase self placement data
 			$(".selfPlacementField").val("");
 			$(".selfPlacementInfo").fadeOut("fast");
+			$("#exemptPrePlacementDIV").fadeOut("fast");
 			$("#seekingEmploymentDIV").fadeIn("fast");
 			// display deadline field for Seeking Employment
 			if (getHostID == 195) {
@@ -1441,6 +1471,7 @@
                                             <td class="style1">
                                             </td>
                                         </tr>
+                                        
                                         <tr>
                                         	<td class="style1" colspan="4">
                                             	
@@ -1838,7 +1869,7 @@
                                                             No
                                                         </cfif>
                                                     </span>
-                                                    <select class="style1 editPage" name="housingArrangedPrivately" onChange="checkHousingDetailsArea(this.value);">
+                                                    <select class="style1 editPage" name="housingArrangedPrivately" id="housingArrangedPrivately" onChange="checkHousingDetailsArea(this.value); checkHousingOnChange()">
                                                         <option value="0"<cfif NOT VAL(qGetCandidate.housingArrangedPrivately)>selected="selected"</cfif>>No</option>
                                                         <option value="1"<cfif VAL(qGetCandidate.housingArrangedPrivately)>selected="selected"</cfif>>Yes</option>
                                                     </select>
@@ -1851,8 +1882,151 @@
                                                     </span>
                                                 </td>
                                             </tr>
+                                    </table>
+
+                                            <!--- Added by Bruno - Requested by Anca --->
+                                            <div id="HousingDIV" style="display:none">
+		                                      <table width="420px" cellpadding="4" cellspacing="0" border="0">
+		                                        <tr>
+		                                            <td class="style1" align="right" valign="top" width="30%">
+		                                            	<strong>Type:</strong>
+		                                            </td>
+		                                            <td class="style1" align:left width="70%">
+		                                            	<input type="hidden" name="housingArrengedChanged" id="housingArrengedChanged" value="#qGetCandidate.housingArrengedChanged#">
+		                                            	<table>
+		                                                	<cfloop query="qGetHousing">
+																<cfif qGetHousing.currentrow MOD 2 EQ 1><tr></cfif>
+		                                                        <td width="20px" class="style1"> 
+		                                                            <input 
+		                                                                type="checkbox" 
+		                                                                name="housing_options" 
+		                                                                id="housing_options#qGetHousing.id#" 
+		                                                                value="#qGetHousing.id#" 
+		                                                                class="formField" 
+		                                                                onChange="checkReservationFields()"
+		                                                                disabled 
+		                                                                <cfif ListFind(#qGetCandidate.housing_options#, qGetHousing.id)>checked</cfif> /> 
+		                                                        </td>
+		                                                        <td class="style1"><label for="housing_options#qGetHousing.id#">#qGetHousing.type#</label></td>
+		                                                        <cfif qGetHousing.currentrow MOD 2 EQ 0></tr></cfif>
+		                                                    </cfloop>
+		                                                </table>
+		                                            </td>
+		                                      	</tr>
+		                                        <tr>
+		                                            <td class="style1" align="right" valign="top" width="30%"><strong>Provider Name:</strong></td>
+		                                            <td class="style1" bordercolor="##FFFFFF" width="70%">
+		                                            	<span class="readOnly">#qGetCandidate.housingProviderName#</span>
+		                                                <input type="text" name="housingProviderName" id="housingProviderName" value="#qGetCandidate.housingProviderName#" class="style1 editPage" size="35" maxlength="100"></td>
+		                                        </tr>
+		                                        <tr>
+		                                            <td class="style1" align="right" valign="top" width="30%"><strong>Email:</strong></td>
+		                                            <td class="style1" bordercolor="##FFFFFF" width="70%">
+		                                            	<span class="readOnly">#qGetCandidate.housingEmail#</span>
+		                                                <input type="text" name="housingEmail" id="housingEmail" value="#qGetCandidate.housingEmail#" class="style1 editPage" size="35" maxlength="100"></td>
+		                                        </tr>
+		                                        <tr>
+		                                            <td class="style1" align="right" valign="top" width="30%"><strong>Phone:</strong></td>
+		                                            <td class="style1" bordercolor="##FFFFFF" width="70%">
+		                                            	<span class="readOnly">#qGetCandidate.housingPhone#</span>
+		                                                <input type="text" name="housingPhone" id="housingPhone" value="#qGetCandidate.housingPhone#" class="style1 editPage phone" size="35" maxlength="100"></td>
+		                                        </tr>
+		                                        <tr>
+		                                            <td class="style1" align="right" width="30%"><strong>Address:</strong></td>
+		                                            <td class="style1" bordercolor="##FFFFFF" width="70%">
+		                                            	<span class="readOnly">#qGetCandidate.housingAddress#</span>
+		                                                <input type="text" name="housingAddress" id="housingAddress" value="#qGetCandidate.housingAddress#" class="style1 editPage" size="35" maxlength="100">
+		                                            </td>
+		                                        </tr>
+		                                        <tr>
+		                                            <td class="style1" align="right" width="30%"><strong>City</strong></td>
+		                                            <td class="style1" bordercolor="##FFFFFF" width="70%">
+		                                                <span class="readOnly">#qGetCandidate.housingCity#</span>
+		                                                <input type="text" name="housingCity" id="housingCity" value="#qGetCandidate.housingCity#" class="style1 editPage" size="35" maxlength="100">
+		                                            </td>
+		                                        </tr>		
+		                                        <tr>
+		                                            <td class="style1" align="right" width="30%"><strong>State:</strong></td>
+		                                            <td class="style1" bordercolor="##FFFFFF" width="70%">
+		                                                <span class="readOnly">
+		                                                	<cfloop query="qGetStateList">
+		                                                		<cfif qGetStateList.id eq qGetCandidate.housingStateName>#qGetStateList.stateName#</cfif>
+		                                                	</cfloop></span>
+		                                                <select name="housingStateName" id="housingStateName" class="style1 editPage">
+		                                              		<option value="0"></option>
+		                                              		<cfloop query="qGetStateList">
+				                                                <option value="#qGetStateList.id#" <cfif qGetStateList.id eq qGetCandidate.housingStateName>selected</cfif>>#qGetStateList.stateName#</option>
+		        	                                      	</cfloop>
+			                                            </select>
+		                                            </td>
+		                                        </tr>
+		                                        <tr>
+		                                            <td class="style1" align="right" width="30%"><strong>Zip:</strong></td>
+		                                            <td class="style1" bordercolor="##FFFFFF" width="70%">
+		                                                <span class="readOnly">#qGetCandidate.housingZip#</span>
+		                                                <input 
+		                                                	type="text" 
+		                                                    name="housingZip" 
+		                                                    id="housingZip" 
+		                                                    value="#qGetCandidate.housingZip#" 
+		                                                    class="style1 editPage" 
+		                                                    size="10" 
+		                                                    maxlength="5" 
+		                                                    onblur="getLocationByZipCode(this.id);">
+		                                            </td>
+		                                        </tr>
+		                                        </table>
+
+		                                        <div id="ReservationDIV" style="display:none">
+		                                        <table>
+		                                        <tr>
+		                                            <td class="style1" align="right"><strong>Reservation ##:</strong></td>
+		                                            <td class="style1" bordercolor="##FFFFFF">
+		                                                <span class="readOnly">#qGetCandidate.housingReservationNumber#</span>
+		                                                <input type="text" name="housingReservationNumber" id="housingReservationNumber" value="#qGetCandidate.housingReservationNumber#" class="style1 editPage" size="35" maxlength="100">
+		                                            </td>
+		                                        </tr>
+		                                        <tr>
+		                                            <td class="style1" align="right"><strong>Reservation Name:</strong></td>
+		                                            <td class="style1" bordercolor="##FFFFFF">
+		                                                <span class="readOnly">#qGetCandidate.housingReservationName#</span>
+		                                                <input type="text" name="housingReservationName" id="housingReservationName" value="#qGetCandidate.housingReservationName#" class="style1 editPage" size="35" maxlength="100">
+		                                            </td>
+		                                        </tr>
+		                                        <tr>
+		                                            <td class="style1" align="right"><strong>Reservation Start Date:</strong></td>
+		                                            <td class="style1" bordercolor="##FFFFFF">
+		                                                <span class="readOnly">#DateFormat(qGetCandidate.housingReservationStartDate, 'mm/dd/yyyy')#</span>
+		                                                <input 
+		                                                	type="text" 
+		                                                    name="housingReservationStartDate" 
+		                                                    id="housingReservationStartDate" 
+		                                                    class="style1 datePicker editPage" 
+		                                                    value="#DateFormat(qGetCandidate.housingReservationStartDate, 'mm/dd/yyyy')#" 
+		                                                    maxlength="10">
+		                                                <cfif NOT LEN(qGetCandidate.housingReservationStartDate)><font size="1">(mm/dd/yyyy)</font></cfif>
+		                                            </td>
+		                                        </tr>
+		                                        <tr>
+		                                            <td class="style1" align="right"><strong>Reservation End Date:</strong></td>
+		                                            <td class="style1" bordercolor="##FFFFFF">
+		                                                <span class="readOnly">#DateFormat(qGetCandidate.housingReservationEndDate, 'mm/dd/yyyy')#</span>
+		                                                <input 
+		                                                	type="text" 
+		                                                    name="housingReservationEndDate" 
+		                                                    id="housingReservationEndDate" 
+		                                                    class="style1 datePicker editPage" 
+		                                                    value="#DateFormat(qGetCandidate.housingReservationEndDate, 'mm/dd/yyyy')#" 
+		                                                    maxlength="10">
+		                                                <cfif NOT LEN(qGetCandidate.housingReservationEndDate)><font size="1">(mm/dd/yyyy)</font></cfif>
+		                                            </td>
+		                                        </tr>
+		                                        </table>
+		                                        </div>
+		                                        </div>
                                         </cfif>
                                         
+                                        <table width="100%" cellpadding="4" cellspacing="0" border="0">
                                         <cfif (FORM.hostCompanyID NEQ 0 AND FORM.hostCompanyID NEQ 195) AND (qCandidatePlaceCompany.RecordCount NEQ 0 AND qCandidatePlaceCompany.hostCompanyID NEQ 195)>
 	                                        <tr class="notReplacement">
 	                                        	<td class="style1" align="right" width="30%">
@@ -1905,8 +2079,8 @@
 
                                         <!--- Placement Date --->
                                         <tr class="readOnly">
-                                        	<td class="style1" align="right"><strong>Placement Date:</strong></td>
-                                            <td class="style1" align="left">
+                                        	<td class="style1" align="right" width="30%"><strong>Placement Date:</strong></td>
+                                            <td class="style1" align="left" width="70%">
 	                                        	#dateFormat(qCandidatePlaceCompany.placement_date, 'mm/dd/yyyy')#
                                             </td>
                                         </tr>
@@ -2354,7 +2528,7 @@
                                                 </td>
                                             </tr>
                                       	</cfif>
-                                        <tr class="hideForSeeking">
+                                        <tr class="hideForSeeking hideForExempt">
                                         	<td class="style1" align="right"><strong>WC Expiration Date:</strong></td>
                                             <td class="style1" bordercolor="##FFFFFF">
                                             	<span class="readOnly2 selfPlacementReadOnly">
@@ -2405,7 +2579,7 @@
 										<!--- Office View Only --->
                                         <cfif ListFind("1,2,3,4", CLIENT.userType) AND qCandidatePlaceCompany.isTransfer EQ 0>
                                            
-                                            <tr class="hiddenField notReplacement hideForSeeking">
+                                            <tr class="hiddenField notReplacement hideForSeeking hideForExempt">
                                                 <td class="style1" align="right"><strong>Job Found:</strong></td>
                                                 <td class="style1">
                                                     <span class="readOnly selfPlacementReadOnly">
@@ -2880,56 +3054,106 @@
                         </cfloop>
                         
                         <!--- SHOW ONLY IF "SEEKING EMPLOYMENT" --->
+						<!---- SEEKING EMPLOYMENT - COMMENTS --->
+                        <div id="seekingEmploymentDIV" >
+                        <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
+                            <tr>
+                                <td bordercolor="##FFFFFF">
                         
-                        
-							<!---- SEEKING EMPLOYMENT - COMMENTS --->
-                            <div id="seekingEmploymentDIV" >
-                            <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
-                                <tr>
-                                    <td bordercolor="##FFFFFF">
-                            
-                                        <table width="100%" cellpadding=3 cellspacing="0" border="0">
-                                            <tr bgcolor="##C2D1EF">
-                                                <td colspan="4" class="style2" bgcolor="##8FB6C9">
-                                                    &nbsp;:: Seeking Employment - Comments
-                                                    <span style="float:right; padding-right:20px;">
-                                                        <a href="candidate/seekingEmploymentComments.cfm?uniqueID=#qGetCandidate.uniqueID#" class="style2 jQueryModal">[ New Comment ]</a>
-                                                    </span>
-                                                </td>
-                                            </tr>	
-                                            <tr>
-                                                <td class="style1"><strong>Date</strong></td>
-                                                <td class="style1"><strong>Comment</strong></td>
-                                            </tr>
-                                            
-                                            <cfloop query="qGetSeekingEmploymentComments">
-                                                <tr <cfif qGetSeekingEmploymentComments.currentRow mod 2>bgcolor="##E4E4E4"</cfif>>     
-                                                    <td class="style1" width="15%">
-                                                        <a href="candidate/seekingEmploymentComments.cfm?uniqueID=#qGetCandidate.uniqueID#&incidentID=#qGetIncidentReport.ID#" class="style4 jQueryModal">
-                                                            #DateFormat(qGetSeekingEmploymentComments.date, 'mm/dd/yy')#
-                                                        </a>
-                                                    </td>
-                                                    <td class="style1">
-                                                        <a href="candidate/seekingEmploymentComments.cfm?uniqueID=#qGetCandidate.uniqueID#&incidentID=#qGetIncidentReport.ID#" class="style4 jQueryModal">
-                                                            #qGetSeekingEmploymentComments.note#
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                            </cfloop>
-                                            
-                                            <cfif NOT VAL(qGetSeekingEmploymentComments.recordCount)>
-                                                <tr bgcolor="##E4E4E4">
-                                                    <td colspan="4" class="style1" align="center">There are no comments recorded</td>                                                
-                                                </tr>
-                                            </cfif> 
-                                                                                           
-                                        </table>
+                                    <table width="100%" cellpadding=3 cellspacing="0" border="0">
+                                        <tr bgcolor="##C2D1EF">
+                                            <td colspan="4" class="style2" bgcolor="##8FB6C9">
+                                                &nbsp;:: Seeking Employment - Comments
+                                                <span style="float:right; padding-right:20px;">
+                                                    <a href="candidate/seekingEmploymentComments.cfm?uniqueID=#qGetCandidate.uniqueID#" class="style2 jQueryModal">[ New Comment ]</a>
+                                                </span>
+                                            </td>
+                                        </tr>	
+                                        <tr>
+                                            <td class="style1"><strong>Date</strong></td>
+                                            <td class="style1"><strong>Comment</strong></td>
+                                        </tr>
                                         
-                                    </td>
-                                </tr>
-                            </table> 
-    						</div>
-                            <br />
+                                        <cfloop query="qGetSeekingEmploymentComments">
+                                            <tr <cfif qGetSeekingEmploymentComments.currentRow mod 2>bgcolor="##E4E4E4"</cfif>>     
+                                                <td class="style1" width="15%">
+                                                    <a href="candidate/seekingEmploymentComments.cfm?uniqueID=#qGetCandidate.uniqueID#&incidentID=#qGetIncidentReport.ID#" class="style4 jQueryModal">
+                                                        #DateFormat(qGetSeekingEmploymentComments.date, 'mm/dd/yy')#
+                                                    </a>
+                                                </td>
+                                                <td class="style1">
+                                                    <a href="candidate/seekingEmploymentComments.cfm?uniqueID=#qGetCandidate.uniqueID#&incidentID=#qGetIncidentReport.ID#" class="style4 jQueryModal">
+                                                        #qGetSeekingEmploymentComments.note#
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </cfloop>
+                                        
+                                        <cfif NOT VAL(qGetSeekingEmploymentComments.recordCount)>
+                                            <tr bgcolor="##E4E4E4">
+                                                <td colspan="4" class="style1" align="center">There are no comments recorded</td>                                                
+                                            </tr>
+                                        </cfif> 
+                                                                                       
+                                    </table>
+                                    
+                                </td>
+                            </tr>
+                        </table> 
+						</div>
+                        <br />
+
+
+
+                        <!--- SHOW ONLY IF "Exempt from Pre-Placement" --->
+						<!---- Exempt from Pre-Placement - COMMENTS --->
+                        <div id="exemptPrePlacementDIV" >
+                        <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
+                            <tr>
+                                <td bordercolor="##FFFFFF">
+                        
+                                    <table width="100%" cellpadding=3 cellspacing="0" border="0">
+                                        <tr bgcolor="##C2D1EF">
+                                            <td colspan="4" class="style2" bgcolor="##8FB6C9">
+                                                &nbsp;:: Exempt from Pre-Placement - Comments
+                                                <span style="float:right; padding-right:20px;">
+                                                    <a href="candidate/exemptPrePlacementComments.cfm?uniqueID=#qGetCandidate.uniqueID#" class="style2 jQueryModal">[ New Comment ]</a>
+                                                </span>
+                                            </td>
+                                        </tr>	
+                                        <tr>
+                                            <td class="style1"><strong>Date</strong></td>
+                                            <td class="style1"><strong>Comment</strong></td>
+                                        </tr>
+
+                                        <cfloop query="qGetExemptFromPrePlacement">
+                                            <tr <cfif qGetExemptFromPrePlacement.currentRow mod 2>bgcolor="##E4E4E4"</cfif>>     
+                                                <td class="style1" width="15%">
+                                                    <a href="candidate/exemptPrePlacementComments.cfm?uniqueID=#qGetCandidate.uniqueID#&incidentID=#qGetIncidentReport.ID#" class="style4 jQueryModal">
+                                                        #DateFormat(qGetExemptFromPrePlacement.date, 'mm/dd/yy')#
+                                                    </a>
+                                                </td>
+                                                <td class="style1">
+                                                    <a href="candidate/exemptPrePlacementComments.cfm?uniqueID=#qGetCandidate.uniqueID#&incidentID=#qGetIncidentReport.ID#" class="style4 jQueryModal">
+                                                        #qGetExemptFromPrePlacement.note#
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </cfloop>
+                                        
+                                        <cfif NOT VAL(qGetExemptFromPrePlacement.recordCount)>
+                                            <tr bgcolor="##E4E4E4">
+                                                <td colspan="4" class="style1" align="center">There are no comments recorded</td>                                                
+                                            </tr>
+                                        </cfif> 
+                                                                                       
+                                    </table>
+                                    
+                                </td>
+                            </tr>
+                        </table> 
+						</div>
+                        <br />
                         
                         
                         
@@ -3283,6 +3507,44 @@
                         </table> 
 
 						<br />
+
+						<!---- Quiz Evaluations --->
+                        <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
+                            <tr>
+                                <td bordercolor="##FFFFFF">
+                        
+                                    <table width="100%" cellpadding=3 cellspacing="0" border="0">
+                                        <tr bgcolor="##C2D1EF">
+                                        	<td colspan="4" class="style2" bgcolor="##8FB6C9">&nbsp;:: Quiz</td>
+                                        </tr>	
+                                        <tr>
+                                        	<td class="style1" width="30%" align="right"><label for="watDateCheckedIn"><strong>Quiz Date:</strong></label></td>
+                                        	<td class="style1" width="70%">
+                                                <span class="readOnly">#dateFormat(qGetCandidate.wat_dateQuiz, 'mm/dd/yyyy')#</span>
+                                                <input type="text" name="wat_dateQuiz" id="wat_dateQuiz" class="datePicker style1 editPage" value="#dateFormat(qGetCandidate.wat_dateQuiz, 'mm/dd/yyyy')#" maxlength="10">
+                                        		<cfif NOT LEN(qGetcandidate.wat_dateQuiz) AND ListFind("1,2,3,4",CLIENT.userType)>
+                                                	<font size="1">
+                                                    	<a href="../wat/candidate/sendQuiz.cfm?candidateID=#qGetCandidate.candidateID#">
+                                                        	[ Send Quiz ]
+                                                       	</a>
+                                                  	</font>
+												</cfif>
+                                                
+                                                <cfif ListFind("1,2,3,4",CLIENT.userType)>
+                                                	<font size="1" style="float:right">
+                                                    	<a href="candidate/quiz_answers.cfm?uniqueID=#URL.uniqueid#" class="style1 jQueryModal" <cfif NOT VAL(qGetQuiz.recordCount)>style="color:gray;"</cfif>>[ Answers ]</a>
+                                                    	<a href="candidate/quiz_tracking.cfm?uniqueID=#URL.uniqueid#" class="style1 jQueryModal">[ Tracking ]</a>
+                                                    </font>
+                                                </cfif>
+                                            </td>
+                                        </tr>
+                        			</table>
+                                    
+                                </td>
+                            </tr>
+                        </table> 
+
+						<br />
  						
                         <!--- Office View Only --->
                         <cfif ListFind("1,2,3,4", CLIENT.userType)>
@@ -3383,6 +3645,47 @@
                                         
                                     </td>
                                 </tr>
+                            </table>
+
+                            <br />
+                            
+							<!---- Email tracking --->
+                            <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
+                                <tr>
+                                    <td bordercolor="##FFFFFF">
+                            
+                                        <table width="100%" cellpadding=3 cellspacing="0" border="0">
+                                            <tr bgcolor="##C2D1EF">
+                                                <td colspan="2" class="style2" bgcolor="##8FB6C9">
+                                                    &nbsp;:: Emails Sent
+                                                </td>
+                                            </tr>	
+                                            <tr>
+                                                <td class="style1"><strong>Date</strong></td>
+                                                <td class="style1"><strong>Email</strong></td>
+                                            </tr>
+                                            
+                                            <cfif VAL(qGetEmailTracking.recordCount)>
+                                                <cfloop query="qGetEmailTracking">
+                                                    <tr <cfif qGetEmailTracking.currentRow mod 2>bgcolor="##E4E4E4"</cfif>>     
+                                                        <td class="style1">
+                                                            #DateFormat(qGetEmailTracking.date, 'mm/dd/yy')#
+                                                        </td>
+                                                        <td class="style1">
+                                                            #qGetEmailTracking.name#
+                                                        </td>
+                                                    </tr>
+                                                </cfloop>
+                                            <cfelse>
+                                                <tr bgcolor="##E4E4E4">
+                                                    <td colspan="4" class="style1" align="center">There were no emails sent.</td>                                                
+                                                </tr>
+                                            </cfif>
+                                                                                           
+                                        </table>
+                                        
+                                    </td>
+                                </tr>
                             </table> 
     
                             <br />
@@ -3430,3 +3733,36 @@
 </cfform>
 
 </cfoutput>
+
+
+<script>
+	function checkHousingOnChange() {
+		if ($("#housingArrangedPrivately").val() == 1) {
+			//console.log('agora é 1');
+			$("#HousingDIV").css("display","block");
+			$("#housingArrengedChanged").val(1);
+		} else {
+			$("#HousingDIV").css("display","none");
+			$("#housingArrengedChanged").val(0);
+		}
+
+		checkReservationFields();
+	}
+	function checkHousingOnLoad() {
+		if (('<cfoutput>#qCandidatePlaceCompany.isHousingProvided#</cfoutput>' != 1) && ($("#housingArrangedPrivately").val() == 0) && ($("#housingArrengedChanged").val() != 1)) {
+			$("#HousingDIV").css("display","none");
+		} else {
+			$("#HousingDIV").css("display","block");
+		}
+
+		checkReservationFields();
+	}
+
+	function checkReservationFields() {
+		if ($("input[name=housing_options]:checked").val() == 1) {
+			$("#ReservationDIV").css("display","block");
+		} else {
+			$("#ReservationDIV").css("display","none");
+		}
+	}
+</script>
