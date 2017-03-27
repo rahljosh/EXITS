@@ -358,8 +358,8 @@
 
         <h3>Add a Family Members</h3>
 	
-        Please include all college age or younger children, whether they are living at home or not, and <span style="background-color:##FF0; padding: 3px;"><strong> any other persons</strong></span> 
-        who live with you on a regular basis. After adding a family member's information, select the <strong><em>Add Member</em></strong> button at the bottom to save their information.<br /><br />
+        Please include all college age or younger children who live in the home or will be <strong>living</strong> in the home at some point durring students visit, and <span style="background-color:##FF0; padding: 3px;"><strong> any other persons</strong></span> 
+        who live with you on a regular basis.   After adding a family member's information, select the <strong><em>Add Member</em></strong> button at the bottom to save their information.<br /><br />
         
         <span class="required">* Required fields</span>
         
