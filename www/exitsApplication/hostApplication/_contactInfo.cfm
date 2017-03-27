@@ -758,7 +758,7 @@
         
        	<table width="100%" cellspacing="0" cellpadding="2" class="border">
             <tr bgcolor="##deeaf3">
-                <td class="label" width="180px"><h3>First Name</h3></td>
+                <td class="label" width="180px"><h3>First Name (Legal name only, please no nicknames)</h3></td>
                 <td><cfinput type="text" name="motherFirstName" value="#FORM.motherFirstName#" class="xLargeField" maxlength="150"></td>
             </tr>
             <tr>
@@ -791,11 +791,12 @@
                 </td>
             </tr>
             <tr bgcolor="##deeaf3">
-                <td class="label"><h3>Occupation <span class="required">*</span></h3></td>
+                <td class="label"><h3>Job Title <span class="required">*</span></h3></td>
                 <td>
                     <cfinput type="text" name="motherworktype" value="#FORM.motherworktype#" class="xLargeField" maxlength="200">  
                     <input name="motherfullpart" id="motherFullTime" type="radio" value="1" <cfif FORM.motherfullpart eq 1>checked</cfif>> <label for="motherFullTime">Full Time</label>
                     <input name="motherfullpart" id="motherPartTime" type="radio" value="0" <cfif FORM.motherfullpart eq 0>checked</cfif>> <label for="motherPartTime">Part Time</label>
+                    <input name="motherfullpart" id="motherPartTime" type="radio" value="2" <cfif FORM.motherfullpart eq 2>checked</cfif>> <label for="motherRetired">Retired</label>
                 </td>
             </tr>
             <tr>
@@ -823,7 +824,7 @@
         
     	<table width="100%" cellspacing="0" cellpadding="2" class="border" id="otherHostParentFields" <cfif FORM.otherHostParent EQ "none">style="display:none;"</cfif>>
             <tr bgcolor="##deeaf3" id="otherHostParentFields">
-                <td class="label" width="180px"><h3>First Name</h3></td>
+                <td class="label" width="180px"><h3>First Name (Legal name only, please no nicknames)</h3></td>
                 <td><cfinput type="text" name="fatherFirstName" value="#FORM.fatherFirstName#" class="xLargeField" maxlength="150"></td>
             </tr>
             <tr>
@@ -856,11 +857,12 @@
                 </td>
             </tr>
             <tr bgcolor="##deeaf3">
-                <td class="label"><h3>Occupation <span class="required">*</span></h3></td>
+                <td class="label"><h3>Job Title <span class="required">*</span></h3></td>
                 <td>
                     <cfinput type="text" name="fatherworktype" value="#FORM.fatherworktype#" class="xLargeField" maxlength="200"> 
                     <input name="fatherfullpart" id="fatherFullTime" type="radio" value="1" <cfif FORM.fatherfullpart eq 1>checked</cfif>> <label for="fatherFullTime">Full Time</label>
                     <input name="fatherfullpart" id="fatherPartTime" type="radio" value="0" <cfif FORM.fatherfullpart eq 0>checked</cfif>> <label for="fatherPartTime">Part Time</label>
+                    <input name="fatherfullpart" id="fatherPartTime" type="radio" value="2" <cfif FORM.fatherfullpart eq 2>checked</cfif>> <label for="fatherRetired">Retired</label>
                 </td>
             </tr>
             <tr>

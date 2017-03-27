@@ -269,7 +269,7 @@
                 </td>
             </tr>
             <tr colspan="2" id="showname" <cfif FORM.religious_participation EQ "Inactive">class="displayNone"</cfif>>
-                <td>Would you expect your exchange student to attend services with your family? <span class="required">*</span> </td>
+                <td>Would you like, although you can't require, your exchange student to attend services with your family? <span class="required">*</span> </td>
                 <td>
                     <cfinput type="radio" name="churchFam" id="churchFamYes" value="yes" checked="#FORM.churchFam eq 'yes'#" />
                     <label for="churchFamYes">Yes</label>

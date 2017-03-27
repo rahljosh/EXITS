@@ -194,7 +194,7 @@
                 </td>
             </tr>
             <tr>
-                <td class="label" valign="top"><h3>Have you had any contact with Child Protective Services<br /> Agency in the past? <span class="required">*</span></h3></td>
+                <td class="label" valign="top"><h3>Have you had any contact with Child Protective Services<br /> in the past, other than foster care or adoption? <span class="required">*</span></h3></td>
                 <td>   
                     <cfinput type="radio" name="cps" id="cpsYes" value="1" checked="#FORM.cps EQ 1#" onclick="document.getElementById('cpsExpl').style.display='table-row';" />
                     <label for="cpsYes">Yes</label>
