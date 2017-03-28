@@ -384,6 +384,7 @@
                     u.lastName,
                     u.lastLogin,
                     u.email,
+                    uar.hostCompanyID,
                     uar.userType,
                     uar.companyID
                 FROM 
@@ -403,7 +404,7 @@
                 ORDER BY 
                     uar.default_region DESC
 		</cfquery>
-		
+
 		<cfreturn qAuthenticateUser /> 
 	</cffunction>
 
@@ -457,6 +458,7 @@
 			CLIENT.userType =  ARGUMENTS.qUser.userType;
 			CLIENT.email = ARGUMENTS.qUser.email;
 			CLIENT.companyID = ARGUMENTS.qUser.companyID;
+			CLIENT.hostCompanyID = ValueList(ARGUMENTS.qUser.hostCompanyID);
 			
 			// Record last logged in date
 			if ( VAL(ARGUMENTS.updateDateLastLoggedIn) ) {

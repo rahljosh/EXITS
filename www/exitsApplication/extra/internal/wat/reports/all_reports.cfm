@@ -13,6 +13,13 @@
 			<table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="#C7CFDC" bgcolor="ffffff">
 				<tr>
                     <td bordercolor="FFFFFF">
+                        <cfif CLIENT.userType EQ 28>
+                            <span class="style1"><strong>Host Company Reports</strong></span><br />
+
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/flighInfoByHC" class="style4">- Flight Information</a></p>
+
+                        </cfif>
+
                         <cfif CLIENT.userType LTE 4>
                         	<span class="style1"><strong>1. International Representative Reports</strong></span><br />
                             

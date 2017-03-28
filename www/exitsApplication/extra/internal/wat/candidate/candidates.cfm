@@ -48,9 +48,15 @@
         </cfif>
         
         <!--- Intl Rep Account --->
-        <cfif NOT ListFind("1,2,3,4", CLIENT.userType)>
+        <cfif NOT ListFind("1,2,3,4,28", CLIENT.userType)>
             AND
                 ec.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">            
+        </cfif>
+
+        <!--- Host Company Users --->
+        <cfif CLIENT.userType EQ '28'>
+            AND
+                ec.hostCompanyID IN (<cfqueryparam cfsqltype="cf_sql_integer" list="true" value="#CLIENT.hostCompanyID#">)   
         </cfif>
  
         <!--- Unassigned Program --->

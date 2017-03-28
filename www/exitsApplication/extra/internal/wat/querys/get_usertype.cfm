@@ -14,6 +14,7 @@
 	FROM smg_usertype
 	WHERE usertypeid >= <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(client.usertype)#">
     AND usertypeid <= '3'
+    OR usertypeid = '28'
 </cfquery>
 
 <cfcatch type="any">

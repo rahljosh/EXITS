@@ -226,6 +226,9 @@
                     <cfquery name="update_user_access" datasource="MySql">
                         UPDATE user_access_rights
                         SET usertype = '#form["usertype_" & x]#'
+                        <cfif VAL(#form["hostCompanyID_" & x]#)>
+                            , hostCompanyID = '#form["hostCompanyID_" & x]#'
+                        </cfif>
                         WHERE id = '#form["access_id_" & x]#'
                     </cfquery>
                     
@@ -254,15 +257,18 @@
                     FROM user_access_rights
                     WHERE userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userid#">
                         AND companyid = '#FORM.companyid_new#'
+                        <cfif VAL(#FORM.hostCompanyID_new#) >
+                            AND hostCompanyID = '#FORM.hostCompanyID_new#'
+                        </cfif>
                 </cfquery>
             
                 <cfif check_user_access.recordcount EQ 0>
                 
                     <cfquery name="user_access_rights" datasource="MySql">
                         INSERT INTO user_access_rights
-                            (userid, companyid, usertype)
+                            (userid, companyid, usertype, hostCompanyID)
                         VALUES
-                            (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userid#">, '#FORM.companyid_new#', '#FORM.usertype_new#')
+                            (<cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userid#">, '#FORM.companyid_new#', '#FORM.usertype_new#', '#FORM.hostCompanyID_new#')
                     </cfquery>
                     
                 </cfif>
@@ -270,6 +276,7 @@
             </cfif>
             
         </cfif>
+
         
         <script language="JavaScript">
 			<!-- 

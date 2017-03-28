@@ -117,6 +117,8 @@
 		// Get quiz
 		qGetQuiz = APPLICATION.CFC.CANDIDATE.getQuizAnswers(candidateID=qGetCandidate.candidateID);	
 	</cfscript>
+
+	
 		
     <cfinclude template="../querys/fieldstudy.cfm">
     <cfinclude template="../querys/program.cfm">
@@ -197,7 +199,11 @@
             u.businessname, 
             u.extra_insurance_typeid,
             u.extra_accepts_sevis_fee,
-            type.type
+            type.type,
+            u.uniqueID,
+            u.firstname,
+            u.lastname,
+            u.email
         FROM 
             smg_users u
         LEFT JOIN 
@@ -249,6 +255,20 @@
     </cfquery>
 
 </cfsilent>
+
+<Cfif CLIENT.userType EQ 28 AND NOT ListFind(CLIENT.hostCompanyID, qGetCandidate.hostCompanyID)>
+	<cfoutput>
+	<table width="100%" height="100%" border="1" align="center" cellpadding="0" cellspacing="0" bordercolor="##CCCCCC" bgcolor="##F4F4F4">
+	    <tr>
+	        <td bordercolor="##FFFFFF">
+				You do not have access to view this page.<br /><br />
+				If you feel this is incorrect, please contact <a href="mailto:#APPLICATION.EMAIL.support#">#APPLICATION.EMAIL.support#</a>
+			</td>
+		</tr>
+	</table>
+	</cfoutput>
+	<cfabort>
+</Cfif>
 
 <script type='text/javaScript'>
 	$(document).ready(function() {
@@ -366,6 +386,7 @@
 	var displaySelfPlacementInfo = function(vHideReadOnly) { 
 		// Get Placement Info
 		getHostID = $("#hostCompanyID").val();
+		//console.log(getHostID);
 		// Get Transfer Info - Do not display self placement if it's a transfer
 		getTransferValue = $("#isTransfer").val();
 		// Get Secondary Info
@@ -870,7 +891,8 @@
                             </tr> 
                             <tr>
                                 <td align="right" class="style1"><strong>Intl. Rep.:</strong></td>
-                                <td class="style1">#qGetIntlRepInfo.businessName#</td>
+                                <td class="style1"><a href="/internal/wat/index.cfm?curdoc=intRep/intlRepInfo&uniqueID=#qGetIntlRepInfo.uniqueID#" target="_blank" class="style4">#qGetIntlRepInfo.businessName#</a><br />
+                                	#qGetIntlRepInfo.firstname# #qGetIntlRepInfo.lastname# (<a href="mailto:#qGetIntlRepInfo.email#" class="style4">#qGetIntlRepInfo.email#</a>)</td>
                             </tr>
                             <tr>
                                 <td align="right" class="style1"><strong>Date of Entry: </strong></td>
@@ -2590,6 +2612,7 @@
                                                         <option value="International Representative" <cfif qCandidatePlaceCompany.selfFindJobOffer EQ 'International Representative'>selected</cfif> >International Representative</option>
                                                         <option value="Employment Agency" <cfif qCandidatePlaceCompany.selfFindJobOffer EQ 'Employment Agency'>selected</cfif> >Employment Agency</option>                                                    
                                                         <option value="Directly with the Employer" <cfif qCandidatePlaceCompany.selfFindJobOffer EQ 'Directly with the Employer'>selected</cfif> >Directly with the Employer</option>
+                                                        <option value="Friend Recommendation" <cfif qCandidatePlaceCompany.selfFindJobOffer EQ 'Friend Recommendation'>selected</cfif> >Friend Recommendation</option>
                                                         <option value="Internet" <cfif qCandidatePlaceCompany.selfFindJobOffer EQ 'Internet'>selected</cfif> >Internet</option>
                                                         <option value="Other" <cfif qCandidatePlaceCompany.selfFindJobOffer EQ 'Other'>selected</cfif> >Other</option>
                                                     </select>

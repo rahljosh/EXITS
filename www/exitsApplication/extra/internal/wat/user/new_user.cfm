@@ -30,6 +30,14 @@ function UserName() {
 
 	// Create an instance of the proxy. 
 	var udf = new UDFComponent();
+
+	function checkUserType() {
+		if ($("#usertype").val() == '28' ) {
+			$("#hostCompanyID").show();
+		} else {
+			$("#hostCompanyID").hide();
+		}
+	}
  
 	var verifyAddress = function() { 
 	
@@ -47,6 +55,12 @@ function UserName() {
 		if($("#password").val() == 0){
 			errorMessage = (errorMessage + 'Please enter a password. \n')
 		}
+
+		if (($("#usertype").val() == 28) && ($("#hostCompanyID").val() == '')) {
+			errorMessage = (errorMessage + 'Please select a Host Company. \n')
+		}
+
+
 		if (errorMessage != "") {
 			alert(errorMessage);
 		} else {
@@ -219,6 +233,8 @@ function UserName() {
 
 <cfinclude template="../querys/get_usertype.cfm">
 <!--- END OF - GET COMPANIES SESSION.USERID HAS ACCESS TO --->
+
+<cfinclude template="../querys/get_host_companies.cfm">
 
 <cfoutput>
 
@@ -453,10 +469,16 @@ function UserName() {
 												</cfselect>
 											</td>
 											<td class="style1">
-												<cfselect name="usertype" required="yes" message="You must select an usertype in order to continue">
+												<cfselect name="usertype" id="usertype" required="yes" message="You must select an usertype in order to continue" onChange="checkUserType();">
 													<option value="0"></option>
 													<cfloop query="get_usertype">
 														<option value="#usertypeid#">#usertype#</option>
+													</cfloop>
+												</cfselect>	
+ 
+												<cfselect name="hostCompanyID" id="hostCompanyID" message="You must select an Host Company in order to continue" style="display:none">
+													<cfloop query="get_host_companies">
+														<option value="#hostCompanyID#">#Left(name, '50')#<cfif Len(name) GT 50>...</cfif></option>
 													</cfloop>
 												</cfselect>	
 											</td>

@@ -37,6 +37,7 @@
             <cfif VAL(ARGUMENTS.hostID)>
             	AND hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostID#">
             </cfif>
+             AND active = 1
             ORDER BY name
         </cfquery>
         
@@ -322,6 +323,43 @@
 			
 			return vStudentStruct;
 		</cfscript>
+    
+    </cffunction>
+
+
+    <cffunction name="getAllPlacements" access="remote" returnFormat="json" hint="Gets a list of host companies">
+        <cfargument name="hostID" default="0" required="yes" />
+        
+        <cfset returnValue = "" />
+        
+        <cfquery name="qGetAllPlacements" datasource="#APPLICATION.DSN.Source#">
+            SELECT c.candidateID
+            FROM extra_candidate_place_company ecpc
+            INNER JOIN extra_candidates c ON c.candidateID = ecpc.candidateID
+                AND c.cancel_date IS NULL
+            WHERE ecpc.hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
+        </cfquery>
+        
+        <cfscript>
+            return qGetAllPlacements;
+        </cfscript>
+    
+    </cffunction>
+
+    <cffunction name="deleteCompany" access="remote" returnFormat="json" hint="Gets a list of host companies">
+        <cfargument name="hostID" default="0" required="yes" />
+        
+        <cfset returnValue = "" />
+        
+        <cfquery name="deleteCompany" datasource="#APPLICATION.DSN.Source#">
+            UPDATE extra_hostcompany
+            SET active = 0
+            WHERE hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
+        </cfquery>
+        
+        <cfscript>
+            return 1;
+        </cfscript>
     
     </cffunction>
 

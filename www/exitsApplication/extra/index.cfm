@@ -42,9 +42,7 @@
 			
 			// location("index.cfm", "no");
 		}
-	</cfscript>
-
-	<cfscript>
+	
         // DO LOGIN
         if ( FORM.type EQ 'login' ) {
         

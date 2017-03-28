@@ -24,6 +24,7 @@
         	extra_typebusiness etb ON etb.business_typeid = eh.business_typeid
         WHERE 
         	companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
+            AND active = 1
         ORDER BY 
         	<cfswitch expression="#URL.sortBy#">
             
