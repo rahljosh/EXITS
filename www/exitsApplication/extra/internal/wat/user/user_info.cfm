@@ -12,9 +12,7 @@ function UserName() {
 }
 <!--  End -->
 </script>
-
 <cftry>
-
 </head>
 <body>
 
@@ -25,10 +23,11 @@ function UserName() {
 </cfquery>
 
 <cfquery name="get_user_access" datasource="MySql">
-	SELECT uar.id, uar.companyid, c.companyshort, uar.usertype, ut.usertype as usertypename, default_region
+	SELECT uar.id, uar.companyid, uar.hostCompanyID, c.companyshort, uar.usertype, ut.usertype as usertypename, default_region, ehc.name AS hostName
 	FROM user_access_rights uar
 	INNER JOIN smg_companies c ON c.companyid = uar.companyid
 	INNER JOIN smg_usertype ut ON ut.usertypeid = uar.usertype
+	INNER JOIN extra_hostcompany ehc ON ehc.hostcompanyid = uar.hostCompanyID
 	WHERE userid = '#get_user.userid#'
 		AND c.system_id = '4'
 	ORDER BY default_region DESC
@@ -50,6 +49,17 @@ function UserName() {
 	WHERE usertypeid >= '#client.usertype#' 
 		AND usertypeid <= '3'
 </cfquery>
+
+<cfquery name="documentControl" datasource="MySQL">
+        select documentType, id
+        from extra_virtualfolderdocuments 
+        where fk_category = 7
+    </cfquery>
+    <cfquery name="docCount" datasource="MySQL">
+     select count(vfid) as docCount
+    from extra_virtualfolder 
+    where fk_studentid = <cfqueryparam cfsqltype="cf_sql_integer" value=" #get_user.userid#"> and (expires >= now() or expires is NULL and isDeleted = 0) 
+    </cfquery>
 <!--- END OF - GET COMPANIES SESSION.USERID HAS ACCESS TO --->
 
 
@@ -59,8 +69,27 @@ function UserName() {
 
 <cfinclude template="../querys/get_usertype.cfm">
 
-<cfparam name="edit" default="no">
+<cfinclude template="../querys/get_host_companies.cfm">
 
+<cfparam name="edit" default="no">
+<cfparam name="url.docsubmit" default="0">
+<cfif url.docsubmit eq 1>
+	<cfif docCount.docCount eq 12>
+        <cfmail to="anca@csb-usa.com" from="support@csb-usa.com" subject="#get_user.businessname# has submitted documents for review">
+        #get_user.firstname# #get_user.lastname# of #get_user.businessname# has uploaded documents and is requesting you review them.
+        
+        Visit https://extra.exitsdev.com/internal/wat/index.cfm?curdoc=intRep/intlRepInfo&uniqueID=#get_user.uniqueid# to review and approve the documents. 
+        </cfmail>
+    
+        <cfmail to="anca@csb-usa.com" from="support@csb-usa.com" subject="#get_user.businessname# has submitted documents for review">
+           Dear #get_user.businessname#,
+    
+    Your vetting documents have been submitted to CSB for review. Please be patient while we verify them. Once processed, a team member will reach out in regards to any missing documents and/or confirmation or completion. Thank you.  
+                       Regards-
+                        CSB International, Inc.
+        </cfmail>
+    </cfif>
+</cfif>
 <cfoutput>
 
 <cfform method="post" name="new_user" action="?curdoc=user/qr_user_info">
@@ -70,6 +99,18 @@ function UserName() {
 <cfif isDefined('form.edit') AND (listFind("1,2,3,4,8", CLIENT.userType))>
 	<cfset edit = '#form.edit#'>
 </cfif>
+
+<script>
+function checkUserType(current_row) {
+	//alert($("##usertype_" + current_row).val());
+
+	if( $("##usertype_" + current_row).val() == '28') {
+		$("##hostCompany_" + current_row).show();
+	} else {
+		$("##hostCompany_" + current_row).hide();
+	}
+}
+</script>
 
 <table width="100%" height="100%" border="1" align="center" cellpadding="0" cellspacing="0" bordercolor="CCCCCC" bgcolor="f4f4f4">
 	<tr>
@@ -234,7 +275,125 @@ function UserName() {
                         </table>
                                                 
                         <br />
+						<cfif client.usertype eq 8>
+                       <!--- DOCUMENTS CONTROL --->
+                        <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
+                            <tr>
+								<td>
 
+                                    <table width="100%" cellpadding="3" cellspacing="3" border="0">
+                                        <tr bgcolor="##C2D1EF">
+                                            <td colspan="2" class="style2" bgcolor="##8FB6C9">&nbsp;:: Documents Control</td>
+                                            
+                                        </tr>
+                                    
+                                        
+                                        
+                                        
+                                        
+                                       <cfloop query="documentControl">
+                                       <Cfquery name="getDocument" datasource="MySQL">
+                                          select *
+                                            from extra_virtualfolder where fk_documentType = <cfqueryparam cfsqltype="cf_sql_integer" value=" #id#">
+                                            and fk_studentid = <cfqueryparam cfsqltype="cf_sql_integer" value=" #get_user.userid#">
+                                             and (expires >= now() or expires is NULL)
+                                       </Cfquery>
+                                       
+                                        <cfif getDocument.isDeleted neq 1>
+                                       <tr>
+                                       		 <td class="style1" colspan=2>
+                                               
+												<cfif len(getDocument.fileName) and getDocument.isDeleted eq 0>
+                                                   <strong> <A href="../#getDocument.filePath#/#getDocument.fileName#" target="_new">#documentControl.documentType#</A></strong>
+                                                    <cfelse>
+                                                    #documentControl.documentType#
+                                                    </cfif>
+                                                    <br />
+                                             
+                                                &nbsp;&nbsp;Expiration Date: 
+													<Cfif getDocument.fileName is not '' >
+                                                     <span class="readOnly">
+                                                        <cfif isDate(getDocument.expires)>
+                                                          #DateFormat(getDocument.expires, 'mm/dd/yyyy')#
+                                                        <cfelse>
+                                                         <font color=##ccc>Waiting for Review</font>
+                                                        </cfif> 
+                                                        
+                                                    </span>
+                                                     <input 
+                                                        type="text" 
+                                                        name="#getDocument.vfid#" 
+                                                        id="#getDocument.vfid#" 
+                                                        value="#DateFormat(getDocument.expires, 'mm/dd/yyyy')#" 
+                                                        class="datePicker style1 editPage" />
+
+                                                    <cfelse>
+                                                    	Missing Document
+                                                    </Cfif>
+                                               
+                                               
+                                                
+                                             
+                                            </td>
+                                       </tr>
+                                        </cfif>
+                                       </cfloop>
+                                       
+                                       <!----
+                                        <tr>
+                                        	<td class="fieldTitle">
+                                            	<input 
+                                                	type="checkbox" 
+                                                    name="watDocEnglishAdvertisingMaterialExpirationCB" 
+                                                    id="watDocEnglishAdvertisingMaterialExpirationCB" 
+                                                    value="1" 
+                                                    class="formField" 
+                                                    onChange="removeDate(this,'watDocEnglishAdvertisingMaterialExpiration');" 
+                                                    disabled 
+													<cfif isDate(FORM.watDocEnglishAdvertisingMaterialExpiration)>
+														<cfif DateCompare(FORM.watDocEnglishAdvertisingMaterialExpiration, NOW(), "d") NEQ -1> checked </cfif>
+                                                  	</cfif> >
+                                            </td>
+                                            <td class="style1">
+                                                <label for="watDocEnglishAdvertisingMaterialExpiration">English sponsor-approved advertising materials </label><br />
+                                                &nbsp;&nbsp;Expiration Date: 
+                                                <span class="readOnly"
+                                                	<cfif isDate(FORM.watDocEnglishAdvertisingMaterialExpiration)>
+														<cfif DateCompare(FORM.watDocEnglishAdvertisingMaterialExpiration, NOW(), "d") EQ -1>
+                                                        	style="color:red;"
+														</cfif>
+                                                  	</cfif> >
+                                                    #DateFormat(watDocEnglishAdvertisingMaterialExpiration,"mm/dd/yyyy")#
+                                                </span>
+                                                <input 
+                                                	type="text" 
+                                                    name="watDocEnglishAdvertisingMaterialExpiration" 
+                                                    id="watDocEnglishAdvertisingMaterialExpiration" 
+                                                    value="#DateFormat(FORM.watDocOriginalAdvertisingMaterialExpiration, 'mm/dd/yyyy')#" 
+                                                    class="datePicker style1 editPage" />
+                                            </td>
+                                        </tr>
+										---->
+                                        <tr>
+                                        	<td colspan="2" style="font-size:9px;"><i>These documents will expireas indicated. They must be renewed and maintained annually (IFR 2012).</i></td>
+                                        </tr>	
+                                        <tr>
+                                        	<td><a href="?curdoc=virtualfolder/view&uniqueID=#URL.uniqueID#"><input type="button"  value="Manage Documents" /></a></td>
+                                            <td><a href="?curdoc=user/user_info&uniqueID=#URL.uniqueID#&docSubmit=1"><input type="button" <cfif #docCount.docCount# lt 12> disabled="disabled"</cfif> value="Submit for Review" /></a></td>
+                                       
+                                       <cfif #docCount.docCount# lt 12>
+                                            <tr>
+                                                <td colspan="2" style="font-size:9px;"><font color="red"><i>All 12 documents must be uploaded before you can submit for review.</i></font></td>
+                                            </tr>
+                                        </cfif>
+                                    </table>
+                                    
+                                </td>
+                            </tr>
+                        </table> 
+
+                        <br />
+                    </cfif>      
                         <!--- DEFAULT COMPANY ACCESS INFORMATION --->
 						<cfif listFind("1,2,3,4", CLIENT.userType)>
 						
@@ -300,7 +459,10 @@ function UserName() {
 											<td class="style1"><b>Alt. Email:</b></td>
 											<td class="style1"><cfif edit EQ 'yes'><input type="text" name="email2" value="#get_user.email2#" size="40" maxlength="100"><cfelse>#get_user.email2#</cfif></td>
 										</tr>
-									</table>																		
+									</table>		
+                                    
+                                     <br />
+																					
 								</td>
 							</tr>
 						</table>
@@ -373,16 +535,31 @@ function UserName() {
                                                         <td class="style1">
                                                         <!--- USERTYPE --->
                                                         <cfif usertype GTE client.usertype> 
-                                                            <select name="usertype_#currentrow#">
+                                                            <select name="usertype_#currentrow#" id="usertype_#currentrow#" onchange="checkUserType(#currentrow#)">
                                                                 <cfset loop_companyid = #get_user_access.companyid#>
                                                                 <cfset loop_usertype = #get_user_access.usertype#>
                                                                 <cfloop query="get_usertype">
                                                                     <option value="#usertypeid#" <cfif loop_usertype EQ usertypeid>selected</cfif>>#usertype#</option>
                                                                 </cfloop>
                                                             </select>
+                                                            <br />
+
+                                                            <div id="hostCompany_#currentrow#">
+                                                            <strong>Host Company</strong><br />
+                                                            <cfselect name="hostCompanyID_#currentrow#">
+                                                            	<cfset loop_hostCompanyID = #get_user_access.hostCompanyID#>
+																<cfloop query="get_host_companies">
+																	<option value="#hostCompanyID#" <cfif loop_hostCompanyID EQ hostCompanyID>selected</cfif>>#Left(name, '50')#<cfif Len(name) GT 50>...</cfif>
+																	</option>
+																</cfloop>
+															</cfselect>	
+															</div>
                                                         <cfelse>
                                                             #usertypename#
                                                             <input type="hidden" name="usertype_#currentrow#" value="#usertype#">
+
+                                                            Host Company: #hostCompanyID#
+                                                            <input type="hidden" name="hostCompanyID_#currentrow#" value="#hostCompanyID#">
                                                         </cfif>
                                                         </td>
                                                         <td class="style1" align="center">
@@ -404,12 +581,24 @@ function UserName() {
                                                         </select>
                                                     </td>
                                                     <td class="style1">
-                                                        <select name="usertype_new">
+                                                        <select name="usertype_new" id="usertype_new" onchange="checkUserType('new')">
                                                             <option value="0"></option>
                                                             <cfloop query="get_usertype">
                                                                 <option value="#usertypeid#">#usertype#</option>
                                                             </cfloop>
-                                                        </select>												
+                                                        </select>
+
+                                                        <br />
+
+                                                        <div id="hostCompany_new" style="display:none">
+                                                            <strong>Host Company</strong><br />
+                                                            <cfselect name="hostCompanyID_new">
+																<cfloop query="get_host_companies">
+																	<option value="#hostCompanyID#" <cfif loop_hostCompanyID EQ hostCompanyID>selected</cfif>>#Left(name, '50')#<cfif Len(name) GT 50>...</cfif>
+																	</option>
+																</cfloop>
+															</cfselect>	
+														</div>												
                                                     </td>
                                                     <td class="style1">&nbsp;</td>
                                                 </tr>
@@ -417,7 +606,8 @@ function UserName() {
                                                 <cfloop query="get_user_access">
                                                     <tr>
                                                         <td class="style1">#companyshort#</td>
-                                                        <td class="style1">#usertypename#</td>
+                                                        <td class="style1">#usertypename# <br /> <strong>Host Company:</strong> 
+                                                         #Left(hostName, '50')#<cfif Len(hostName) GT 50>...</cfif></td>
                                                         <td class="style1">&nbsp;</td>																				
                                                     </tr>
                                                 </cfloop>
@@ -485,12 +675,10 @@ function UserName() {
 </table>		
 
 </cfoutput>
-	
 <cfcatch type="any">
 	<cfinclude template="../error_message.cfm">
 </cfcatch>
 
 </cftry>
-
 </body>
 </html>

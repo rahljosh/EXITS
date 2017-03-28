@@ -15,8 +15,20 @@
 
     <cfscript>
 		qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(companyID=CLIENT.companyID);
-		qGetHostCompanyList = APPLICATION.CFC.HOSTCOMPANY.getHostCompanies(companyID=CLIENT.companyID);
+
 	</cfscript>
+
+    <cfquery name="qGetHostCompanyList" datasource="#APPLICATION.DSN.Source#" maxrows="30">
+        SELECT *
+        FROM extra_hostcompany
+        WHERE name != ""
+            AND companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        <cfif CLIENT.userType EQ 28>
+            AND hostCompanyID IN (<cfqueryparam cfsqltype="cf_sql_integer" list="true" value="#CLIENT.hostCompanyID#">)
+        </cfif>
+         AND active = 1
+        ORDER BY name
+    </cfquery>
 
     <!--- FORM submitted --->
     <cfif FORM.submitted>
@@ -53,6 +65,11 @@
 			<cfif VAL(FORM.hostcompanyID)> 
                 AND
                     ehc.hostcompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">                               
+            </cfif>
+
+            <cfif CLIENT.userType EQ 28> 
+                AND
+                    ehc.hostcompanyID IN  (<cfqueryparam cfsqltype="cf_sql_integer" list="true" value="#CLIENT.hostcompanyID#">)
             </cfif>
        		GROUP BY
             	ehc.hostCompanyID
@@ -97,10 +114,14 @@
                 c.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
             AND 
                 c.status = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-           <cfif VAL(FORM.hostcompanyID)> 
+            <cfif VAL(FORM.hostcompanyID)> 
                 AND
                     c.hostcompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">                               
-			</cfif>                
+			</cfif>
+            <cfif CLIENT.userType EQ 28>
+                    AND c.hostCompanyID IN (<cfqueryparam cfsqltype="cf_sql_integer" list="true" value="#CLIENT.hostCompanyID#">)
+            </cfif>  
+
        		ORDER BY
                 ehc.name,
                 c.candidateID
@@ -120,7 +141,9 @@
                     
 				<cfif VAL(ARGUMENTS.hostcompanyID)> 
                     AND
-                        hostcompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostcompanyID#">                               
+                        hostcompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostcompanyID#">  
+                <cfelseif CLIENT.userType EQ 28>
+                        AND hostCompanyID IN (<cfqueryparam cfsqltype="cf_sql_integer" list="true" value="#CLIENT.hostCompanyID#">)
                 </cfif>                
                 
                 <cfif ARGUMENTS.placementType NEQ 'All'>
@@ -178,12 +201,17 @@
         <tr valign="middle">
             <td align="right" valign="middle" class="style1"><b>Host Company: </b></td>
             <td valign="middle">  
-                <select name="hostCompanyID" class="style1">
-                    <option value="ALL">---  All Host Companies  ---</option>
-                    <cfloop query="qGetHostCompanyList">
-                    	<option value="#hostcompanyID#" <cfif qGetHostCompanyList.hostcompanyID EQ FORM.hostCompanyID> selected </cfif> >#qGetHostCompanyList.name#</option>
-                    </cfloop>
-                </select>
+                <Cfif qGetHostCompanyList.recordCount EQ 1>
+                    #qGetHostCompanyList.name#
+                    <input type="hidden" name="hostcompanyID" value="#qGetHostCompanyList.hostcompanyID#" />
+                <cfelse>
+                    <select name="hostCompanyID" class="style1">
+                        <option value="ALL">---  All Host Companies  ---</option>
+                        <cfloop query="qGetHostCompanyList">
+                        	<option value="#hostcompanyID#" <cfif qGetHostCompanyList.hostcompanyID EQ FORM.hostCompanyID> selected </cfif> >#qGetHostCompanyList.name#</option>
+                        </cfloop>
+                    </select>
+                </Cfif>
             </td>
         </tr>
         <tr>
@@ -227,12 +255,14 @@
                 <input type="radio" name="printOption" id="printOption3" value="3" <cfif FORM.printOption EQ 3> checked="checked" </cfif> > <label for="printOption3">Excel (XLS)</label>
             </td>            
         </tr>
-        <tr>
-        	<td align="right" class="style1"><b>Email Host Company: </b></td>
-            <td class="style1">
-            	<input type="checkbox" name="email" id="email" <cfif FORM.email EQ 'on'>checked</cfif> />
-            </td>
-        </tr>
+        <cfif CLIENT.userType NEQ 28>
+            <tr>
+            	<td align="right" class="style1"><b>Email Host Company: </b></td>
+                <td class="style1">
+                	<input type="checkbox" name="email" id="email" <cfif FORM.email EQ 'on'>checked</cfif> />
+                </td>
+            </tr>
+        </cfif>
         <tr>
             <td colspan="2" align="center"><br />
                 <input type="submit" value="Generate Report" class="style1" /><br />
@@ -348,13 +378,98 @@
                 
           	</cfsavecontent>
             
+            
+            <cfsavecontent variable="currentHCReportContentEmail">
+
+                <table width="98%" cellpadding="4" cellspacing="0" align="center" style="margin-top:10px; margin-bottom:20px; border:1px solid ##4F8EA4; line-height:15px;"> 
+                    <tr>
+                        <td colspan="12">
+                            <strong>#qGetHostCompany.name# - Total candidates: #qTotalPerHostCompany.recordCount#</strong> 
+                            (
+                                #totalPerHostCompanyCSBPlacements# CSB; &nbsp; 
+                                #totalPerHostCompanySelfPlacements# Self; &nbsp; 
+                                #totalPerHostCompanyWalkInPlacements# Walk-In 
+                            )
+                        </td>
+                    </tr>
+                    <tr style="font-weight:bold;">
+                        <td width="5%" align="left" bgcolor="##4F8EA4" class="tableTitleView">ID</Td>
+                        <td width="15%" align="left" bgcolor="##4F8EA4" class="tableTitleView">Last Name</Td>
+                        <td width="15%" align="left" bgcolor="##4F8EA4" class="tableTitleView">First Name</Td>
+                        <td width="15%" align="left" bgcolor="##4F8EA4" class="tableTitleView">Country</td>
+                        <td width="10%" align="left" bgcolor="##4F8EA4" class="tableTitleView">#FORM.flightType# Date</td>
+                        <td width="10%" align="left" bgcolor="##4F8EA4" class="tableTitleView">#FORM.flightType# Airport</td>
+                        <td width="10%" align="left" bgcolor="##4F8EA4" class="tableTitleView">#FORM.flightType# Time / Flight ##</td>
+                    </tr>
+                    <cfloop query="qTotalPerHostCompany">
+                        <cfscript>
+                            // Get Flight Information
+                            qGetFlightInfo = APPLICATION.CFC.FLIGHTINFORMATION.getFlightInformationByCandidateID(candidateID=qTotalPerHostCompany.candidateID, flightType=FORM.flightType, getLastLeg=FORM.getLastLeg);
+                        </cfscript>
+                        <tr <cfif qTotalPerHostCompany.currentRow mod 2>bgcolor="##E4E4E4"</cfif> >
+                            <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerHostCompany.uniqueID#" target="_blank" class="style4">#qTotalPerHostCompany.candidateID#</a></td>
+                            <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerHostCompany.uniqueID#" target="_blank" class="style4">#qTotalPerHostCompany.lastname#</a></td>
+                            <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerHostCompany.uniqueID#" target="_blank" class="style4">#qTotalPerHostCompany.firstname#</a></td>
+                            <td class="style1">#qTotalPerHostCompany.countryname#</td>                     
+                            <td colspan="3" class="style1">
+                                
+                                <table width="100%" cellpadding="0" cellspacing="0">
+                                    <cfif qGetFlightInfo.recordCount>
+                                    
+                                        <cfloop query="qGetFlightInfo"> 
+                                            <tr>
+                                                <td width="40%" class="style1">
+                                                    <cfif qGetFlightInfo.isOvernightFlight EQ 1>
+                                                        #DateFormat(DateAdd("d", 1, qGetFlightInfo.departDate), 'mm/dd/yyyy')# 
+                                                    <cfelse>
+                                                        #qGetFlightInfo.departDate#
+                                                    </cfif>
+                                                </td>
+                                                <td width="30%" class="style1">
+                                                    #qGetFlightInfo.arriveAirportCode#
+                                                </td>
+                                                <td width="30%" class="style1">
+                                                    #qGetFlightInfo.arriveTime# / #qGetFlightInfo.flightNumber#
+                                                </td>
+                                             </tr>  
+                                        </cfloop>
+                                             
+                                    <cfelseif qTotalPerHostCompany.wat_placement EQ 'CSB-Placement' AND DateAdd("d", -14, qTotalPerHostCompany.startDate) LTE now() AND FORM.flightType EQ 'arrival'>
+                                        <tr>
+                                            <td colspan="3" class="style1" style="color:##F00; font-weight:bold; font-size:9px;">
+                                                Alert Arrival Missing (CSB-Placement) - Program Start Date: #DateFormat(qTotalPerHostCompany.startDate, 'mm/dd/yy')#
+                                            </td>
+                                        </tr>
+                                    <cfelseif qTotalPerHostCompany.wat_placement EQ 'Self-Placement' AND DateAdd("d", -14, qTotalPerHostCompany.startDate) LTE now() AND FORM.flightType EQ 'arrival'>                                      <tr>
+                                            <td colspan="3" class="style1" style="color:##F90; font-weight:bold; font-size:9px;">
+                                                Alert Arrival Missing (Self-Placement) - Program Start Date: #DateFormat(qTotalPerHostCompany.startDate, 'mm/dd/yy')#
+                                            </td>
+                                        </tr>                                            
+                                    <cfelse>
+                                        <tr>
+                                            <td colspan="3" class="style1">
+                                                n/a
+                                            </td>
+                                        </tr>                                                                                    
+                                    </cfif> 
+                                    
+                                </table>  
+                                                                  
+                            </td>
+                        </tr>
+                    </cfloop>
+    
+                </table>
+                
+          	</cfsavecontent>
+            
             #currentHCReportContent#
             
             <cfif FORM.email EQ 'on'>
             	<cfscript>
 					APPLICATION.CFC.EMAIL.sendEmail(
 						emailTo=qGetHostCompany.email,
-						emailMessage=currentHCReportContent,
+						emailMessage=currentHCReportContentEmail,
 						emailSubject='Flight Report Information',
 						companyID=CLIENT.companyID,
 						footerType='emailRegular');

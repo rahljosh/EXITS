@@ -17,16 +17,19 @@
             sta.state
         FROM 
         	smg_users u
-        INNER JOIN 
+        LEFT JOIN 
         	user_access_rights uar ON uar.userid = u.userid
         LEFT JOIN 
         	smg_states sta ON sta.id = u.state
         WHERE 
         	u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
         AND 
-        	uar.usertype <= <cfqueryparam cfsqltype="cf_sql_integer" value="4">
-        AND 
         	uar.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#client.companyid#"> 
+        AND ( 
+            uar.usertype <= <cfqueryparam cfsqltype="cf_sql_integer" value="4"> 
+            OR
+            uar.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="28">)
+        GROUP BY u.userid
         ORDER BY 
             <cfswitch expression="#URL.sortBy#">
             
@@ -65,7 +68,7 @@
                     u.firstName #URL.sortOrder#
                 </cfdefaultcase>
 
-			</cfswitch>                	
+			</cfswitch>   
             
     </cfquery>
 

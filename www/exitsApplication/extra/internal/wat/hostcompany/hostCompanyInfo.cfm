@@ -1517,6 +1517,44 @@
 		}
 	} 
 
+
+    var confirmDelete = function() { 
+        console.log('confirmDelete');
+        $.ajax({
+            url: "../../extensions/components/hostCompany.cfc?method=getAllPlacements",
+            dataType: "json",
+            data: { 
+                hostID: $("#hostCompanyID").val()
+            },
+            success: function(data) {
+                //console.log(data.DATA);
+                //console.log(data.DATA.length);
+               if (data.DATA.length > 0 ) {
+                    alert("Company cannot be deleted, Candidates placement:\n " + data.DATA);
+                    //console.log(data.DATA);
+                } else {
+                    //console.log('Clean');
+                    if (confirm("Are you sure you want to delete this company?")) {
+                        window.open("../../extensions/components/hostCompany.cfc?method=deleteCompany&companyID="+ $("#hostCompanyID").val(), $("#hostCompanyID").val(), "width=10, height=10");
+                        $.ajax({
+                            url: "../../extensions/components/hostCompany.cfc?method=deleteCompany",
+                            dataType: "json",
+                            data: { 
+                                hostID: $("#hostCompanyID").val()
+                            },
+                            success: function(data) {
+                                //console.log(data.DATA);
+                                //console.log(data.DATA.length);
+                                alert("Company Deleted");
+                            }
+                        })
+                    }
+                }
+            }
+        })
+    }
+
+
 	// Callback function to handle the results returned by the getHostLeadList function and populate the table. 
 	var checkAddress = function(googleResponse) { 
 
@@ -3797,7 +3835,8 @@
                         <td align="center">
                             
                             <!---- EDIT BUTTON ---->
-                            <div class="readOnly">                            
+                            <div class="readOnly">  
+                                <img src="../pics/delete.gif" onclick="confirmDelete(#qGetHostCompanyInfo.hostCompanyID#);" /> &nbsp; &nbsp;  &nbsp; &nbsp;                          
                                 <img src="../pics/edit.gif" onClick="readOnlyEditPage();">
                             </div>
                             

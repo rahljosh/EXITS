@@ -9,6 +9,8 @@
 
 <cftry>
 
+<cfparam name="FORM.hostCompanyID" default="0">
+
 <cfoutput>
 
 <cftransaction action="begin" isolation="serializable">
@@ -60,6 +62,7 @@
 		<cfset form.error6 = 'Username <b>#form.username#</b> is current in use by account <b>#check_username.firstname# #check_username.lastname# ###check_username.userid#</b>. You must change it in order to continue.'>
 		<cfset total_errors = total_errors + 1>
 	</cfif>
+
 	
 	<cfif total_errors GT 0>
 		<table  bgcolor="FFFFFF" bordercolor="CCCCCC" border="1" height="100%" width="100%">
@@ -112,9 +115,9 @@
 	
 	<cfquery name="user_access_rights" datasource="MySql">
 		INSERT INTO user_access_rights
-			(userid, companyid, usertype, default_region)
+			(userid, companyid, usertype, default_region, hostCompanyID)
 		VALUES
-			('#get_user.userid#', '#form.companyid#', '#form.usertype#', '1')
+			('#get_user.userid#', '#form.companyid#', '#form.usertype#', '1', '#form.hostCompanyID#')
 	</cfquery>
 
 	<html>
