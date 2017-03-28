@@ -1,0 +1,340 @@
+@charset "UTF-8";
+/* CSS Document */
+
+body {
+	background-color: #a6aeb0;
+	margin: 0;
+	padding: 0;
+	color: #000;
+	background-image: url(../images/background.jpg);
+	background-repeat: repeat;
+	background-position: center top;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 100%;
+	line-height: 1.2;
+}
+/* ~~ Element/tag selectors ~~ */
+
+a img {
+	border: none;
+}
+a:link {
+	color: #17468E;
+	text-decoration: none;
+}
+a:visited {
+	color: #17468E;
+	text-decoration: underline;
+}
+a:hover, a:active, a:focus { 
+	text-decoration: underline;
+}
+
+.container {
+	width: 1024px;
+	background-color: #FFFFFF;
+	margin: 0 auto;
+	-moz-box-shadow:    3px 3px 5px 6px #A7A9AC;
+  	-webkit-box-shadow: 3px 3px 5px 6px #A7A9AC;
+  	box-shadow:         3px 3px 5px 6px #A7A9AC;
+}
+header {
+	background-color: #FFFFFF;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	font-family: Gotham, "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-size: 16pt;
+	color: #17468E;
+}
+
+.sidebar1 {
+	float: left;
+	width: 300px;
+	padding-bottom: 0px;
+}
+
+.sidebar2 {
+	float: right;
+	width: 300px;
+	padding-bottom: 0px;
+}
+.imgBtnArea {
+	padding: 0px 0;
+	width: 700px;
+	float: right;
+	margin-bottom:20px;
+}
+.sidebar1 aside {
+	float: left;
+	width: 255px;
+	margin-left: 35px;
+	padding-top: 0;
+	padding-right: 0;
+	padding-bottom: 10px;
+	padding-left: 0;
+	border-right-width: thin;
+	border-right-style: dotted;
+	border-right-color: #CCC;
+	font-size: 90%;
+	padding: 10px 0;
+}
+.sidebar2 aside {
+	float: left;
+	width: 255px;
+	margin-left: 0px;
+	padding-top: 10px;
+	padding-right: 0;
+	padding-bottom: 10px;
+	padding-left: 25px;
+	border-left-width: thin;
+	border-left-style: dotted;
+	border-left-color: #CCC;
+	font-size: 90%;
+}
+.sidebar2 aside ul li{
+	margin-bottom: 10px;
+}
+.content {
+	padding: 10px 0;
+	width: 700px;
+	float: left;
+	font-size: 90%;
+}
+.contentFull {
+	padding: 10px 0;
+	width: 900px;
+	margin: 0 auto;
+	font-size: 90%;
+}
+.contentFull ul{
+	padding-left: 35px;
+	padding-right: 35px;
+}
+.contentFull li{
+	padding-bottom: 5px;
+}
+.contentLft {
+	width: 670px;
+	float: left;
+	font-size: 90%;
+	padding-top: 10px;
+	padding-right: 0;
+	padding-bottom: 10px;
+	padding-left: 30px;
+}
+.contentLft ul{
+	padding-left: 35px;
+	padding-right: 35px;
+}
+.contentLft li{
+	padding-bottom: 5px;
+	list-style-position: outside;
+	list-style-image: url(../images/arrowBUL.png);
+}
+.contentLft .Roman ul li {
+	margin-left: 20px;
+	list-style-type: none;
+	list-style-position: outside;
+}
+
+#showHide > div {
+    display: none;
+}
+
+#showHide > div:target {
+    display: block;
+}
+
+.content ul, .content ol {
+	padding: 0 15px 15px 40px; 
+}
+
+ul.nav {
+	list-style: none; 
+	border-top: 1px solid #666; 
+	margin-bottom: 15px;
+	width: 200px;
+}
+ul.nav li {
+	border-bottom: 1px solid #666;
+}
+ul.nav a, ul.nav a:visited {
+	padding: 8px 8px 8px 15px;
+	display: block;
+	text-decoration: none;
+	background-color: #efefef;
+}
+ul.nav a:hover, ul.nav a:active, ul.nav a:focus {
+	background-color: #17468E;
+	color: #FFF;
+}
+
+/* ~~ The footer ~~ */
+footer {
+	background-color: #D1D2D4;
+	position: relative;
+	clear: both;
+	padding-top: 20px;
+	padding-right: 0;
+	padding-bottom: 0;
+	padding-left: 0;
+	line-height: 1.5;
+	margin-top: 20px;
+}
+.divCopyright {
+	background-color: #0068AC;
+	font-style: normal;
+	color: #404041;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	font-size: 80%;
+	padding-left: 30px;
+	padding-right: 70px;
+	vertical-align: middle;
+	height: 34px;
+	margin-top: 20px;
+	text-align:center;
+}
+/* ~~ Miscellaneous float/clear classes ~~ */
+.fltrt { 
+	float: right;
+	margin-left: 8px;
+}
+.fltlft { 
+	float: left;
+	margin-right: 8px;
+}
+.clearfloat { 
+	clear:both;
+	height:0;
+	font-size: 1px;
+	line-height: 0px;
+}
+
+/*HTML 5 support */
+header, section, footer, aside, article, figure {
+	display: block;
+}
+
+/*Column Layouts*/
+.Col-Cont{
+	display: block;
+	overflow: auto;
+	font-size: 90%;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+.Column{
+	display: block;
+	float: left;
+	width: 450px;
+	margin-left: 40px;
+}
+.ColHeader {
+	background-color: #0068AC;
+	color: #FFFFFF;
+	font-size: 20px;
+	margin-bottom: 15px;
+	padding: 10px 0;
+	text-align: center;
+	width: 100%;	
+}
+.column2{
+	display: inline-block;
+	float: left;
+	width: 45%;
+	margin-left: 15px;
+}
+.column2 li{
+	padding-bottom: 5px;
+	list-style-position: outside;
+	list-style-image: url(../images/arrow_bullets.png);
+}
+.Column ul{
+	margin-left:20px;
+	list-style: none;
+}
+.columnInline {
+	width: 180px;
+	margin: 15px 0 0 15px;
+	padding: 10px;
+	background-color: #fff;
+	display: inline-block;
+	text-align: left;
+	font-size: 100%;
+	font-weight: bold;
+	-webkit-box-shadow: 2px 2px 2px 2px rgba(127, 127, 127, .5);
+	box-shadow: 2px 2px 2px 2px rgba(127, 127, 127, .5);
+}
+.columnInline img{
+	margin: 10px auto 5px auto;
+	/* [disabled]border: thin solid #999; */
+}
+.two-col {
+       -moz-column-count: 2;
+       -moz-column-gap: 15px;
+       -webkit-column-count: 2;
+       -webkit-column-gap: 15px;
+}
+.two-col ul li {
+	list-style-position: outside;
+	list-style-type: square;
+}
+.three-col {
+       -moz-column-count: 3;
+       -moz-column-gap: 5px;
+       -webkit-column-count: 3;
+       -webkit-column-gap: 5px;
+}
+.four-col {
+       -moz-column-count: 4;
+       -moz-column-gap: 10px;
+       -webkit-column-count: 4;
+       -webkit-column-gap: 10px;
+}
+.five-col {
+       -moz-column-count: 5;
+       -moz-column-gap: 5px;
+       -webkit-column-count: 5;
+       -webkit-column-gap: 5px;
+}
+.five-col ul li {
+	list-style: none;
+	padding-bottom: 5px;
+}
+
+/*Banner*/
+.bannerCallout {
+	background-image: url(../images/Exchange_Banner.jpg);
+	background-repeat: no-repeat;
+	padding: 20px;
+	height: 145px;
+	width: 984px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	font-size: 95%;
+}
+.bannerCallout h1 {
+	color: #17468E;
+	margin-bottom: 8px;
+}
+/*Press Room*/
+.iseNews {
+	width: 378px;
+	margin-left: 15px;
+	float: left;
+	font-size: 95%;	
+}
+.iseNewsImg {
+	width: 238px;
+	margin-left: 25px;
+	float: left;
+	overflow: hidden;
+}
+.picIMG {
+	text-align: center;
+	padding: 3px;
+	border: thin solid #CCC;
+}
