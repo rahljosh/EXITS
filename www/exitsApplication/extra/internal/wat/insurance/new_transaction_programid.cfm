@@ -228,7 +228,7 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
                     	#qGetCandidates.countryname#
                     </td>                                
                 </tr>
-				<!---
+				
                 <cfquery datasource="MySql">
                     UPDATE 
                         extra_candidates 
@@ -273,7 +273,7 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
                         <cfqueryparam cfsqltype="cf_sql_timestamp" value="#vInsuranceDate#">
                     );	
                 </cfquery>
-                ---->
+              
             </cfif>
             
         </cfloop>
