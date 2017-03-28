@@ -1,0 +1,122 @@
+@charset "UTF-8";
+/* CSS Document */
+#menuHolder {
+	width: 1024px;
+	margin-right: auto;
+	margin-left: auto;
+	background-color: #0068AC;	
+}
+.menu{
+	border: none;
+	border: 0px;
+	font-size: 13px;
+	height: 30px;
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	font-style: normal;
+	padding: 0px;
+	margin-top: 0px;
+	margin-right: 0px;
+	margin-bottom: 0px;
+	margin-left: 10px;
+	}
+.menu ul{
+	height:30px;
+	list-style:none;
+	padding-top: 0;
+	padding-right: 0px;
+	padding-bottom: 0;
+	padding-left: 15px;
+	margin-top: 0;
+	margin-right: 0;
+	margin-bottom: 0;
+	margin-left: 0;
+	}
+	.menu li{
+		float:left;
+		padding:0px;
+		}
+	.menu li a{
+	color: #FFF;
+	display: block;
+	line-height: 30px;
+	text-align: center;
+	text-decoration: none;
+	background-color: #0068AC;
+	background-image: url(../images/seperator.gif);
+	background-repeat: no-repeat;
+	background-position: right bottom;
+	padding-top: 0px;
+	padding-right: 30px;
+	padding-bottom: 0px;
+	padding-left: 30px;
+	margin: 0px;
+		}
+		.menu li a:hover, .menu ul li:hover a{
+	color: #000;
+	text-decoration: none;
+	background-color: #7CA4C9;
+	background-image: url(../images/hover.gif);
+	background-repeat: no-repeat;
+	background-position: center bottom;
+			}
+	.menu li ul{
+	display: none;
+	height: auto;
+	padding: 0px;
+	margin: 0px;
+	position: absolute;
+	width: 200px;
+	z-index: 200;		/*top:1em;
+		/*left:0;*/
+	background-image: url(../images/navBack.png);
+	background-repeat: repeat;
+	border-top-width: 0px;
+	border-right-width: 0px;
+	border-bottom-width: thick;
+	border-left-width: 0px;
+	border-bottom-style: solid;
+	border-bottom-color: #0068AC;
+		}
+	.menu li:hover ul{
+		display:block;
+		
+		}
+	.menu li li {
+	display: block;
+	float: none;
+	margin: 0px;
+	padding: 0px;
+	width: 200px;
+	background-repeat: no-repeat;
+	background-position: left bottom;
+	background-image: url(../images/sub_sep.gif);
+		}
+	.menu li:hover li a{
+		background:none;
+		
+		}
+	.menu li ul a{
+	display:block;
+	height:25px;
+	margin:0px;
+	text-align:left;
+	color: #000;
+	padding-top: 0px;
+	padding-right: 10px;
+	padding-bottom: 3px;
+	padding-left: 15px;
+		}
+		.menu li ul a:hover, .menu li ul li:hover a{
+	border: 0px;
+	color: #000;
+	text-decoration: none;
+	background-image: url(../images/hover_sub.gif);
+	background-repeat: no-repeat;
+	background-position: left center;
+	background-color: #7CA4C9;
+			}
+	.menu p{
+		clear:left;
+		}
+
