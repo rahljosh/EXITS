@@ -228,6 +228,7 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
                     	#qGetCandidates.countryname#
                     </td>                                
                 </tr>
+<!--
 				
                 <cfquery datasource="MySql">
                     UPDATE 
@@ -239,7 +240,8 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
                         candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCandidates.candidateID)#">
                 </cfquery>	
                             
-                <!--- CREATE HISTORY FILE --->
+                - CREATE HISTORY FILE -
+
                 <cfquery  datasource="MySql">
                     INSERT INTO 
                         extra_insurance_history 
@@ -273,7 +275,9 @@ The cfoutput tags around the table tags force output of the HTML when using cfse
                         <cfqueryparam cfsqltype="cf_sql_timestamp" value="#vInsuranceDate#">
                     );	
                 </cfquery>
+
               
+-->
             </cfif>
             
         </cfloop>
