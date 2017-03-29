@@ -101,6 +101,7 @@
                     <td colspan="8" style="background-color:##CCCCCC; border:none;">&nbsp;</td>
                 </tr>
                 <tr>
+                   
                     <td style="width:200px; text-align:left; font-weight:bold;">Last Name</td>
                     <td style="width:200px; text-align:left; font-weight:bold;">First Name</td>
                     <td style="width:100px; text-align:center; font-weight:bold;">Date of Birth</td>
@@ -112,6 +113,7 @@
                 </tr>
                 <cfloop query="qGetInsuranceHistory">
                     <tr>
+                       
                         <td>#qGetInsuranceHistory.lastName#</td>
                         <td>#qGetInsuranceHistory.firstName#</td>
                         <td>#DateFormat(qGetInsuranceHistory.dob, 'dd/mmm/yyyy')#</td>
@@ -162,6 +164,7 @@
                     <td colspan="3" style="border:none;">&nbsp;</td>
                 </tr>
                 <tr>
+                    
                     <td style="width:350px; text-align:left; font-weight:bold;">Last Name</td>
                     <td style="width:200px; text-align:left; font-weight:bold;">First Name</td>
                     <td style="width:100px; text-align:center; font-weight:bold;">Date of Birth</td>
@@ -173,6 +176,7 @@
                 
                 <cfloop query="qGetInsuranceHistory">
                     <tr>
+                       
                         <td>#qGetInsuranceHistory.lastName#</td>
                         <td>#qGetInsuranceHistory.firstName#</td>
                         <td>#DateFormat(qGetInsuranceHistory.dob, 'dd/mmm/yyyy')#</td>
@@ -215,6 +219,7 @@
                 </td>
             </tr>
             <tr>
+               <td style="width:80px; text-align:left; font-weight:bold;">ID</td>
                 <td style="width:350px; text-align:left; font-weight:bold;">Last Name</td>
                 <td style="width:200px; text-align:left; font-weight:bold;">First Name</td>
                 <td style="width:100px; text-align:center; font-weight:bold;">Date of Birth</td>
@@ -225,6 +230,7 @@
             
             <cfloop query="qGetInsuranceHistory">
                 <tr>
+                    <td>#qGetInsuranceHistory.candidateID#</td>
                     <td>#qGetInsuranceHistory.lastName#</td>
                     <td>#qGetInsuranceHistory.firstName#</td>
                     <td>#DateFormat(qGetInsuranceHistory.dob, 'dd/mmm/yyyy')#</td>
