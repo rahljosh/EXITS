@@ -15,7 +15,13 @@
 	<link rel="stylesheet" type="text/css" href="app.css">
 	<title>Page [21] - State Choice</title>
 </head>
-<body <cfif check_state.recordcount GT '0' AND check_state.state1 GT '0'>onLoad="hideAll(); changeDiv('1','block');"</cfif>>
+<cfquery name="program_type" datasource="#APPLICATION.DSN#">
+select type
+from smg_programs 
+where programid = #get_student_info.programid#
+</cfquery>
+
+	<body <cfif (check_state.recordcount GT '0' AND check_state.state1 GT '0')>onLoad="hideAll(); changeDiv('1','block');"</cfif>>
 
 <!--- relocate users if they try to access the edit page without permission --->
 <cfinclude template="../querys/get_latest_status.cfm">
@@ -28,6 +34,8 @@
     <!--- OR (client.usertype LTE 4 AND get_latest_status.status GTE 7) <!--- OFFICE USERS ---> --->
 	<cflocation url="?curdoc=section4/page21print&id=4&p=21" addtoken="no">
 </cfif>
+<!---Get the progrma type for students program--->
+
 
 <!-----Script to show certain fileds---->
 <script type="text/javascript">
@@ -84,7 +92,7 @@
 
 
 <!--- ESI - Make sure there are 3 unique selections --->
-<cfif CLIENT.companyID EQ 14>
+<cfif CLIENT.companyID EQ 14 and program_type.type neq 27>
 
 	<script type="text/javascript">
 		// Display warning when page is ready
@@ -130,7 +138,7 @@
 <cfquery name="states" datasource="#APPLICATION.DSN#">
     select s.statename, s.id
     from smg_states s
-    where (s.id < 52 AND s.id !=11 and s.id !=2)
+    where (s.id < 52)
 </cfquery>
 
 <Cfquery name="qGetStateClosed" datasource="#APPLICATION.DSN#">
@@ -185,12 +193,18 @@
     AND
     	fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="ESIDistrictChoice">
 </cfquery>
-
-<cfscript>
-	// Get List of Canada Districts
-	qGetESIDistrictChoice = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='ESIDistrictChoice',sortBy='sortOrder');
-</cfscript>
-
+ 
+ <cfif program_type.type eq 27>
+ <cfscript>
+        // Get List of Canada Districts
+        qGetESIDistrictChoice = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='ESIDistrictChoice-ShortTerm',sortBy='sortOrder');
+    </cfscript>
+ <cfelse>
+	<cfscript>
+        // Get List of Canada Districts
+        qGetESIDistrictChoice = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='ESIDistrictChoice',sortBy='sortOrder');
+    </cfscript>
+ </cfif>
 <cfquery name="qESIDistrictClosed" datasource="#APPLICATION.DSN#">
 	SELECT
     	sc.fk_districtID
@@ -270,13 +284,15 @@
     <div class="section"><br>
 
         <!--- Check uploaded file - Upload File Button --->
+          <cfif program_type.type NEQ 27>
         <cfinclude template="../check_uploaded_file.cfm">
-        
+        	</cfif>
         <table width="670" border=0 cellpadding=3 cellspacing=0 align="center">
             <tr>
                 <td>
+                  <cfif program_type.type NEQ 27>
                     <div align="justify"><cfinclude template="state_guarantee_text.cfm"></div>
-                    
+                  </cfif>
                     <cfif CLIENT.companyID NEQ 14>
                         <!--- Regular State Guarantee Choice --->
                         
@@ -401,6 +417,32 @@
                       <Cfif get_Student_info.programid eq 0>
                           <h2><align="Center">You have not selected a program to apply for.  The program is required to see what districts are available.   Please to go to Page 1 of your application, select a program from the drop down, save the page and return to this page to select your district.</align></h2>
                       <cfelse>
+                      
+                      <cfif program_type.type eq 27>
+                              
+                                    <b>Note: There will be additional charges if you make a district choice, please contact your representative for details.</b><br><br>
+                                
+                                   
+                                         <img src="pics/pinMap_short-term.png" width="650" height="380" align="middle"><br>
+                                        
+                                     
+                                       
+                                        <table cellpadding="2" cellspacing="2" style="margin:10px;">
+                                            <tr>
+                                                <td>District Choice:</td>
+                                                <td><select name="option1"  onClick="DataChanged();" onChange="changeValues();">
+                                                        <option value="0">I do not want to specify a district. </option>
+                                                         <cfloop query="qGetESIDistrictChoice">
+                                                            <option value="#qGetESIDistrictChoice.fieldID#" <cfif qESIDistrictChoice.option1 EQ qGetESIDistrictChoice.fieldID>selected</cfif>>#qGetESIDistrictChoice.name#</option>
+                                                         </cfloop>
+                                                    </select>
+                                                </td>
+                                            </tr>
+                                         </table>
+                       
+                         <cfelse>
+            
+                       
                         <img src="pics/ESI-Map.png" width="650" height="380" align="middle"><br>
                         
                      
@@ -443,6 +485,7 @@
                                 </td>
                             </tr> 
                         </table>
+                        	</cfif>
                         </Cfif>
                     </cfif>
                     
