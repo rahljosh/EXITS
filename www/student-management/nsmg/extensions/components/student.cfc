@@ -30,6 +30,11 @@
         <cfargument name="companyID" default="" hint="CompanyID is not required">
         <cfargument name="onlyApprovedApps" default="0" hint="onlyApprovedApps is not required">
         
+        <cfscript>
+        	vSeasonID = APPLICATION.CFC.LOOKUPTABLES.getCurrentSeason();
+        </cfscript>
+        <cfquery name="currentPrograms"
+        
         <cfquery 
 			name="qGetStudentByID" 
 			datasource="#APPLICATION.DSN#">
@@ -39,6 +44,7 @@
                     smg_students
                 WHERE
                 	1 = 1
+					AND
 					
 				<cfif LEN(ARGUMENTS.studentID)>
                     AND
@@ -4868,7 +4874,13 @@
         <cfargument name="userType" hint="UserType is required">
         <cfargument name="isActive" default="1" hint="Active status is not required">
         <cfargument name="statusKey" default="" hint="Project Help Status Key is not required">
-
+		
+       <cfscript>
+       	
+       	vCurrentSeasonPrograms = APPLICATION.CFC.LookUpTables.getCurrentSeasonPrograms();
+       </cfscript>
+       
+       
         <cfquery 
 			name="qGetProjectHelpList" 
 			datasource="#APPLICATION.DSN#">
@@ -4930,6 +4942,8 @@
 				<cfif VAL(ARGUMENTS.isActive)>
                     AND 
                         s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+					AND
+               			s.progamid IN (#vCurrentSeasonPrograms#)
                 </cfif>
                 
                 <cfif VAL(ARGUMENTS.regionID)>                    
