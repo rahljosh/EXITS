@@ -369,6 +369,47 @@
     </cffunction>
     
 
+
+	<!--- Get Current Season Based on Today's date --->
+	<cffunction name="getCurrentSeasonPrograms" access="public" returntype="query" output="false" hint=" Get Current Season Based on Today's date ">
+	
+		<cfquery 
+			name="qGetCurrentSeason" 
+			datasource="#APPLICATION.dsn#">
+				SELECT
+                	seasonID,
+                    season,
+                    years,                    
+                    active,
+                    startDate,
+                    endDate,
+                    DATE_ADD(endDate, INTERVAL 31 DAY) AS newEndDate,
+                    datePaperworkStarted,
+                    datePaperworkEnded
+				FROM
+                	smg_seasons
+                WHERE
+					CURRENT_DATE() BETWEEN startDate AND DATE_ADD(endDate, INTERVAL 31 DAY)  
+    	</cfquery>
+        
+        <Cfquery 
+        	name="qGetCurrentSeasonPrograms" 
+        	datasource="#APPLICATION.dsn#">
+        	
+        	SELECT
+        		programid
+        	FROM
+        		smg_progams
+			WHERE 
+       			seasonid = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#qGetCurrentSeason.seasonid#">
+        	
+        </Cfquery>
+          <cfscript>
+			// Return List
+			return ValueList(qGetCurrentSeasonPrograms.programid);		
+        </cfscript>     
+    </cffunction>
+
 	<!--- Get Current Paperwork Season Based on Today's date --->
 	<cffunction name="getCurrentPaperworkSeason" access="public" returntype="query" output="false" hint="Get Current Paperwork Season Based on Today's date">
 	
