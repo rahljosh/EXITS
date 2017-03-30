@@ -41,6 +41,7 @@
             WHEN pmtrng.fk_paymenttype IN (18,19,20,38) AND NOT sppmt.receivesPreAYPBonus THEN 0
             WHEN pmtrng.fk_paymenttype = 24 AND (sppmt.specialPaymentId IS NULL OR sppmt.receivesPreAYPBonus) THEN pmtrng.paymentAmount
             WHEN pmtrng.fk_paymenttype = 24 AND NOT sppmt.receivesPreAYPBonus THEN 0 
+            WHEN pmtrng.fk_paymenttype = 14 AND (st.regionassigned = 1653 and st.state_guarantee = 5) THEN 500
             WHEN pmtrng.fk_paymenttype = 14 AND (sppmt.specialPaymentId IS NULL OR sppmt.receivesStateGuarantee) THEN pmtrng.paymentAmount
             WHEN pmtrng.fk_paymenttype = 14 AND NOT sppmt.receivesStateGuarantee THEN 0
             WHEN pmtrng.fk_paymenttype = 23 AND (sppmt.specialPaymentId IS NULL OR sppmt.receivesCEOBonus) THEN pmtrng.paymentAmount
