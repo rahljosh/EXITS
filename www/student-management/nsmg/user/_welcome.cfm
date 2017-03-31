@@ -397,6 +397,7 @@
 
 
 				<!--- Do not display for ESI --->
+               <!--
                 <cfif APPLICATION.SETTINGS.COMPANYLIST.ESI NEQ companyID OR APPLICATION.SETTINGS.COMPANYLIST.DASH NEQ companyID>
                     <div class="subSectionLarge">
                         
@@ -440,7 +441,7 @@
                             </cfif>
                         </table>                                                
                         
-						<!--- Do Not Display for DASH --->
+						--- Do Not Display for DASH --
             				<cfif APPLICATION.SETTINGS.COMPANYLIST.DASH NEQ companyID>
                         <div align="center">
                             <p>Click Below to view trainings available</p>
@@ -454,11 +455,11 @@
                         </div>                                        
                             </cfif>
         				
-                        <!----
-                        <!--- Complete --->
+                        ---
+                        - Complete --
                         <cfif APPLICATION.CFC.USER.getUserSessionPaperwork().isTrainingCompleted>
                             <div align="center" style="padding-top:7px;"><img src="pics/buttons/complete.png" border="0" /></div>                
-                        <!--- Need Info --->
+                        - Need Info --
                         <cfelse>
                             <div align="center">
                                 <p>You are missing the New Area Rep or Area Rep Refresher training. Click below for our WebEx trainings schedule</p>
@@ -467,12 +468,12 @@
                                 </a>
                             </div>                                        
                         </cfif>
-						--->						
+												
                         
                     </div>
                     
 				</cfif>
-                
+                ---->
                 
 			</cfif>
             
