@@ -146,9 +146,7 @@
 					FROM smg_companies c
 					WHERE c.system_id = '4'
 					<cfif client.usertype NEQ '1'>
-						<cfloop query="get_companies">
-							AND c.companyid = '#companyid#'
-						</cfloop>
+						AND c.companyid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#ValueList(get_companies.companyid)#" list="yes">)
 					</cfif>
 				</cfquery>
 				

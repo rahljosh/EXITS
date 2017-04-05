@@ -4,7 +4,9 @@
 	Author:		James Griffiths
 	Date:		June 5, 2012
 	Desc:		Scheduled Task - Email link to evaluation report 20, 50, 80, and 110
-					days after check in date.
+				days after check in date.
+				10 days after each evaluation email, it sends a "Reminder".
+				5 days after the Reminder is sends a "Failure".
 				It should be scheduled to run daily.
 
 ----- ------------------------------------------------------------------------- --->
@@ -43,14 +45,14 @@
 		INNER JOIN smg_users u ON u.userID = ec.intRep
 		LEFT OUTER JOIN extra_hostcompany eh ON eh.hostCompanyID = ec.hostCompanyID
 		LEFT OUTER JOIN smg_programs p ON p.programID = ec.programID
-		WHERE ec.companyID = 8
-		AND ec.status = 1
-		AND ec.isDeleted = 0                       
-		AND ec.applicationStatusID IN ( 0,11 )
+		WHERE ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+		AND ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+		AND ec.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                       
+		AND ec.applicationStatusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,11" list="yes"> )
 		AND (
         	CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 20 DAY)
-            OR ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 26 DAY) AND watDateEvaluation1 IS NULL )
-            OR ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 31 DAY) AND watDateEvaluation1 IS NULL ) )
+            OR ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 25 DAY) AND watDateEvaluation1 IS NULL )
+            OR ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 30 DAY) AND watDateEvaluation1 IS NULL ) )
         ORDER BY
 			ec.lastName,
 			ec.firstName 
@@ -86,14 +88,14 @@
 		INNER JOIN smg_users u ON u.userID = ec.intRep
 		LEFT OUTER JOIN extra_hostcompany eh ON eh.hostCompanyID = ec.hostCompanyID
 		LEFT OUTER JOIN smg_programs p ON p.programID = ec.programID
-		WHERE ec.companyID = 8
-		AND ec.status = 1
-		AND ec.isDeleted = 0                       
-		AND ec.applicationStatusID IN ( 0,11 )
+		WHERE ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+		AND ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+		AND ec.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                       
+		AND ec.applicationStatusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,11" list="yes"> )
 		AND (
         	CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 50 DAY)
-			OR ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 56 DAY) AND watDateEvaluation2 IS NULL )
-			OR ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 61 DAY) AND watDateEvaluation2 IS NULL ) )
+			OR ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 55 DAY) AND watDateEvaluation2 IS NULL )
+			OR ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 60 DAY) AND watDateEvaluation2 IS NULL ) )
         ORDER BY
 			ec.lastName,
 			ec.firstName
@@ -129,14 +131,14 @@
 		INNER JOIN smg_users u ON u.userID = ec.intRep
 		LEFT OUTER JOIN extra_hostcompany eh ON eh.hostCompanyID = ec.hostCompanyID
 		LEFT OUTER JOIN smg_programs p ON p.programID = ec.programID
-		WHERE ec.companyID = 8
-		AND ec.status = 1
-		AND ec.isDeleted = 0                       
-		AND ec.applicationStatusID IN ( 0,11 )
+		WHERE ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+		AND ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+		AND ec.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                       
+		AND ec.applicationStatusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,11" list="yes"> )
 		AND (
         	CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 80 DAY)
-			OR ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 86 DAY) AND watDateEvaluation3 IS NULL )
-			OR ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 91 DAY) AND watDateEvaluation3 IS NULL ) )
+			OR ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 85 DAY) AND watDateEvaluation3 IS NULL )
+			OR ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 90 DAY) AND watDateEvaluation3 IS NULL ) )
         ORDER BY
 			ec.lastName,
 			ec.firstName
@@ -165,27 +167,28 @@
 			IFNULL(p.programName, '') AS programName,
 			IFNULL(eh.name, '') AS hostCompanyName,
             CASE
-            	WHEN CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 120 DAY) THEN "sent"
+            	WHEN CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 110 DAY) THEN "sent"
                 ELSE "resent"
           	END AS sentType
 		FROM extra_candidates ec
 		INNER JOIN smg_users u ON u.userID = ec.intRep
 		LEFT OUTER JOIN extra_hostcompany eh ON eh.hostCompanyID = ec.hostCompanyID
 		LEFT OUTER JOIN smg_programs p ON p.programID = ec.programID
-		WHERE ec.companyID = 8
-		AND ec.status = 1
-		AND ec.isDeleted = 0                       
-		AND ec.applicationStatusID IN ( 0,11 )
+		WHERE ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+		AND ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+		AND ec.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                       
+		AND ec.applicationStatusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,11" list="yes"> )
 		AND (
         	CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 110 DAY)
-			OR ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 116 DAY) AND watDateEvaluation4 IS NULL )
-			OR ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 121 DAY) AND watDateEvaluation4 IS NULL ) )
+			OR ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 115 DAY) AND watDateEvaluation4 IS NULL )
+			OR ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 120 DAY) AND watDateEvaluation4 IS NULL ) )
         ORDER BY
 			ec.lastName,
 			ec.firstName
 	</cfquery>
 	
-	<!--- Get evaluations that have not been completed and are in the last day of warning status to send out a reminder --->
+
+	<!--- Get evaluations that have not been completed after 5 days of sent --->
     <cfquery name="qEvaluation1Reminder" datasource="#APPLICATION.DSN.Source#">
 		SELECT
 			ec.uniqueID,
@@ -198,6 +201,7 @@
 			DATE_FORMAT(ec.watDateCheckedIn, '%m/%e/%Y') AS checkInDate,
 			ec.watDateCheckedIn,
 			u.email AS intRepEmail,
+			eh.email AS hostCompanyEmail,
 			IFNULL(DATE_FORMAT(ec.watDateEvaluation1, '%m/%e/%Y'), '') AS watDateEvaluation1,
 			IFNULL(DATE_FORMAT(ec.watDateEvaluation2, '%m/%e/%Y'), '') AS watDateEvaluation2,
 			IFNULL(DATE_FORMAT(ec.watDateEvaluation3, '%m/%e/%Y'), '') AS watDateEvaluation3,
@@ -212,11 +216,11 @@
 		INNER JOIN smg_users u ON u.userID = ec.intRep
 		LEFT OUTER JOIN extra_hostcompany eh ON eh.hostCompanyID = ec.hostCompanyID
 		LEFT OUTER JOIN smg_programs p ON p.programID = ec.programID
-		WHERE ec.companyID = 8
-		AND ec.status = 1
-		AND ec.isDeleted = 0                       
-		AND ec.applicationStatusID IN ( 0,11 )
-		AND ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 30 DAY) AND watDateEvaluation1 IS NULL )
+		WHERE ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+		AND ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+		AND ec.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                       
+		AND ec.applicationStatusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,11" list="yes"> )
+		AND ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 25 DAY) AND watDateEvaluation1 IS NULL )
         ORDER BY
 			ec.lastName,
 			ec.firstName
@@ -234,6 +238,7 @@
 			DATE_FORMAT(ec.watDateCheckedIn, '%m/%e/%Y') AS checkInDate,
 			ec.watDateCheckedIn,
 			u.email AS intRepEmail,
+			eh.email AS hostCompanyEmail,
 			IFNULL(DATE_FORMAT(ec.watDateEvaluation1, '%m/%e/%Y'), '') AS watDateEvaluation1,
 			IFNULL(DATE_FORMAT(ec.watDateEvaluation2, '%m/%e/%Y'), '') AS watDateEvaluation2,
 			IFNULL(DATE_FORMAT(ec.watDateEvaluation3, '%m/%e/%Y'), '') AS watDateEvaluation3,
@@ -248,11 +253,11 @@
 		INNER JOIN smg_users u ON u.userID = ec.intRep
 		LEFT OUTER JOIN extra_hostcompany eh ON eh.hostCompanyID = ec.hostCompanyID
 		LEFT OUTER JOIN smg_programs p ON p.programID = ec.programID
-		WHERE ec.companyID = 8
-		AND ec.status = 1
-		AND ec.isDeleted = 0                       
-		AND ec.applicationStatusID IN ( 0,11 )
-		AND ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 60 DAY) AND watDateEvaluation2 IS NULL )
+		WHERE ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+		AND ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+		AND ec.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                       
+		AND ec.applicationStatusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,11" list="yes"> )
+		AND ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 55 DAY) AND watDateEvaluation2 IS NULL )
         ORDER BY
 			ec.lastName,
 			ec.firstName
@@ -270,6 +275,7 @@
 			DATE_FORMAT(ec.watDateCheckedIn, '%m/%e/%Y') AS checkInDate,
 			ec.watDateCheckedIn,
 			u.email AS intRepEmail,
+			eh.email AS hostCompanyEmail,
 			IFNULL(DATE_FORMAT(ec.watDateEvaluation1, '%m/%e/%Y'), '') AS watDateEvaluation1,
 			IFNULL(DATE_FORMAT(ec.watDateEvaluation2, '%m/%e/%Y'), '') AS watDateEvaluation2,
 			IFNULL(DATE_FORMAT(ec.watDateEvaluation3, '%m/%e/%Y'), '') AS watDateEvaluation3,
@@ -284,11 +290,11 @@
 		INNER JOIN smg_users u ON u.userID = ec.intRep
 		LEFT OUTER JOIN extra_hostcompany eh ON eh.hostCompanyID = ec.hostCompanyID
 		LEFT OUTER JOIN smg_programs p ON p.programID = ec.programID
-		WHERE ec.companyID = 8
-		AND ec.status = 1
-		AND ec.isDeleted = 0                       
-		AND ec.applicationStatusID IN ( 0,11 )
-		AND ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 90 DAY) AND watDateEvaluation3 IS NULL )
+		WHERE ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+		AND ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+		AND ec.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                       
+		AND ec.applicationStatusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,11" list="yes"> )
+		AND ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 85 DAY) AND watDateEvaluation3 IS NULL )
         ORDER BY
 			ec.lastName,
 			ec.firstName
@@ -306,6 +312,7 @@
 			DATE_FORMAT(ec.watDateCheckedIn, '%m/%e/%Y') AS checkInDate,
 			ec.watDateCheckedIn,
 			u.email AS intRepEmail,
+			eh.email AS hostCompanyEmail,
 			IFNULL(DATE_FORMAT(ec.watDateEvaluation1, '%m/%e/%Y'), '') AS watDateEvaluation1,
 			IFNULL(DATE_FORMAT(ec.watDateEvaluation2, '%m/%e/%Y'), '') AS watDateEvaluation2,
 			IFNULL(DATE_FORMAT(ec.watDateEvaluation3, '%m/%e/%Y'), '') AS watDateEvaluation3,
@@ -320,10 +327,167 @@
 		INNER JOIN smg_users u ON u.userID = ec.intRep
 		LEFT OUTER JOIN extra_hostcompany eh ON eh.hostCompanyID = ec.hostCompanyID
 		LEFT OUTER JOIN smg_programs p ON p.programID = ec.programID
-		WHERE ec.companyID = 8
-		AND ec.status = 1
-		AND ec.isDeleted = 0                       
-		AND ec.applicationStatusID IN ( 0,11 )
+		WHERE ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+		AND ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+		AND ec.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                       
+		AND ec.applicationStatusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,11" list="yes"> )
+		AND ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 115 DAY) AND watDateEvaluation4 IS NULL )
+        ORDER BY
+			ec.lastName,
+			ec.firstName
+	</cfquery>
+
+
+
+
+
+
+
+
+
+	<!--- Get evaluations that have not been completed and are in the last day of warning status to send out a reminder --->
+    <cfquery name="qEvaluation1Failure" datasource="#APPLICATION.DSN.Source#">
+		SELECT
+			ec.uniqueID,
+			ec.candidateID,
+			ec.firstName,
+			ec.middleName,
+			ec.lastName,
+			ec.email,
+			ec.ds2019,
+			DATE_FORMAT(ec.watDateCheckedIn, '%m/%e/%Y') AS checkInDate,
+			ec.watDateCheckedIn,
+			u.email AS intRepEmail,
+			eh.email AS hostCompanyEmail,
+			IFNULL(DATE_FORMAT(ec.watDateEvaluation1, '%m/%e/%Y'), '') AS watDateEvaluation1,
+			IFNULL(DATE_FORMAT(ec.watDateEvaluation2, '%m/%e/%Y'), '') AS watDateEvaluation2,
+			IFNULL(DATE_FORMAT(ec.watDateEvaluation3, '%m/%e/%Y'), '') AS watDateEvaluation3,
+			IFNULL(DATE_FORMAT(ec.watDateEvaluation4, '%m/%e/%Y'), '') AS watDateEvaluation4,
+			DATE_FORMAT(ec.dob, '%m/%e/%Y') AS dob,
+			DATE_FORMAT(ec.startDate, '%m/%e/%Y') AS startDate,
+			DATE_FORMAT(ec.endDate, '%m/%e/%Y') AS endDate,
+			IFNULL(u.businessName, '') AS businessName,
+			IFNULL(p.programName, '') AS programName,
+			IFNULL(eh.name, '') AS hostCompanyName
+		FROM extra_candidates ec
+		INNER JOIN smg_users u ON u.userID = ec.intRep
+		LEFT OUTER JOIN extra_hostcompany eh ON eh.hostCompanyID = ec.hostCompanyID
+		LEFT OUTER JOIN smg_programs p ON p.programID = ec.programID
+		WHERE ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+		AND ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+		AND ec.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                       
+		AND ec.applicationStatusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,11" list="yes"> )
+		AND ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 30 DAY) AND watDateEvaluation1 IS NULL )
+        ORDER BY
+			ec.lastName,
+			ec.firstName
+	</cfquery>
+    
+    <cfquery name="qEvaluation2Failure" datasource="#APPLICATION.DSN.Source#">
+		SELECT
+			ec.uniqueID,
+			ec.candidateID,
+			ec.firstName,
+			ec.middleName,
+			ec.lastName,
+			ec.email,
+			ec.ds2019,
+			DATE_FORMAT(ec.watDateCheckedIn, '%m/%e/%Y') AS checkInDate,
+			ec.watDateCheckedIn,
+			u.email AS intRepEmail,
+			eh.email AS hostCompanyEmail,
+			IFNULL(DATE_FORMAT(ec.watDateEvaluation1, '%m/%e/%Y'), '') AS watDateEvaluation1,
+			IFNULL(DATE_FORMAT(ec.watDateEvaluation2, '%m/%e/%Y'), '') AS watDateEvaluation2,
+			IFNULL(DATE_FORMAT(ec.watDateEvaluation3, '%m/%e/%Y'), '') AS watDateEvaluation3,
+			IFNULL(DATE_FORMAT(ec.watDateEvaluation4, '%m/%e/%Y'), '') AS watDateEvaluation4,
+			DATE_FORMAT(ec.dob, '%m/%e/%Y') AS dob,
+			DATE_FORMAT(ec.startDate, '%m/%e/%Y') AS startDate,
+			DATE_FORMAT(ec.endDate, '%m/%e/%Y') AS endDate,
+			IFNULL(u.businessName, '') AS businessName,
+			IFNULL(p.programName, '') AS programName,
+			IFNULL(eh.name, '') AS hostCompanyName
+		FROM extra_candidates ec
+		INNER JOIN smg_users u ON u.userID = ec.intRep
+		LEFT OUTER JOIN extra_hostcompany eh ON eh.hostCompanyID = ec.hostCompanyID
+		LEFT OUTER JOIN smg_programs p ON p.programID = ec.programID
+		WHERE ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+		AND ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+		AND ec.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                       
+		AND ec.applicationStatusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,11" list="yes"> )
+		AND ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 60 DAY) AND watDateEvaluation2 IS NULL )
+        ORDER BY
+			ec.lastName,
+			ec.firstName
+	</cfquery>
+    
+    <cfquery name="qEvaluation3Failure" datasource="#APPLICATION.DSN.Source#">
+		SELECT
+			ec.uniqueID,
+			ec.candidateID,
+			ec.firstName,
+			ec.middleName,
+			ec.lastName,
+			ec.email,
+			ec.ds2019,
+			DATE_FORMAT(ec.watDateCheckedIn, '%m/%e/%Y') AS checkInDate,
+			ec.watDateCheckedIn,
+			u.email AS intRepEmail,
+			eh.email AS hostCompanyEmail,
+			IFNULL(DATE_FORMAT(ec.watDateEvaluation1, '%m/%e/%Y'), '') AS watDateEvaluation1,
+			IFNULL(DATE_FORMAT(ec.watDateEvaluation2, '%m/%e/%Y'), '') AS watDateEvaluation2,
+			IFNULL(DATE_FORMAT(ec.watDateEvaluation3, '%m/%e/%Y'), '') AS watDateEvaluation3,
+			IFNULL(DATE_FORMAT(ec.watDateEvaluation4, '%m/%e/%Y'), '') AS watDateEvaluation4,
+			DATE_FORMAT(ec.dob, '%m/%e/%Y') AS dob,
+			DATE_FORMAT(ec.startDate, '%m/%e/%Y') AS startDate,
+			DATE_FORMAT(ec.endDate, '%m/%e/%Y') AS endDate,
+			IFNULL(u.businessName, '') AS businessName,
+			IFNULL(p.programName, '') AS programName,
+			IFNULL(eh.name, '') AS hostCompanyName
+		FROM extra_candidates ec
+		INNER JOIN smg_users u ON u.userID = ec.intRep
+		LEFT OUTER JOIN extra_hostcompany eh ON eh.hostCompanyID = ec.hostCompanyID
+		LEFT OUTER JOIN smg_programs p ON p.programID = ec.programID
+		WHERE ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+		AND ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+		AND ec.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                       
+		AND ec.applicationStatusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,11" list="yes"> )
+		AND ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 90 DAY) AND watDateEvaluation3 IS NULL )
+        ORDER BY
+			ec.lastName,
+			ec.firstName
+	</cfquery>
+    
+    <cfquery name="qEvaluation4Failure" datasource="#APPLICATION.DSN.Source#">
+		SELECT
+			ec.uniqueID,
+			ec.candidateID,
+			ec.firstName,
+			ec.middleName,
+			ec.lastName,
+			ec.email,
+			ec.ds2019,
+			DATE_FORMAT(ec.watDateCheckedIn, '%m/%e/%Y') AS checkInDate,
+			ec.watDateCheckedIn,
+			u.email AS intRepEmail,
+			eh.email AS hostCompanyEmail,
+			IFNULL(DATE_FORMAT(ec.watDateEvaluation1, '%m/%e/%Y'), '') AS watDateEvaluation1,
+			IFNULL(DATE_FORMAT(ec.watDateEvaluation2, '%m/%e/%Y'), '') AS watDateEvaluation2,
+			IFNULL(DATE_FORMAT(ec.watDateEvaluation3, '%m/%e/%Y'), '') AS watDateEvaluation3,
+			IFNULL(DATE_FORMAT(ec.watDateEvaluation4, '%m/%e/%Y'), '') AS watDateEvaluation4,
+			DATE_FORMAT(ec.dob, '%m/%e/%Y') AS dob,
+			DATE_FORMAT(ec.startDate, '%m/%e/%Y') AS startDate,
+			DATE_FORMAT(ec.endDate, '%m/%e/%Y') AS endDate,
+			IFNULL(u.businessName, '') AS businessName,
+			IFNULL(p.programName, '') AS programName,
+			IFNULL(eh.name, '') AS hostCompanyName
+		FROM extra_candidates ec
+		INNER JOIN smg_users u ON u.userID = ec.intRep
+		LEFT OUTER JOIN extra_hostcompany eh ON eh.hostCompanyID = ec.hostCompanyID
+		LEFT OUTER JOIN smg_programs p ON p.programID = ec.programID
+		WHERE ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
+		AND ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+		AND ec.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                       
+		AND ec.applicationStatusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="0,11" list="yes"> )
 		AND ( CURDATE() = DATE_ADD(watDateCheckedIn, INTERVAL 120 DAY) AND watDateEvaluation4 IS NULL )
         ORDER BY
 			ec.lastName,
@@ -369,16 +533,37 @@
     
     <p>
     	As required by the U.S. Department of State, CSB is sending an evaluation request by email every month, for the duration of your program, and you are required to respond within 10 (ten) business days. 
+        The evaluation is designed for your best interest! <font color="red">Our records show that you have not responded monthly evaluation {evaluationID}.</font>
+    </p>
+    
+    <p>
+    	This is your reminder to take the evaluation {evaluationID2} immediately or contact CSB by email or phone in regards to your current program status.  
+        For your convenience, the evaluation email was resent. Please remember to always check your Spam/Junk folders.
+    </p>
+   
+   	<p>
+    	Failure to take the evaluation or contact CSB will result in a program termination. This information does not mean to scare or threaten you, rather than properly inform and protect you.
+ 	</p>
+</cfsavecontent>
+
+
+<cfsavecontent variable="vFailureBody">
+	<p>
+    	Dear {candidateName},
+    </p>
+    
+    <p>
+    	As required by the U.S. Department of State, CSB is sending an evaluation request by email every month, for the duration of your program, and you are required to respond within 10 (ten) business days. 
         The evaluation is designed for your best interest! <font color="red">Our records show that you are failing to take the monthly evaluation {evaluationID} on time.</font>
     </p>
     
     <p>
-    	This is your reminder  to  take the evaluation {evaluationID2} immediately or contact CSB by email or phone in regards to your current program status.  
-        For your convenience,  the evaluation email was resent. Please remember to always check your Spam/Junk folders.
+    	This is your reminder to take the evaluation {evaluationID2} immediately or contact CSB by email or phone in regards to your current program status.  
+        For your convenience, the evaluation email was resent. Please remember to always check your Spam/Junk folders.
     </p>
    
    	<p>
-    	Failure to take the evaluation or contact CSB  will result in a program termination.This information does not mean to scare or threaten you, rather than properly inform and protect you.
+    	Failure to take the evaluation or contact CSB will result in a program termination. This information does not mean to scare or threaten you, rather than properly inform and protect you.
  	</p>
 </cfsavecontent>
     
@@ -501,6 +686,17 @@
 				companyID=8
 			);
 		}
+		if ( IsValid("email", qEvaluation1Reminder.hostCompanyEmail[i]) ) {
+			APPLICATION.CFC.EMAIL.sendEmail(
+				emailFrom=vEmailFrom,
+				emailTo=qEvaluation1Reminder.hostCompanyEmail[i],
+				emailReplyTo=vEmailFrom,
+				emailSubject="CSB – Evaluation 1 Reminder - " & vCandidateName,
+				emailMessage=vEvaluationEmailBody,
+				footerType="emailNoInfo",
+				companyID=8
+			);
+		}
 		APPLICATION.CFC.CANDIDATE.setEvaluationTracking(
 			candidateID=VAL(qEvaluation1Reminder.candidateID[i]),
 			evaluationNumber=1,
@@ -521,6 +717,17 @@
 				emailFrom=vEmailFrom,
 				emailTo=qEvaluation2Reminder.email[i],
 				emailCC=qEvaluation2Reminder.intRepEmail[i],
+				emailReplyTo=vEmailFrom,
+				emailSubject="CSB – Evaluation 2 Reminder - " & vCandidateName,
+				emailMessage=vEvaluationEmailBody,
+				footerType="emailNoInfo",
+				companyID=8
+			);
+		}
+		if ( IsValid("email", qEvaluation2Reminder.hostCompanyEmail[i]) ) {
+			APPLICATION.CFC.EMAIL.sendEmail(
+				emailFrom=vEmailFrom,
+				emailTo=qEvaluation2Reminder.hostCompanyEmail[i],
 				emailReplyTo=vEmailFrom,
 				emailSubject="CSB – Evaluation 2 Reminder - " & vCandidateName,
 				emailMessage=vEvaluationEmailBody,
@@ -555,7 +762,18 @@
 				companyID=8
 			);
 		}
-		APPLICATION.CFC.CANDIDATE.setEvaluationTracking(
+		if ( IsValid("email", qEvaluation3Reminder.hostCompanyEmail[i]) ) {
+			APPLICATION.CFC.EMAIL.sendEmail(
+				emailFrom=vEmailFrom,
+				emailTo=qEvaluation3Reminder.hostCompanyEmail[i],
+				emailReplyTo=vEmailFrom,
+				emailSubject="CSB – Evaluation 3 Reminder - " & vCandidateName,
+				emailMessage=vEvaluationEmailBody,
+				footerType="emailNoInfo",
+				companyID=8
+			);
+		}
+		APPLICATION.CFC.CANDIDATE.setEvaluationTracking(	
 			candidateID=VAL(qEvaluation3Reminder.candidateID[i]),
 			evaluationNumber=3,
 			date=NOW(),
@@ -582,11 +800,180 @@
 				companyID=8
 			);
 		}
+		if ( IsValid("email", qEvaluation4Reminder.hostCompanyEmail[i]) ) {
+			APPLICATION.CFC.EMAIL.sendEmail(
+				emailFrom=vEmailFrom,
+				emailTo=qEvaluation4Reminder.hostCompanyEmail[i],
+				emailReplyTo=vEmailFrom,
+				emailSubject="CSB – Evaluation 4 Reminder - " & vCandidateName,
+				emailMessage=vEvaluationEmailBody,
+				footerType="emailNoInfo",
+				companyID=8
+			);
+		}
 		APPLICATION.CFC.CANDIDATE.setEvaluationTracking(
 			candidateID=VAL(qEvaluation4Reminder.candidateID[i]),
 			evaluationNumber=4,
 			date=NOW(),
 			comment="System - Reminder sent on " & DateFormat(NOW(),'mm/dd/yyyy') & ".");
+	}
+
+
+
+
+
+
+
+	// Evaluation 1 Failure
+	For ( i=1;i LTE qEvaluation1Failure.Recordcount; i=i+1 ) {
+		vEmailTo = qEvaluation1Failure.email[i];
+		vCandidateName = qEvaluation1Failure.firstName[i] & " " & qEvaluation1Failure.middleName[i] & " " & qEvaluation1Failure.lastName[i];
+		vEvaluationEmailBody = ReplaceNoCase(vReminderBody, "{candidateName}", vCandidateName);
+		vEvaluationEmailBody = ReplaceNoCase(vEvaluationEmailBody, "{evaluationID}", 1);
+		vEvaluationEmailBody = ReplaceNoCase(vEvaluationEmailBody, "{evaluationID2}", 1);
+
+		if ( IsValid("email", qEvaluation1Failure.email[i]) ) {
+			APPLICATION.CFC.EMAIL.sendEmail(
+				emailFrom=vEmailFrom,
+				emailTo=qEvaluation1Failure.email[i],
+				emailCC=qEvaluation1Failure.intRepEmail[i],
+				emailReplyTo=vEmailFrom,
+				emailSubject="CSB – Evaluation 1 Failure to Respond - " & vCandidateName,
+				emailMessage=vEvaluationEmailBody,
+				footerType="emailNoInfo",
+				companyID=8
+			);
+		}
+		if ( IsValid("email", qEvaluation1Failure.hostCompanyEmail[i]) ) {
+			APPLICATION.CFC.EMAIL.sendEmail(
+				emailFrom=vEmailFrom,
+				emailTo=qEvaluation1Failure.hostCompanyEmail[i],
+				emailReplyTo=vEmailFrom,
+				emailSubject="CSB – Evaluation 1 Failure to Respond - " & vCandidateName,
+				emailMessage=vEvaluationEmailBody,
+				footerType="emailNoInfo",
+				companyID=8
+			);
+		}
+		APPLICATION.CFC.CANDIDATE.setEvaluationTracking(
+			candidateID=VAL(qEvaluation1Failure.candidateID[i]),
+			evaluationNumber=1,
+			date=NOW(),
+			comment="System - Failure to Respond sent on " & DateFormat(NOW(),'mm/dd/yyyy') & ".");
+	}
+	
+	// Evaluation 2 Failure
+	For ( i=1;i LTE qEvaluation2Failure.Recordcount; i=i+1 ) {
+		vEmailTo = qEvaluation2Failure.email[i];
+		vCandidateName = qEvaluation2Failure.firstName[i] & " " & qEvaluation2Failure.middleName[i] & " " & qEvaluation2Failure.lastName[i];
+		vEvaluationEmailBody = ReplaceNoCase(vReminderBody, "{candidateName}", vCandidateName);
+		vEvaluationEmailBody = ReplaceNoCase(vEvaluationEmailBody, "{evaluationID}", 2);
+		vEvaluationEmailBody = ReplaceNoCase(vEvaluationEmailBody, "{evaluationID2}", 2);
+
+		if ( IsValid("email", qEvaluation2Failure.email[i]) ) {
+			APPLICATION.CFC.EMAIL.sendEmail(
+				emailFrom=vEmailFrom,
+				emailTo=qEvaluation2Failure.email[i],
+				emailCC=qEvaluation2Failure.intRepEmail[i],
+				emailReplyTo=vEmailFrom,
+				emailSubject="CSB – Evaluation 2 Failure to Respond - " & vCandidateName,
+				emailMessage=vEvaluationEmailBody,
+				footerType="emailNoInfo",
+				companyID=8
+			);
+		}
+		if ( IsValid("email", qEvaluation2Failure.hostCompanyEmail[i]) ) {
+			APPLICATION.CFC.EMAIL.sendEmail(
+				emailFrom=vEmailFrom,
+				emailTo=qEvaluation2Failure.hostCompanyEmail[i],
+				emailReplyTo=vEmailFrom,
+				emailSubject="CSB – Evaluation 2 Failure to Respond - " & vCandidateName,
+				emailMessage=vEvaluationEmailBody,
+				footerType="emailNoInfo",
+				companyID=8
+			);
+		}
+		APPLICATION.CFC.CANDIDATE.setEvaluationTracking(
+			candidateID=VAL(qEvaluation2Failure.candidateID[i]),
+			evaluationNumber=2,
+			date=NOW(),
+			comment="System - Failure to Respond sent on " & DateFormat(NOW(),'mm/dd/yyyy') & ".");
+	}
+	
+	// Evaluation 3 Failure
+	For ( i=1;i LTE qEvaluation3Failure.Recordcount; i=i+1 ) {
+		vEmailTo = qEvaluation3Failure.email[i];
+		vCandidateName = qEvaluation3Failure.firstName[i] & " " & qEvaluation3Failure.middleName[i] & " " & qEvaluation3Failure.lastName[i];
+		vEvaluationEmailBody = ReplaceNoCase(vReminderBody, "{candidateName}", vCandidateName);
+		vEvaluationEmailBody = ReplaceNoCase(vEvaluationEmailBody, "{evaluationID}", 3);
+		vEvaluationEmailBody = ReplaceNoCase(vEvaluationEmailBody, "{evaluationID2}", 3);
+
+		if ( IsValid("email", qEvaluation3Failure.email[i]) ) {
+			APPLICATION.CFC.EMAIL.sendEmail(
+				emailFrom=vEmailFrom,
+				emailTo=qEvaluation3Failure.email[i],
+				emailCC=qEvaluation3Failure.intRepEmail[i],
+				emailReplyTo=vEmailFrom,
+				emailSubject="CSB – Evaluation 3 Failure to Respond - " & vCandidateName,
+				emailMessage=vEvaluationEmailBody,
+				footerType="emailNoInfo",
+				companyID=8
+			);
+		}
+		if ( IsValid("email", qEvaluation3Failure.hostCompanyEmail[i]) ) {
+			APPLICATION.CFC.EMAIL.sendEmail(
+				emailFrom=vEmailFrom,
+				emailTo=qEvaluation3Failure.hostCompanyEmail[i],
+				emailReplyTo=vEmailFrom,
+				emailSubject="CSB – Evaluation 3 Failure to Respond - " & vCandidateName,
+				emailMessage=vEvaluationEmailBody,
+				footerType="emailNoInfo",
+				companyID=8
+			);
+		}
+		APPLICATION.CFC.CANDIDATE.setEvaluationTracking(	
+			candidateID=VAL(qEvaluation3Failure.candidateID[i]),
+			evaluationNumber=3,
+			date=NOW(),
+			comment="System - Failure to Respond sent on " & DateFormat(NOW(),'mm/dd/yyyy') & ".");
+	}
+	
+	// Evaluation 4 Failure
+	For ( i=1;i LTE qEvaluation4Failure.Recordcount; i=i+1 ) {
+		vEmailTo = qEvaluation4Failure.email[i];
+		vCandidateName = qEvaluation4Failure.firstName[i] & " " & qEvaluation4Failure.middleName[i] & " " & qEvaluation4Failure.lastName[i];
+		vEvaluationEmailBody = ReplaceNoCase(vReminderBody, "{candidateName}", vCandidateName);
+		vEvaluationEmailBody = ReplaceNoCase(vEvaluationEmailBody, "{evaluationID}", 4);
+		vEvaluationEmailBody = ReplaceNoCase(vEvaluationEmailBody, "{evaluationID2}", 4);
+
+		if ( IsValid("email", qEvaluation4Failure.email[i]) ) {
+			APPLICATION.CFC.EMAIL.sendEmail(
+				emailFrom=vEmailFrom,
+				emailTo=qEvaluation4Failure.email[i],
+				emailCC=qEvaluation4Failure.intRepEmail[i],
+				emailReplyTo=vEmailFrom,
+				emailSubject="CSB – Evaluation 4 Failure to Respond - " & vCandidateName,
+				emailMessage=vEvaluationEmailBody,
+				footerType="emailNoInfo",
+				companyID=8
+			);
+		}
+		if ( IsValid("email", qEvaluation4Failure.hostCompanyEmail[i]) ) {
+			APPLICATION.CFC.EMAIL.sendEmail(
+				emailFrom=vEmailFrom,
+				emailTo=qEvaluation4Failure.hostCompanyEmail[i],
+				emailReplyTo=vEmailFrom,
+				emailSubject="CSB – Evaluation 4 Failure to Respond - " & vCandidateName,
+				emailMessage=vEvaluationEmailBody,
+				footerType="emailNoInfo",
+				companyID=8
+			);
+		}
+		APPLICATION.CFC.CANDIDATE.setEvaluationTracking(
+			candidateID=VAL(qEvaluation4Failure.candidateID[i]),
+			evaluationNumber=4,
+			date=NOW(),
+			comment="System - Failure to Respond sent on " & DateFormat(NOW(),'mm/dd/yyyy') & ".");
 	}
 	
 </cfscript>

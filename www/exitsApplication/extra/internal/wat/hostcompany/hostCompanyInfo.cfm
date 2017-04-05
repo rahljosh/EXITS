@@ -2173,24 +2173,21 @@
                                         <cfloop query="qGetJobs">
                                             <tr bgcolor="###iif(qGetJobs.currentrow MOD 2 ,DE("E9ECF1") ,DE("FFFFFF") )#">
                                                 <td class="style1">
-                                                	<!--- REMOVED - Requested by Anca --->
-                                                    <cfif ListFind("1,2,3,4", CLIENT.userType)>
-													<a href="javascript:openWindow('hostcompany/jobInfo.cfm?ID=#id#&hostCompanyID=#qGetHostCompanyInfo.hostCompanyID#', 300, 600);">
-                                                    </cfif>
+                                                	<!--- REMOVED - Requested by Anca
+													<a href="javascript:openWindow('hostcompany/jobInfo.cfm?ID=#id#&hostCompanyID=#qGetHostCompanyInfo.hostCompanyID#', 300, 600);">--->
 	                                                    #qGetJobs.title#
-                                                    <cfif ListFind("1,2,3,4", CLIENT.userType)>
-                                                    </a>
-                                                    </cfif>
+                                                    <!---</a>--->
                                                 </td>
                                                 <td  class="style1">#classification#</td>
                                                 <td class="style1">#qGetJobs.wage# / #qGetJobs.wage_type#</td>
                                                 <td class="style1">#qGetJobs.hours#</td>
+                                                <td class="style1"><a href="javascript:openWindow('hostcompany/jobDelete.cfm?jobID=#qGetJobs.id#', 600, 300);"><img border="0" src="../pics/deletex.gif"/></a></td>
                                             </tr>
                                         </cfloop>
                                         <cfif VAL(qGetHostCompanyInfo.hostCompanyID) AND ListFind("1,2,3,4", CLIENT.userType)>
                                             <tr>
                                                 <td colspan="3" align="center">
-                                                    <a href="javascript:openWindow('hostcompany/jobInfo.cfm?hostCompanyID=#qGetHostCompanyInfo.hostCompanyID#', 300, 600);" > 
+                                                    <a href="javascript:openWindow('hostcompany/jobInfo.cfm?hostCompanyID=#qGetHostCompanyInfo.hostCompanyID#', 600, 300);" > 
                                                         <img src="../pics/add-job.gif" width="64" height="20" border="0" />
                                                     </a>
                                                 </td>
