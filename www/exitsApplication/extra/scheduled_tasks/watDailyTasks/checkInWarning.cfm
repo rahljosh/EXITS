@@ -19,14 +19,15 @@
             c.lastName,
             c.email AS candidateEmail,
             i.email AS intRepEmail,
+            hc.email AS hostCompanyEmail,
             CASE 
             	WHEN ADDDATE(c.startDate, INTERVAL 5 DAY) = CURDATE() THEN "WARNING"         
                 WHEN ADDDATE(c.startDate, INTERVAL 10 DAY) = CURDATE() THEN "NON-COMPLIANT"
-                WHEN ADDDATE(c.startDate, INTERVAL 12 DAY) = CURDATE() THEN "NON-COMPLIANT"
                 ELSE ""        
             	END AS compliantStatus
      	FROM extra_candidates c
         INNER JOIN smg_users i ON c.intRep = i.userID
+        INNER JOIN extra_hostcompany hc ON hc.hostCompanyID = c.hostCompanyID
         LEFT OUTER JOIN smg_programs p ON c.programID = p.programID
         WHERE c.status = 1
         AND c.isDeleted = 0
@@ -35,13 +36,7 @@
         AND c.companyID = 8
         AND c.ds2019 != ""        
         AND c.ds2019 IS NOT NULL
-        AND (
-        	ADDDATE(c.startDate, INTERVAL 5 DAY) = CURDATE()
-             OR 
-            ADDDATE(c.startDate, INTERVAL 10 DAY) = CURDATE() 
-             OR 
-            ADDDATE(c.startDate, INTERVAL 12 DAY) = CURDATE()
-            )
+        AND (ADDDATE(c.startDate, INTERVAL 5 DAY) = CURDATE() OR ADDDATE(c.startDate, INTERVAL 10 DAY) = CURDATE())
     </cfquery>
     
 </cfsilent>
@@ -102,6 +97,18 @@
 					emailFrom=vEmailFrom,
 					emailTo=qGetCandidates.candidateEmail[i],
 					emailCC=qGetCandidates.intRepEmail[i],
+					emailReplyTo=vEmailFrom,
+					emailSubject="CSB - Failure to Check-in - " & vFullName,
+					emailMessage=vEmailBody,
+					footerType="emailNoInfo",
+					companyID=8
+				);
+			}
+
+			if ( IsValid("email", qGetCandidates.hostCompanyEmail[i]) ) {
+				APPLICATION.CFC.EMAIL.sendEmail(
+					emailFrom=vEmailFrom,
+					emailTo=qGetCandidates.hostCompanyEmail[i],
 					emailReplyTo=vEmailFrom,
 					emailSubject="CSB - Failure to Check-in - " & vFullName,
 					emailMessage=vEmailBody,
