@@ -258,7 +258,40 @@
             </cfinvoke>
                 
      	</cfif>
-                  
+        <!--- Email Juan from CLS when branch approves an app---->
+        <cfif ARGUMENTS.statusID EQ 5 AND  #qGetStudentInfo.intrep# eq 6381>
+         	<cfsavecontent variable="vEmailMessage">
+                <cfoutput>
+                    <table width="600px" cellspacing="0" cellpadding="0" style="border: 1px solid ##000000; margin-top:15px;">
+                        <tr><td bgcolor="b5d66e"><img src="#CLIENT.exits_url#/nsmg/student_app/pics/EXITSbanner.jpg" width="600" heignt="75"></td></tr>
+                        <tr>
+                            <td>
+                                <p>Juan-</p>
+                                
+                                <p>This email is to inform you that the application for:<br>
+                                #qGetStudentInfo.firstname# #qGetStudentInfo.familylastname#<br>
+                                has been approved by the branch.</p>
+                                <p><em>What does this mean to you and what are the next steps?</em></p>
+                                <p>
+                                 The application needs to be approved by the main office.
+								</p>
+                                <p>                                    
+								This is the only step in the application process when you will receive an email regarding the approval of applications.
+                                </p> 
+                            </td>
+                        </tr>
+                        
+                    </table>                                    
+				</cfoutput>                    
+            </cfsavecontent>
+                
+            <cfinvoke component="nsmg.cfc.email" method="send_mail">
+                <cfinvokeargument name="email_to" value="#vEmailList#">
+                <cfinvokeargument name="email_subject" value="#qGetStudentInfo.firstname# #qGetStudentInfo.familylastname# ###qGetStudentInfo.studentID# - Exchange Application Approved">
+                <cfinvokeargument name="email_message" value="#vEmailMessage#">
+                <cfinvokeargument name="email_from" value="#qGetCompanyInfo.companyshort#-support@exitsapplication.com">
+            </cfinvoke>
+		</cfif>
 	</cffunction>
 
 
