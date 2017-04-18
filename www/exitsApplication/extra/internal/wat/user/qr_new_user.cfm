@@ -112,13 +112,18 @@
 		SELECT max(userid) as userid
 		FROM smg_users
 	</cfquery>
+
+	<cfloop list="#FORM.hostCompanyID#" index="hostCompanyID">
+		<cfif hostCompanyID GT 0>
+		    <cfquery name="user_access_rights" datasource="MySql">
+			INSERT INTO user_access_rights
+				(userid, companyid, usertype, default_region, hostCompanyID)
+			VALUES
+				('#get_user.userid#', '#form.companyid#', '#form.usertype#', '1', '#hostCompanyID#')
+		</cfquery>
+		</cfif>
+	</cfloop>
 	
-	<cfquery name="user_access_rights" datasource="MySql">
-		INSERT INTO user_access_rights
-			(userid, companyid, usertype, default_region, hostCompanyID)
-		VALUES
-			('#get_user.userid#', '#form.companyid#', '#form.usertype#', '1', '#form.hostCompanyID#')
-	</cfquery>
 
 	<html>
 	<head>

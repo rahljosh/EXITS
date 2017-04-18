@@ -199,6 +199,7 @@
                 	extra_hostcompany
                 WHERE           
                     companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+                    AND active = 1
 
 				<cfif IsNumeric(ARGUMENTS.searchString)>
                     AND

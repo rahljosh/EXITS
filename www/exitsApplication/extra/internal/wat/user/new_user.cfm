@@ -33,9 +33,9 @@ function UserName() {
 
 	function checkUserType() {
 		if ($("#usertype").val() == '28' ) {
-			$("#hostCompanyID").show();
+			$("#hostCompany").show();
 		} else {
-			$("#hostCompanyID").hide();
+			$("#hostCompany").hide();
 		}
 	}
  
@@ -475,12 +475,18 @@ function UserName() {
 														<option value="#usertypeid#">#usertype#</option>
 													</cfloop>
 												</cfselect>	
- 
-												<cfselect name="hostCompanyID" id="hostCompanyID" message="You must select an Host Company in order to continue" style="display:none">
-													<cfloop query="get_host_companies">
-														<option value="#hostCompanyID#">#Left(name, '50')#<cfif Len(name) GT 50>...</cfif></option>
-													</cfloop>
-												</cfselect>	
+ 												
+ 												<div id="hostCompany" style="display:none" />
+													<cfselect name="hostCompanyID" id="hostCompanyID" message="You must select an Host Company in order to continue" >
+														<cfloop query="get_host_companies">
+															<option value="#hostCompanyID#">#Left(name, '50')#<cfif Len(name) GT 50>...</cfif></option>
+														</cfloop>
+													</cfselect>	
+													<div id="afterHere" style="cursor: pointer; padding:5px; margin:5px; background-color:##efefef" onclick="$('##hostCompanyID').clone().attr('name', 'hostCompanyID').appendTo('##extraHostCompanyDiv');">+ Add Another Host Copmpany</div>
+													<div id="extraHostCompanyDiv">
+													</div>
+												</div>
+												
 											</td>
 										</tr>
 									</table>									

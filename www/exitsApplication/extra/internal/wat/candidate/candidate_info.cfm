@@ -891,7 +891,15 @@
                             </tr> 
                             <tr>
                                 <td align="right" class="style1"><strong>Intl. Rep.:</strong></td>
-                                <td class="style1"><a href="/internal/wat/index.cfm?curdoc=intRep/intlRepInfo&uniqueID=#qGetIntlRepInfo.uniqueID#" target="_blank" class="style4">#qGetIntlRepInfo.businessName#</a><br />
+                                <td class="style1">
+                                	<cfif CLIENT.usertype NEQ 28>
+                                		<a href="/internal/wat/index.cfm?curdoc=intRep/intlRepInfo&uniqueID=#qGetIntlRepInfo.uniqueID#" target="_blank" class="style4">
+                                	</cfif>
+                                		#qGetIntlRepInfo.businessName#
+                                	<cfif CLIENT.usertype NEQ 28>
+                                		</a>
+                                	</cfif>
+                                	<br />
                                 	#qGetIntlRepInfo.firstname# #qGetIntlRepInfo.lastname# (<a href="mailto:#qGetIntlRepInfo.email#" class="style4">#qGetIntlRepInfo.email#</a>)</td>
                             </tr>
                             <tr>
@@ -985,7 +993,8 @@
                                     <cfif ListFind("1,2,3,4", CLIENT.userType)>
                                         <p><a href="candidate/candidate_profile.cfm?uniqueid=#qGetCandidate.uniqueid#" class="style4" target="_blank">[ Profile ]</a></p>
 									</cfif>
-                                    <cfif VAL(qGetCandidate.applicationStatusID)>
+
+                                    <cfif VAL(qGetCandidate.applicationStatusID) AND CLIENT.userType NEQ 28>
                                     	<p><a href="onlineApplication/index.cfm?action=initial&uniqueID=#qGetCandidate.uniqueID#" class="style4 popUpOnlineApplication">[ Online Application ]</a></p>
                                     </cfif>
                                     

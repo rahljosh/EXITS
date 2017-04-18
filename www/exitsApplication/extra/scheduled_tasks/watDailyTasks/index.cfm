@@ -47,3 +47,8 @@
 <!--- Document Expiration --->
 <cfinclude template="documentExpiration.cfm">
 <h1>Document Expiration Task</h1>
+
+
+<!--- Document Expiration --->
+<cfinclude template="Ds2019-Issued.cfm">
+<h1>Ds2019 Report</h1>

@@ -12,8 +12,20 @@
 
     <cfscript>
 		qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(companyID=CLIENT.companyID);
-		qGetHostCompanyList = APPLICATION.CFC.HOSTCOMPANY.getHostCompanies(companyID=CLIENT.companyID);
+		//qGetHostCompanyList = APPLICATION.CFC.HOSTCOMPANY.getHostCompanies(companyID=CLIENT.companyID);
 	</cfscript>
+
+    <cfquery name="qGetHostCompanyList" datasource="#APPLICATION.DSN.Source#">
+        SELECT *
+        FROM extra_hostcompany
+        WHERE name != ""
+            AND companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        <cfif CLIENT.userType EQ 28>
+            AND hostCompanyID IN (<cfqueryparam cfsqltype="cf_sql_integer" list="true" value="#CLIENT.hostCompanyID#">)
+        </cfif>
+         AND active = 1
+        ORDER BY name
+    </cfquery>
 
     <!--- FORM submitted --->
     <cfif FORM.submitted>
@@ -71,7 +83,9 @@
 			<cfif VAL(FORM.hostcompanyID)> 
                 AND
                     eh.hostcompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">                               
-			</cfif>
+			<cfelseif CLIENT.userType EQ 28>
+                AND eh.hostCompanyID IN (<cfqueryparam cfsqltype="cf_sql_integer" list="true" value="#CLIENT.hostCompanyID#">)
+            </cfif>
             <cfif FORM.csbPlacement EQ 1>
             	AND
                 	ec.wat_placement = "CSB-Placement"
@@ -136,12 +150,17 @@
         <tr valign="middle">
             <td align="right" valign="middle" class="style1"><b>Host Company: </b></td>
             <td valign="middle">  
-                <select name="hostCompanyID" class="style1">
-                    <option value="ALL">---  All Host Companies  ---</option>
-                    <cfloop query="qGetHostCompanyList">
-                    	<option value="#hostcompanyID#" <cfif qGetHostCompanyList.hostcompanyID EQ FORM.hostCompanyID> selected </cfif> >#qGetHostCompanyList.name#</option>
-                    </cfloop>
-                </select>
+                <Cfif qGetHostCompanyList.recordCount EQ 1>
+                    #qGetHostCompanyList.name#
+                    <input type="hidden" name="hostcompanyID" value="#qGetHostCompanyList.hostcompanyID#" />
+                <cfelse>
+                    <select name="hostCompanyID" class="style1">
+                        <option value="ALL">---  All Host Companies  ---</option>
+                        <cfloop query="qGetHostCompanyList">
+                            <option value="#hostcompanyID#" <cfif qGetHostCompanyList.hostcompanyID EQ FORM.hostCompanyID> selected </cfif> >#qGetHostCompanyList.name#</option>
+                        </cfloop>
+                    </select>
+                </Cfif>
             </td>
         </tr>
         <tr>

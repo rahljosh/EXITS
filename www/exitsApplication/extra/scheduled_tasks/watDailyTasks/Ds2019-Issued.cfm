@@ -20,13 +20,13 @@
 	        	getVerification = APPLICATION.CFC.USER.getVerificationDate(qGetIntlRepList.userID,0);
 	        </cfscript>
 
-	        <cfset report_start_date = "4/4/2017">
+	        <cfset report_start_date = "2017/4/1">
 
-	        	<cfif getVerification.recordCount GT 0  AND VAL(getVerification.VERIFICATIONRECEIVED) AND getVerification.VERIFICATIONRECEIVED GTE report_start_date>
+	        	<cfif getVerification.recordCount GT 0  AND VAL(getVerification.VERIFICATIONRECEIVED)>
 
 			        <cfloop query="getVerification">
 
-			        	<cfif VAL(getVerification.VERIFICATIONRECEIVED) >
+			        	<cfif VAL(getVerification.VERIFICATIONRECEIVED) AND getVerification.VERIFICATIONRECEIVED GTE report_start_date>
 
 				        	<cfquery name="qGetCandidates" datasource="#APPLICATION.DSN.Source#"> 
 						        SELECT DISTINCT 
@@ -145,7 +145,6 @@
 										
 									</cfsavecontent>
 
-<!---
 					        		<cfscript >
 					        			to_email = qGetCandidates.email;
 					        			bcc_email = 'support@csb-usa.com';
@@ -188,7 +187,6 @@
 					        				WHERE extra_candidates.candidateid = #qGetCandidates.candidateid#
 					        			</cfquery>
 					        		</cfloop>
---->
 
 					        	</cfif>
 

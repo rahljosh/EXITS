@@ -25,10 +25,10 @@
 	APPLICATION.CSB.name = "CSB International, Inc.";
 	APPLICATION.CSB.phone = "(631) 893-4549";
 	APPLICATION.CSB.toolFreePhone = "1-877-669-0717";		
-	APPLICATION.CSB.address = '119 Cooper Street';
-	APPLICATION.CSB.city = 'Babylon';
+	APPLICATION.CSB.address = '36 Park Avenue';
+	APPLICATION.CSB.city = 'Bay Shore';
 	APPLICATION.CSB.state = 'NY';
-	APPLICATION.CSB.zipCode = '11702';
+	APPLICATION.CSB.zipCode = '11706';
 	
 	// Set CSB WAT Information
 	APPLICATION.CSB.WAT = StructNew();		
@@ -42,10 +42,10 @@
 	APPLICATION.CSB.WAT.phoneIDCard = "1-877-669-0717";
 	APPLICATION.CSB.WAT.logo = "8.gif";
 	APPLICATION.CSB.WAT.smallLogo = "8s.gif";
-	APPLICATION.CSB.WAT.address = '119 Cooper Street';
-	APPLICATION.CSB.WAT.city = 'Babylon';
+	APPLICATION.CSB.WAT.address = '36 Park Avenue';
+	APPLICATION.CSB.WAT.city = 'Bay Shore';
 	APPLICATION.CSB.WAT.state = 'NY';
-	APPLICATION.CSB.WAT.zipCode = '11702';
+	APPLICATION.CSB.WAT.zipCode = '11706';
 	APPLICATION.CSB.WAT.country = 'United States';
 
 	// Set INTO Information
@@ -59,10 +59,10 @@
 	APPLICATION.CSB.INTO.phoneIDCard = "1-888-468-6872";
 	APPLICATION.CSB.INTO.logo = "2.gif";
 	APPLICATION.CSB.INTO.smallLogo = "2.gif";
-	APPLICATION.CSB.INTO.address = '119 Cooper Street';
-	APPLICATION.CSB.INTO.city = 'Babylon';
+	APPLICATION.CSB.INTO.address = '36 Park Avenue';
+	APPLICATION.CSB.INTO.city = 'Bay Shore';
 	APPLICATION.CSB.INTO.state = 'NY';
-	APPLICATION.CSB.INTO.zipCode = '11702';
+	APPLICATION.CSB.INTO.zipCode = '11706';
 	APPLICATION.CSB.INTO.country = 'United States';
 
 	// Set CSB Trainee Information
@@ -78,10 +78,10 @@
 	APPLICATION.CSB.Trainee.phoneIDCard = "1-877-669-0717";
 	APPLICATION.CSB.Trainee.logo = "7.gif";
 	APPLICATION.CSB.Trainee.smallLogo = "7s.gif";
-	APPLICATION.CSB.Trainee.address = '119 Cooper Street';
-	APPLICATION.CSB.Trainee.city = 'Babylon';
+	APPLICATION.CSB.Trainee.address = '36 Park Avenue';
+	APPLICATION.CSB.Trainee.city = 'Bay Shore';
 	APPLICATION.CSB.Trainee.state = 'NY';
-	APPLICATION.CSB.Trainee.zipCode = '11702';
+	APPLICATION.CSB.Trainee.zipCode = '11706';
 	APPLICATION.CSB.Trainee.country = 'United States';
 
 
@@ -153,13 +153,13 @@
 		// Set Site URL
 		//APPLICATION.SITE.URL.main = 'http://brazil/';
 		//APPLICATION.SITE.URL.activation = 'http://brazil/accountActivation.cfm';
-		APPLICATION.SITE.URL.main = 'http://extra.local/';
-		APPLICATION.SITE.URL.activation = 'http://extra.local/accountActivation.cfm';
+		APPLICATION.SITE.URL.main = 'http://extra.exitsdev.com/';
+		APPLICATION.SITE.URL.activation = 'http://extra.exitsdev.com/accountActivation.cfm';
 		
 		// Email Settings
-		APPLICATION.EMAIL.contactUs = 'james@iseusa.com';
-		APPLICATION.EMAIL.support = 'james@iseusa.com';
-		APPLICATION.EMAIL.errors = 'james@iseusa.com';
+		APPLICATION.EMAIL.contactUs = 'support@csb-usa.com';
+		APPLICATION.EMAIL.support = 'support@csb-usa.com';
+		APPLICATION.EMAIL.errors = 'support@csb-usa.com';
 
 		// APPLICATION.PATH.base = getDirectoryFromPath(getBaseTemplatePath());	'
 		APPLICATION.PATH.base = 'C:/websites/exitsApplication/extra/internal/';
