@@ -30,21 +30,16 @@
         <cfargument name="companyID" default="" hint="CompanyID is not required">
         <cfargument name="onlyApprovedApps" default="0" hint="onlyApprovedApps is not required">
         
-        <cfscript>
-        	vSeasonID = APPLICATION.CFC.LOOKUPTABLES.getCurrentSeason();
-        </cfscript>
-        <cfquery name="currentPrograms"
-        
         <cfquery 
 			name="qGetStudentByID" 
 			datasource="#APPLICATION.DSN#">
                 SELECT
-					*
+					*, smg_student_app_status_type.shortdesc
                 FROM 
                     smg_students
+                LEFT JOIN smg_student_app_status_type on smg_student_app_status_type.typeid = smg_students.app_current_status
                 WHERE
                 	1 = 1
-					AND
 					
 				<cfif LEN(ARGUMENTS.studentID)>
                     AND
@@ -136,7 +131,7 @@
                     areaRep.firstName AS areaRepFirstName,
                     areaRep.lastName AS areaRepLastName,
 					areaRep.email AS areaRepEmail,
-                    areaRep.work_phone AS areaRepPhone
+                    areaRep.work_phone AS areaRepPhone,
                     <!--- Placing Representative --->
                     placeRep.userID AS placeRepUserID,
                     placeRep.firstname AS placeRepFirstName,
@@ -4876,10 +4871,8 @@
         <cfargument name="statusKey" default="" hint="Project Help Status Key is not required">
 		
        <cfscript>
-       	
        	vCurrentSeasonPrograms = APPLICATION.CFC.LookUpTables.getCurrentSeasonPrograms();
        </cfscript>
-       
        
         <cfquery 
 			name="qGetProjectHelpList" 
@@ -4943,8 +4936,9 @@
                     AND 
                         s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
 					AND
-               			s.progamid IN (#vCurrentSeasonPrograms#)
-                </cfif>
+                		s.programid IN (#vCurrentSeasonPrograms#)
+                		
+               	</cfif>
                 
                 <cfif VAL(ARGUMENTS.regionID)>                    
                     AND
