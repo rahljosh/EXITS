@@ -669,6 +669,20 @@
 
 <cfoutput>
 
+    <Cfif CLIENT.userType EQ 28>
+    <cfoutput>
+    <table width="100%" height="100%" border="1" align="center" cellpadding="0" cellspacing="0" bordercolor="##CCCCCC" bgcolor="##F4F4F4">
+        <tr>
+            <td bordercolor="##FFFFFF">
+                You do not have access to view this page.<br /><br />
+                If you feel this is incorrect, please contact <a href="mailto:#APPLICATION.EMAIL.support#">#APPLICATION.EMAIL.support#</a>
+            </td>
+        </tr>
+    </table>
+    </cfoutput>
+    <cfabort>
+</Cfif>
+
 <!--- TABLE HOLDER --->
 <table width="100%" align="center" cellpadding="0" cellspacing="0" bgcolor="##F4F4F4" style="border:1px solid ##CCC;">
     <tr>

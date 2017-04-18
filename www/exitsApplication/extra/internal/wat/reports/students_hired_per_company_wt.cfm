@@ -16,7 +16,7 @@
 
     <cfscript>
 		qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(companyID=CLIENT.companyID);
-		qGetHostCompanyList = APPLICATION.CFC.HOSTCOMPANY.getHostCompanies(companyID=CLIENT.companyID);
+		//qGetHostCompanyList = APPLICATION.CFC.HOSTCOMPANY.getHostCompanies(companyID=CLIENT.companyID);
 		
 		if (VAL(URL.programID) AND NOT VAL(FORM.programID)) {
 			FORM.programID = URL.programID;	
@@ -25,6 +25,18 @@
 			FORM.hostCompanyID = URL.hostCompanyID;
 		}
 	</cfscript>
+
+    <cfquery name="qGetHostCompanyList" datasource="#APPLICATION.DSN.Source#">
+        SELECT *
+        FROM extra_hostcompany
+        WHERE name != ""
+            AND companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        <cfif CLIENT.userType EQ 28>
+            AND hostCompanyID IN (<cfqueryparam cfsqltype="cf_sql_integer" list="true" value="#CLIENT.hostCompanyID#">)
+        </cfif>
+         AND active = 1
+        ORDER BY name
+    </cfquery>
 
     <!--- FORM submitted --->
     <cfif FORM.submitted>
@@ -61,8 +73,9 @@
                     </cfif> )
 
 			<cfif VAL(FORM.hostcompanyID)> 
-                AND
-                    ehc.hostcompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">                               
+                AND ehc.hostcompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">                               
+            <cfelseif CLIENT.userType EQ 28>
+                AND ehc.hostCompanyID IN (<cfqueryparam cfsqltype="cf_sql_integer" list="true" value="#CLIENT.hostCompanyID#">)
             </cfif>
 
        		GROUP BY
@@ -131,9 +144,10 @@
         			c.status = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.studentStatus#">
    			</cfif>
            	<cfif VAL(FORM.hostcompanyID)> 
-                AND
-                    ecpc.hostcompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">                               
-			</cfif>              
+                AND ecpc.hostcompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostcompanyID#">                               
+			<cfelseif CLIENT.userType EQ 28>
+                AND ecpc.hostCompanyID IN (<cfqueryparam cfsqltype="cf_sql_integer" list="true" value="#CLIENT.hostCompanyID#">)
+            </cfif>
        		ORDER BY
                 c.candidateID
 		</cfquery>
@@ -187,7 +201,9 @@
 				<cfif VAL(ARGUMENTS.hostcompanyID)> 
                     AND
                         hostcompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hostcompanyID#">                               
-                </cfif>                
+                <cfelseif CLIENT.userType EQ 28>
+                    AND hostCompanyID IN (<cfqueryparam cfsqltype="cf_sql_integer" list="true" value="#CLIENT.hostCompanyID#">)
+                </cfif>
                 
                 <cfif ARGUMENTS.placementType NEQ 'All'>
                     AND
@@ -222,12 +238,17 @@
         <tr valign="middle">
             <td align="right" valign="middle" class="style1"><b>Host Company: </b></td>
             <td valign="middle">  
-                <select name="hostCompanyID" class="style1">
-                    <option value="ALL">---  All Host Companies  ---</option>
-                    <cfloop query="qGetHostCompanyList">
-                    	<option value="#hostcompanyID#" <cfif qGetHostCompanyList.hostcompanyID EQ FORM.hostCompanyID> selected </cfif> >#qGetHostCompanyList.name#</option>
-                    </cfloop>
-                </select>
+                <Cfif qGetHostCompanyList.recordCount EQ 1>
+                    #qGetHostCompanyList.name#
+                    <input type="hidden" name="hostcompanyID" value="#qGetHostCompanyList.hostcompanyID#" />
+                <cfelse>
+                    <select name="hostCompanyID" class="style1">
+                        <option value="ALL">---  All Host Companies  ---</option>
+                        <cfloop query="qGetHostCompanyList">
+                            <option value="#hostcompanyID#" <cfif qGetHostCompanyList.hostcompanyID EQ FORM.hostCompanyID> selected </cfif> >#qGetHostCompanyList.name#</option>
+                        </cfloop>
+                    </select>
+                </Cfif>
             </td>
         </tr>
         <tr>
@@ -372,6 +393,9 @@
                             <cfscript>
                             	// Get Seeking Employment Comments
 								qGetSeekingEmploymentComments = APPLICATION.CFC.CANDIDATE.getSeekingEmploymentComments(candidateID=qTotalPerHostCompany.candidateID);
+
+                                // Get Exempt From Pre-Placement Comments
+                                qGetExemptFromPrePlacement = APPLICATION.CFC.CANDIDATE.getExemptFromPrePlacement(candidateID=qTotalPerHostCompany.candidateID);                                
 							</cfscript>
                         
                             <cfquery name="qGetHostHistory" datasource="#APPLICATION.DSN.Source#">
@@ -423,7 +447,28 @@
                                     </td>
                                 </tr>
                                 </cfif>
+
+                            <cfelseif qGetHostCompany.hostCompanyID EQ 4600>
+                                <tr bgcolor="###IIf(qTotalPerHostCompany.currentRow MOD 2 ,DE("FFFFFF") ,DE("E4E4E4") )#">
+                                    <td colspan="17" class="style1" style="border-top:1px solid ###IIf(qTotalPerHostCompany.currentRow MOD 2 ,DE("E4E4E4") ,DE("FFFFFF") )#;">
+                                        <strong>Reason:</strong> 
+                                        <cfloop query="qGetHostHistory">
+                                            #qGetHostHistory.reason_host# <br />
+                                        </cfloop>
+                                    </td>
+                                </tr>
                                 
+                                <cfif qGetExemptFromPrePlacement.recordCount GT 0 >
+                                <tr bgcolor="###IIf(qTotalPerHostCompany.currentRow MOD 2 ,DE("FFFFFF") ,DE("E4E4E4") )#">
+                                    <td colspan="17" class="style1" style="border-top:1px solid ###IIf(qTotalPerHostCompany.currentRow MOD 2 ,DE("E4E4E4") ,DE("FFFFFF") )#;">
+                                        <strong>Comments:</strong> 
+                                        <cfloop query="qGetExemptFromPrePlacement">
+                                            #DateFormat(qGetExemptFromPrePlacement.date, 'mm/dd/yyyy')# - #qGetExemptFromPrePlacement.note#
+                                            <hr style="margin: 5px 10px; border: none; border-bottom: 1px solid ##ccc" />
+                                        </cfloop>
+                                    </td>
+                                </tr>
+                                </cfif>
                             </cfif>
                            	
                             <tr bgcolor="###IIf(qTotalPerHostCompany.currentRow MOD 2 ,DE("FFFFFF") ,DE("E4E4E4") )#">

@@ -16,6 +16,8 @@ function UserName() {
 </head>
 <body>
 
+<cfparam name="loop_hostCompanyID" default="">
+
 <cfquery name="get_user" datasource="MySql">
 	SELECT *
 	FROM smg_users
@@ -30,8 +32,25 @@ function UserName() {
 	INNER JOIN extra_hostcompany ehc ON ehc.hostcompanyid = uar.hostCompanyID
 	WHERE userid = '#get_user.userid#'
 		AND c.system_id = '4'
+	GROUP BY companyid, usertype
 	ORDER BY default_region DESC
 </cfquery>
+
+
+
+<cfquery name="get_user_access_hostCompanies" datasource="MySql">
+	SELECT uar.id, uar.companyid, uar.hostCompanyID, c.companyshort, uar.usertype, ut.usertype as usertypename, default_region, ehc.name AS hostName
+	FROM user_access_rights uar
+	INNER JOIN smg_companies c ON c.companyid = uar.companyid
+	INNER JOIN smg_usertype ut ON ut.usertypeid = uar.usertype
+	INNER JOIN extra_hostcompany ehc ON ehc.hostcompanyid = uar.hostCompanyID
+	WHERE userid = '#get_user.userid#'
+		AND c.system_id = '4'
+		AND uar.hostcompanyid > 0
+	ORDER BY hostName ASC
+</cfquery>
+
+
 
 <!--- GET COMPANIES SESSION.USERID HAS ACCESS TO --->
 <cfquery name="list_companies" datasource="MySql">
@@ -531,6 +550,7 @@ function checkUserType(current_row) {
                                                     <tr>
                                                         <td class="style1">
                                                             #companyshort#
+                                                            <input type="hidden" name="companyID_#currentrow#" value="#companyID#" />
                                                         </td>
                                                         <td class="style1">
                                                         <!--- USERTYPE --->
@@ -546,13 +566,32 @@ function checkUserType(current_row) {
 
                                                             <div id="hostCompany_#currentrow#">
                                                             <strong>Host Company</strong><br />
+                                                            <!---
                                                             <cfselect name="hostCompanyID_#currentrow#">
                                                             	<cfset loop_hostCompanyID = #get_user_access.hostCompanyID#>
 																<cfloop query="get_host_companies">
-																	<option value="#hostCompanyID#" <cfif loop_hostCompanyID EQ hostCompanyID>selected</cfif>>#Left(name, '50')#<cfif Len(name) GT 50>...</cfif>
+																	<option value="#hostCompanyID#" <cfif VAL(loop_hostCompanyID) AND loop_hostCompanyID EQ hostCompanyID>selected</cfif>>#Left(name, '50')#<cfif Len(name) GT 50>...</cfif>
 																	</option>
 																</cfloop>
 															</cfselect>	
+														--->
+
+
+
+															<cfselect name="hostCompanyID" id="hostCompanyID_sample">
+																<option value="">Select</option>
+																<cfloop query="get_host_companies">
+																	<option value="#hostCompanyID#">#Left(name, '50')#<cfif Len(name) GT 50>...</cfif></option>
+																</cfloop>
+															</cfselect>	
+
+															<div id="afterHere" style="cursor: pointer; padding:5px; margin:5px; background-color:##efefef" onclick="$('##hostCompanyID_sample').clone().attr('name', 'hostCompanyID').appendTo('##extraHostCompanyDiv').css('display', 'block');">+ Add Another Host Company</div>
+
+															<div id="extraHostCompanyDiv"></div>
+
+
+
+
 															</div>
                                                         <cfelse>
                                                             #usertypename#
@@ -569,6 +608,7 @@ function checkUserType(current_row) {
                                                         </td>																				
                                                     </tr>
                                                 </cfloop>
+
                                                 <!--- NEW COMPANY ACCESS --->
                                                 <tr><td class="style1" colspan="1"><b>New Access Level</b></td></tr>
                                                 <tr>
@@ -593,8 +633,9 @@ function checkUserType(current_row) {
                                                         <div id="hostCompany_new" style="display:none">
                                                             <strong>Host Company</strong><br />
                                                             <cfselect name="hostCompanyID_new">
+                                                            	<option value="">Select</option>
 																<cfloop query="get_host_companies">
-																	<option value="#hostCompanyID#" <cfif loop_hostCompanyID EQ hostCompanyID>selected</cfif>>#Left(name, '50')#<cfif Len(name) GT 50>...</cfif>
+																	<option value="#hostCompanyID#" >#Left(name, '50')#<cfif Len(name) GT 50>...</cfif>
 																	</option>
 																</cfloop>
 															</cfselect>	
@@ -606,9 +647,14 @@ function checkUserType(current_row) {
                                                 <cfloop query="get_user_access">
                                                     <tr>
                                                         <td class="style1">#companyshort#</td>
-                                                        <td class="style1">#usertypename# <br /> <strong>Host Company:</strong> 
-                                                         #Left(hostName, '50')#<cfif Len(hostName) GT 50>...</cfif></td>
-                                                        <td class="style1">&nbsp;</td>																				
+                                                        <td class="style1">#usertypename# <br /> 
+                                                        	<strong>Host Company:</strong> <br />
+                                                        	<cfloop query="get_user_access_hostCompanies">
+                                                        		
+                                                         		#Left(hostName, '50')#<cfif Len(hostName) GT 50>...</cfif><br />
+                                                         	</cfloop>
+                                                     	</td>
+                                                        <td class="style1">&nbsp;</td>
                                                     </tr>
                                                 </cfloop>
                                             </cfif>
@@ -676,9 +722,38 @@ function checkUserType(current_row) {
 
 </cfoutput>
 <cfcatch type="any">
+	<cfdump var="#cfcatch#" />
+	<cafbort />
 	<cfinclude template="../error_message.cfm">
 </cfcatch>
 
 </cftry>
+
+<SCRIPT LANGUAGE="JavaScript">
+
+	$( document ).ready(function() {
+	    //console.log( "ready!" );
+
+	    <cfoutput>
+		    <cfloop query="get_user_access_hostCompanies">
+		    	
+		    	$('##hostCompanyID_sample').clone().attr('name', 'hostCompanyID').attr('id', 'hostCompanyID_#get_user_access_hostCompanies.hostcompanyID#').appendTo('##extraHostCompanyDiv');
+		    	//console.log('##hostCompanyID_#get_user_access_hostCompanies.hostcompanyID#');
+
+
+		    	$('##hostCompanyID_#get_user_access_hostCompanies.hostcompanyID# option[value=#get_user_access_hostCompanies.hostcompanyID#]').attr('selected', true);
+
+
+		    </cfloop>
+	    </cfoutput>
+
+	    $('#hostCompanyID_sample').hide();
+
+	});
+
+
+</script>
+
+
 </body>
 </html>

@@ -283,7 +283,7 @@
         AND c.cancel_date IS NULL
         AND ecpc.hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostCompanyInfo.hostCompanyID)#">
         GROUP BY p.programName
-        ORDER BY p.startDate ASC
+        ORDER BY p.startDate DESC
     </cfquery>
     
     <!--- Get database records for authentication files --->
@@ -2173,15 +2173,18 @@
                                         <cfloop query="qGetJobs">
                                             <tr bgcolor="###iif(qGetJobs.currentrow MOD 2 ,DE("E9ECF1") ,DE("FFFFFF") )#">
                                                 <td class="style1">
-                                                	<!--- REMOVED - Requested by Anca
-													<a href="javascript:openWindow('hostcompany/jobInfo.cfm?ID=#id#&hostCompanyID=#qGetHostCompanyInfo.hostCompanyID#', 300, 600);">--->
+													<a href="javascript:openWindow('hostcompany/jobInfo.cfm?ID=#id#&hostCompanyID=#qGetHostCompanyInfo.hostCompanyID#', 300, 600);">
 	                                                    #qGetJobs.title#
-                                                    <!---</a>--->
                                                 </td>
                                                 <td  class="style1">#classification#</td>
                                                 <td class="style1">#qGetJobs.wage# / #qGetJobs.wage_type#</td>
                                                 <td class="style1">#qGetJobs.hours#</td>
-                                                <td class="style1"><a href="javascript:openWindow('hostcompany/jobDelete.cfm?jobID=#qGetJobs.id#', 600, 300);"><img border="0" src="../pics/deletex.gif"/></a></td>
+                                                <td class="style1">
+                                                    <!--- Office View Only ---> 
+                                                    <cfif ListFind("1,2,3,4", CLIENT.userType)>
+                                                        <a href="javascript:openWindow('hostcompany/jobDelete.cfm?jobID=#qGetJobs.id#', 600, 300);"><img border="0" src="../pics/deletex.gif"/></a>
+                                                    </cfif>
+                                                </td>
                                             </tr>
                                         </cfloop>
                                         <cfif VAL(qGetHostCompanyInfo.hostCompanyID) AND ListFind("1,2,3,4", CLIENT.userType)>

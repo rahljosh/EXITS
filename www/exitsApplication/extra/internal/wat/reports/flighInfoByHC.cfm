@@ -18,7 +18,7 @@
 
 	</cfscript>
 
-    <cfquery name="qGetHostCompanyList" datasource="#APPLICATION.DSN.Source#" maxrows="30">
+    <cfquery name="qGetHostCompanyList" datasource="#APPLICATION.DSN.Source#">
         SELECT *
         FROM extra_hostcompany
         WHERE name != ""

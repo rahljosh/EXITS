@@ -6,6 +6,57 @@
 
 <br>
 
+<cfif CLIENT.userType EQ 28>
+
+    <table width="90%" border="0" cellpadding="0" cellspacing="0" align="center" bordercolor="#C7CFDC"> 
+        <tr>
+            <td width="49%" valign="top">
+                <table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="#C7CFDC" bgcolor="ffffff">
+                    <tr>
+                        <td bordercolor="FFFFFF">
+                            <span class="style1"><strong>1. Host Company Reports</strong></span><br />
+    
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/all_canceled_students_hc_wt" class="style4">- All Cancelled Candidates</a></p>
+
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/students_hired_per_company_wt" class="style4">- All Participating Candidates</a></p>
+                            
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/hostCompanyArrivalInstructions" class="style4">- Arrival Instructions</a></p>
+
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/flighInfoByHC" class="style4">- Flight Information</a></p>
+                            
+                       </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    
+    <br />
+
+
+    <table width="90%" border="0" cellpadding="0" cellspacing="0" align="center" bordercolor="#C7CFDC"> 
+        <tr>
+            <td width="49%" valign="top">
+                <table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="#C7CFDC" bgcolor="ffffff">
+                    <tr>
+                        <td bordercolor="FFFFFF">
+                            <span class="style1"><strong>2. Program Reports</strong></span><br />
+                            
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/candidatesByStateAndCity" class="style4">- Candidates by State and City</a></p>
+
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/checkinReport" class="style4">- Check-in</a></p>
+
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/housingAddressList" class="style4">- Housing Address List</a></p>
+                            
+                      </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+
+<cfelse>
+
 <!--- International Representative Reports --->
 <table width="90%" border="0" cellpadding="0" cellspacing="0" align="center" bordercolor="#C7CFDC">	
 	<tr>
@@ -13,12 +64,6 @@
 			<table cellpadding=3 cellspacing=3 border=1 align="center" width="100%" bordercolor="#C7CFDC" bgcolor="ffffff">
 				<tr>
                     <td bordercolor="FFFFFF">
-                        <cfif CLIENT.userType EQ 28>
-                            <span class="style1"><strong>Host Company Reports</strong></span><br />
-
-                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/flighInfoByHC" class="style4">- Flight Information</a></p>
-
-                        </cfif>
 
                         <cfif CLIENT.userType LTE 4>
                         	<span class="style1"><strong>1. International Representative Reports</strong></span><br />
@@ -207,4 +252,5 @@
     
     <br />
 
+</cfif>
 </cfif>

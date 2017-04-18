@@ -62,6 +62,8 @@
             AND ec.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
         <cfelseif CLIENT.userType EQ 11>
             AND ec.branchID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+         <cfelseif CLIENT.userType EQ 28>
+            AND hostCompanyID IN (<cfqueryparam cfsqltype="cf_sql_integer" list="true" value="#CLIENT.hostCompanyID#">)
 		</cfif>
     </cfquery>
    
@@ -228,13 +230,13 @@
                             <tr style="min-height:12px;">
                                 <th colspan="2" class="applicationStatsCandidate">Candidate</th>
 								<!--- <th colspan="2" class="applicationStatsBranch">Intl. Branch</th> --->
-                                <th colspan="2" class="applicationStatsIntlRep">Intl. Rep.</th>
+                                <th colspan="3" class="applicationStatsIntlRep">Intl. Rep.</th>
                                 <th colspan="3" class="applicationStatsCSB">CSB</th>
                             </tr>
                             <tr>
                                 <cfloop query="qStatus">
                                     <th class="ApplicationStatsTitle"> 
-										<a href="index.cfm?curdoc=onlineApplication/index&action=list&statusID=#qStatus.statusID#" title="#qStatus.description#">#qStatus.name#</a>
+										<a<cfif qStatus.statusID EQ 12> style="color:red"</cfif> href="index.cfm?curdoc=onlineApplication/index&action=list&statusID=#qStatus.statusID#" title="#qStatus.description#">#qStatus.name#</a>
                                 	</th>
                                 </cfloop>
      						</tr>

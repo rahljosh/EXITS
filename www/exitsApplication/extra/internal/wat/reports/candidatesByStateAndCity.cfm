@@ -80,6 +80,9 @@
             AND
                 h.state = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.stateID#">
       	</cfif>
+        <cfif CLIENT.userType EQ 28>
+            AND h.hostCompanyID IN (<cfqueryparam cfsqltype="cf_sql_integer" list="true" value="#CLIENT.hostCompanyID#">)
+        </cfif>
         GROUP BY
         	c.candidateID
         ORDER BY

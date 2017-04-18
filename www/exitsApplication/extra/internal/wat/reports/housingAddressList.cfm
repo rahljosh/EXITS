@@ -23,8 +23,20 @@
     <cfscript>
 		qGetProgramList = APPLICATION.CFC.PROGRAM.getPrograms(companyID=CLIENT.companyID);
 		qGetIntlRepList = APPLICATION.CFC.USER.getIntlReps();
-		qGetHostCompanyList = APPLICATION.CFC.HOSTCOMPANY.getHostCompanies();
+		//qGetHostCompanyList = APPLICATION.CFC.HOSTCOMPANY.getHostCompanies();
 	</cfscript>
+
+    <cfquery name="qGetHostCompanyList" datasource="#APPLICATION.DSN.Source#">
+        SELECT *
+        FROM extra_hostcompany
+        WHERE name != ""
+            AND companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+        <cfif CLIENT.userType EQ 28>
+            AND hostCompanyID IN (<cfqueryparam cfsqltype="cf_sql_integer" list="true" value="#CLIENT.hostCompanyID#">)
+        </cfif>
+         AND active = 1
+        ORDER BY name
+    </cfquery>
  
 </cfsilent>
         
@@ -48,6 +60,8 @@
             </cfif>
             <cfif VAL(FORM.hostCompanyID)>
             	AND ec.hostcompanyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostCompanyID#">
+            <cfelseif CLIENT.userType EQ 28>
+                AND ec.hostCompanyID IN (<cfqueryparam cfsqltype="cf_sql_integer" list="true" value="#CLIENT.hostCompanyID#">)
             </cfif>
 		WHERE u.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
 		<cfif CLIENT.userType EQ 8>
@@ -122,15 +136,22 @@
                         </select>
                     </td>
                 </tr>
+            </cfif>
+            <cfif CLIENT.userType LTE 4 OR CLIENT.userType EQ 28>
                 <tr valign="middle">
                     <td align="right" valign="middle" class="style1"><b>Host Companies:</b> </td>
                     <td valign="middle">
+                    <Cfif qGetHostCompanyList.recordCount EQ 1>
+                        #qGetHostCompanyList.name#
+                        <input type="hidden" name="hostcompanyID" value="#qGetHostCompanyList.hostcompanyID#" />
+                    <cfelse>
                         <select name="hostCompanyID" class="style1">
-                            <option value="0">---  All Host Companies  ---</option>
+                            <option value="ALL">---  All Host Companies  ---</option>
                             <cfloop query="qGetHostCompanyList">
-                                <option value="#qGetHostCompanyList.hostCompanyID#" <cfif FORM.hostCompanyID EQ qGetHostCompanyList.hostCompanyID>selected="selected"</cfif>>#qGetHostCompanyList.name#</option>
+                                <option value="#hostcompanyID#" <cfif qGetHostCompanyList.hostcompanyID EQ FORM.hostCompanyID> selected </cfif> >#qGetHostCompanyList.name#</option>
                             </cfloop>
                         </select>
+                    </Cfif>
                     </td>
                 </tr>
             </cfif>
@@ -233,6 +254,8 @@
                     </cfif>
                     <cfif VAL(FORM.hostCompanyID)>
                     	AND ec.hostcompanyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostCompanyID#">
+                    <cfelseif CLIENT.userType EQ 28>
+                        AND ehc.hostCompanyID IN (<cfqueryparam cfsqltype="cf_sql_integer" list="true" value="#CLIENT.hostCompanyID#">)
                     </cfif>
                     GROUP BY ec.candidateID
                 </cfquery>

@@ -219,6 +219,26 @@
         <cfif IsDefined('FORM.user_access_count')>
         
             <cfloop from="1" to="#FORM.user_access_count#" index="x">
+
+                <cfquery name="user_access_rights" datasource="MySql">
+                    DELETE FROM user_access_rights
+                    WHERE hostCompanyID <> 0
+                         AND userid = '#form.userid#'
+                </cfquery>
+
+                <cfloop list="#FORM.hostCompanyID#" index="hostCompanyID">
+
+                    <cfif hostCompanyID GT 0>
+                        <cfquery name="user_access_rights" datasource="MySql">
+                            INSERT INTO user_access_rights
+                                (userid, companyid, usertype, default_region, hostCompanyID)
+                            VALUES
+                                ('#form.userid#', '#form["companyID_" & x]#', '#form["usertype_" & x]#', '0', '#hostCompanyID#')
+                        </cfquery>
+                    </cfif>
+                </cfloop>
+
+
             
                 <!--- EDIT COMPANY ACCESS --->
                 <cfif NOT IsDefined('FORM.delete_'&x)>
@@ -226,9 +246,6 @@
                     <cfquery name="update_user_access" datasource="MySql">
                         UPDATE user_access_rights
                         SET usertype = '#form["usertype_" & x]#'
-                        <cfif VAL(#form["hostCompanyID_" & x]#)>
-                            , hostCompanyID = '#form["hostCompanyID_" & x]#'
-                        </cfif>
                         WHERE id = '#form["access_id_" & x]#'
                     </cfquery>
                     

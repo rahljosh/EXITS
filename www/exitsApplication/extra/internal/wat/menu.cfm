@@ -106,12 +106,15 @@
             <td bgcolor="##8FB6C9" width="15%"><a class="item1" href="?curdoc=user/user_info&uniqueid=#get_user_uniqueid.uniqueid#">My Info</a></td>
             <td bgcolor="##8FB6C9" width="15%"><a class="item1" href="?curdoc=reports/all_reports">Reports</a></td>
 
+            <cfif CLIENT.userType NEQ 28>
             <td bgcolor="##8FB6C9" width="15%">
             	<a class="item1" href="">Tools</a>
                 <div class="section">
                     <a class="item2" href="?curdoc=tools/visaInterview">Visa Interview</a> 
+                    <a class="item2" href="?curdoc=tools/batch_flight_info">Batch Flight Information</a> 
                 </div>
             </td>
+            </cfif>
             
         	<td bgcolor="##8FB6C9" width="40%">&nbsp;</td>
         </tr>
