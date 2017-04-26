@@ -124,7 +124,7 @@
     <cfinclude template="../querys/program.cfm">
 
     <cfquery name="qGetEmailTracking" datasource="#APPLICATION.DSN.Source#">
-        SELECT ee.id, ee.name, eet.date
+        SELECT ee.id, ee.name, eet.date, eet.email_id
         FROM extra_emails_tracking eet
         INNER JOIN extra_emails ee ON (eet.email_id = ee.id)
         WHERE candidate_id = '#qGetCandidate.candidateID#'
@@ -3688,13 +3688,14 @@
                             
                                         <table width="100%" cellpadding=3 cellspacing="0" border="0">
                                             <tr bgcolor="##C2D1EF">
-                                                <td colspan="2" class="style2" bgcolor="##8FB6C9">
+                                                <td colspan="3" class="style2" bgcolor="##8FB6C9">
                                                     &nbsp;:: Emails Sent
                                                 </td>
                                             </tr>	
                                             <tr>
                                                 <td class="style1"><strong>Date</strong></td>
                                                 <td class="style1"><strong>Email</strong></td>
+                                                <td class="style1"></td>
                                             </tr>
                                             
                                             <cfif VAL(qGetEmailTracking.recordCount)>
@@ -3705,6 +3706,9 @@
                                                         </td>
                                                         <td class="style1">
                                                             #qGetEmailTracking.name#
+                                                        </td>
+                                                        <td class="style1">
+                                                            <a href="javascript:openWindow('candidate/view_email.cfm?id=#email_id#', 600, 800);" >View</a>
                                                         </td>
                                                     </tr>
                                                 </cfloop>

@@ -364,4 +364,47 @@
     
     </cffunction>
 
+
+    <cffunction name="getActiveHostCompanies" access="remote" returntype="query" hint="Gets a list of host companies with active candidates">
+        <cfargument name="companyID" default="0" hint="companyID is required">
+        <cfargument name="programID" default="0" hint="companyID is required">
+        
+        <cfquery name="qGetHostCompanies" datasource="#APPLICATION.DSN.Source#">
+            SELECT *
+            FROM extra_hostcompany eh
+            LEFT JOIN extra_candidates ec ON ec.hostCompanyID = eh.hostCompanyID
+            WHERE eh.name != ""
+                AND eh.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.companyID#">
+                AND eh.active = 1
+                AND ec.active = 1
+                AND ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#">
+            ORDER BY name
+        </cfquery>
+        
+        <cfreturn getActiveHostCompanies>
+    
+    </cffunction>
+
+
+    <cffunction name="setEmailTracking" access="public" returntype="void" output="no">
+        <cfargument name="hc_id" type="numeric" required="yes">
+        <cfargument name="email_id" type="numeric" required="yes">
+        <cfargument name="email_content" type="string" required="no">
+        <cfargument name="date" default="#NOW()#" required="no">
+
+        
+        <cfquery datasource="#APPLICATION.DSN.Source#">
+            INSERT INTO extra_emails_tracking (
+                hc_id,
+                email_id,
+                email_content,
+                date)
+            VALUES (
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hc_id)#">,
+                <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.email_id)#">,
+                <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#ARGUMENTS.email_content#">,
+                <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.date#">)
+        </cfquery>
+    </cffunction>
+
 </cfcomponent>

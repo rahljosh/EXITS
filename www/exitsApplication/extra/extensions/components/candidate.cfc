@@ -1644,6 +1644,7 @@
                 candidate.email,
                 candidate.sex,
                 candidate.ds2019,
+                DATE_FORMAT(candidate.visaInterview,'%m/%d/%Y') AS visaInterview,
                 rep.businessName,
                 program.programName,
                 DATE_FORMAT(program.startDate,'%m/%d/%Y') AS startDate,
@@ -1656,7 +1657,7 @@
             WHERE candidate.status = 1
             AND candidate.isDeleted = 0
             AND candidate.applicationStatusID IN (0,11)
-            AND candidate.visaInterview IS NULL
+
             AND candidate.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.companyID)#">
             <cfif VAL(ARGUMENTS.intRep)>
             	AND candidate.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.intRep)#">

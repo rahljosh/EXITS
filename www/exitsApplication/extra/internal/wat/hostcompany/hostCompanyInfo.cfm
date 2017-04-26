@@ -285,6 +285,14 @@
         GROUP BY p.programName
         ORDER BY p.startDate DESC
     </cfquery>
+
+    <cfquery name="qGetEmailTracking" datasource="#APPLICATION.DSN.Source#">
+        SELECT ee.id, ee.name, eet.date, eet.email_id
+        FROM extra_emails_tracking eet
+        INNER JOIN extra_emails ee ON (eet.email_id = ee.id)
+        WHERE hc_id = '#qGetHostCompanyInfo.hostCompanyID#'
+        ORDER BY date
+    </cfquery>
     
     <!--- Get database records for authentication files --->
     <cfquery name="qGetAuthenticationFile" datasource="#APPLICATION.DSN.Source#">
@@ -837,7 +845,7 @@
                         authentication_certificateOfExistenceExpiration,
                         authentication_certificateOfReinstatementExpiration,
                         authentication_departmentOfStateExpiration,
-                        authentication_businessLicenseNotAvailable )
+                        authentication_businessLicenseNotAvailable  )
                     VALUES (
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostCompanyID#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
@@ -2173,8 +2181,13 @@
                                         <cfloop query="qGetJobs">
                                             <tr bgcolor="###iif(qGetJobs.currentrow MOD 2 ,DE("E9ECF1") ,DE("FFFFFF") )#">
                                                 <td class="style1">
-													<a href="javascript:openWindow('hostcompany/jobInfo.cfm?ID=#id#&hostCompanyID=#qGetHostCompanyInfo.hostCompanyID#', 300, 600);">
+                                                    <cfif ListFind("1,2,3,4", CLIENT.userType)>
+													   <a href="javascript:openWindow('hostcompany/jobInfo.cfm?ID=#id#&hostCompanyID=#qGetHostCompanyInfo.hostCompanyID#', 300, 600);">
+                                                    </cfif>
 	                                                    #qGetJobs.title#
+                                                    <cfif ListFind("1,2,3,4", CLIENT.userType)>
+                                                        </a>
+                                                    </cfif>
                                                 </td>
                                                 <td  class="style1">#classification#</td>
                                                 <td class="style1">#qGetJobs.wage# / #qGetJobs.wage_type#</td>
@@ -2510,6 +2523,50 @@
                         </table>
                         
                         <br />
+
+                        <!--- Email Tracking --->
+                        <table cellpadding="3" cellspacing="3" border="1" align="center" width="100%" bordercolor="##C7CFDC" bgcolor="##ffffff">
+                            <tr>
+                                <td bordercolor="##FFFFFF">
+
+                                    <table width="100%" cellpadding=3 cellspacing="0" border="0">
+                                            <tr bgcolor="##C2D1EF">
+                                                <td colspan="3" class="style2" bgcolor="##8FB6C9">
+                                                    &nbsp;:: Emails Sent
+                                                </td>
+                                            </tr>   
+                                            <tr>
+                                                <td class="style1"><strong>Date</strong></td>
+                                                <td class="style1"><strong>Email</strong></td>
+                                                <td class="style1"></td>
+                                            </tr>
+                                            
+                                            <cfif VAL(qGetEmailTracking.recordCount)>
+                                                <cfloop query="qGetEmailTracking">
+                                                    <tr <cfif qGetEmailTracking.currentRow mod 2>bgcolor="##E4E4E4"</cfif>>     
+                                                        <td class="style1">
+                                                            #DateFormat(qGetEmailTracking.date, 'mm/dd/yy')#
+                                                        </td>
+                                                        <td class="style1">
+                                                            #qGetEmailTracking.name#
+                                                        </td>
+                                                        <td class="style1">
+                                                            <a href="javascript:openWindow('hostcompany/view_email.cfm?id=#email_id#&hostCOmpanyID=#URL.hostCompanyID#', 600, 800);" >View</a>
+                                                        </td>
+                                                    </tr>
+                                                </cfloop>
+                                            <cfelse>
+                                                <tr bgcolor="##E4E4E4">
+                                                    <td colspan="4" class="style1" align="center">There were no emails sent.</td>                                                
+                                                </tr>
+                                            </cfif>
+                                                                                           
+                                        </table>
+
+                                </td>
+                            </tr>
+                        </table>
+
 
                 	</td>        
 					<!--- END OF LEFT SECTION --->

@@ -33,10 +33,8 @@
 	</cfquery>
     
 </cfsilent>
-Arrivals:<br />
-	<Cfdump var="#qGetArrivals#">
-    Departures:<br />
-	<Cfdump var="#qGetDepartures#">
+
+
 <cfsavecontent variable="flightReport">
 
 	<!--- Arrival Information --->
@@ -69,8 +67,16 @@ Arrivals:<br />
                                 </cfif>
                                 
                                 <cfset dateDiference = DateDiff("d", qGetArrivals.startDate, qGetArrivals.departDate) >
-                                <cfif dateDiference GTE -7 AND dateDiference LTE 7>
-                                	<span style="color:red">(Program Start Date: #qGetArrivals.startDate#)</span>
+                                
+                                <cfif dateDiference LTE -5 OR dateDiference GTE 5>
+
+                                    <cfif (dateDiference LTE -5 AND dateDiference GT -10)
+                                            OR (dateDiference GTE 5 AND dateDiference LT 10)>
+                                        <span style="color:##ce8500">
+                                    <cfelse>
+                                	   <span style="color:red">
+                                    </cfif>
+                                        (Program Start Date: #qGetArrivals.startDate#)</span>
                                 </cfif>
                         	</td>
                             <td style="padding:4px 0px 4px 0px;">#qGetArrivals.arriveAirportCode#</td>

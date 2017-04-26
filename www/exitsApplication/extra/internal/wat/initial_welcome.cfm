@@ -117,6 +117,7 @@
                     </td>
                 </tr>
 
+                <cfif CLIENT.userType NEQ 28>
                 <!--- New Candidates --->
                 <tr>
                     <td colspan="2" style="font-weight:bold; text-decoration:underline;">New Candidates</td>
@@ -138,6 +139,7 @@
                         </cfif>
                     </td>
                 </tr>
+                </cfif>
 
                 <!--- New Host Companies --->
                 <cfif CLIENT.userType LTE 4>

@@ -86,9 +86,9 @@
                     eh.name as hostCompanyName,
                     u.businessName,
 					efi.ID,
-                    efi.programID,
+                    ec.programID,
                     efi.flightType,
-                    p.startDate,
+                    ec.startDate,
                     DATE_FORMAT(efi.departDate, '%c/%e/%Y') AS departDate,
                     efi.departCity,
                     efi.departAirportCode,
@@ -111,7 +111,7 @@
 				LEFT JOIN                 
                     extra_hostcompany eh ON ec.hostcompanyID = eh.hostcompanyID
                 	Left JOIN 
-                	smg_programs p on p.programid = efi.programid
+                	smg_programs p on p.programid = ec.programid
                 WHERE
                     flightType = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(ARGUMENTS.flightType)#">
 				<cfif VAL(ARGUMENTS.companyID)>
