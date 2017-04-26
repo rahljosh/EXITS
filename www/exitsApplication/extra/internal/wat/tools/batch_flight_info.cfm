@@ -37,14 +37,6 @@
 
 
 	
-    <!--- Query for Program Type --->
-    <cfquery name="qProgramType" datasource="MySql">
-        SELECT 
-        	programTypeID,
-            programType             
-        FROM 
-        	smg_program_type
-    </cfquery>
 
 	<!--- FORM has been submitted --->
 	<cfif FORM.submitted>
@@ -81,44 +73,127 @@
             <cfif isSpreadsheetFile(theFile)>
                 <cfspreadsheet action="read" src="#theFile#" query="data" headerrow="1" excludeHeaderRow="true">
 
+                <!--- Check for errors before adding to the database --->
                 <cfloop query="data">
 
-                    <cfquery datasource="#APPLICATION.DSN.Source#">
-                        INSERT INTO 
-                            extra_flight_information
-                        (
-                            candidateID, 
-                            flightType,
-                            departDate,
-                            departCity, 
-                            departAirportCode, 
-                            departTime,
-                            flightNumber,
-                            arriveCity,
-                            arriveAirportCode,
-                            arriveTime,
-                            isOvernightFlight
-                        )
-                        VALUES 
-                        (
-                            <cfqueryparam cfsqltype="cf_sql_integer" value="#data.candidate_id#">, 
-                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#data.type#">,
-                            <cfqueryparam cfsqltype="cf_sql_date" value="#data.depart_date#" null="#NOT IsDate(data.depart_date)#">,
-                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#data.depart_city#">,
-                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#data.depart_airport_code#">,
-                            <cfqueryparam cfsqltype="cf_sql_time" value="#data.depart_time#">,
-                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#data.flight_number#">,
-                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#data.arrive_city#">,
-                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#data.arrive_airport_code#">,
-                            <cfqueryparam cfsqltype="cf_sql_time" value="#data.arrive_time#">,
-                            <cfqueryparam cfsqltype="cf_sql_bit" value="#data.overnight_time#">
-                        )
-                    </cfquery>
+                    <cfif (NOT IsNumeric(data.candidate_id)) OR
+                            (data.type NEQ 'Arrival' AND data.type NEQ 'Departure') OR 
+                            (NOT IsDate(data.depart_date)) OR
+                            (NOT isValid('time', data.depart_time)) OR
+                            (NOT isValid('time', data.arrive_time)) OR 
+                            (data.overnight_time NEQ 'Yes' AND data.overnight_time NEQ 'No')>
+
+                        <cfscript>
+                            ArrayAppend(Errors.Messages, "<br /><strong>Errors for Candidate  " & data.candidate_id  & "</strong>" );
+                        </cfscript>
+
+                    </cfif>
+
+                    <cfif NOT IsNumeric(data.candidate_id)>
+                        <cfif data.candidate_id EQ ''>
+                            <cfset data.candidate_id = '<em>Empty</em>' />
+                        </cfif>
+                        <cfscript>
+                            ArrayAppend(Errors.Messages, "- candidate_id, is not numeric: <strong>" & data.candidate_id  & "</strong>" );
+                        </cfscript>
+                    </cfif>
+
+                    <cfif data.type NEQ 'Arrival' AND data.type NEQ 'Departure'>
+                        <cfif data.type EQ ''>
+                            <cfset data.type = '<em>Empty</em>' />
+                        </cfif>
+                        <cfscript>
+                            ArrayAppend(Errors.Messages, "- type, needs to be 'Arrival' or 'Departure': <strong>" & data.type  & "</strong>" );
+                        </cfscript>
+                    </cfif>
+
+                    <cfif NOT IsDate(data.depart_date)>
+                        <cfif data.depart_date EQ ''>
+                            <cfset data.depart_date = '<em>Empty</em>' />
+                        </cfif>
+                        <cfscript>
+                            ArrayAppend(Errors.Messages, "- depart_date, wrong date format (YYYY-MM-DD): <strong>" & data.depart_date  & "</strong>" );
+                        </cfscript>
+                    </cfif>
+
+                    <cfif NOT isValid('time', data.depart_time)>
+                        <cfif data.depart_time EQ ''>
+                            <cfset data.depart_time = '<em>Empty</em>' />
+                        </cfif>
+                        <cfscript>
+                            ArrayAppend(Errors.Messages, "- depart_time, wrong time format (HH-MM 24h format): <strong>" & data.depart_time  & "</strong>" );
+                        </cfscript>
+                    </cfif>
+
+                    <cfif NOT isValid('time', data.arrive_time)>
+                        <cfif data.arrive_time EQ ''>
+                            <cfset data.arrive_time = '<em>Empty</em>' />
+                        </cfif>
+                        <cfscript>
+                            ArrayAppend(Errors.Messages, "- arrive_time, wrong time format (HH-MM 24h format): <strong>" & data.arrive_time  & "</strong>" );
+                        </cfscript>
+                    </cfif>
+
+                    <cfif data.overnight_time NEQ 'Yes' AND data.overnight_time NEQ 'No'>
+                        <cfif data.overnight_time EQ ''>
+                            <cfset data.overnight_time = '<em>Empty</em>' />
+                        </cfif>
+                        <cfscript>
+                            ArrayAppend(Errors.Messages, "- overnight_time, needs to be 'Yes' or 'No': <strong>" & data.overnight_time  & "</strong>" );
+                        </cfscript>
+                    </cfif>
+
                 </cfloop>
+
+                <cfif VAL(ArrayLen(Errors.Messages))>
+                    <cfscript>
+                        ArrayAppend(Errors.Messages, "<br /> <strong>Please, fix the spreadsheet and upload it again.</strong>" );
+                    </cfscript>
+                </cfif>
+
+
+
+                <cfif NOT VAL(ArrayLen(Errors.Messages))>
+                    <cfloop query="data">
+                        <cfquery datasource="#APPLICATION.DSN.Source#">
+                            INSERT INTO 
+                                extra_flight_information
+                            (
+                                candidateID, 
+                                flightType,
+                                departDate,
+                                departCity, 
+                                departAirportCode, 
+                                departTime,
+                                flightNumber,
+                                arriveCity,
+                                arriveAirportCode,
+                                arriveTime,
+                                isOvernightFlight
+                            )
+                            VALUES 
+                            (
+                                <cfqueryparam cfsqltype="cf_sql_integer" value="#data.candidate_id#">, 
+                                <cfqueryparam cfsqltype="cf_sql_varchar" value="#data.type#">,
+                                <cfqueryparam cfsqltype="cf_sql_date" value="#data.depart_date#" null="#NOT IsDate(data.depart_date)#">,
+                                <cfqueryparam cfsqltype="cf_sql_varchar" value="#data.depart_city#">,
+                                <cfqueryparam cfsqltype="cf_sql_varchar" value="#data.depart_airport_code#">,
+                                <cfqueryparam cfsqltype="cf_sql_time" value="#data.depart_time#">,
+                                <cfqueryparam cfsqltype="cf_sql_varchar" value="#data.flight_number#">,
+                                <cfqueryparam cfsqltype="cf_sql_varchar" value="#data.arrive_city#">,
+                                <cfqueryparam cfsqltype="cf_sql_varchar" value="#data.arrive_airport_code#">,
+                                <cfqueryparam cfsqltype="cf_sql_time" value="#data.arrive_time#">,
+                                <cfqueryparam cfsqltype="cf_sql_bit" value="#data.overnight_time#">
+                            )
+                        </cfquery>
+                    </cfloop>
+                </cfif>
 
             </cfif>
 
-            <cfset upload_success = 1 />
+            <cfif NOT VAL(ArrayLen(Errors.Messages))>
+                <cfset upload_success = 1 />
+            </cfif>
    
         </cfif>
     
@@ -142,10 +217,10 @@
 
 	<!--- Display Errors --->
 	<cfif VAL(ArrayLen(Errors.Messages))>
-		<table width="95%" align="center" cellpadding="0" cellspacing="0">
+		<table width="95%" align="center" cellpadding="10" cellspacing="0" style="background-color: ##eedede; color:##711c1c; text-align: center">
         	<tr>
             	<td>
-			        <font color="##FF0000">Please review the following items:</font> <br>
+			        <font color="##FF0000">Error! Please review the following items:</font> <br>
 	
                     <cfloop from="1" to="#ArrayLen(Errors.Messages)#" index="i">
                         #Errors.Messages[i]# <br>        	
