@@ -52,3 +52,14 @@
 <!--- Document Expiration --->
 <cfinclude template="Ds2019-Issued.cfm">
 <h1>Ds2019 Report</h1>
+
+
+<!--- Document Expiration --->
+<cfinclude template="hostCompany-ParticipantList.cfm">
+<h1>SWT Program - Welcome Host Employer</h1>
+
+
+<!--- Candidates Emails --->
+<cfinclude template="sendEmails.cfm">
+<h1>Candidate Emails</h1>
+

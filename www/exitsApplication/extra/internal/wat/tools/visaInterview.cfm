@@ -56,7 +56,7 @@
 		// Set up page message, fade in and fade out after 2 seconds
 		$("#candidateDetailMessage").text("Visa Interview Date for candidate #" + candidateID + " set").fadeIn().fadeOut(3000);
 		// Fade out record from search list
-		$("#" + candidateID).fadeOut("slow");
+		//$("#" + candidateID).fadeOut("slow");
 	}
 	
 	var myErrorHandler = function(statusCode, statusMsg) { 
@@ -209,13 +209,13 @@
                         <td class="style5"><a href="?curdoc=candidate/candidate_info&uniqueID=#uniqueID#" class="style4" target="_blank">#firstName#</a></td>
                         <td class="style5">#email#</td>
                         <td class="style5">#sex#</td>
-                        <td class="style5">#countryName#'</td>
+                        <td class="style5">#countryName#</td>
                         <td class="style5">#ds2019#</td>
                         <td class="style5">#businessName#</td>
                         <td class="style5">#programName#</td>
                         <td class="style5">#startDate#</td>
                         <td class="style5">#endDate#</td>
-                        <td align="center" class="style5"><input id="#candidateID#_date" type="text" class="datePicker" onchange="setVisaInterviewDate(#candidateID#)"/></td>
+                        <td align="center" class="style5"><input id="#candidateID#_date" value="#visaInterview#" type="text" class="datePicker" onchange="setVisaInterviewDate(#candidateID#)"/></td>
                 	</tr>
                 </cfloop>
        		</cfif>
