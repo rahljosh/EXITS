@@ -1718,6 +1718,7 @@
                     ec.arrival_city,
                     ec.arrival_state,
                     ec.arrival_zip,
+                    eir.ID AS incidentReportID,	                
                     hostCompany.name as hostCompanyName,
                     hostCompany.address as hostCompanyAddress,
                     hostCompany.city as hostCompanyCity,
@@ -1754,6 +1755,10 @@
                 	extra_hostcompany hostCompany ON hostCompany.hostcompanyid = ec.hostcompanyid
 				LEFT OUTER JOIN
 					smg_states states ON states.id = hostCompany.state
+				LEFT OUTER JOIN
+            		extra_incident_report eir ON eir.candidateID = ec.candidateID
+            			AND
+                            eir.isSolved = 0
                 WHERE ec.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
                 AND ec.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
                 AND ec.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">                       

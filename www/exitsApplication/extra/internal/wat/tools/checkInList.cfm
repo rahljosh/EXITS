@@ -143,6 +143,7 @@
 			var arrival_state = verList.DATA[i][verList.COLUMNS.findIdx('ARRIVAL_STATE')];
 			var arrival_zip = verList.DATA[i][verList.COLUMNS.findIdx('ARRIVAL_ZIP')];
 			var recentTracking = verList.DATA[i][verList.COLUMNS.findIdx('COMMENT')];
+			var incidentReportID = verList.DATA[i][verList.COLUMNS.findIdx('INCIDENTREPORTID')];
 			
 			if (recentTracking == null) {
 				recentTracking = "";
@@ -199,7 +200,13 @@
 					tableBody += '<tr id="' + candidateID + '" class="rowOn">';
 				}
 				tableBody += '<td class="style5"><a href="?curdoc=candidate/candidate_info&uniqueID=' + uniqueID + '" class="style4" target="_blank">#' + candidateID + '</a></td>';
-				tableBody += '<td class="style5"><a href="?curdoc=candidate/candidate_info&uniqueID=' + uniqueID + '" class="style4" target="_blank">' + lastName + '</a></td>';
+				tableBody += '<td class="style5">';
+
+				if (incidentReportID != '' && incidentReportID > 0) {
+					tableBody += '<img src="/internal/pics/error-exclamate.gif" width="20" style="vertical-align:middle" alt="Open Incident" title="Open Incident"/> ';
+				}
+				tableBody += '<a href="?curdoc=candidate/candidate_info&uniqueID=' + uniqueID + '" class="style4" target="_blank">' + lastName + '</a></td>';
+
 				tableBody += '<td class="style5"><a href="?curdoc=candidate/candidate_info&uniqueID=' + uniqueID + '" class="style4" target="_blank">' + firstName + '</a></td>';
 				tableBody += '<td class="style5">' + email + '</td>';
 				tableBody += '<td class="style5">' + sex + '</td>';
