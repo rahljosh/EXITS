@@ -200,8 +200,6 @@
     <!--- Mail Tracking List --->
     <cfif VAL(FORM.submitted)>
 
-
-
         <table cellpadding="4" cellspacing="0" align="center" class="section" width="95%">
             
             
@@ -228,7 +226,7 @@
 
 	            	<cfloop query="qGetTrackingResults">
 	              		<tr <cfif currentRow % 2 EQ 0>class="rowOff"<cfelse>class="rowOn"</cfif>>
-	                        <td class="style5">#getVerification.verificationReceivedDisplay#</td>
+	                        <td class="style5">#ds2019_date#</td>
 	                        <td class="style5">#tracking#</td>
 	                        <td class="style5">#DateFormat(date, 'mm/dd/yyyy')#</td>
 	                        <td class="style5">$#extra_cost#</td>
