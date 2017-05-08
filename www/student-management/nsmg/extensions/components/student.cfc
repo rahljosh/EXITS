@@ -34,7 +34,7 @@
 			name="qGetStudentByID" 
 			datasource="#APPLICATION.DSN#">
                 SELECT
-					*, smg_student_app_status_type.shortdesc
+					*, smg_student_app_status_type.statusdesc
                 FROM 
                     smg_students
                 LEFT JOIN smg_student_app_status_type on smg_student_app_status_type.typeid = smg_students.app_current_status
@@ -4633,7 +4633,8 @@
             	
 				// PHP Student - Email PHP
 				flightInfoLink = 'http://www.phpusa.com/internal/index.cfm?curdoc=student/student_info&unqid=#qGetStudentFullInformation.uniqueID#';
-                flightEmailTo = APPLICATION.EMAIL.PHPContact;				
+                flightEmailTo = APPLICATION.EMAIL.PHPContact;
+                flightEmailCC = 'chris@phpusa.com';				
 
 			} else if ( ARGUMENTS.sendEmailTo EQ 'regionalManager' ) {
 				
