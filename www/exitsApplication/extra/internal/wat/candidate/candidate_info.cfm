@@ -21,6 +21,7 @@
     <cfparam name="FORM.hostCompanyID" default="0">
     <cfparam name="FORM.candCompID" default="0">
     <cfparam name="FORM.cancelStatus" default="">
+    <cfparam name="FORM.cancelation_fee" default="">
     
     <cfajaxproxy cfc="extensions.components.hostCompany" jsclassname="HCComponent">
     
@@ -444,6 +445,11 @@
 			$("#divCancelation").slideDown(1000);
 			if ( $("#cancel_date").val() == '' ) {
 				$("#cancel_date").val(getCurrentDate());
+			}
+			if ($("#ds2019").val() != '') {
+				$("#cancellationFeeDiv").show();
+			} else {
+				$("#cancellationFeeDiv").hide();
 			}
 		} else {			
 			$("#cancel_date").val("");
@@ -1769,7 +1775,7 @@
                                                 <td colspan="3" class="style2" bgcolor="##8FB6C9">&nbsp;:: Cancelation	</td>
                                             </tr>
                                             <tr>
-                                                <td width="12%" class="style1"><strong>Date: </strong></td>
+                                                <td width="12%" class="style1" align="right"><strong>Date: </strong></td>
                                                 <td colspan="2" class="style1">
                                                     <span class="readOnly">#dateFormat(qGetCandidate.cancel_date, 'mm/dd/yyyy')#</span>
                                                     <input type="text" name="cancel_date" id="cancel_date" class="style1 editPage datePicker"value="#dateFormat(qGetCandidate.cancel_date, 'mm/dd/yyyy')#">
@@ -1779,10 +1785,32 @@
                                                 <td class="style1" align="right"><strong>Reason:</strong></td>
                                                 <td class="style1">
                                                     <span class="readOnly">#qGetCandidate.cancel_reason#</span>
+                                                    <select name="cancel_reason_options" id="cancel_reason_options" class="editPage" onchange="setCancelationReason()">
+                                                    	<option value="Visa denial" <cfif qGetCandidate.cancel_reason EQ 'Visa denial'> selected</cfif>> Visa denial</option>
+                                                    	<option value="Withdrawal" <cfif qGetCandidate.cancel_reason EQ 'Withdrawal'> selected</cfif>>Withdrawal</option>
+                                                    	<option value="Other" <cfif qGetCandidate.cancel_reason NEQ 'Withdrawal' AND qGetCandidate.cancel_reason NEQ 'Visa denial'> selected</cfif> >Other</option>
+                                                    </select>
                                                     <input name="cancel_reason" id="cancel_reason" type="text" class="style1 editPage xLargeField" value="#qGetCandidate.cancel_reason#">
                                                 </td>								
                                             </tr>
-                                        </table>	
+										</table>
+
+
+										<div id="cancellationFeeDiv" <cfif qGetCandidate.status EQ 'canceled' AND LEN(qGetCandidate.ds2019)> style="display:block;" <cfelse> style="display:none" </cfif>>
+											<table width="100%" cellpadding="4" cellspacing="0" border="0">
+	                                            <tr>
+	                                                <td width="12%" class="style1" align="right"><strong>Fee:</strong></td>
+	                                                <td class="style1">
+	                                                    <span class="readOnly">#qGetCandidate.cancellation_fee#</span>
+	                                                    <select name="cancellation_fee" id="cancellation_fee" class="editPage">
+	                                                    	<option value="" <cfif qGetCandidate.cancellation_fee EQ ''> selected</cfif>> Select</option>
+	                                                    	<option value="Cancellation fee applies" <cfif qGetCandidate.cancellation_fee EQ 'Cancellation fee applies'> selected</cfif>> Cancellation fee applies</option>
+	                                                    	<option value="No cancellation fee (full refund)" <cfif qGetCandidate.cancellation_fee EQ 'No cancellation fee (full refund)'> selected</cfif>>No cancellation fee (full refund)</option>
+	                                                    </select>
+	                                                </td>								
+	                                            </tr>
+	                                        </table>	
+                                        </div>
                                 
                                     </td>
                                 </tr>
@@ -3220,7 +3248,7 @@
                                             <td class="style1" align="right"><strong>Number:</strong></td>
                                             <td class="style1">
                                             	<span class="readOnly">#qGetCandidate.ds2019#</span>
-                                                <input type="text" name="ds2019" class="style1 editPage mediumField" value="#qGetCandidate.ds2019#" maxlength="20">
+                                                <input type="text" name="ds2019" id="ds2019" class="style1 editPage mediumField" value="#qGetCandidate.ds2019#" maxlength="20">
                                             </td>
                                         </tr>
                                         <tr>	
@@ -3799,6 +3827,17 @@
 			$("#ReservationDIV").css("display","block");
 		} else {
 			$("#ReservationDIV").css("display","none");
+		}
+	}
+
+	function setCancelationReason() {
+		//console.log($("#cancel_reason_options").val());
+		if ($("#cancel_reason_options").val() != 'Other') {
+			$("#cancel_reason").val($("#cancel_reason_options").val());
+			$("#cancel_reason").hide();
+		} else {
+			$("#cancel_reason").val('');
+			$("#cancel_reason").show();
 		}
 	}
 </script>

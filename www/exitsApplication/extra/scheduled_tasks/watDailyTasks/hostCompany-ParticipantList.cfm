@@ -108,15 +108,13 @@
 
 		<cfscript >
 			to_email = email;
-			bcc_email = 'support@csb-usa.com';
 
 			APPLICATION.CFC.email.sendEmail(
 				emailTo=to_email,
-				emailBcc=bcc_email,
 				companyID=companyID,
 				emailSubject='#replace(getEmail.subject, "*2016*", year(now()))#',
 				displayEmailLogoHeader=1,
-				emailMessage='#emailMessage#'
+				emailMessage='#replace(emailMessage, "*2016*", year(now()))#'
 			);
 
 			APPLICATION.CFC.HOSTCOMPANY.setEmailTracking(
