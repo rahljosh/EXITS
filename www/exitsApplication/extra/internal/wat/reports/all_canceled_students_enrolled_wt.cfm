@@ -54,6 +54,8 @@
                 ec.enddate,
                 ec.intrep, 
                 ec.wat_placement,
+                ec.cancel_date,
+                ec.cancel_reason,
                 ehc.name,                 
                 u.businessName
             FROM extra_candidates ec
@@ -305,6 +307,8 @@
                     <th align="left" class="#tableTitleClass#">Placement Information</th>
                     <th align="left" class="#tableTitleClass#">DS-2019</th>
                     <th align="left" class="#tableTitleClass#">Option</th>
+                    <th align="left" class="#tableTitleClass#">Cancelation Date</th>
+                    <th align="left" class="#tableTitleClass#">Cancelation Reason</th>
                 </tr>
                 <cfif ListFind("2,3", FORM.printOption)>
                     <tr>
@@ -324,6 +328,8 @@
                         <td class="style1">#qTotalPerAgent.name#</td>
                         <td class="style1">#qTotalPerAgent.ds2019#</td>
                         <td class="style1">#qTotalPerAgent.wat_placement#</td>
+                        <td class="style1">#DateFormat(qTotalPerAgent.cancel_date, 'mm/dd/yyyy')#</td>
+                        <td class="style1">#qTotalPerAgent.cancel_reason#</td>
                     </tr>
                 </cfloop>        
             </table>

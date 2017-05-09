@@ -76,6 +76,8 @@
                 c.enddate, 
                 c.wat_placement, 
                 c.status,
+                c.cancel_date,
+                c.cancel_reason,
                 u.businessname,
                 country.countryname
             FROM   
@@ -270,6 +272,8 @@
                     <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">SSN</Td>
                     <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Intl. Rep.</td>
                     <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Option</td>
+                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Cancelation Date</td>
+                    <td align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Cancelation Reason</td>
                 </tr>
                 <cfloop query="qTotalPerHostCompany">
                     <tr <cfif qTotalPerHostCompany.currentRow mod 2>bgcolor="##E4E4E4"</cfif> >
@@ -283,6 +287,8 @@
                         <td><span class="style1">#qTotalPerHostCompany.ssn#</span></td>
                         <td><span class="style1">#qTotalPerHostCompany.businessname#</span></td>
                         <td><span class="style1">#qTotalPerHostCompany.wat_placement#</span></td>
+                        <td><span class="style1">#dateformat(qTotalPerHostCompany.cancel_date, 'mm/dd/yyyy')#</span></td>
+                        <td class="style1">#qTotalPerHostCompany.cancel_reason#</td>
                     </tr>
                 </cfloop>
 
