@@ -70,6 +70,7 @@
                 c.wat_placement,
                 c.startDate,
                 c.ds2019,
+                c.email,
                 ehc.name AS hostCompanyName,
                 country.countryname
             FROM   
@@ -99,6 +100,7 @@
             AND 
                 c.status != <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
            
+           
            <cfif VAL(FORM.userID)> 
                 AND
                     c.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.userID#">                               
@@ -111,6 +113,7 @@
         <cffunction name="filterGetAllCandidates" hint="Gets total by Host Company">
         	<cfargument name="placementType" default="" hint="Placement Type is not required">
             <cfargument name="intRep" default="0" hint="intRep is not required">
+            <cfargument name="isEmail" default="0" hint="intRep is not required">
             
             <cfquery name="qFilterGetAllCandidates" dbtype="query">
                 SELECT
@@ -315,12 +318,13 @@
                     </tr>
                     <tr>
                         <td width="5%" align="left" bgcolor="4F8EA4" class="#tableTitleClass#">ID</Td>
-                        <td width="15%" align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Last Name</Td>
-                        <td width="15%" align="left" bgcolor="4F8EA4" class="#tableTitleClass#">First Name</Td>
-                        <td width="15%" align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Country</td>
-                        <td width="15%" align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Start Date</td>
+                        <td width="10%" align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Last Name</Td>
+                        <td width="10%" align="left" bgcolor="4F8EA4" class="#tableTitleClass#">First Name</Td>
+                        <td width="10%" align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Country</td>
+                        <td width="15%" align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Email</td>
+                        <td width="10%" align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Start Date</td>
                         <td width="15%" align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Host Company</td>
-                        <td width="35%" align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Flight Information</td>
+                        <td width="25%" align="left" bgcolor="4F8EA4" class="#tableTitleClass#">Flight Information</td>
                     </tr>
                     <cfloop query="qTotalPerIntlRep">
                         <cfscript>
@@ -333,6 +337,7 @@
                             <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerIntlRep.uniqueID#" target="_blank" class="style4">#qTotalPerIntlRep.lastname#</a></td>
                             <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerIntlRep.uniqueID#" target="_blank" class="style4">#qTotalPerIntlRep.firstname#</a></td>
                             <td><span class="style1">#qTotalPerIntlRep.countryname#</span></td>
+                            <td><span class="style1">#qTotalPerIntlRep.email#</span></td>
                             <td><span class="style1">
                             	<cfif qTotalPerIntlRep.ds2019 is ''>
                                 	Awaiting DS-2019
