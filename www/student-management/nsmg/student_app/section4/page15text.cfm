@@ -20,17 +20,11 @@
         	studentid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.studentid#">
     </cfquery>
 	
-    <cfif client.companyid eq 14 or client.companyid eq 15>
+    <cfif client.companyid eq 14>
     	<cfset progDesig = "F-1">
     <cfelse>
     	<cfset progDesig = "J-1">
     </cfif>
-    
-    <cfif client.companyid eq 15>
-    	<cfset companyName = "DASH, Inc.">
-	<cfelse>
-    	<cfset companyName = "International Student Exchange, Inc.">
-	</cfif>
     
 	<cfparam name="subject" default="son/daughter">
 	<cfparam name="subjectivePronoun" default="he/she">
@@ -127,12 +121,11 @@ The Exchange Student will abide by the federal, state, and local laws of the Uni
 <p>The Exchange Student and his Parents acknowledge that DMD/PHP reserves the right to dismiss any student who fails to uphold any and all of the rules listed above, detailed in the student handbook, or detailed in any government or industry regulation. DMD/PHP also reserves the right to dismiss students for other inappropriate behaviors and/or actions not explicitly stated in the rules above or student handbook, that in DMD/PHP’s reasonable judgment negatively impact the host family, community or program. In the event that a student is dismissed from the program, the parent or natural guardians are responsible for all additional expenses incurred above those of the regular program costs. In the case of early dismissal, program fees will not be reimbursed.</p>
 <p>The Exchange Student and his Parents acknowledge that DMD/PHP is not acting in the capacity of in loco parentis with respect to you, and that your natural parents still retain all of their rights and obligations and are expected to maintain regular and frequent (once or twice per month) contact with you telephonically, electronically or in person (if possible, after five months of your program start date).</p>
 </cfsavecontent>
-
 <!--- Public High School Agreement --->
 <cfsavecontent variable="publicAgreement">
     <p style="font-size:10px; padding-left:10px;">
         In the City of #cityInfo#, country of #countryInfo#, on the #dayInfo# day of #monthInfo# in the year of #yearInfo#, I/We the undersigned parents of #studentInfo# my/our #subject#, 
-        and I, the "Exchange Student", understand and agree that this agreement shall constitute a binding contract between the undersigned and "#client.companyshort#". "#client.companyshort#" is defined to include: #companyName#, its affiliates, and their owners, directors, officers, and employees.
+        and I, the "Exchange Student", understand and agree that this agreement shall constitute a binding contract between the undersigned and "#client.companyshort#". "#client.companyshort#" is defined to include: International Student Exchange, Inc., its affiliates, and their owners, directors, officers, and employees.
     </p>
     
     <ol style="font-size:10px; padding-right:10px;">
@@ -297,6 +290,93 @@ The Exchange Student will abide by the federal, state, and local laws of the Uni
     </ol>    
 </cfsavecontent>
 
+
+<!--- DASH Agreement --->
+<cfsavecontent variable="dashAgreement">
+    <p style="font-size:10px; padding-left:10px;">
+        In the City of #cityInfo#, country of #countryInfo#, on the #dayInfo# day of #monthInfo# in the year of #yearInfo#, I/We the undersigned parents of #studentInfo# my/our #subject#, 
+        and I, the "Exchange Student", understand and agree that this agreement shall constitute a binding contract between the undersigned and "#client.companyshort#". "#client.companyshort#" is defined to include: International Student Exchange, Inc., its affiliates, and their owners, directors, officers, and employees.
+    </p>
+    
+    <ol style="font-size:10px; padding-right:10px;">
+    
+        <li>
+          	The Exchange Student will accept placement with a family of any race, creed, color, or family composition. Live as a member of the host family, respect the host family and their rules and customs, and accept the responsibilities given to the student.  If the student is not present in the host family home for any meal, they are responsible for providing it themselves.  
+        </li>
+        
+        <li>
+           The Exchange Student will abide by the federal, state, and local laws of the United States and any state, city, town, county or other jurisdictional region.  Under these laws, consumption of alcoholic beverages by anyone under the age of 21, and the use or possession of illegal or non-prescription drugs, and the use of tobacco product by anyone under the age of 18 is prohibited.  </u></b>
+        </li>
+        
+        <li>
+           	The students have the ability to travel and receive visits, as long as it does not interfere with academics and school attendance.  The host family is NOT responsible for handling any travel arrangements for the student or the student’s visitors.  Visitors must book a hotel/motel.  The student should coordinate with the host family and make sure they know the student’s location and contact information while the student is traveling or staying with visitors at a location other than the host family’s home.  All independent travel must be approved by the #client.companyshort# National Office 15 days in advance by submitting a Travel Release Form, with signatures from the host family, student and school (if missing classes).
+        </li>
+        
+        <li>
+          	The Exchange Student will have access to a minimum of $300 U.S. dollars per month to cover personal items, non-tuition school fees such as books, laptop, athletic fees, field trips, lunches and social activities.
+        </li>
+        
+        <li>
+           	Disrespectful or threatening comments made in person or electronically, as well as any physical altercations with host family members or peers will be taken very seriously and can lead to dismissal. Inappropriate behavior including sexting or viewing pornography can also lead to dismissal.
+        </li>
+        
+        <li>
+           	Students must obey the rules and regulations of the high school they attend.  Attendance at school is mandatory, unless a student is ill or has received DASH approval.  #client.companyshort# students are required to enroll in a full course load, including English.  Students should maintain a minimum of a “C” average in each class.  Failure to do so, and/or repeated complaints from the school regarding poor attitude or behavior, are grounds for dismissal from the DASH program.  The Exchange Student may be required to hire tutors, at their own expense, if in the opinion of #client.companyshort# and/or school officials, their language or academic skills are inadequate for the program.
+        </li>
+        
+        <li>The Exchange Student understands that driving or purchasing a motorized vehicle (car, motorcycle, boat, or any other vehicle requiring a driver's license) is prohibited. Driving is permitted with the instructor of an official driver's education course and only during class hours. This is solely for the purpose of obtaining a driving license and does not allow the student to drive after a license is obtained.</li>
+        
+        <li>#client.companyshort# strongly recommends that natural parents NOT accompany their student to the U.S., or at any time from the beginning of the program through the first 8 weeks minimum, since this can jeopardize the adaption process and therefore can have a severe negative impact on the student’s success while on the program.</li>
+        
+        <li>The Exchange Student may not initiate any life changing decisions or actions while on the program, including changing religions, pregnancy, adoption or marriage.  American friendships are encouraged, however intimate relationships that include sexual involvement are not allowed.
+        </li>
+        
+        <li>The Exchange Student will refrain from obscene, indecent, violent or disorderly conduct while on the program.  Exchange Students shall also refrain from perpetrating any form of harassment – including but not limited to: violent threats, physical abuse, sexual harassment, harassment based on sexual orientation, gender, race, religion or any other factor – of host family members, DASH staff, fellow students, school staff, members of the community or any other individuals.  Exchange Students shall not engage in any self-endangering behaviors.  In addition, students shall refrain from any other conduct likely to bring the U.S. State Department or DASH into notoriety or disrepute.
+        </li>
+        
+        <li>The Exchange Student and his Parents acknowledge that #client.companyshort# reserves the right to dismiss any student who fails to uphold any and all of the rules listed above, detailed in the student handbook, or detailed in any government or industry regulation. DASH also reserves the right to dismiss students for other inappropriate behaviors and/or actions not explicitly stated in the rules above or student handbook, that in #client.companyshort#'s reasonable judgment negatively impact the host family, community or program. In the event that a student is dismissed from the program, the parent or natural guardians are responsible for all additional expenses incurred above those of the regular program costs. In the case of early dismissal, program fees will not be reimbursed.
+        </li>
+        
+      </ol>
+       
+       <p>The Exchange Student and his Parents acknowledge that #CLIENT.companyshort# is not acting in the capacity of in loco parentis with respect to you, and that your natural parents still retain all of their rights and obligations and are expected to maintain regular and frequent (once or twice per month) contact with you via phone, email, social media or VOIP.</p>
+      
+        
+ 
+</cfsavecontent>
+    
+    
+    <cfsavecontent variable="ukAgreement">
+    <p style="padding-left:10px;">
+        In the City of #cityInfo#, country of #countryInfo#, on the #dayInfo# day of #monthInfo# in the year of #yearInfo#, I/We the undersigned parents of #studentInfo# my/our #subject#, 
+        and I, the student applicant, agree to the following terms and conditions. The above-named student is applying to participate in a cultural exchange program sponsored by the exchange 
+        organization and we give our #subject# permission to participate in this program.
+    </p>
+    
+    <ol>
+    
+	  	<li>We understand the program is designed to increase understanding among people of the world and is not to be used for the sole purpose of foreign language training. We have discussed the importance of good behavior with our son/daughter and he/she understands the significance of acting in a manner which will reflect well on our family and our country.
+		<li>	We understand and agree that the enrollment of our son/daughter in the exchange program is primarily for the cultural exchange and that a diploma or graduation is not guaranteed of any student.
+		<li>	Upon receipt of the Student Handbook, we all agree to read and discuss its contents. Should we not understand any part thereof, we will contact our international representative for clarification before the program participant leaves our country. We understand that problems are to be resolved first by discussion between the host family and the program participant, then with the assistance of the exchange organization. The program participant is not to discuss problems of a personal nature with the members of the community or school. We understand the program participant will have responsibilities as a member of the family including attending religious services. Although not required, the exchange organization strongly recommends they do so as part of family life.
+		<li>	We agree that the program participant will try to adjust, will obey the disciplinary rules of the host family and school, will give respect and obedience to the host family and school officials, and will keep communications open at all times.
+		<li>	We understand and agree that the program participant will not take any unprescribed drugs, drink alcoholic beverages, possess false identification, drive any motorized vehicle, or participate in any dangerous sports such as hang gliding, bungee jumping, etc. If the program participant does any of the above, we understand that he/she may be immediately returned home at our family's expense, and we accept full responsibility for any situation arising from his/her involvement with the above.
+		<li>	We give permission for our son/daughter to use the internet but also understand that prolonged or inappropriate use of the internet, including email or chat rooms, may result in a first warning and then program termination.
+		<li>	We agree that the program participant may not take any action that may change the nature of his/her life, i.e. getting married, changing religions.
+		<li>	We understand and agree that the program participant will be subject to all the laws of the host country. In the case of serious infraction of the rules and requirements governing the conduct of the program participant, or in the case of extreme homesickness, or poor adjustment to the host family or school, the participant may be returned home immediately at the discretion of the exchange organization's Executive Committee and at the expense of our family.
+		<li>	We understand and agree that the program participant may not drive any motorized vehicle that requires an operator's license, nor be a pilot or passenger in a private plane. A student is allowed to register for school­ sponsored driver education classes. If a license is obtained through this program, the license must be immediately given to the exchange organization's local representative. It will be returned to the student on the day of departure for home.
+		<li>	We understand that as natural parents we are responsible for providing funds necessary for day to day expenses for our child. The suggested amount is approximately $350.00 a month.
+		<li>	We agree to pay the early return of our child if it is deemed necessary for medical reasons after consultation between ourselves, program personnel, and the designated medical authorities.
+		<li>	We agree to pay for any medical and dental bills not covered by the accident and sickness insurance. We agree to pay for any deductible amount due that the insurance policy might not cover.
+		<li>	We agree that the program participant is to possess a return flight ticket from the airport located nearest the host family to the participant's country.
+		<li>	We agree to pay for any and all telephone calls made by the program participant including those calls made which might appear on the host family's telephone bill after the departure of the program participant.
+		<li>	We give the exchange organization the right to use the participant's name and photograph for reproduction in any medium for the purposes of publication, advertising, trade, display, or editorial use.
+		<li>	We agree to attend meetings that are scheduled to prepare us for the exchange experience.
+		<li>	We confirm that all statements made and all information in this application are true and will be relied upon by the school district and supporting organizations. Any inaccuracy in this application is grounds to terminate the agreement and send the students home (without any refund and at the parents' expense).
+
+        
+    </ol>    
+</cfsavecontent>
+    
 <table width="670px" cellpadding=2 cellspacing=0 align="center">
 	<tr>
 		<td style="text-align:justify;">
@@ -307,6 +387,10 @@ The Exchange Student will abide by the federal, state, and local laws of the Uni
                 #canadaAgreement#
             <cfelseif ListFind("5", qGetStudentInfo.app_indicated_program)>
             	#phpAgreement#
+            <cfelseif ListFind("15", client.companyid)>
+            	#dashAgreement#
+            <cfelseif ListFind("16", client.companyid)>
+            	#ukAgreement#
             <cfelse>
 		        <!--- Public High School Agreement --->
                 #publicAgreement#
