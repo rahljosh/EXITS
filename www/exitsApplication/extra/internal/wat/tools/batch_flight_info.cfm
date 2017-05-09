@@ -81,7 +81,9 @@
                             (NOT IsDate(data.depart_date)) OR
                             (NOT isValid('time', data.depart_time)) OR
                             (NOT isValid('time', data.arrive_time)) OR 
-                            (data.overnight_time NEQ 'Yes' AND data.overnight_time NEQ 'No')>
+                            (data.overnight_time NEQ 'Yes' AND data.overnight_time NEQ 'No') OR
+                            (Len(data.arrive_airport_code) GT 10) OR 
+                            (Len(data.depart_airport_code) GT 10)>
 
                         <cfscript>
                             ArrayAppend(Errors.Messages, "<br /><strong>Errors for Candidate  " & data.candidate_id  & "</strong>" );
@@ -131,6 +133,25 @@
                         </cfif>
                         <cfscript>
                             ArrayAppend(Errors.Messages, "- arrive_time, wrong time format (HH-MM 24h format): <strong>" & data.arrive_time  & "</strong>" );
+                        </cfscript>
+                    </cfif>
+
+
+                    <cfif Len(data.depart_airport_code) GT 10>
+                        <cfif data.depart_airport_code EQ ''>
+                            <cfset data.depart_airport_code = '<em>Empty</em>' />
+                        </cfif>
+                        <cfscript>
+                            ArrayAppend(Errors.Messages, "- depart_airport_code, can NOT be over 10 characters: <strong>" & data.depart_airport_code  & "</strong>" );
+                        </cfscript>
+                    </cfif>
+
+                    <cfif Len(data.arrive_airport_code) GT 10>
+                        <cfif data.arrive_airport_code EQ ''>
+                            <cfset data.arrive_airport_code = '<em>Empty</em>' />
+                        </cfif>
+                        <cfscript>
+                            ArrayAppend(Errors.Messages, "- arrive_airport_code, can NOT be over 10 characters: <strong>" & data.arrive_airport_code  & "</strong>" );
                         </cfscript>
                     </cfif>
 
@@ -312,6 +333,7 @@
                 * Values for <strong>type</strong>: Arrival / Departure<br />
                 * Date format for  <strong>depart_date</strong>: yyyy-mm-dd<br />
                 * Time format for <strong>depart_time</strong> and <strong>arrive_time</strong>: hh:mm <em>24h format</em><br />
+                * Values for  <strong>depart_airport_code</strong> and <strong>arrive_airport_code</strong> can NOT be over 10 characters<br />
                 * Values for <strong>overnight_time</strong>: Yes / No
                 </p>
 

@@ -736,6 +736,15 @@
 					candidateID=newRecord.GENERATED_KEY,
 					companyID=ARGUMENTS.companyID
 				);
+
+				intlRepEmail = APPLICATION.CFC.USER.getUserByID(userID=ARGUMENTS.intlRepID).email;
+
+				APPLICATION.CFC.EMAIL.sendEmail(
+					emailTo=APPLICATION.CFC.UDF.removeAccent(TRIM(intlRepEmail)),
+					emailTemplate='newAccountOfficeIntRep',
+					candidateID=newRecord.GENERATED_KEY,
+					companyID=ARGUMENTS.companyID
+				);
 				
 			}
 			

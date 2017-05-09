@@ -63,3 +63,11 @@
 <cfinclude template="sendEmails.cfm">
 <h1>Candidate Emails</h1>
 
+
+<!--- Cancellation Emails --->
+<cfinclude template="canceledCandidates.cfm">
+<h1>Cancellation Emails</h1>
+
+<!--- Cancellation Emails  --->
+<cfinclude template="canceledCandidatesHC.cfm">
+<h1>Cancellation Emails HC</h1>
