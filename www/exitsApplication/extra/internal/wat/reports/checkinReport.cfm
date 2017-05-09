@@ -157,7 +157,7 @@
             
             	<cfquery name="qGetCandidates" datasource="#APPLICATION.DSN.Source#">
                 	SELECT ec.uniqueID, ec.candidateID, ec.lastName, ec.firstName, ec.email, ec.sex, ec.hostcompanyid, ec.startdate, 
-                            ec.enddate, ec.ds2019, ec.visaInterview, ec.watDateCheckedIn, ec.arrival_address, ec.arrival_apt_number, 
+                            ec.enddate, ec.ds2019, ec.visaInterview, ec.watDateCheckedIn, ec.arrival_address, ec.arrival_address_2, ec.arrival_apt_number, 
                             ec.arrival_apt_number, ec.arrival_city, ec.arrival_state, ec.arrival_zip, eh.name as hostcompanyname
                     FROM extra_candidates ec
                     LEFT JOIN extra_hostcompany eh on eh.hostcompanyid = ec.hostcompanyid
@@ -213,7 +213,7 @@
                                     <cfelse>
                                         -
                                     </cfif></td>
-                                <td class="style1">#arrival_address#<cfif arrival_apt_number NEQ ''>, #arrival_apt_number#</cfif> - #arrival_city# <cfloop query="qGetStateList">
+                                <td class="style1">#arrival_address#<cfif arrival_apt_number NEQ ''>, #arrival_apt_number#</cfif> <cfif arrival_address_2 NEQ ''>, #arrival_address_2#</cfif> - #arrival_city# <cfloop query="qGetStateList">
                                                         <cfif qGetStateList.id EQ qGetCandidates.arrival_state>
                                                             #state#
                                                         </cfif>

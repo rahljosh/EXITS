@@ -19,6 +19,7 @@
     <cfparam name="FORM.intlRepID" default="0"> <!--- 0 for all reps --->
     <cfparam name="FORM.evaluationStatus" default="all"> <!--- all, complete, missing, (1-4 -> missing specific evaluation) --->
     <cfparam name="FORM.studentStatus" default="all">
+    <cfparam name="FORM.showMissingVisaDate" default="1" />
     
     <!--- Get the list of programs --->
     <cfscript>
@@ -42,7 +43,8 @@
                 WHERE  ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.programID)#">
                     AND ec.visaInterview IS NULL
                     AND ec.ds2019 <> ''
-                    AND u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intlRepID#">
+                    AND ec.status = 1
+                    AND u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.intlRepID)#">
                 GROUP BY ec.candidateID
                 
             </cfquery>
@@ -86,6 +88,7 @@
                         AND ec.visaInterview IS NULL
                         AND ec.ds2019 <> ''
                         AND u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetIntlRepList.userID#">
+                        AND ec.status = 1
                     GROUP BY ec.candidateID
                 </cfquery>
 
@@ -137,7 +140,7 @@
             FROM extra_candidates ec
             INNER JOIN smg_users u ON ec.intRep = u.userID
             WHERE ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
-                
+                AND ec.status = <cfqueryparam cfsqltype="cf_sql_varchar" value="1">
                 AND ec.visaInterview IS NOT NULL
                 <cfif VAL(FORM.intlRepID)>
                     AND u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.intlRepID#">
@@ -153,7 +156,7 @@
     		FROM smg_users u
     		INNER JOIN extra_candidates ec ON ec.intRep = u.userID
     			AND ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
-    			
+    			AND ec.status = <cfqueryparam cfsqltype="cf_sql_varchar" value="1">
     		WHERE u.usertype = <cfqueryparam cfsqltype="cf_sql_integer" value="8">
     		<cfif CLIENT.userType EQ 8>
     			AND u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
@@ -193,6 +196,7 @@
 
     $( document ).ready(function() {
         //toggleEmailDiv();
+        setVisaMissingDate();
         
     });
 
@@ -224,7 +228,7 @@
             </tr>
             <cfif CLIENT.userType LTE 4>
                 <tr valign="middle">
-                    <td align="right" valign="middle" class="style1"><b>Intl. Rep.:</b> </td>
+                    <td align="right" valign="middle" class="style1" width="25%"><b>Intl. Rep.:</b> </td>
                     <td valign="middle">
                         <select name="intlRepID" id="intlRepID" class="style1">
                             <option value="All">---  All International Representatives  ---</option>
@@ -236,15 +240,30 @@
                 </tr>
             </cfif>
             <tr>
-                <td align="right" class="style1"><b>Email Int. Rep.: </b></td>
+                <td align="right" class="style1"><b>Show Missing Visa Interview Date Only: </b></td>
+                <td  class="style1"> 
+                    <input type="radio" name="showMissingVisaDate" id="showMissingVisaDate1" value="1" onclick="setVisaMissingDate(1)" <cfif FORM.showMissingVisaDate EQ 1> checked </cfif> > <label for="showMissingVisaDate1">No</label>
+                    <input type="radio" name="showMissingVisaDate" id="showMissingVisaDate2" value="2" onclick="setVisaMissingDate(2)" <cfif FORM.showMissingVisaDate EQ 2> checked </cfif> > <label for="showMissingVisaDate2">Yes</label> 
+                </td>
+            </tr>
+            </table>
+
+            <div id="emailOptionDiv" style="display: none">
+            <table width="95%" cellpadding="4" cellspacing="0" border="0" align="center">
+            <tr>
+                <td align="right" class="style1" width="25%"><b>Email Int. Rep.: </b></td>
                 <td  class="style1"> 
                     <input type="radio" name="emailOption" id="emailOption1" value="1" <cfif FORM.emailOption EQ 1> checked </cfif> > <label for="emailOption1">No</label>
                     <input type="radio" name="emailOption" id="emailOption2" value="2" <cfif FORM.emailOption EQ 2> checked </cfif> > <label for="emailOption2">Yes</label> 
                     <span style="color:red; display:none" id="emailSentDiv">- Email sent.</span>
                 </td>           
             </tr>
+            </table>
+            </div>
+
+            <table width="95%" cellpadding="4" cellspacing="0" border="0" align="center">
             <tr>
-                <td valign="middle" align="right" class="style1"><b>Program:</b></td>
+                <td valign="middle" align="right" class="style1" width="25%"><b>Program:</b></td>
                 <td> 
                     <select name="programID" class="style1">
                         <option value="0">Select a Program</option>
@@ -263,15 +282,21 @@
                     <input type="radio" name="printOption" id="printOption3" value="3" <cfif FORM.printOption EQ 3> checked </cfif> > <label for="printOption3">Print (PDF)</label>
                 </td>           
             </tr>
+            </table>
 
+            <div id="orderOptionDiv">
+            <table width="95%" cellpadding="4" cellspacing="0" border="0" align="center">
             <tr>
-                <td align="right" class="style1"><b>Order By: </b></td>
+                <td align="right" class="style1" width="25%"><b>Order By: </b></td>
                 <td  class="style1"> 
                     <input type="radio" name="orderOption" id="orderOption1" value="1" <cfif FORM.orderOption EQ 1> checked </cfif> > <label for="orderOption1">Int. Representatives</label>
                     <input type="radio" name="orderOption" id="orderOption2" value="2" <cfif FORM.orderOption EQ 2> checked </cfif> > <label for="orderOption2">Date</label> 
                 </td>           
             </tr>
+            </table>
+            </div>
 
+            <table width="95%" cellpadding="4" cellspacing="0" border="0" align="center">
             <tr>
                 <td colspan=2 align="center"><br />
                     <input type="submit" value="Generate Report" class="style1" />
@@ -301,45 +326,89 @@
             <cfif FORM.orderOption EQ 2>
 
                 <cfloop query="qGetVisaInterviewDates">
+
+                    <cfif FORM.showMissingVisaDate EQ 2>
+
+                        <cfquery name="qGetCandidates" datasource="#APPLICATION.DSN.Source#">
+                            SELECT ec.uniqueID, ec.candidateID, ec.lastName, ec.firstName, ec.email, ec.sex, ec.hostcompanyid, ec.startdate, 
+                                    ec.enddate, ec.ds2019, ec.visaInterview, eh.name as hostcompanyname, u.userID, u.businessname
+                            FROM extra_candidates ec
+                            LEFT JOIN extra_hostcompany eh on eh.hostcompanyid = ec.hostcompanyid
+                            LEFT JOIN smg_users u on u.userID = ec.intRep
+                            WHERE ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.programID)#">
+                                AND ec.visaInterview IS NULL
+                                AND ec.ds2019 <> ''
+                                AND ec.status = 1
+                                <Cfif VAL(FORM.intlRepID)>
+                                    AND u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.intlRepID)#">
+                                </Cfif>
+                            GROUP BY ec.candidateID
+                            ORDER BY u.userID
+                        </cfquery>
+
+                    <cfelse>
+
+                        <cfquery name="qGetCandidates" datasource="#APPLICATION.DSN.Source#">
+                            SELECT ec.uniqueID, ec.candidateID, ec.lastName, ec.firstName, ec.email, ec.sex, ec.hostcompanyid, ec.startdate, 
+                                    ec.enddate, ec.ds2019, ec.visaInterview, eh.name as hostcompanyname, u.userID, u.businessname
+                            FROM extra_candidates ec
+                            LEFT JOIN extra_hostcompany eh on eh.hostcompanyid = ec.hostcompanyid
+                            LEFT JOIN smg_users u on u.userID = ec.intRep
+                            WHERE ec.visaInterview = <cfqueryparam cfsqltype="cf_sql_date" value="#DateFormat(qGetVisaInterviewDates.visaInterview, 'yyyy-mm-dd')#">
+                                AND ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.programID)#">
+                                <Cfif VAL(FORM.intlRepID)>
+                                    AND u.userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.intlRepID)#">
+                                </Cfif>
+                                AND ec.status = 1
+                            GROUP BY ec.candidateID
+                            ORDER BY u.userID
+                        </cfquery>
+
+                    </cfif>
                 
-                    <cfquery name="qGetCandidates" datasource="#APPLICATION.DSN.Source#">
-                        SELECT ec.uniqueID, ec.candidateID, ec.lastName, ec.firstName, ec.email, ec.sex, ec.hostcompanyid, ec.startdate, 
-                                ec.enddate, ec.ds2019, ec.visaInterview, eh.name as hostcompanyname
-                        FROM extra_candidates ec
-                        LEFT JOIN extra_hostcompany eh on eh.hostcompanyid = ec.hostcompanyid
-                        WHERE ec.visaInterview = <cfqueryparam cfsqltype="cf_sql_date" value="#DateFormat(qGetVisaInterviewDates.visaInterview, 'yyyy-mm-dd')#">
-                            AND ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.programID)#">
-                        GROUP BY ec.candidateID
-                    </cfquery>
+                    
                     
                     <cfif VAL(qGetCandidates.recordCount)>
                     
                         <cfset totalCandidatesCount = totalCandidatesCount + qGetCandidates.recordCount>
                     
-                        <table width="100%" cellpadding="4" cellspacing=0 align="center">
-                            <tr>
+                        <table width="100%" cellpadding="2" cellspacing=0 align="center">
+                            <tr style="padding:10px 0 0 4px">
                                 <td colspan="11">
+                                    <hr />
                                     <small>
                                         <strong>#DateFormat(qGetVisaInterviewDates.visaInterview, 'mm/dd/yyyy')# - Total candidates: #qGetCandidates.recordCount#</strong> 
                                     </small>
                                 </td>
                             </tr>
-                            <cfif ListFind("2,3", FORM.printOption)>
-                                <tr><td colspan="11"><img src="../../pics/black_pixel.gif" width="100%" height="2"></td></tr>
-                            </cfif>
-                            <tr>
-                                <th align="left" class="#tableTitleClass#">Date</Th>
-                                <th align="left" class="#tableTitleClass#">Candidate</Th>
-                                <th align="left" class="#tableTitleClass#">Sex</Th>
-                                <th align="left" class="#tableTitleClass#">Start Date</Th>
-                                <th align="left" class="#tableTitleClass#">End Date</Th>
-                                <th align="left" class="#tableTitleClass#">Placement Information</th>
-                                <th align="left" class="#tableTitleClass#">DS-2019</th>
-                            </tr>
-                            <cfif ListFind("2,3", FORM.printOption)>
-                                <tr><td colspan="11"><img src="../../pics/black_pixel.gif" width="100%" height="2"></td></tr>
-                            </cfif>
+                            <cfset currentIntRep = 0/>
                             <cfloop query="qGetCandidates">
+                                <cfif qGetCandidates.userID NEQ currentIntRep >
+                                    <cfset currentIntRep = qGetCandidates.userID/>
+                                    <tr style="padding: 0 0 4px 4px">
+                                        <td colspan="11">
+                                            <small>
+                                                <strong>#qGetCandidates.businessname#</strong> 
+                                            </small>
+                                        </td>
+                                    </tr>
+                                    <cfif ListFind("2,3", FORM.printOption)>
+                                        <tr><td colspan="11"><img src="../../pics/black_pixel.gif" width="100%" height="2"></td></tr>
+                                    </cfif>
+                                    <tr style="padding: 4px">
+                                        <th align="left" class="#tableTitleClass#">Date</Th>
+                                        <th align="left" class="#tableTitleClass#">Candidate</Th>
+                                        <th align="left" class="#tableTitleClass#">Sex</Th>
+                                        <th align="left" class="#tableTitleClass#">Start Date</Th>
+                                        <th align="left" class="#tableTitleClass#">End Date</Th>
+                                        <th align="left" class="#tableTitleClass#">Placement Information</th>
+                                        <th align="left" class="#tableTitleClass#">DS-2019</th>
+                                    </tr>
+                                    <cfif ListFind("2,3", FORM.printOption)>
+                                        <tr><td colspan="11"><img src="../../pics/black_pixel.gif" width="100%" height="2"></td></tr>
+                                    </cfif>
+                                </cfif>
+                            
                                 <tr <cfif qGetCandidates.currentRow mod 2>bgcolor="##E4E4E4"</cfif>>
                                     <td class="style1">
                                         #DateFormat(visaInterview,'mm/dd/yyyy')#
@@ -369,17 +438,38 @@
             <cfelseif FORM.orderOption EQ 1>
         
             	<cfloop query="qGetIntlReps">
+
+                    <cfif FORM.showMissingVisaDate EQ 2>
+
+                        <cfquery name="qGetCandidates" datasource="#APPLICATION.DSN.Source#">
+                            SELECT ec.uniqueID, ec.candidateID, ec.lastName, ec.firstName, ec.email, ec.sex, ec.hostcompanyid, ec.startdate, 
+                                    ec.enddate, ec.ds2019, ec.visaInterview, eh.name as hostcompanyname, u.userID, u.businessname
+                            FROM extra_candidates ec
+                            LEFT JOIN extra_hostcompany eh on eh.hostcompanyid = ec.hostcompanyid
+                            LEFT JOIN smg_users u on u.userID = ec.intRep
+                            WHERE ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.programID)#">
+                                AND ec.visaInterview IS NULL
+                                AND ec.ds2019 <> ''
+                                AND ec.status = 1
+                                AND ec.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(userID)#">
+                            GROUP BY ec.candidateID
+                        </cfquery>
+
+                    <cfelse>
                 
-                	<cfquery name="qGetCandidates" datasource="#APPLICATION.DSN.Source#">
-                    	SELECT ec.uniqueID, ec.candidateID, ec.lastName, ec.firstName, ec.email, ec.sex, ec.hostcompanyid, ec.startdate, 
-                                ec.enddate, ec.ds2019, ec.visaInterview, eh.name as hostcompanyname
-                        FROM extra_candidates ec
-                        LEFT JOIN extra_hostcompany eh on eh.hostcompanyid = ec.hostcompanyid
-                        WHERE ec.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(userID)#">
-                            AND ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.programID)#">
-                            AND ec.visaInterview IS NOT NULL
-                        GROUP BY ec.candidateID
-                    </cfquery>
+                    	<cfquery name="qGetCandidates" datasource="#APPLICATION.DSN.Source#">
+                        	SELECT ec.uniqueID, ec.candidateID, ec.lastName, ec.firstName, ec.email, ec.sex, ec.hostcompanyid, ec.startdate, 
+                                    ec.enddate, ec.ds2019, ec.visaInterview, eh.name as hostcompanyname
+                            FROM extra_candidates ec
+                            LEFT JOIN extra_hostcompany eh on eh.hostcompanyid = ec.hostcompanyid
+                            WHERE ec.intRep = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(userID)#">
+                                AND ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.programID)#">
+                                AND ec.visaInterview IS NOT NULL
+                                AND ec.status = 1
+                            GROUP BY ec.candidateID
+                        </cfquery>
+
+                    </cfif>
                     
                     <cfif VAL(qGetCandidates.recordCount)>
                     
@@ -541,3 +631,20 @@
     </cfif>
     
 </cfoutput>
+
+
+<script>
+
+function setVisaMissingDate() {
+    if(($('#showMissingVisaDate2').is(":checked"))) {
+        $("#orderOptionDiv").hide();
+        $("#orderOption1").attr("checked", "checked");
+        $("#emailOptionDiv").show();
+    } else {
+        $("#orderOptionDiv").show();
+        $("#emailOptionDiv").hide();
+        $("#emailOption1").attr("checked", "checked");
+    }
+}
+
+</script>

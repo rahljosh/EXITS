@@ -87,6 +87,8 @@
                 c.hostCompanyID,
                 c.wat_placement,
                 c.startDate,
+                c.ds2019,
+                c.email,
                 u.businessname,
                 country.countryname
             FROM   
@@ -307,10 +309,12 @@
                     </tr>
                     <tr style="font-weight:bold;">
                         <td width="5%" align="left" bgcolor="##4F8EA4" class="tableTitleView">ID</Td>
-                        <td width="15%" align="left" bgcolor="##4F8EA4" class="tableTitleView">Last Name</Td>
-                        <td width="15%" align="left" bgcolor="##4F8EA4" class="tableTitleView">First Name</Td>
-                        <td width="15%" align="left" bgcolor="##4F8EA4" class="tableTitleView">Country</td>
-                        <td width="20%" align="left" bgcolor="##4F8EA4" class="tableTitleView">Intl. Rep.</td>
+                        <td width="10%" align="left" bgcolor="##4F8EA4" class="tableTitleView">Last Name</Td>
+                        <td width="10%" align="left" bgcolor="##4F8EA4" class="tableTitleView">First Name</Td>
+                        <td width="10%" align="left" bgcolor="##4F8EA4" class="tableTitleView">Country</td>
+                        <td width="10%" align="left" bgcolor="##4F8EA4" class="tableTitleView">Email</td>
+                        <td width="10%" align="left" bgcolor="##4F8EA4" class="tableTitleView">Start Date</td>
+                        <td width="15%" align="left" bgcolor="##4F8EA4" class="tableTitleView">Intl. Rep.</td>
                         <td width="10%" align="left" bgcolor="##4F8EA4" class="tableTitleView">#FORM.flightType# Date</td>
                         <td width="10%" align="left" bgcolor="##4F8EA4" class="tableTitleView">#FORM.flightType# Airport</td>
                         <td width="10%" align="left" bgcolor="##4F8EA4" class="tableTitleView">#FORM.flightType# Time / Flight ##</td>
@@ -325,6 +329,14 @@
                             <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerHostCompany.uniqueID#" target="_blank" class="style4">#qTotalPerHostCompany.lastname#</a></td>
                             <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerHostCompany.uniqueID#" target="_blank" class="style4">#qTotalPerHostCompany.firstname#</a></td>
                             <td class="style1">#qTotalPerHostCompany.countryname#</td>
+                            <td class="style1">#qTotalPerHostCompany.email#</td>
+                            <td class="style1">
+							<Cfif qTotalPerHostCompany.ds2019 is ''>
+                            	Awaiting DS-2019
+                            <Cfelse>
+                            	#DateFormat(qTotalPerHostCompany.startdate,'mm/dd/yyyy')#
+                            </Cfif>
+                            </td>
                             <td class="style1">#qTotalPerHostCompany.businessName#</td>                        
                             <td colspan="3" class="style1">
                                 
@@ -349,7 +361,7 @@
                                              </tr>  
                                         </cfloop>
                                              
-                                    <cfelseif qTotalPerHostCompany.wat_placement EQ 'CSB-Placement' AND DateAdd("d", -14, qTotalPerHostCompany.startDate) LTE now() AND FORM.flightType EQ 'arrival'>
+                                    <cfelseif qTotalPerHostCompany.wat_placement EQ 'CSB-Placement' AND DateAdd("d", -14, qTotalPerHostCompany.startDate) LTE now() AND FORM.flightType EQ 'arrival'  and qTotalPerHostCompany.ds2019 is not ''>
                                         <tr>
                                             <td colspan="3" class="style1" style="color:##F00; font-weight:bold; font-size:9px;">
                                                 Alert Arrival Missing (CSB-Placement) - Program Start Date: #DateFormat(qTotalPerHostCompany.startDate, 'mm/dd/yy')#
@@ -394,11 +406,13 @@
                     </tr>
                     <tr style="font-weight:bold;">
                         <td width="5%" align="left" bgcolor="##4F8EA4" class="tableTitleView">ID</Td>
-                        <td width="15%" align="left" bgcolor="##4F8EA4" class="tableTitleView">Last Name</Td>
-                        <td width="15%" align="left" bgcolor="##4F8EA4" class="tableTitleView">First Name</Td>
-                        <td width="15%" align="left" bgcolor="##4F8EA4" class="tableTitleView">Country</td>
-                        <td width="10%" align="left" bgcolor="##4F8EA4" class="tableTitleView">#FORM.flightType# Date</td>
-                        <td width="10%" align="left" bgcolor="##4F8EA4" class="tableTitleView">#FORM.flightType# Airport</td>
+                        <td width="10%" align="left" bgcolor="##4F8EA4" class="tableTitleView">Last Name</Td>
+                        <td width="10%" align="left" bgcolor="##4F8EA4" class="tableTitleView">First Name</Td>
+                        <td width="10%" align="left" bgcolor="##4F8EA4" class="tableTitleView">Country</td>
+                        <td width="15%" align="left" bgcolor="##4F8EA4" class="tableTitleView">Email</td>
+                        <td width="10%" align="left" bgcolor="##4F8EA4" class="tableTitleView">Start Date</td>
+                        <td width="15%" align="left" bgcolor="##4F8EA4" class="tableTitleView">#FORM.flightType# Date</td>
+                        <td width="15%" align="left" bgcolor="##4F8EA4" class="tableTitleView">#FORM.flightType# Airport</td>
                         <td width="10%" align="left" bgcolor="##4F8EA4" class="tableTitleView">#FORM.flightType# Time / Flight ##</td>
                     </tr>
                     <cfloop query="qTotalPerHostCompany">
@@ -410,7 +424,15 @@
                             <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerHostCompany.uniqueID#" target="_blank" class="style4">#qTotalPerHostCompany.candidateID#</a></td>
                             <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerHostCompany.uniqueID#" target="_blank" class="style4">#qTotalPerHostCompany.lastname#</a></td>
                             <td><a href="?curdoc=candidate/candidate_info&uniqueid=#qTotalPerHostCompany.uniqueID#" target="_blank" class="style4">#qTotalPerHostCompany.firstname#</a></td>
-                            <td class="style1">#qTotalPerHostCompany.countryname#</td>                     
+                            <td class="style1">#qTotalPerHostCompany.countryname#</td> 
+                            <td class="style1">#qTotalPerHostCompany.email#</td>   
+                            <td class="style1">
+                            <Cfif qTotalPerHostCompany.ds2019 is ''>
+                                Awaiting DS-2019
+                            <Cfelse>
+                                #DateFormat(qTotalPerHostCompany.startdate,'mm/dd/yyyy')#
+                            </Cfif>
+                            </td>                  
                             <td colspan="3" class="style1">
                                 
                                 <table width="100%" cellpadding="0" cellspacing="0">
