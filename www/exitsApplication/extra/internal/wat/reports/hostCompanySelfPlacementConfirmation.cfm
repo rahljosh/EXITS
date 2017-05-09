@@ -55,7 +55,7 @@
                 ec.ds2019,
                 ec.startdate, 
                 ec.enddate,
-ec.intrep, 
+                ec.intrep, 
                 ec.wat_placement,
                 ehc.hostCompanyID,
                 ehc.authentication_secretaryOfState,
@@ -81,6 +81,7 @@ ec.intrep,
                 ehc.city,
                 s.stateName,
                 ehc.zip,
+                ecpc.selfEmailConfirmationDate,
                 <!--- Country --->
                 cl.countryName
             FROM
@@ -161,9 +162,234 @@ ec.intrep,
                 ec.candidateID            
         </cfquery>
 
+
+        <cfquery name="qGetResultsEmail" datasource="#APPLICATION.DSN.Source#">
+            SELECT 
+                ec.candidateID,
+                ec.uniqueID,
+                ec.firstname, 
+                ec.lastname, 
+                ec.sex, 
+                ec.email,
+                ec.ds2019,
+                ec.startdate, 
+                ec.enddate,
+                ec.intrep, 
+                ec.wat_placement,
+                ehc.hostCompanyID,
+                ehc.authentication_secretaryOfState,
+                ehc.authentication_departmentOfLabor,
+                ehc.authentication_googleEarth,
+                ehc.authentication_incorporation,
+                ehc.authentication_certificateOfExistence,
+                ehc.authentication_certificateOfReinstatement,
+                ehc.authentication_departmentOfState,
+                ehc.authentication_businessLicenseNotAvailable,
+                ehc.name,
+                ehc.EIN, 
+                ehc.workmensCompensation,
+                ecpc.jobID AS jobTitleID,
+                ej.title AS jobTitle,
+                <!--- Host Company --->
+                ehc.hostCompanyID,
+                ehc.name AS hostCompanyName,
+                ehc.email AS hostCompanyEmail,
+                ehc.supervisor AS hostCompanySupervisor,
+                ehc.personJobOfferName,
+                ehc.address,
+                ehc.city,
+                s.stateName,
+                ehc.zip,
+                ecpc.selfEmailConfirmationDate,
+                <!--- Country --->
+                cl.countryName
+            FROM
+                extra_candidates ec
+            INNER JOIN
+                extra_candidate_place_company ecpc ON ecpc.candidateID = ec.candidateID 
+                    AND 
+                        ecpc.hostCompanyID = ec.hostCompanyID 
+                    AND 
+                        ecpc.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+            LEFT JOIN
+                extra_jobs ej ON ej.id = ecpc.jobID
+            INNER JOIN
+                extra_hostcompany ehc ON ehc.hostcompanyid = ecpc.hostcompanyid  
+                
+                <cfif VAL(FORM.hostCompanyID)>    
+                    AND    
+                        ehc.hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostCompanyID#">
+                </cfif>
+
+            LEFT OUTER JOIN
+                smg_countrylist cl ON cl.countryID = ec.residence_country
+            LEFT JOIN
+                smg_states s ON s.id = ehc.state  
+            LEFT JOIN
+                extra_confirmations conf ON conf.hostID = ecpc.hostcompanyID
+                    AND conf.programID = ec.programID
+            LEFT OUTER JOIN extra_program_confirmations epc ON epc.hostID = ecpc.hostCompanyID
+                AND epc.programID = ec.programID
+                
+            <cfif VAL(FORM.missingPhone) OR VAL(FORM.missingDocs)>
+            LEFT JOIN extra_hostauthenticationfiles ehaf
+                   ON (ehaf.hostID = ecpc.hostcompanyid
+                            AND (dateExpires >= <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
+                                OR dateExpires IS NULL)
+                            AND authenticationType = "workmensCompensation")
+            LEFT JOIN
+                extra_j1_positions j1 ON j1.hostID = ecpc.hostcompanyID
+                    AND j1.programID = ec.programID
+            </cfif> 
+            WHERE 
+                ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
+            AND 
+                ec.status != <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
+            AND
+                ec.wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="Self-Placement">
+            AND
+                (ecpc.selfEmailConfirmationDate IS NULL OR ecpc.selfEmailConfirmationDate = '')
+            
+            <cfif VAL(FORM.missingPhone)>
+                AND epc.confirmation_phone IS NULL
+                AND (conf.confirmed = 1 OR conf.confirmedDate IS NOT NULL)
+                AND (numberPositions = 0 OR verifiedDate IS NOT NULL)
+                AND ehc.workmensCompensation IS NOT NULL
+                AND ehc.authentication_secretaryOfState > 0
+                AND ehaf.id > 0
+                AND ecpc.selfEmailConfirmationDate IS NOT NULL
+            <cfelseif VAL(FORM.missingDocs) >
+                AND (ehc.authentication_secretaryOfState = 0
+                    OR ehc.authentication_departmentOfLabor = 0
+                    OR ehc.authentication_googleEarth = 0
+                    OR ehc.EIN IS NULL
+                    OR ehc.EIN = ''
+                    OR ehaf.ID = ''
+                    OR ehaf.ID IS NULL)
+                
+                AND epc.confirmation_phone IS NOT NULL
+                AND ecpc.selfEmailConfirmationDate IS NOT NULL
+                AND (numberPositions = 0 OR verifiedDate IS NOT NULL)
+            </cfif>
+                
+                
+            <cfif LEN(FORM.selfJobOfferStatus)>
+                AND
+                    ecpc.selfJobOfferStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfJobOfferStatus#">                 
+            </cfif> 
+                       
+            ORDER BY
+                ehc.name,
+                ec.candidateID            
+        </cfquery>
+
+
+
+        <cfquery name="qGetResultsEmailMissingDocs" datasource="#APPLICATION.DSN.Source#">
+            SELECT 
+                ec.candidateID,
+                ec.uniqueID,
+                ec.firstname, 
+                ec.lastname, 
+                ec.sex, 
+                ec.email,
+                ec.ds2019,
+                ec.startdate, 
+                ec.enddate,
+                ec.intrep, 
+                ec.wat_placement,
+                ehc.hostCompanyID,
+                epc.confirmation_phone,
+                ehc.authentication_secretaryOfState,
+                ehc.authentication_departmentOfLabor,
+                ehc.authentication_googleEarth,
+                ehc.authentication_incorporation,
+                ehc.authentication_certificateOfExistence,
+                ehc.authentication_certificateOfReinstatement,
+                ehc.authentication_departmentOfState,
+                ehc.authentication_businessLicenseNotAvailable,
+                ehc.name,
+                ehc.EIN, 
+                ehc.workmensCompensation,
+                ecpc.jobID AS jobTitleID,
+                ej.title AS jobTitle,
+                <!--- Host Company --->
+                ehc.hostCompanyID,
+                ehc.name AS hostCompanyName,
+                ehc.email AS hostCompanyEmail,
+                ehc.supervisor AS hostCompanySupervisor,
+                ehc.personJobOfferName,
+                ehc.address,
+                ehc.city,
+                s.stateName,
+                ehc.zip,
+                ecpc.selfEmailConfirmationDate,
+                <!--- Country --->
+                cl.countryName
+            FROM
+                extra_candidates ec
+            INNER JOIN
+                extra_candidate_place_company ecpc ON ecpc.candidateID = ec.candidateID 
+                    AND 
+                        ecpc.hostCompanyID = ec.hostCompanyID 
+                    AND 
+                        ecpc.status = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+            LEFT JOIN
+                extra_jobs ej ON ej.id = ecpc.jobID
+            INNER JOIN
+                extra_hostcompany ehc ON ehc.hostcompanyid = ecpc.hostcompanyid  
+                
+                <cfif VAL(FORM.hostCompanyID)>    
+                    AND    
+                        ehc.hostCompanyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.hostCompanyID#">
+                </cfif>
+
+            LEFT OUTER JOIN
+                smg_countrylist cl ON cl.countryID = ec.residence_country
+            LEFT JOIN
+                smg_states s ON s.id = ehc.state  
+            LEFT JOIN
+                extra_confirmations conf ON conf.hostID = ecpc.hostcompanyID
+                    AND conf.programID = ec.programID
+            LEFT OUTER JOIN extra_program_confirmations epc ON epc.hostID = ecpc.hostCompanyID
+                AND epc.programID = ec.programID
+                
+            <cfif VAL(FORM.missingPhone) OR VAL(FORM.missingDocs)>
+            LEFT JOIN extra_hostauthenticationfiles ehaf
+                   ON (ehaf.hostID = ecpc.hostcompanyid
+                            AND (dateExpires >= <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
+                                OR dateExpires IS NULL)
+                            AND authenticationType = "workmensCompensation")
+            LEFT JOIN
+                extra_j1_positions j1 ON j1.hostID = ecpc.hostcompanyID
+                    AND j1.programID = ec.programID
+            </cfif> 
+            WHERE 
+                ec.programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.programID#">
+                AND ec.status != <cfqueryparam cfsqltype="cf_sql_varchar" value="canceled">
+                AND ec.wat_placement = <cfqueryparam cfsqltype="cf_sql_varchar" value="Self-Placement">
+                AND ecpc.selfEmailConfirmationDate <> ''
+                AND (epc.confirmation_phone IS NULL 
+                    OR ehc.authentication_secretaryOfState = 0
+                    OR ehc.authentication_departmentOfLabor = 0
+                    OR ehc.authentication_googleEarth = 0
+                    OR ehc.workmensCompensation IS NULL
+                    OR ehc.workmensCompensation = ''
+                    OR ehc.EIN IS NULL
+                    OR ehc.EIN = '')
+            <cfif LEN(FORM.selfJobOfferStatus)>
+                AND
+                    ecpc.selfJobOfferStatus = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.selfJobOfferStatus#">                 
+            </cfif> 
+            ORDER BY
+                ehc.name,
+                ec.candidateID            
+        </cfquery>
+
     </cfif>       
     
 </cfsilent>
+
 
 <script type="text/javascript">
 	<!-- Begin
@@ -364,7 +590,7 @@ ec.intrep,
                             <td class="style1">#qGetResults.jobTitle#</td>
                             <td class="style1">#DateFormat(qGetResults.startdate, 'mm/dd/yyyy')#</td>
                             <td class="style1">#DateFormat(qGetResults.enddate, 'mm/dd/yyyy')#</td>
-                            <td class="style1">#qGetResults.email#</td>
+                            <td class="style1">#qGetResults.email#<br />#qGetResults.selfEmailConfirmationDate#</td>
                         </tr>
                     </cfoutput>        
                 </table>
@@ -376,10 +602,13 @@ ec.intrep,
             
             <cfif VAL(vSendEmail)>
                 <p style="margin-left:15px; font-weight:bold; color:##006">*** Email sent to #qGetResults.hostCompanyEmail# on #DateFormat(now(), 'mm/dd/yyyy')# at #TimeFormat(now(), 'hh:mm tt')# ***</p>
+
             <cfelseif VAL(FORM.emailHostCompany)>
                 <p style="margin-left:15px; font-weight:bold; color:##F00">*** Email address missing or not valid ***</p>
 			</cfif>
             
+
+            <!--- Email Template --->
             <cfsavecontent variable="emailTemplate">
 				<style type="text/css">
                 <!--
@@ -399,7 +628,7 @@ ec.intrep,
                 <cfquery name="qGetJ1Positions" datasource="#APPLICATION.DSN.Source#">
                 	SELECT *
                     FROM extra_j1_positions
-                    WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetResults.hostCompanyID)#">
+                    WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetResultsEmail.hostCompanyID)#">
                     AND programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.programID)#">
                     AND verifiedDate IS NOT NULL
                 </cfquery>
@@ -407,16 +636,16 @@ ec.intrep,
                 <cfquery name="qGetConfirmations" datasource="#APPLICATION.DSN.Source#">
                 	SELECT *
                     FROM extra_confirmations
-                    WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetResults.hostCompanyID)#">
+                    WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetResultsEmail.hostCompanyID)#">
                     AND programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.programID)#">
                     AND confirmedDate IS NOT NULL
                 </cfquery>
             
-                <p class="style1">Dear #qGetResults.hostCompanySupervisor#,</p>
+                <p class="style1">Dear #qGetResultsEmail.hostCompanySupervisor#,</p>
                 
                 <p class="style1">
                     We are writing you from CSB International, Inc., designated by the U.S. Department of State as a sponsor for the Summer Work Travel Program. 
-                    Please accept this email as a formal inquire in regards to the job offer provided by <strong>#qGetResults.hostCompanyName#</strong> for the below participant(s), 
+                    Please accept this email as a formal inquire in regards to the job offer provided by <strong>#qGetResultsEmail.hostCompanyName#</strong> for the below participant(s), 
                     who has/have applied for our program, under the self-placement option. The job vetting process is crucial for the safety of our program participants 
                     and to ensure that they have a positive exchange experience in the U.S.
                 </p>
@@ -426,9 +655,9 @@ ec.intrep,
        				<tr>
                         <td colspan="6">
                         	<strong>
-                            	#qGetResults.hostCompanyName#
+                            	#qGetResultsEmail.hostCompanyName#
                                 <br />
-                                Work site address as provided on the job offer: #qGetResults.address# #qGetResults.city#, #qGetResults.stateName# #qGetResults.zip#
+                                #qGetResultsEmail.address# #qGetResultsEmail.city#, #qGetResultsEmail.stateName# #qGetResultsEmail.zip#
                           	</strong>
                       	</td>
                     </tr>
@@ -446,29 +675,29 @@ ec.intrep,
                         vRowCount = 0;
                     </cfscript>
                     
-                    <cfoutput>
+                    <cfloop query="qGetResultsEmail">
                         <cfscript>
                             vRowCount = vRowCount + 1;
                         </cfscript>
                         <tr <cfif vRowCount MOD 2>bgcolor="##E4E4E4"</cfif>>
                             <td class="style1">
-                                #qGetResults.firstname# #qGetResults.lastname# (###qGetResults.candidateID#)                                  
+                                #qGetResultsEmail.firstname# #qGetResultsEmail.lastname# (###qGetResultsEmail.candidateID#)                                  
                             </td>
-                            <td class="style1">#qGetResults.sex#</td>
-                            <td class="style1">#qGetResults.countryName#</td>
-                            <td class="style1">#qGetResults.jobTitle#</td>
-                            <td class="style1">#DateFormat(qGetResults.startdate, 'mm/dd/yyyy')#</td>
-                            <td class="style1">#DateFormat(qGetResults.enddate, 'mm/dd/yyyy')#</td>
+                            <td class="style1">#qGetResultsEmail.sex#</td>
+                            <td class="style1">#qGetResultsEmail.countryName#</td>
+                            <td class="style1">#qGetResultsEmail.jobTitle#</td>
+                            <td class="style1">#DateFormat(qGetResultsEmail.startdate, 'mm/dd/yyyy')#</td>
+                            <td class="style1">#DateFormat(qGetResultsEmail.enddate, 'mm/dd/yyyy')#</td>
                             <!--- This is designed to prevent a link from being automatically generated in email clients --->
-                            <td class="style1"><a href="" style="color:##000001;">#qGetResults.email#</a></td>
+                            <td class="style1"><a href="" style="color:##000001;">#qGetResultsEmail.email#</a></td>
                         </tr>
-                    </cfoutput>        
+                    </cfloop>        
                 </table>
                 
                 <p class="style1">
                     Please review the below and <font color="##FF0000">reply with complete answers</font> within <font color="##FF0000">5 (five) business days</font> of receiving this note.
                     <ol class="style1">
-                    	<li>Was the extended job offer reviewed and <strong>signed personally</strong> by <strong>#qGetResults.personJobOfferName#</strong>? Please also confirm the address where the participant will work.</li>
+                    	<li>Was the extended job offer reviewd and <strong>signed personally</strong> by <strong>#qGetResultsEmail.personJobOfferName#</strong>?</li>
                         <li>Please confirm the <strong>employment availability</strong> for the above participant(s) <strong>and the number of hours of paid employment you have agreed to provide to each</strong>.</li>
                         <li>Please verify <strong>the job title, the start date and the end date.</strong> Please inform CSB of any corrections needed.</li>
                         <cfif NOT VAL(qGetJ1Positions.recordCount)>
@@ -508,12 +737,12 @@ ec.intrep,
             
             <cfscript>
                 // Email Host Company
-                if ( VAL(FORM.emailHostCompany) AND IsValid("email", qGetResults.hostCompanyEmail) ) {
+                if ( VAL(FORM.emailHostCompany) AND IsValid("email", qGetResultsEmail.hostCompanyEmail) AND qGetResultsEmail.recordCount GT 0 ) {
                     
                     // Send out Self Placement Confirmation Email
                     APPLICATION.CFC.EMAIL.sendEmail(
                         emailFrom="#APPLICATION.EMAIL.contactUs# (#CLIENT.firstName# #CLIENT.lastName# CSB-USA)",
-                        emailTo=qGetResults.hostCompanyEmail,
+                        emailTo=qGetResultsEmail.hostCompanyEmail,
 						emailReplyTo=CLIENT.email,
                         emailSubject='SWT/CSB - Summer Job Confirmation',
 						emailMessage=emailTemplate,
@@ -523,6 +752,94 @@ ec.intrep,
                     );	
 
 				}
+            </cfscript>
+
+
+            <cfsavecontent variable="emailTemplate2">
+
+                <style type="text/css">
+                <!--
+                .style1 {
+                    font-family: Verdana, Arial, Helvetica, sans-serif;
+                    font-size: 10px;
+                    padding:2px;
+                }
+                table td, th {
+                    font-family: Verdana, Arial, Helvetica, sans-serif;
+                    font-size: 10px;
+                    padding:2px;
+                }
+                -->
+                </style>
+
+                <p class="style1">Dear #hostCompanySupervisor#,</p>
+
+                <p class="style1">Thank you for verifying and confirming the participants who have a job offer extended by #qGetResultsEmailMissingDocs.hostCompanyName#. To complete the vetting process, it is crucial that we receive a copy of the below document(s) at your earliest convenience.</p>
+
+                    
+                    <cfscript>
+                        vRowCount = 0;
+                    </cfscript>
+                    
+                    <p class="style1" style="color:red; font-weight: bold">
+                    <cfif qGetResultsEmailMissingDocs.confirmation_phone EQ '' >
+                        - Phone Confirmation<br />
+                    </cfif>
+
+                    <cfif qGetResultsEmailMissingDocs.EIN EQ '' >
+                        - EIN<br />
+                    </cfif>
+
+                    <cfif qGetResultsEmailMissingDocs.workmensCompensation EQ '' >
+                        - Worker's Compensation Certificate<br />
+                    </cfif>
+
+                    <cfif qGetResultsEmailMissingDocs.authentication_secretaryOfState EQ 0>
+                        - Business License<br />
+                    </cfif>
+
+                    <cfif qGetResultsEmailMissingDocs.authentication_departmentOfLabor EQ 0>
+                        - Department of Labor<br />
+                    </cfif>
+
+                    <cfif qGetResultsEmailMissingDocs.authentication_googleEarth EQ 0>
+                        - Google Earth<br />
+                    </cfif>
+                    </p>
+
+                </table>
+
+                <br />
+
+                <p class="style1"><strong><u>Important Note:</u></strong>
+                <ol class="style1">
+                    <li>If the job offer is cancelled or revoked due to any circumstances / conditions, please notify CSB immediately.</li>
+                    <li>It is crucial to <strong>always maintain contact with CSB</strong> with questions and concerns <strong>throughout the duration of the program</strong>. You have the choice <strong>to contact CSB by email</strong> or phone <strong>to inform us of any changes</strong> that include but are not limited to: <strong>participant is fired, late, poor performance, job title change and worksite location</strong>.</li>
+                    <li>Do you have any program questions? Please take a look at the <a href="https://extra.exitsapplication.com/internal/uploadedfiles/wat/SWT_Host_Employer_Manual.pdf" target="_blank">Host Employer Manual</a>.</li>
+                </ol>
+                </p>
+
+                <p class="style1">Thank you for your support for the exchange programs and we are here to assist you with any further question you may have.</p>
+
+            </cfsavecontent>
+
+            <cfscript>
+                // Email Host Company
+                if ( VAL(FORM.emailHostCompany) AND IsValid("email", qGetResultsEmailMissingDocs.hostCompanyEmail) AND qGetResultsEmailMissingDocs.recordCount GT 0 ) {
+                    
+                    // Send out Self Placement Confirmation Email
+                    APPLICATION.CFC.EMAIL.sendEmail(
+                        emailFrom="#APPLICATION.EMAIL.contactUs# (#CLIENT.firstName# #CLIENT.lastName# CSB-USA)",
+                        emailTo=qGetResultsEmail.hostCompanyEmail,
+                        emailReplyTo=CLIENT.email,
+                        emailSubject='SWT/CSB - Summer Job Confirmation',
+                        emailMessage=emailTemplate2,
+                        companyID=CLIENT.companyID,
+                        footerType='emailRegular',
+                        displayEmailLogoHeader=0
+                    );  
+
+                }
             </cfscript>
                                    
         </cfoutput>
@@ -535,7 +852,7 @@ ec.intrep,
                     <cfif FORM.hostCompanyID EQ "All"> 
                         All International Rep. 
                     <cfelse>
-                        #qGetResults.hostCompanyName#
+                        #qGetResultsEmail.hostCompanyName#
                     </cfif>
                 </div>
             </cfif>
@@ -543,6 +860,8 @@ ec.intrep,
         </cfoutput>
         
     </cfsavecontent>
+
+
 
 	<cfoutput>
 
