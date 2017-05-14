@@ -48,20 +48,19 @@
 	</cfoutput>
 
 </cfsavecontent>
+
     
 <cfif getCanceledCandidates.RecordCount GT 0 >
 	<cfscript>
 		vEmailFrom 	= 'support@csb-usa.com (CSB Summer Work Travel)';
-		vEmailTo	= 'anca@csb-usa.com';
-		vEmailCC	= 'jennifer@iseusa.org';
+		vEmailTo	= 'anca@csb-usa.com, jennifer@iseusa.org';
 		
 		// Send Email
 		
-		if ( IsValid("email", vEmailTo) ) {
+		//if ( IsValid("email", vEmailTo) ) {
 			APPLICATION.CFC.EMAIL.sendEmail(
 				emailFrom 	 = vEmailFrom,
 				emailTo 	 = vEmailTo,
-				emailCC 	 = vEmailCC,
 				emailReplyTo = vEmailFrom,
 				emailSubject = "Cancellation SWT",
 				emailMessage = emailContent,
@@ -69,7 +68,7 @@
 				displayEmailLogoHeader=1,
 				companyID	 = 8
 			);
-		}
+		//}
 		
 	</cfscript>
 </cfif>

@@ -16,9 +16,11 @@
     <cfscript>
 		// Check if we have a valid student
 		qGetCandidate = APPLICATION.CFC.candidate.getCandidateByID(uniqueID=URL.uniqueID);
+
+        applicationIsOffice = APPLICATION.CFC.ONLINEAPP.isOfficeApplication(foreignTable=APPLICATION.foreignTable, foreignID=qGetCandidate.candidateID);
 		
 		// Activate Account
-		if ( qGetCandidate.recordCount AND qGetCandidate.applicationStatusID EQ 1 ) {
+		if (( qGetCandidate.recordCount AND qGetCandidate.applicationStatusID EQ 1 ) OR (qGetCandidate.recordCount AND qGetCandidate.applicationStatusID EQ 12)) {
 			
 			// Update Candidate Session Variables
 			APPLICATION.CFC.CANDIDATE.setCandidateSession(
@@ -74,27 +76,34 @@
                                         </tr>
                                         
                                         <!--- Account Activated --->
-										<cfif qGetCandidate.recordCount AND qGetCandidate.applicationStatusID EQ 1>
+										<cfif (qGetCandidate.recordCount AND qGetCandidate.applicationStatusID EQ 1) OR (qGetCandidate.recordCount AND qGetCandidate.applicationStatusID EQ 12)>
                                             <tr>
                                                 <td>
                                                     Dear #qGetCandidate.firstname# #qGetCandidate.lastName#, <br /><br />
                                                     
                                                     <strong> Your account has been activated. </strong> <br /><br />
                                                     
-                                                    An email has been sent to you with your login information. <br /><br />
+                                                    <cfif qGetCandidate.applicationStatusID NEQ 12 >
+                                                        An email has been sent to you with your login information. <br /><br />
+                                                    </cfif>
                                                     
-                                                    Please <a href="index.cfm">click here</a> to login into E<font color="##FF6600">X</font>TRA. <br /><br />
+                                                    <cfif applicationIsOffice NEQ 1>
+                                                        Please <a href="index.cfm">click here</a> to login into E<font color="##FF6600">X</font>TRA. <br />
+                                                    </cfif><br />
+
                                                 </td>
                                             </tr>
                                         <!--- Account Already Active --->
-                                        <cfelseif qGetCandidate.applicationStatusID GT 1>
+                                        <cfelseif qGetCandidate.applicationStatusID NEQ 1 AND qGetCandidate.applicationStatusID NEQ 12>
                                             <tr>
                                                 <td>
                                                     Dear Candidate, <br /><br />
                                                    
                                                     <strong> Your account is already activated. </strong> <br /><br />
 													
-                                                    Please <a href="index.cfm">click here</a> to login into E<font color="##FF6600">X</font>TRA. <br /><br />
+                                                    <cfif applicationIsOffice NEQ 1>
+                                                    Please <a href="index.cfm">click here</a> to login into E<font color="##FF6600">X</font>TRA. <br />
+                                                    </cfif><br />
                                                 </td>
                                             </tr>
 										<!--- Could not locate account --->
