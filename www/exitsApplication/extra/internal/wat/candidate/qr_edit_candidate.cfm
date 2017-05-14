@@ -88,11 +88,38 @@
 <cfparam name="FORM.englishAssessment" default="">
 <cfparam name="FORM.englishAssessmentDate" default="">
 <cfparam name="FORM.englishAssessmentComment" default="">
+
+<!--- Housing Arranged --->
+<cfparam name="FORM.housingArrengedChanged" default="0">
+<cfparam name="FORM.housing_options" default="">
+<cfparam name="FORM.housingProviderName" default="">
+<cfparam name="FORM.housingEmail" default="">
+<cfparam name="FORM.housingPhone" default="">
+<cfparam name="FORM.housingAddress" default="">
+<cfparam name="FORM.housingCity" default="">
+<cfparam name="FORM.housingStateName" default="0">
+<cfparam name="FORM.housingZip" default="">
+<cfparam name="FORM.housingReservationNumber" default="">
+<cfparam name="FORM.housingReservationName" default="">
+<cfparam name="FORM.housingReservationStartDate" default="">
+<cfparam name="FORM.housingReservationEndDate" default="">
+
+<cfparam name="FORM.cancellation_fee" default="">
+
+<cfif housingArrengedChanged EQ "" >
+    <cfset FORM.housingArrengedChanged = 0 />
+</cfif>
+
+<cfif housingStateName EQ "" >
+    <cfset FORM.housingStateName = 0 />
+</cfif>
+
 <!--- Secondary Placement Information --->
 <cfscript>
 	qGetCandidate = APPLICATION.CFC.CANDIDATE.getCandidateByID(uniqueID=URL.uniqueID);
 	qGetAllPlacements = APPLICATION.CFC.CANDIDATE.getCandidatePlacementInformation(candidateID=qGetCandidate.candidateID, displayAll="1");
 </cfscript>
+
 <cfloop query="qGetAllPlacements">
 	<cfif qGetAllPlacements.isSecondary EQ "1">
         <cfparam name="FORM.selfJobOfferStatus_#qGetAllPlacements.candCompID#" default="Pending">
@@ -131,7 +158,8 @@
         hostCompanyID,
         ds2019,
         startdate,
-        enddate
+        enddate,
+        watDateCheckedIn
     FROM 
     	extra_candidates
     WHERE 
@@ -939,6 +967,52 @@
 </cfif>
 <!--- END OF HOST COMPANY HISTORY --->
 
+
+<!--- SEND CHECK-IN EMAIL --->
+<cfif qGetCandidateInfo.watDateCheckedIn EQ '' AND FORM.watDateCheckedIn NEQ '' >
+
+    <cfsavecontent variable="checkinEmail">
+        <p>   
+            Dear {candidateName},
+        </p>
+        
+        <p>
+            We would like to confirm that you are successfully checked-in as of {DATE}. We advise you to wait approximately 5 (five) days before applying for the Social Security Number (SSN) at the nearest Social Security Administration (SSA) office.
+        </p>
+        <p>
+            If you should have any questions or you need assistance during your stay, please feel free to always contact us by emailing support@csb-usa.com or by calling our toll-free number 1-877-779-0717 (dial 0 for the operator).
+        </p>
+        <p>
+            CSB Support Team
+        </p>                                                            
+    </cfsavecontent>
+
+    <cfscript>
+        vEmailFrom = 'support@csb-usa.com (CSB Summer Work Travel)';
+        vFullName = FORM.firstname & " " & FORM.lastname;
+        vDate = FORM.watDateCheckedIn;
+        vEmailBody = ReplaceNoCase(checkinEmail, "{candidateName}", vFullName);
+        vEmailBody = ReplaceNoCase(vEmailBody, "{DATE}", vDate);
+        //vEmailTo = "bruno@brunolopes.com";
+        vEmailTo = FORM.email;
+        
+        if ( IsValid("email", FORM.email) ) {
+            APPLICATION.CFC.EMAIL.sendEmail(
+                emailFrom=vEmailFrom,
+                emailTo=vEmailTo,
+                emailReplyTo=vEmailFrom,
+                emailSubject= vFullName & " - CSB Check-in Receipt",
+                emailMessage=vEmailBody,
+                footerType="emailNoInfo",
+                companyID=8
+            );
+        }        
+            
+    </cfscript>
+</cfif>
+<!--- END CHECK-IN EMAIL --->
+
+
 <cfquery datasource="#APPLICATION.DSN.Source#">
     UPDATE 
     	extra_candidates
@@ -1042,7 +1116,25 @@
         watDateEvaluation4 = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.watDateEvaluation4#" null="#NOT IsDate(FORM.watDateEvaluation4)#">,
         housingArrangedPrivately = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.housingArrangedPrivately#">,
         housingDetails = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housingDetails#">,
-        programRemarks = <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#FORM.programRemarks#">
+        programRemarks = <cfqueryparam cfsqltype="cf_sql_longvarchar" value="#FORM.programRemarks#">,
+
+        <!---  Housing Arranged  --->
+        housingArrengedChanged =  <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.housingArrengedChanged#">,
+        housing_options =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housing_options#">,
+        housingProviderName =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housingProviderName#">,
+        housingEmail =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housingEmail#">,
+        housingPhone =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housingPhone#">,
+        housingAddress =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housingAddress#">,
+        housingCity =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housingCity#">,
+        housingStateName =  <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.housingStateName#">,
+        housingZip =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housingZip#">,
+        housingReservationNumber =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housingReservationNumber#">,
+        housingReservationName =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housingReservationName#">,
+        housingReservationStartDate =  <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.housingReservationStartDate#" null="#NOT IsDate(FORM.housingReservationStartDate)#">,
+        housingReservationEndDate =  <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.housingReservationEndDate#" null="#NOT IsDate(FORM.housingReservationEndDate)#">,
+
+        cancellation_fee =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.cancellation_fee#">
+        
     WHERE 
     	candidateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetCandidateInfo.candidateID#">
 </cfquery>
@@ -1133,7 +1225,22 @@
         watDateEvaluation1,
         watDateEvaluation2,
         watDateEvaluation3,
-        watDateEvaluation4 )
+        watDateEvaluation4,
+        <!---  Housing Arranged  --->
+        housingArrengedChanged,
+        housing_options,
+        housingProviderName,
+        housingEmail,
+        housingPhone,
+        housingAddress,
+        housingCity,
+        housingStateName,
+        housingZip,
+        housingReservationNumber,
+        housingReservationName,
+        housingReservationStartDate,
+        housingReservationEndDate,
+        cancellation_fee)
   	VALUES (
     	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetCandidateInfo.candidateID)#">,
         <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
@@ -1218,7 +1325,23 @@
         <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.watDateEvaluation1#" null="#NOT IsDate(qGetCandidateInfo.watDateEvaluation1)#">,
         <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.watDateEvaluation2#" null="#NOT IsDate(qGetCandidateInfo.watDateEvaluation2)#">,
         <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.watDateEvaluation3#" null="#NOT IsDate(qGetCandidateInfo.watDateEvaluation3)#">,
-        <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.watDateEvaluation4#" null="#NOT IsDate(qGetCandidateInfo.watDateEvaluation4)#"> )
+        <cfqueryparam cfsqltype="cf_sql_date" value="#qGetCandidateInfo.watDateEvaluation4#" null="#NOT IsDate(qGetCandidateInfo.watDateEvaluation4)#">,
+
+        <!---  Housing Arranged  --->
+        <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.housingArrengedChanged#">,
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housing_options#">,
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housingProviderName#">,
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housingEmail#">,
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housingPhone#">,
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housingAddress#">,
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housingCity#">,
+        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.housingStateName#">,
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housingZip#">,
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housingReservationNumber#">,
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.housingReservationName#">,
+        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.housingReservationStartDate#" null="#NOT IsDate(FORM.housingReservationStartDate)#">,
+        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.housingReservationEndDate#" null="#NOT IsDate(FORM.housingReservationEndDate)#">,
+        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.cancellation_fee#">)
 </cfquery>
 
 <cflocation url="index.cfm?curdoc=candidate/candidate_info&uniqueid=#URL.uniqueID#" addtoken="no">

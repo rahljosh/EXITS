@@ -110,7 +110,7 @@
 	$(document).ready(function() {
 		// Get Current Country Value
 		selectedType = $("#type").val();
-		startApplicationType(selectedType);
+		//startApplicationType(selectedType);
 		
 	});
 </script>
@@ -220,12 +220,12 @@
                 </select>
             </div>
     
-            <div class="field divEmailAddress">
+            <div class="field ">
                 <label for="lastName">Email Address <em>*</em></label> 
                 <input type="text" name="email" id="email" value="#FORM.email#" class="largeField" maxlength="100" />
             </div>
     
-            <div class="field divEmailAddress">
+            <div class="field ">
                 <label for="lastName">Confirm Email Address <em>*</em></label> 
                 <input type="text" name="emailConfirm" id="emailConfirm" value="#FORM.emailConfirm#" class="largeField" maxlength="100" />
             </div>

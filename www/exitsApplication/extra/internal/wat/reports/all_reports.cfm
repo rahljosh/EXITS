@@ -68,7 +68,7 @@
                         <cfif CLIENT.userType LTE 4>
                         	<span class="style1"><strong>1. International Representative Reports</strong></span><br />
                             
-                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/all_canceled_students_enrolled_wt" class="style4">- All Cancelled Candidates</a></p>
+                            <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/all_canceled_students_enrolled_wt" class="style4">- Cancelled Participants</a></p>
                             
                             <p style="padding-left:20px;"><a href="index.cfm?curdoc=reports/all_students_enrolled_wt" class="style4">- All Participating Candidates</a></p>
 

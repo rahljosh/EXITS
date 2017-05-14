@@ -299,6 +299,7 @@
                         <th align="left" class="#tableTitleClass#" width="8%">First Name</Th>
                         <th align="left" class="#tableTitleClass#" width="3%">Sex</th>
                         <th align="left" class="#tableTitleClass#" width="8%">E-mail</th>
+                        <th align="left" class="#tableTitleClass#" width="5%">DOB</th>
                         <th align="left" class="#tableTitleClass#" width="5%">Start Date</th>
                         <th align="left" class="#tableTitleClass#" width="5%">End Date</th>
                         <th align="left" class="#tableTitleClass#" width="18%">Placement Information</th>
@@ -370,6 +371,7 @@
                             </td>
                             <td class="style1">#qTotalPerAgent.sex#</td>
                             <td class="style1">#qTotalPerAgent.email#</td>
+                            <td class="style1">#DateFormat(qTotalPerAgent.dob, 'mm/dd/yyyy')#</td>
                             <td class="style1">#DateFormat(qTotalPerAgent.startdate, 'mm/dd/yyyy')#</td>
                             <td class="style1">#DateFormat(qTotalPerAgent.enddate, 'mm/dd/yyyy')#</td>
                             <td class="style1" colspan="4">

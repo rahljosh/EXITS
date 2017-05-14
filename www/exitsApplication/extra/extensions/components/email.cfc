@@ -246,12 +246,27 @@
                     <cfsavecontent variable="stEmailStructure.message">
                         <p>Dear #qGetCandidateInfo.firstName# #qGetCandidateInfo.lastName#-</p>
     
-                        #accountCreatedMessage#                        
-    
-                        Please click on 
-                        <a href="#APPLICATION.SITE.URL.activation#?uniqueID=#qGetCandidateInfo.uniqueID#" style="text-decoration:none; color:##0069aa;">
+                        <p>Your program application has been successfully created at CSB International, Inc. - Summer Work Travel Program.</p>
+
+                        <p>Please click on <a href="#APPLICATION.SITE.URL.activation#?uniqueID=#qGetCandidateInfo.uniqueID#" style="text-decoration:none; color:##0069aa;">
                             #APPLICATION.SITE.URL.activation#?uniqueID=#qGetCandidateInfo.uniqueID#
-                        </a> to activate your account. <br /><br />
+                        </a> to verify your email address which is needed to continue your application.</p>
+                    </cfsavecontent>
+                
+                </cfcase>
+
+                <cfcase value="newAccountOfficeIntRep">
+                    
+                    <cfscript>
+                        stEmailStructure.subject = csbEmailSubject & ' - Account Created | Activation Required';
+                    </cfscript>
+                    
+                    <cfsavecontent variable="stEmailStructure.message">
+                        <p>Dear #qGetIntlRep.businessName#-</p>
+    
+                        <p>A program application for <strong>#qGetCandidateInfo.firstName# #qGetCandidateInfo.lastName#</strong> has been successfully created at CSB International, Inc. - Summer Work Travel Program.</p>
+
+                        <p>Please check with #qGetCandidateInfo.firstName# #qGetCandidateInfo.lastName# to ensure he/she has validated the email. You will not be able to continue unless the validation was completed.</p>                   
                     </cfsavecontent>
                 
                 </cfcase>

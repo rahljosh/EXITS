@@ -862,7 +862,7 @@
 
 				<cfif VAL(ARGUMENTS.applicationStatusID)>
                 	AND
-                    	aps.statusID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.applicationStatusID#">
+                    	ec.applicationStatusID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.applicationStatusID#">
                 </cfif>                
                 
                 GROUP BY            
