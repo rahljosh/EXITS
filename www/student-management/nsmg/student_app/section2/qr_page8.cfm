@@ -4,6 +4,92 @@
 </cfif>
 
 <cftransaction action="begin" isolation="serializable">
+		<!--- INSERT 8th SCHOOL YEAR --->
+		<cfif IsDefined('form.new_8class')>
+			<cfquery name="Insert_Year" datasource="#APPLICATION.DSN#">
+				INSERT INTO 
+                	smg_student_app_school_year 
+                    (
+                    	studentid, 
+                        beg_year, 
+                        end_year, 
+                        class_year
+                  	)
+				VALUES 
+                	(
+                    	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.studentid)#">, 
+						<cfif form.new8_beg_year is '' OR NOT VAL(FORM.new8_beg_year)>
+                        	<cfqueryparam null="yes">,
+                      	<cfelse>
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.new8_beg_year)#">,
+						</cfif>
+                        <cfif form.new8_end_year is '' OR NOT VAL(FORM.new8_end_year)>
+                        	<cfqueryparam null="yes">,
+                      	<cfelse>
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.new8_end_year)#">,
+						</cfif>
+						<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.new_8class#">
+                 	)
+			</cfquery>
+			<cfquery name="get_year" datasource="#APPLICATION.DSN#">
+				SELECT max(yearid) as yearid FROM smg_student_app_school_year
+			</cfquery>
+			<cfset form.new_8class_yearid = '#get_year.yearid#'>
+		</cfif>
+		<!--- INSERT 8th CLASSES UP TO 13 PER TIME --->
+		<cfif IsDefined('form.new_8class_count') and form.new_8class_yearid NEQ '0'>
+			<cfloop From = "1" To = "#form.new_8class_count#" Index = "x">
+				<cfif form["new_8class_name" & x] NEQ ''>
+					<cfquery name="insert_classes" datasource="#APPLICATION.DSN#">
+						INSERT INTO smg_student_app_grades(yearid, class_name, hours, grade)
+						VALUES ('#form.new_8class_yearid#', '#form["new_8class_name" & x]#',
+								'#form["new_8class_hour" & x]#', '#form["new_8class_grade" & x]#')
+					</cfquery>
+				</cfif>
+			</cfloop>
+		</cfif>
+		<!--- UPDATE 8th YEAR --->
+		<cfif IsDefined('form.upd_8yearid')>
+			<cfquery name="update_year" datasource="#APPLICATION.DSN#">
+				UPDATE 
+                	smg_student_app_school_year
+				SET 
+                	beg_year = 
+                    	<cfif form.upd8_beg_year is '' OR NOT VAL(FORM.upd8_beg_year)>
+                        	<cfqueryparam null="yes">,
+                      	<cfelse>
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.upd8_beg_year)#">,
+						</cfif>
+					end_year = 
+						<cfif form.upd8_end_year is '' OR NOT VAL(FORM.upd8_end_year)>
+                        	<cfqueryparam null="yes">,
+                      	<cfelse>
+                        	<cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.upd8_end_year)#">,
+						</cfif>
+					class_year = <cfqueryparam cfsqltype="cf_sql_varchar" value="#upd_8class#">
+				WHERE 
+                	yearid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(upd_8yearid)#">
+				LIMIT 1				
+			</cfquery>
+		</cfif>
+		<!--- UPDATE 8th CLASSES --->
+		<cfif IsDefined('form.upd_8class_count')>
+			<cfloop from="1" to="#form.upd_8class_count#" index="x">
+				<cfquery name="update_classes" datasource="#APPLICATION.DSN#">
+					UPDATE smg_student_app_grades
+					SET class_name = '#form["upd_8class_name" & x]#', 
+						hours = '#form["upd_8class_hour" & x]#',			
+						grade = '#form["upd_8class_grade" & x]#'
+					WHERE gradesid = '#form["upd_8class_gradesid" & x]#' 
+					LIMIT 1 
+				</cfquery>
+			</cfloop>
+		</cfif>
+
+
+
+
+
 		<!--- INSERT 9th SCHOOL YEAR --->
 		<cfif IsDefined('form.new_9class')>
 			<cfquery name="Insert_Year" datasource="#APPLICATION.DSN#">

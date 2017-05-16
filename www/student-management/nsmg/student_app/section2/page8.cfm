@@ -46,7 +46,7 @@
 <cfinclude template="../querys/get_student_info.cfm">
 
 <!--- querys to get 9, 10, 11 and 12th years and grades --->
-<cfloop from="9" to="12" index="i">
+<cfloop from="8" to="12" index="i">
 	<cfquery name="get_#i#class" datasource="#APPLICATION.DSN#">
 		SELECT yearid, studentid, beg_year, end_year, class_year
 		FROM smg_student_app_school_year 
@@ -106,7 +106,7 @@
                     <td align="center">
                         <div align="justify">
                             In English, type names, hours per week, and the final <b>(American-equivalent)</b> grade for the classes you attended
-                            in the 9<sup>th</sup>, 10<sup>th</sup>, 11<sup>th</sup> and 12<sup>th</sup> grades. Indicate the grade in which you 
+                            in the 8<sup>th</sup>, 9<sup>th</sup>, 10<sup>th</sup>, 11<sup>th</sup> and 12<sup>th</sup> grades. Indicate the grade in which you 
                             are presently enrolled. In addition to this translation, please also attach a copy of each year's transcript of grades 
                             issued by your school.
                         </div>
@@ -120,6 +120,163 @@
             <table width="670" border=0 cellpadding=0 cellspacing=0 align="center">
                 <tr>
                     <td width="48%" valign="top">
+                        <!--- 8th grade --->
+                        <table border=1 cellpadding=0 cellspacing=0  bordercolor="CCCCCC" width="100%">
+                            <cfif get_8class.recordcount EQ 0>  <!--- year has not been entered --->
+                                <tr>
+                                    <td colspan="3">
+                                        <em>
+                                            &nbsp; School Year &nbsp; 
+                                            <cfinput 
+                                                type="text" 
+                                                name="new8_beg_year" 
+                                                size="6" 
+                                                maxlength="4" 
+                                                validate="regex" 
+                                                pattern="^[0-9]{4,4}$"
+                                                range="1901,2155"
+                                                onchange="DataChanged();" 
+                                                validateat="onsubmit,onserver" 
+                                                message="8th Grade School Year - Please enter a valid year in the YYYY format."> 
+                                            (yyyy) &nbsp; to &nbsp; 
+                                            <cfinput 
+                                                type="text" 
+                                                name="new8_end_year" 
+                                                size="6" 
+                                                maxlength="4" 
+                                                validate="regex" 
+                                                pattern="^[0-9]{4,4}$"
+                                                range="1901,2155" 
+                                                onchange="DataChanged();"  
+                                                validateat="onsubmit,onserver" 
+                                                message="8th Grade School Year - Please enter a valid year in the YYYY format."> 
+                                            (yyyy)
+                                        </em>
+                                    </td>
+                                </tr>
+                                <cfinput type="hidden" name="new_8class" value="8th">
+                            <cfelse>
+                                <tr>
+                                    <td colspan="3">
+                                        <em>
+                                            &nbsp; School Year &nbsp; 
+                                            <cfinput 
+                                                type="text" 
+                                                name="upd8_beg_year" 
+                                                size="6" 
+                                                value="#DateFormat(get_8class.beg_year, 'yyyy')#" 
+                                                maxlength="4" 
+                                                validate="regex" 
+                                                pattern="^[0-9]{4,4}$" 
+                                                range="1901,2155" 
+                                                onchange="DataChanged();" 
+                                                validateat="onsubmit,onserver" 
+                                                message="8th Grade School Year - Please enter a valid year in the YYYY format."> 
+                                            (yyyy) &nbsp; to &nbsp; 
+                                            <cfinput 
+                                                type="text" 
+                                                name="upd8_end_year" 
+                                                size="6" 
+                                                value="#DateFormat(get_8class.end_year, 'yyyy')#" 
+                                                maxlength="4" 
+                                                validate="regex" 
+                                                pattern="^[0-9]{4,4}$" 
+                                                range="1901,2155" 
+                                                onchange="DataChanged();" 
+                                                validateat="onsubmit,onserver" 
+                                                message="8th Grade School Year - Please enter a valid year in the YYYY format."> 
+                                            (yyyy)
+                                        </em>
+                                    </td>
+                                </tr>
+                                <cfinput type="hidden" name="upd_8class" value="8th">
+                                <cfinput type="hidden" name="upd_8yearid" value="#get_8class.yearid#">          
+                            </cfif>
+                            <tr>
+                                <td align="center">
+                                    <em>8<sup>th</sup> year classes</em>
+                                </td>
+                                <td align="center">
+                                    <em>Hours <br>per week</em>
+                                </td>
+                                <td align="center">
+                                    <em>Final Grade<br> (Am. Equivalent)</em>
+                                </td>
+                            </tr>
+                            <cfif get_8class.recordcount NEQ 0>
+                                <cfinput type="hidden" name="upd_8class_count" value='#get_8grades.recordcount#'>       
+                                <cfloop query="get_8grades">
+                                    <tr>
+                                        <cfinput type="hidden" name="upd_8class_gradesid#currentrow#" value="#gradesid#">
+                                        <td align="center">
+                                            <cfinput 
+                                                type="text" 
+                                                name="upd_8class_name#currentrow#" 
+                                                value="#class_name#" 
+                                                size="24" 
+                                                onchange="DataChanged();">
+                                        </td>
+                                        <td align="center">
+                                            <cfinput 
+                                                type="text" 
+                                                name="upd_8class_hour#currentrow#" 
+                                                value="#hours#" 
+                                                size="6" 
+                                                maxlength="3" 
+                                                validate="range" 
+                                                message="Total of hours per week for #class_name# must be a number." 
+                                                onchange="DataChanged();">
+                                        </td>
+                                        <td align="center">
+                                            <cfinput 
+                                                type="text" 
+                                                name="upd_8class_grade#currentrow#" 
+                                                value="#grade#" 
+                                                size="12" 
+                                                maxlength="4" 
+                                                onchange="DataChanged();javascript:this.value=this.value.toUpperCase();">
+                                        </td>
+                                    </tr>           
+                                </cfloop>
+                            </cfif>         
+                            <!--- NEW CLASSES UP TO 14 --->
+                            <cfset new8classes = 14 - get_8grades.recordcount>
+                            <cfinput type="hidden" name="new_8class_count" value="#new8classes#">
+                            <cfinput type="hidden" name="new_8class_yearid" value="#get_8class.yearid#">
+                            <cfloop from="1" to="#new8classes#" index="i">
+                                <tr>
+                                    <td align="center">
+                                        <cfinput 
+                                            type="text" 
+                                            name="new_8class_name#i#" 
+                                            size="24" 
+                                            onchange="DataChanged();">
+                                    </td>
+                                    <td align="center">
+                                        <cfinput 
+                                            type="text" 
+                                            name="new_8class_hour#i#" 
+                                            size="6" 
+                                            maxlength="3" 
+                                            validate="range" 
+                                            message="8th class field #i# - Total of hours per week must be a number." 
+                                            onchange="DataChanged();">
+                                    </td>
+                                    <td align="center">
+                                        <cfinput 
+                                            type="text" 
+                                            name="new_8class_grade#i#" 
+                                            size="12" 
+                                            maxlength="4" 
+                                            onchange="DataChanged();javascript:this.value=this.value.toUpperCase();">
+                                    </td>
+                                </tr>
+                            </cfloop>       
+                        </table>
+                        	
+                    </td>
+                    <td width="4%">&nbsp;</td>
+                    <td width="48%" valign="top" align="left">
                         <!--- 9th grade --->
                         <table border=1 cellpadding=0 cellspacing=0  bordercolor="CCCCCC" width="100%">
                             <cfif get_9class.recordcount EQ 0>  <!--- year has not been entered --->
@@ -190,7 +347,7 @@
                                     </td>
                                 </tr>
                                 <cfinput type="hidden" name="upd_9class" value="9th">
-                                <cfinput type="hidden" name="upd_9yearid" value="#get_9class.yearid#">			
+                                <cfinput type="hidden" name="upd_9yearid" value="#get_9class.yearid#">          
                             </cfif>
                             <tr>
                                 <td align="center">
@@ -204,7 +361,7 @@
                                 </td>
                             </tr>
                             <cfif get_9class.recordcount NEQ 0>
-                                <cfinput type="hidden" name="upd_9class_count" value='#get_9grades.recordcount#'>		
+                                <cfinput type="hidden" name="upd_9class_count" value='#get_9grades.recordcount#'>       
                                 <cfloop query="get_9grades">
                                     <tr>
                                         <cfinput type="hidden" name="upd_9class_gradesid#currentrow#" value="#gradesid#">
@@ -236,9 +393,9 @@
                                                 maxlength="4" 
                                                 onchange="DataChanged();javascript:this.value=this.value.toUpperCase();">
                                         </td>
-                                    </tr>			
+                                    </tr>           
                                 </cfloop>
-                            </cfif>			
+                            </cfif>         
                             <!--- NEW CLASSES UP TO 14 --->
                             <cfset new9classes = 14 - get_9grades.recordcount>
                             <cfinput type="hidden" name="new_9class_count" value="#new9classes#">
@@ -271,11 +428,15 @@
                                             onchange="DataChanged();javascript:this.value=this.value.toUpperCase();">
                                     </td>
                                 </tr>
-                            </cfloop>		
-                        </table>	
+                            </cfloop>       
+                        </table>
                     </td>
-                    <td width="4%">&nbsp;</td>
-                    <td width="48%" valign="top" align="left">
+                </tr>
+            </table>
+            <br>
+            <table width="670" border=0 cellpadding=0 cellspacing=0 align="center">
+                <tr>
+                    <td width="48%" valign="top">
                         <!--- 10th grade --->
                         <table border=1 cellpadding=0 cellspacing=0  bordercolor="CCCCCC" width="100%">
                             <cfif get_10class.recordcount EQ 0>  <!--- year has not been entered --->
@@ -346,7 +507,7 @@
                                     </td>
                                 </tr>
                                 <cfinput type="hidden" name="upd_10class" value="10th">
-                                <cfinput type="hidden" name="upd_10yearid" value="#get_10class.yearid#">			
+                                <cfinput type="hidden" name="upd_10yearid" value="#get_10class.yearid#">            
                             </cfif>
                             <tr>
                                 <td align="center"><em>10<sup>th</sup> year classes</em></td>
@@ -354,7 +515,7 @@
                                 <td align="center"><em>Final Grade<br> (Am. Equivalent)</em></td>
                             </tr>
                             <cfif get_10class.recordcount NEQ 0>
-                                <cfinput type="hidden" name="upd_10class_count" value='#get_10grades.recordcount#'>		
+                                <cfinput type="hidden" name="upd_10class_count" value='#get_10grades.recordcount#'>     
                                 <cfloop query="get_10grades">
                                     <tr>
                                         <cfinput type="hidden" name="upd_10class_gradesid#currentrow#" value="#gradesid#">
@@ -386,9 +547,9 @@
                                                 maxlength="4" 
                                                 onchange="DataChanged();javascript:this.value=this.value.toUpperCase();">
                                         </td>
-                                    </tr>			
+                                    </tr>           
                                 </cfloop>
-                            </cfif>			
+                            </cfif>         
                             <!--- NEW CLASSES UP TO 14 --->
                             <cfset new10classes = 14 - get_10grades.recordcount>
                             <cfinput type="hidden" name="new_10class_count" value="#new10classes#">
@@ -421,15 +582,11 @@
                                             onchange="DataChanged();javascript:this.value=this.value.toUpperCase();">
                                     </td>
                                 </tr>
-                            </cfloop>		
-                        </table>	
+                            </cfloop>       
+                        </table>
                     </td>
-                </tr>
-            </table>
-            <br>
-            <table width="670" border=0 cellpadding=0 cellspacing=0 align="center">
-                <tr>
-                    <td width="48%" valign="top">
+                    <td width="4%">&nbsp;</td>
+                    <td width="48%" valign="top" align="left">
                         <!--- 11th grade --->
                         <table border=1 cellpadding=0 cellspacing=0  bordercolor="CCCCCC" width="100%">
                             <cfif get_11class.recordcount EQ 0>  <!--- year has not been entered --->
@@ -500,7 +657,7 @@
                                     </td>
                                 </tr>
                                 <cfinput type="hidden" name="upd_11class" value="11th">
-                                <cfinput type="hidden" name="upd_11yearid" value="#get_11class.yearid#">			
+                                <cfinput type="hidden" name="upd_11yearid" value="#get_11class.yearid#">            
                             </cfif>
                             <tr>
                                 <td align="center"><em>11<sup>th</sup> year classes</em></td>
@@ -508,7 +665,7 @@
                                 <td align="center"><em>Final Grade<br> (Am. Equivalent)</em></td>
                             </tr>
                             <cfif get_11class.recordcount NEQ 0>
-                                <cfinput type="hidden" name="upd_11class_count" value='#get_11grades.recordcount#'>		
+                                <cfinput type="hidden" name="upd_11class_count" value='#get_11grades.recordcount#'>     
                                 <cfloop query="get_11grades">
                                     <tr>
                                         <cfinput type="hidden" name="upd_11class_gradesid#currentrow#" value="#gradesid#">
@@ -540,9 +697,9 @@
                                                 maxlength="4" 
                                                 onchange="DataChanged();javascript:this.value=this.value.toUpperCase();">
                                         </td>
-                                    </tr>			
+                                    </tr>           
                                 </cfloop>
-                            </cfif>			
+                            </cfif>         
                             <!--- NEW CLASSES UP TO 14 --->
                             <cfset new11classes = 14 - get_11grades.recordcount>
                             <cfinput type="hidden" name="new_11class_count" value="#new11classes#">
@@ -575,10 +732,15 @@
                                             onchange="DataChanged();javascript:this.value=this.value.toUpperCase();">
                                     </td>
                                 </tr>
-                            </cfloop>		
+                            </cfloop>       
                         </table>	
-                    </td>
-                    <td width="4%">&nbsp;</td>
+					</td>
+                    </tr>
+                </table>
+                <br>
+
+                <table width="670" border=0 cellpadding=0 cellspacing=0 align="center">
+                <tr>
                     <td width="48%" valign="top" align="left">
                         <!--- 12th grade --->
                         <table border=1 cellpadding=0 cellspacing=0  bordercolor="CCCCCC" width="100%">
@@ -650,7 +812,7 @@
                                     </td>
                                 </tr>
                                 <cfinput type="hidden" name="upd_12class" value="12th">
-                                <cfinput type="hidden" name="upd_12yearid" value="#get_12class.yearid#">			
+                                <cfinput type="hidden" name="upd_12yearid" value="#get_12class.yearid#">            
                             </cfif>
                             <tr>
                                 <td align="center"><em>12<sup>th</sup> year classes</em></td>
@@ -658,7 +820,7 @@
                                 <td align="center"><em>Final Grade<br> (Am. Equivalent)</em></td>
                             </tr>
                             <cfif get_12class.recordcount NEQ 0>
-                                <cfinput type="hidden" name="upd_12class_count" value='#get_12grades.recordcount#'>		
+                                <cfinput type="hidden" name="upd_12class_count" value='#get_12grades.recordcount#'>     
                                 <cfloop query="get_12grades">
                                 <tr>
                                     <cfinput type="hidden" name="upd_12class_gradesid#currentrow#" value="#gradesid#">
@@ -690,9 +852,9 @@
                                             maxlength="4" 
                                             onchange="DataChanged();javascript:this.value=this.value.toUpperCase();">
                                     </td>
-                                </tr>			
+                                </tr>           
                             </cfloop>
-                        </cfif>			
+                        </cfif>         
                         <!--- NEW CLASSES UP TO 14 --->
                         <cfset new12classes = 14 - get_12grades.recordcount>
                         <cfinput type="hidden" name="new_12class_count" value="#new12classes#">
@@ -725,9 +887,13 @@
                                         onchange="DataChanged();javascript:this.value=this.value.toUpperCase();">
                                 </td>
                             </tr>
-                        </cfloop>		
-                    </table>	
-							</td>
+                        </cfloop>       
+                        </table>
+                    </td>
+                    <td width="4%">&nbsp;</td>
+                    <td width="48%" valign="top" align="left"> &nbsp;</td>
+                </tr>
+
 						
             </tr>
         </table>

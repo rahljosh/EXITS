@@ -162,15 +162,15 @@
 	<tr>
         <cfif ListFind("14,15,16", get_student_info.app_indicated_program)>     
         	<!--- Canada Application --->       	
-	        <td><em>What grade level will student have completed upon arrival in Canada?</em></td>
+	        <td width="65%"><em>What grade level will student have completed upon arrival in Canada?</em></td>
 		<cfelse>
         	<!--- USA - Public High School --->
-	        <td><em>What grade level will student have completed upon arrival in the USA?</em></td>
+	        <td width="65%"><em>What grade level will student have completed upon arrival in the USA?</em></td>
         </cfif>	
 		<td>
-			<cfif companyID EQ 6 OR companyID EQ 14>
-				<input type="radio" name="grades" id="grade8" value="8" onchange="DataChanged();" style="margin:2px;" <cfif grades EQ 8> checked="yes" </cfif>> <label for="grade8">8<sup>th</sup></label>
-			</cfif>
+			<!---<cfif companyID EQ 6 OR companyID EQ 14>--->
+			<input type="radio" name="grades" id="grade8" value="8" onchange="DataChanged();" style="margin:2px;" <cfif grades EQ 8> checked="yes" </cfif>> <label for="grade8">8<sup>th</sup></label>
+			<!---</cfif>--->
         	<input type="radio" name="grades" id="grade9" value="9" onchange="DataChanged();" style="margin:2px;" <cfif grades EQ 9> checked="yes" </cfif>> <label for="grade9">9<sup>th</sup></label>
             <input type="radio" name="grades" id="grade10" value="10" onchange="DataChanged();" style="margin:2px;" <cfif grades EQ 10> checked="yes" </cfif>> <label for="grade10">10<sup>th</sup></label>
             <input type="radio" name="grades" id="grade11" value="11" onchange="DataChanged();" style="margin:2px;" <cfif grades EQ 11> checked="yes" </cfif>> <label for="grade11">11<sup>th</sup></label>
