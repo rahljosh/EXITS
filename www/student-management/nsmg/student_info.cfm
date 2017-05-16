@@ -596,6 +596,21 @@
                             </tr>
 			 				
                             <tr><td align="center" colspan="2"><cfif dob EQ ''>n/a<cfelse>#dateformat (dob, 'mm/dd/yyyy')# - #datediff('yyyy',dob,now())# year old #sex# </cfif></td></tr> 
+
+                            <tr>
+                                <td colspan="2">Last Grade Completed: #grades#<sup>th</sup></td>
+                            </tr>
+
+                            <tr>
+                                <td>Country: </td>
+                                <cfquery name="countryresidency" datasource="#APPLICATION.DSN#">
+                                    SELECT countryname
+                                    FROM smg_countrylist
+                                    WHERE countryid = #countryresident#
+                                </cfquery>
+                                <td>#countryresidency.countryname#</td>
+                            </tr>
+
 							
                             <tr><td>Intl. Rep. : </td>
 								<td><select name="intrep" <cfif FORM.edit EQ 'no'>disabled</cfif> >
