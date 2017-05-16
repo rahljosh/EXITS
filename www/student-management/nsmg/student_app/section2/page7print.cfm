@@ -147,9 +147,9 @@
 	        <td><em>What grade level will student have completed upon arrival in the USA?</em></td>
         </cfif>	
 		<td>
-			<cfif companyID EQ 6 OR companyID EQ 14>
+			<!---<cfif companyID EQ 6 OR companyID EQ 14>--->
 				<cfif grades is '8'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> <cfelse> <img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> </cfif>  8<sup>th</sup>
-			</cfif>
+			<!---</cfif>--->
 			<cfif grades is '9'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> <cfelse> <img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> </cfif>  9<sup>th</sup> 
 			<cfif grades is '10'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> </cfif> 10<sup>th</sup>
 			<cfif grades is '11'><img src="#vStudentAppRelativePath#pics/RadioY.gif" width="13" height="13" border="0"> <cfelse><img src="#vStudentAppRelativePath#pics/RadioN.gif" width="13" height="13" border="0"> </cfif> 11<sup>th</sup>
