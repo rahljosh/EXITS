@@ -21,8 +21,8 @@
 
 <cfinclude template="../querys/get_student_info.cfm">
 
-<!--- querys to get 9, 10, 11 and 12th years and grades --->
-<cfloop from="9" to="12" index="i">
+<!--- querys to get 8, 9, 10, 11 and 12th years and grades --->
+<cfloop from="8" to="12" index="i">
 	<cfquery name="get_#i#class" datasource="#APPLICATION.DSN#">
 		SELECT yearid, studentid, beg_year, end_year, class_year
 		FROM smg_student_app_school_year 
@@ -66,22 +66,60 @@
 	<cfinclude template="../check_upl_print_file.cfm">
 </cfif>
 
-<table width="660" border="0" cellpadding="3" cellspacing="0" align="center">
-	<tr><td align="center"><b>TRANSCRIPT OF GRADES continued</b></td></tr>
-	<tr><td>&nbsp;</td></tr>
-	<tr><td align="center">
+<table width="660" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr><td align="center" colspan="3"><b>TRANSCRIPT OF GRADES continued</b></td></tr>
+	<tr><td align="center" colspan="3">
 		<div align="justify">
 			In English type names, hours per week, and the final <b>(American-equivalent)</b> grade for the classes you attended
-			in the 9<sup>th</sup>, 10<sup>th</sup>, 11<sup>th</sup> and 12<sup>th</sup> grades. Indicate the grade in which you 
+			in the 8<sup>th</sup>, 9<sup>th</sup>, 10<sup>th</sup>, 11<sup>th</sup> and 12<sup>th</sup> grades. Indicate the grade in which you 
 			are presently enrolled. In addition to this translation, please also attach a copy of each year’s transcript of grades 
 			issued by your school.
 		</div>
-	</td></tr>
+		</td>
+	</tr>
 	<tr><td>&nbsp;</td></tr>
-</table>
 
-<table width="660" border="0" cellpadding="3" cellspacing="0" align="center">
-<tr>
+	<tr>
+	<td width="48%" valign="top">
+	<!--- 8th grade --->
+		<table border=1 cellpadding=0 cellspacing=0  bordercolor="CCCCCC" width="100%">
+		<cfif get_8class.recordcount EQ 0>  <!--- year has not been entered --->
+			<tr><td colspan="3"><em>&nbsp; School Year &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; to &nbsp;</em></td></tr>
+		<cfelse>
+			<tr><td colspan="3">
+					<em>&nbsp; School Year &nbsp; 
+					#DateFormat(get_8class.beg_year, 'yyyy')# 
+					&nbsp; to &nbsp; 
+					#DateFormat(get_8class.end_year, 'yyyy')#</em></td></tr>
+		</cfif>
+		<tr>
+			<td align="center" style="font-size:11px;line-height:9px"><em>8<sup>th</sup> year classes</em></td>
+			<td align="center" style="font-size:11px;line-height:9px"><em>Hours <br>per week</em></td>
+			<td align="center" style="font-size:11px;line-height:9px"><em>Final Grade<br> (Am. Equivalent)</em></td>
+		</tr>
+		<cfif get_8class.recordcount NEQ 0>
+			<cfloop query="get_8grades">
+			<tr>
+				<td align="center" style="font-size:11px;line-height:11px"> &nbsp; #class_name#</td>
+				<td align="center" style="font-size:11px;line-height:11px"> &nbsp; #hours# </td>
+				<td align="center" style="font-size:11px;line-height:11px"> &nbsp; #grade# </td>
+			</tr>			
+			</cfloop>
+		</cfif>			
+		<!--- NEW CLASSES UP TO 14 --->
+		<cfset new8classes = 14 - get_8grades.recordcount>
+			<cfloop from="1" to="#new8classes#" index="i">
+			<tr>
+				<td align="center" style="font-size:11px;line-height:11px">&nbsp;</td>
+				<td align="center" style="font-size:11px;line-height:11px">&nbsp;</td>
+				<td align="center" style="font-size:11px;line-height:11px">&nbsp;</td>
+			</tr>
+			</cfloop>		
+		</table>	
+	</td>
+	
+	<td width="4%">&nbsp;</td>
+
 	<td width="48%" valign="top">
 	<!--- 9th grade --->
 		<table border=1 cellpadding=0 cellspacing=0  bordercolor="CCCCCC" width="100%">
@@ -95,14 +133,16 @@
 					#DateFormat(get_9class.end_year, 'yyyy')#</em></td></tr>
 		</cfif>
 		<tr>
-			<td align="center"><em>9<sup>th</sup> year classes</em></td><td align="center"><em>Hours <br>per week</em></td><td align="center"><em>Final Grade<br> (Am. Equivalent)</em></td>
+			<td align="center" style="font-size:11px;line-height:9px"><em>9<sup>th</sup> year classes</em></td>
+			<td align="center" style="font-size:11px;line-height:9px"><em>Hours <br>per week</em></td>
+			<td align="center" style="font-size:11px;line-height:9px"><em>Final Grade<br> (Am. Equivalent)</em></td>
 		</tr>
 		<cfif get_9class.recordcount NEQ 0>
 			<cfloop query="get_9grades">
 			<tr>
-				<td> &nbsp; #class_name#</td>
-				<td> &nbsp; #hours# </td>
-				<td> &nbsp; #grade# </td>
+				<td align="center" style="font-size:11px;line-height:11px"> &nbsp; #class_name#</td>
+				<td align="center" style="font-size:11px;line-height:11px"> &nbsp; #hours# </td>
+				<td align="center" style="font-size:11px;line-height:11px"> &nbsp; #grade# </td>
 			</tr>			
 			</cfloop>
 		</cfif>			
@@ -117,8 +157,11 @@
 			</cfloop>		
 		</table>	
 	</td>
-	
-	<td width="4%">&nbsp;</td>
+</table>
+
+
+<table width="660" border="0" cellpadding="0" cellspacing="0" align="center" style="margin-top:10px">
+<tr>
 
 	<td width="48%" valign="top" align="left">
 	<!--- 10th grade --->
@@ -133,14 +176,16 @@
 					#DateFormat(get_10class.end_year, 'yyyy')#</em></td></tr>
 		</cfif>
 		<tr>
-			<td align="center"><em>10<sup>th</sup> year classes</em></td><td align="center"><em>Hours <br>per week</em></td><td align="center"><em>Final Grade<br> (Am. Equivalent)</em></td>
+			<td align="center" style="font-size:11px;line-height:9px"><em>10<sup>th</sup> year classes</em></td>
+			<td align="center" style="font-size:11px;line-height:9px"><em>Hours <br>per week</em></td>
+			<td align="center" style="font-size:11px;line-height:9px"><em>Final Grade<br> (Am. Equivalent)</em></td>
 		</tr>
 		<cfif get_10class.recordcount NEQ 0>
 			<cfloop query="get_10grades">
 			<tr>
-				<td> &nbsp; #class_name#</td>
-				<td> &nbsp; #hours# </td>
-				<td> &nbsp; #grade# </td>
+				<td align="center" style="font-size:11px;line-height:11px"> &nbsp; #class_name#</td>
+				<td align="center" style="font-size:11px;line-height:11px"> &nbsp; #hours# </td>
+				<td align="center" style="font-size:11px;line-height:11px"> &nbsp; #grade# </td>
 			</tr>			
 			</cfloop>
 		</cfif>			
@@ -155,11 +200,9 @@
 			</cfloop>		
 		</table>	
 	</td>
-</tr>
-</table><br>
 
-<table width="660" border="0" cellpadding="3" cellspacing="0" align="center">
-<tr>
+	<td width="4%">&nbsp;</td>
+
 	<td width="48%" valign="top">
 	<!--- 11th grade --->
 		<table border=1 cellpadding=0 cellspacing=0  bordercolor="CCCCCC" width="100%">
@@ -173,14 +216,16 @@
 					#DateFormat(get_11class.end_year, 'yyyy')#</em></td></tr>
 		</cfif>
 		<tr>
-			<td align="center"><em>11<sup>th</sup> year classes</em></td><td align="center"><em>Hours <br>per week</em></td><td align="center"><em>Final Grade<br> (Am. Equivalent)</em></td>
+			<td align="center" style="font-size:11px;line-height:9px"><em>11<sup>th</sup> year classes</em></td>
+			<td align="center" style="font-size:11px;line-height:9px"><em>Hours <br>per week</em></td>
+			<td align="center" style="font-size:11px;line-height:9px"><em>Final Grade<br> (Am. Equivalent)</em></td>
 		</tr>
 		<cfif get_11class.recordcount NEQ 0>
 			<cfloop query="get_11grades">
 			<tr>
-				<td> &nbsp; #class_name#</td>
-				<td> &nbsp; #hours# </td>
-				<td> &nbsp; #grade# </td>
+				<td align="center" style="font-size:11px;line-height:11px"> &nbsp; #class_name#</td>
+				<td align="center" style="font-size:11px;line-height:11px"> &nbsp; #hours# </td>
+				<td align="center" style="font-size:11px;line-height:11px"> &nbsp; #grade# </td>
 			</tr>			
 			</cfloop>
 		</cfif>			
@@ -196,8 +241,14 @@
 		</table>	
 	</td>
 	
-	<td width="4%">&nbsp;</td>
 	
+</tr>
+</table>
+
+
+
+<table width="660" border="0" cellpadding="0" cellspacing="0" align="center" style="margin-top:10px">
+<tr>	
 	<td width="48%" valign="top" align="left">
 	<!--- 12th grade --->
 		<table border=1 cellpadding=0 cellspacing=0  bordercolor="CCCCCC" width="100%">
@@ -211,14 +262,16 @@
 					#DateFormat(get_12class.end_year, 'yyyy')#</em></td></tr>
 		</cfif>
 		<tr>
-			<td align="center"><em>12<sup>th</sup> year classes</em></td><td align="center"><em>Hours <br>per week</em></td><td align="center"><em>Final Grade<br> (Am. Equivalent)</em></td>
+			<td align="center" style="font-size:11px;line-height:9px"><em>12<sup>th</sup> year classes</em></td>
+			<td align="center" style="font-size:11px;line-height:9px"><em>Hours <br>per week</em></td>
+			<td align="center" style="font-size:11px;line-height:9px"><em>Final Grade<br> (Am. Equivalent)</em></td>
 		</tr>
 		<cfif get_12class.recordcount NEQ 0>
 			<cfloop query="get_12grades">
 			<tr>
-				<td> &nbsp; #class_name#</td>
-				<td> &nbsp; #hours# </td>
-				<td> &nbsp; #grade# </td>
+				<td align="center" style="font-size:11px;line-height:11px"> &nbsp; #class_name#</td>
+				<td align="center" style="font-size:11px;line-height:11px"> &nbsp; #hours# </td>
+				<td align="center" style="font-size:11px;line-height:11px"> &nbsp; #grade# </td>
 			</tr>			
 			</cfloop>
 		</cfif>			
@@ -233,18 +286,24 @@
 			</cfloop>		
 		</table>	
 	</td>
+	<td width="4%" valign="top" align="left">&nbsp;</td>
+	<td width="48%" valign="top" align="left">&nbsp;</td>
 </tr>
 </table><br>
 
-<table width="660" border="0" cellpadding="3" cellspacing="0" align="center">
-	<tr><td align="center">Please attach a copy of each year's transcript of grades.</td></tr>	
-	<tr><td>&nbsp;</td></tr>
-	<tr><td align="center">
+<table width="660" border="0" cellpadding="0" cellspacing="0" align="center">
+	<tr>
+		<td align="center">
+			Please attach a copy of each year's transcript of grades.
+		</td>
+	</tr>	
+	<tr>
+		<td align="center">
 			Students must bring an official transcript with them for scheduling purposes in the American School. <br>
 			All documents must be translated into English.
-	</td></tr>
-	<tr><td>&nbsp;</td></tr>
-</table><br><br>
+		</td>
+	</tr>
+</table>
 
 </div>
 
