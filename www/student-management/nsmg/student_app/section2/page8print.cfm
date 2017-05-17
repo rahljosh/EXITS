@@ -150,9 +150,9 @@
 		<cfset new9classes = 14 - get_9grades.recordcount>
 			<cfloop from="1" to="#new9classes#" index="i">
 			<tr>
-				<td align="center">&nbsp;</td>
-				<td align="center">&nbsp;</td>
-				<td align="center">&nbsp;</td>
+				<td align="center" style="font-size:11px;line-height:11px">&nbsp;</td>
+				<td align="center" style="font-size:11px;line-height:11px">&nbsp;</td>
+				<td align="center" style="font-size:11px;line-height:11px">&nbsp;</td>
 			</tr>
 			</cfloop>		
 		</table>	
@@ -193,9 +193,9 @@
 		<cfset new10classes = 14 - get_10grades.recordcount>
 			<cfloop from="1" to="#new10classes#" index="i">
 			<tr>
-				<td align="center">&nbsp;</td>
-				<td align="center">&nbsp;</td>
-				<td align="center">&nbsp;</td>
+				<td align="center" style="font-size:11px;line-height:11px">&nbsp;</td>
+				<td align="center" style="font-size:11px;line-height:11px">&nbsp;</td>
+				<td align="center" style="font-size:11px;line-height:11px">&nbsp;</td>
 			</tr>
 			</cfloop>		
 		</table>	
@@ -233,9 +233,9 @@
 		<cfset new11classes = 14 - get_11grades.recordcount>
 			<cfloop from="1" to="#new11classes#" index="i">
 			<tr>
-				<td align="center">&nbsp;</td>
-				<td align="center">&nbsp;</td>
-				<td align="center">&nbsp;</td>
+				<td align="center" style="font-size:11px;line-height:11px">&nbsp;</td>
+				<td align="center" style="font-size:11px;line-height:11px">&nbsp;</td>
+				<td align="center" style="font-size:11px;line-height:11px">&nbsp;</td>
 			</tr>
 			</cfloop>		
 		</table>	
@@ -279,9 +279,9 @@
 		<cfset new12classes = 14 - get_12grades.recordcount>
 			<cfloop from="1" to="#new12classes#" index="i">
 			<tr>
-				<td align="center">&nbsp;</td>
-				<td align="center">&nbsp;</td>
-				<td align="center">&nbsp;</td>
+				<td align="center" style="font-size:11px;line-height:11px">&nbsp;</td>
+				<td align="center" style="font-size:11px;line-height:11px">&nbsp;</td>
+				<td align="center" style="font-size:11px;line-height:11px">&nbsp;</td>
 			</tr>
 			</cfloop>		
 		</table>	
