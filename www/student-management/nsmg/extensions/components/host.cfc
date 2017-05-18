@@ -214,9 +214,10 @@
         <cfscript>
 			vSeasonID = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID;
 			if (LEN(ARGUMENTS.programID)) {
-				vSeasonID = APPLICATION.CFC.PROGRAM.getPrograms(programID=ARGUMENTS.programID).seasonID;	
+				vSeasonID = APPLICATION.CFC.PROGRAM.getPrograms(programID=ARGUMENTS.programID).seasonID;
 			}
 		</cfscript>
+        <cfset vNextSeasonID = #vSeasonID# + 1>
         
         <cfquery name="qGetProgramInfo" datasource="#APPLICATION.DSN#">
         	SELECT *
@@ -269,13 +270,15 @@
                         SELECT hostID 
                         FROM smg_host_app_season 
                         WHERE applicationStatusID < 9 
-                        AND seasonID >= <cfqueryparam cfsqltype="cf_sql_integer" value="#vSeasonID#"> )
+                        AND seasonID IN ('#vSeasonID#,#vNextSeasonID#' ) )
                 <cfelseif NOT ListFind("13",CLIENT.companyID)>
                     AND hostID IN (
                         SELECT hostID 
                         FROM smg_host_app_season 
                         WHERE applicationStatusID < 4 
-                        AND seasonID >= <cfqueryparam cfsqltype="cf_sql_integer" value="#vSeasonID#"> )
+                        AND seasonID >= #vSeasonID#  )
+                <cfelse>
+                
                	</cfif>
                 ORDER BY familyLastName
         </cfquery>
@@ -2760,10 +2763,13 @@
                         <p>Everyone here is excited about your decision to host next season and looks forward to sharing the experience with you.</p>
                         <p>
                         	Please review these documents to help familiarize yourself with the many aspects of becoming a host family. 
-                            - <a href="#CLIENT.site_URL#/pdfs/HostFamilyHandbook.pdf">Host Family Handbook</a>
-                            - <a href="#CLIENT.site_URL#/pdfs/student-handbook.pdf">Student Handbook</a>
-                            - <a href="#CLIENT.site_URL#/pdfs/hostfamilyadvisoryletter2016.pdf"> </a>
-                            - <a href="#CLIENT.site_URL#/pdfs/studentadvisoryletter2016.pdf"> </a>
+                            - <a href="#CLIENT.site_URL#/pdfs/HostFamilyHandbook.pdf">Host Family Handbook</a><br>
+                            - <a href="#CLIENT.site_URL#/pdfs/student-handbook.pdf">Student Handbook</a><br>
+                            <cfif client.companyid NEQ 14>
+                            - <a href="#CLIENT.site_URL#/pdfs/hostfamilyadvisoryletter2016.pdf">Host Family Advisory Letter</a><br>
+                            - <a href="#CLIENT.site_URL#/pdfs/studentadvisoryletter2016.pdf">Student Advisory Letter</a><br>
+                            </cfif>
+                            
                         </p>
                         <p>If you have any questions, you should always contact your Area Rep first. In an emergency, you can contact us, here at the headquarters.</p>
                         
@@ -2903,7 +2909,8 @@
                         <p>Dear #ARGUMENTS.regionalManager#,</p>
                         
                         <p>
-	                        This email is intended to notify you that the Compliance Department has requested additional information in order to approve the #ARGUMENTS.hostFamilyLastName# family's Host Application. 
+	                        This email is intended to notify you that the Compliance Department has requested additional information in order to 
+                            approve the #ARGUMENTS.hostFamilyLastName# family's Host Application. 
                         </p>
                         
                         <p>Please find a list of requested updates below.</p>
@@ -3203,6 +3210,7 @@
                     hl.statusID,
                     hl.firstName,
                     hl.lastName,
+                    CONCAT(hl.firstName, ' ',hl.lastName) AS hostLeadName,
                     hl.address,
                     hl.address2,
                     hl.city,
@@ -3265,6 +3273,7 @@
                 ORDER BY
                     hl.dateCreated,
                     hl.lastName
+                
 		</cfquery>
 
         <cfscript>
@@ -3723,6 +3732,7 @@
                     hl.isListSubscriber,
                     DATE_FORMAT(hl.dateCreated, '%m/%e/%Y') as dateCreated,
                     DATE_FORMAT(hl.dateLastLoggedIn, '%m/%e/%Y') as dateLastLoggedIn,
+                    DATE_FORMAT(hl.dateUpdated, '%m/%e/%Y') as dateUpdated,
                     <!--- Follow Up Representative --->
                     CONCAT(fu.firstName, ' ', fu.lastName) AS followUpAssigned,
                     <!--- State --->
@@ -3796,7 +3806,7 @@
                 <cfelseif ARGUMENTS.statusID NEQ 'All'>
                 	<!--- Do not display final dispositions: 3=Not Interested / 8=Converted to Host Family --->
                     AND
-						hl.statusID NOT IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="3,8" list="yes"> )
+						hl.statusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,12,13" list="yes"> )
 				</cfif>
                 
                 <cfif LEN(ARGUMENTS.keyword)>
@@ -3921,7 +3931,7 @@
 			}
 
 			// Populate structure with query
-			resultQuery = QueryNew("ID, hashID, firstName, lastName, city, state, zipCode, phone, email, dateCreated, dateLastLoggedIn, statusAssigned, regionAssigned, areaRepAssigned");
+			resultQuery = QueryNew("ID, hashID, firstName, lastName, city, state, zipCode, phone, email, dateCreated, dateUpdated, dateLastLoggedIn, statusAssigned, regionAssigned, areaRepAssigned");
 			
 			if ( qGetHostLeadsRemote.recordCount < stResult.recordTo ) {
 				stResult.recordTo = qGetHostLeadsRemote.recordCount;
@@ -3942,6 +3952,7 @@
 					QuerySetCell(resultQuery, "phone", qGetHostLeadsRemote.phone[i]);
 					QuerySetCell(resultQuery, "email", qGetHostLeadsRemote.email[i]);
 					QuerySetCell(resultQuery, "dateCreated", qGetHostLeadsRemote.dateCreated[i]);
+					QuerySetCell(resultQuery, "dateUpdated", qGetHostLeadsRemote.dateUpdated[i]);
 					QuerySetCell(resultQuery, "dateLastLoggedIn", qGetHostLeadsRemote.dateLastLoggedIn[i]);
 					QuerySetCell(resultQuery, "statusAssigned", qGetHostLeadsRemote.statusAssigned[i]);
 					QuerySetCell(resultQuery, "regionAssigned", qGetHostLeadsRemote.regionAssigned[i]);
