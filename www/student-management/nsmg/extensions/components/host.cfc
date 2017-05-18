@@ -4174,5 +4174,382 @@
 	<!--- ------------------------------------------------------------------------- ----
 		END OF HOST LEADS
 	----- ------------------------------------------------------------------------- --->
+
+
+    <cffunction name="getHostsRemote" access="remote" returnFormat="json" output="false" hint="Returns host leads in Json format">
+        <cfargument name="pageNumber" type="numeric" default="1" hint="Page number is not required">
+        <cfargument name="regionid" type="numeric" default="" hint="regionid is not required">
+        <cfargument name="keyword" type="string" default="" hint="dateTo is not required">
+        <cfargument name="active_rep" type="string" default="" hint="active_rep is not required">
+        <cfargument name="hosting" type="string" default="" hint="hosting is not required">
+        <cfargument name="active" type="string" default="" hint="active is not required">
+        <cfargument name="available_to_host" type="string" default="" hint="available_to_host is not required">
+        <cfargument name="area_rep" type="string" default="" hint="area_rep is not required">
+        <cfargument name="vHostIDList" type="string" default="" hint="vHostIDList is not required">
+        <cfargument name="sortBy" type="string" default="dateCreated" hint="sortBy is not required">
+        <cfargument name="sortOrder" type="string" default="DESC" hint="sortOrder is not required">
+        <cfargument name="pageSize" type="numeric" default="30" hint="Page number is not required">
+
+        <!--- OFFICE PEOPLE AND ABOVE --->
+        <cfif APPLICATION.CFC.USER.isOfficeUser()>
+            
+            <cfquery name="qGetResults" datasource="#application.dsn#">
+                SELECT 
+                    h.hostid, 
+                    h.nexits_id,
+                    h.familylastname, 
+                    h.fatherfirstname, 
+                    h.motherfirstname, 
+                    h.city, 
+                    h.state,
+                    h.isNotQualifiedToHost,
+                    h.isHosting,
+                    h.phone,
+                    h.call_back,
+                    u.firstname AS area_rep_firstname,
+                    u.lastname AS area_rep_lastname,
+                    p.programName
+                FROM 
+                    smg_hosts h
+
+                LEFT OUTER JOIN      (
+                          SELECT    MAX(studentID) studentID, hostID
+                          FROM      smg_hosthistory
+                          GROUP BY  hostid
+                      ) hh ON (hh.hostid = h.hostid)
+
+                LEFT OUTER JOIN smg_students s ON s.studentID = hh.studentID
+                LEFT OUTER JOIN smg_users u ON h.arearepID = u.userID
+                LEFT OUTER JOIN smg_programs p ON s.programId = p.programID
+                
+                WHERE 
+                    1 = 1
+                    
+                <cfif CLIENT.companyID EQ 5>
+                    AND
+                        h.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> ) 
+                <cfelse>
+                    AND 
+                        h.companyid = #CLIENT.companyid#
+                </cfif>
+                
+                <cfif VAL(ARGUMENTS.regionid)>
+                    AND 
+                        h.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionid#">
+                </cfif>
+
+                <cfif ARGUMENTS.active_rep EQ 1>
+                    AND u.active = 1
+                <cfelseif ARGUMENTS.active_rep EQ 0>
+                    AND u.active = 0 
+                </cfif>
+                
+                <cfif LEN(TRIM(ARGUMENTS.keyword))>
+                    AND (
+                            h.hostid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(ARGUMENTS.keyword)#">
+                        OR 
+                            h.familylastname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(ARGUMENTS.keyword)#%">
+                        OR 
+                            h.fatherfirstname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(ARGUMENTS.keyword)#%">
+                        OR 
+                            h.motherfirstname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(ARGUMENTS.keyword)#%">
+                        OR 
+                            h.city LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(ARGUMENTS.keyword)#%">
+                        OR 
+                            h.state LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(ARGUMENTS.keyword)#%">
+                        OR 
+                            h.email LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(ARGUMENTS.keyword)#%">
+                        )
+                </cfif>
+                
+                <cfif ARGUMENTS.hosting EQ 1>
+                    AND 
+                        s.active = 1
+                <cfelseif ARGUMENTS.hosting EQ 0>
+                    AND 
+                        s.hostid IS NULL
+                </cfif>
+                
+                <cfif LEN(ARGUMENTS.active)>
+                    AND 
+                        h.active = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.active#">
+                </cfif>
+
+                <cfif ARGUMENTS.available_to_host EQ 1>
+                    AND h.isNotQualifiedToHost = 0
+                    AND h.isHosting = 1
+                <cfelseif ARGUMENTS.available_to_host EQ 0>
+                    AND (h.isNotQualifiedToHost = 1
+                    OR h.isHosting = 0)
+                </cfif>
+                
+                <cfif VAL(ARGUMENTS.area_rep)>
+                    AND h.areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.area_rep)#">
+                </cfif>
+
+                GROUP BY 
+                    h.hostID
+                ORDER BY 
+                    <cfswitch expression="#ARGUMENTS.sortBy#">
+                    
+                    <cfcase value="hostID">                    
+                        h.hostID #ARGUMENTS.sortOrder#,
+                        h.familylastname
+                    </cfcase>
+                
+                    <cfcase value="nexitsID">
+                        h.nexits_id #ARGUMENTS.sortOrder#,
+                        h.familylastname
+                    </cfcase>
+    
+                    <cfcase value="lastName">
+                        h.familylastname #ARGUMENTS.sortOrder#
+                    </cfcase>
+    
+                    <cfcase value="father">
+                        h.fatherfirstname #ARGUMENTS.sortOrder#,
+                        h.familylastname
+                    </cfcase>
+
+                    <cfcase value="mother">
+                        h.motherFirstName #ARGUMENTS.sortOrder#,
+                        h.familylastname
+                    </cfcase>
+    
+                    <cfcase value="phone">
+                        h.phone #ARGUMENTS.sortOrder#,
+                        h.familylastname
+                    </cfcase>
+
+                    <cfcase value="city">
+                        h.city #ARGUMENTS.sortOrder#,
+                        h.familylastname
+                    </cfcase>
+    
+                    <cfcase value="state">
+                        h.state #ARGUMENTS.sortOrder#,
+                        h.familylastname
+                    </cfcase>
+
+                    <cfcase value="areaRep">
+                        u.lastname #ARGUMENTS.sortOrder#,
+                        u.firstname
+                    </cfcase>
+    
+                    <cfcase value="lastHosted">
+                        p.programID DESC,
+                        h.familylastname
+                    </cfcase>
+
+                    <cfcase value="hostStatus">
+                        h.isNotQualifiedToHost
+                    </cfcase>
+    
+                    <cfdefaultcase>
+                        h.hostID DESC
+                    </cfdefaultcase>
+    
+                </cfswitch>  
+            </cfquery>
+        
+        <!--- FIELD --->
+        <cfelse>
+            
+            <!---- REGIONAL ADVISOR ----->
+            <cfif CLIENT.usertype EQ 6>
+
+                <cfscript>
+                    // Get Available Reps
+                    qGetUserUnderAdv = APPLICATION.CFC.USER.getSupervisedUsers(userType=CLIENT.userType, userID=CLIENT.userID, regionID=FORM.regionID);
+                    
+                    // Store Users under Advisor on a list
+                    vSupervisedUserIDList = ValueList(qGetUserUnderAdv.userID);
+                </cfscript>
+
+                <cfquery name="qGetHostList" datasource="#application.dsn#">
+                    SELECT
+                        h.hostID
+                    FROM
+                        smg_hosts h
+                    LEFT OUTER JOIN
+                        smg_students s ON s.hostID = h.hostID
+                    WHERE
+                        h.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionID#">
+                    AND
+                        (    
+                            s.areaRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vSupervisedUserIDList#" list="yes">  )
+                        OR 
+                            s.placeRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vSupervisedUserIDList#" list="yes">  )
+                        OR
+                            h.areaRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vSupervisedUserIDList#" list="yes">  )              
+                        )
+                    GROUP BY
+                        hostID                 
+                </cfquery>
+                
+                <cfscript>
+                    // Add to a list
+                    vHostIDList = ValueList(qGetHostList.hostID);
+                </cfscript>
+                
+            <!--- AREA REP - STUDENTS VIEW --->
+            <cfelseif listFind("7,9", CLIENT.usertype)>
+            
+                <cfquery name="qGetHostList" datasource="#application.dsn#">
+                    SELECT
+                        h.hostID
+                    FROM
+                        smg_hosts h
+                    LEFT OUTER JOIN
+                        smg_students s ON s.hostID = h.hostID
+                    WHERE
+                        h.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionID#">
+                    AND
+                        (    
+                            s.areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
+                        OR 
+                            s.placeRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
+                        OR
+                            h.areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">                        
+                        )
+                    GROUP BY
+                        hostID                 
+                </cfquery>
+
+                <cfscript>
+                    // Add to a list
+                    vHostIDList = ValueList(qGetHostList.hostID);
+                </cfscript>
+                
+            </cfif>
+      
+            <cfquery name="qGetResults" datasource="#application.dsn#">
+                SELECT DISTINCT 
+                    h.familylastname, 
+                    h.fatherfirstname, 
+                    h.motherfirstname, 
+                    h.hostid, 
+                    h.nexits_id,
+                    h.city, 
+                    h.state
+                FROM 
+                    smg_hosts h
+                <!--- REGIONAL MANAGER SEES ALL FAMILIES ON THE REGION --->
+                WHERE 
+                    h.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionid#">
+                    
+                <cfif LEN(TRIM(ARGUMENTS.keyword))>
+                    AND (
+                            h.hostid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(ARGUMENTS.keyword)#">
+                        OR 
+                            h.familylastname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(ARGUMENTS.keyword)#%">
+                        OR 
+                            h.fatherfirstname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(ARGUMENTS.keyword)#%">
+                        OR 
+                            h.motherfirstname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(ARGUMENTS.keyword)#%">
+                        OR 
+                            h.city LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(ARGUMENTS.keyword)#%">
+                        OR 
+                            h.state LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(ARGUMENTS.keyword)#%">
+                        OR 
+                            h.email LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(ARGUMENTS.keyword)#%">
+                    )
+                </cfif>
+                
+                <!--- if vHostIDList is null return 0 results. --->
+                <cfif listFind("6,7,9", CLIENT.usertype) AND NOT LEN(ARGUMENTS.vHostIDList)>
+                    AND 
+                        1 = 0
+                <!--- Advisors, AR and Student view has limited access --->
+                <cfelseif listFind("6,7,9", CLIENT.usertype) AND LEN(ARGUMENTS.vHostIDList)>
+                    AND
+                        h.hostid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.vHostIDList#" list="yes"> )
+                </cfif>
+                    
+                ORDER BY 
+                    #ARGUMENTS.orderby#
+            </cfquery>
+            
+        </cfif>
+
+        <cfscript>
+            // Set return structure that will store query + pagination information
+            stResult = StructNew();
+            
+            // Populate structure with pagination information
+            stResult.pageNumber = ARGUMENTS.pageNumber;
+            stResult.numberOfRecordsOnPage = ARGUMENTS.pageSize;
+            stResult.numberOfPages = Ceiling( qGetResults.recordCount / stResult.numberOfRecordsOnPage );
+            stResult.numberOfRecords = qGetResults.recordCount;
+            stResult.sortBy = ARGUMENTS.sortBy;
+            stResult.sortOrder = ARGUMENTS.sortOrder;
+            
+            // Here using url.pagenumber to work out what records to display on current page
+            stResult.recordFrom = ( (ARGUMENTS.pageNumber * stResult.numberOfRecordsOnPage) - stResult.numberOfRecordsOnPage) + 1;
+            stResult.recordTo = ( ARGUMENTS.pageNumber * stResult.numberOfRecordsOnPage );
+            
+            /* 
+                if on last page display the actual number of records in record set as the last to 'figure'. Otherwise it gives 
+                a false reading and gives the pagenumber * numberOfRecordsOnPage which is always a multiple of 10
+            */
+            if ( stResult.recordTo EQ (stResult.numberOfPages * 10) ) {
+                stResult.recordTo = qGetResults.recordCount;
+            }
+
+            // Populate structure with query
+            resultQuery = QueryNew("hostid, nexits_id, familylastname, fatherfirstname, motherfirstname, city, state, isNotQualifiedToHost, isHosting, phone, call_back, area_rep_firstname, area_rep_lastname, programName, hostStatus");
+            
+            if ( qGetResults.recordCount < stResult.recordTo ) {
+                stResult.recordTo = qGetResults.recordCount;
+            }
+            
+            // Populate query below
+            if ( qGetResults.recordCount ) {
+                
+                For ( i=stResult.recordFrom; i LTE stResult.recordTo; i++ ) {
+                    QueryAddRow(resultQuery);
+                    QuerySetCell(resultQuery, "hostid", qGetResults.hostid[i]);
+                    QuerySetCell(resultQuery, "nexits_id", qGetResults.nexits_id[i]);
+                    QuerySetCell(resultQuery, "familylastname", qGetResults.familylastname[i]);
+                    QuerySetCell(resultQuery, "fatherfirstname", qGetResults.fatherfirstname[i]);
+                    QuerySetCell(resultQuery, "motherfirstname", qGetResults.motherfirstname[i]);
+                    QuerySetCell(resultQuery, "city", qGetResults.city[i]);
+                    QuerySetCell(resultQuery, "state", qGetResults.state[i]);
+                    QuerySetCell(resultQuery, "isNotQualifiedToHost", qGetResults.isNotQualifiedToHost[i]);
+                    QuerySetCell(resultQuery, "isHosting", qGetResults.isHosting[i]);
+                    QuerySetCell(resultQuery, "phone", qGetResults.phone[i]);
+                    QuerySetCell(resultQuery, "call_back", qGetResults.call_back[i]);
+                    QuerySetCell(resultQuery, "area_rep_firstname", qGetResults.area_rep_firstname[i]);
+                    QuerySetCell(resultQuery, "area_rep_lastname", qGetResults.area_rep_lastname[i]);
+                    QuerySetCell(resultQuery, "programName", qGetResults.programName[i]);
+
+                    if (qGetResults.isNotQualifiedToHost[i] == 1) {
+                        QuerySetCell(resultQuery, "hostStatus", 'Not qualified to host');
+                    } else if (qGetResults.isHosting[i] == 0) {
+                        QuerySetCell(resultQuery, "hostStatus", 'Decided not to host');
+                    } else {
+                        QuerySetCell(resultQuery, "hostStatus", 'Available to Host');
+                    }
+                    
+
+                    if (qGetResults.call_back[i] == 1) {
+                        QuerySetCell(resultQuery, "hostStatus", 'Call Back');
+                    } else if (qGetResults.call_back[i] == 2) {
+                        QuerySetCell(resultQuery, "hostStatus", 'Call Back Next SY');
+                    }
+
+                }
+            
+            }
+            
+            // Add query to structure
+            stResult.query = resultQuery;
+            
+            // return structure
+            return stResult;            
+        </cfscript>
+
+        
+    </cffunction>
     
 </cfcomponent>
