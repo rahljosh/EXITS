@@ -198,7 +198,7 @@
             tableHeader += '<td id="phone" class="listTitle"><a href="javascript:void(0);" title="Sort By Phone">Phone</a></td>';                                                           
             tableHeader += '<td id="email" class="listTitle"><a href="javascript:void(0);" title="Sort By Email">Email</a></td>'; 
             tableHeader += '<td id="dateCreated" class="listTitle"><a href="javascript:void(0);" title="Sort By Submitted On">Submitted On</a></td>'; 
-			tableHeader += '<td id="dateLastLoggedIn" class="listTitle"><a href="javascript:void(0);" title="Sort By Last Login">Last Login</a></td>'; 
+			tableHeader += '<td id="dateUpdated" class="listTitle"><a href="javascript:void(0);" title="Sort By Last Updated">Last Updated</a></td>'; 
             tableHeader += '<td id="regionAssigned" class="listTitle"><a href="javascript:void(0);" title="Sort By Region">Region</a></td>';  
             tableHeader += '<td id="areaRepAssigned" class="listTitle"><a href="javascript:void(0);" title="Sort By Area Rep.">Area Rep.</a></td>';  		
             tableHeader += '<td id="statusAssigned" class="listTitle"><a href="javascript:void(0);" title="Sort By Status">Status</a></td>';  			
@@ -217,7 +217,7 @@
 		$('#phone').click(function (){getHostLeadList(pageNumber,this.id);});
 		$('#email').click(function (){getHostLeadList(pageNumber,this.id);});
 		$('#dateCreated').click(function (){getHostLeadList(pageNumber,this.id);});
-		$('#dateLastLoggedIn').click(function (){getHostLeadList(pageNumber,this.id);});
+		$('#dateUpdated').click(function (){getHostLeadList(pageNumber,this.id);});
 		$('#regionAssigned').click(function (){getHostLeadList(pageNumber,this.id);});
 		$('#areaRepAssigned').click(function (){getHostLeadList(pageNumber,this.id);});
 		$('#statusAssigned').click(function (){getHostLeadList(pageNumber,this.id);});
@@ -240,7 +240,7 @@
 			var phone = hostLeadData.QUERY.DATA[i][hostLeadData.QUERY.COLUMNS.findIdx('PHONE')];
 			var email = hostLeadData.QUERY.DATA[i][hostLeadData.QUERY.COLUMNS.findIdx('EMAIL')];
 			var dateCreated = hostLeadData.QUERY.DATA[i][hostLeadData.QUERY.COLUMNS.findIdx('DATECREATED')];
-			var dateLastLoggedIn = hostLeadData.QUERY.DATA[i][hostLeadData.QUERY.COLUMNS.findIdx('DATELASTLOGGEDIN')];
+			var dateUpdated = hostLeadData.QUERY.DATA[i][hostLeadData.QUERY.COLUMNS.findIdx('dateUpdated')];
 			var regionAssigned = hostLeadData.QUERY.DATA[i][hostLeadData.QUERY.COLUMNS.findIdx('REGIONASSIGNED')];
 			var areaRepAssigned = hostLeadData.QUERY.DATA[i][hostLeadData.QUERY.COLUMNS.findIdx('AREAREPASSIGNED')];
 			var statusAssigned = hostLeadData.QUERY.DATA[i][hostLeadData.QUERY.COLUMNS.findIdx('STATUSASSIGNED')];
@@ -457,30 +457,7 @@
                     </cfloop>
                 </select>
             </td>   
-            <td class="listTitle">
-                <label for="sortBy">Sort By</label> <br />    
-                <select name="sortBy" id="sortBy" class="mediumField selectSortBy">
-                	<option value="firstName" <cfif FORM.sortBy EQ 'firstName'>selected="selected"</cfif> >First Name</option>
-                	<option value="lastName" <cfif FORM.sortBy EQ 'lastName'>selected="selected"</cfif> >Last Name</option>
-                	<option value="city" <cfif FORM.sortBy EQ 'city'>selected="selected"</cfif> >City</option>
-                	<option value="state" <cfif FORM.sortBy EQ 'state'>selected="selected"</cfif> >State</option>
-                	<!--- <option value="zipCode" <cfif FORM.sortBy EQ 'zipCode'>selected="selected"</cfif> >Zip Code</option> --->
-                	<option value="phone" <cfif FORM.sortBy EQ 'phone'>selected="selected"</cfif> >Phone</option>
-                	<option value="email" <cfif FORM.sortBy EQ 'email'>selected="selected"</cfif> >Email</option>
-                	<option value="dateCreated" <cfif FORM.sortBy EQ 'dateCreated'>selected="selected"</cfif> >Submitted On</option>
-                    <option value="dateLastLoggedIn" <cfif FORM.sortBy EQ 'dateLastLoggedIn'>selected="selected"</cfif> >Last Login</option>
-                    <option value="regionAssigned" <cfif FORM.sortBy EQ 'regionAssigned'>selected="selected"</cfif> >Region</option>
-                    <option value="areaRepAssigned" <cfif FORM.sortBy EQ 'areaRepAssigned'>selected="selected"</cfif> >Area Rep.</option>
-                    <option value="statusAssigned" <cfif FORM.sortBy EQ 'statusAssigned'>selected="selected"</cfif> >Status</option>
-                </select>
-            </td>                
-            <td class="listTitle">
-                <label for="sortOrder">Sort Order</label> <br />    
-                <select name="sortOrder" id="sortOrder" class="smallField selectSortOrder">
-                	<option value="ASC" <cfif FORM.sortOrder EQ 'ASC'>selected="selected"</cfif> >ASC</option>
-                	<option value="DESC" <cfif FORM.sortOrder EQ 'DESC'>selected="selected"</cfif> >DESC</option>
-                </select>
-            </td>                
+                    
             <td class="listTitle">
                 <label for="pageSize">Records per Page</label> <br />
                 <select name="pageSize" id="pageSize" class="smallField">
