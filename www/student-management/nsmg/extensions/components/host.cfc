@@ -4189,7 +4189,7 @@
 
     <cffunction name="getHostsRemote" access="remote" returnFormat="json" output="false" hint="Returns host leads in Json format">
         <cfargument name="pageNumber" type="numeric" default="1" hint="Page number is not required">
-        <cfargument name="regionid" type="numeric" default="" hint="regionid is not required">
+        <cfargument name="regionid" type="numeric" default="0" hint="regionid is not required">
         <cfargument name="keyword" type="string" default="" hint="dateTo is not required">
         <cfargument name="active_rep" type="string" default="" hint="active_rep is not required">
         <cfargument name="hosting" type="string" default="" hint="hosting is not required">
@@ -4197,9 +4197,12 @@
         <cfargument name="available_to_host" type="string" default="" hint="available_to_host is not required">
         <cfargument name="area_rep" type="string" default="" hint="area_rep is not required">
         <cfargument name="vHostIDList" type="string" default="" hint="vHostIDList is not required">
+        <cfargument name="HFstatus" type="string" default="" hint="vHosHFstatustIDList is not required">
+        <cfargument name="school_id" type="string" default="" hint="school_id is not required">
         <cfargument name="sortBy" type="string" default="dateCreated" hint="sortBy is not required">
         <cfargument name="sortOrder" type="string" default="DESC" hint="sortOrder is not required">
         <cfargument name="pageSize" type="numeric" default="30" hint="Page number is not required">
+
 
         <!--- OFFICE PEOPLE AND ABOVE --->
         <cfif APPLICATION.CFC.USER.isOfficeUser()>
@@ -4216,7 +4219,9 @@
                     h.isNotQualifiedToHost,
                     h.isHosting,
                     h.phone,
+                    h.email,
                     h.call_back,
+                    h.call_back_updated,
                     u.firstname AS area_rep_firstname,
                     u.lastname AS area_rep_lastname,
                     p.programName
@@ -4254,6 +4259,10 @@
                 <cfelseif ARGUMENTS.active_rep EQ 0>
                     AND u.active = 0 
                 </cfif>
+
+                <cfif VAL(ARGUMENTS.school_id)>
+                    AND h.schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.school_id)#">
+                </cfif>
                 
                 <cfif LEN(TRIM(ARGUMENTS.keyword))>
                     AND (
@@ -4284,6 +4293,25 @@
                 <cfif LEN(ARGUMENTS.active)>
                     AND 
                         h.active = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.active#">
+                </cfif>
+
+                <cfif LEN(ARGUMENTS.HFstatus)>
+                    <cfif ARGUMENTS.HFstatus EQ "Decided Not to Host">
+                        AND h.isHosting = 0
+                        AND h.isNotQualifiedToHost = 0
+                        AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                    <cfelseif ARGUMENTS.HFstatus EQ "Not qualified to host">
+                        AND h.isNotQualifiedToHost = 1
+                        AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                    <cfelseif ARGUMENTS.HFstatus EQ "Available to Host">
+                        AND h.isNotQualifiedToHost = 0
+                        AND h.isHosting = 1
+                        AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                    <cfelseif ARGUMENTS.HFstatus EQ "Call Back">
+                        AND h.call_back = 1
+                    <cfelseif ARGUMENTS.HFstatus EQ "Call Back Next SY">
+                        AND h.call_back = 2
+                    </cfif>
                 </cfif>
 
                 <cfif ARGUMENTS.available_to_host EQ 1>
@@ -4508,7 +4536,7 @@
             }
 
             // Populate structure with query
-            resultQuery = QueryNew("hostid, nexits_id, familylastname, fatherfirstname, motherfirstname, city, state, isNotQualifiedToHost, isHosting, phone, call_back, area_rep_firstname, area_rep_lastname, programName, hostStatus");
+            resultQuery = QueryNew("hostid, nexits_id, familylastname, fatherfirstname, motherfirstname, city, state, isNotQualifiedToHost, isHosting, phone, email, call_back, area_rep_firstname, area_rep_lastname, programName, hostStatus, call_back_updated");
             
             if ( qGetResults.recordCount < stResult.recordTo ) {
                 stResult.recordTo = qGetResults.recordCount;
@@ -4529,10 +4557,12 @@
                     QuerySetCell(resultQuery, "isNotQualifiedToHost", qGetResults.isNotQualifiedToHost[i]);
                     QuerySetCell(resultQuery, "isHosting", qGetResults.isHosting[i]);
                     QuerySetCell(resultQuery, "phone", qGetResults.phone[i]);
+                    QuerySetCell(resultQuery, "email", qGetResults.email[i]);
                     QuerySetCell(resultQuery, "call_back", qGetResults.call_back[i]);
                     QuerySetCell(resultQuery, "area_rep_firstname", qGetResults.area_rep_firstname[i]);
                     QuerySetCell(resultQuery, "area_rep_lastname", qGetResults.area_rep_lastname[i]);
                     QuerySetCell(resultQuery, "programName", qGetResults.programName[i]);
+                    QuerySetCell(resultQuery, "call_back_updated", qGetResults.call_back_updated[i]);
 
                     if (qGetResults.isNotQualifiedToHost[i] == 1) {
                         QuerySetCell(resultQuery, "hostStatus", 'Not qualified to host');
@@ -4562,5 +4592,10 @@
 
         
     </cffunction>
+
+
+
+    
+
     
 </cfcomponent>
