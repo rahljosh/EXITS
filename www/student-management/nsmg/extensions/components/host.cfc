@@ -4197,7 +4197,8 @@
         <cfargument name="available_to_host" type="string" default="" hint="available_to_host is not required">
         <cfargument name="area_rep" type="string" default="" hint="area_rep is not required">
         <cfargument name="vHostIDList" type="string" default="" hint="vHostIDList is not required">
-        <cfargument name="HFstatus" type="string" default="" hint="vHosHFstatustIDList is not required">
+        <cfargument name="HFstatus" type="string" default="" hint="HFstatus is not required">
+        <cfargument name="HFyear" type="string" default="" hint="HFyear is not required">
         <cfargument name="school_id" type="string" default="" hint="school_id is not required">
         <cfargument name="sortBy" type="string" default="dateCreated" hint="sortBy is not required">
         <cfargument name="sortOrder" type="string" default="DESC" hint="sortOrder is not required">
@@ -4283,16 +4284,17 @@
                 </cfif>
                 
                 <cfif ARGUMENTS.hosting EQ 1>
-                    AND 
-                        s.active = 1
+                    AND s.active = 1
                 <cfelseif ARGUMENTS.hosting EQ 0>
-                    AND 
-                        s.hostid IS NULL
+                    AND s.hostid IS NULL
                 </cfif>
                 
                 <cfif LEN(ARGUMENTS.active)>
-                    AND 
-                        h.active = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.active#">
+                    AND h.active = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.active#">
+                </cfif>
+
+                <cfif VAL(ARGUMENTS.HFyear)>
+                    AND h.dateCreated BETWEEN <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.HFyear#-01-01"> AND <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.HFyear#-12-31">
                 </cfif>
 
                 <cfif LEN(ARGUMENTS.HFstatus)>
@@ -4399,7 +4401,7 @@
 
                 <cfscript>
                     // Get Available Reps
-                    qGetUserUnderAdv = APPLICATION.CFC.USER.getSupervisedUsers(userType=CLIENT.userType, userID=CLIENT.userID, regionID=FORM.regionID);
+                    qGetUserUnderAdv = APPLICATION.CFC.USER.getSupervisedUsers(userType=CLIENT.userType, userID=CLIENT.userID, regionID=CLIENT.regionID);
                     
                     // Store Users under Advisor on a list
                     vSupervisedUserIDList = ValueList(qGetUserUnderAdv.userID);
@@ -4422,8 +4424,145 @@
                         OR
                             h.areaRepID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vSupervisedUserIDList#" list="yes">  )              
                         )
+
+
+                    <cfif ARGUMENTS.active_rep EQ 1>
+                        AND u.active = 1
+                    <cfelseif ARGUMENTS.active_rep EQ 0>
+                        AND u.active = 0 
+                    </cfif>
+
+                    <cfif VAL(ARGUMENTS.school_id)>
+                        AND h.schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.school_id)#">
+                    </cfif>
+                    
+                    <cfif LEN(TRIM(ARGUMENTS.keyword))>
+                        AND (
+                                h.hostid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(ARGUMENTS.keyword)#">
+                            OR 
+                                h.familylastname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(ARGUMENTS.keyword)#%">
+                            OR 
+                                h.fatherfirstname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(ARGUMENTS.keyword)#%">
+                            OR 
+                                h.motherfirstname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(ARGUMENTS.keyword)#%">
+                            OR 
+                                h.city LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(ARGUMENTS.keyword)#%">
+                            OR 
+                                h.state LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(ARGUMENTS.keyword)#%">
+                            OR 
+                                h.email LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(ARGUMENTS.keyword)#%">
+                            )
+                    </cfif>
+                    
+                    <cfif ARGUMENTS.hosting EQ 1>
+                        AND s.active = 1
+                    <cfelseif ARGUMENTS.hosting EQ 0>
+                        AND s.hostid IS NULL
+                    </cfif>
+                    
+                    <cfif LEN(ARGUMENTS.active)>
+                        AND h.active = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.active#">
+                    </cfif>
+
+                    <cfif VAL(ARGUMENTS.HFyear)>
+                        AND h.dateCreated BETWEEN <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.HFyear#-01-01"> AND <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.HFyear#-12-31">
+                    </cfif>
+
+                    <cfif LEN(ARGUMENTS.HFstatus)>
+                        <cfif ARGUMENTS.HFstatus EQ "Decided Not to Host">
+                            AND h.isHosting = 0
+                            AND h.isNotQualifiedToHost = 0
+                            AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                        <cfelseif ARGUMENTS.HFstatus EQ "Not qualified to host">
+                            AND h.isNotQualifiedToHost = 1
+                            AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                        <cfelseif ARGUMENTS.HFstatus EQ "Available to Host">
+                            AND h.isNotQualifiedToHost = 0
+                            AND h.isHosting = 1
+                            AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                        <cfelseif ARGUMENTS.HFstatus EQ "Call Back">
+                            AND h.call_back = 1
+                        <cfelseif ARGUMENTS.HFstatus EQ "Call Back Next SY">
+                            AND h.call_back = 2
+                        </cfif>
+                    </cfif>
+
+                    <cfif ARGUMENTS.available_to_host EQ 1>
+                        AND h.isNotQualifiedToHost = 0
+                        AND h.isHosting = 1
+                    <cfelseif ARGUMENTS.available_to_host EQ 0>
+                        AND (h.isNotQualifiedToHost = 1
+                        OR h.isHosting = 0)
+                    </cfif>
+                    
+                    <cfif VAL(ARGUMENTS.area_rep)>
+                        AND h.areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.area_rep)#">
+                    </cfif>
+
+
                     GROUP BY
-                        hostID                 
+                        hostID
+                    ORDER BY 
+                        <cfswitch expression="#ARGUMENTS.sortBy#">
+                        
+                            <cfcase value="hostID">                    
+                                h.hostID #ARGUMENTS.sortOrder#,
+                                h.familylastname
+                            </cfcase>
+                        
+                            <cfcase value="nexitsID">
+                                h.nexits_id #ARGUMENTS.sortOrder#,
+                                h.familylastname
+                            </cfcase>
+            
+                            <cfcase value="lastName">
+                                h.familylastname #ARGUMENTS.sortOrder#
+                            </cfcase>
+            
+                            <cfcase value="father">
+                                h.fatherfirstname #ARGUMENTS.sortOrder#,
+                                h.familylastname
+                            </cfcase>
+
+                            <cfcase value="mother">
+                                h.motherFirstName #ARGUMENTS.sortOrder#,
+                                h.familylastname
+                            </cfcase>
+            
+                            <cfcase value="phone">
+                                h.phone #ARGUMENTS.sortOrder#,
+                                h.familylastname
+                            </cfcase>
+
+                            <cfcase value="city">
+                                h.city #ARGUMENTS.sortOrder#,
+                                h.familylastname
+                            </cfcase>
+            
+                            <cfcase value="state">
+                                h.state #ARGUMENTS.sortOrder#,
+                                h.familylastname
+                            </cfcase>
+
+                            <cfcase value="areaRep">
+                                u.lastname #ARGUMENTS.sortOrder#,
+                                u.firstname
+                            </cfcase>
+            
+                            <cfcase value="lastHosted">
+                                p.programID DESC,
+                                h.familylastname
+                            </cfcase>
+
+                            <cfcase value="hostStatus">
+                                h.isNotQualifiedToHost
+                            </cfcase>
+            
+                            <cfdefaultcase>
+                                h.hostID DESC
+                            </cfdefaultcase>
+            
+                        </cfswitch>                  
                 </cfquery>
                 
                 <cfscript>
@@ -4451,8 +4590,143 @@
                         OR
                             h.areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">                        
                         )
+
+                    <cfif ARGUMENTS.active_rep EQ 1>
+                        AND u.active = 1
+                    <cfelseif ARGUMENTS.active_rep EQ 0>
+                        AND u.active = 0 
+                    </cfif>
+
+                    <cfif VAL(ARGUMENTS.school_id)>
+                        AND h.schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.school_id)#">
+                    </cfif>
+                    
+                    <cfif LEN(TRIM(ARGUMENTS.keyword))>
+                        AND (
+                                h.hostid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(ARGUMENTS.keyword)#">
+                            OR 
+                                h.familylastname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(ARGUMENTS.keyword)#%">
+                            OR 
+                                h.fatherfirstname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(ARGUMENTS.keyword)#%">
+                            OR 
+                                h.motherfirstname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(ARGUMENTS.keyword)#%">
+                            OR 
+                                h.city LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(ARGUMENTS.keyword)#%">
+                            OR 
+                                h.state LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(ARGUMENTS.keyword)#%">
+                            OR 
+                                h.email LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(ARGUMENTS.keyword)#%">
+                            )
+                    </cfif>
+                    
+                    <cfif ARGUMENTS.hosting EQ 1>
+                        AND s.active = 1
+                    <cfelseif ARGUMENTS.hosting EQ 0>
+                        AND s.hostid IS NULL
+                    </cfif>
+                    
+                    <cfif LEN(ARGUMENTS.active)>
+                        AND h.active = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.active#">
+                    </cfif>
+
+                    <cfif VAL(ARGUMENTS.HFyear)>
+                        AND h.dateCreated BETWEEN <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.HFyear#-01-01"> AND <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.HFyear#-12-31">
+                    </cfif>
+
+                    <cfif LEN(ARGUMENTS.HFstatus)>
+                        <cfif ARGUMENTS.HFstatus EQ "Decided Not to Host">
+                            AND h.isHosting = 0
+                            AND h.isNotQualifiedToHost = 0
+                            AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                        <cfelseif ARGUMENTS.HFstatus EQ "Not qualified to host">
+                            AND h.isNotQualifiedToHost = 1
+                            AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                        <cfelseif ARGUMENTS.HFstatus EQ "Available to Host">
+                            AND h.isNotQualifiedToHost = 0
+                            AND h.isHosting = 1
+                            AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                        <cfelseif ARGUMENTS.HFstatus EQ "Call Back">
+                            AND h.call_back = 1
+                        <cfelseif ARGUMENTS.HFstatus EQ "Call Back Next SY">
+                            AND h.call_back = 2
+                        </cfif>
+                    </cfif>
+
+                    <cfif ARGUMENTS.available_to_host EQ 1>
+                        AND h.isNotQualifiedToHost = 0
+                        AND h.isHosting = 1
+                    <cfelseif ARGUMENTS.available_to_host EQ 0>
+                        AND (h.isNotQualifiedToHost = 1
+                        OR h.isHosting = 0)
+                    </cfif>
+                    
+                    <cfif VAL(ARGUMENTS.area_rep)>
+                        AND h.areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.area_rep)#">
+                    </cfif>
+                
                     GROUP BY
-                        hostID                 
+                        hostID  
+                    ORDER BY 
+                        <cfswitch expression="#ARGUMENTS.sortBy#">
+                        
+                            <cfcase value="hostID">                    
+                                h.hostID #ARGUMENTS.sortOrder#,
+                                h.familylastname
+                            </cfcase>
+                        
+                            <cfcase value="nexitsID">
+                                h.nexits_id #ARGUMENTS.sortOrder#,
+                                h.familylastname
+                            </cfcase>
+            
+                            <cfcase value="lastName">
+                                h.familylastname #ARGUMENTS.sortOrder#
+                            </cfcase>
+            
+                            <cfcase value="father">
+                                h.fatherfirstname #ARGUMENTS.sortOrder#,
+                                h.familylastname
+                            </cfcase>
+
+                            <cfcase value="mother">
+                                h.motherFirstName #ARGUMENTS.sortOrder#,
+                                h.familylastname
+                            </cfcase>
+            
+                            <cfcase value="phone">
+                                h.phone #ARGUMENTS.sortOrder#,
+                                h.familylastname
+                            </cfcase>
+
+                            <cfcase value="city">
+                                h.city #ARGUMENTS.sortOrder#,
+                                h.familylastname
+                            </cfcase>
+            
+                            <cfcase value="state">
+                                h.state #ARGUMENTS.sortOrder#,
+                                h.familylastname
+                            </cfcase>
+
+                            <cfcase value="areaRep">
+                                u.lastname #ARGUMENTS.sortOrder#,
+                                u.firstname
+                            </cfcase>
+            
+                            <cfcase value="lastHosted">
+                                p.programID DESC,
+                                h.familylastname
+                            </cfcase>
+
+                            <cfcase value="hostStatus">
+                                h.isNotQualifiedToHost
+                            </cfcase>
+            
+                            <cfdefaultcase>
+                                h.hostID DESC
+                            </cfdefaultcase>
+            
+                        </cfswitch>                
                 </cfquery>
 
                 <cfscript>
@@ -4464,15 +4738,33 @@
       
             <cfquery name="qGetResults" datasource="#application.dsn#">
                 SELECT DISTINCT 
+                    h.hostid, 
+                    h.nexits_id,
                     h.familylastname, 
                     h.fatherfirstname, 
                     h.motherfirstname, 
-                    h.hostid, 
-                    h.nexits_id,
                     h.city, 
-                    h.state
+                    h.state,
+                    h.isNotQualifiedToHost,
+                    h.isHosting,
+                    h.phone,
+                    h.email,
+                    h.call_back,
+                    h.call_back_updated,
+                    u.firstname AS area_rep_firstname,
+                    u.lastname AS area_rep_lastname,
+                    p.programName
                 FROM 
                     smg_hosts h
+                LEFT OUTER JOIN      (
+                          SELECT    MAX(studentID) studentID, hostID
+                          FROM      smg_hosthistory
+                          GROUP BY  hostid
+                      ) hh ON (hh.hostid = h.hostid)
+
+                LEFT OUTER JOIN smg_students s ON s.studentID = hh.studentID
+                LEFT OUTER JOIN smg_users u ON h.arearepID = u.userID
+                LEFT OUTER JOIN smg_programs p ON s.programId = p.programID
                 <!--- REGIONAL MANAGER SEES ALL FAMILIES ON THE REGION --->
                 WHERE 
                     h.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionid#">
@@ -4506,7 +4798,66 @@
                 </cfif>
                     
                 ORDER BY 
-                    #ARGUMENTS.orderby#
+                    <cfswitch expression="#ARGUMENTS.sortBy#">
+                    
+                        <cfcase value="hostID">                    
+                            h.hostID #ARGUMENTS.sortOrder#,
+                            h.familylastname
+                        </cfcase>
+                    
+                        <cfcase value="nexitsID">
+                            h.nexits_id #ARGUMENTS.sortOrder#,
+                            h.familylastname
+                        </cfcase>
+        
+                        <cfcase value="lastName">
+                            h.familylastname #ARGUMENTS.sortOrder#
+                        </cfcase>
+        
+                        <cfcase value="father">
+                            h.fatherfirstname #ARGUMENTS.sortOrder#,
+                            h.familylastname
+                        </cfcase>
+
+                        <cfcase value="mother">
+                            h.motherFirstName #ARGUMENTS.sortOrder#,
+                            h.familylastname
+                        </cfcase>
+        
+                        <cfcase value="phone">
+                            h.phone #ARGUMENTS.sortOrder#,
+                            h.familylastname
+                        </cfcase>
+
+                        <cfcase value="city">
+                            h.city #ARGUMENTS.sortOrder#,
+                            h.familylastname
+                        </cfcase>
+        
+                        <cfcase value="state">
+                            h.state #ARGUMENTS.sortOrder#,
+                            h.familylastname
+                        </cfcase>
+
+                        <cfcase value="areaRep">
+                            u.lastname #ARGUMENTS.sortOrder#,
+                            u.firstname
+                        </cfcase>
+        
+                        <cfcase value="lastHosted">
+                            p.programID DESC,
+                            h.familylastname
+                        </cfcase>
+
+                        <cfcase value="hostStatus">
+                            h.isNotQualifiedToHost
+                        </cfcase>
+        
+                        <cfdefaultcase>
+                            h.hostID DESC
+                        </cfdefaultcase>
+        
+                    </cfswitch> 
             </cfquery>
             
         </cfif>
