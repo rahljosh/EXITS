@@ -1,7 +1,7 @@
 /* CSS Document */
 /****Green Button******/
 .buttonGreen {
-	border-top: 1px solid #046A3A;
+	border-top: 1px solid #69bd45;
 	background: #69bd45;
 	background: -webkit-gradient(linear, left top, left bottom, from(#69bd45), to(#066e26));
 	background: -webkit-linear-gradient(top, #69bd45, #066e26);
@@ -26,12 +26,47 @@
 .buttonGreen:hover {
 	border-top-color: #066e26;
 	background: #69bd45;
-	color: #ccc;
+	color: #000;
 	cursor:pointer;
    }
 .buttonGreen:active {
    border-top-color: #066e26;
    background: #066e26;
+   } 
+
+/****Gray Button******/
+.buttonGray {
+	border-top: 1px solid #046A3A;
+	background: #c9c9c9;
+	background: -webkit-gradient(linear, left top, left bottom, from(#c9c9c9), to(#8d8d8d));
+	background: -webkit-linear-gradient(top, #c9c9c9, #8d8d8d);
+	background: -moz-linear-gradient(top, #c9c9c9, #8d8d8d);
+	background: -ms-linear-gradient(top, #c9c9c9, #8d8d8d);
+	background: -o-linear-gradient(top, #c9c9c9, #8d8d8d);
+	padding: 5px 10px;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	border-radius: 8px;
+	-webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+	-moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+	box-shadow: rgba(0,0,0,1) 0 1px 0;
+	text-shadow: rgba(0,0,0,.4) 0 1px 0;
+	color: white;
+	font-size: 12px;
+	font-family: Arial, Helvetica, sans-serif;
+	text-decoration: none;
+	vertical-align: middle;
+	font-weight: bold;
+   }
+.buttonGray:hover {
+	border-top-color: #8d8d8d;
+	background: #c9c9c9;
+	color: #ccc;
+	cursor:pointer;
+   }
+.buttonGray:active {
+   border-top-color: #8d8d8d;
+   background: #a6a6a6;
    }  
 
 /****Yellow Button******/

@@ -255,11 +255,26 @@
     	UPDATE smg_hosts
         SET dateUpdated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
             updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
-      		isHosting = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.decideToHost)#">
+      		isHosting = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.decideToHost)#">,
+            call_back_updated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
         WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostInfo.hostID#">
     </cfquery>
     <cflocation url="?#CGI.QUERY_STRING#"/>
 </cfif>
+
+<cfif isDefined('call_back')>
+    <cfquery datasource="#APPLICATION.DSN#">
+        UPDATE smg_hosts
+        SET dateUpdated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
+            updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
+            call_back = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.call_back)#">,
+            call_back_updated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
+        WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostInfo.hostID#">
+    </cfquery>
+    <cflocation url="?#CGI.QUERY_STRING#"/>
+</cfif>
+
+
 
 
 <cfif not isNumeric(url.hostID)>
@@ -815,6 +830,38 @@ div.scroll2 {
                                 </form>
                          	</cfif>
                         </td>
+                </tr>
+                <tr>
+                    <td style="text-align:center" colspan="2">
+                        <cfif qGetHostInfo.call_back EQ 1 >
+                            <form method="post" action="index.cfm?curdoc=host_fam_info&hostid=#url.hostid#" style="display:inline;">
+                                <input type="hidden" name="call_back" value="0"/>
+                                <input type="submit" value="Call Back"  alt="Call Back" border="0" class="buttonGreen" />
+                            </form>
+                            <form method="post" action="index.cfm?curdoc=host_fam_info&hostid=#url.hostid#" style="display:inline;">
+                                <input type="hidden" name="call_back" value="2"/>
+                                <input type="submit" value="Call Back Next SY"  alt="Call Back Next SY" border="0" class="buttonGray" />
+                            </form>
+                        <cfelseif qGetHostInfo.call_back EQ 2 >
+                            <form method="post" action="index.cfm?curdoc=host_fam_info&hostid=#url.hostid#" style="display:inline;">
+                                <input type="hidden" name="call_back" value="1"/>
+                                <input type="submit" value="Call Back"  alt="Call Back" border="0" class="buttonGray" />
+                            </form>
+                            <form method="post" action="index.cfm?curdoc=host_fam_info&hostid=#url.hostid#" style="display:inline;">
+                                <input type="hidden" name="call_back" value="0"/>
+                                <input type="submit" value="Call Back Next SY"  alt="Call Back Next SY" border="0" class="buttonGreen" />
+                            </form>
+                        <cfelse>
+                            <form method="post" action="index.cfm?curdoc=host_fam_info&hostid=#url.hostid#" style="display:inline;">
+                                <input type="hidden" name="call_back" value="1"/>
+                                <input type="submit" value="Call Back"  alt="Call Back" border="0" class="buttonBlue" />
+                            </form>
+                            <form method="post" action="index.cfm?curdoc=host_fam_info&hostid=#url.hostid#" style="display:inline;">
+                                <input type="hidden" name="call_back" value="2"/>
+                                <input type="submit" value="Call Back Next SY"  alt="Call Back Next SY" border="0" class="buttonBlue" />
+                            </form>
+                        </cfif>
+                    </td>
                 </tr>
                 <cfelse>
                     <tr>
