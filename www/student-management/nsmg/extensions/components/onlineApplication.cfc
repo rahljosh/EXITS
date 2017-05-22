@@ -236,8 +236,7 @@
                                 <p>This email is to inform you that your application has been accepted and approved by #qGetCompanyInfo.companyName# in #qGetCompanyInfo.city#, #qGetCompanyInfo.state#.</p>
                                 <p><em>What does this mean to you and what are the next steps?</em></p>
                                 <p>
-                                    You are now listed as available for placement in the United States and the region or state you chose if applicable. 
-                                    Students are placed on a daily basis all over the country. All you have to do is wait to hear from us.
+                                    You are now listed as available for placement!. Students are placed on a daily basis all over the country. All you have to do is wait to hear from us.
 								</p>
                                 <p>                                    
                                     You will receive an email and acceptance letter once you have been placed with a host family.
