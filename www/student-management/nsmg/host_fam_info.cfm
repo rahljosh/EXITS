@@ -183,6 +183,18 @@
     </cfif>
 </cfif>
 
+
+<cfif isDefined('withCompetitor')>
+    <cfquery datasource="#APPLICATION.DSN#">
+        UPDATE smg_hosts
+        SET with_competitor = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(withCompetitor)#">,
+            call_back_updated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
+        WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostInfo.hostID#">
+    </cfquery>
+    <cflocation url="?#CGI.QUERY_STRING#"/>
+</cfif>
+
+
 <cfif isDefined('hostNewSeason')>
 	<cfif FORM.hostNewSeason EQ 1>
     	<cfscript>
@@ -797,7 +809,7 @@ div.scroll2 {
                         </td>
                         <td>
                             <cfif CLIENT.usertype LTE 7>
-                                <cfif VAL(qGetHostInfo.isHosting)>
+                                <cfif VAL(qGetHostInfo.isHosting) AND NOT VAL(qGetHostInfo.with_competitor)>
                                     <form 
                                         method="post" 
                                         action="index.cfm?curdoc=host_fam_info&hostid=#url.hostid#" 
@@ -805,6 +817,14 @@ div.scroll2 {
                                         onsubmit="return confirm('Are you sure this family does not want to host this year?')">
                                         <input type="hidden" name="decideToHost" value="0"/>
                                         <input type="submit" value="Decided Not To Host"  alt="Decided Not To Host" border="0" class="buttonRed" />
+                                    </form>
+                                    <form 
+                                        method="post" 
+                                        action="index.cfm?curdoc=host_fam_info&hostid=#url.hostid#" 
+                                        style="display:inline;" 
+                                        onsubmit="return confirm('Are you sure the family is with a competitor?')">
+                                        <input type="hidden" name="withCompetitor" value="1"/>
+                                        <input type="submit" value="With Competitor"  alt="With Competitor" border="0" class="buttonRed" />
                                     </form>
                                     <cfif VAL(qGetHostInfo.applicationStatusID)>
                                         <form method="post" action="index.cfm?curdoc=host_fam_info&hostid=#url.hostid#" style="display:inline;">
