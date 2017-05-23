@@ -100,6 +100,8 @@
                               Call Back
                           <cfelseif call_back EQ 2 >
                               Call Back Next SY
+                          <cfelseif with_competitor EQ 1 >
+                              With Competitor
                           <cfelse>
                               Available to Host
                           </cfif>

@@ -25,6 +25,7 @@
     <cfparam name="HFstatus" default="" />
     <cfparam name="HFyear" default="" />
     <cfparam name="school_ID" default="" />
+    <cfparam name="stateID" default="" />
     <cfparam name="orderby" default="familylastname">
     <cfparam name="recordsToShow" default="25">
     
@@ -40,6 +41,8 @@
             userID=CLIENT.userID,
             userType=CLIENT.userType
         );
+
+        qGetStates = APPLICATION.CFC.LOOKUPTABLES.getState();
     
         // Store List of Supervised Users
         vSupervisedUserIDList = '';
@@ -108,9 +111,9 @@
                 ORDER BY dateCreated ASC
             </cfquery>
         </cfif>
+
     </cfif>
 
-    
 
 </cfsilent>
 
@@ -165,6 +168,7 @@
         var sortOrder = $(".selectSortOrder").val();        
         var pageSize = $("#pageSize").val();
         var school_id = $("#school_id").val();
+        var stateID = $("#stateID").val();
         var HFstatus = $("#HFstatus").val();
         var HFyear = $("#HFyear").val();
         
@@ -191,7 +195,7 @@
         hf.setCallbackHandler(populateList); 
         hf.setErrorHandler(myErrorHandler); 
         // This time, pass the intRep ID to the getHostList CFC function. 
-        hf.getHostsRemote(pageNumber,regionID,keyword,active_rep,hosting,active,available_to_host,area_rep,vHostIDList,HFstatus,HFyear,school_id,sortBy,sortOrder,pageSize);
+        hf.getHostsRemote(pageNumber,regionID,keyword,active_rep,hosting,active,available_to_host,area_rep,vHostIDList,HFstatus,HFyear,school_id,stateID,sortBy,sortOrder,pageSize);
 
     } 
 
@@ -395,6 +399,7 @@
         $("#HFstatus_export").val($("#HFstatus").val());
         $("#HFyear_export").val($("#HFyear").val());
         $("#school_id_export").val($("#school_id").val());
+        $("#stateID_export").val($("#stateID").val());
         $("#sortBy_export").val($("#sortBy").val());
 
         //console.log($("#HFstatus_export").val());
@@ -563,10 +568,20 @@
                         <option value="Available to Host" <cfif HFstatus EQ "Available to Host">selected</cfif>>Available to Host</option>
                         <option value="Call Back" <cfif HFstatus EQ "Call Back">selected</cfif>>Call Back</option>
                         <option value="Call Back Next SY" <cfif HFstatus EQ "Call Back Next SY">selected</cfif>>Call Back Next SY</option>
+                        <option value="With Competitor" <cfif HFstatus EQ "With Competitor">selected</cfif>>With Competitor</option>
                     </select>
                     
                     <input type="hidden" name="sortBy" class="selectSortBy" /> 
                     <input type="hidden" name="sortOrder" class="selectSortOrder" />     
+                </td>
+                <td>
+                    State<br />
+                    <select name="stateID" id="stateID">
+                        <option value="">All</option>
+                        <cfloop query="qGetStates">
+                            <option value="#qGetStates.state#" <cfif stateID EQ qGetStates.state>selected="selected"</cfif> >#qGetStates.stateName#</option>
+                        </cfloop>
+                    </select>    
                 </td>
                 <td>
                     School ID<br />
@@ -613,7 +628,7 @@
 <tr id="loadPaginationInfo"></tr>
 
 <tr>
-    <td colspan="10">
+    <td colspan="11">
         <div id="loadingDiv" style="display: none; width: 100%; text-align: center">
             <img src="/nsmg/pics/loading.gif" />
         </div>
@@ -621,14 +636,14 @@
 </tr>
 
 <tr>
-    <td colspan="10">
+    <td colspan="11">
         <!--- Host List --->
         <table id="loadHostList" border="0" cellpadding="4" cellspacing="0" class="section" width="100%"></table>
     </td>
 </tr>
 
 <tr>
-    <td colspan="10" style="text-align:center">
+    <td colspan="11" style="text-align:center">
         <cfform action="?curdoc=host_fam_export" id="exportForm" name="exportForm" onsubmit="return checkSearchFields();">
             <input type="hidden" name="regionid" id="regionid_export" />
             <input type="hidden" name="keyword" id="keyword_export" />
@@ -642,6 +657,7 @@
             <input type="hidden" name="HFstatus" id="HFstatus_export" />
             <input type="hidden" name="HFyear" id="HFyear_export" />
             <input type="hidden" name="school_id" id="school_id_export" />
+            <input type="hidden" name="stateID" id="stateID_export" />
             <input type="hidden" name="sortBy" id="sortBy_export" />
 
             <input type="submit" value=" Export to Excel " class="buttonBlue smallerButton"  />

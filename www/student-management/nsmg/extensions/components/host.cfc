@@ -4200,6 +4200,7 @@
         <cfargument name="HFstatus" type="string" default="" hint="HFstatus is not required">
         <cfargument name="HFyear" type="string" default="" hint="HFyear is not required">
         <cfargument name="school_id" type="string" default="" hint="school_id is not required">
+        <cfargument name="stateID" type="string" default="" hint="stateID is not required">
         <cfargument name="sortBy" type="string" default="dateCreated" hint="sortBy is not required">
         <cfargument name="sortOrder" type="string" default="DESC" hint="sortOrder is not required">
         <cfargument name="pageSize" type="numeric" default="30" hint="Page number is not required">
@@ -4223,6 +4224,7 @@
                     h.email,
                     h.call_back,
                     h.call_back_updated,
+                    h.with_competitor,
                     u.firstname AS area_rep_firstname,
                     u.lastname AS area_rep_lastname,
                     p.programName
@@ -4259,6 +4261,10 @@
                     AND u.active = 1
                 <cfelseif ARGUMENTS.active_rep EQ 0>
                     AND u.active = 0 
+                </cfif>
+
+                <cfif LEN(ARGUMENTS.stateID)>
+                    AND h.state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.stateID#">
                 </cfif>
 
                 <cfif VAL(ARGUMENTS.school_id)>
@@ -4313,6 +4319,8 @@
                         AND h.call_back = 1
                     <cfelseif ARGUMENTS.HFstatus EQ "Call Back Next SY">
                         AND h.call_back = 2
+                    <cfelseif ARGUMENTS.HFstatus EQ "With Competitor">
+                        AND h.with_competitor = 1
                     </cfif>
                 </cfif>
 
@@ -4435,6 +4443,10 @@
                     <cfif VAL(ARGUMENTS.school_id)>
                         AND h.schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.school_id)#">
                     </cfif>
+
+                    <cfif LEN(ARGUMENTS.stateID)>
+                        AND h.state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.stateID#">
+                    </cfif>
                     
                     <cfif LEN(TRIM(ARGUMENTS.keyword))>
                         AND (
@@ -4484,6 +4496,8 @@
                             AND h.call_back = 1
                         <cfelseif ARGUMENTS.HFstatus EQ "Call Back Next SY">
                             AND h.call_back = 2
+                        <cfelseif ARGUMENTS.HFstatus EQ "With Competitor">
+                            AND h.with_competitor = 1
                         </cfif>
                     </cfif>
 
@@ -4597,6 +4611,10 @@
                         AND u.active = 0 
                     </cfif>
 
+                    <cfif LEN(ARGUMENTS.stateID)>
+                        AND h.state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.stateID#">
+                    </cfif>
+
                     <cfif VAL(ARGUMENTS.school_id)>
                         AND h.schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.school_id)#">
                     </cfif>
@@ -4649,6 +4667,8 @@
                             AND h.call_back = 1
                         <cfelseif ARGUMENTS.HFstatus EQ "Call Back Next SY">
                             AND h.call_back = 2
+                        <cfelseif ARGUMENTS.HFstatus EQ "With Competitor">
+                            AND h.with_competitor = 1
                         </cfif>
                     </cfif>
 
@@ -4751,6 +4771,7 @@
                     h.email,
                     h.call_back,
                     h.call_back_updated,
+                    h.with_competitor,
                     u.firstname AS area_rep_firstname,
                     u.lastname AS area_rep_lastname,
                     p.programName
@@ -4887,7 +4908,7 @@
             }
 
             // Populate structure with query
-            resultQuery = QueryNew("hostid, nexits_id, familylastname, fatherfirstname, motherfirstname, city, state, isNotQualifiedToHost, isHosting, phone, email, call_back, area_rep_firstname, area_rep_lastname, programName, hostStatus, call_back_updated");
+            resultQuery = QueryNew("hostid, nexits_id, familylastname, fatherfirstname, motherfirstname, city, state, isNotQualifiedToHost, isHosting, phone, email, call_back, area_rep_firstname, area_rep_lastname, programName, hostStatus, call_back_updated, with_competitor");
             
             if ( qGetResults.recordCount < stResult.recordTo ) {
                 stResult.recordTo = qGetResults.recordCount;
@@ -4914,6 +4935,7 @@
                     QuerySetCell(resultQuery, "area_rep_lastname", qGetResults.area_rep_lastname[i]);
                     QuerySetCell(resultQuery, "programName", qGetResults.programName[i]);
                     QuerySetCell(resultQuery, "call_back_updated", qGetResults.call_back_updated[i]);
+                    QuerySetCell(resultQuery, "with_competitor", qGetResults.with_competitor[i]);
 
                     if (qGetResults.isNotQualifiedToHost[i] == 1) {
                         QuerySetCell(resultQuery, "hostStatus", 'Not qualified to host');
@@ -4928,6 +4950,11 @@
                         QuerySetCell(resultQuery, "hostStatus", 'Call Back');
                     } else if (qGetResults.call_back[i] == 2) {
                         QuerySetCell(resultQuery, "hostStatus", 'Call Back Next SY');
+                    }
+
+
+                    if (qGetResults.with_competitor[i] == 1) {
+                        QuerySetCell(resultQuery, "hostStatus", 'With Competitor');
                     }
 
                 }
