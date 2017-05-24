@@ -17,16 +17,55 @@
 				Area Rep.    	Update status and comments (optional)																	
 				
 ----- ------------------------------------------------------------------------- --->
+<!-- CSS Global Compulsory -->
+	<link rel="stylesheet" href="../assets/plugins/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../assets/css/style.css">
+
+	<!-- CSS Header and Footer -->
+	<link rel="stylesheet" href="../assets/css/headers/header-default.css">
+	<link rel="stylesheet" href="../assets/css/footers/footer-v1.css">
+
+	<!-- CSS Implementing Plugins -->
+	<link rel="stylesheet" href="../assets/plugins/animate.css">
+	<link rel="stylesheet" href="../assets/plugins/line-icons/line-icons.css">
+	<script src="https://use.fontawesome.com/b474fc74fd.js"></script>
+<!--	<link rel="stylesheet" href="../assets/plugins/font-awesome/css/font-awesome.min.css">-->
+
+	<!-- CSS Page Style -->
+	<link rel="stylesheet" href="../assets/css/pages/page_log_reg_v1.css">
+	<!----Profile---->
+	<link rel="stylesheet" href="../assets/css/pages/profile.css">
+	<link rel="stylesheet" href="../assets/plugins/scrollbar/css/jquery.mCustomScrollbar.css">
+
+	<!----Form Elements---->
+	<link rel="stylesheet" href="../assets/plugins/sky-forms-pro/skyforms/css/sky-forms.css">
+	<link rel="stylesheet" href="../assets/plugins/sky-forms-pro/skyforms/custom/custom-sky-forms.css">
+
+	<!-- CSS Implementing Plugins -->
+
+	<!----User Profile Elements---->
+	<!-- CSS Page Style -->
+	<link rel="stylesheet" href="../assets/css/pages/profile.css">
+
+
+	<!-- CSS Theme -->
+	<link rel="stylesheet" href="../assets/css/theme-colors/blue.css" id="style_color">
+	<link rel="stylesheet" href="../assets/css/theme-skins/dark.css">
+
+	<!-- CSS Customization -->
+	<link rel="stylesheet" href="../assets/css/custom.css">
+
 
 <!--- Kill Extra Output --->
 <cfsilent>
-
+		
 	<!--- Import CustomTag --->
     <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
 	
 	<cfscript>
 		// Param URL Variables
-		param name="URL.Key" type="string" default=0;	
+		param name="URL.Key" type="string" default=0;
+		param name="URL.app_sent" type="string" default=0;		
 		try {
 			param name="URL.ID" type="numeric" default=0;	
 		} catch (any excpt) {
@@ -154,6 +193,12 @@
 		}
 	</cfscript>
     
+    <cfquery name="checkHostAppExist" datasource="#application.dsn#">
+    select *
+    from smg_hosts
+    where email =<cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetHostLead.email#">
+	</cfquery>
+
 </cfsilent>
 
 <cfoutput>
@@ -166,10 +211,11 @@
     </cfquery>
 </Cfif>
 
-	<!--- Page Header --->
-    <gui:pageHeader
-        headerType="applicationNoHeader"
-    />	
+
+
+
+
+
 
 		<script language="javascript">
             // Display warning when page is ready
@@ -306,15 +352,102 @@
             </script>
 		
         </cfif>
-        
-        <!--- Table Header --->
-        <gui:tableHeader
-            imageName="current_items.gif"
-            tableTitle="Host Family Lead Information"
-            width="95%"
-            imagePath="../"
-        />    
+      
+      
+      
+      		<div class="container content">
+				<div class="row">
+					<!-- Begin Content -->
+					<div class="col-md-11">
+						<!-- Alert Tabs -->
+						<div class="tab-v2 margin-bottom-40">
+							 <div class="headline"><h2 class="heading-lg">Host Family Lead Information</h2></div>
+						<div class="tag-box tag-box-v3">
+
+						<!-- Heading v6 -->
+						<div class="heading heading-v6"><h2>Family Information</h2></div>
+							<div class="row">
+								<div class="col-md-4">
+									<div class="bg-light"><!-- You can delete "bg-light" class. It is just to make background color -->
+										<h4><i class="fa fa-home"></i>Contact Information</h4>
+										<p>#qGetHostLead.firstname# #qGetHostLead.lastname#</p>
+										<p>#qGetHostLead.address#</p>
+										<p>#qGetHostLead.address2#</p>
+										<p>#qGetHostLead.city# #qGetHostLead.state# #qGetHostLead.zipCode#</p>
+										<p>#qGetHostLead.email#</p>
+										<p>#qGetHostLead.phone#</p>
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="bg-light"><!-- You can delete "bg-light" class. It is just to make background color -->
+										<h4><i class="fa fa-gears"></i>Account Information</h4>
+							
+										<p>Source: #qGetHostLead.hearAboutUs# #qGetHostLead.hearAboutUsDetail# </p>
+										<p>Created: #DateFormat(qGetHostLead.dateCreated, 'mmmm d, yyyy')#</p>
+										<p>Updated: #DateFormat(qGetHostLead.dateUpdated, 'mmmm d, yyyy')#</p>
+										<p>Converted: 
+										<cfif isDate(qGetHostLead.dateConverted)>
+											#DateFormat(qGetHostLead.dateConverted, 'mmmm d, yyyy')#
+											<cfelse>
+												n/a
+											</cfif>
+										#DateFormat(qGetHostLead.dateConverted, 'mmmm d, yyyy')#</p>
+										
+										
+									</div>
+								</div>
+								<div class="col-md-4">
+									<div class="bg-light"><!-- You can delete "bg-light" class. It is just to make background color -->
+										<h4><i class="fa fa-address-book"></i>Contact People</h4>
+							
+										<p>Previously Talking With: 
+											 <cfif LEN(qGetHostLead.contactWithRepName)>#qGetHostLead.contactWithRepName#<cfelse>Nobody</cfif></p>
+										<p>Follow Up Rep: 
+											<cfif LEN(qGetHostLead.followUpAssigned)>
+											##qGetHostLead.followUpAssigned##
+											<cfelse>
+												n/a
+											</cfif>
+											</p>
+										<p>Program Manager: 
+											<cfif LEN(qGetHostLead.companyShort)>
+												#qGetHostLead.companyShort#
+											<cfelse>
+												n/a
+											</cfif></p>
+										<p>Current Rep: 
+											<cfif LEN(qGetHostLead.areaRepAssigned)>
+											#qGetHostLead.areaRepAssigned#
+											<cfelse>
+												n/a
+											</cfif></p>
+										<p>Current Region:
+											<cfif LEN(qGetHostLead.regionAssigned)>
+											#qGetHostLead.regionAssigned#
+											<cfelse>
+												n/a
+											</cfif>
+										</p>
+										
+										
+									</div>
+								</div>
+							</div><!--/row-->
+						</div>
+						<!-- End Heading v6 -->
+						</div>
+								
+					</div>
+				</div>		
+			  </div>
 		
+      
+      
+      
+      
+      
+      
+
 		<!--- Page Messages --->
         <gui:displayPageMessages 
             pageMessages="#SESSION.pageMessages.GetCollection()#"
@@ -377,8 +510,9 @@
                                 <tr>
                                     <th align="right" style="padding-bottom:5px;">Application:</th>
                                     <td style="padding-bottom:5px;">
-                                  
-                                    <cfif not val(#qGetHostLead.companyID#)>
+                                  	<Cfif checkHostAppExist.recordcount gt 0>
+                                  	Email is assocaited with the <a href="/index.cfm?curdoc=host_fam_info&hostid=#checkHostAppExist.hostid#"> #checkHostAppExist.FamilyLastName# (#checkHostAppExist.hostid#) </a> family.
+                                  	<cfelseif not val(#qGetHostLead.companyID#)>
                                     	Assign Company before sending
                                     <cfelseif val(#qGetHostLead.hostid#)>
                                   
@@ -450,10 +584,35 @@
                         </td>
                     </tr>
                 </table>
-            
+           						
 				<!--- Only Display Form on Edit Mode --->
                 <cfif displayForm>
-                
+              
+                	
+				<cfif val(URL.app_sent)>
+                    <table width="95%" border="0" cellpadding="4" cellspacing="0" class="section" align="center">                    
+                        <tr class="projectHelpTitle">
+                            <th colspan="2">Host Family NOT Found</th>
+                        </tr>
+						<Tr>
+							<td align="center" colspan=4>
+								 <h1>We can't find a host family based on the email address of this lead.</h1>
+								 <p>If you know the ID of the host family that exists, please enter it and click update.</p>
+								 <p>This will assign this lead to the host family and remove them from your lead list.</p>
+							</td>
+						</Tr>
+						   <tr>
+                            <th width="45%" align="right" valign="top" style="padding-top:10px;"><label for="companyID">Host ID:</label></th>
+                            <td width="55%" style="padding-top:10px;">
+								<Input type="text" size=8 name"hostID" placeholder="Host ID">
+                               
+                            </td>
+                        </tr>
+					</table>
+                <cfelse>
+                	
+                	
+				
                     <!--- Follow Up --->
                     <table width="95%" border="0" cellpadding="4" cellspacing="0" class="section" align="center">                    
                         <tr class="projectHelpTitle">
@@ -578,7 +737,7 @@
                             </td>
                         </tr>                
                     </table>
-        
+        </cfif>
                     <!--- Form Buttons --->            
                     <table width="95%" border="0" cellpadding="4" cellspacing="0" class="section" align="center">
                         <tr>
