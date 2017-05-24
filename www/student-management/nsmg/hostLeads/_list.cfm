@@ -16,7 +16,7 @@
     <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
 
     <cfscript>	
-		// Param URL Variables
+		// Param FORM Variables
 		param name="FORM.keyword" default="";
 		param name="FORM.followUpID" default=0;	
 		param name="FORM.regionID" default=0;	
@@ -25,6 +25,7 @@
 		param name="FORM.sortBy" default="dateCreated";		
 		param name="FORM.sortOrder" default="DESC";	
 		param name="FORM.pageSize" default=30;	
+		param name="FORM.active_rep" default="";
 		
 		// Make sure records have a valid hashID and the initial record in the history table
 		// APPLICATION.CFC.HOST.setHostLeadDataIntegrity();
@@ -89,6 +90,7 @@
 		var sortBy = $(".selectSortBy").val();	
 		var sortOrder = $(".selectSortOrder").val();		
 		var pageSize = $("#pageSize").val();
+		var active_rep = $("#active_rep").val();
 		
 		if( typeof titleSortBy != 'undefined' ) {
 			// SortBy was passed by the sort title function
@@ -113,7 +115,7 @@
 		hf.setCallbackHandler(populateList); 
 		hf.setErrorHandler(myErrorHandler); 
 		// This time, pass the intRep ID to the getHostLeadList CFC function. 
-		hf.getHostLeadsRemote(pageNumber,keyword,followUpID,regionID,stateID,statusID,sortBy,sortOrder,pageSize);
+		hf.getHostLeadsRemote(pageNumber,keyword,followUpID,regionID,stateID,statusID,sortBy,sortOrder,pageSize,active_rep);
 	} 
 
 	// Callback function to handle the results returned by the getHostLeadList function and populate the table. 
@@ -198,11 +200,12 @@
             tableHeader += '<td id="phone" class="listTitle"><a href="javascript:void(0);" title="Sort By Phone">Phone</a></td>';                                                           
             tableHeader += '<td id="email" class="listTitle"><a href="javascript:void(0);" title="Sort By Email">Email</a></td>'; 
             tableHeader += '<td id="dateCreated" class="listTitle"><a href="javascript:void(0);" title="Sort By Submitted On">Submitted On</a></td>'; 
-			tableHeader += '<td id="dateUpdated" class="listTitle"><a href="javascript:void(0);" title="Sort By Last Updated">Last Updated</a></td>'; 
+			
             tableHeader += '<td id="regionAssigned" class="listTitle"><a href="javascript:void(0);" title="Sort By Region">Region</a></td>';  
             tableHeader += '<td id="areaRepAssigned" class="listTitle"><a href="javascript:void(0);" title="Sort By Area Rep.">Area Rep.</a></td>';  		
-            tableHeader += '<td id="statusAssigned" class="listTitle"><a href="javascript:void(0);" title="Sort By Status">Status</a></td>';  			
-            tableHeader += '<td class="listTitle" align="center">Actions</td>';                                                          
+            tableHeader += '<td id="statusAssigned" class="listTitle"><a href="javascript:void(0);" title="Sort By Status">Status</a></td>';  
+			tableHeader += '<td id="dateUpdated" class="listTitle"><a href="javascript:void(0);" title="Sort By Last Updated">Updated</a></td>'; 
+            tableHeader += '<td class="listTitle" align="center" colspan=4>Actions</td>';                                                          
 			tableHeader += '</tr>';
 		
 		// Clear current result and append Table Header to HTML
@@ -240,19 +243,17 @@
 			var phone = hostLeadData.QUERY.DATA[i][hostLeadData.QUERY.COLUMNS.findIdx('PHONE')];
 			var email = hostLeadData.QUERY.DATA[i][hostLeadData.QUERY.COLUMNS.findIdx('EMAIL')];
 			var dateCreated = hostLeadData.QUERY.DATA[i][hostLeadData.QUERY.COLUMNS.findIdx('DATECREATED')];
-			var dateUpdated = hostLeadData.QUERY.DATA[i][hostLeadData.QUERY.COLUMNS.findIdx('dateUpdated')];
+			var dateUpdated = hostLeadData.QUERY.DATA[i][hostLeadData.QUERY.COLUMNS.findIdx('DATEUPDATED')];
 			var regionAssigned = hostLeadData.QUERY.DATA[i][hostLeadData.QUERY.COLUMNS.findIdx('REGIONASSIGNED')];
 			var areaRepAssigned = hostLeadData.QUERY.DATA[i][hostLeadData.QUERY.COLUMNS.findIdx('AREAREPASSIGNED')];
 			var statusAssigned = hostLeadData.QUERY.DATA[i][hostLeadData.QUERY.COLUMNS.findIdx('STATUSASSIGNED')];
 			
 			// Create Table Rows
 			var tableBody = "";	
-			if (i % 2 == 0) {
-				tableBody = '<tr bgcolor="#FFFFE6" id="' + id + '">';
-			} else {
-				tableBody = '<tr bgcolor="#FFFFFF" id="' + id + '">';
-			}
-				tableBody += '<td><a href="hostLeads/index.cfm?action=detail&id=' + id + '&key=' + hashID + '" class="jQueryModal">' + firstName + '</a></td>';
+			
+				tableBody = '<tr id="' + id + '">';
+			
+				tableBody += '<td><a href="hostLeads/index.cfm?action=detail&id=' + id + '&key=' + hashID + '" class="modalDialog">' + firstName + '</a></td>';
 				tableBody += '<td><a href="hostLeads/index.cfm?action=detail&id=' + id + '&key=' + hashID + '" class="jQueryModal">' + lastName + '</a></td>';
 				tableBody += '<td>' + city + '</a></td>';
 				tableBody += '<td>' + state + '</td>';
@@ -260,14 +261,15 @@
 				tableBody += '<td>' + phone + '</td>';
 				tableBody += '<td><a href="mailto:' + email + '">' + email + '</a></td>';
 				tableBody += '<td>' + dateCreated + '</td>';
-				tableBody += '<td>' + dateLastLoggedIn + '</td>';
+				
 				tableBody += '<td>' + regionAssigned + '</td>';
 				tableBody += '<td>' + areaRepAssigned + '</td>';
 				tableBody += '<td>' + statusAssigned + '</td>';
+				tableBody += '<td>' + dateUpdated + '</td>';
 				<cfif ListFind('1,2', CLIENT.userType)>
-					tableBody += '<td align="center"><a href="hostLeads/index.cfm?action=detail&id=' + id + '&key=' + hashID + '" class="jQueryModal">[Details]</a> &nbsp; | &nbsp; <a href="javascript:confirmDeleteHostLead(' + id + ');">[Delete]</a></td>';
+					tableBody += '<td align="center"><a href="?curdoc=forms/host_fam_form_lead&leadID=' + id + '&key=' + hashID + '" class="jQueryModal"><button type="button" class="btn btn-success">Add HF</button></a>  &nbsp;  <a href="hostLeads/index.cfm?action=detail&id=' + id + '&key=' + hashID + '" class="jQueryModal"><button type="button" class="btn">Update</button></a>  &nbsp;<a href="hostLeads/index.cfm?action=app_sent&id=' + id + '&key=' + hashID + '" class="jQueryModal"><button type="button" class="btn btn-warning">App Sent</button></a> &nbsp; <a href="javascript:confirmDeleteHostLead(' + id + ');"><button type="button" class="btn btn-danger">Delete</button></a></td>';
 				<cfelse>
-					tableBody += '<td align="center"><a href="hostLeads/index.cfm?action=detail&id=' + id + '&key=' + hashID + '" class="jQueryModal">[Details]</a></td>';
+					tableBody += '<td align="center"><a href="?curdoc=forms/host_fam_form_lead&leadID=' + id + '&key=' + hashID + '" class="jQueryModal">Create Host</a> &nbsp; | &nbsp; <a href="hostLeads/index.cfm?action=detail&id=' + id + '&key=' + hashID + '" class="jQueryModal">App Sent</a> &nbsp; | &nbsp; <a href="hostLeads/index.cfm?action=detail&id=' + id + '&key=' + hashID + '" class="jQueryModal">Details</a></td>';
 				</cfif>
 			tableBody += '</tr>';
 			// Append table rows
@@ -391,12 +393,7 @@
 
 <cfoutput>
 
-	<!--- Table Header --->
-    <gui:tableHeader
-        imageName="family.gif"
-        tableTitle="Host Family Leads"
-        tableRightTitle=""
-    />
+
 
 	<!--- This holds the student information messages --->
     <table width="100%" border="0" cellpadding="4" cellspacing="0" class="section pageMessages displayNone" align="center">
@@ -410,8 +407,9 @@
     </table>
         
 	<!--- Search Options --->
-    <table border="0" cellpadding="4" cellspacing="0" class="section" width="100%" style="padding:15px;">
+    <table border="0" cellpadding="4" cellspacing="4" class="table table-striped" width="100%" style="padding:15px;">
         <tr>
+            <td><input name="send" type="submit" value="Search" class="submitButton" onClick="getHostLeadList();" /></td>
             <td class="listTitle">
                 <label for="keyword">Keyword</label> <br />
                 <input type="text" name="keyword" id="keyword" class="largeField" maxlength="50" />
@@ -457,7 +455,14 @@
                     </cfloop>
                 </select>
             </td>   
-                    
+            <td>
+                    Associated with Active Rep<br />
+                    <select name="active_rep" id="active_rep">
+                        <option value="">All</option>
+                        <option value="1" <cfif FORM.active_rep EQ 1>selected</cfif>>Yes</option>
+                        <option value="0" <cfif FORM.active_rep EQ 0>selected</cfif>>No</option>
+                    </select>    
+            </td>      
             <td class="listTitle">
                 <label for="pageSize">Records per Page</label> <br />
                 <select name="pageSize" id="pageSize" class="smallField">
@@ -466,7 +471,7 @@
                     </cfloop>
                 </select>
             </td>                
-            <td><input name="send" type="submit" value="Search" class="submitButton" onClick="getHostLeadList();" /></td>            
+                       
         </tr>
         
         <cfif ListFind('1,2,3,4', CLIENT.userType)>
@@ -482,10 +487,9 @@
     </table>
 
     <!--- Host Leads List --->
-    <table id="loadHostLeadList" border="0" cellpadding="4" cellspacing="0" class="section" width="100%"></table>
+    <table id="loadHostLeadList" border="0" cellpadding="4" cellspacing="0" class="table table-striped table-hover" width="100%"></table>
        
-    <!--- Table Footer --->
-    <gui:tableFooter />
+ 
 
 </cfoutput>
 
