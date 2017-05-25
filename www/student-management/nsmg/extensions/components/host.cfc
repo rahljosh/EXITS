@@ -2632,12 +2632,7 @@
                             <strong>Password:</strong> #ARGUMENTS.hostFamilyPassword#<br />
                         </p>
                         
-                        <p> 
-                            <em>
-
-                                There is a live chat and email support available through the application if you need immediate assistance while filling it out. Any and all feedback would be greatly appreciated.
-                            </em>
-                        </p>
+                       
                                         
                         <p>	
                             Thank you, <br />
@@ -3127,6 +3122,7 @@
                     hl.contactWithRepName,
                     hl.dateCreated,
                     hl.dateUpdated,
+                    hl.dateConverted,
                     r.regionName AS regionAssigned,
                     CONCAT(u.firstName, ' ', u.lastName) AS areaRepAssigned,
                     alk.name AS statusAssigned
@@ -3318,6 +3314,7 @@
                     hl.dateLastLoggedIn,
                     hl.dateCreated,
                     hl.dateUpdated,
+                    hl.dateConverted,
                     hl.contactwithrepname,
                     <!--- Follow Up Representative --->
                     CONCAT(fu.firstName, ' ', fu.lastName) AS followUpAssigned,
@@ -3348,7 +3345,8 @@
                 	applicationlookup alk ON alk.fieldID = hl.statusID 
                     	AND 
                             alk.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="hostLeadStatus">
-                WHERE
+               
+                 WHERE
                 	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
                 AND	
                 	hl.ID =  <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.ID#">
@@ -3436,6 +3434,7 @@
         <cfargument name="statusID" type="numeric" required="yes" hint="statusID is required">
         <cfargument name="enteredByID" type="numeric" required="yes" hint="enteredByID is required">
         <cfargument name="comments" type="string" default="" hint="comments is not required">
+        <cfargument name="hostid" type="string" default="" hint="comments is not required">
         
         <cfscript>
 			// Set actions
@@ -3596,7 +3595,8 @@
                     statusID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.statusID)#">,
                     followUpID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.followUpID)#">,
                     regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.regionID)#">,
-                    areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.areaRepID)#">
+                    areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.areaRepID)#">,
+                    hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
                 WHERE	                        
                     ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.ID#">
         </cfquery>
@@ -3699,6 +3699,7 @@
         <cfargument name="numberOfRecordsOnPage" type="numeric" default="30" hint="Page number is not required">
         <cfargument name="isDeleted" type="numeric" default="0" hint="isDeleted is not required">
         <cfargument name="hasLoggedIn" type="numeric" default="0" hint="hasLoggedIn is not required">
+        <cfargument name="active_rep" type="string" default="" hint="active_rep is not required">
 		
         <cfscript>
 			if ( NOT ListFind("ASC,DESC", ARGUMENTS.sortOrder ) ) {
@@ -3772,8 +3773,11 @@
                     AND	
                         hl.dateLastLoggedIn IS NOT NULL
 				</cfif>                    
-
-				<cfif CLIENT.companyID NEQ 5>
+				   
+               
+				
+                   
+                <cfif CLIENT.companyID NEQ 5>
                     AND
                         r.company = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
                 </cfif>
@@ -3831,6 +3835,11 @@
                 <cfif VAL(ARGUMENTS.stateID)>
                 	AND
                         hl.stateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.stateID#">
+                </cfif>
+                 <cfif ARGUMENTS.active_rep EQ 1>
+                    AND u.active = 1
+                <cfelseif ARGUMENTS.active_rep EQ 0>
+                    AND u.active = 0 
                 </cfif>
                 
                 ORDER BY
@@ -4201,6 +4210,8 @@
         <cfargument name="HFyear" type="string" default="" hint="HFyear is not required">
         <cfargument name="school_id" type="string" default="" hint="school_id is not required">
         <cfargument name="stateID" type="string" default="" hint="stateID is not required">
+        <cfargument name="HFcity" type="string" default="" hint="HFcity is not required">
+        <cfargument name="accepts_double" type="string" default="" hint="double_placement is not required">
         <cfargument name="sortBy" type="string" default="dateCreated" hint="sortBy is not required">
         <cfargument name="sortOrder" type="string" default="DESC" hint="sortOrder is not required">
         <cfargument name="pageSize" type="numeric" default="30" hint="Page number is not required">
@@ -4216,8 +4227,11 @@
                     h.familylastname, 
                     h.fatherfirstname, 
                     h.motherfirstname, 
+                    h.address,
+                    h.address2,
                     h.city, 
                     h.state,
+                    h.zip,
                     h.isNotQualifiedToHost,
                     h.isHosting,
                     h.phone,
@@ -4227,7 +4241,34 @@
                     h.with_competitor,
                     u.firstname AS area_rep_firstname,
                     u.lastname AS area_rep_lastname,
-                    p.programName
+                    p.programName,
+
+                    CASE 
+                        WHEN h.isHosting = 0
+                            AND h.isNotQualifiedToHost = 0
+                            AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                            AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL) 
+                            THEN 'Decided Not to Host'
+                        WHEN h.isNotQualifiedToHost = 1
+                            AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                            AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL)
+                            THEN 'Not Qualified to Host'
+                        WHEN h.isNotQualifiedToHost = 0
+                            AND h.isHosting = 1
+                            AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                            AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL)
+                            THEN 'Available to Host'
+                        WHEN h.call_back = 1
+                            AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL)
+                            THEN 'Call Back'
+                        WHEN h.call_back = 2
+                            AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL)
+                            THEN 'Call Back Next SY'
+                        WHEN h.with_competitor = 1
+                            THEN 'With Competitor'
+                    END 
+                    AS HFstatus
+
                 FROM 
                     smg_hosts h
 
@@ -4271,6 +4312,10 @@
                     AND h.schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.school_id)#">
                 </cfif>
                 
+                <cfif LEN(ARGUMENTS.accepts_double)>
+                    AND h.acceptDoublePlacement = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.accepts_double)#">
+                </cfif>
+                
                 <cfif LEN(TRIM(ARGUMENTS.keyword))>
                     AND (
                             h.hostid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(ARGUMENTS.keyword)#">
@@ -4299,6 +4344,10 @@
                     AND h.active = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.active#">
                 </cfif>
 
+                <cfif LEN(ARGUMENTS.HFcity)>
+                    AND h.city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.HFcity#">
+                </cfif>
+
                 <cfif VAL(ARGUMENTS.HFyear)>
                     AND h.dateCreated BETWEEN <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.HFyear#-01-01"> AND <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.HFyear#-12-31">
                 </cfif>
@@ -4308,17 +4357,22 @@
                         AND h.isHosting = 0
                         AND h.isNotQualifiedToHost = 0
                         AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                        AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL)
                     <cfelseif ARGUMENTS.HFstatus EQ "Not qualified to host">
                         AND h.isNotQualifiedToHost = 1
                         AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                        AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL)
                     <cfelseif ARGUMENTS.HFstatus EQ "Available to Host">
                         AND h.isNotQualifiedToHost = 0
                         AND h.isHosting = 1
                         AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                        AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL)
                     <cfelseif ARGUMENTS.HFstatus EQ "Call Back">
                         AND h.call_back = 1
+                        AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL)
                     <cfelseif ARGUMENTS.HFstatus EQ "Call Back Next SY">
                         AND h.call_back = 2
+                        AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL)
                     <cfelseif ARGUMENTS.HFstatus EQ "With Competitor">
                         AND h.with_competitor = 1
                     </cfif>
@@ -4327,9 +4381,12 @@
                 <cfif ARGUMENTS.available_to_host EQ 1>
                     AND h.isNotQualifiedToHost = 0
                     AND h.isHosting = 1
+                    AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL)
                 <cfelseif ARGUMENTS.available_to_host EQ 0>
                     AND (h.isNotQualifiedToHost = 1
-                    OR h.isHosting = 0)
+                        OR h.isHosting = 0
+                        OR h.with_competitor = 1)
+                    AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
                 </cfif>
                 
                 <cfif VAL(ARGUMENTS.area_rep)>
@@ -4386,12 +4443,16 @@
                     </cfcase>
     
                     <cfcase value="lastHosted">
-                        p.programID DESC,
+                        p.programID #ARGUMENTS.sortOrder#,
                         h.familylastname
                     </cfcase>
 
                     <cfcase value="hostStatus">
-                        h.isNotQualifiedToHost
+                        HFstatus #ARGUMENTS.sortOrder#
+                    </cfcase>
+
+                    <cfcase value="hostStatusUpdated">
+                        h.call_back_updated #ARGUMENTS.sortOrder#
                     </cfcase>
     
                     <cfdefaultcase>
@@ -4444,8 +4505,16 @@
                         AND h.schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.school_id)#">
                     </cfif>
 
+                    <cfif LEN(ARGUMENTS.accepts_double)>
+                        AND h.acceptDoublePlacement = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.accepts_double)#">
+                    </cfif>
+
                     <cfif LEN(ARGUMENTS.stateID)>
                         AND h.state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.stateID#">
+                    </cfif>
+                    
+                    <cfif LEN(ARGUMENTS.HFcity)>
+                        AND h.city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.HFcity#">
                     </cfif>
                     
                     <cfif LEN(TRIM(ARGUMENTS.keyword))>
@@ -4504,9 +4573,12 @@
                     <cfif ARGUMENTS.available_to_host EQ 1>
                         AND h.isNotQualifiedToHost = 0
                         AND h.isHosting = 1
+                        AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL)
                     <cfelseif ARGUMENTS.available_to_host EQ 0>
                         AND (h.isNotQualifiedToHost = 1
-                        OR h.isHosting = 0)
+                            OR h.isHosting = 0
+                            OR h.with_competitor = 1)
+                        AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
                     </cfif>
                     
                     <cfif VAL(ARGUMENTS.area_rep)>
@@ -4564,12 +4636,16 @@
                             </cfcase>
             
                             <cfcase value="lastHosted">
-                                p.programID DESC,
+                                p.programID #ARGUMENTS.sortOrder#,
                                 h.familylastname
                             </cfcase>
 
                             <cfcase value="hostStatus">
-                                h.isNotQualifiedToHost
+                                HFstatus #ARGUMENTS.sortOrder#
+                            </cfcase>
+
+                            <cfcase value="hostStatusUpdated">
+                                h.call_back_updated #ARGUMENTS.sortOrder#
                             </cfcase>
             
                             <cfdefaultcase>
@@ -4615,8 +4691,16 @@
                         AND h.state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.stateID#">
                     </cfif>
 
+                    <cfif LEN(ARGUMENTS.HFcity)>
+                        AND h.city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.HFcity#">
+                    </cfif>
+
                     <cfif VAL(ARGUMENTS.school_id)>
                         AND h.schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.school_id)#">
+                    </cfif>
+                    
+                    <cfif LEN(ARGUMENTS.accepts_double)>
+                        AND h.acceptDoublePlacement = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.accepts_double)#">
                     </cfif>
                     
                     <cfif LEN(TRIM(ARGUMENTS.keyword))>
@@ -4675,9 +4759,12 @@
                     <cfif ARGUMENTS.available_to_host EQ 1>
                         AND h.isNotQualifiedToHost = 0
                         AND h.isHosting = 1
+                        AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL)
                     <cfelseif ARGUMENTS.available_to_host EQ 0>
                         AND (h.isNotQualifiedToHost = 1
-                        OR h.isHosting = 0)
+                            OR h.isHosting = 0
+                            OR h.with_competitor = 1)
+                        AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
                     </cfif>
                     
                     <cfif VAL(ARGUMENTS.area_rep)>
@@ -4734,12 +4821,16 @@
                             </cfcase>
             
                             <cfcase value="lastHosted">
-                                p.programID DESC,
+                                p.programID #ARGUMENTS.sortOrder#,
                                 h.familylastname
                             </cfcase>
 
                             <cfcase value="hostStatus">
-                                h.isNotQualifiedToHost
+                                HFstatus #ARGUMENTS.sortOrder#
+                            </cfcase>
+
+                            <cfcase value="hostStatusUpdated">
+                                h.call_back_updated #ARGUMENTS.sortOrder#
                             </cfcase>
             
                             <cfdefaultcase>
@@ -4763,8 +4854,11 @@
                     h.familylastname, 
                     h.fatherfirstname, 
                     h.motherfirstname, 
+                    h.address,
+                    h.address2,
                     h.city, 
                     h.state,
+                    h.zip,
                     h.isNotQualifiedToHost,
                     h.isHosting,
                     h.phone,
@@ -4774,7 +4868,34 @@
                     h.with_competitor,
                     u.firstname AS area_rep_firstname,
                     u.lastname AS area_rep_lastname,
-                    p.programName
+                    p.programName,
+
+                    CASE 
+                        WHEN h.isHosting = 0
+                            AND h.isNotQualifiedToHost = 0
+                            AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                            AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL) 
+                            THEN 'Decided Not to Host'
+                        WHEN h.isNotQualifiedToHost = 1
+                            AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                            AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL)
+                            THEN 'Not Qualified to Host'
+                        WHEN h.isNotQualifiedToHost = 0
+                            AND h.isHosting = 1
+                            AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                            AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL)
+                            THEN 'Available to Host'
+                        WHEN h.call_back = 1
+                            AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL)
+                            THEN 'Call Back'
+                        WHEN h.call_back = 2
+                            AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL)
+                            THEN 'Call Back Next SY'
+                        WHEN h.with_competitor = 1
+                            THEN 'With Competitor'
+                    END 
+                    AS HFstatus
+
                 FROM 
                     smg_hosts h
                 LEFT OUTER JOIN      (
@@ -4790,6 +4911,28 @@
                 WHERE 
                     h.regionid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionid#">
                     
+                <cfif ARGUMENTS.active_rep EQ 1>
+                    AND u.active = 1
+                <cfelseif ARGUMENTS.active_rep EQ 0>
+                    AND u.active = 0 
+                </cfif>
+
+                <cfif LEN(ARGUMENTS.stateID)>
+                    AND h.state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.stateID#">
+                </cfif>
+
+                <cfif LEN(ARGUMENTS.HFcity)>
+                    AND h.city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.HFcity#">
+                </cfif>
+
+                <cfif VAL(ARGUMENTS.school_id)>
+                    AND h.schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.school_id)#">
+                </cfif>
+
+                <cfif LEN(ARGUMENTS.accepts_double)>
+                    AND h.acceptDoublePlacement = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.accepts_double)#">
+                </cfif> 
+                
                 <cfif LEN(TRIM(ARGUMENTS.keyword))>
                     AND (
                             h.hostid = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(ARGUMENTS.keyword)#">
@@ -4806,6 +4949,60 @@
                         OR 
                             h.email LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(ARGUMENTS.keyword)#%">
                     )
+                </cfif>
+                
+                <cfif ARGUMENTS.hosting EQ 1>
+                    AND s.active = 1
+                <cfelseif ARGUMENTS.hosting EQ 0>
+                    AND s.hostid IS NULL
+                </cfif>
+                
+                <cfif LEN(ARGUMENTS.active)>
+                    AND h.active = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.active#">
+                </cfif>
+
+                <cfif VAL(ARGUMENTS.HFyear)>
+                    AND h.dateCreated BETWEEN <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.HFyear#-01-01"> AND <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.HFyear#-12-31">
+                </cfif>
+
+                <cfif LEN(ARGUMENTS.HFstatus)>
+                    <cfif ARGUMENTS.HFstatus EQ "Decided Not to Host">
+                        AND h.isHosting = 0
+                        AND h.isNotQualifiedToHost = 0
+                        AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                    <cfelseif ARGUMENTS.HFstatus EQ "Not qualified to host">
+                        AND h.isNotQualifiedToHost = 1
+                        AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                    <cfelseif ARGUMENTS.HFstatus EQ "Available to Host">
+                        AND h.isNotQualifiedToHost = 0
+                        AND h.isHosting = 1
+                        AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                    <cfelseif ARGUMENTS.HFstatus EQ "Call Back">
+                        AND h.call_back = 1
+                    <cfelseif ARGUMENTS.HFstatus EQ "Call Back Next SY">
+                        AND h.call_back = 2
+                    <cfelseif ARGUMENTS.HFstatus EQ "With Competitor">
+                        AND h.with_competitor = 1
+                    </cfif>
+                </cfif>
+
+                <cfif ARGUMENTS.available_to_host EQ 1>
+                    AND h.isNotQualifiedToHost = 0
+                    AND h.isHosting = 1
+                    AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL)
+                <cfelseif ARGUMENTS.available_to_host EQ 0>
+                    AND (h.isNotQualifiedToHost = 1
+                        OR h.isHosting = 0
+                        OR h.with_competitor = 1)
+                    AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                </cfif>
+                
+                <cfif VAL(ARGUMENTS.area_rep)>
+                    AND h.areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.area_rep)#">
+                </cfif>
+
+                <cfif LEN(ARGUMENTS.stateID)>
+                    AND h.state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.stateID#">
                 </cfif>
                 
                 <!--- if vHostIDList is null return 0 results. --->
@@ -4866,12 +5063,16 @@
                         </cfcase>
         
                         <cfcase value="lastHosted">
-                            p.programID DESC,
+                            p.programID  #ARGUMENTS.sortOrder#,
                             h.familylastname
                         </cfcase>
 
                         <cfcase value="hostStatus">
-                            h.isNotQualifiedToHost
+                            HFstatus #ARGUMENTS.sortOrder#
+                        </cfcase>
+
+                        <cfcase value="hostStatusUpdated">
+                            h.call_back_updated #ARGUMENTS.sortOrder#
                         </cfcase>
         
                         <cfdefaultcase>
@@ -4908,7 +5109,7 @@
             }
 
             // Populate structure with query
-            resultQuery = QueryNew("hostid, nexits_id, familylastname, fatherfirstname, motherfirstname, city, state, isNotQualifiedToHost, isHosting, phone, email, call_back, area_rep_firstname, area_rep_lastname, programName, hostStatus, call_back_updated, with_competitor");
+            resultQuery = QueryNew("hostid, nexits_id, familylastname, fatherfirstname, motherfirstname, address, address2, city, state, zip, isNotQualifiedToHost, isHosting, phone, email, call_back, area_rep_firstname, area_rep_lastname, programName, call_back_updated, with_competitor, HFstatus");
             
             if ( qGetResults.recordCount < stResult.recordTo ) {
                 stResult.recordTo = qGetResults.recordCount;
@@ -4924,8 +5125,11 @@
                     QuerySetCell(resultQuery, "familylastname", qGetResults.familylastname[i]);
                     QuerySetCell(resultQuery, "fatherfirstname", qGetResults.fatherfirstname[i]);
                     QuerySetCell(resultQuery, "motherfirstname", qGetResults.motherfirstname[i]);
+                    QuerySetCell(resultQuery, "address", qGetResults.address[i]);
+                    QuerySetCell(resultQuery, "address2", qGetResults.address2[i]);
                     QuerySetCell(resultQuery, "city", qGetResults.city[i]);
                     QuerySetCell(resultQuery, "state", qGetResults.state[i]);
+                    QuerySetCell(resultQuery, "zip", qGetResults.zip[i]);
                     QuerySetCell(resultQuery, "isNotQualifiedToHost", qGetResults.isNotQualifiedToHost[i]);
                     QuerySetCell(resultQuery, "isHosting", qGetResults.isHosting[i]);
                     QuerySetCell(resultQuery, "phone", qGetResults.phone[i]);
@@ -4936,26 +5140,8 @@
                     QuerySetCell(resultQuery, "programName", qGetResults.programName[i]);
                     QuerySetCell(resultQuery, "call_back_updated", qGetResults.call_back_updated[i]);
                     QuerySetCell(resultQuery, "with_competitor", qGetResults.with_competitor[i]);
+                    QuerySetCell(resultQuery, "HFstatus", qGetResults.HFstatus[i]);
 
-                    if (qGetResults.isNotQualifiedToHost[i] == 1) {
-                        QuerySetCell(resultQuery, "hostStatus", 'Not qualified to host');
-                    } else if (qGetResults.isHosting[i] == 0) {
-                        QuerySetCell(resultQuery, "hostStatus", 'Decided not to host');
-                    } else {
-                        QuerySetCell(resultQuery, "hostStatus", 'Available to Host');
-                    }
-                    
-
-                    if (qGetResults.call_back[i] == 1) {
-                        QuerySetCell(resultQuery, "hostStatus", 'Call Back');
-                    } else if (qGetResults.call_back[i] == 2) {
-                        QuerySetCell(resultQuery, "hostStatus", 'Call Back Next SY');
-                    }
-
-
-                    if (qGetResults.with_competitor[i] == 1) {
-                        QuerySetCell(resultQuery, "hostStatus", 'With Competitor');
-                    }
 
                 }
             
@@ -4968,12 +5154,6 @@
             return stResult;            
         </cfscript>
 
-        
     </cffunction>
 
-
-
-    
-
-    
 </cfcomponent>
