@@ -9,7 +9,16 @@
     SELECT *
     FROM smg_airports
 </cfquery>
+    <cfscript>
+        // Get User Regions
+        qGetRegionList = APPLICATION.CFC.REGION.getUserRegions(
+            companyID=CLIENT.companyID,
+            userID=CLIENT.userID,
+            userType=CLIENT.userType
+        );
 
+     
+    </cfscript>
 <cfoutput query="qGetHostInfo">
 
 <cfform action="?curdoc=querys/insert_community_info_pis&hostID=#URL.hostID#" method="post">
@@ -27,32 +36,17 @@
 	<tr><td width="80%" valign="top">
 		<table border=0 cellpadding=4 cellspacing=0 align="left" width="100%">
 			<tr><td colspan="2"><h3>#qGetHostInfo.city# #qGetHostInfo.state#, #qGetHostInfo.zip#</h3></td></tr>
-			<tr><Td width="20%" align="right">Region: </Td>
-				<td> 
-				<cfselect name="region" required="yes" message="Region must be selected.">
-					<cfif client.usertype LTE '4'> <!--- all regions --->
-						<cfquery name="regions" datasource="#APPLICATION.DSN#">
-							SELECT regionid, regionname  FROM smg_regions 
-							WHERE company = '#client.companyid#' AND subofregion = '0' 
-							ORDER BY regionname
-						</cfquery>
-						<option value="0">Select Region</option>
-					<cfelse>
-						<cfquery name="regions" datasource="#APPLICATION.DSN#">
-							SELECT smg_regions.regionid, smg_regions.regionname 
-							FROM smg_users
-							INNER JOIN user_access_rights ON smg_users.userid = user_access_rights.userid
-							INNER JOIN smg_regions ON smg_regions.regionid = user_access_rights.regionid
-							WHERE user_access_rights.userid = '#client.userid#' 
-								AND user_access_rights.companyid = '#client.companyid#'
-							ORDER BY regionname
-						</cfquery>
-					</cfif>
-					<cfloop query="regions">
-						<option value="#regionid#" <cfif qGetHostInfo.regionid EQ regionid>selected</cfif>>#regionname# &nbsp;</option>
-					</cfloop>
-				</cfselect>
-				</td>
+			<tr>
+			
+				  <Td width="20%" align="right">Region: </Td>
+                       <td>
+                        <select name="region" id="region">
+                          
+                            <cfloop query="qGetRegionList">
+                                <option value="#regionID#" <cfif regionID EQ qGetHostInfo.regionid>selected="selected"</cfif>>#companyshort# - #regionName#</option>
+                            </cfloop>
+                        </select>
+                    </td>
 			</tr>
 			<tr><td colspan="2">Would you describe the community as:</td></tr>
 			<tr><td colspan="2">
