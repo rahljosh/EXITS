@@ -3697,9 +3697,10 @@
         <cfargument name="sortBy" type="string" default="dateCreated" hint="sortBy is not required">
         <cfargument name="sortOrder" type="string" default="DESC" hint="sortOrder is not required">
         <cfargument name="numberOfRecordsOnPage" type="numeric" default="30" hint="Page number is not required">
+        <cfargument name="active_rep" type="numeric" default="2" hint="active_rep is not required">
         <cfargument name="isDeleted" type="numeric" default="0" hint="isDeleted is not required">
         <cfargument name="hasLoggedIn" type="numeric" default="0" hint="hasLoggedIn is not required">
-        <cfargument name="active_rep" type="string" default="" hint="active_rep is not required">
+        
 		
         <cfscript>
 			if ( NOT ListFind("ASC,DESC", ARGUMENTS.sortOrder ) ) {
@@ -3768,15 +3769,18 @@
                 	OR
                     	hl.dateLastLoggedIn IS NOT NULL	
                 	)
-                    
+
+                <cfif ARGUMENTS.active_rep EQ 1>
+                    AND u.active =  <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                <cfelseif ARGUMENTS.active_rep EQ 0>
+                    AND u.active = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                </cfif>
+                
                 <cfif VAL(ARGUMENTS.hasLoggedIn)>
                     AND	
                         hl.dateLastLoggedIn IS NOT NULL
 				</cfif>                    
-				   
-               
-				
-                   
+
                 <cfif CLIENT.companyID NEQ 5>
                     AND
                         r.company = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
@@ -3836,11 +3840,7 @@
                 	AND
                         hl.stateID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.stateID#">
                 </cfif>
-                 <cfif ARGUMENTS.active_rep EQ 1>
-                    AND u.active = 1
-                <cfelseif ARGUMENTS.active_rep EQ 0>
-                    AND u.active = 0 
-                </cfif>
+                
                 
                 ORDER BY
                 
