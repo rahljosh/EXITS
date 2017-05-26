@@ -578,12 +578,13 @@ function checkUserType(current_row) {
 
 
 
-															<cfselect name="hostCompanyID" id="hostCompanyID_sample">
+															<cfselect name="hostCompanyID" id="hostCompanyID_sample" style="width:93%">
 																<option value="">Select</option>
 																<cfloop query="get_host_companies">
 																	<option value="#hostCompanyID#">#Left(name, '50')#<cfif Len(name) GT 50>...</cfif></option>
 																</cfloop>
 															</cfselect>	
+															<a href="" id="removeButton_sample" style="float:right"><img src="/internal/pics/deletex.gif" border="0" /></a>
 
 															<div id="afterHere" style="cursor: pointer; padding:5px; margin:5px; background-color:##efefef" onclick="$('##hostCompanyID_sample').clone().attr('name', 'hostCompanyID').appendTo('##extraHostCompanyDiv').css('display', 'block');">+ Add Another Host Company</div>
 
@@ -737,19 +738,38 @@ function checkUserType(current_row) {
 	    <cfoutput>
 		    <cfloop query="get_user_access_hostCompanies">
 		    	
-		    	$('##hostCompanyID_sample').clone().attr('name', 'hostCompanyID').attr('id', 'hostCompanyID_#get_user_access_hostCompanies.hostcompanyID#').appendTo('##extraHostCompanyDiv');
+		    	$('##hostCompanyID_sample').clone()
+		    		.attr('name', 'hostCompanyID')
+		    		.attr('id', 'hostCompanyID_#get_user_access_hostCompanies.hostcompanyID#')
+		    		.appendTo('##extraHostCompanyDiv');
+
+		    	$('##removeButton_sample').clone()
+		    		.attr('id', 'removeButton_#get_user_access_hostCompanies.hostcompanyID#')
+		    		.click(function(){
+					    removeHostCompany(#get_user_access_hostCompanies.hostcompanyID#);
+					    return false;
+					})
+		    		.appendTo('##extraHostCompanyDiv');
+		    	
 		    	//console.log('##hostCompanyID_#get_user_access_hostCompanies.hostcompanyID#');
 
-
-		    	$('##hostCompanyID_#get_user_access_hostCompanies.hostcompanyID# option[value=#get_user_access_hostCompanies.hostcompanyID#]').attr('selected', true);
+		    	$('##hostCompanyID_#get_user_access_hostCompanies.hostcompanyID# option[value=#get_user_access_hostCompanies.hostcompanyID#]')
+		    		.attr('selected', true);
 
 
 		    </cfloop>
 	    </cfoutput>
 
 	    $('#hostCompanyID_sample').hide();
+	    $('#removeButton_sample').hide();
 
 	});
+
+	function removeHostCompany(hostID) {
+		$('#hostCompanyID_' + hostID).val('');
+		$('#hostCompanyID_' + hostID).hide();
+		$('#removeButton_' + hostID).hide();
+	}
 
 
 </script>
