@@ -10,6 +10,8 @@
 ----- ------------------------------------------------------------------------- --->
 <link rel="stylesheet" href="linked/css/buttons.css" type="text/css">
 <link rel="stylesheet" href="linked/css/statusIcons.css" type="text/css" />
+
+
 <!--- Kill extra output --->
 <cfsilent>
 
@@ -19,7 +21,11 @@
 	<cfajaxproxy cfc="extensions.components.cbc" jsclassname="CBC">
 
     <!--- Param URL Variables --->
-    <cfparam name="url.hostID" default="">
+    <cfparam name="url.hostID" default="" />
+
+    <cfparam name="FORM.updateApplicationHistoryNotes" default="0" />
+    <cfparam name="applicationHistoryID" default="" />
+
     
     <!--- CHECK RIGHTS --->
 	<cfinclude template="check_rights_host.cfm">
@@ -172,122 +178,6 @@
     </cfquery>
 
 </cfsilent>
-
-<!--- Check if decided to host was clicked because the email should also be sent out in this case. --->
-<cfset goingToHost = 0>
-<cfif isDefined('decideToHost')>
-	<cfif FORM.decideToHost EQ 0>
-    	<cfset goingToHost = 0>
-    <cfelse>
-    	<cfset goingToHost = 1>
-    </cfif>
-</cfif>
-
-
-<cfif isDefined('withCompetitor')>
-    <cfquery datasource="#APPLICATION.DSN#">
-        UPDATE smg_hosts
-        SET with_competitor = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(withCompetitor)#">,
-            call_back_updated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
-        WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostInfo.hostID#">
-    </cfquery>
-    <cflocation url="?#CGI.QUERY_STRING#"/>
-</cfif>
-
-
-<cfif isDefined('hostNewSeason')>
-	<cfif FORM.hostNewSeason EQ 1>
-    	<cfscript>
-			APPLICATION.CFC.HOST.setHostSeasonStatus(hostID=qGetHostInfo.hostID,seasonID=qCurrentSeason.seasonID);
-			goingToHost = 1;
-		</cfscript>
-    </cfif>
-</cfif>
-
-<!--- Send email to host family and update application, check for password first. --->
-<cfif isDefined('sendAppEmail') OR goingToHost EQ 1>
-
-    <cfquery datasource="#APPLICATION.DSN#">
-    	UPDATE smg_hosts
-      	SET
-        	dateUpdated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
-            updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
-        	<cfif isDefined('sendAppEmail')>
-            	<cfif FORM.sendAppEmail EQ "Convert to eHost">
-        			,areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
-              	</cfif>
-           	</cfif>
-            <cfif qGetHostInfo.password is ''>
-              	,password = <cfqueryparam cfsqltype="cf_sql_varchar" value="#strPassword#">
-            </cfif>
-  		WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostInfo.hostID)#">
-	</cfquery>
-    <cfif NOT VAL(qGetHostInfo.applicationStatusID)>
-    	<cfscript>
-			APPLICATION.CFC.HOST.setHostSeasonStatus(hostID=qGetHostInfo.hostID,seasonID=qCurrentSeason.seasonID);
-		</cfscript>
-    </cfif>
-    <cfquery name="qGetUpdatedPassword" datasource="#APPLICATION.DSN#">
-        SELECT password, email
-        FROM smg_hosts
-        WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostInfo.hostID)#">
-    </cfquery>
-    
-       <cfscript>
-			// Data Validation
-			
-			// Email Address
-            if ( NOT LEN(TRIM(qGetUpdatedPassword.email)) ) {
-                SESSION.formErrors.Add("Please provide an email address.");
-            }	
-			
-			// Valid Email Address
-            if ( LEN(TRIM(qGetUpdatedPassword.email)) AND NOT isValid("email", TRIM(qGetUpdatedPassword.email)) ) {
-                SESSION.formErrors.Add("The email address you have entered does not appear to be valid.");
-            }	
-		</cfscript>	
-        
-    <cfif NOT SESSION.formErrors.length()>
- 	<cfscript>
-		APPLICATION.CFC.HOST.sendWelcomeLetter(
-			email=#qGetHostInfo.email#,
-			password=#qGetUpdatedPassword.password#,
-			fatherFirstName=#qGetHostInfo.fatherFirstName#,
-			motherFirstName=#qGetHostInfo.motherFirstName#);
-	</cfscript>
-    </cfif>
-    <!--- Only reload the page if it does not need to change the host family's active status --->
-    <cfif NOT isDefined('decideToHost')>
-    	<cflocation url="?#CGI.QUERY_STRING#"/>
-    </cfif>                  
-</cfif>
-
-<cfif isDefined('decideToHost')>
-	<cfquery datasource="#APPLICATION.DSN#">
-    	UPDATE smg_hosts
-        SET dateUpdated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
-            updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
-      		isHosting = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.decideToHost)#">,
-            call_back_updated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
-        WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostInfo.hostID#">
-    </cfquery>
-    <cflocation url="?#CGI.QUERY_STRING#"/>
-</cfif>
-
-<cfif isDefined('call_back')>
-    <cfquery datasource="#APPLICATION.DSN#">
-        UPDATE smg_hosts
-        SET dateUpdated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
-            updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
-            call_back = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.call_back)#">,
-            call_back_updated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">
-        WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostInfo.hostID#">
-    </cfquery>
-    <cflocation url="?#CGI.QUERY_STRING#"/>
-</cfif>
-
-
-
 
 <cfif not isNumeric(url.hostID)>
 	a numeric hostID is required.
@@ -802,6 +692,7 @@ div.scroll2 {
                 </tr>
             </table>
             <table width="100%" align="left" cellpadding=8 class="section">
+
                 <cfif qGetHostInfo.isNotQualifiedToHost EQ 0>
                     <tr>
                         <td>
@@ -812,7 +703,7 @@ div.scroll2 {
                                 <cfif VAL(qGetHostInfo.isHosting) AND NOT VAL(qGetHostInfo.with_competitor)>
                                     <form 
                                         method="post" 
-                                        action="index.cfm?curdoc=host_fam_info&hostid=#url.hostid#" 
+                                        action="index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" 
                                         style="display:inline;" 
                                         onsubmit="return confirm('Are you sure this family does not want to host this year?')">
                                         <input type="hidden" name="decideToHost" value="0"/>
@@ -820,23 +711,23 @@ div.scroll2 {
                                     </form>
                                     <form 
                                         method="post" 
-                                        action="index.cfm?curdoc=host_fam_info&hostid=#url.hostid#" 
+                                        action="index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" 
                                         style="display:inline;" 
                                         onsubmit="return confirm('Are you sure the family is with a competitor?')">
                                         <input type="hidden" name="withCompetitor" value="1"/>
                                         <input type="submit" value="With Competitor"  alt="With Competitor" border="0" class="buttonRed" />
                                     </form>
                                     <cfif VAL(qGetHostInfo.applicationStatusID)>
-                                        <form method="post" action="index.cfm?curdoc=host_fam_info&hostid=#url.hostid#" style="display:inline;">
+                                        <form method="post" action="index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" style="display:inline;">
                                             <input name="sendAppEmail" type="submit" value="Resend Login Info"  alt="Resend Login Info" border="0" class="buttonGreen" />
                                         </form>
                                     <cfelse>
-                                        <form method="post" action="index.cfm?curdoc=host_fam_info&hostid=#url.hostid#" style="display:inline;">
+                                        <form method="post" action="index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" style="display:inline;">
                                             <input name="sendAppEmail" type="submit" value="Convert to eHost"  alt="Convert to eHost" border="0" class="buttonYellow" />
                                         </form>
                                     </cfif>
                                 <cfelse>
-                                    <form method="post" action="index.cfm?curdoc=host_fam_info&hostid=#url.hostid#" style="display:inline;">
+                                    <form method="post" action="index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" style="display:inline;">
                                         <input type="hidden" name="decideToHost" value="1"/>
                                         <input type="submit" value="Decided To Host"  alt="Decided To Host" border="0" class="buttonYellow" />
                                     </form>
@@ -844,76 +735,103 @@ div.scroll2 {
                                 
                             </cfif>
                             <cfif NOT VAL(vCurrentSeasonStatus) AND VAL(qGetHostInfo.isHosting)>
-                                <form method="post" action="index.cfm?curdoc=host_fam_info&hostid=#url.hostid#" style="display:inline;">
+                                <form method="post" action="index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" style="display:inline;">
                                     <input type="hidden" name="hostNewSeason" value="1"/>
                                     <input type="submit" value="Host #qCurrentSeason.season#"  alt="Host Season X" border="0" class="buttonGreen" />
                                 </form>
                          	</cfif>
                         </td>
-                </tr>
-                <tr>
-                    <td style="text-align:center" colspan="2">
-                        <cfif qGetHostInfo.call_back EQ 1 >
-                            <form method="post" action="index.cfm?curdoc=host_fam_info&hostid=#url.hostid#" style="display:inline;">
-                                <input type="hidden" name="call_back" value="0"/>
-                                <input type="submit" value="Call Back"  alt="Call Back" border="0" class="buttonGreen" />
-                            </form>
-                            <form method="post" action="index.cfm?curdoc=host_fam_info&hostid=#url.hostid#" style="display:inline;">
-                                <input type="hidden" name="call_back" value="2"/>
-                                <input type="submit" value="Call Back Next SY"  alt="Call Back Next SY" border="0" class="buttonGray" />
-                            </form>
-                        <cfelseif qGetHostInfo.call_back EQ 2 >
-                            <form method="post" action="index.cfm?curdoc=host_fam_info&hostid=#url.hostid#" style="display:inline;">
-                                <input type="hidden" name="call_back" value="1"/>
-                                <input type="submit" value="Call Back"  alt="Call Back" border="0" class="buttonGray" />
-                            </form>
-                            <form method="post" action="index.cfm?curdoc=host_fam_info&hostid=#url.hostid#" style="display:inline;">
-                                <input type="hidden" name="call_back" value="0"/>
-                                <input type="submit" value="Call Back Next SY"  alt="Call Back Next SY" border="0" class="buttonGreen" />
-                            </form>
-                        <cfelse>
-                            <form method="post" action="index.cfm?curdoc=host_fam_info&hostid=#url.hostid#" style="display:inline;">
-                                <input type="hidden" name="call_back" value="1"/>
-                                <input type="submit" value="Call Back"  alt="Call Back" border="0" class="buttonBlue" />
-                            </form>
-                            <form method="post" action="index.cfm?curdoc=host_fam_info&hostid=#url.hostid#" style="display:inline;">
-                                <input type="hidden" name="call_back" value="2"/>
-                                <input type="submit" value="Call Back Next SY"  alt="Call Back Next SY" border="0" class="buttonBlue" />
-                            </form>
-                        </cfif>
-                    </td>
-                </tr>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center" colspan="2">
+                            <cfif qGetHostInfo.call_back EQ 1 >
+                                <form method="post" action="index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" style="display:inline;">
+                                    <input type="hidden" name="call_back" value="0"/>
+                                    <input type="submit" value="Call Back"  alt="Call Back" border="0" class="buttonGreen" />
+                                </form>
+                                <form method="post" action="index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" style="display:inline;">
+                                    <input type="hidden" name="StatusUpdateSub" value="1"/>
+                                    <input type="hidden" name="call_back" value="2"/>
+                                    <input type="submit" value="Call Back Next SY"  alt="Call Back Next SY" border="0" class="buttonGray"  />
+                                </form>
+                            <cfelseif qGetHostInfo.call_back EQ 2 >
+                                <cfform method="post" action="index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" style="display:inline;">
+                                    <input type="hidden" name="StatusUpdateSub"  value="1"/>
+                                    <input type="hidden" name="call_back" value="1"/>
+                                    <input type="submit" value="Call Back"  alt="Call Back" border="0" class="buttonGray" />
+                                </cfform>
+                                <form method="post" action="index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" style="display:inline;">
+                                    <input type="hidden" name="call_back" value="0"/>
+                                    <input type="submit" value="Call Back Next SY"  alt="Call Back Next SY" border="0" class="buttonGreen" />
+                                </form>
+                            <cfelse>
+                                <cfform method="post" action="index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" style="display:inline;">
+                                    <input type="hidden" name="StatusUpdateSub"  value="1"/>
+                                    <input type="hidden" name="call_back" value="1"/>
+                                    <input type="submit" value="Call Back"  alt="Call Back" border="0" class="buttonBlue"/>
+                                </cfform>
+                                <cfform method="post" action="index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" style="display:inline;">
+                                    <input type="hidden" name="StatusUpdateSub"  value="1"/>
+                                    <input type="hidden" name="call_back" value="2"/>
+                                    <input type="submit" value="Call Back Next SY"  alt="Call Back Next SY" border="0" class="buttonBlue"/>
+                                </cfform>
+                            </cfif>
+                        </td>
+                    </tr>
+
                 <cfelse>
+                    
                     <tr>
                         <td>
                             <input type="checkbox" checked="checked" disabled="disabled" /> <span style="color:red;"><b>Not Qualified</b></span>
                         </td>
                         
                     </tr>
+                </cfif>
+
+                <cfif qGetHostEligibility.recordcount GT 0>
                     <tr>
-                        <td width="30%">
-                            <u>Entered By</u>
-                        </td>
-                        <td width="20%">
-                            <u>Date</u>
-                        </td>
-                        <td width="50%">
-                            <u>Explanation</u>
+                        <td colspan="2">
+                            <div style="max-height: 75px; overflow: auto">
+                            <table cellpadding="0" cellspacing="0" width="100%">
+                            <tr>
+                                <td width="22%">
+                                    <u>Status</u>
+                                </td>
+                                <td width="12%">
+                                    <u>Date</u>
+                                </td>
+                                <td width="25%">
+                                    <u>Entered By</u>
+                                </td>
+                                <td width="41%">
+                                    <u>Notes</u>
+                                </td>
+                            </tr>
+                            <cfloop query="qGetHostEligibility">
+                                <tr>
+                                    <td>
+                                        <Cfif LEN(qGetHostEligibility.status_update)>
+                                            #qGetHostEligibility.status_update#
+                                        <cfelse>
+                                            Not Qualified to Host
+                                        </Cfif>
+                                    </td>
+                                    <td>
+                                        #DateFormat(dateupdated,'mm/dd/yyyy')#
+                                    </td>
+                                    <td>
+                                        #qGetHostEligibility.enteredBy#
+                                    </td>
+                                    <td>
+                                        #comments#
+                                    </td>
+                                </tr>
+                            </cfloop>
+                            </table>
+                            </div>
                         </td>
                     </tr>
-                    <cfloop query="qGetHostEligibility">
-                        <tr>
-                            <td>
-                                #qGetHostEligibility.enteredBy#
-                            </td>
-                            <td>
-                                #DateFormat(dateupdated,'mm/dd/yyyy')#
-                            </td>
-                            <td>
-                                #comments#
-                            </td>
-                        </tr>
-                    </cfloop>
                 </cfif>
                
                 <tr id="qualifiedNotesTr">

@@ -26,6 +26,8 @@
     <cfparam name="HFyear" default="" />
     <cfparam name="school_ID" default="" />
     <cfparam name="stateID" default="" />
+    <cfparam name="HFcity" default="" />
+    <cfparam name="accepts_double" default="" />
     <cfparam name="orderby" default="familylastname">
     <cfparam name="recordsToShow" default="25">
     
@@ -50,24 +52,14 @@
     </cfscript>
 
     <cfif APPLICATION.CFC.USER.isOfficeUser()>
-        <cfquery name="qGetAreaRepList" datasource="#APPLICATION.DSN#">
-            SELECT DISTINCT 
-                u.userid, 
-                u.firstname, 
-                u.lastname
-            FROM 
-                smg_users u
-            <!--- need LEFT OUTER JOIN on user_access_rights because of the "unassigned" search option. --->
-            LEFT OUTER JOIN 
-                user_access_rights uar ON u.userid = uar.userid
-            LEFT OUTER JOIN 
-                smg_companies c ON uar.companyid = c.companyid
-            WHERE  c.companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">)
-                AND uar.usertype = 7
-            ORDER BY 
-                firstName,
-                lastName               
-        </cfquery>
+
+        <cfscript>
+            qGetAreaRepList = APPLICATION.CFC.USER.getUsers(
+                userType = ('5,6,7'),
+                isActive = 1,
+                companyID = CLIENT.companyID
+            );
+        </cfscript>
 
         <cfquery name="qGetHFyear" datasource="#APPLICATION.DSN#">
             SELECT DISTINCT DATE_FORMAT(dateCreated,'%Y') AS dateCreated
@@ -76,44 +68,36 @@
         </cfquery>
     <cfelse>
 
-        <cfif CLIENT.usertype EQ 6>
-            <cfquery name="qGetAreaRepList" datasource="#APPLICATION.DSN#">
-                SELECT DISTINCT 
-                    u.userid, 
-                    u.firstname, 
-                    u.lastname
-                FROM 
-                    smg_users u
-                <!--- need LEFT OUTER JOIN on user_access_rights because of the "unassigned" search option. --->
-                LEFT OUTER JOIN 
-                    user_access_rights uar ON u.userid = uar.userid
-                LEFT OUTER JOIN 
-                    smg_companies c ON uar.companyid = c.companyid
-                WHERE  c.companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">)
-                    AND uar.usertype = 7
-                    AND uar.regionID = #CLIENT.regionID#
-                ORDER BY 
-                    firstName,
-                    lastName               
-            </cfquery>
+        <cfscript>
+            qGetAreaRepList = APPLICATION.CFC.USER.getUsers(
+                userType = ('5,6,7'),
+                isActive = 1,
+                companyID = CLIENT.companyID,
+                regionID = CLIENT.regionID
+            );
+        </cfscript>
 
-            <cfquery name="qGetHFyear" datasource="#APPLICATION.DSN#">
-                SELECT DISTINCT DATE_FORMAT(dateCreated,'%Y') AS dateCreated
-                FROM smg_hosts          
-                WHERE smg_hosts.regionID = #CLIENT.regionID#    
-                ORDER BY dateCreated ASC
-            </cfquery>
-        <cfelseif CLIENT.usertype EQ 7>
-            <cfquery name="qGetHFyear" datasource="#APPLICATION.DSN#">
-                SELECT DISTINCT DATE_FORMAT(dateCreated,'%Y') AS dateCreated
-                FROM smg_hosts          
-                WHERE smg_hosts.regionID = #CLIENT.regionID#    
-                ORDER BY dateCreated ASC
-            </cfquery>
-        </cfif>
+        <cfquery name="qGetHFyear" datasource="#APPLICATION.DSN#">
+            SELECT DISTINCT DATE_FORMAT(dateCreated,'%Y') AS dateCreated
+            FROM smg_hosts          
+            WHERE smg_hosts.regionID = #CLIENT.regionID#    
+            ORDER BY dateCreated ASC
+        </cfquery>
 
     </cfif>
 
+
+    <cfquery name="qGetCities" datasource="#APPLICATION.DSN#">
+        SELECT DISTINCT TRIM(city) AS city
+        FROM smg_hosts 
+        WHERE city <> ''  
+            AND active = 1
+            AND companyID = #CLIENT.companyID#
+        <cfif NOT APPLICATION.CFC.USER.isOfficeUser()>
+            AND smg_hosts.regionID = #CLIENT.regionID#  
+        </cfif>  
+        ORDER BY city ASC
+    </cfquery>
 
 </cfsilent>
 
@@ -169,6 +153,8 @@
         var pageSize = $("#pageSize").val();
         var school_id = $("#school_id").val();
         var stateID = $("#stateID").val();
+        var HFcity = $("#HFcity").val();
+        var accepts_double = $("#accepts_double").val();
         var HFstatus = $("#HFstatus").val();
         var HFyear = $("#HFyear").val();
         
@@ -195,7 +181,7 @@
         hf.setCallbackHandler(populateList); 
         hf.setErrorHandler(myErrorHandler); 
         // This time, pass the intRep ID to the getHostList CFC function. 
-        hf.getHostsRemote(pageNumber,regionID,keyword,active_rep,hosting,active,available_to_host,area_rep,vHostIDList,HFstatus,HFyear,school_id,stateID,sortBy,sortOrder,pageSize);
+        hf.getHostsRemote(pageNumber,regionID,keyword,active_rep,hosting,active,available_to_host,area_rep,vHostIDList,HFstatus,HFyear,school_id,stateID,HFcity,accepts_double, sortBy,sortOrder,pageSize);
 
     } 
 
@@ -308,7 +294,7 @@
         $('#areaRep').click(function (){getHostList(pageNumber,this.id);});
         $('#lastHosted').click(function (){getHostList(pageNumber,this.id);});
         $('#hostStatus').click(function (){getHostList(pageNumber,this.id);});
-        $('#callbackUpdated').click(function (){getHostList(pageNumber,this.id);});
+        $('#hostStatusUpdated').click(function (){getHostList(pageNumber,this.id);});
         
         // No data returned, display message
         if( hostData.QUERY.DATA.length == 0) {          
@@ -334,8 +320,8 @@
             var area_rep_firstname = hostData.QUERY.DATA[i][hostData.QUERY.COLUMNS.findIdx('AREA_REP_FIRSTNAME')];
             var area_rep_lastname = hostData.QUERY.DATA[i][hostData.QUERY.COLUMNS.findIdx('AREA_REP_LASTNAME')];
             var programName = hostData.QUERY.DATA[i][hostData.QUERY.COLUMNS.findIdx('PROGRAMNAME')];
-            var hostStatus = hostData.QUERY.DATA[i][hostData.QUERY.COLUMNS.findIdx('HOSTSTATUS')];
             var call_back_updated = hostData.QUERY.DATA[i][hostData.QUERY.COLUMNS.findIdx('CALL_BACK_UPDATED')];
+            var HFstatus = hostData.QUERY.DATA[i][hostData.QUERY.COLUMNS.findIdx('HFSTATUS')];
 
             if (call_back_updated != '') {
                 var call_back_updated_date = new Date(call_back_updated);   
@@ -361,7 +347,7 @@
                 tableBody += '<td>' + state + '</td>';
                 tableBody += '<td>' + area_rep_firstname + ' ' + area_rep_lastname + '</td>';
                 tableBody += '<td>' + programName + '</td>';
-                tableBody += '<td>' + hostStatus + '</td>';
+                tableBody += '<td>' + HFstatus + '</td>';
                 tableBody += '<td>' + call_back_updated + '</td>';
             tableBody += '</tr>';
             // Append table rows
@@ -531,7 +517,7 @@
                     --->
                 </cfif>
                 <td>
-                    Available to Host<br />
+                    Available<br />
                     <select name="available_to_host" id="available_to_host">
                         <option value="">All</option>
                         <option value="1" <cfif available_to_host EQ 1>selected</cfif>>Yes</option>
@@ -540,7 +526,7 @@
                 </td>
                 <cfif CLIENT.usertype NEQ 7>
                     <td>
-                        Associated with Active Rep<br />
+                        With Active Rep<br />
                         <select name="active_rep" id="active_rep">
                             <option value="">All</option>
                             <option value="1" <cfif active_rep EQ 1>selected</cfif>>Yes</option>
@@ -552,13 +538,48 @@
                         <select name="area_rep" id="area_rep">
                             <option value="">All</option>
                             <cfloop query="qGetAreaRepList">
-                                <option value="#qGetAreaRepList.userID#" <cfif area_rep EQ qGetAreaRepList.userID>selected</cfif>>#qGetAreaRepList.firstname# #qGetAreaRepList.lastname#</option>
+                                <option value="#qGetAreaRepList.userID#" <cfif area_rep EQ qGetAreaRepList.userID>selected</cfif>>
+
+                                    <cfif LEN(qGetAreaRepList.firstname) + LEN(qGetAreaRepList.lastname) GT 20>
+                                        #qGetAreaRepList.firstname# #qGetAreaRepList.lastname#...
+                                    <cfelse>
+                                        #qGetAreaRepList.firstname# #qGetAreaRepList.lastname# (###qGetAreaRepList.userID#)
+                                    </cfif>
+
+                                    
+                                </option>
                             </cfloop>
-                        </select>   
+                        </select>
                     </td>
                 <cfelse>
                     <input type="hidden" name="area_rep" id="area_rep" value="#CLIENT.userID#" />
                 </cfif>
+
+                <td>
+                    Double<br />
+                    <select name="accepts_double" id="accepts_double">
+                        <option value="">All</option>
+                        <option value="1">Yes</option>
+                        <option value="0">No</option>
+                    </select>
+                </td>
+
+                <td>
+                    City<br />
+                    <select name="HFcity" id="HFcity">
+                        <option value="" >All</option>
+                        <cfloop query="qGetCities">
+                            <option value="#qGetCities.city#" <cfif qGetCities.city EQ HFcity>selected</cfif>>
+                                <cfif LEN(qGetCities.city) GT 10>
+                                    #LEFT(qGetCities.city, 10)#...
+                                <cfelse>
+                                    #qGetCities.city#
+                                </cfif>
+                            </option>
+                        </cfloop>
+                    </select>
+                </td>
+
                 <td>
                     Status<br />
                     <select name="HFstatus" id="HFstatus">
@@ -579,7 +600,7 @@
                     <select name="stateID" id="stateID">
                         <option value="">All</option>
                         <cfloop query="qGetStates">
-                            <option value="#qGetStates.state#" <cfif stateID EQ qGetStates.state>selected="selected"</cfif> >#qGetStates.stateName#</option>
+                            <option value="#qGetStates.state#" <cfif stateID EQ qGetStates.state>selected="selected"</cfif> >#qGetStates.state#</option>
                         </cfloop>
                     </select>    
                 </td>
@@ -628,7 +649,7 @@
 <tr id="loadPaginationInfo"></tr>
 
 <tr>
-    <td colspan="11">
+    <td colspan="13">
         <div id="loadingDiv" style="display: none; width: 100%; text-align: center">
             <img src="/nsmg/pics/loading.gif" />
         </div>
@@ -636,14 +657,14 @@
 </tr>
 
 <tr>
-    <td colspan="11">
+    <td colspan="13">
         <!--- Host List --->
         <table id="loadHostList" border="0" cellpadding="4" cellspacing="0" class="section" width="100%"></table>
     </td>
 </tr>
 
 <tr>
-    <td colspan="11" style="text-align:center">
+    <td colspan="13" style="text-align:center">
         <cfform action="?curdoc=host_fam_export" id="exportForm" name="exportForm" onsubmit="return checkSearchFields();">
             <input type="hidden" name="regionid" id="regionid_export" />
             <input type="hidden" name="keyword" id="keyword_export" />
@@ -657,6 +678,8 @@
             <input type="hidden" name="HFstatus" id="HFstatus_export" />
             <input type="hidden" name="HFyear" id="HFyear_export" />
             <input type="hidden" name="school_id" id="school_id_export" />
+            <input type="hidden" name="HFcity" id="HFcity_export" />
+            <input type="hidden" name="accepts_double" id="accepts_double_export" />
             <input type="hidden" name="stateID" id="stateID_export" />
             <input type="hidden" name="sortBy" id="sortBy_export" />
 

@@ -71,8 +71,15 @@
                 	u.userID 
                                    
 				<cfif VAL(ARGUMENTS.usertype)>
+					<cfif listFindNoCase(ARGUMENTS.usertype, 5)
+							OR listFindNoCase(ARGUMENTS.usertype, 6)
+							OR listFindNoCase(ARGUMENTS.usertype, 7)>
+						ORDER BY 
+                        u.firstname, u.lastName
+					<cfelse>
                     ORDER BY 
                         u.businessName                
+                     </cfif>
                 <cfelse>
                     ORDER BY 
                         u.lastName

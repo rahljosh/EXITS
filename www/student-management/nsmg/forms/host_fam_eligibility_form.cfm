@@ -33,11 +33,11 @@
 		}
 	</cfscript>
 
-	<cfif isNotQualifiedNum EQ 1 AND NOT LEN(FORM.explanation)>
+	<!---<cfif isNotQualifiedNum EQ 1 AND NOT LEN(FORM.explanation)>--->
     
-    	<cfset errorMsg = "You must enter an explanation if the host family is not qualified">
+    	<cfset errorMsg = "You must enter an explanation.">
         
-  	<cfelse>
+  	<!---<cfelse>--->
     
     	<cfscript>
 			APPLICATION.CFC.CBC.setIsNotQualifiedToHost(hostID=URL.hostID, isNotQualifiedToHost=isNotQualifiedNum);
@@ -52,15 +52,29 @@
                     foreignID=URL.hostID,
                     enteredByID=CLIENT.userID,
                     comments=FORM.explanation,
-                    dateCreated=NOW()
+                    dateCreated=NOW(),
+                    status_update='Not Qualified to Host'
                 );
             </cfscript>
-            
+        <cfelse>
+
+            <cfscript>
+                APPLICATION.CFC.LOOKUPTABLES.insertApplicationHistory(
+                    applicationID=7,
+                    foreignTable='smg_hosts',
+                    foreignID=URL.hostID,
+                    enteredByID=CLIENT.userID,
+                    comments=FORM.explanation,
+                    dateCreated=NOW(),
+                    status_update='Available to Host'
+                );
+            </cfscript>
+
       	</cfif>
         
         <cflocation url="index.cfm?curdoc=host_fam_info&hostid=#URL.hostid#" addtoken="No">
         
-    </cfif>
+    <!---</cfif>--->
 
 </cfif>
 
@@ -70,20 +84,7 @@
     </script>
 </cfif>
 
-<script type="text/javascript">
-	$(document).ready(function() {
-		displayExplanation('<cfoutput>#qGetHostEligibilityReason.comments#</cfoutput>');			 
-	});
 
-	var displayExplanation = function(comments) {
-		if ($("#isNotQualified").is(':checked')) {
-			$("#explanationRow").html("<td>Explanation:</td><td><textarea name='explanation' id='explanation' value='' /></td>");
-			$("#explanation").val(comments);
-		} else {
-			$("#explanationRow").html("");
-		}
-	}
-</script>
 
 <!--- this table is so the form is not 100% width. --->
 <table align="center">
@@ -109,20 +110,23 @@
                             <input type="checkbox" name="isNotQualified" id="isNotQualified" onclick="displayExplanation('<cfoutput>#qGetHostEligibilityReason.comments#</cfoutput>');"
 								<cfif qGetHostEligibility.isNotQualifiedToHost EQ 1>
                                 	checked="checked"
-                                    disabled="disabled"
 								</cfif> />
                         </td>
                         <td width="80%" style=" vertical-align:middle;">
                             Not Qualified
                         </td>
                     </tr>
-                    <tr id="explanationRow">
+                    <tr >
+                        <td>Explanation:</td><td><textarea name='explanation' id='explanation'><cfoutput>#qGetHostEligibilityReason.comments#</cfoutput></textarea></td>
                   	</tr>
                 </table>
                 
                 <table border=0 cellpadding=4 cellspacing=0 width=100% class="section">
                     <tr>
-                        <td align="center"><input name="Submit" type="image" src="pics/submit.gif" border=0></td>
+                        <td align="center">
+                            <a href="?curdoc=host_fam_info&hostid=<cfoutput>#URL.hostID#</cfoutput>"><img src="pics/back.gif" border=0 /></a>  &nbsp;
+                            <input name="Submit" type="image" src="pics/submit.gif" border=0>
+                        </td>
                     </tr>
                 </table>
 

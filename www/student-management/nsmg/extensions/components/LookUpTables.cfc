@@ -124,6 +124,7 @@
                     ah.isResolved,
                     ah.dateCreated,
                     ah.dateUpdated,
+                    ah.status_update,
                     <!--- Entered By --->
                     CAST(CONCAT(u.firstName, ' ', u.lastName,  ' ##', u.userID) AS CHAR) AS enteredBy
 				FROM
@@ -167,7 +168,7 @@
 	</cffunction>
 
 
-	<cffunction name="insertApplicationHistory" access="public" returntype="void" output="false" hint="Inserts a History">
+	<cffunction name="insertApplicationHistory" access="public" returntype="any" output="false" hint="Inserts a History">
     	<cfargument name="applicationID" hint="applicationID is required">
     	<cfargument name="foreignTable" hint="foreignTable is required. This is what defines a group of data">
         <cfargument name="foreignID" hint="foreignID is required">
@@ -178,6 +179,7 @@
         <cfargument name="isResolved" default="0" hint="isResolved is not required">
         <cfargument name="dateCreated" default="#now()#" hint="dateCreated is not required">
         <cfargument name="dateUpdated" default="#now()#" hint="dateCreated is not required">
+        <cfargument name="status_update" default="" hint="status_updated is not required">
 		
         <cfscript>
 			if ( VAL(ARGUMENTS.formatActionsText) ) {
@@ -189,8 +191,7 @@
 			}
 		</cfscript>
         
-        <cfquery 
-        	datasource="#APPLICATION.DSN#">
+        <cfquery datasource="#APPLICATION.DSN#" result="result">
                 INSERT
                     applicationhistory
                  (
@@ -202,7 +203,8 @@
                     comments,
                     isResolved,
                     dateCreated,
-                    dateUpdated
+                    dateUpdated,
+                    status_update
                  )           
                 VALUES
                 (
@@ -214,9 +216,12 @@
                     <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.comments#">,
                     <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.isResolved)#">,
                     <cfqueryparam cfsqltype="cf_sql_timestamp" value="#ARGUMENTS.dateCreated#">,
-                    <cfqueryparam cfsqltype="cf_sql_timestamp" value="#ARGUMENTS.dateUpdated#">
+                    <cfqueryparam cfsqltype="cf_sql_timestamp" value="#ARGUMENTS.dateUpdated#">,
+                    <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.status_update#">
                 )        
         </cfquery> 
+
+        <cfreturn result.generatedkey />
 
 	</cffunction>
 

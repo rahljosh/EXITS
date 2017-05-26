@@ -16,8 +16,8 @@
     <cfimport taglib="extensions/customTags/gui/" prefix="gui" />	
 
 	<cfscript>
-		// Param FORM Variables
-		param name="FORM.pageNumber" type="numeric" default='1';	
+	// Param FORM Variables
+	param name="FORM.pageNumber" type="numeric" default='1';	
     param name="FORM.regionid" type="numeric" default='0';  
     param name="FORM.keyword" type="string" default='';  
     param name="FORM.active_rep" type="string" default='';  
@@ -29,16 +29,18 @@
     param name="FORM.HFstatus" type="string" default='';  
     param name="FORM.school_id" type="string" default='';  
     param name="FORM.type" type="string" default='';  
+    param name="FORM.stateID" type="string" default='';  
     param name="FORM.sortBy" type="string" default='';  
     param name="FORM.sortOrder" type="string" default='';  
     param name="FORM.pageSize" type="numeric" default='10000';  
 		
-		// Get History
-		getHostExport = APPLICATION.CFC.HOST.getHostsRemote(pageNumber = FORM.pageNumber, regionid = FORM.regionid, keyword = FORM.keyword,  active_rep = FORM.active_rep, hosting = FORM.hosting, active = FORM.active,cavailable_to_host = FORM.available_to_host, area_rep = FORM.area_rep, vHostIDList = FORM.vHostIDList, HFstatus = FORM.HFstatus, school_id = FORM.school_id, type = FORM.type,csortBy = FORM.sortBy, sortOrder = FORM.sortOrder, pageSize = FORM.pageSize
-      );
+	// Get History
+	getHostExport = APPLICATION.CFC.HOST.getHostsRemote(pageNumber = FORM.pageNumber, regionid = FORM.regionid, keyword = FORM.keyword,  active_rep = FORM.active_rep, hosting = FORM.hosting, active = FORM.active,cavailable_to_host = FORM.available_to_host, area_rep = FORM.area_rep, vHostIDList = FORM.vHostIDList, HFstatus = FORM.HFstatus, school_id = FORM.school_id, type = FORM.type, stateID = FORM.stateID, sortBy = FORM.sortBy, sortOrder = FORM.sortOrder, pageSize = FORM.pageSize
+    );
 	</cfscript>
     
 </cfsilent>
+
 
 <cfoutput>
 
@@ -70,8 +72,11 @@
                     <td style="width:75px; text-align:left; font-weight:bold;">Mother</td>
                     <td style="width:150px; text-align:left; font-weight:bold;">Phone</td>
                     <td style="width:250px; text-align:left; font-weight:bold;">Email</td>
+                    <td style="width:100px; text-align:left; font-weight:bold;">Address</td>
+                    <td style="width:100px; text-align:left; font-weight:bold;">Address 2</td>
                     <td style="width:100px; text-align:left; font-weight:bold;">City</td>
                     <td style="width:50px; text-align:left; font-weight:bold;">State</td>
+                    <td style="width:75px; text-align:left; font-weight:bold;">Zip</td>
                     <td style="width:200px; text-align:left; font-weight:bold;">Area Rep</td>
                     <td style="width:75px; text-align:left; font-weight:bold;">Las Hosted</td>
                     <td style="width:150px; text-align:left; font-weight:bold;">Status</td>
@@ -87,8 +92,11 @@
                         <td>#motherfirstname#</td>
                         <td>#phone#</td>
                         <td>#email#</td>
+                        <td>#address#</td>
+                        <td>#address2#</td>
                         <td>#city#</td>
                         <td>#state#</td>
+                        <td>#zip#</td>
                         <td>#area_rep_firstname# #area_rep_lastname#</td>
                         <td>#programName#</td>
                         <td>
@@ -105,8 +113,6 @@
                           <cfelse>
                               Available to Host
                           </cfif>
-
-                          
                         </td>
                         <td>#call_back_updated#</td>
                     </tr>                    
