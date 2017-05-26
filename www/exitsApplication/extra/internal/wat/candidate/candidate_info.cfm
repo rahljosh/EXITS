@@ -1806,6 +1806,7 @@
 	                                                    	<option value="" <cfif qGetCandidate.cancellation_fee EQ ''> selected</cfif>> Select</option>
 	                                                    	<option value="Cancellation fee applies" <cfif qGetCandidate.cancellation_fee EQ 'Cancellation fee applies'> selected</cfif>> Cancellation fee applies</option>
 	                                                    	<option value="No cancellation fee (full refund)" <cfif qGetCandidate.cancellation_fee EQ 'No cancellation fee (full refund)'> selected</cfif>>No cancellation fee (full refund)</option>
+	                                                    	<option value="No refund" <cfif qGetCandidate.cancellation_fee EQ 'No refund'> selected</cfif>>No refund</option>
 	                                                    </select>
 	                                                </td>								
 	                                            </tr>
