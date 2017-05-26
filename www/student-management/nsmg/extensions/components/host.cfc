@@ -4196,6 +4196,7 @@
 	----- ------------------------------------------------------------------------- --->
 
 
+
     <cffunction name="getHostsRemote" access="remote" returnFormat="json" output="false" hint="Returns host leads in Json format">
         <cfargument name="pageNumber" type="numeric" default="1" hint="Page number is not required">
         <cfargument name="regionid" type="numeric" default="0" hint="regionid is not required">
@@ -4226,7 +4227,9 @@
                     h.nexits_id,
                     h.familylastname, 
                     h.fatherfirstname, 
-                    h.motherfirstname, 
+                    h.motherfirstname,
+                    h.address,
+                    h.address2,
                     h.address,
                     h.address2,
                     h.city, 
@@ -4310,6 +4313,10 @@
 
                 <cfif VAL(ARGUMENTS.school_id)>
                     AND h.schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.school_id)#">
+                </cfif>
+
+                <cfif LEN(ARGUMENTS.accepts_double)>
+                    AND h.acceptDoublePlacement = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.accepts_double)#">
                 </cfif>
                 
                 <cfif LEN(ARGUMENTS.accepts_double)>
@@ -4512,6 +4519,10 @@
                     <cfif LEN(ARGUMENTS.stateID)>
                         AND h.state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.stateID#">
                     </cfif>
+
+                    <cfif LEN(ARGUMENTS.HFcity)>
+                        AND h.city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.HFcity#">
+                    </cfif>
                     
                     <cfif LEN(ARGUMENTS.HFcity)>
                         AND h.city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.HFcity#">
@@ -4697,6 +4708,10 @@
 
                     <cfif VAL(ARGUMENTS.school_id)>
                         AND h.schoolID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.school_id)#">
+                    </cfif>
+
+                    <cfif LEN(ARGUMENTS.accepts_double)>
+                        AND h.acceptDoublePlacement = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(ARGUMENTS.accepts_double)#">
                     </cfif>
                     
                     <cfif LEN(ARGUMENTS.accepts_double)>
@@ -4948,7 +4963,7 @@
                             h.state LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(ARGUMENTS.keyword)#%">
                         OR 
                             h.email LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(ARGUMENTS.keyword)#%">
-                    )
+                        )
                 </cfif>
                 
                 <cfif ARGUMENTS.hosting EQ 1>
@@ -5153,7 +5168,6 @@
             // return structure
             return stResult;            
         </cfscript>
-
     </cffunction>
 
 </cfcomponent>
