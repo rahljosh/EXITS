@@ -721,10 +721,7 @@ div.scroll2 {
                                         <form method="post" action="index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" style="display:inline;">
                                             <input name="sendAppEmail" type="submit" value="Resend Login Info"  alt="Resend Login Info" border="0" class="buttonGreen" />
                                         </form>
-                                    <cfelse>
-                                        <form method="post" action="index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" style="display:inline;">
-                                            <input name="sendAppEmail" type="submit" value="Convert to eHost"  alt="Convert to eHost" border="0" class="buttonYellow" />
-                                        </form>
+                                 
                                     </cfif>
                                 <cfelse>
                                     <form method="post" action="index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" style="display:inline;">
