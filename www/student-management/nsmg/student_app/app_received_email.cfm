@@ -19,7 +19,7 @@
         This notice should not be interpreted as verification that the student has been accepted into the program and only confirms
         that the application <cfif get_student.randid EQ 0>has arrived<cfelse>has been received</cfif> and is pending review for acceptance into the program.<br><br>
         
-        Please note, if you use EXITS to manage your online applicatiosn, this application will now show under your current applications in received status.<br><br>
+        Please note, if you use EXITS to manage your online applications, this application will now show under your current applications in received status.<br><br>
         
         Sincerely, <br><br>
         
