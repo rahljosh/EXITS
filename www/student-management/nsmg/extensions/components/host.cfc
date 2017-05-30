@@ -4230,8 +4230,6 @@
                     h.motherfirstname,
                     h.address,
                     h.address2,
-                    h.address,
-                    h.address2,
                     h.city, 
                     h.state,
                     h.zip,
@@ -4347,9 +4345,7 @@
                     AND s.hostid IS NULL
                 </cfif>
                 
-                <cfif LEN(ARGUMENTS.active)>
-                    AND h.active = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.active#">
-                </cfif>
+                AND h.active = 1
 
                 <cfif LEN(ARGUMENTS.HFcity)>
                     AND h.city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.HFcity#">
@@ -4552,9 +4548,7 @@
                         AND s.hostid IS NULL
                     </cfif>
                     
-                    <cfif LEN(ARGUMENTS.active)>
-                        AND h.active = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.active#">
-                    </cfif>
+                    AND h.active = 1
 
                     <cfif VAL(ARGUMENTS.HFyear)>
                         AND h.dateCreated BETWEEN <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.HFyear#-01-01"> AND <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.HFyear#-12-31">
@@ -4742,9 +4736,7 @@
                         AND s.hostid IS NULL
                     </cfif>
                     
-                    <cfif LEN(ARGUMENTS.active)>
-                        AND h.active = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.active#">
-                    </cfif>
+                    AND h.active = 1
 
                     <cfif VAL(ARGUMENTS.HFyear)>
                         AND h.dateCreated BETWEEN <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.HFyear#-01-01"> AND <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.HFyear#-12-31">
@@ -4972,9 +4964,7 @@
                     AND s.hostid IS NULL
                 </cfif>
                 
-                <cfif LEN(ARGUMENTS.active)>
-                    AND h.active = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.active#">
-                </cfif>
+                AND h.active = 1
 
                 <cfif VAL(ARGUMENTS.HFyear)>
                     AND h.dateCreated BETWEEN <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.HFyear#-01-01"> AND <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.HFyear#-12-31">

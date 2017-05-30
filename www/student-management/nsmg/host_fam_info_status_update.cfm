@@ -201,6 +201,12 @@
     </cfquery>
 
     <cflocation url="index.cfm?curdoc=host_fam_info&hostid=#URL.hostid#" addtoken="No">
+    <cfabort />
+</cfif>
+
+<cfif structKeyExists(FORM, "sendAppEmail")>
+    <cflocation url="index.cfm?curdoc=host_fam_info&hostid=#URL.hostid#" addtoken="No">
+    <cfabort />
 </cfif>
 
 <strong>New Status:</strong> 
