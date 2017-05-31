@@ -25,7 +25,9 @@
 		param name="FORM.sortBy" default="dateCreated";		
 		param name="FORM.sortOrder" default="DESC";	
 		param name="FORM.pageSize" default=30;	
-		param name="FORM.active_rep" default="";
+		param name="FORM.active_rep" default="2";
+		param name="FORM.area_rep" default = "";
+		param name="FORM.city" default = "";
 		
 		// Make sure records have a valid hashID and the initial record in the history table
 		// APPLICATION.CFC.HOST.setHostLeadDataIntegrity();
@@ -46,6 +48,42 @@
 		// Get List of Status
 		qGetStatus = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='hostLeadStatus');
 	</cfscript>	
+
+
+	 <cfif APPLICATION.CFC.USER.isOfficeUser()>
+
+			<cfscript>
+				qGetAreaRepList = APPLICATION.CFC.USER.getUsers(
+					userType = ('5,6,7'),
+					isActive = 1,
+					companyID = CLIENT.companyID
+				);
+			</cfscript>
+
+		<cfelse>
+
+			<cfscript>
+				qGetAreaRepList = APPLICATION.CFC.USER.getUsers(
+					userType = ('5,6,7'),
+					isActive = 1,
+					companyID = CLIENT.companyID,
+					regionID = CLIENT.regionID
+				);
+			</cfscript>
+		</cfif>
+
+	   <cfquery name="qGetCities" datasource="#APPLICATION.DSN#">
+			SELECT DISTINCT TRIM(city) AS city
+			FROM smg_hosts 
+			WHERE city <> ''  
+				AND active = 1
+				AND companyID = #CLIENT.companyID#
+			<cfif NOT APPLICATION.CFC.USER.isOfficeUser()>
+				AND smg_hosts.regionID = #CLIENT.regionID#  
+			</cfif>  
+			ORDER BY city ASC
+		</cfquery>
+
 
 	<!--- Ajax Call to the Component --->
     <cfajaxproxy cfc="nsmg.extensions.components.host" jsclassname="hostFamily">
@@ -83,7 +121,6 @@
 
 		// FORM Variables
 		var keyword = $("#keyword").val();
-		var followUpID = $("#followUpID").val();
 		var regionID = $("#regionID").val();
 		var stateID = $("#stateID").val();
 		var statusID = $("#statusID").val();
@@ -91,6 +128,8 @@
 		var sortOrder = $(".selectSortOrder").val();		
 		var pageSize = $("#pageSize").val();
 		var active_rep = $("#active_rep").val();
+		var area_rep= $("#area_rep").val();
+		var city = $("#city").val();
 		
 		if( typeof titleSortBy != 'undefined' ) {
 			// SortBy was passed by the sort title function
@@ -115,7 +154,7 @@
 		hf.setCallbackHandler(populateList); 
 		hf.setErrorHandler(myErrorHandler); 
 		// This time, pass the intRep ID to the getHostLeadList CFC function. 
-		hf.getHostLeadsRemote(pageNumber,keyword,followUpID,regionID,stateID,statusID,sortBy,sortOrder,pageSize,active_rep);
+		hf.getHostLeadsRemote(pageNumber,keyword,regionID,stateID,statusID,sortBy,sortOrder,pageSize,active_rep,area_rep,city);
 	} 
 
 	// Callback function to handle the results returned by the getHostLeadList function and populate the table. 
@@ -199,11 +238,12 @@
             // tableHeader += '<td id="zipCode" class="listTitle"><a href="javascript:void(0);" title="Sort By Zip Code">Zip Code</a></td>';                                                          
             tableHeader += '<td id="phone" class="listTitle"><a href="javascript:void(0);" title="Sort By Phone">Phone</a></td>';                                                           
             tableHeader += '<td id="email" class="listTitle"><a href="javascript:void(0);" title="Sort By Email">Email</a></td>'; 
-            tableHeader += '<td id="dateCreated" class="listTitle"><a href="javascript:void(0);" title="Sort By Submitted On">Submitted On</a></td>'; 
+           
 			
             tableHeader += '<td id="regionAssigned" class="listTitle"><a href="javascript:void(0);" title="Sort By Region">Region</a></td>';  
             tableHeader += '<td id="areaRepAssigned" class="listTitle"><a href="javascript:void(0);" title="Sort By Area Rep.">Area Rep.</a></td>';  		
             tableHeader += '<td id="statusAssigned" class="listTitle"><a href="javascript:void(0);" title="Sort By Status">Status</a></td>';  
+		 	tableHeader += '<td id="dateCreated" class="listTitle"><a href="javascript:void(0);" title="Sort By Submitted On">Submitted</a></td>'; 
 			tableHeader += '<td id="dateUpdated" class="listTitle"><a href="javascript:void(0);" title="Sort By Last Updated">Updated</a></td>'; 
             tableHeader += '<td class="listTitle" align="center" colspan=4>Actions</td>';                                                          
 			tableHeader += '</tr>';
@@ -224,6 +264,8 @@
 		$('#regionAssigned').click(function (){getHostLeadList(pageNumber,this.id);});
 		$('#areaRepAssigned').click(function (){getHostLeadList(pageNumber,this.id);});
 		$('#statusAssigned').click(function (){getHostLeadList(pageNumber,this.id);});
+		
+		
 		
 		// No data returned, display message
 		if( hostLeadData.QUERY.DATA.length == 0) {			
@@ -247,6 +289,7 @@
 			var regionAssigned = hostLeadData.QUERY.DATA[i][hostLeadData.QUERY.COLUMNS.findIdx('REGIONASSIGNED')];
 			var areaRepAssigned = hostLeadData.QUERY.DATA[i][hostLeadData.QUERY.COLUMNS.findIdx('AREAREPASSIGNED')];
 			var statusAssigned = hostLeadData.QUERY.DATA[i][hostLeadData.QUERY.COLUMNS.findIdx('STATUSASSIGNED')];
+		
 			
 			// Create Table Rows
 			var tableBody = "";	
@@ -260,18 +303,19 @@
 				// tableBody += '<td>' + zipCode + '</td>';
 				tableBody += '<td>' + phone + '</td>';
 				tableBody += '<td><a href="mailto:' + email + '">' + email + '</a></td>';
-				tableBody += '<td>' + dateCreated + '</td>';
+				
 				
 				tableBody += '<td>' + regionAssigned + '</td>';
 				tableBody += '<td>' + areaRepAssigned + '</td>';
 				tableBody += '<td>' + statusAssigned + '</td>';
+				tableBody += '<td>' + dateCreated + '</td>';
 				tableBody += '<td>' + dateUpdated + '</td>';
+				tableBody += '<td align="center"><a href="hostLeads/convert_lead.cfm?leadID=' + id + '&key=' + hashID + '" class="jQueryModal"><button type="button" class="btn-u btn-u-green">Convert</button></a>  <a href="hostLeads/index.cfm?action=detail&id=' + id + '&key=' + hashID + '" class="jQueryModal"><button type="button" class="btn-u btn-u-orange">Update</button></a>';
 				<cfif ListFind('1,2', CLIENT.userType)>
-					tableBody += '<td align="center"><a href="?curdoc=forms/host_fam_form_lead&leadID=' + id + '&key=' + hashID + '" class="jQueryModal"><button type="button" class="btn btn-success">Add HF</button></a>  &nbsp;  <a href="hostLeads/index.cfm?action=detail&id=' + id + '&key=' + hashID + '" class="jQueryModal"><button type="button" class="btn">Update</button></a>  &nbsp;<a href="hostLeads/index.cfm?action=app_sent&id=' + id + '&key=' + hashID + '" class="jQueryModal"><button type="button" class="btn btn-warning">App Sent</button></a> &nbsp; <a href="javascript:confirmDeleteHostLead(' + id + ');"><button type="button" class="btn btn-danger">Delete</button></a></td>';
-				<cfelse>
-					tableBody += '<td align="center"><a href="?curdoc=forms/host_fam_form_lead&leadID=' + id + '&key=' + hashID + '" class="jQueryModal">Create Host</a> &nbsp; | &nbsp; <a href="hostLeads/index.cfm?action=detail&id=' + id + '&key=' + hashID + '" class="jQueryModal">App Sent</a> &nbsp; | &nbsp; <a href="hostLeads/index.cfm?action=detail&id=' + id + '&key=' + hashID + '" class="jQueryModal">Details</a></td>';
+				 tableBody += ' <a href="javascript:confirmDeleteHostLead(' + id + ');"><button type="button" class="btn-u btn-u-red">Delete</button></a>';
 				</cfif>
-			tableBody += '</tr>';
+				
+				tableBody += '</td></tr>';
 			// Append table rows
 			$("#loadHostLeadList").append(tableBody);
 		} 
@@ -394,7 +438,6 @@
 <cfoutput>
 
 
-
 	<!--- This holds the student information messages --->
     <table width="100%" border="0" cellpadding="4" cellspacing="0" class="section pageMessages displayNone" align="center">
         <tr>
@@ -410,24 +453,9 @@
     <table border="0" cellpadding="4" cellspacing="4" class="table table-striped" width="100%" style="padding:15px;">
         <tr>
             <td><input name="send" type="submit" value="Search" class="submitButton" onClick="getHostLeadList();" /></td>
-            <td class="listTitle">
-                <label for="keyword">Keyword</label> <br />
-                <input type="text" name="keyword" id="keyword" class="largeField" maxlength="50" />
-            </td>  
-            <cfif ListFind("1,2,3,4", CLIENT.userType)>
-                <td class="listTitle">
-                    <label for="followUpID">Follow Up Rep</label> <br />   
-                    <select name="followUpID" id="followUpID" class="largeField">
-                        <option value="0" <cfif NOT VAL(FORM.followUpID)>selected="selected"</cfif> ></option>
-                        <cfloop query="qGetFollowUpUserList">
-                            <option value="#qGetFollowUpUserList.userID#" <cfif FORM.followUpID EQ qGetFollowUpUserList.userID>selected="selected"</cfif> >#qGetFollowUpUserList.firstName# #qGetFollowUpUserList.lastName# (###qGetFollowUpUserList.userID#)</option>
-                        </cfloop>
-                    </select>
-                </td> 
-            </cfif>         
-            <td class="listTitle">
-                <label for="regionID">Region</label> <br />   
-                <select name="regionID" id="regionID" class="mediumField">
+            <td>
+               Region<br />   
+                <select name="regionID" id="regionID">
                 	<cfif ListFind("1,2,3,4", CLIENT.userType)>
                 		<option value="0" <cfif NOT VAL(FORM.regionID)>selected="selected"</cfif> ></option>
                     </cfif>
@@ -435,36 +463,75 @@
                     	<option value="#qGetRegions.regionID#" <cfif FORM.regionID EQ qGetRegions.regionID>selected="selected"</cfif> >#qGetRegions.regionName#</option>
                     </cfloop>
                 </select>
-            </td>                
-            <td class="listTitle">
-                <label for="stateID">State</label> <br />   
-                <select name="stateID" id="stateID" class="mediumField">
-                	<option value="0" <cfif NOT LEN(FORM.stateID)>selected="selected"</cfif> ></option>
-                    <cfloop query="qGetStates">
-                    	<option value="#qGetStates.ID#" <cfif FORM.stateID EQ qGetStates.ID>selected="selected"</cfif> >#qGetStates.stateName#</option>
-                    </cfloop>
-                </select>
-            </td>                
-            <td class="listTitle">
-                <label for="statusID">Status</label> <br />   
-                <select name="statusID" id="statusID" class="largeField">
+            </td>    
+            <td>
+                <label for="keyword">Keyword</label> <br />
+                <input type="text" name="keyword" id="keyword" maxlength="50" />
+            </td> 
+            <td>
+                    With Active Rep<br />
+                    <select name="active_rep" id="active_rep">
+                        <option value="2">All</option>
+                        <option value="1" <cfif FORM.active_rep EQ 1>selected</cfif>>Yes</option>
+                        <option value="0" <cfif FORM.active_rep EQ 0>selected</cfif>>No</option>
+                    </select>    
+            </td>    
+            <td>
+                        Area Rep<br />
+                        <select name="area_rep" id="area_rep">
+                            <option value="">All</option>
+                            <cfloop query="qGetAreaRepList">
+                                <option value="#qGetAreaRepList.userID#" <cfif FORM.area_rep EQ qGetAreaRepList.userID>selected</cfif>>
+
+                                    <cfif LEN(qGetAreaRepList.firstname) + LEN(qGetAreaRepList.lastname) GT 20>
+                                        #qGetAreaRepList.firstname# #qGetAreaRepList.lastname#...
+                                    <cfelse>
+                                        #qGetAreaRepList.firstname# #qGetAreaRepList.lastname# (###qGetAreaRepList.userID#)
+                                    </cfif>
+
+                                    
+                                </option>
+                            </cfloop>
+                        </select>
+                    </td>
+		  <td>
+				City<br />
+				<select name="city" id="city">
+					<option value="" >All</option>
+					<cfloop query="qGetCities">
+						<option value="#qGetCities.city#" <cfif qGetCities.city EQ FORM.city>selected</cfif>>
+							<cfif LEN(qGetCities.city) GT 10>
+								#LEFT(qGetCities.city, 10)#...
+							<cfelse>
+								#qGetCities.city#
+							</cfif>
+						</option>
+					</cfloop>
+				</select>
+			</td>
+             <td>
+                Status<br />   
+                <select name="statusID" id="statusID">
                 	<option value="All" <cfif FORM.statusID EQ 'All'>selected="selected"</cfif> >All</option>
                     <option value="" <cfif NOT LEN(FORM.statusID)>selected="selected"</cfif> >Pending Action</option>
                     <cfloop query="qGetStatus">
                     	<option value="#qGetStatus.fieldID#" <cfif FORM.statusID EQ qGetStatus.fieldID>selected="selected"</cfif> >#qGetStatus.name#</option>
                     </cfloop>
                 </select>
-            </td>   
+            </td>               
             <td>
-                    Associated with Active Rep<br />
-                    <select name="active_rep" id="active_rep">
-                        <option value="">All</option>
-                        <option value="1" <cfif FORM.active_rep EQ 1>selected</cfif>>Yes</option>
-                        <option value="0" <cfif FORM.active_rep EQ 0>selected</cfif>>No</option>
-                    </select>    
-            </td>      
-            <td class="listTitle">
-                <label for="pageSize">Records per Page</label> <br />
+                State<br />   
+                <select name="stateID" id="stateID">
+                	<option value="0" <cfif NOT LEN(FORM.stateID)>selected="selected"</cfif> >All</option>
+                    <cfloop query="qGetStates">
+                    	<option value="#qGetStates.ID#" <cfif FORM.stateID EQ qGetStates.ID>selected="selected"</cfif> >#qGetStates.stateName#</option>
+                    </cfloop>
+                </select>
+            </td>                
+     
+              
+            <td>
+             Records per Page<br />
                 <select name="pageSize" id="pageSize" class="smallField">
                 	<cfloop from="30" to="150" step="30" index="i">
 	                    <option class="#i#" <cfif FORM.pageSize EQ i>selected="selected"</cfif> >#i#</option>
