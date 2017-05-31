@@ -3690,17 +3690,17 @@
 	<cffunction name="getHostLeadsRemote" access="remote" returnFormat="json" output="false" hint="Returns host leads in Json format">
         <cfargument name="pageNumber" type="numeric" default="1" hint="Page number is not required">
         <cfargument name="keyword" type="string" default="" hint="keyword is not required">
-        <cfargument name="followUpID" type="numeric" default="0" hint="followUpID is not required">
         <cfargument name="regionID" type="string" default="0" hint="regionID is not required">
-        <cfargument name="stateID" type="string" default="0" hint="keyword is not required">
+        <cfargument name="stateID" type="numeric" default="0" hint="stateID is not required">
         <cfargument name="statusID" type="string" default="" hint="statusID is not required">
         <cfargument name="sortBy" type="string" default="dateCreated" hint="sortBy is not required">
         <cfargument name="sortOrder" type="string" default="DESC" hint="sortOrder is not required">
         <cfargument name="numberOfRecordsOnPage" type="numeric" default="30" hint="Page number is not required">
         <cfargument name="active_rep" type="numeric" default="2" hint="active_rep is not required">
-        <cfargument name="isDeleted" type="numeric" default="0" hint="isDeleted is not required">
-        <cfargument name="hasLoggedIn" type="numeric" default="0" hint="hasLoggedIn is not required">
-        
+        <cfargument name="arearepID" type="string" default="0" hint="arearep is not required">
+        <cfargument name="city" type="string" default="0" hint="city is not required">
+	
+	hf.getHostLeadsRemote(pageNumber,keyword,regionID,stateID,statusID,sortBy,sortOrder,pageSize,active_rep,area_rep,city);
 		
         <cfscript>
 			if ( NOT ListFind("ASC,DESC", ARGUMENTS.sortOrder ) ) {
@@ -3760,7 +3760,7 @@
                     	AND 
                             alk.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="hostLeadStatus">
                 WHERE
-                	hl.isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.isDeleted#">
+                	hl.isDeleted = 0
 				
                 <!--- Get Only Leads Entered as of 04/01/2011 --->
                 AND
@@ -3798,16 +3798,22 @@
                     	hl.areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
                 </cfif>
 
-				<cfif VAL(ARGUMENTS.followUpID)>
+				<cfif VAL(ARGUMENTS.areaRepID)>
                     AND
-                        hl.followUpID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.followUpID#">
+                        hl.areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.areaRepID#">
                 </cfif>
-				
 				<cfif VAL(ARGUMENTS.regionID)>
                     AND
                         hl.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#">
                 </cfif>
-
+				<cfif VAL(ARGUMENTS.city)>
+                    AND
+                        hl.city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.city#">
+                </cfif>
+                <cfif VAL(ARGUMENTS.state)>
+                    AND
+                        hl.state = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.state#">
+                </cfif>
                 <cfif VAL(ARGUMENTS.statusID)>
                     AND
                         hl.statusID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.statusID#">
@@ -4216,6 +4222,7 @@
         <cfargument name="sortBy" type="string" default="dateCreated" hint="sortBy is not required">
         <cfargument name="sortOrder" type="string" default="DESC" hint="sortOrder is not required">
         <cfargument name="pageSize" type="numeric" default="30" hint="Page number is not required">
+
 
 
         <!--- OFFICE PEOPLE AND ABOVE --->
