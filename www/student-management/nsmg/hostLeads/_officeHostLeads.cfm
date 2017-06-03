@@ -317,10 +317,6 @@ where statusid = 10
 
 
 
-
-
-
-
 <!----Current Time Frame---->
 <!----Totals---->
 <cfquery dbtype="query" datasource="leads" name="TotalnumberOfInitialLeads">
@@ -579,7 +575,9 @@ where statusid = 10
                 <!----<Th>Next Time Frame<br>#DateFormat(futFromDate, 'mm/dd/yyyy')# - #DateFormat(futToDate,'mm/dd/yyyy')#<br>Total Leads: #futleads.recordcount#</Th>---->
         	</tr>
               <td valign="top" align="center">
-             
+            Sent to RM: #prevsentToRm#" value="#val(prevsentToRm)#<br />
+            Commited: #prevtotalComLeads#" value="#val(prevtotalComLeads)#<Br />
+            Not Qual or Int: #notQualNotInt#" value="#val(notQualNotInt)#
                 <cfchart
                      format="png" chartheight="180"
                      scalefrom="0"
@@ -600,10 +598,10 @@ where statusid = 10
                              
                              
                              
-                   
+                  
                     <cfchartdata item="Sent to RM: #prevsentToRm#" value="#prevsentToRm#">
-                    <cfchartdata item="Commited: #prevtotalComLeads#" value="#prevtotalComLeads#">
-                     <cfchartdata item="Not Qual/int: #notQualNotInt#" value="#prevnotQualNotInt#">
+                    <cfchartdata item="Commited: #prevtotalComLeads#" value="#valprevtotalComLeads#">
+                    <cfchartdata item="Not Qual or Int: #prevnotQualNotInt#" value="#prevnotQualNotInt#">
                 </cfchartseries>
             </cfchart>
 
