@@ -3596,6 +3596,9 @@
                     followUpID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.followUpID)#">,
                     regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.regionID)#">,
                     areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.areaRepID)#">,
+                     <cfif ARGUMENTS.statusID eq 14>
+                    dateConverted = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
+                    </cfif>
                     hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
                 WHERE	                        
                     ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.ID#">
@@ -3691,16 +3694,15 @@
         <cfargument name="pageNumber" type="numeric" default="1" hint="Page number is not required">
         <cfargument name="keyword" type="string" default="" hint="keyword is not required">
         <cfargument name="regionID" type="string" default="0" hint="regionID is not required">
-        <cfargument name="stateID" type="numeric" default="0" hint="stateID is not required">
+        <cfargument name="stateID" type="string" default="0" hint="stateID is not required">
         <cfargument name="statusID" type="string" default="" hint="statusID is not required">
         <cfargument name="sortBy" type="string" default="dateCreated" hint="sortBy is not required">
         <cfargument name="sortOrder" type="string" default="DESC" hint="sortOrder is not required">
         <cfargument name="numberOfRecordsOnPage" type="numeric" default="30" hint="Page number is not required">
-        <cfargument name="active_rep" type="numeric" default="2" hint="active_rep is not required">
+        <cfargument name="active_rep" type="string" default="2" hint="active_rep is not required">
         <cfargument name="arearepID" type="string" default="0" hint="arearep is not required">
         <cfargument name="city" type="string" default="0" hint="city is not required">
-	
-	hf.getHostLeadsRemote(pageNumber,keyword,regionID,stateID,statusID,sortBy,sortOrder,pageSize,active_rep,area_rep,city);
+        
 		
         <cfscript>
 			if ( NOT ListFind("ASC,DESC", ARGUMENTS.sortOrder ) ) {
@@ -3760,7 +3762,7 @@
                     	AND 
                             alk.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="hostLeadStatus">
                 WHERE
-                	hl.isDeleted = 0
+                	hl.isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
 				
                 <!--- Get Only Leads Entered as of 04/01/2011 --->
                 AND
@@ -3774,12 +3776,7 @@
                     AND u.active =  <cfqueryparam cfsqltype="cf_sql_bit" value="1">
                 <cfelseif ARGUMENTS.active_rep EQ 0>
                     AND u.active = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
-                </cfif>
-                
-                <cfif VAL(ARGUMENTS.hasLoggedIn)>
-                    AND	
-                        hl.dateLastLoggedIn IS NOT NULL
-				</cfif>                    
+                </cfif>                   
 
                 <cfif CLIENT.companyID NEQ 5>
                     AND
@@ -3806,11 +3803,11 @@
                     AND
                         hl.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#">
                 </cfif>
-				<cfif VAL(ARGUMENTS.city)>
+				<cfif LEN(ARGUMENTS.city)>
                     AND
                         hl.city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.city#">
                 </cfif>
-                <cfif VAL(ARGUMENTS.state)>
+                <cfif VAL(ARGUMENTS.stateID)>
                     AND
                         hl.state = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.state#">
                 </cfif>
@@ -3988,18 +3985,35 @@
 
 	<cffunction name="deleteHostLeadRemote" access="remote" returntype="void" output="false" hint="Deletes a host lead">
         <cfargument name="ID" type="numeric" hint="ID is not required">
+        <cfargument name="enteredByID" type="numeric" hint="ID is not required">
 		
         <cfquery 
 			datasource="#APPLICATION.DSN#">
                 UPDATE
                 	smg_host_lead
 				SET
-                	isDeleted = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                	statusID = <cfqueryparam cfsqltype="cf_sql_integer" value="3">
 				WHERE
                 	ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.ID#">                                         
 		</cfquery>
+       
+       <cfscript>
+       	// Insert New History
+				APPLICATION.CFC.LOOKUPTABLES.insertApplicationHistory(
+					applicationID=APPLICATION.CONSTANTS.TYPE.hostFamilyLead,
+					foreignTable='smg_host_lead',
+					foreignID=ARGUMENTS.ID,
+					enteredByID=CLIENT.userid,
+					actions='Marked Inactive from Main Page',
+					comments='Not interested.'
+				);
+       	
+       </cfscript>
+       
+				
         
-	</cffunction>            
+	</cffunction>      
+          
     
     <!--- 
 		End of Remote Functions 
@@ -4222,7 +4236,6 @@
         <cfargument name="sortBy" type="string" default="dateCreated" hint="sortBy is not required">
         <cfargument name="sortOrder" type="string" default="DESC" hint="sortOrder is not required">
         <cfargument name="pageSize" type="numeric" default="30" hint="Page number is not required">
-
 
 
         <!--- OFFICE PEOPLE AND ABOVE --->
