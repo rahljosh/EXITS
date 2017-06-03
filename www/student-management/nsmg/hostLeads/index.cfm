@@ -24,7 +24,7 @@
 --->
 <cfswitch expression="#action#">
 
-	<cfcase value="list,detail,needAttention,export,report,leadList,officeHostLeads" delimiters=",">
+	<cfcase value="list,detail,needAttention,export,report,leadList,officeHostLeads,app_sent" delimiters=",">
 
 		<!--- Include template --->
 		<cfinclude template="_#action#.cfm" />

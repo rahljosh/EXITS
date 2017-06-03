@@ -46,7 +46,8 @@
 	<!----User Profile Elements---->
 	<!-- CSS Page Style -->
 	<link rel="stylesheet" href="../assets/css/pages/profile.css">
-
+<!-- Timeline CSS-->
+	<link rel="stylesheet" href="../assets/css/pages/shortcode_timeline2.css">
 
 	<!-- CSS Theme -->
 	<link rel="stylesheet" href="../assets/css/theme-colors/blue.css" id="style_color">
@@ -83,7 +84,8 @@
 		param name="FORM.comments" default='';
 		param name="familyFound" default=1;
 		param name="displayForm" default=1;
-		param name="form.hostid" default=0;
+		param name="FORM.hostid" default=0;
+		
 		/* 
 			Check to see if passed key is the correct hash for the record. 
 			This will stop people from tampering with the URLs.
@@ -119,12 +121,13 @@
 		
 		// FORM SUBMITTED
 		if ( FORM.submitted ) {
-			 
+			
 			// Host Lead User is able to enter a comment only
 			if ( CLIENT.userType NEQ 26 ) {
 			
+					
 				// Data Validation - Allow adding comment only up to 3 times, after that region is required
-				if ( NOT VAL(FORM.regionID) AND qGetHostLeadHistory.recordCount GT 3 ) {
+				if ( NOT VAL(FORM.regionID) AND qGetHostLeadHistory.recordCount GT 3 AND CLIENT.usertype eq 5 ) {
 					// Get all the missing items in a list
 					SESSION.formErrors.Add('You must select a region');
 				}			
@@ -164,6 +167,8 @@
 					comments=FORM.comments					
 				);
 				
+				
+						
 				// Get the latest updates
 				qGetHostLead = APPLICATION.CFC.HOST.getHostLeadByID(ID=URL.ID);
 
@@ -175,7 +180,7 @@
 				);
 
 				// Set Page Message
-				SESSION.pageMessages.Add("Form successfully submitted.");
+				SESSION.pageMessages.Add("Changes have been saved.");
 				
 				// Refresh Page
 				// Location("#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#", "no"); 
@@ -331,7 +336,7 @@
                     stSubmitApplication = APPLICATION.CFC.HOST.submitApplication(hostID=FORM.hostID,action="newApplication");
 					
 					// Set Page Message
-					SESSION.pageMessages.Add("Host App Email Sent.");
+					SESSION.pageMessages.Add("Host Application was started and an email sent to the host family.");
 					
 					// Update Host Status According to usertype approving/denying the application
 					 APPLICATION.CFC.HOST.setHostSeasonStatus(hostID=FORM.hostID);
@@ -353,20 +358,31 @@
 		
         </cfif>
       
-      
+      		<!--- Page Messages --->
+        <gui:displayPageMessages 
+            pageMessages="#SESSION.pageMessages.GetCollection()#"
+            messageType="tableSection"
+            width="95%"
+            />
+        
+        <!--- Form Errors --->
+        <gui:displayFormErrors 
+            formErrors="#SESSION.formErrors.GetCollection()#"
+            messageType="tableSection"
+            width="95%"
+            />
       
       		<div class="container content">
 				<div class="row">
 					<!-- Begin Content -->
-					<div class="col-md-11">
+					<div class="col-md-12">
 						<!-- Alert Tabs -->
 						<div class="tab-v2 margin-bottom-40">
 							 <div class="headline"><h2 class="heading-lg">Host Family Lead Information</h2></div>
 						<div class="tag-box tag-box-v3">
-
 						<!-- Heading v6 -->
-						<div class="heading heading-v6"><h2>Family Information</h2></div>
-							<div class="row">
+						<div class="heading heading-v6"><h2>#qGetHostLead.statusAssigned#</h2></div>
+							 <div class="row row-eq-height">
 								<div class="col-md-4">
 									<div class="bg-light"><!-- You can delete "bg-light" class. It is just to make background color -->
 										<h4><i class="fa fa-home"></i>Contact Information</h4>
@@ -385,14 +401,19 @@
 										<p>Source: #qGetHostLead.hearAboutUs# #qGetHostLead.hearAboutUsDetail# </p>
 										<p>Created: #DateFormat(qGetHostLead.dateCreated, 'mmmm d, yyyy')#</p>
 										<p>Updated: #DateFormat(qGetHostLead.dateUpdated, 'mmmm d, yyyy')#</p>
-										<p>Converted: 
-										<cfif isDate(qGetHostLead.dateConverted)>
-											#DateFormat(qGetHostLead.dateConverted, 'mmmm d, yyyy')#
-											<cfelse>
-												n/a
-											</cfif>
-										#DateFormat(qGetHostLead.dateConverted, 'mmmm d, yyyy')#</p>
-										
+										<p>Converted:
+										<cfif isDate(#qGetHostLead.dateConverted#)>
+										#DateFormat(qGetHostLead.dateConverted, 'mmmm d, yyyy')#
+										<cfelse>
+										Don't give up!
+									
+										</cfif>
+										</p>
+										<p>Days to Convert: 
+										<cfif isDate(#qGetHostLead.dateConverted#)>
+										#dateDiff("d", qGetHostLead.dateCreated, qGetHostLead.dateConverted)# days
+										</cfif>
+									</p>	
 										
 									</div>
 								</div>
@@ -402,13 +423,6 @@
 							
 										<p>Previously Talking With: 
 											 <cfif LEN(qGetHostLead.contactWithRepName)>#qGetHostLead.contactWithRepName#<cfelse>Nobody</cfif></p>
-										<p>Follow Up Rep: 
-											<cfif LEN(qGetHostLead.followUpAssigned)>
-											##qGetHostLead.followUpAssigned##
-											<cfelse>
-												n/a
-											</cfif>
-											</p>
 										<p>Program Manager: 
 											<cfif LEN(qGetHostLead.companyShort)>
 												#qGetHostLead.companyShort#
@@ -433,10 +447,150 @@
 									</div>
 								</div>
 							</div><!--/row-->
+					
+							
+						</div>
+						<!----Action to take---->
+						
+						<div class="tag-box tag-box-v3">
+							<div class="heading heading-v6"><h2>Make an Update</h2></div>
+							
+								  <cfform name="hostLeadDetail" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" class="sky-form">
+									<input type="hidden" name="submitted" value="1" />
+									<input type="hidden" name="ID" value="#ID#" />
+									<input type="hidden" name="KEY" value="#key#" />
+									<fieldset>
+									<cfif ListFind("1,2,3,4", CLIENT.userType)>
+										
+										<section class="col-md-6">
+											<label class="label">Program Manager</label>
+											<label class="select">
+												<select name="companyID" id="companyID" >
+												    <option value="0" <cfif NOT VAL(FORM.companyID)>selected="selected"</cfif> >Unassigned</option>
+													<cfloop query="qGetCompanies">
+														<option value="#qGetCompanies.companyID#" <cfif FORM.companyID EQ qGetCompanies.companyID>selected="selected"</cfif> >#qGetCompanies.companyshort#</option>
+													</cfloop>
+												</select>
+												<i></i>
+											</label>
+										</section>
+										<section class="col-md-6">
+											<label class="label">Region</label>
+											<label class="select">
+												 <cfselect
+													name="regionID" 
+													id="regionID"
+													class="xLargeField"
+													value="regionID"
+													display="regionInfo"
+													selected="#FORM.regionID#" 
+													bindonload="yes"
+													bind="cfc:nsmg.extensions.components.region.getRegionRemote({companyID})" />
+												<i></i>
+											</label>
+										</section>
+										</cfif>
+										  <input type="hidden" name="companyID" value="#FORM.companyID#" />
+										<cfif CLIENT.userType EQ 5>
+										<input type="hidden" name="regionID" value="#FORM.regionID#" />
+											<section>
+												<label class="label">Area Representative</label>
+												<label class="select">
+													<cfselect
+													name="areaRepID" 
+													id="areaRepID"
+													class="largeField"
+													value="userID"
+													display="userInformation"
+													selected="#FORM.areaRepID#" 
+													bindonload="yes"
+													bind="cfc:nsmg.extensions.components.user.getUsersAssignedToRegion({regionID})" />
+													<i></i>
+												</label>
+											</section>
+										</cfif>
+										<section class="col-md-12">
+											<label class="label">Status</label>
+											<label class="select">
+												<select name="statusID" id="statusID" >
+												    <option value="0" <cfif FORM.statusID EQ 0>selected="selected"</cfif> >Please Select a Status</option>
+													<cfloop query="qGetStatus">
+													<Cfif qGetStatus.fieldID neq 14>
+														<option value="#qGetStatus.fieldID#" <cfif FORM.statusID EQ qGetStatus.fieldID>selected="selected"</cfif> >#qGetStatus.name#</option>
+													</cfif>
+													</cfloop>
+												</select>
+												<i></i>
+											</label>
+										</section>
+										<section class="col-md-12">
+											<label class="label">Comments</label>
+											<label class="textarea">
+												<textarea rows="5" name="comments">#FORM.comments#</textarea>
+											</label>
+											
+										</section>
+										<Cfif FORM.statusID neq 14>
+										
+											<div class="row padding-top-5">
+												
+												<div class="col-md-6">
+													<div align="center">
+														<button type="submit" class="btn-u btn-u-lg  btn-u-orange center"><i class="fa fa-cloud" aria-hidden="true"></i> Save Changes</button>
+													</div>
+												
+												</div> 
+												<div class="col-md-6">
+													<div align="center">
+													
+														<a href="convert_lead.cfm?leadID=#URL.id#"><button type="button" class="btn-u btn-u-lg btn-u-green"><i class="fa fa-retweet" aria-hidden="true"></i> Convert Lead to a Host</button></a>
+													</div>
+												</div>
+ 
+											</div>	
+										</cfif>
+									</fieldset>
+								
+								</cfform>
+							
+							</div>
+							
 						</div>
 						<!-- End Heading v6 -->
+						
+						
+					<div class="tag-box tag-box-v3">
+							<div class="heading heading-v6"><h2>History</h2></div>
+			<div class="row">
+								<!-- Begin Content -->
+				<div class="col-md-12">
+					<ul class="timeline-v2">
+					  <cfloop query="qGetHostLeadHistory">
+						<li class="equal-height-columns">
+							<div class="cbp_tmtime equal-height-column"><span>#TimeFormat(qGetHostLeadHistory.dateUpdated, 'hh:mm tt')#</span> <span>#DateFormat(qGetHostLeadHistory.dateUpdated, 'mmm d, yyyy')# </span></div>
+							<i class="cbp_tmicon rounded-x hidden-xs"></i>
+							<div class="cbp_tmlabel equal-height-column">
+								<h2><cfoutput>#qGetHostLeadHistory.actions#</cfoutput></h2>
+								<p><cfoutput>#qGetHostLeadHistory.comments#</cfoutput></p>
+							</div>
+						</li>
+						</cfloop>
+					</ul>
+				</div>
+				<!-- End Content -->
+
+							
 						</div>
-								
+						<!-- End Heading v6 -->
+							</div>	
+						
+						
+						
+						
+			
+						
+						
+						</div>		
 					</div>
 				</div>		
 			  </div>
@@ -445,340 +599,11 @@
       
       
       
+      	
       
+
+
       
 
-		<!--- Page Messages --->
-        <gui:displayPageMessages 
-            pageMessages="#SESSION.pageMessages.GetCollection()#"
-            messageType="tableSection"
-            width="95%"
-            />
-        
-        <!--- Form Errors --->
-        <gui:displayFormErrors 
-            formErrors="#SESSION.formErrors.GetCollection()#"
-            messageType="tableSection"
-            width="95%"
-            />
-            
-		<cfif familyFound>	
-			
-            <cfform name="hostLeadDetail" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" class="defaultForm" onsubmit="return confirmStatus();">
-                <input type="hidden" name="submitted" value="1" />
-                <input type="hidden" name="ID" value="#ID#" />
-                <input type="hidden" name="KEY" value="#key#" />
-                
-                <table width="95%" border="0" cellpadding="4" cellspacing="0" class="section" align="center">
-                    <tr class="projectHelpTitle">
-                        <th colspan="2">Family Information</th>
-                    </tr>
-                    <tr>
-                        
-                        <!--- Left Column --->
-                        <td width="50%" valign="top">
-                        
-                            <table width="100%" border="0" cellpadding="4" cellspacing="0" align="center">
-                                <tr>
-                                    <th width="170px" align="right" style="padding-top:10px;">Name:</th>
-                                    <td style="padding-top:10px;">#qGetHostLead.firstName# #qGetHostLead.lastName#</td>
-                                </tr> 
-                                <tr>
-                                    <th align="right" valign="top" rowspan="2">Address:</th>
-                                    <td>
-                                        #qGetHostLead.address# <br />
-                                        <cfif LEN(qGetHostLead.address2)>
-                                            #qGetHostLead.address2# <br />
-                                        </cfif>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        #qGetHostLead.city#, #qGetHostLead.state# #qGetHostLead.zipCode# <br />
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th align="right">Phone:</th>
-                                    <td>#qGetHostLead.phone#</td>
-                                </tr>
-                                <tr>
-                                    <th align="right" style="padding-bottom:5px;">Date Submitted:</th>
-                                    <td style="padding-bottom:5px;">#DateFormat(qGetHostLead.dateCreated, 'mm/dd/yyyy')# #TimeFormat(qGetHostLead.dateCreated, 'hh:mm:tt')# EST</td>
-                                </tr>
-                                
-                              
-                                <tr>
-                                    <th align="right" style="padding-bottom:5px;">Application:</th>
-                                    <td style="padding-bottom:5px;">
-                                  	<Cfif checkHostAppExist.recordcount gt 0>
-                                  	Email is assocaited with the <a href="/index.cfm?curdoc=host_fam_info&hostid=#checkHostAppExist.hostid#"> #checkHostAppExist.FamilyLastName# (#checkHostAppExist.hostid#) </a> family.
-                                  	<cfelseif not val(#qGetHostLead.companyID#)>
-                                    	Assign Company before sending
-                                    <cfelseif val(#qGetHostLead.hostid#)>
-                                  
-                                   	 #DateFormat(qGetHostInfo.applicationSent, 'mm/dd/yyyy')# @ #TimeFormat(qGetHostInfo.applicationSent, 'h:mm')#
-                                    <cfelse>
-                                    <a href="_detail.cfm?#CGI.QUERY_STRING#&startApp">Send Host App</a></td>
-                                	</cfif>
-                                </tr>
-                              
-                            </table>   
-                                
-                        </td>
-                                            
-                        <!--- Right Column --->
-                        <td width="50%" valign="top">
-                        
-                            <table width="100%" border="0" cellpadding="4" cellspacing="0" align="center">
-                                <tr>
-                                    <th width="170px" align="right" style="padding-top:10px;">Email:</th>
-                                    <td><a href="mailto:#qGetHostLead.email#" style="padding-top:10px;">#qGetHostLead.email#</a></td>
-                                </tr>
-                                <tr>
-                                    <th align="right">Password:</th>
-                                    <td>
-                                    	<cfif ListFind("1,2,3,4", CLIENT.userType)>
-                                        	#qGetHostLead.password#
-                                    	<cfelse>
-                                        	******
-                                        </cfif>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th align="right" valign="top">How did you hear about us :</th>
-                                    <td>
-                                        #qGetHostLead.hearAboutUs#
-                                        <cfif LEN(qGetHostLead.hearAboutUsDetail)>
-                                            &nbsp; - &nbsp; #qGetHostLead.hearAboutUsDetail#
-                                        </cfif>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th align="right" valign="top">Have been talking with:</th>
-                                    <td>
-                                        
-                                        <cfif LEN(qGetHostLead.contactWithRepName)>
-                                           #qGetHostLead.contactWithRepName#
-                                        <cfelse>
-                                        Nobody
-                                        </cfif>
-                                    </td>
-                                </tr>
-                                
-                                <tr>
-                                    <th align="right" style="padding-bottom:5px;">Last Updated:</th>
-                                    <td style="padding-bottom:5px;">#DateFormat(qGetHostLead.dateUpdated, 'mm/dd/yyyy')# #TimeFormat(qGetHostLead.dateUpdated, 'hh:mm:tt')# EST</td>
-                                </tr>
-                                <tr>
-                                    <th align="right" style="padding-bottom:5px;">Last Login:</th>
-                                    <td style="padding-bottom:5px;">#DateFormat(qGetHostLead.dateLastLoggedIn, 'mm/dd/yyyy')# #TimeFormat(qGetHostLead.dateLastLoggedIn, 'hh:mm:tt')# EST</td>
-                                </tr>
-                                <cfif val(#qGetHostLead.hostID#)>
-                                <tr>
-                                    <th align="right">Host ID:</th>
-                                    <td><a href="../index.cfm?curdoc=host_fam_info&amp;hostid=#qGetHostLead.hostID#" target="_top">#qGetHostLead.hostID#</a></td>
-                                </tr>
-                                </cfif>
-                            </table>    
-                                                    
-                        </td>
-                    </tr>
-                </table>
-           						
-				<!--- Only Display Form on Edit Mode --->
-                <cfif displayForm>
-              
-                	
-				<cfif val(URL.app_sent)>
-                    <table width="95%" border="0" cellpadding="4" cellspacing="0" class="section" align="center">                    
-                        <tr class="projectHelpTitle">
-                            <th colspan="2">Host Family NOT Found</th>
-                        </tr>
-						<Tr>
-							<td align="center" colspan=4>
-								 <h1>We can't find a host family based on the email address of this lead.</h1>
-								 <p>If you know the ID of the host family that exists, please enter it and click update.</p>
-								 <p>This will assign this lead to the host family and remove them from your lead list.</p>
-							</td>
-						</Tr>
-						   <tr>
-                            <th width="45%" align="right" valign="top" style="padding-top:10px;"><label for="companyID">Host ID:</label></th>
-                            <td width="55%" style="padding-top:10px;">
-								<Input type="text" size=8 name"hostID" placeholder="Host ID">
-                               
-                            </td>
-                        </tr>
-					</table>
-                <cfelse>
-                	
-                	
-				
-                    <!--- Follow Up --->
-                    <table width="95%" border="0" cellpadding="4" cellspacing="0" class="section" align="center">                    
-                        <tr class="projectHelpTitle">
-                            <th colspan="2">Follow Up Information</th>
-                        </tr>
-
-                        <tr>
-                            <th width="45%" align="right" valign="top" style="padding-top:10px;"><label for="companyID">Follow Up Representative:</label></th>
-                            <td width="55%" style="padding-top:10px;">
-								<!--- Only Office Can Assign a Follow Up UserID --->
-                                <cfif ListFind("1,2,3,4", CLIENT.userType)>
-                                    <select name="followUpID" id="followUpID" class="largeField">
-                                        <option value="0" <cfif NOT VAL(FORM.followUpID)>selected="selected"</cfif> >Unassigned</option>
-                                        <cfloop query="qGetFollowUpUserList">
-                                            <option value="#qGetFollowUpUserList.userID#" <cfif FORM.followUpID EQ qGetFollowUpUserList.userID>selected="selected"</cfif> >#qGetFollowUpUserList.firstName# #qGetFollowUpUserList.lastName# (###qGetFollowUpUserList.userID#)</option>
-                                        </cfloop>
-                                    </select>
-                                <cfelse>
-                                    <input type="hidden" name="followUpID" value="#FORM.followUpID#" />
-                                    #qGetHostLead.followUpAssigned#
-                                </cfif>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <th align="right" valign="top" style="padding-top:10px;"><label for="companyID">Company:</label></th>
-                            <td style="padding-top:10px;">
-                                <!--- Only Office Can Assign a Company --->
-                                <cfif ListFind("1,2,3,4", CLIENT.userType)>
-                                    <select name="companyID" id="companyID" class="mediumField">
-                                        <option value="0" <cfif NOT VAL(FORM.companyID)>selected="selected"</cfif> >Unassigned</option>
-                                        <cfloop query="qGetCompanies">
-                                            <option value="#qGetCompanies.companyID#" <cfif FORM.companyID EQ qGetCompanies.companyID>selected="selected"</cfif> >#qGetCompanies.companyshort#</option>
-                                        </cfloop>
-                                    </select>
-                                <cfelse>
-                                    <input type="hidden" name="companyID" value="#FORM.companyID#" />
-                                    <cfif LEN(qGetHostLead.companyShort)>
-                                    	#qGetHostLead.companyShort#
-                                    <cfelse>
-                                    	n/a
-                                    </cfif>
-                                </cfif>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th align="right" valign="top" style="padding-top:10px;"><label for="regionID">Region:</label></th>
-                            <td style="padding-top:10px;">
-                                <!--- Only Office Can Assign a Region --->
-                                <cfif ListFind("1,2,3,4", CLIENT.userType)>
-                                   <cfselect
-                                        name="regionID" 
-                                        id="regionID"
-                                        class="xLargeField"
-                                        value="regionID"
-                                        display="regionInfo"
-                                        selected="#FORM.regionID#" 
-                                        bindonload="yes"
-                                        bind="cfc:nsmg.extensions.components.region.getRegionRemote({companyID})" />
-                                    <p class="formNote">Assign a region to give it's manager access to this lead</p>
-                                <cfelse>
-                                    <input type="hidden" name="regionID" value="#FORM.regionID#" />
-                                    <cfif LEN(qGetHostLead.regionAssigned)>
-                                    	#qGetHostLead.regionAssigned#
-                                    <cfelse>
-                                    	n/a
-                                    </cfif>
-                                </cfif>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th align="right" valign="top"><label for="areaRepID">Area Representative:</label></th>
-                            <td>
-                                <!--- Only Managers can assign an Area Rep. --->
-                                <cfif CLIENT.userType EQ 5>
-                                   <cfselect
-                                        name="areaRepID" 
-                                        id="areaRepID"
-                                        class="largeField"
-                                        value="userID"
-                                        display="userInformation"
-                                        selected="#FORM.areaRepID#" 
-                                        bindonload="yes"
-                                        bind="cfc:nsmg.extensions.components.user.getUsersAssignedToRegion({regionID})" />
-                                    <p class="formNote">Assign an area representative that will have instant access to this lead</p>
-                                <cfelse>
-                                    <input type="hidden" name="areaRepID" value="#FORM.areaRepID#" />
-                                    #qGetHostLead.areaRepAssigned#
-                                    <p class="formNote">Will be assigned by the region manager.</p>
-                                </cfif>                            
-                            </td>
-                        </tr>
-                        <tr>
-                            <th align="right" valign="top"><label for="statusID">Status:</label></th>
-                            <td>
-                                <cfif CLIENT.userType NEQ 26>
-                                    
-                                    <select name="statusID" id="statusID" class="xLargeField" onchange="displayFinalDecision();">
-                                        <option value="0" <cfif FORM.statusID EQ 0>selected="selected"</cfif> >Please Select a Status</option>
-                                        <cfloop query="qGetStatus">
-                                            <option value="#qGetStatus.fieldID#" <cfif FORM.statusID EQ qGetStatus.fieldID>selected="selected"</cfif> >#qGetStatus.name#</option>
-                                        </cfloop>
-                                    </select>
-                                    
-                                    <p id="pFinalDecision" class="formWarning displayNone">
-                                        PS: This is a final decision, this lead will be removed from your active list. 
-                                        <br />
-                                        You can still find it under your host lead list by filtering by current status.
-                                    </p>
-                                
-                                <cfelse>
-                                    <input type="hidden" name="statusID" value="#FORM.statusID#" />
-                                    #qGetHostLead.statusAssigned#
-                                </cfif>
-                            </td>
-                        </tr>
-
-                        <tr>
-                            <th align="right" valign="top">Comments:</th>
-                            <td>
-                                <textarea name="comments" class="xLargeTextArea">#FORM.comments#</textarea>
-                            </td>
-                        </tr>                
-                    </table>
-        </cfif>
-                    <!--- Form Buttons --->            
-                    <table width="95%" border="0" cellpadding="4" cellspacing="0" class="section" align="center">
-                        <tr>
-                            <td align="center"><input name="Submit" type="image" src="../student_app/pics/save.gif" border="0" alt="Submit"/></td>
-                        </tr>                
-                    </table>    
-            
-                </cfif>
-    
-			</cfform>
-
-			<!--- History --->
-            <table width="95%" border="0" cellpadding="4" cellspacing="0" class="section" align="center">                            				
-                <tr class="projectHelpTitle">
-                    <th colspan="4">Record History</th>
-                </tr>
-                <tr>
-                    <td class="columnTitle">Date</td>
-                    <td class="columnTitle">Actions</td>
-                    <td class="columnTitle">Comments</td>
-                </tr>
-                <cfloop query="qGetHostLeadHistory">
-                    <tr bgcolor="###iif(qGetHostLeadHistory.currentrow MOD 2 ,DE("FFFFE6") ,DE("FFFFFF") )#">
-                        <td valign="top" width="20%">#DateFormat(qGetHostLeadHistory.dateUpdated, 'mm/dd/yy')# at #TimeFormat(qGetHostLeadHistory.dateUpdated, 'hh:mm tt')# EST</td>
-                        <td valign="top" width="30%">#qGetHostLeadHistory.actions#</td>
-                        <td valign="top" width="50%">#qGetHostLeadHistory.comments#</td>
-                    </tr>
-                </cfloop>
-            </table>   
-
-		</cfif>
-            
-        <!--- Table Footer --->
-        <gui:tableFooter 
-  	        width="95%"
-			imagePath="../"
-        />
-
-	<!--- Page Footer --->
-    <gui:pageFooter
-        footerType="application"
-    />
 
 </cfoutput>

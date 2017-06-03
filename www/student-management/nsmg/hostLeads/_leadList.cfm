@@ -54,7 +54,7 @@
                             #firstName# #lastName# (###ID#)
                         </a>
                     </td>
-                    <td align="center">#DateFormat(dateCreated, 'mm/dd/yyyy')#</td>
+                    <td align="center">#DateFormat(dateUpdated, 'mm/dd/yyyy')#</td>
                     <td align="center">#YesNoFormat(isAdWords)#</td>
                 </tr>
             </cfloop>
