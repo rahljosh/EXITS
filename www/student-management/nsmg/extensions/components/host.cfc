@@ -3809,9 +3809,9 @@
                         hl.city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.city#">
                 </cfif>
 
-                <cfif VAL(ARGUMENTS.state)>
+                <cfif VAL(ARGUMENTS.stateID)>
                     AND
-                        hl.state = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.state#">
+                        hl.state = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.stateID#">
                 </cfif>
 
                 <cfif VAL(ARGUMENTS.statusID)>
@@ -3862,7 +3862,7 @@
                         hl.firstName
                     </cfcase>
     
-                    <cfcase value="city">
+                    <cfcase value="host_city">
                         hl.city #ARGUMENTS.sortOrder#,
                         hl.lastName
                     </cfcase>
@@ -3892,23 +3892,28 @@
                         hl.lastName
                     </cfcase>
 
+                    <cfcase value="dateUpdated">
+                        hl.dateUpdated #ARGUMENTS.sortOrder#,
+                        hl.lastName
+                    </cfcase>
+
                     <cfcase value="dateLastLoggedIn">
                         hl.dateLastLoggedIn #ARGUMENTS.sortOrder#,
                         hl.lastName
                     </cfcase>
     
                     <cfcase value="statusAssigned">
-						statusAssigned,
+						statusAssigned #ARGUMENTS.sortOrder#,
                         hl.lastName
                     </cfcase>
 
                     <cfcase value="regionAssigned">
-						regionAssigned,
+						regionAssigned #ARGUMENTS.sortOrder#,
                         hl.lastName
                     </cfcase>
 
                     <cfcase value="areaRepAssigned">
-						areaRepAssigned,
+						areaRepAssigned #ARGUMENTS.sortOrder#,
                         hl.lastName
                     </cfcase>
     
