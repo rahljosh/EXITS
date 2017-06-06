@@ -25,7 +25,7 @@
 		param name="FORM.sortBy" default="dateCreated";		
 		param name="FORM.sortOrder" default="DESC";	
 		param name="FORM.pageSize" default=30;	
-		param name="FORM.active_rep" default="2";
+		param name="FORM.active_rep" default="";
 		param name="FORM.area_rep" default = "";
 		param name="FORM.city" default = "";
 		
@@ -48,6 +48,7 @@
 		// Get List of Status
 		qGetStatus = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='hostLeadStatus');
 	</cfscript>	
+	
 
 
 	 <cfif APPLICATION.CFC.USER.isOfficeUser()>
@@ -90,28 +91,7 @@
     <cfset quote = #RandRange(1,3)#>
     
 </cfsilent>    
-	<!--=== Breadcrumbs ===-->
-		<div class="breadcrumbs">
-			<div class="container">
-				<h1 class="pull-left">Host Leads</h1>
-				<ul class="pull-right breadcrumb">
-					  <cfif quote eq 1>
-                            <p><em>"Yesterday is not ours to recover, but tomorrow is ours to win or lose.<br />
-                                - Lyndon B. Johnson</em></p>
-                        <cfelseif quote eq 2>
-                            <!--- Call Back --->
-                            <p><em>"Patience, persistence and perspiration make an unbeatable combination for success.<br />
-                                - Napoleon Hill"</em></p>
-                        <cfelse>
-                            <!--- Call Back Next SY --->
-                            <p><em>"Paralyze resistance with persistence."<br />
-                                - Woody Hayes</em></p>
-                        </cfif>
-				</ul>
-			</div><!--/container-->
-		</div><!--/breadcrumbs-->
-		<!--=== End Breadcrumbs ===-->
-		<br>
+
 <script language="javascript">
 	// Function to find the index in an array of the first entry with a specific value. 
 	// It is used to get the index of a column in the column list. 
@@ -134,7 +114,7 @@
 	// --- START OF HOST LEADS LIST --- //
 
 	// Use an asynchronous call to get the student details. The function is called when the user selects a student. 
-	var getHostLeadList = function(pageNumber,titleSortBy) { 
+	var getHostLeadList = function(pageNumber, titleSortBy) { 
 		
 		// pageNumber could be passed to the function, if not set it to 1
 		if ( pageNumber == '' ) {
@@ -197,9 +177,10 @@
 		***/
 		if ( numberOfRecords > 0 ) {
 		
-							
+		
 			//Display query set info
-			var paginationInfo = '<td id="topPageNavigation" colspan="12" align="center"><div class="col-md-4"></td>';
+			var paginationInfo = '<td id="topPageNavigation" colspan="12" align="center"> <p> Displaying <strong>' + recordFrom + '</strong> to: <strong>' + recordTo + '</strong> of <strong>' + numberOfRecords + '</strong> records <br />';
+				paginationInfo += 'Total Number of Pages: <strong>' + numberOfPages + '</strong></p></td>';
 	
 			// Clear current information and append pagination info
 			$("#loadPaginationInfo").empty().append(paginationInfo);
@@ -210,7 +191,7 @@
 				//expression ensures no more than 20 page links are shown at one time   
 				if( (pageNumber > (page - 10)) && (pageNumber < (page + 10)) ) 	{
 					//for each page link build a span tag and bind a click handler to each one that will call build table each time it is clicked
-					$('<li><a href="#">2</a></li>').html('<a id="' + page + '" href="javascript:void(0);" title="Go to ' + page + '">' + page + ' </a>').bind('click', {newPage: page}, function(event) {
+					$('<span class="page-number"></span>').html('<a id="' + page + '" href="javascript:void(0);" title="Go to ' + page + '">' + page + ' </a>').bind('click', {newPage: page}, function(event) {
 						currentPage = event.data['newPage'];
 						getHostLeadList(currentPage);//builds table each time a page link is clicked
 					  }).appendTo($pager);// append each span tag/link to pager div
@@ -224,8 +205,8 @@
 				$pager.find('#' + pageNumber).addClass('selectedLink');
 				 
 				//the links that will take user one place forward and on place back
-				var $previousLink = $('<li><a href="" id="prev" class="previousPage"><a href="#">&laquo;</a></li>');
-				var $nextLink = $('<li><a href="" id="next" class="nextPage"><a href="#">&raquo;</a></li>');
+				var $previousLink = $('<a href="" id="prev" class="previousPage" title="Go To Previous Page"> [Previous Page] </a>');
+				var $nextLink = $('<a href="" id="next" class="nextPage" title="Go To Next Page"> [Next Page] </a>');
 				//previous and next links with handler that prevents the default event of hyperlink, and calls buildTable() on each click;
 				if ( pageNumber != 1 ) {
 					$previousLink.prependTo($pager).click(function(event){event.preventDefault();getHostLeadList(prevPageNumber);});
@@ -240,7 +221,6 @@
 				//$pager.insertAfter("#loadPaginationInfo");
 
 			}
-
 		} else {
 			
 			// Clear current
@@ -256,14 +236,13 @@
 			tableHeader += '<tr>';
         	tableHeader += '<th id="firstName" class="listTitle"><a href="javascript:void(0);" title="Sort By First Name">First Name</a></th>';
         	tableHeader += '<th id="lastName" class="listTitle"><a href="javascript:void(0);" title="Sort By Last Name">Last Name</a></th>';
-        	tableHeader += '<th id="city" class="listTitle"><a href="javascript:void(0);" title="Sort By City">City</a></th>';
+        	tableHeader += '<th id="host_city" class="listTitle"><a href="javascript:void(0);" title="Sort By City">City</a></th>';
         	tableHeader += '<th id="state" class="listTitle"><a href="javascript:void(0);" title="Sort By State">State</a></th>'; 
 		
             // tableHeader += '<td id="zipCode" class="listTitle"><a href="javascript:void(0);" title="Sort By Zip Code">Zip Code</a></td>';                                                          
             tableHeader += '<th id="phone" class="listTitle"><a href="javascript:void(0);" title="Sort By Phone">Phone</a></th>';                                                           
             tableHeader += '<th id="email" class="listTitle"><a href="javascript:void(0);" title="Sort By Email">Email</a></th>'; 
            
-			
             tableHeader += '<th id="regionAssigned" class="listTitle"><a href="javascript:void(0);" title="Sort By Region">Region</a></th>';  
             tableHeader += '<th id="areaRepAssigned" class="listTitle"><a href="javascript:void(0);" title="Sort By Area Rep.">Area Rep.</a></th>';  		
             tableHeader += '<th id="statusAssigned" class="listTitle"><a href="javascript:void(0);" title="Sort By Status">Status</a></th>';  
@@ -280,7 +259,7 @@
 		// Add click handlers to handle sorting by. They cause query to be returned in the order selected by the user. Update sortBy value
 		$('#firstName').click(function (){getHostLeadList(pageNumber,this.id);});
 		$('#lastName').click(function (){getHostLeadList(pageNumber,this.id);});
-		$('#city').click(function (){getHostLeadList(pageNumber,this.id);});
+		$('#host_city').click(function (){getHostLeadList(pageNumber,this.id);});
 		$('#state').click(function (){getHostLeadList(pageNumber,this.id);});
 		// $('#zipCode').click(function (){getHostLeadList(pageNumber,this.id);});
 		$('#phone').click(function (){getHostLeadList(pageNumber,this.id);});
@@ -340,7 +319,7 @@
 				tableBody += '<td align="center"> <a href="hostLeads/index.cfm?action=detail&id=' + id + '&key=' + hashID + '" class="jQueryModal"><button type="button" class="btn-u btn-u-orange">Details</button></a>';
 				}else{
 					tableBody += '<td align="center"><a href="hostLeads/convert_lead.cfm?leadID=' + id + '&key=' + hashID + '" class="jQueryModal"><button type="button" class="btn-u btn-u-green">Convert</button></a>  <a href="hostLeads/index.cfm?action=detail&id=' + id + '&key=' + hashID + '" class="jQueryModal"><button type="button" class="btn-u btn-u-orange">Update</button></a>';
-					tableBody += ' <a href="javascript:confirmDeleteHostLead(' + id + ');"><button type="button" class="btn-u btn-u-red">Nay</button></a>';
+					tableBody += ' <a href="javascript:confirmDeleteHostLead(' + id + ');"><button type="button" class="btn-u btn-u-red">Not Interested</button></a>';
 						
 				}
 				tableBody += '</td></tr>';
@@ -354,7 +333,7 @@
 			height:"90%", 
 			iframe:true,
 			overlayClose:false,
-			escKey:false,
+			escKey:true,
 			onClosed:function(){ getHostLeadList(); }
 		});		
 
@@ -365,7 +344,7 @@
 	// --- START OF DELETE LEAD --- //
 	var confirmDeleteHostLead = function(ID) {
 		// Are you sure you would like to check DS-2019 verification for student #" + studentID + " as received?
-		var answer = confirm(" Shoot! Looks like the vote has been cast.  Are you sure would you like to mark this lead as not interested in hosting?")
+		var answer = confirm("Are you sure would you like to mark this lead as not interested in hosting?")
 		if (answer){
 			deleteHostFamilyLead(ID);
 		} 
@@ -393,6 +372,23 @@
 	var myErrorHandler = function(statusCode, statusMsg) { 
 		alert('Status: ' + statusCode + ', ' + statusMsg); 
 	} 
+	
+	function checkSearchFields() {
+	$("#regionid_export").val($("#regionID").val());
+	$("#keyword_export").val($("#keyword").val());
+	$("#stateID_export").val($("#stateID").val());
+	$("#statusID_export").val($("#statusID").val());
+	$("#sortBy_export").val($("#sortBy").val());
+	$("#sortOrder_export").val($("#sortOrder").val());
+	$("#area_rep_export").val($("#area_rep").val());
+	$("#city_export").val($("#city").val());
+
+
+	//console.log($("#HFstatus_export").val());
+	
+	return true;
+	}
+	
 </script>
 
 <style>
@@ -546,6 +542,9 @@
                     	<option value="#qGetStatus.fieldID#" <cfif FORM.statusID EQ qGetStatus.fieldID>selected="selected"</cfif> >#qGetStatus.name#</option>
                     </cfloop>
                 </select>
+                
+                <input type="hidden" name="sortBy" class="selectSortBy" /> 
+                <input type="hidden" name="sortOrder" class="selectSortOrder" />    
             </td>               
             <td>
                 State<br />   
@@ -583,8 +582,28 @@
 
     <!--- Host Leads List --->
     <table id="loadHostLeadList" border="0" cellpadding="4" cellspacing="0" class="table table-striped table-hover" width="100%"></table>
-       
- 
+
+ 	<table width="100%">
+ 		<tr>
+			<td colspan="13" style="text-align:center">
+				<cfform action="?curdoc=hostLeads/host_lead_export" id="exportForm" name="exportForm" onsubmit="return checkSearchFields();">
+
+					<input type="hidden" name="keyword" id="keyword_export" />
+					<input type="hidden" name="keyword" id="keyword_export" />
+					<input type="hidden" name="regionid" id="regionid_export" />
+					<input type="hidden" name="stateID" id="stateID_export" />
+					<input type="hidden" name="statusID" id="statusID_export" />
+					<input type="hidden" name="sortBy" id="sortBy_export" />
+					<input type="hidden" name="sortOrder" id="sortOrder_export" />
+					<input type="hidden" name="active_rep" id="active_rep_export" />
+					<input type="hidden" name="area_rep" id="area_rep_export" />
+					<input type="hidden" name="city" id="city_export" />
+					<input type="submit" value=" Export to Excel " class="btn-u btn-u-blue" />
+
+				</cfform>
+			</td>
+		</tr>
+ 	</table>
 
 </cfoutput>
 
