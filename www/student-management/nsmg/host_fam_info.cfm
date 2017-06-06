@@ -682,7 +682,7 @@ div.scroll2 {
                 <tr valign=middle height=24>
                     <td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
                     <td width=26 background="pics/header_background.gif"><img src="pics/family.gif"></td>
-                    <td background="pics/header_background.gif"><h2>&nbsp;&nbsp;Host Eligibility</h2></td>
+                    <td background="pics/header_background.gif"><h2>&nbsp;&nbsp;Host Status</h2></td>
                     <td background="pics/header_background.gif" width=16>
                         <cfif APPLICATION.CFC.USER.isOfficeUser()>
                         	<span class="buttonBlue smallerButton" onclick="window.location.href='index.cfm?curdoc=forms/host_fam_eligibility_form&hostID=#qGetHostInfo.hostID#'">Edit</span>
@@ -715,7 +715,7 @@ div.scroll2 {
                                         style="display:inline;" 
                                         onsubmit="return confirm('Are you sure the family is with a competitor?')">
                                         <input type="hidden" name="withCompetitor" value="1"/>
-                                        <input type="submit" value="With Competitor"  alt="With Competitor" border="0" class="buttonRed" />
+                                        <input type="submit" value="With Other Sponsor"  alt="With Other Sponsor" border="0" class="buttonRed" />
                                     </form>
                                     <cfif VAL(qGetHostInfo.applicationStatusID)>
                                         <form method="post" action="index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" style="display:inline;">
@@ -739,29 +739,10 @@ div.scroll2 {
                          	</cfif>
                         </td>
                     </tr>
+                    
                     <tr>
                         <td style="text-align:center" colspan="2">
-                            <cfif qGetHostInfo.call_back EQ 1 >
-                                <form method="post" action="index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" style="display:inline;">
-                                    <input type="hidden" name="call_back" value="0"/>
-                                    <input type="submit" value="Call Back"  alt="Call Back" border="0" class="buttonGreen" />
-                                </form>
-                                <form method="post" action="index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" style="display:inline;">
-                                    <input type="hidden" name="StatusUpdateSub" value="1"/>
-                                    <input type="hidden" name="call_back" value="2"/>
-                                    <input type="submit" value="Call Back Next SY"  alt="Call Back Next SY" border="0" class="buttonGray"  />
-                                </form>
-                            <cfelseif qGetHostInfo.call_back EQ 2 >
-                                <cfform method="post" action="index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" style="display:inline;">
-                                    <input type="hidden" name="StatusUpdateSub"  value="1"/>
-                                    <input type="hidden" name="call_back" value="1"/>
-                                    <input type="submit" value="Call Back"  alt="Call Back" border="0" class="buttonGray" />
-                                </cfform>
-                                <form method="post" action="index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" style="display:inline;">
-                                    <input type="hidden" name="call_back" value="0"/>
-                                    <input type="submit" value="Call Back Next SY"  alt="Call Back Next SY" border="0" class="buttonGreen" />
-                                </form>
-                            <cfelse>
+
                                 <cfform method="post" action="index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" style="display:inline;">
                                     <input type="hidden" name="StatusUpdateSub"  value="1"/>
                                     <input type="hidden" name="call_back" value="1"/>
@@ -772,9 +753,10 @@ div.scroll2 {
                                     <input type="hidden" name="call_back" value="2"/>
                                     <input type="submit" value="Call Back Next SY"  alt="Call Back Next SY" border="0" class="buttonBlue"/>
                                 </cfform>
-                            </cfif>
+
                         </td>
                     </tr>
+                    
 
                 <cfelse>
                     
@@ -832,6 +814,115 @@ div.scroll2 {
                 </cfif>
                
                 <tr id="qualifiedNotesTr">
+                </tr>
+            </table>
+            <table width=100% cellpadding=0 cellspacing=0 border=0>
+                <tr valign="bottom">
+                    <td width=9 valign="top" height=12>
+                        <img src="pics/footer_leftcap.gif" >
+                    </td>
+                    <td width=100% background="pics/header_background_footer.gif">
+                    </td>
+                    <td width=9 valign="top">
+                        <img src="pics/footer_rightcap.gif">
+                    </td>
+                </tr>
+            </table>
+            
+            <br/>
+
+            <!--- Current Season Status --->
+            <table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
+                <tr valign=middle height=24>
+                    <td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
+                    <td background="pics/header_background.gif"><h2>&nbsp;&nbsp;Current Season Status</h2></td>
+                    <td background="pics/header_background.gif" width=16></td>
+                    <td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
+                </tr>
+            </table>
+            <table width="100%" align="left" cellpadding=8 class="section">
+                <tr>
+                    <td>
+                        <cfif VAL(qGetHostInfo.isNotQualifiedToHost)>
+                            <p style="font-weight: bold;">Not Qualified to Host</p>
+                            <p><em>"Every day is a new day, and you'll never be able to find happiness if you don't move on.<br/>
+                                - Carrie Underwood"</em></p>
+                        
+                        <cfelseif NOT VAL(qGetHostInfo.isHosting)
+                            AND NOT VAL(qGetHostInfo.isNotQualifiedToHost)
+                            AND NOT VAL(qGetHostInfo.with_competitor)>
+                            <p style="font-weight: bold;">Decided Not to Host</p>
+                            <p><em>Change is possible. You must want it enough for the change to take place.<br />
+                                - Lailah Gifty Akita</em></p>
+                        
+                        <cfelseif NOT VAL(qGetHostInfo.isNotQualifiedToHost)
+                            AND VAL(qGetHostInfo.isHosting)
+                            AND NOT VAL(qGetHostInfo.with_competitor)
+                            AND NOT VAL(qGetHostInfo.call_back)
+                            AND NOT VAL(vCurrentSeasonStatus)>
+                            <p style="font-weight: bold;">Available to Host</p>
+                            <p><em> To host or not to host is just a phone call away!</em></p>
+                        
+                        <cfelseif NOT VAL(qGetHostInfo.isNotQualifiedToHost)
+                            AND VAL(qGetHostInfo.isHosting)
+                            AND NOT VAL(qGetHostInfo.with_competitor)
+                            AND VAL(vCurrentSeasonStatus)>
+                            <!--- Current Season --->
+
+                            <cfquery name="qGetHostAppStatus" datasource="#APPLICATION.DSN#">
+                                SELECT *
+                                FROM smg_host_app_season
+                                WHERE hostID = #qGetHostInfo.hostID#
+                            </cfquery>
+
+                            <cfif qGetHostAppStatus.applicationStatusID EQ 3>
+                                <p style="font-weight: bold;">Application Approved</p>
+                                <p style="margin-bottom:0"><em>Great! Together we've added another member to our ever expanding student exchange family!</em></p>
+                            <cfelseif qGetHostAppStatus.applicationStatusID EQ 4>
+                                <p style="font-weight: bold">Application Waiting on Field - HQ</p>
+                                <p style="margin-bottom:0"><em>"Teamwork makes the dream work"<br />
+                                    - Bang Gae</em></p>
+                            <cfelseif qGetHostAppStatus.applicationStatusID EQ 5>
+                                <p style="font-weight: bold">Application Waiting on Field - Manager</p>
+                                <p style="margin-bottom:0"><em>"Teamwork divides the task and multiplies the success."<br />
+                                    - Author Unknown</em></p>
+                            <cfelseif qGetHostAppStatus.applicationStatusID EQ 6>
+                                <p style="font-weight: bold">Application Waiting on Field - Advisor</p>
+                                <p style="margin-bottom:0"><em>"Teamwork divides the task and multiplies the success."<br />
+                                    - Author Unknown</em></p>
+                            <cfelseif qGetHostAppStatus.applicationStatusID EQ 7>
+                                <p style="font-weight: bold">Application Waiting on Field - Area Rep</p>
+                                <p style="margin-bottom:0"><em>"Teamwork divides the task and multiplies the success." <br />
+                                    ― Author Unknown</em></p>
+                            <cfelseif qGetHostAppStatus.applicationStatusID EQ 8>
+                                <p style="font-weight: bold">Application Waiting on Host - Host</p>
+                                <p style="margin-bottom:0"><em>Families appreciate your support as they fill out their application.</em></p>
+                            <cfelseif qGetHostAppStatus.applicationStatusID EQ 9>
+                                <p style="font-weight: bold">Application Waiting on Host - Not Started</p>
+                                <p style="margin-bottom:0"><em>Reaching out to the family to find out if they've received their login information helps them start the application process.</em></p>
+                            </cfif>
+                        
+                        <cfelseif NOT VAL(qGetHostInfo.call_back)
+                            AND VAL(qGetHostInfo.with_competitor)>
+                            <!--- With Other Sponsor --->
+                            <p style="font-weight: bold">With Other Sponsor</p>
+                            <p><em>"Yesterday is not ours to recover, but tomorrow is ours to win or lose.<br />
+                                - Lyndon B. Johnson</em></p>
+                        
+                        <cfelseif VAL(qGetHostInfo.call_back) AND qGetHostInfo.call_back EQ 1>
+                            <!--- Call Back --->
+                            <p style="font-weight: bold">Call Back</p>
+                            <p><em>"Patience, persistence and perspiration make an unbeatable combination for success.<br />
+                                - Napoleon Hill"</em></p>
+                        
+                        <cfelseif VAL(qGetHostInfo.call_back) AND qGetHostInfo.call_back EQ 2>
+                            <!--- Call Back Next SY --->
+                            <p style="font-weight: bold">Call Back Next SY</p>
+                            <p><em>"Paralyze resistance with persistence."<br />
+                                - Woody Hayes</em></p>
+                        </cfif>
+
+                    </td>
                 </tr>
             </table>
             <table width=100% cellpadding=0 cellspacing=0 border=0>
