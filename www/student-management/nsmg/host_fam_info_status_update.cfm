@@ -7,6 +7,8 @@
     vCurrentSeasonStatus = APPLICATION.CFC.HOST.getApplicationList(hostID=qGetHostInfo.hostID,seasonID=qCurrentSeason.seasonID).applicationStatusID;
 </cfscript>
 
+<cfset newStatus = '' />
+
 <cfset goingToHost = 0>
 <cfif structKeyExists(FORM, "decideToHost")>
     <cfif FORM.decideToHost EQ 0>
@@ -21,6 +23,8 @@
     <cfquery datasource="#APPLICATION.DSN#">
         UPDATE smg_hosts
         SET with_competitor = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.withCompetitor)#">,
+            isHosting = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
+            call_back = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
             call_back_updated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
             call_back_updated_by = #CLIENT.userid#
         WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostID#">
@@ -38,17 +42,43 @@
     </cfscript>
 
     <cfset applicationHistoryID = applicationHistory />
+    <cfset newStatus = 'With Competitor' />
 
 </cfif>
 
 
 <cfif structKeyExists(FORM, "hostNewSeason")>
+
+    <cfquery datasource="#APPLICATION.DSN#">
+        UPDATE smg_hosts
+        SET with_competitor = <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
+            call_back = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
+            call_back_updated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
+            call_back_updated_by = #CLIENT.userid#
+        WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostID#">
+    </cfquery>
+
     <cfif FORM.hostNewSeason EQ 1>
         <cfscript>
             APPLICATION.CFC.HOST.setHostSeasonStatus(hostID=URL.hostID,seasonID=qCurrentSeason.seasonID);
             goingToHost = 1;
         </cfscript>
     </cfif>
+
+    <cfscript>
+        applicationHistory = APPLICATION.CFC.LOOKUPTABLES.insertApplicationHistory(
+            applicationID=7,
+            foreignTable='smg_hosts',
+            foreignID=URL.hostID,
+            enteredByID=CLIENT.userID,
+            dateCreated=NOW(),
+            status_update='Host #qCurrentSeason.season#'
+        );
+    </cfscript>
+
+    <cflocation url="index.cfm?curdoc=host_fam_info&hostid=#URL.hostid#" addtoken="No">
+    <cfabort />
+    
 </cfif>
 
 <!--- Send email to host family and update application, check for password first. --->
@@ -112,22 +142,43 @@
         SET dateUpdated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
             updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
             isHosting = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.decideToHost)#">,
+            <cfif goingToHost EQ 1>
+            with_competitor = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
+            call_back = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
+            </cfif>
             call_back_updated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
             call_back_updated_by = #CLIENT.userid#
         WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostInfo.hostID#">
     </cfquery>
 
     <cfif VAL(FORM.decideToHost)>
-        <cfscript>
-            applicationHistory = APPLICATION.CFC.LOOKUPTABLES.insertApplicationHistory(
-                applicationID=7,
-                foreignTable='smg_hosts',
-                foreignID=URL.hostID,
-                enteredByID=CLIENT.userID,
-                dateCreated=NOW(),
-                status_update='Available To Host'
-            );
-        </cfscript>
+        <cfif VAL(vCurrentSeasonStatus)>
+            <cfscript>
+                applicationHistory = APPLICATION.CFC.LOOKUPTABLES.insertApplicationHistory(
+                    applicationID=7,
+                    foreignTable='smg_hosts',
+                    foreignID=URL.hostID,
+                    enteredByID=CLIENT.userID,
+                    dateCreated=NOW(),
+                    status_update='Host #qCurrentSeason.season#'
+                );
+            </cfscript>
+
+            <cfset newStatus = 'Host #qCurrentSeason.season#' />
+        <cfelse>
+            <cfscript>
+                applicationHistory = APPLICATION.CFC.LOOKUPTABLES.insertApplicationHistory(
+                    applicationID=7,
+                    foreignTable='smg_hosts',
+                    foreignID=URL.hostID,
+                    enteredByID=CLIENT.userID,
+                    dateCreated=NOW(),
+                    status_update='Available To Host'
+                );
+            </cfscript>
+
+            <cfset newStatus = 'Available To Host' />
+        </cfif>
     <cfelse>
         <cfscript>
             applicationHistory = APPLICATION.CFC.LOOKUPTABLES.insertApplicationHistory(
@@ -139,6 +190,16 @@
                 status_update='Decided Not to Host'
             );
         </cfscript>
+
+        <cfquery datasource="#APPLICATION.DSN#">
+            UPDATE smg_hosts
+            SET call_back = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
+                call_back_updated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
+                call_back_updated_by = #CLIENT.userid#
+            WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostID#">
+        </cfquery>
+
+        <cfset newStatus = 'Decided Not to Host' />
     </cfif>
 
     <cfset applicationHistoryID = applicationHistory />
@@ -166,6 +227,7 @@
                 status_update='Call Back'
             );
         </cfscript>
+        <cfset newStatus = 'Call Back' />
     <Cfelseif FORM.call_back EQ 2>
         <cfscript>
             applicationHistory = APPLICATION.CFC.LOOKUPTABLES.insertApplicationHistory(
@@ -177,17 +239,7 @@
                 status_update='Call Back Next SY'
             );
         </cfscript>
-    <cfelse>
-        <cfscript>
-            applicationHistory = APPLICATION.CFC.LOOKUPTABLES.insertApplicationHistory(
-                applicationID=7,
-                foreignTable='smg_hosts',
-                foreignID=URL.hostID,
-                enteredByID=CLIENT.userID,
-                dateCreated=NOW(),
-                status_update='Available to Host'
-            );
-        </cfscript>
+        <cfset newStatus = 'Call Back Next SY' />
     </Cfif>
 
     <cfset applicationHistoryID = applicationHistory />
@@ -210,23 +262,7 @@
 </cfif>
 
 <strong>New Status:</strong> 
-<cfif structKeyExists(FORM, "decideToHost") AND goingToHost EQ 0>
-    Decided Not To Host
-<cfelseif structKeyExists(FORM, "decideToHost") AND goingToHost EQ 1>
-    Available to Host
-<cfelseif structKeyExists(FORM, "withCompetitor") AND FORM.withCompetitor EQ 1>
-    With Competitor
-<cfelseif structKeyExists(FORM, "hostNewSeason")>
-    Available to Host
-<cfelseif structKeyExists(FORM, "call_back")>
-    <cfif FORM.call_back EQ 1>
-        Call Back
-    <cfelseif FORM.call_back EQ 2>
-        Call Back Next SY
-    <cfelseif FORM.call_back EQ 0>
-        Available to Host
-    </cfif>
-</cfif>
+<cfoutput>#newStatus#</cfoutput>
 
 
 <div id="statusNotes" style="margin-top: 10px">

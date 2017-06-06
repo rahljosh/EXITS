@@ -298,7 +298,7 @@
         
         // No data returned, display message
         if( hostData.QUERY.DATA.length == 0) {          
-            $("#loadHostList").append("<tr bgcolor='#FFFFE6'><th colspan='12'>Your search did not return any results.</th></tr>");
+            $("#loadHostList").append("<tr bgcolor='#FFFFE6'><th colspan='13'>Your search did not return any results.</th></tr>");
         }
         
         // Loop over results and build the grid
@@ -584,12 +584,13 @@
                     Status<br />
                     <select name="HFstatus" id="HFstatus">
                         <option value="">All</option>
-                        <option value="Decided Not to Host" <cfif HFstatus EQ "Decided Not to Host">selected</cfif>>Decided Not to Host</option>
-                        <option value="Not qualified to host" <cfif HFstatus EQ "Not qualified to host">selected</cfif>>Not qualified to host</option>
                         <option value="Available to Host" <cfif HFstatus EQ "Available to Host">selected</cfif>>Available to Host</option>
                         <option value="Call Back" <cfif HFstatus EQ "Call Back">selected</cfif>>Call Back</option>
                         <option value="Call Back Next SY" <cfif HFstatus EQ "Call Back Next SY">selected</cfif>>Call Back Next SY</option>
-                        <option value="With Competitor" <cfif HFstatus EQ "With Competitor">selected</cfif>>With Competitor</option>
+                        <option value="Current Season" <cfif HFstatus EQ "Current Season">selected</cfif>>Current Season</option>
+                        <option value="Decided Not to Host" <cfif HFstatus EQ "Decided Not to Host">selected</cfif>>Decided Not to Host</option>
+                        <option value="Not Qualified to Host" <cfif HFstatus EQ "Not Qualified to Host">selected</cfif>>Not Qualified to Host</option>
+                        <option value="With Other Sponsor" <cfif HFstatus EQ "With Other Sponsor">selected</cfif>>With Other Sponsor</option>
                     </select>
                     
                     <input type="hidden" name="sortBy" class="selectSortBy" /> 
