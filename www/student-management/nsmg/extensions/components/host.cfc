@@ -1164,6 +1164,9 @@
         <cfargument name="userID" default="#CLIENT.userID#" hint="userID is not required">
         <cfargument name="active_rep" default="" hint="userID is not required">
         <cfargument name="ny_office" default="" hint="userID is not required">
+        
+        <cfdump var="#arguments#"></cfdump>
+        <cfabort></cfabort>
         <cfquery 
 
 			name="qGetApplicationList" 
