@@ -1165,8 +1165,7 @@
         <cfargument name="active_rep" default="" hint="userID is not required">
         <cfargument name="ny_office" default="" hint="userID is not required">
         
-        <cfdump var="#arguments#"></cfdump>
-        <cfabort></cfabort>
+      
         <cfquery 
 
 			name="qGetApplicationList" 
@@ -1364,7 +1363,7 @@
                      <Cfif val(ARGUMENTS.ny_office) eq 1>
                     AND 
                     	areaRep.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="26571">
-                    <Cfelseif val(ARGUMENTS.active_rep) eq 0>
+                    <Cfelseif val(ARGUMENTS.ny_office) eq 0>
                     AND 
                     	areaRep.userid !=<cfqueryparam cfsqltype="cf_sql_integer" value="26571">
                     </Cfif>
@@ -1446,7 +1445,8 @@
                 ORDER BY 
                     dateUpdated
 		</cfquery>
-        
+        <cfdump var="#qGetApplicationList#"></cfdump>
+        <cfabort></cfabort>
 		<cfreturn qGetApplicationList>
 	</cffunction>
     <!---End of Basics for Host App List---->
