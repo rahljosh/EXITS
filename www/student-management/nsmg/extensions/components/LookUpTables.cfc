@@ -28,7 +28,7 @@
     	<cfargument name="fieldKey" hint="fieldKey is required. This is what defines a group of data">
         <cfargument name="fieldID" default="" hint="fieldID is not required">
     	<cfargument name="isActive" default="1" hint="isActive is not required">
-        <cfargument name="sortBy" type="string" default="fieldID" hint="sortBy is not required">
+        <cfargument name="sortOrder" type="string" default="fieldID" hint="sortBy is not required">
         <cfargument name="includeFieldIDList" default="" hint="includeFieldIDList is not required, display inactive data">
 
         <cfquery 
@@ -69,7 +69,7 @@
                 
                 ORDER BY
                 
-                <cfswitch expression="#ARGUMENTS.sortBy#">
+                <cfswitch expression="#ARGUMENTS.sortOrder#">
                     
                     <cfcase value="fieldID">                    
                         fieldID
@@ -84,7 +84,7 @@
                     </cfcase>
 
                     <cfdefaultcase>
-                        fieldKey
+                        sortOrder
                     </cfdefaultcase>
     
                 </cfswitch>  
@@ -349,7 +349,7 @@
 
 
 	<!--- Get Current Season Based on Today's date --->
-	<cffunction name="getCurrentSeason" access="public" returntype="query" output="false" hint=" Get Current Season Based on Today's date ">
+	<cffunction name="getCurrentSeason" access="public" returntype="query" output="false" hint="Get Current Season Based on Today's date ">
 	
 		<cfquery 
 			name="qGetCurrentSeason" 
@@ -376,10 +376,10 @@
 
 
 	<!--- Get Current Season Based on Today's date --->
-	<cffunction name="getCurrentSeasonPrograms" access="public" returntype="query" output="false" hint=" Get Current Season Based on Today's date ">
+	<cffunction name="getCurrentSeasonPrograms" access="public" returntype="string" output="false" hint=" Get Current Season Based on Today's date ">
 	
 		<cfquery 
-			name="qGetCurrentSeason" 
+			name="qGetCurrentSeasons" 
 			datasource="#APPLICATION.dsn#">
 				SELECT
                 	seasonID,
@@ -396,7 +396,10 @@
                 WHERE
 					CURRENT_DATE() BETWEEN startDate AND DATE_ADD(endDate, INTERVAL 31 DAY)  
     	</cfquery>
-        
+        <cfscript>
+			// Return List
+			vCurrentSeasons = ValueList(qGetCurrentSeasons.seasonID);		
+        </cfscript> 
         <Cfquery 
         	name="qGetCurrentSeasonPrograms" 
         	datasource="#APPLICATION.dsn#">
@@ -404,15 +407,16 @@
         	SELECT
         		programid
         	FROM
-        		smg_progams
+        		smg_programs
 			WHERE 
-       			seasonid = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#qGetCurrentSeason.seasonid#">
+       			seasonid in  (#vCurrentSeasons#)
         	
         </Cfquery>
           <cfscript>
 			// Return List
-			return ValueList(qGetCurrentSeasonPrograms.programid);		
-        </cfscript>     
+			vProgramList = ValueList(qGetCurrentSeasonPrograms.programid);		
+        </cfscript>   
+         <cfreturn vProgramList>      
     </cffunction>
 
 	<!--- Get Current Paperwork Season Based on Today's date --->
