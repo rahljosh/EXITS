@@ -1162,8 +1162,10 @@
         <cfargument name="userType" default="#CLIENT.userType#" hint="userType is not required">
         <cfargument name="regionID" default="#CLIENT.regionID#" hint="regionID is not required">
         <cfargument name="userID" default="#CLIENT.userID#" hint="userID is not required">
-
+        <cfargument name="active_rep" default="" hint="userID is not required">
+        <cfargument name="ny_office" default="" hint="userID is not required">
         <cfquery 
+
 			name="qGetApplicationList" 
 			datasource="#APPLICATION.DSN#">
                 SELECT DISTINCT
@@ -1189,18 +1191,20 @@
                     SELECT
                        h.hostID, h.uniqueID, h.familyLastName, h.fatherFirstName, h.motherFirstName, h.email as hostEmail, h.city as hostCity, h.state as hostState,
                         <!--- Host Family Display Name --->
-                        CAST( 
-                            CONCAT(                      
-                                h.familyLastName,
-                                ' - ', 
-                                IFNULL(h.fatherFirstName, ''),                                                  
-                                IF (h.fatherFirstName != '', IF (h.motherFirstName != '', ' and ', ''), ''),
-                                IFNULL(h.motherFirstName, ''),
+                      CAST( 
+							CONCAT(                      
+								IFNULL(h.fatherFirstName, ''),  
+								IF(h.fatherLastName != h.motherLastName, ' ', ''), 
+								IF(h.fatherLastName != h.motherLastName, h.fatherlastname, ''),
+								IF(h.fatherFirstName != '', IF (h.motherFirstName != '', ' and ', ''), ''),
+								IFNULL(h.motherFirstName, ''), 
+								' ',
+								h.familyLastName,
                                 ' (##',
                                 h.hostID,
                                 ')'                    
-                            ) 
-                        AS CHAR) AS displayHostFamily,
+								) 
+						AS CHAR) AS  displayHostFamily,
                         <!--- Is other host parent home? --->
                         (
                             CASE 
@@ -1311,6 +1315,7 @@
                         smg_host_app_season.dateSent,
                         smg_host_app_season.dateStarted,
                         smg_host_app_season.dateSubmitted,
+                        smg_host_app_season.dateUpdated,
                         smg_host_app_season.ID AS hostAppSeasonID                      
                     FROM 
                         smg_hosts h
@@ -1344,7 +1349,28 @@
                     	smg_companies c ON c.companyID = h.companyID
                     WHERE
                         1 = 1 
-                    
+                    <!----Show only assigned to an Active Rep---->
+                    <Cfif val(ARGUMENTS.active_rep) eq 1>
+                    AND 
+                    	areaRep.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                    <Cfelseif ARGUMENTS.active_rep eq 0>
+                    AND 
+                    	areaRep.active = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                    </Cfif>
+                     <!----Show only assigned to NY Office---->
+                     <Cfif val(ARGUMENTS.ny_office) eq 1>
+                    AND 
+                    	areaRep.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="26571">
+                    <Cfelseif val(ARGUMENTS.active_rep) eq 0>
+                    AND 
+                    	areaRep.userid !=<cfqueryparam cfsqltype="cf_sql_integer" value="26571">
+                    </Cfif>
+                       <!----Show only assigned to Specific Region---->
+                     <Cfif val(ARGUMENTS.regionid)>
+                    AND 
+                    	h.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.regionid)#">
+                  
+                    </Cfif>
                     <!--- If hostID is passed ignore active and companyID filters --->
                     <cfif LEN(ARGUMENTS.hostID)>
                         AND
@@ -1364,7 +1390,7 @@
                         	h.isNotQualifiedToHost = 0
                     
 						<!--- ISE - Displays all apps |  OR APPLICATION.CFC.USER.isOfficeUser()---> 
-						<cfif ARGUMENTS.companyID EQ 5>
+						<cfif val(ARGUMENTS.companyID) EQ 5>
                             AND          
                                 h.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
                         <cfelseif VAL(ARGUMENTS.companyID)>
@@ -1415,8 +1441,7 @@
                     smg_users rm ON rm.userID = regionalManagerID
                              
                 ORDER BY 
-                    regionName,
-                    familyLastName
+                    dateUpdated
 		</cfquery>
         
 		<cfreturn qGetApplicationList>
@@ -3500,25 +3525,23 @@
         </cfsavecontent>
     
         <cfscript>	
-			// Follow Up User
-			if ( ARGUMENTS.followUpID NEQ qGetHostLead.followUpID ) {
-				// Assign new area rep 
-				vActions = vActions & "Follow Up Representative: #qGetFollowUpUser.firstName# #qGetFollowUpUser.lastName# ###qGetFollowUpUser.userID# <br /> #CHR(13)#";
-				
-			}
+			// User Doing changes
+				// Add User and TimeStamp Information
+				vActions = vActions & "<strong>#qGetEnterBy.firstName# #qGetEnterBy.lastName# ###qGetEnterBy.userID#</strong> <br /> #CHR(13)#";
 		
 			// Region
 			if ( ARGUMENTS.regionID NEQ qGetHostLead.regionID ) {
 				// Get Region Information
 				qGetRegion = APPLICATION.CFC.REGION.getRegions(regionID=ARGUMENTS.regionID);
 				// Assign new region
-				vActions = vActions & "Region: #qGetRegion.regionName# ###qGetRegion.regionID# <br /> #CHR(13)#";
+				vActions = vActions & "<em>New Region Set: #qGetRegion.regionName# ###qGetRegion.regionID# </em><br /> #CHR(13)#";
 			}
 
 			// Area Representative
-			if ( ARGUMENTS.areaRepID NEQ qGetHostLead.areaRepID ) {
+			if ( (ARGUMENTS.areaRepID NEQ qGetHostLead.areaRepID) AND CLIENT.userType EQ 5 ) {
 				// Assign new area rep 
-				vActions = vActions & "Area Representative: #qGetUser.firstName# #qGetUser.lastName# ###qGetUser.userID# <br /> #CHR(13)#";
+				
+				vActions = vActions & "<em>Area Representative: #qGetUser.firstName# #qGetUser.lastName# ###qGetUser.userID# </em><br /> #CHR(13)#";
 				
 				// Email Area Representative / Production Only
 				if ( NOT APPLICATION.isServerLocal AND isvalid("email", qGetUser.Email) ) { 
@@ -3543,20 +3566,20 @@
 				// Get Status Information
 				qGetStatus = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='hostLeadStatus',fieldID=ARGUMENTS.statusID);				
 				// Assign new statusID
-				vActions = vActions & "Status: #qGetStatus.name# <br /> #CHR(13)#";
+				vActions = vActions & "<em>Status: #qGetStatus.name#</em> <br /> #CHR(13)#";
 			}
 			
-			// Comments
-			if ( LEN(ARGUMENTS.comments) ) {
-				vActions = vActions & "Comment added <br /> #CHR(13)#";
-			}
+		
 			
 			// Check if information has been updated
 			if ( LEN(vActions) ) {
 				
-				// Add User and TimeStamp Information
-				vActions = vActions & "Assigned by: #qGetEnterBy.firstName# #qGetEnterBy.lastName# ###qGetEnterBy.userID# <br /> #CHR(13)#";
-
+			
+				// Comments
+				if ( LEN(ARGUMENTS.comments) ) {
+					vActions = vActions & "Comment added <br /> #CHR(13)#";
+				}
+				
 				// Insert New History
 				APPLICATION.CFC.LOOKUPTABLES.insertApplicationHistory(
 					applicationID=APPLICATION.CONSTANTS.TYPE.hostFamilyLead,
@@ -3593,10 +3616,13 @@
                     smg_host_lead
                 SET
                     statusID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.statusID)#">,
-                    followUpID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.followUpID)#">,
+                    <cfif VAL(ARGUMENTS.areaRepID)>
                     regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.regionID)#">,
+					</cfif>
+                    <cfif VAL(ARGUMENTS.areaRepID)>
                     areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.areaRepID)#">,
-                     <cfif ARGUMENTS.statusID eq 14>
+                    </cfif>
+                    <cfif ARGUMENTS.statusID eq 14>
                     dateConverted = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
                     </cfif>
                     hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
@@ -3951,7 +3977,7 @@
 			}
 
 			// Populate structure with query
-			resultQuery = QueryNew("ID, hashID, firstName, lastName, city, state, zipCode, phone, email, dateCreated, dateUpdated, dateLastLoggedIn, statusAssigned, regionAssigned, areaRepAssigned");
+			resultQuery = QueryNew("ID, hashID, firstName, lastName, address, city, state, zipCode, phone, email, dateCreated, dateUpdated, dateLastLoggedIn, statusAssigned, regionAssigned, areaRepAssigned");
 			
 			if ( qGetHostLeadsRemote.recordCount < stResult.recordTo ) {
 				stResult.recordTo = qGetHostLeadsRemote.recordCount;
@@ -3966,6 +3992,7 @@
 					QuerySetCell(resultQuery, "HASHID", qGetHostLeadsRemote.hashID[i]);
 					QuerySetCell(resultQuery, "firstName", qGetHostLeadsRemote.firstName[i]);
 					QuerySetCell(resultQuery, "lastName", qGetHostLeadsRemote.lastName[i]);
+					QuerySetCell(resultQuery, "address", qGetHostLeadsRemote.address[i]);
 					QuerySetCell(resultQuery, "city", qGetHostLeadsRemote.city[i]);
 					QuerySetCell(resultQuery, "state", qGetHostLeadsRemote.state[i]);
 					QuerySetCell(resultQuery, "zipCode", qGetHostLeadsRemote.zipCode[i]);
@@ -4023,6 +4050,113 @@
 	</cffunction>      
           
     
+    
+    <cffunction name="getHostLeadsRemoteQuery" access="public" returntype="query" output="false" hint="Gets host leads entered from ISEUSA.com">
+        
+        <cfargument name="statusID" type="numeric" default="0" hint="statusID is not required">
+
+              
+        <cfquery 
+			name="getHostLeadsRemoteQuery" 
+			datasource="#APPLICATION.DSN#">
+                SELECT
+					hl.ID,
+                    <!--- 17E0 was being displayed as 17 or 17.0 --->
+					<!--- CAST(hl.hashID AS CHAR) AS hashID, --->
+                    <!--- CONVERT(hl.hashID USING utf8) AS hashID, --->                    
+                    CONCAT(hl.hashID, '&') AS hashID,
+                    hl.statusID,
+                    hl.followUpID,
+                    hl.regionID,
+                    hl.areaRepID,
+                    hl.firstName,
+                    hl.lastName,
+                    hl.address,
+                    hl.address2,
+                    hl.city,
+                    hl.zipCode,
+                    hl.phone,
+                    hl.email,
+                    hl.hearAboutUs,
+                    hl.hearAboutUsDetail,
+                    hl.isListSubscriber,
+                    DATE_FORMAT(hl.dateCreated, '%m/%e/%Y') as dateCreated,
+                    DATE_FORMAT(hl.dateLastLoggedIn, '%m/%e/%Y') as dateLastLoggedIn,
+                    DATE_FORMAT(hl.dateUpdated, '%m/%e/%Y') as dateUpdated,
+                    <!--- Follow Up Representative --->
+                    CONCAT(fu.firstName, ' ', fu.lastName) AS followUpAssigned,
+                    <!--- State --->
+                    st.state,
+                    <!--- Region --->
+                    r.regionName AS regionAssigned,
+                    <!--- Area Representative --->
+                    CONCAT(u.firstName, ' ', u.lastName) AS areaRepAssigned,
+                    <!--- Status --->
+                    alk.name AS statusAssigned
+                FROM 
+                    smg_host_lead hl
+                LEFT OUTER JOIN
+                	smg_users fu ON fu.userID = hl.followUpID    
+                LEFT OUTER JOIN
+                	smg_states st ON st.id = hl.stateID
+                LEFT OUTER JOIN
+                	smg_regions r ON r.regionID = hl.regionID
+                LEFT OUTER JOIN
+                	smg_users u ON u.userID = hl.areaRepID    
+                LEFT OUTER JOIN
+                	applicationlookup alk ON alk.fieldID = hl.statusID 
+                    	AND 
+                            alk.fieldKey = <cfqueryparam cfsqltype="cf_sql_varchar" value="hostLeadStatus">
+                WHERE
+                	hl.isDeleted = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+				
+                <!--- Get Only Leads Entered as of 04/01/2011 --->
+                AND
+                	(
+                    	hl.dateCreated >= <cfqueryparam cfsqltype="cf_sql_date" value="2011/04/01">
+                	OR
+                    	hl.dateLastLoggedIn IS NOT NULL	
+               		)
+                                 
+
+                <cfif val(CLIENT.companyID) NEQ 5>
+                    AND
+                        r.company = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+                </cfif>
+
+                <!---- Screnner ---->
+                <cfif val(CLIENT.userType)  EQ 26>
+                	AND
+                    	hl.followUpID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+                </cfif>
+                 <!--- Regional Manager --->
+			   <cfif val(CLIENT.userType) EQ 5>
+					AND 
+						hl.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.regionID)#">
+				</cfif>
+                <!---- RA and AR can only see leads assigned to them---->
+                <cfif ListFind("6,7,9", #CLIENT.userType#)>
+                	AND
+                    	hl.areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+                </cfif>
+
+			
+                <cfif VAL(ARGUMENTS.statusID)>
+                    AND
+                        hl.statusID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.statusID#">
+                <cfelseif ARGUMENTS.statusID NEQ 'All'>
+                	<!--- Do not display final dispositions: 3=Not Interested / 8=Converted to Host Family --->
+                    AND
+						hl.statusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,12,13" list="yes"> )
+				</cfif>
+                
+             
+
+              
+            
+		</cfquery>
+		<cfreturn getHostLeadsRemoteQuery>
+	</cffunction>
     <!--- 
 		End of Remote Functions 
 	--->
