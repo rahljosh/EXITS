@@ -1445,8 +1445,7 @@
                 ORDER BY 
                     dateUpdated
 		</cfquery>
-        <cfdump var="#qGetApplicationList#"></cfdump>
-        <cfabort></cfabort>
+
 		<cfreturn qGetApplicationList>
 	</cffunction>
     <!---End of Basics for Host App List---->
