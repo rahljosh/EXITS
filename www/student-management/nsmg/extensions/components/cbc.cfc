@@ -233,6 +233,7 @@
                         h.flagcbc,
                         h.seasonID,
                         h.denied,
+                        h.nexits_approved,
                         s.season,
                         c.companyID,
                         c.companyshort
@@ -437,6 +438,7 @@
         <cfargument name="companyID" required="yes" hint="companyID is required">
         <cfargument name="isNoSSN" default="0" hint="isNoSSN is not required">
         <cfargument name="dateAuthorized" required="yes" hint="Date of Authorization">
+        <cfargument name="dateNexitsApproved" required="yes" hint="Date of NEXITS Approved">
         <cfargument name="isRerun" default="0" hint="isRerun is not required">
 
             <cfquery 
@@ -471,7 +473,15 @@
                             isNoSSN,
                             isRerun, 
                             date_authorized,
+                            nexits_approved,
+                            <cfif IsDate(ARGUMENTS.dateNexitsApproved)>
+                            requestid,
+                            date_sent,
+                            date_approved,
+                            </cfif>
                             dateCreated
+                            
+                            
                         )
                         VALUES 
                         (
@@ -483,6 +493,12 @@
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.isNoSSN#">,
                             <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.isRerun#">,
                             <cfqueryparam cfsqltype="cf_sql_timestamp" value="#ARGUMENTS.dateAuthorized#" null="#NOT IsDate(ARGUMENTS.dateAuthorized)#">,
+                            <cfqueryparam cfsqltype="cf_sql_timestamp" value="#ARGUMENTS.dateNexitsApproved#" null="#NOT IsDate(ARGUMENTS.dateNexitsApproved)#">,
+                            <cfif IsDate(ARGUMENTS.dateNexitsApproved)>
+                            'Approved in NEXITS',
+                            <cfqueryparam cfsqltype="cf_sql_timestamp" value="#ARGUMENTS.dateNexitsApproved#" null="#NOT IsDate(ARGUMENTS.dateNexitsApproved)#">,
+                            <cfqueryparam cfsqltype="cf_sql_timestamp" value="#ARGUMENTS.dateNexitsApproved#" null="#NOT IsDate(ARGUMENTS.dateNexitsApproved)#">,
+                            </cfif>
                             <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">
                         )
                 </cfquery>	
@@ -2154,6 +2170,7 @@
         <cfargument name="schoolAcceptanceDate" type="any" default="" hint="schoolAcceptanceDate is not required">
         <cfargument name="crossDataUserCBC" type="numeric" default="0" hint="cross data CBC with users">
         <cfargument name="representativeDistanceInMiles" type="string" default="" hint="representativeDistanceInMiles is not required">
+        <cfargument name="maxDistance" type="string" default="120" hint="representativeDistanceInMiles is not required">
          
 		<cfscript>
 			// Placements can only be approved with a valid CBC, 2nd Visit Rep and school acceptance
@@ -2259,9 +2276,9 @@
 			}
 
 			/***************************************************************************************
-				Block if rep lives more than 120 miles away
+				Block if rep lives more than 120 (for ise) 250 (for Dash) miles away
 			***************************************************************************************/
-			if ( ARGUMENTS.representativeDistanceInMiles GT 120 ) {
+			if ( ARGUMENTS.representativeDistanceInMiles GT ARGUMENTS.maxDistance ) {
 				vIsOutOfCompliance = 1;
 				vOtherMessage = vOtherMessage & "<p>Supervising Representative is #ARGUMENTS.representativeDistanceInMiles# mi away from Host Family</p>";
 			}
@@ -2835,6 +2852,8 @@
 		</cfscript>
         
         <cfoutput>
+        
+        
 			<cfif vStatus EQ 0>
                 <div style="display:inline-block; background-color:yellow; color:black; padding:2px; font-weight:bold;">Notify Compliance</div>
             <cfelseif vStatus EQ 1>
@@ -2850,6 +2869,121 @@
         
     </cffunction>
     
+    
+      <!--- Returns the result status of a CBC report --->
+    <cffunction name="getCBCResultStatusColor" access="public" returntype="string" hint="Outputs Status message. (representations: 1 for clean, 2 for hits, 3 for denied, 4 for approved, and 0 for problem with XML)">
+    	<cfargument name="cbcID" type="numeric" required="yes">
+        <cfargument name="cbcType" type="string" default="host" required="no" hint="host or user">
+        
+        <!--- Get the appropriate CBC record --->
+        <cfquery name="qGetCBCRecord" datasource="#APPLICATION.DSN#">
+        	SELECT *
+            <cfif ARGUMENTS.cbcType EQ "host">
+            	FROM smg_hosts_cbc
+                WHERE cbcFamID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.cbcID#">
+           	<cfelse>
+            	FROM smg_users_cbc
+                WHERE cbcID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.cbcID#">
+            </cfif>
+        </cfquery>
+        
+        <!-- Get the XML Results --->
+        <cfscript>
+			vStatus = 1;
+			try {
+				// Parse XML
+				var readXML = XmlParse(qGetCBCRecord.xml_received);
+
+				// Get Total of Products
+				vTotalProducts = ArrayLen(readXML.bgc.product);
+				
+				// Set USOneSearchID, if there is a social is product 2 if there is no social is product 1
+				if ( vTotalProducts GT 1 ) {
+					usOneSearchID = 2;					
+				} else {
+					usOneSearchID = 1;					
+				}
+				
+				// Get Report ID
+				try { 
+					// Try to get from US One Search (if there is an error, get it from BCG order number)
+					ReportID = readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.offender.record.key.secureKey.XmlText;
+				} catch (Any e) {
+					// Error
+					ReportID = '#readXML.bgc.XmlAttributes.orderId#';
+				}					
+
+				// Get Total Offenses
+				try { 
+					// Get total of items - USOneSearch
+					vTotalOffenses = readXML.bgc.product[usOneSearchID].USOneSearch.response.detail.offenders.XmlAttributes.qtyFound;
+				} catch (Any e) {
+					// Get total of items - USOneSearch
+					vTotalOffenses = 0;
+				}
+				
+				if (vTotalOffenses == 0) {
+					vStatus = 1;	
+				} else {
+					vStatus = 2;	
+				}
+			} catch (Any e) {
+				vStatus = 0;	
+			}
+			
+			// Approved or denied
+			if (LEN(qGetCBCRecord.date_approved)) {
+				vStatus = 4;	
+			} else if (LEN(qGetCBCRecord.denied)) {
+				vStatus = 3;	
+			}
+			
+			// Only show pending in yellow if it is not an office user viewing the page.
+			vPendingCleanColor = "yellow";
+			vPendingCleanColorText = "black";
+			if (APPLICATION.CFC.USER.isOfficeUser()) {
+				vPendingCleanColor = "green";
+				vPendingCleanColorText = "white";
+			}
+		</cfscript>
+        
+        <cfoutput>
+        
+        
+			<cfif vStatus EQ 0>
+             
+              <cfscript>
+				// Set color
+				vCBCStatusColor = 'blue';
+			  </cfscript>
+			
+            <cfelseif vStatus EQ 1>
+                <cfscript>
+				// Set color
+				vCBCStatusColor = 'yellow';
+			  </cfscript>
+            <cfelseif vStatus EQ 2>
+                <cfscript>
+				// Set color
+				vCBCStatusColor = 'yellow';
+			  </cfscript>
+            <cfelseif vStatus EQ 3>
+               <cfscript>
+				// Set color
+				vCBCStatusColor = 'red';
+			  </cfscript>
+            <cfelseif vStatus EQ 4>
+                <cfscript>
+				// Set color
+				vCBCStatusColor = 'green';
+			  </cfscript>
+            </cfif>
+            <cfscript>
+            	return vCBCStatusColor;
+			</cfscript>
+      	</cfoutput>
+        
+    </cffunction>
     <!--- 
 		James Griffiths - 6/11/2013
 		This function gets the total number of denied CBCs for a given host or all hosts.
