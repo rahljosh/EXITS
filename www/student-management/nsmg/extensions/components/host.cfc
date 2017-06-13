@@ -1164,7 +1164,6 @@
         <cfargument name="userID" default="#CLIENT.userID#" hint="userID is not required">
         <cfargument name="active_rep" default="" hint="userID is not required">
         <cfargument name="ny_office" default="" hint="userID is not required">
-        
       
         <cfquery 
 
@@ -1401,7 +1400,7 @@
                         </cfif>
                         
 					</cfif>
-                    
+                    	AND (h.call_back != <cfqueryparam cfsqltype="cf_sql_integer" value="2"> )
                     <cfswitch expression="#ARGUMENTS.userType#">
                         
                         <!--- Regional Manager --->
@@ -3610,7 +3609,7 @@
 
 			}
 		</cfscript>
-			
+		
 		<!--- Update Host Lead --->
         <cfquery 
             datasource="#APPLICATION.DSN#">
@@ -3618,7 +3617,7 @@
                     smg_host_lead
                 SET
                     statusID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.statusID)#">,
-                    <cfif VAL(ARGUMENTS.areaRepID)>
+                    <cfif VAL(ARGUMENTS.regionID)>
                     regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.regionID)#">,
 					</cfif>
                     <cfif VAL(ARGUMENTS.areaRepID)>
