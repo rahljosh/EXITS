@@ -1062,7 +1062,8 @@
                         smg_host_app_season.dateSent,
                         smg_host_app_season.dateStarted,
                         smg_host_app_season.dateSubmitted,
-                        smg_host_app_season.ID AS hostAppSeasonID                      
+                        smg_host_app_season.ID AS hostAppSeasonID,
+                        smg_host_app_season.activeApp                     
                     FROM smg_hosts h
                   	<!--- Host Season-based approval status --->
                     <cfif LEN(ARGUMENTS.statusID)>
@@ -1401,6 +1402,7 @@
                         
 					</cfif>
                     	AND (h.call_back != <cfqueryparam cfsqltype="cf_sql_integer" value="2"> )
+                        AND smg_host_app_season.activeApp = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                     <cfswitch expression="#ARGUMENTS.userType#">
                         
                         <!--- Regional Manager --->
@@ -4423,7 +4425,7 @@
                         WHEN h.isNotQualifiedToHost = 0
                             AND h.isHosting = 1
                             AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL)
-                            AND (shas.total = 0 OR shas.total IS NULL)
+                            AND (shas.total = 0 OR shas.total IS NULL OR shas.activeApp = 0)
                             AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
                             THEN 'Available to Host'
                         
@@ -4431,6 +4433,7 @@
                             AND h.isHosting = 1
                             AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL)
                             AND shas.total > 0
+                            AND shas.activeApp = 1
                             AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
                             THEN 'Current Season'
 
@@ -4438,6 +4441,7 @@
                             AND h.isHosting = 1
                             AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL)
                             AND shas.total > 0
+                            AND shas.activeApp = 1
                             AND h.call_back = 1
                             THEN 'CS - Call Back'
 
@@ -4445,6 +4449,7 @@
                             AND h.isHosting = 1
                             AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL)
                             AND shas.total > 0
+                            AND shas.activeApp = 1
                             AND h.call_back = 2
                             THEN 'CS - Call Back Next SY'
                         
@@ -4475,7 +4480,7 @@
                 LEFT OUTER JOIN smg_regions r ON r.regionid = h.regionID
 
                 LEFT OUTER JOIN      (
-                          SELECT    COUNT(id) AS total, hostID
+                          SELECT    COUNT(id) AS total, hostID, activeApp
                           FROM      smg_host_app_season
                           WHERE     seasonID = 14
                           GROUP BY  hostID

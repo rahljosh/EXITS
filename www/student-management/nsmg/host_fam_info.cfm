@@ -66,7 +66,7 @@
 		qGetAreaRep = APPLICATION.CFC.USER.getUsers(userID = qGetHostInfo.areaRepID);
 		
 		qCurrentSeason = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason();
-		vCurrentSeasonStatus = APPLICATION.CFC.HOST.getApplicationList(hostID=qGetHostInfo.hostID,seasonID=qCurrentSeason.seasonID).applicationStatusID;
+		vCurrentSeasonStatus = APPLICATION.CFC.HOST.getApplicationList(hostID=qGetHostInfo.hostID,seasonID=qCurrentSeason.seasonID);
 		vHasEhost = APPLICATION.CFC.HOST.getSeasonsForHost(hostID=qGetHostInfo.hostID).recordCount;
     </cfscript>
     
@@ -717,7 +717,7 @@ div.scroll2 {
                                         <input type="hidden" name="withCompetitor" value="1"/>
                                         <input type="submit" value="With Other Sponsor"  alt="With Other Sponsor" border="0" class="buttonRed" />
                                     </form>
-                                    <cfif VAL(qGetHostInfo.applicationStatusID)>
+                                    <cfif VAL(qGetHostInfo.applicationStatusID) AND VAL(qGetHostInfo.activeApp)>
                                         <form method="post" action="index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" style="display:inline;">
                                             <input name="sendAppEmail" type="submit" value="Resend Login Info"  alt="Resend Login Info" border="0" class="buttonGreen" />
                                         </form>
@@ -731,7 +731,7 @@ div.scroll2 {
                                 </cfif>
                                 
                             </cfif>
-                            <cfif NOT VAL(vCurrentSeasonStatus) AND VAL(qGetHostInfo.isHosting)>
+                            <cfif VAL(qGetHostInfo.isHosting) AND (NOT VAL(vCurrentSeasonStatus.applicationStatusID) OR NOT VAL(qGetHostInfo.activeApp))>
                                 <form method="post" action="index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" style="display:inline;">
                                     <input type="hidden" name="hostNewSeason" value="1"/>
                                     <input type="submit" value="Host #qCurrentSeason.season#"  alt="Host Season X" border="0" class="buttonGreen" />
@@ -859,45 +859,40 @@ div.scroll2 {
                             AND VAL(qGetHostInfo.isHosting)
                             AND NOT VAL(qGetHostInfo.with_competitor)
                             AND NOT VAL(qGetHostInfo.call_back)
-                            AND NOT VAL(vCurrentSeasonStatus)>
+                            AND NOT VAL(vCurrentSeasonStatus.applicationStatusID)>
                             <p style="font-weight: bold;">Available to Host</p>
                             <p><em> To host or not to host is just a phone call away!</em></p>
                         
                         <cfelseif NOT VAL(qGetHostInfo.isNotQualifiedToHost)
                             AND VAL(qGetHostInfo.isHosting)
                             AND NOT VAL(qGetHostInfo.with_competitor)
-                            AND VAL(vCurrentSeasonStatus)>
+                            AND VAL(vCurrentSeasonStatus.applicationStatusID)
+                            AND VAL(vCurrentSeasonStatus.activeApp)>
                             <!--- Current Season --->
 
-                            <cfquery name="qGetHostAppStatus" datasource="#APPLICATION.DSN#">
-                                SELECT *
-                                FROM smg_host_app_season
-                                WHERE hostID = #qGetHostInfo.hostID#
-                            </cfquery>
-
-                            <cfif qGetHostAppStatus.applicationStatusID EQ 3>
+                            <cfif vCurrentSeasonStatus.applicationStatusID EQ 3>
                                 <p style="font-weight: bold;">Application Approved</p>
                                 <p style="margin-bottom:0"><em>Great! Together we've added another member to our ever expanding student exchange family!</em></p>
-                            <cfelseif qGetHostAppStatus.applicationStatusID EQ 4>
+                            <cfelseif vCurrentSeasonStatus.applicationStatusID EQ 4>
                                 <p style="font-weight: bold">Application Waiting on Field - HQ</p>
                                 <p style="margin-bottom:0"><em>"Teamwork makes the dream work"<br />
                                     - Bang Gae</em></p>
-                            <cfelseif qGetHostAppStatus.applicationStatusID EQ 5>
+                            <cfelseif vCurrentSeasonStatus.applicationStatusID EQ 5>
                                 <p style="font-weight: bold">Application Waiting on Field - Manager</p>
                                 <p style="margin-bottom:0"><em>"Teamwork divides the task and multiplies the success."<br />
                                     - Author Unknown</em></p>
-                            <cfelseif qGetHostAppStatus.applicationStatusID EQ 6>
+                            <cfelseif vCurrentSeasonStatus.applicationStatusID EQ 6>
                                 <p style="font-weight: bold">Application Waiting on Field - Advisor</p>
                                 <p style="margin-bottom:0"><em>"Teamwork divides the task and multiplies the success."<br />
                                     - Author Unknown</em></p>
-                            <cfelseif qGetHostAppStatus.applicationStatusID EQ 7>
+                            <cfelseif vCurrentSeasonStatus.applicationStatusID EQ 7>
                                 <p style="font-weight: bold">Application Waiting on Field - Area Rep</p>
                                 <p style="margin-bottom:0"><em>"Teamwork divides the task and multiplies the success." <br />
                                     ― Author Unknown</em></p>
-                            <cfelseif qGetHostAppStatus.applicationStatusID EQ 8>
+                            <cfelseif vCurrentSeasonStatus.applicationStatusID EQ 8>
                                 <p style="font-weight: bold">Application Waiting on Host - Host</p>
                                 <p style="margin-bottom:0"><em>Families appreciate your support as they fill out their application.</em></p>
-                            <cfelseif qGetHostAppStatus.applicationStatusID EQ 9>
+                            <cfelseif vCurrentSeasonStatus.applicationStatusID EQ 9>
                                 <p style="font-weight: bold">Application Waiting on Host - Not Started</p>
                                 <p style="margin-bottom:0"><em>Reaching out to the family to find out if they've received their login information helps them start the application process.</em></p>
                             </cfif>
