@@ -101,6 +101,8 @@
 
 </cfsilent>
 
+<cfhtmlhead text="<title>EXITS - Host Families</title>">
+
 
 <!--- Ajax Call to the Component --->
 <cfajaxproxy cfc="nsmg.extensions.components.host" jsclassname="hostFamily">

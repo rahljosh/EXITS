@@ -891,6 +891,7 @@
             FROM smg_host_app_season
             WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.hostID)#">
             AND seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
+            AND activeApp = 1
         </cfquery>
         
         <cfscript>
@@ -1067,12 +1068,34 @@
                     FROM smg_hosts h
                   	<!--- Host Season-based approval status --->
                     <cfif LEN(ARGUMENTS.statusID)>
-                    	INNER JOIN smg_host_app_season ON smg_host_app_season.hostID = h.hostID
+                    	<!---
+                        INNER JOIN smg_host_app_season ON smg_host_app_season.hostID = h.hostID
                         	AND smg_host_app_season.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
                             AND smg_host_app_season.applicationStatusID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.statusID)#">
+                        --->
+                        LEFT OUTER JOIN      (
+                                  SELECT    MAX(id) shasID, hostID
+                                  FROM      smg_host_app_season
+                                  WHERE     seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
+                                    AND smg_host_app_season.applicationStatusID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.statusID)#">
+                                  GROUP BY  hostID
+                              ) shas1 ON (shas1.hostID = h.hostid)
+
+                        LEFT OUTER JOIN smg_host_app_season ON (smg_host_app_season.id = shas1.shasID)
                    	<cfelse>
-                    	LEFT OUTER JOIN smg_host_app_season ON smg_host_app_season.hostID = h.hostID
+                    	<!---
+                        LEFT OUTER JOIN smg_host_app_season ON smg_host_app_season.hostID = h.hostID
                         	AND smg_host_app_season.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
+                            --->
+
+                        LEFT OUTER JOIN      (
+                                  SELECT    MAX(id) shasID, hostID
+                                  FROM      smg_host_app_season
+                                  WHERE     seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
+                                  GROUP BY  hostID
+                              ) shas1 ON (shas1.hostID = h.hostid)
+
+                        LEFT OUTER JOIN smg_host_app_season ON (smg_host_app_season.id = shas1.shasID)
                     </cfif>
                     <!--- Region --->
                     LEFT OUTER JOIN smg_regions r ON r.regionID = h.regionID
@@ -4381,6 +4404,10 @@
         <cfargument name="sortOrder" type="string" default="DESC" hint="sortOrder is not required">
         <cfargument name="pageSize" type="numeric" default="30" hint="Page number is not required">
 
+        <cfscript>
+            vCurrentSeason = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID;
+        </cfscript>
+
 
         <!--- OFFICE PEOPLE AND ABOVE --->
         <cfif APPLICATION.CFC.USER.isOfficeUser()>
@@ -4408,7 +4435,7 @@
                     u.lastname AS area_rep_lastname,
                     p.programName,
                     r.regionname,
-                    shas.total,
+                    shas.activeApp,
 
                     CASE 
                         WHEN h.isNotQualifiedToHost = 1
@@ -4483,11 +4510,13 @@
                 LEFT OUTER JOIN smg_regions r ON r.regionid = h.regionID
 
                 LEFT OUTER JOIN      (
-                          SELECT    COUNT(id) AS total, hostID, activeApp
+                          SELECT    MAX(id) shasID, hostID
                           FROM      smg_host_app_season
-                          WHERE     seasonID = 14
+                          WHERE     seasonID = #vCurrentSeason#
                           GROUP BY  hostID
-                      ) shas ON (shas.hostID = h.hostid)
+                      ) shas1 ON (shas1.hostID = h.hostid)
+
+                LEFT OUTER JOIN smg_host_app_season shas ON (shas.id = shas1.shasID)
                 
                 WHERE 
                     1 = 1
@@ -4577,13 +4606,12 @@
                         AND h.isNotQualifiedToHost = 0
                         AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
                         AND h.with_competitor = 0
-                        AND (shas.total = 0 OR shas.total IS NULL)
+                        AND (shas.activeApp = 0 OR shas.activeApp IS NULL)
 
                     <cfelseif ARGUMENTS.HFstatus EQ "Current Season">
                         AND h.isHosting = 1
                         AND h.isNotQualifiedToHost = 0
                         AND h.with_competitor = 0
-                        AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
                         AND shas.activeApp = 1
 
                     <cfelseif ARGUMENTS.HFstatus EQ "With Other Sponsor">
@@ -4774,47 +4802,6 @@
                         AND h.dateCreated BETWEEN <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.HFyear#-01-01"> AND <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.HFyear#-12-31">
                     </cfif>
 
-                    <cfif LEN(ARGUMENTS.HFstatus)>
-                        <cfif ARGUMENTS.HFstatus EQ "Not Qualified to Host">
-                            AND h.isNotQualifiedToHost = 1
-                        
-                        <cfelseif ARGUMENTS.HFstatus EQ "Decided Not to Host">
-                            AND h.isNotQualifiedToHost = 0
-                            AND h.isHosting = 0
-                            AND h.with_competitor = 0
-                            AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
-                            AND (shas.activeApp = 0 OR shas.activeApp IS NULL)
-                        
-                        <cfelseif ARGUMENTS.HFstatus EQ "Available to Host">
-                            AND h.isHosting = 1
-                            AND h.isNotQualifiedToHost = 0
-                            AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
-                            AND h.with_competitor = 0
-                            AND (shas.total = 0 OR shas.total IS NULL)
-
-                        <cfelseif ARGUMENTS.HFstatus EQ "Current Season">
-                            AND h.isHosting = 1
-                            AND h.isNotQualifiedToHost = 0
-                            AND h.with_competitor = 0
-                            AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
-                            AND shas.activeApp = 1
-
-                        <cfelseif ARGUMENTS.HFstatus EQ "With Other Sponsor">
-                            AND h.isNotQualifiedToHost = 0
-                            AND h.isHosting = 0
-                            AND h.with_competitor = 1
-                            AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
-                            AND (shas.activeApp = 0 OR shas.activeApp IS NULL)
-
-                        <cfelseif ARGUMENTS.HFstatus EQ "Call Back">
-                            AND h.call_back = 1
-
-                        <cfelseif ARGUMENTS.HFstatus EQ "Call Back Next SY">
-                            AND h.call_back = 2
-
-                        </cfif>
-                    </cfif>
-
                     <cfif ARGUMENTS.available_to_host EQ 1>
                         AND h.isNotQualifiedToHost = 0
                         AND h.isHosting = 1
@@ -4918,47 +4905,6 @@
                         AND h.dateCreated BETWEEN <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.HFyear#-01-01"> AND <cfqueryparam cfsqltype="cf_sql_date" value="#ARGUMENTS.HFyear#-12-31">
                     </cfif>
 
-                    <cfif LEN(ARGUMENTS.HFstatus)>
-                        <cfif ARGUMENTS.HFstatus EQ "Not Qualified to Host">
-                            AND h.isNotQualifiedToHost = 1
-                        
-                        <cfelseif ARGUMENTS.HFstatus EQ "Decided Not to Host">
-                            AND h.isNotQualifiedToHost = 0
-                            AND h.isHosting = 0
-                            AND h.with_competitor = 0
-                            AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
-                            AND (shas.activeApp = 0 OR shas.activeApp IS NULL)
-                        
-                        <cfelseif ARGUMENTS.HFstatus EQ "Available to Host">
-                            AND h.isHosting = 1
-                            AND h.isNotQualifiedToHost = 0
-                            AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
-                            AND h.with_competitor = 0
-                            AND (shas.total = 0 OR shas.total IS NULL)
-
-                        <cfelseif ARGUMENTS.HFstatus EQ "Current Season">
-                            AND h.isHosting = 1
-                            AND h.isNotQualifiedToHost = 0
-                            AND h.with_competitor = 0
-                            AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
-                            AND shas.activeApp = 1
-
-                        <cfelseif ARGUMENTS.HFstatus EQ "With Other Sponsor">
-                            AND h.isNotQualifiedToHost = 0
-                            AND h.isHosting = 0
-                            AND h.with_competitor = 1
-                            AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
-                            AND (shas.activeApp = 0 OR shas.activeApp IS NULL)
-
-                        <cfelseif ARGUMENTS.HFstatus EQ "Call Back">
-                            AND h.call_back = 1
-
-                        <cfelseif ARGUMENTS.HFstatus EQ "Call Back Next SY">
-                            AND h.call_back = 2
-
-                        </cfif>
-                    </cfif>
-
                     <cfif ARGUMENTS.available_to_host EQ 1>
                         AND h.isNotQualifiedToHost = 0
                         AND h.isHosting = 1
@@ -5009,7 +4955,7 @@
                     u.lastname AS area_rep_lastname,
                     p.programName,
                     r.regionName,
-                    shas.total,
+                    shas.activeApp,
 
                     CASE 
                         WHEN h.isNotQualifiedToHost = 1
@@ -5083,11 +5029,13 @@
                 LEFT OUTER JOIN smg_regions r ON r.regionid = h.regionID
 
                 LEFT OUTER JOIN      (
-                          SELECT    COUNT(id) AS total, hostID, activeApp
+                          SELECT    MAX(id) shasID, hostID
                           FROM      smg_host_app_season
-                          WHERE     seasonID = 14
+                          WHERE     seasonID = #vCurrentSeason#
                           GROUP BY  hostID
-                      ) shas ON (shas.hostID = h.hostid)
+                      ) shas1 ON (shas1.hostID = h.hostid)
+
+                LEFT OUTER JOIN smg_host_app_season shas ON (shas.id = shas1.shasID)
 
                 <!--- REGIONAL MANAGER SEES ALL FAMILIES ON THE REGION --->
                 WHERE 
@@ -5161,13 +5109,12 @@
                         AND h.isNotQualifiedToHost = 0
                         AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
                         AND h.with_competitor = 0
-                        AND (shas.total = 0 OR shas.total IS NULL)
+                        AND (shas.activeApp = 0 OR shas.activeApp IS NULL)
 
                     <cfelseif ARGUMENTS.HFstatus EQ "Current Season">
                         AND h.isHosting = 1
                         AND h.isNotQualifiedToHost = 0
                         AND h.with_competitor = 0
-                        AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
                         AND shas.activeApp = 1
 
                     <cfelseif ARGUMENTS.HFstatus EQ "With Other Sponsor">

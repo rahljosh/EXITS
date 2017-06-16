@@ -54,13 +54,13 @@
                                         <input type="hidden" name="host_lead_referer" value="1">
                                         <input type="submit" value="With Other Sponsor"  alt="With Other Sponsor" border="0" class="buttonRed" />
                                     </cfform>
-                                    <cfif VAL(qGetHostInfo.applicationStatusID)>
+                                    <!---<cfif VAL(qGetHostInfo.applicationStatusID)>
                                          <cfform method="post" action="../index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" style="display:inline;">
                                            <input type="hidden" name="host_lead_referer" value="1">
                                             <input name="sendAppEmail" type="submit" value="Resend Login Info"  alt="Resend Login Info" border="0" class="buttonGreen" />
                                         </cfform>
                                  
-                                    </cfif>
+                                    </cfif>--->
                                 <cfelse>
                                   	<cfform method="post" action="../index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" style="display:inline;">
                                   
