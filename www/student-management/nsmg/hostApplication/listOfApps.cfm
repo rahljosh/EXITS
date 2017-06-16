@@ -13,14 +13,25 @@
 <cfsilent>
 
 	<!--- Import CustomTag Used for Page Messages and Form Errors --->
-    <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
+    <cfimport taglib="../extensions/customTags/gui/" prefix="gui" /> 
     
+    	<!--- Ajax Call to the Component --->
+    <cfajaxproxy cfc="nsmg.extensions.components.host" jsclassname="hostFamily">
     <!--- Param URL Variables --->
     <cfparam name="URL.status" default="">
     <cfparam name="URL.approve" default="">
+    <cfif client.usertype lte 4>
+     	<cfparam name="URL.regionID" default="">
+    <cfelse>
+    	 <cfparam name="URL.regionID" default="#CLIENT.regionID#">
+    </cfif>
+  
     <cfparam name="URL.hostID" default="0">
-    <cfparam name="URL.seasonID" default="0">  
+    <cfparam name="URL.seasonID" default="0"> 
+    <cfparam name="URL.active_rep" default="2">  
+    <cfparam name="URL.ny_office" default="2">   
     <!--- Param FORM Variables --->  
+
     <cfparam name="FORM.setHostIDAsPaper" default="">
 
 	<!--- INSERT UNIQUE ID | Delete This Later | Make sure unique ID is inserted when a new family is created --->
@@ -59,13 +70,22 @@
             SESSION.pageMessages.Add("Record for host family ###FORM.setHostIDAsPaper# has sucessfully been converted to a paper application");
             
             // Go back to the list information
-            location("#CGI.SCRIPT_NAME#?curdoc=hostApplication/listOfApps&status=#URL.status#", "no");
+            location("#CGI.SCRIPT_NAME#?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=#URL.status#", "no");
             
         }
 		
 		// Get List of Host Family Applications
-		qGetHostApplications = APPLICATION.CFC.HOST.getApplicationListLimitedHostInfo(statusID=URL.status,seasonID=URL.seasonID);	
-    </cfscript>
+		qGetHostApplications = APPLICATION.CFC.HOST.getApplicationListLimitedHostInfo(statusID=URL.status,seasonID=URL.seasonID,active_rep=URL.active_rep,ny_office=URL.ny_office,regionID=URL.regionID);	
+   
+      // Get User Regions
+        qGetRegionList = APPLICATION.CFC.REGION.getUserRegions(
+            companyID=CLIENT.companyID,
+            userID=CLIENT.userID,
+            userType=CLIENT.userType
+        );
+
+     </cfscript>
+ 
   
     <cfparam name="FORM.notHosting" default="0">
     <cfif VAL(FORM.notHosting)>
@@ -77,7 +97,7 @@
             WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.notHosting#">
         </cfquery>
         <cflocation url="?#CGI.QUERY_STRING#"/>
-    </cfif>
+    </cfif> 
     
 </cfsilent>    
 
@@ -87,147 +107,176 @@
 			width:"80%", 
 			height:"95%", 
 			iframe:true,
-			overlayClose:false,
-			escKey:false			
+			overlayClose:true,
+			escKey:true,
+			closeButton:true,		
+			onClosed:function(){ window.location.reload(); }
 		});	
 	});
-	
-	// JQuery Modal
-	var setRecordToPaperApplication = function(recordID) { 
-			
-		// a workaround for a flaw in the demo system (http://dev.jqueryui.com/ticket/4375), ignore!
-		$( "#dialog:ui-dialog" ).dialog( "destroy" );
-	
-		$( "#dialog-set-record-as-paper-confirm" ).dialog({
-			resizable: false,
-			height:200,
-			width:400,
-			modal: true,
-			buttons: {
-				"Convert To Paper Application": function() {
-					$( this ).dialog( "close" );
-					// Submit Form
-					$("#frSetRecordToPaper" + recordID).submit();
-				},
-				Cancel: function() {
-					$( this ).dialog( "close" );
-				}
-			}
-		});
-			
-	}
+		
 </script>
-
 <cfoutput>
 
-	<!--- Set Record As Paper Application - Modal Dialog Box --->
-    <div id="dialog-set-record-as-paper-confirm" title="EXITS - Host Family Application" class="displayNone" style="font-size:1em;"> 
-        <p>
-            <span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 0 0;"></span>
-            Are you sure you would like to convert this online application to paper? <br />
-        </p> 
-        <p>Host Family will be removed from the online application list but it will still be available as a paper application.</p>
-    </div> 
+<!--- Page Messages --->
+<gui:displayPageMessages 
+	pageMessages="#SESSION.pageMessages.GetCollection()#"
+	messageType="divOnly"
+	width="90%"
+	/>
 
-    <div class="rdholder"> 
-    
-        <div class="rdtop"> 
-            <span class="rdtitle">Applications</span> 
-        </div> <!-- end top --> 
-        
-        <div class="rdbox">
+<!--- Form Errors --->
+<gui:displayFormErrors 
+	formErrors="#SESSION.formErrors.GetCollection()#"
+	messageType="divOnly"
+	width="90%"
+	/>
+<!--- Search Options --->
 
-			<!--- Page Messages --->
-            <gui:displayPageMessages 
-                pageMessages="#SESSION.pageMessages.GetCollection()#"
-                messageType="divOnly"
-                width="90%"
-                />
+<!-- Checkout-Form -->
+<div class="sky-form">
+	<div class="row">
+		<section class="col col-3">
+			<h1>Status</h1>
+			<label class="select ">
+			<select name="statusID" id="statusID" onChange="top.location.href=this.options[this.selectedIndex].value;">
+
+				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=9&seasonID=#url.seasonid#&active_rep=#url.active_rep#&ny_office=#URL.ny_office#" <cfif val(URL.status) eq 9>selected="selected"</cfif>  >Applications with HF: Not Started</option>
+				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=8&seasonID=#url.seasonid#&active_rep=#url.active_rep#&ny_office=#URL.ny_office#" <cfif val(URL.status) eq 8>selected="selected"</cfif> >Applications with HF: In Process</option>
+				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=7&seasonID=#url.seasonid#&active_rep=#url.active_rep#&ny_office=#URL.ny_office#"  <cfif val(URL.status) eq 7>selected="selected"</cfif> >Applications with Field: Area Rep.</option>
+				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=6&seasonID=#url.seasonid#&active_rep=#url.active_rep#&ny_office=#URL.ny_office#"<cfif val(URL.status) eq 6>selected="selected"</cfif> >Applications with Field: Advisor</option>
+				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=5&seasonID=#url.seasonid#&active_rep=#url.active_rep#&ny_office=#URL.ny_office#"  <cfif val(URL.status) eq 5>selected="selected"</cfif> >Applications with Field: Manager</option>
+				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=4&seasonID=#url.seasonid#&active_rep=#url.active_rep#&ny_office=#URL.ny_office#"  <cfif val(URL.status) eq 4>selected="selected"</cfif> >Applications with #CLIENT.companyshort#: HQ</option>
+				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=3&seasonID=#url.seasonid#&active_rep=#url.active_rep#&ny_office=#URL.ny_office#"  <cfif val(URL.status) eq 3>selected="selected"</cfif> >Applications with #CLIENT.companyshort#: Approved</option>
+			</select>
+		</label>
+		</section>
+	<section class="col col-2">
+		<h1>Region</h1>
+		<label class="select ">
+		<select name="regionID" id="active_rep"  onChange="top.location.href=this.options[this.selectedIndex].value;">
+			<cfif client.usertype LTE 4>
+			<option value="?curdoc=hostApplication/listOfApps&status=#URL.status#&seasonID=#url.seasonid#&active_rep=2&ny_office=#URL.ny_office#" <cfif regionID EQ URL.regionID>selected="selected"</cfif>>All</otpion>
+			</cfif>
+			<cfloop query="qGetRegionList">
+				<option value="?curdoc=hostApplication/listOfApps&regionid=#qGetRegionList.regionID#&status=#URL.status#&seasonID=#url.seasonid#&active_rep=2&ny_office=#URL.ny_office#" <cfif regionID EQ URL.regionID>selected="selected"</cfif>>#qGetRegionList.regionname#</option>
+			</cfloop>
+			</select>  
+
+		</label>
+		</section>
+		<section class="col col-2">
+		<h1>With Active Rep</h1>
+		<label class="select ">
+			<select name="active_rep" id="active_rep"  onChange="top.location.href=this.options[this.selectedIndex].value;">
+				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=#URL.status#&seasonID=#url.seasonid#&active_rep=2&ny_office=#URL.ny_office#" <cfif URL.active_rep EQ 2>selected</cfif>>All</option>
+				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=#URL.status#&seasonID=#url.seasonid#&active_rep=1&ny_office=#URL.ny_office#" <cfif URL.active_rep EQ 1>selected</cfif>>Yes</option>
+				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=#URL.status#&seasonID=#url.seasonid#&active_rep=0&ny_office=#URL.ny_office#" <cfif URL.active_rep EQ 0>selected</cfif>>No</option>
+			</select>  
+
+		</label>
+		</section>
+
+		<section class="col col-2">
+		<h1>NY Office Rep</h1>
+			<label class="select ">
+			<select name="ny_office" id="ny_office"  onChange="top.location.href=this.options[this.selectedIndex].value;">
+				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=#URL.status#&seasonID=#url.seasonid#&active_rep=#url.active_rep#&ny_office=2" <cfif URL.ny_office EQ 2>selected</cfif>>All</option>
+				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=#URL.status#&seasonID=#url.seasonid#&active_rep=#url.active_rep#&ny_office=1" <cfif URL.ny_office EQ 1>selected</cfif>>Yes</option>
+				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=#URL.status#&seasonID=#url.seasonid#&active_rep=#url.active_rep#&ny_office=0" <cfif URL.ny_office EQ 0>selected</cfif>>No</option>
+			</select>    
+			</label>
+		</section>
+
+		<section class="counters col col-2">
+			<span class="counter">#qGetHostApplications.recordcount#</span>
+			<h3>Applications</h>
+		</section>
+	</div>
+</div>
+						
+<table  class="table table-striped table-hover">
+	<thead>
+		<tr>
+		<th align="left">Since</th>
+		<th align="left">Host Family</th>
+		<th align="left">City, State</th>
+		<th align="left">Contact</th>
+		<th align="left">Region</th>
+		<th align="left">Area Representative</th>
+		<th align="left">Regional Advisor</th> 
+		<th align="left">Regional Manager</th>
+		<th></th>
+		</tr>
+
+	</thead>
+
+	<cfif NOT qGetHostApplications.recordcount>
+		<tr>
+			<td colspan="8">There are no applications to display</td>
+		</tr>
+	</cfif>
+
+	<cfloop query="qGetHostApplications">
+		<cfif ((url.status eq 9) AND DateDiff('d',dateSent, now()) gt 3)>
+		  <tr class="danger">
+		 <cfelseif ((url.status eq 8) AND DateDiff('d',dateUpdated, now()) gt 7)>
+		  <tr class="danger">
+		 <cfelseif ((url.status eq 7) AND DateDiff('d',dateUpdated, now()) gt 3)>
+		  <tr class="danger">
+		 <cfelseif ((url.status eq 6) AND DateDiff('d',dateUpdated, now()) gt 1)>
+		  <tr class="danger">
+		 <cfelseif ((url.status eq 5) AND DateDiff('d',dateUpdated, now()) gt 1)>
+		  <tr class="danger">
+		 <cfelse>
+		  <tr>
+		</cfif> 
+
+
+			<td>#DateFormat(dateUpdated, 'mmm d, yyyy')#</td>
+			 <td><a href="index.cfm?curdoc=host_fam_info&hostID=#qGetHostApplications.hostID#" title="View Details">#qGetHostApplications.displayHostFamily#</a></td>
+			<td>#qGetHostApplications.hostCity#, #qGetHostApplications.hostState#</td>
+			<td>#qGetHostApplications.hostEmail#<br>#qGetHostApplications.phone#</td>
+			<td>#qGetHostApplications.regionName#</td>
+			<td>#qGetHostApplications.areaRepresentative#</td>
+			<td>#qGetHostApplications.regionalAdvisor#</td> 
+			<td>#qGetHostApplications.regionalManager#</td> 
+			<td width="350" align="center">
+
+
+			<a href="/hostApplication/index.cfm?uniqueID=#qGetHostApplications.uniqueID#&season=#URL.seasonID#&userID=#CLIENT.userID#" class="jQueryModal" title="Open Application">
+				<button type="button" class="btn btn-primary btn-sm"><i class="fa fa-folder-open-o" aria-hidden="true"></i> Open</button>
+			</a>
+
+			<cfif url.status lt 8>
+				<a href="index.cfm?curdoc=hostApplication/toDoList&hostID=#qGetHostApplications.hostID#" title="View Details">
+					<button type="button" class="btn btn-success btn-sm"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> Review</button>
+				</a>
+			</cfif>
+
+			<cfif CLIENT.userType LTE 4 and url.status lte 3> 
+		 		<a href="hostApplication/viewPDF.cfm?hostID=#qGetHostApplications.hostID#&pdf&reportType=office&seasonID=#URL.seasonID#" class="jQueryModal">
+					<button type="button" class="btn btn-warning btn-sm"><i class="fa fa-print" aria-hidden="true"></i> Confidential </button>
+				</a>
+				<a href="hostApplication/viewPDF.cfm?hostID=#qGetHostApplications.hostID#&pdf&reportType=agent&seasonID=#URL.seasonID#" class="jQueryModal">
+					<button type="button" class="btn btn-warning btn-sm"><i class="fa fa-print" aria-hidden="true"></i> Agent</button>
+				</a>
+			 	
+			</cfif>
+			<cfif url.status gt 3> 
+				<a href="hostApplication/host-status-change.cfm?hostID=#qGetHostApplications.hostID#&pdf&reportType=agent&seasonID=#URL.seasonID#" class="jQueryModal">
+						<button type="button" class="btn btn-danger btn-sm"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i> Not Hosting</button>
+				</a>
+			</cfif>
+
+
+
+			   </div>
+
+			</td>
+		</tr>
+	</cfloop>
+</table>
             
-            <!--- Form Errors --->
-            <gui:displayFormErrors 
-                formErrors="#SESSION.formErrors.GetCollection()#"
-                messageType="divOnly"
-                width="90%"
-                />
- 
-            <table width="98%" cellpadding="4" cellspacing="0" align="center">
-                <tr>
-                    <th align="left">Host Family</th>
-                    <th align="left">City, State</th>
-                    <th align="left">Email</th>
-                    <th align="left">Region</th>
-                    <th align="left">Area Representative</th>
-                    <th align="left">Regional Advisor</th> 
-                    <th align="left">Regional Manager</th>
-                    <th>Actions</th>
-            	</tr>
-                
-				<cfif NOT qGetHostApplications.recordcount>
-                	<tr>
-						<td colspan="6">There are no applications to display</td>
-                    </tr>
-                </cfif>
-                
-                <cfloop query="qGetHostApplications">
-                    <tr <cfif qGetHostApplications.currentrow MOD 2>bgcolor="##efefef"</cfif>>
-                        <td><a href="index.cfm?curdoc=hostApplication/toDoList&hostID=#qGetHostApplications.hostID#" title="View Details">#qGetHostApplications.displayHostFamily#</a></td>
-                        <td>#qGetHostApplications.hostCity#, #qGetHostApplications.hostState#</td>
-                        <td>#qGetHostApplications.hostEmail#</td>
-                        <td>#qGetHostApplications.regionName#</td>
-                        <td>#qGetHostApplications.areaRepresentative#</td>
-                        <td>#qGetHostApplications.regionalAdvisor#</td> 
-                        <td>#qGetHostApplications.regionalManager#</td> 
-                        <td width="350" align="center">
-                        	<table width="100%">
-                            	<tr>
-                                	<td>
-                                    	<a class="jQueryModal" href="/hostApplication/index.cfm?uniqueID=#qGetHostApplications.uniqueID#&season=#URL.seasonID#&userID=#CLIENT.userID#" title="Open Application">
-                                        	<img src="pics/buttons/openApplication.png" border="0">
-                                      	</a>
-                                    </td>
-                                    <td>
-                                    	<a href="index.cfm?curdoc=hostApplication/toDoList&hostID=#qGetHostApplications.hostID#" title="View Details">
-                                        	<img src="pics/buttons/approve.png" width="110" border="0">
-                                      	</a>
-                                    </td>
-                                    <td>
-                                    	<cfif CLIENT.userType LTE 4> 
-                                            <a class="jQueryModal" href="hostApplication/viewPDF.cfm?hostID=#qGetHostApplications.hostID#&pdf&reportType=office&seasonID=#URL.seasonID#" title="Print Application">
-                                                <img src="pics/buttons/printOffice.png">
-                                            </a>
-                                        </cfif>
-                                    </td>
-                                </tr>
-                                <tr>
-                                	<td></td>
-                                    <td>
-                                    	<form 
-                                            action="index.cfm?curdoc=hostApplication/listOfApps&status=#URL.status#" 
-                                            method="post" 
-                                            style="display:inline;" 
-                                            onsubmit="return confirm('Are you sure this family does not want to host this year?')"
-                                            id="notHostingForm">
-                                            <input type="hidden" name="notHosting" value="#qGetHostApplications.hostID#"/>
-                                            <input type="image" src="pics/buttons/notHosting.png" width="110" border="0"/>
-                                        </form>
-                                    </td>
-                                    <td>
-                                    	<a class="jQueryModal" href="hostApplication/viewPDF.cfm?hostID=#qGetHostApplications.hostID#&pdf&reportType=agent&seasonID=#URL.seasonID#" title="Print Application">
-                                            <img src="pics/buttons/printAgent.png">
-                                        </a>
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-            		</tr>
-            	</cfloop>
-            </table>
-            
-        </div>
-        
-        <div class="rdbottom"></div> <!-- end bottom --> 
-	
-    </div>
+     
 
 </cfoutput>
