@@ -217,7 +217,7 @@
 	</cfif>
 
 	<cfloop query="qGetHostApplications">
-		<cfif ((url.status eq 9) AND DateDiff('d',dateSent, now()) gt 3)>
+		<cfif ((url.status eq 9) AND DateDiff('d',dateUpdated, now()) gt 3)>
 		  <tr class="danger">
 		 <cfelseif ((url.status eq 8) AND DateDiff('d',dateUpdated, now()) gt 7)>
 		  <tr class="danger">
@@ -235,7 +235,7 @@
 			<td>#DateFormat(dateUpdated, 'mmm d, yyyy')#</td>
 			 <td><a href="index.cfm?curdoc=host_fam_info&hostID=#qGetHostApplications.hostID#" title="View Details">#qGetHostApplications.displayHostFamily#</a></td>
 			<td>#qGetHostApplications.hostCity#, #qGetHostApplications.hostState#</td>
-			<td>#qGetHostApplications.hostEmail#<br>#qGetHostApplications.phone#</td>
+			<td>#qGetHostApplications.hostEmail#<br>#qGetHostApplications.host_phone#</td>
 			<td>#qGetHostApplications.regionName#</td>
 			<td>#qGetHostApplications.areaRepresentative#</td>
 			<td>#qGetHostApplications.regionalAdvisor#</td> 
