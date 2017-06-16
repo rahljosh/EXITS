@@ -179,6 +179,8 @@
 
 </cfsilent>
 
+<cfhtmlhead text="<title>HF:#qGetHostInfo.familylastname# (###qGetHostInfo.hostID#)</title>">
+
 <cfif not isNumeric(url.hostID)>
 	a numeric hostID is required.
 	<cfabort>
@@ -717,16 +719,10 @@ div.scroll2 {
                                         <input type="hidden" name="withCompetitor" value="1"/>
                                         <input type="submit" value="With Other Sponsor"  alt="With Other Sponsor" border="0" class="buttonRed" />
                                     </form>
-                                    <cfif VAL(qGetHostInfo.applicationStatusID) AND VAL(qGetHostInfo.activeApp)>
-                                        <form method="post" action="index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" style="display:inline;">
-                                            <input name="sendAppEmail" type="submit" value="Resend Login Info"  alt="Resend Login Info" border="0" class="buttonGreen" />
-                                        </form>
-                                 
-                                    </cfif>
                                 <cfelse>
                                     <form method="post" action="index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" style="display:inline;">
                                         <input type="hidden" name="decideToHost" value="1"/>
-                                        <input type="submit" value="Decided To Host"  alt="Decided To Host" border="0" class="buttonYellow" />
+                                        <input type="submit" value="Host #qCurrentSeason.season#"  alt="Host #qCurrentSeason.season#" border="0" class="buttonGreen" />
                                     </form>
                                 </cfif>
                                 
@@ -734,7 +730,7 @@ div.scroll2 {
                             <cfif VAL(qGetHostInfo.isHosting) AND (NOT VAL(vCurrentSeasonStatus.applicationStatusID) OR NOT VAL(qGetHostInfo.activeApp))>
                                 <form method="post" action="index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" style="display:inline;">
                                     <input type="hidden" name="hostNewSeason" value="1"/>
-                                    <input type="submit" value="Host #qCurrentSeason.season#"  alt="Host Season X" border="0" class="buttonGreen" />
+                                    <input type="submit" value="Host #qCurrentSeason.season#"  alt="Host #qCurrentSeason.season#" border="0" class="buttonGreen" />
                                 </form>
                          	</cfif>
                         </td>
@@ -843,6 +839,15 @@ div.scroll2 {
             <table width="100%" align="left" cellpadding=8 class="section">
                 <tr>
                     <td>
+                        <cfif CLIENT.usertype LTE 7 AND VAL(qGetHostInfo.isHosting) AND NOT VAL(qGetHostInfo.with_competitor)>
+                            <cfif VAL(qGetHostInfo.applicationStatusID) AND VAL(qGetHostInfo.activeApp)>
+                                <form method="post" action="index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" style="float:right;margin: 15px 10px 10px 30px;">
+                                    <input name="sendAppEmail" type="submit" value="Resend Login Info"  alt="Resend Login Info" border="0" class="buttonGreen" />
+                                </form>
+                            </cfif>
+                        </cfif>
+
+
                         <cfif VAL(qGetHostInfo.isNotQualifiedToHost)>
                             <p style="font-weight: bold;">Not Qualified to Host</p>
                             <p><em>"Every day is a new day, and you'll never be able to find happiness if you don't move on.<br/>

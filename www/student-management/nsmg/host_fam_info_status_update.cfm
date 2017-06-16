@@ -35,9 +35,10 @@
 
     <cfif vCurrentSeason.recordCount GT 0> 
         <cfquery datasource="#APPLICATION.DSN#">
-            UPDATE smg_hosts_app_season
+            UPDATE smg_host_app_season
             SET activeApp = 0
-            WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#vCurrentSeason.id#">
+            WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostID#">
+                AND seasonID = #qCurrentSeason.seasonID#
         </cfquery>
     </cfif>
 
@@ -166,8 +167,10 @@
     </cfquery>
 
     <cfif VAL(FORM.decideToHost)>
-        <cfif VAL(vCurrentSeasonStatus)>
+        
             <cfscript>
+                APPLICATION.CFC.HOST.setHostSeasonStatus(hostID=URL.hostID,seasonID=qCurrentSeason.seasonID);
+
                 applicationHistory = APPLICATION.CFC.LOOKUPTABLES.insertApplicationHistory(
                     applicationID=7,
                     foreignTable='smg_hosts',
@@ -179,20 +182,7 @@
             </cfscript>
 
             <cfset newStatus = 'Host #qCurrentSeason.season#' />
-        <cfelse>
-            <cfscript>
-                applicationHistory = APPLICATION.CFC.LOOKUPTABLES.insertApplicationHistory(
-                    applicationID=7,
-                    foreignTable='smg_hosts',
-                    foreignID=URL.hostID,
-                    enteredByID=CLIENT.userID,
-                    dateCreated=NOW(),
-                    status_update='Available To Host'
-                );
-            </cfscript>
-
-            <cfset newStatus = 'Available To Host' />
-        </cfif>
+        
     <cfelse>
         <cfscript>
             applicationHistory = APPLICATION.CFC.LOOKUPTABLES.insertApplicationHistory(
@@ -218,9 +208,10 @@
 
         <cfif vCurrentSeason.recordCount GT 0> 
             <cfquery datasource="#APPLICATION.DSN#">
-                UPDATE smg_hosts_app_season
+                UPDATE smg_host_app_season
                 SET activeApp = 0
-                WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#vCurrentSeason.id#">
+                WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostID#">
+                    AND seasonID = #qCurrentSeason.seasonID#
             </cfquery>
         </cfif>
 

@@ -14,6 +14,9 @@
 		foreignTable='smg_hosts',
 		foreignID=URL.hostID
 	);
+
+    qCurrentSeason = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason();
+    vCurrentSeason = APPLICATION.CFC.HOST.getApplicationList(hostID=URL.hostID,seasonID=qCurrentSeason.seasonID);
 	
 	errorMsg = "";
 </cfscript>
@@ -45,10 +48,21 @@
   	<!---<cfelse>--->
     
     	<cfscript>
-			APPLICATION.CFC.CBC.setIsNotQualifiedToHost(hostID=URL.hostID, isNotQualifiedToHost=isNotQualifiedNum);
+			//APPLICATION.CFC.CBC.setIsNotQualifiedToHost(hostID=URL.hostID, isNotQualifiedToHost=isNotQualifiedNum);
 		</cfscript>
         
         <cfif isNotQualifiedNum EQ 1>
+
+            <cfquery datasource="#APPLICATION.DSN#">
+                UPDATE smg_hosts
+                SET with_competitor = 0,
+                    isHosting = 0,
+                    isNotQualifiedToHost = 1,
+                    call_back = 0,
+                    call_back_updated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
+                    call_back_updated_by = #CLIENT.userid#
+                WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostID#">
+            </cfquery>
             
 			<cfscript>
                 APPLICATION.CFC.LOOKUPTABLES.insertApplicationHistory(
@@ -61,7 +75,27 @@
                     status_update='Not Qualified to Host'
                 );
             </cfscript>
+
+            <cfif vCurrentSeason.recordCount GT 0> 
+                <cfquery datasource="#APPLICATION.DSN#">
+                    UPDATE smg_host_app_season
+                    SET activeApp = 0
+                    WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostID#">
+                        AND seasonID = #qCurrentSeason.seasonID#
+                </cfquery>
+            </cfif>
         <cfelse>
+
+            <cfquery datasource="#APPLICATION.DSN#">
+                UPDATE smg_hosts
+                SET with_competitor = 0,
+                    isHosting = 1,
+                    isNotQualifiedToHost = 0,
+                    call_back = 0,
+                    call_back_updated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
+                    call_back_updated_by = #CLIENT.userid#
+                WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostID#">
+            </cfquery>
 
             <cfscript>
                 APPLICATION.CFC.LOOKUPTABLES.insertApplicationHistory(
