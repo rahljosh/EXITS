@@ -4412,48 +4412,52 @@
 
                     CASE 
                         WHEN h.isNotQualifiedToHost = 1
+                            AND h.isHosting = 0
+                            AND h.with_competitor = 0
                             AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                            AND (shas.activeApp = 0 OR shas.activeApp IS NULL)
                             THEN 'Not Qualified to Host'
                         
-                        WHEN h.isHosting = 0
-                            AND h.isNotQualifiedToHost = 0
-                            AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL)
+                        WHEN h.isNotQualifiedToHost = 0
+                            AND h.isHosting = 0
+                            AND h.with_competitor = 0
                             AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                            AND (shas.activeApp = 0 OR shas.activeApp IS NULL)
                             THEN 'Decided Not to Host'
                         
                         WHEN h.isNotQualifiedToHost = 0
                             AND h.isHosting = 1
-                            AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL)
-                            AND (shas.total = 0 OR shas.total IS NULL OR shas.activeApp = 0)
+                            AND h.with_competitor = 0
                             AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                            AND (shas.activeApp = 0 OR shas.activeApp IS NULL)
                             THEN 'Available to Host'
                         
                         WHEN h.isNotQualifiedToHost = 0
                             AND h.isHosting = 1
-                            AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL)
-                            AND shas.total > 0
-                            AND shas.activeApp = 1
+                            AND h.with_competitor = 0
                             AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                            AND shas.activeApp = 1
                             THEN 'Current Season'
 
                         WHEN h.isNotQualifiedToHost = 0
                             AND h.isHosting = 1
-                            AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL)
-                            AND shas.total > 0
-                            AND shas.activeApp = 1
+                            AND h.with_competitor = 0
                             AND h.call_back = 1
+                            AND shas.activeApp = 1
                             THEN 'CS - Call Back'
 
                         WHEN h.isNotQualifiedToHost = 0
                             AND h.isHosting = 1
-                            AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL)
-                            AND shas.total > 0
-                            AND shas.activeApp = 1
+                            AND h.with_competitor = 0
                             AND h.call_back = 2
+                            AND shas.activeApp = 1
                             THEN 'CS - Call Back Next SY'
                         
-                        WHEN h.with_competitor = 1
+                        WHEN h.isNotQualifiedToHost = 0
+                            AND h.isHosting = 0
+                            AND h.with_competitor = 1
                             AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                            AND (shas.activeApp = 0 OR shas.activeApp IS NULL)
                             THEN 'With Other Sponsor'
                         
                         WHEN h.call_back = 1
@@ -4560,30 +4564,34 @@
                 <cfif LEN(ARGUMENTS.HFstatus)>
                     <cfif ARGUMENTS.HFstatus EQ "Not Qualified to Host">
                         AND h.isNotQualifiedToHost = 1
-                        AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
-
+                    
                     <cfelseif ARGUMENTS.HFstatus EQ "Decided Not to Host">
-                        AND h.isHosting = 0
                         AND h.isNotQualifiedToHost = 0
-                        AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL)
+                        AND h.isHosting = 0
+                        AND h.with_competitor = 0
                         AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                        AND (shas.activeApp = 0 OR shas.activeApp IS NULL)
                     
                     <cfelseif ARGUMENTS.HFstatus EQ "Available to Host">
                         AND h.isHosting = 1
                         AND h.isNotQualifiedToHost = 0
                         AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
-                        AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL)
+                        AND h.with_competitor = 0
                         AND (shas.total = 0 OR shas.total IS NULL)
 
                     <cfelseif ARGUMENTS.HFstatus EQ "Current Season">
                         AND h.isHosting = 1
                         AND h.isNotQualifiedToHost = 0
-                        AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL)
-                        AND shas.total > 0
+                        AND h.with_competitor = 0
+                        AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                        AND shas.activeApp = 1
 
                     <cfelseif ARGUMENTS.HFstatus EQ "With Other Sponsor">
+                        AND h.isNotQualifiedToHost = 0
+                        AND h.isHosting = 0
                         AND h.with_competitor = 1
                         AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                        AND (shas.activeApp = 0 OR shas.activeApp IS NULL)
 
                     <cfelseif ARGUMENTS.HFstatus EQ "Call Back">
                         AND h.call_back = 1
@@ -4769,30 +4777,34 @@
                     <cfif LEN(ARGUMENTS.HFstatus)>
                         <cfif ARGUMENTS.HFstatus EQ "Not Qualified to Host">
                             AND h.isNotQualifiedToHost = 1
-                            AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
-
+                        
                         <cfelseif ARGUMENTS.HFstatus EQ "Decided Not to Host">
-                            AND h.isHosting = 0
                             AND h.isNotQualifiedToHost = 0
-                            AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL)
+                            AND h.isHosting = 0
+                            AND h.with_competitor = 0
                             AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                            AND (shas.activeApp = 0 OR shas.activeApp IS NULL)
                         
                         <cfelseif ARGUMENTS.HFstatus EQ "Available to Host">
                             AND h.isHosting = 1
                             AND h.isNotQualifiedToHost = 0
                             AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
-                            AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL)
+                            AND h.with_competitor = 0
                             AND (shas.total = 0 OR shas.total IS NULL)
 
                         <cfelseif ARGUMENTS.HFstatus EQ "Current Season">
                             AND h.isHosting = 1
                             AND h.isNotQualifiedToHost = 0
-                            AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL)
-                            AND shas.total > 0
+                            AND h.with_competitor = 0
+                            AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                            AND shas.activeApp = 1
 
                         <cfelseif ARGUMENTS.HFstatus EQ "With Other Sponsor">
+                            AND h.isNotQualifiedToHost = 0
+                            AND h.isHosting = 0
                             AND h.with_competitor = 1
                             AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                            AND (shas.activeApp = 0 OR shas.activeApp IS NULL)
 
                         <cfelseif ARGUMENTS.HFstatus EQ "Call Back">
                             AND h.call_back = 1
@@ -4821,70 +4833,7 @@
                     GROUP BY
                         hostID
                     ORDER BY 
-                        <cfswitch expression="#ARGUMENTS.sortBy#">
-                        
-                            <cfcase value="hostID">                    
-                                h.hostID #ARGUMENTS.sortOrder#,
-                                h.familylastname
-                            </cfcase>
-                        
-                            <cfcase value="nexitsID">
-                                h.nexits_id #ARGUMENTS.sortOrder#,
-                                h.familylastname
-                            </cfcase>
-            
-                            <cfcase value="lastName">
-                                h.familylastname #ARGUMENTS.sortOrder#
-                            </cfcase>
-            
-                            <cfcase value="father">
-                                h.fatherfirstname #ARGUMENTS.sortOrder#,
-                                h.familylastname
-                            </cfcase>
-
-                            <cfcase value="mother">
-                                h.motherFirstName #ARGUMENTS.sortOrder#,
-                                h.familylastname
-                            </cfcase>
-            
-                            <cfcase value="phone">
-                                h.phone #ARGUMENTS.sortOrder#,
-                                h.familylastname
-                            </cfcase>
-
-                            <cfcase value="city">
-                                h.city #ARGUMENTS.sortOrder#,
-                                h.familylastname
-                            </cfcase>
-            
-                            <cfcase value="state">
-                                h.state #ARGUMENTS.sortOrder#,
-                                h.familylastname
-                            </cfcase>
-
-                            <cfcase value="areaRep">
-                                u.lastname #ARGUMENTS.sortOrder#,
-                                u.firstname
-                            </cfcase>
-            
-                            <cfcase value="lastHosted">
-                                p.programID #ARGUMENTS.sortOrder#,
-                                h.familylastname
-                            </cfcase>
-
-                            <cfcase value="hostStatus">
-                                HFstatus #ARGUMENTS.sortOrder#
-                            </cfcase>
-
-                            <cfcase value="hostStatusUpdated">
-                                h.call_back_updated #ARGUMENTS.sortOrder#
-                            </cfcase>
-            
-                            <cfdefaultcase>
-                                h.hostID DESC
-                            </cfdefaultcase>
-            
-                        </cfswitch>                  
+                        h.hostID DESC                 
                 </cfquery>
                 
                 <cfscript>
@@ -4972,30 +4921,34 @@
                     <cfif LEN(ARGUMENTS.HFstatus)>
                         <cfif ARGUMENTS.HFstatus EQ "Not Qualified to Host">
                             AND h.isNotQualifiedToHost = 1
-                            AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
-
+                        
                         <cfelseif ARGUMENTS.HFstatus EQ "Decided Not to Host">
-                            AND h.isHosting = 0
                             AND h.isNotQualifiedToHost = 0
-                            AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL)
+                            AND h.isHosting = 0
+                            AND h.with_competitor = 0
                             AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                            AND (shas.activeApp = 0 OR shas.activeApp IS NULL)
                         
                         <cfelseif ARGUMENTS.HFstatus EQ "Available to Host">
                             AND h.isHosting = 1
                             AND h.isNotQualifiedToHost = 0
                             AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
-                            AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL)
+                            AND h.with_competitor = 0
                             AND (shas.total = 0 OR shas.total IS NULL)
 
                         <cfelseif ARGUMENTS.HFstatus EQ "Current Season">
                             AND h.isHosting = 1
                             AND h.isNotQualifiedToHost = 0
-                            AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL)
-                            AND shas.total > 0
+                            AND h.with_competitor = 0
+                            AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                            AND shas.activeApp = 1
 
                         <cfelseif ARGUMENTS.HFstatus EQ "With Other Sponsor">
+                            AND h.isNotQualifiedToHost = 0
+                            AND h.isHosting = 0
                             AND h.with_competitor = 1
                             AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                            AND (shas.activeApp = 0 OR shas.activeApp IS NULL)
 
                         <cfelseif ARGUMENTS.HFstatus EQ "Call Back">
                             AND h.call_back = 1
@@ -5023,70 +4976,7 @@
                     GROUP BY
                         hostID  
                     ORDER BY 
-                        <cfswitch expression="#ARGUMENTS.sortBy#">
-                        
-                            <cfcase value="hostID">                    
-                                h.hostID #ARGUMENTS.sortOrder#,
-                                h.familylastname
-                            </cfcase>
-                        
-                            <cfcase value="nexitsID">
-                                h.nexits_id #ARGUMENTS.sortOrder#,
-                                h.familylastname
-                            </cfcase>
-            
-                            <cfcase value="lastName">
-                                h.familylastname #ARGUMENTS.sortOrder#
-                            </cfcase>
-            
-                            <cfcase value="father">
-                                h.fatherfirstname #ARGUMENTS.sortOrder#,
-                                h.familylastname
-                            </cfcase>
-
-                            <cfcase value="mother">
-                                h.motherFirstName #ARGUMENTS.sortOrder#,
-                                h.familylastname
-                            </cfcase>
-            
-                            <cfcase value="phone">
-                                h.phone #ARGUMENTS.sortOrder#,
-                                h.familylastname
-                            </cfcase>
-
-                            <cfcase value="city">
-                                h.city #ARGUMENTS.sortOrder#,
-                                h.familylastname
-                            </cfcase>
-            
-                            <cfcase value="state">
-                                h.state #ARGUMENTS.sortOrder#,
-                                h.familylastname
-                            </cfcase>
-
-                            <cfcase value="areaRep">
-                                u.lastname #ARGUMENTS.sortOrder#,
-                                u.firstname
-                            </cfcase>
-            
-                            <cfcase value="lastHosted">
-                                p.programID #ARGUMENTS.sortOrder#,
-                                h.familylastname
-                            </cfcase>
-
-                            <cfcase value="hostStatus">
-                                HFstatus #ARGUMENTS.sortOrder#
-                            </cfcase>
-
-                            <cfcase value="hostStatusUpdated">
-                                h.call_back_updated #ARGUMENTS.sortOrder#
-                            </cfcase>
-            
-                            <cfdefaultcase>
-                                h.hostID DESC
-                            </cfdefaultcase>
-            
-                        </cfswitch>                
+                        h.hostID DESC               
                 </cfquery>
 
                 <cfscript>
@@ -5123,45 +5013,52 @@
 
                     CASE 
                         WHEN h.isNotQualifiedToHost = 1
+                            AND h.isHosting = 0
+                            AND h.with_competitor = 0
                             AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                            AND (shas.activeApp = 0 OR shas.activeApp IS NULL)
                             THEN 'Not Qualified to Host'
                         
-                        WHEN h.isHosting = 0
-                            AND h.isNotQualifiedToHost = 0
-                            AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL)
+                        WHEN h.isNotQualifiedToHost = 0
+                            AND h.isHosting = 0
+                            AND h.with_competitor = 0
                             AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                            AND (shas.activeApp = 0 OR shas.activeApp IS NULL)
                             THEN 'Decided Not to Host'
                         
                         WHEN h.isNotQualifiedToHost = 0
                             AND h.isHosting = 1
-                            AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL)
-                            AND (shas.total = 0 OR shas.total IS NULL)
+                            AND h.with_competitor = 0
                             AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                            AND (shas.activeApp = 0 OR shas.activeApp IS NULL)
                             THEN 'Available to Host'
                         
                         WHEN h.isNotQualifiedToHost = 0
                             AND h.isHosting = 1
-                            AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL)
-                            AND shas.total > 0
+                            AND h.with_competitor = 0
                             AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                            AND shas.activeApp = 1
                             THEN 'Current Season'
 
                         WHEN h.isNotQualifiedToHost = 0
                             AND h.isHosting = 1
-                            AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL)
-                            AND shas.total > 0
+                            AND h.with_competitor = 0
                             AND h.call_back = 1
+                            AND shas.activeApp = 1
                             THEN 'CS - Call Back'
 
                         WHEN h.isNotQualifiedToHost = 0
                             AND h.isHosting = 1
-                            AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL)
-                            AND shas.total > 0
+                            AND h.with_competitor = 0
                             AND h.call_back = 2
+                            AND shas.activeApp = 1
                             THEN 'CS - Call Back Next SY'
                         
-                        WHEN h.with_competitor = 1
+                        WHEN h.isNotQualifiedToHost = 0
+                            AND h.isHosting = 0
+                            AND h.with_competitor = 1
                             AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                            AND (shas.activeApp = 0 OR shas.activeApp IS NULL)
                             THEN 'With Other Sponsor'
                         
                         WHEN h.call_back = 1
@@ -5186,7 +5083,7 @@
                 LEFT OUTER JOIN smg_regions r ON r.regionid = h.regionID
 
                 LEFT OUTER JOIN      (
-                          SELECT    COUNT(id) AS total, hostID
+                          SELECT    COUNT(id) AS total, hostID, activeApp
                           FROM      smg_host_app_season
                           WHERE     seasonID = 14
                           GROUP BY  hostID
@@ -5251,30 +5148,34 @@
                 <cfif LEN(ARGUMENTS.HFstatus)>
                     <cfif ARGUMENTS.HFstatus EQ "Not Qualified to Host">
                         AND h.isNotQualifiedToHost = 1
-                        AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
-
+                    
                     <cfelseif ARGUMENTS.HFstatus EQ "Decided Not to Host">
-                        AND h.isHosting = 0
                         AND h.isNotQualifiedToHost = 0
-                        AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL)
+                        AND h.isHosting = 0
+                        AND h.with_competitor = 0
                         AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                        AND (shas.activeApp = 0 OR shas.activeApp IS NULL)
                     
                     <cfelseif ARGUMENTS.HFstatus EQ "Available to Host">
                         AND h.isHosting = 1
                         AND h.isNotQualifiedToHost = 0
                         AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
-                        AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL)
+                        AND h.with_competitor = 0
                         AND (shas.total = 0 OR shas.total IS NULL)
 
                     <cfelseif ARGUMENTS.HFstatus EQ "Current Season">
                         AND h.isHosting = 1
                         AND h.isNotQualifiedToHost = 0
-                        AND (h.with_competitor = '' OR h.with_competitor = 0 OR h.with_competitor IS NULL)
-                        AND shas.total > 0
+                        AND h.with_competitor = 0
+                        AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                        AND shas.activeApp = 1
 
                     <cfelseif ARGUMENTS.HFstatus EQ "With Other Sponsor">
+                        AND h.isNotQualifiedToHost = 0
+                        AND h.isHosting = 0
                         AND h.with_competitor = 1
                         AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                        AND (shas.activeApp = 0 OR shas.activeApp IS NULL)
 
                     <cfelseif ARGUMENTS.HFstatus EQ "Call Back">
                         AND h.call_back = 1

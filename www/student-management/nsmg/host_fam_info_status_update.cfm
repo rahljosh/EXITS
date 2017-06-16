@@ -1,10 +1,13 @@
 <!--- Check if decided to host was clicked because the email should also be sent out in this case. --->
 <cfajaxproxy cfc="extensions.components.cbc" jsclassname="CBC">
 
+<cfparam name="FORM.host_lead_referer" default="0" />
+
 <cfscript>
     qGetHostInfo = APPLICATION.CFC.HOST.getApplicationList(hostID=URL.hostID);
     qCurrentSeason = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason();
-    vCurrentSeasonStatus = APPLICATION.CFC.HOST.getApplicationList(hostID=qGetHostInfo.hostID,seasonID=qCurrentSeason.seasonID).applicationStatusID;
+    vCurrentSeason = APPLICATION.CFC.HOST.getApplicationList(hostID=qGetHostInfo.hostID,seasonID=qCurrentSeason.seasonID);
+    vCurrentSeasonStatus = vCurrentSeason.applicationStatusID;
 </cfscript>
 
 <cfset newStatus = '' />
@@ -18,19 +21,27 @@
     </cfif>
 </cfif>
 
-
 <cfif structKeyExists(FORM, "withCompetitor")>
     <cfquery datasource="#APPLICATION.DSN#">
         UPDATE smg_hosts
         SET with_competitor = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(FORM.withCompetitor)#">,
             isHosting = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
+            isNotQualifiedToHost = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
             call_back = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
             call_back_updated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
             call_back_updated_by = #CLIENT.userid#
         WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostID#">
     </cfquery>
 
-     <cfscript>
+    <cfif vCurrentSeason.recordCount GT 0> 
+        <cfquery datasource="#APPLICATION.DSN#">
+            UPDATE smg_hosts_app_season
+            SET activeApp = 0
+            WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#vCurrentSeason.id#">
+        </cfquery>
+    </cfif>
+
+    <cfscript>
         applicationHistory = APPLICATION.CFC.LOOKUPTABLES.insertApplicationHistory(
             applicationID=7,
             foreignTable='smg_hosts',
@@ -52,6 +63,8 @@
     <cfquery datasource="#APPLICATION.DSN#">
         UPDATE smg_hosts
         SET with_competitor = <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
+            isNotQualifiedToHost = <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
+            isHosting = <cfqueryparam cfsqltype="cf_sql_bit" value="1">,
             call_back = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
             call_back_updated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
             call_back_updated_by = #CLIENT.userid#
@@ -143,8 +156,9 @@
             updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
             isHosting = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.decideToHost)#">,
             <cfif goingToHost EQ 1>
-            with_competitor = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
-            call_back = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
+                with_competitor = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
+                call_back = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
+                isNotQualifiedToHost = <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
             </cfif>
             call_back_updated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
             call_back_updated_by = #CLIENT.userid#
@@ -193,11 +207,22 @@
 
         <cfquery datasource="#APPLICATION.DSN#">
             UPDATE smg_hosts
-            SET call_back = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
+            SET isNotQualifiedToHost = 0,
+                isHosting = 0,
+                with_competitor = 0,
+                call_back = 0,
                 call_back_updated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
                 call_back_updated_by = #CLIENT.userid#
             WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostID#">
         </cfquery>
+
+        <cfif vCurrentSeason.recordCount GT 0> 
+            <cfquery datasource="#APPLICATION.DSN#">
+                UPDATE smg_hosts_app_season
+                SET activeApp = 0
+                WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#vCurrentSeason.id#">
+            </cfquery>
+        </cfif>
 
         <cfset newStatus = 'Decided Not to Host' />
     </cfif>
@@ -251,14 +276,41 @@
         SET comments = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.explanation#">
         WHERE ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.applicationHistoryID#">
     </cfquery>
+	<cfif structKeyExists(FORM, 'host_lead_referer') AND VAL(FORM.host_lead_referer)>
+	   <cfquery datasource="#APPLICATION.DSN#">
+    		update smg_host_app_season
+    		set activeApp = 0
+    		where hostid = #URL.hostID#
+    		and seasonID=#qCurrentSeason.seasonID#
+		</cfquery>
+		<script language="javascript">
+			// Close Window After 1.5 Seconds
+			setTimeout(function() { parent.$.fn.colorbox.close(); }, 10);
+		</script>
+	   <cfabort />
+	</cfif>
 
     <cflocation url="index.cfm?curdoc=host_fam_info&hostid=#URL.hostid#" addtoken="No">
     <cfabort />
 </cfif>
 
 <cfif structKeyExists(FORM, "sendAppEmail")>
-    <cflocation url="index.cfm?curdoc=host_fam_info&hostid=#URL.hostid#" addtoken="No">
-    <cfabort />
+   <cfif structKeyExists(FORM, 'host_lead_referer') AND VAL(FORM.host_lead_referer)>
+		<cfquery datasource="#APPLICATION.DSN#">
+    		update smg_host_app_season
+    		set activeApp = 0
+    		where hostid = #URL.hostID#
+    		and seasonID=#qCurrentSeason.seasonID#
+		</cfquery>
+		<script language="javascript">
+			// Close Window After 1.5 Seconds
+			setTimeout(function() { parent.$.fn.colorbox.close(); }, 10);
+		</script> 
+        <cfabort />
+	</cfif>
+
+	<cflocation url="index.cfm?curdoc=host_fam_info&hostid=#URL.hostid#" addtoken="No">
+	<cfabort />
 </cfif>
 
 <strong>New Status:</strong> 
@@ -271,6 +323,7 @@
         <textarea name='explanation' id='explanation' style="width: 50%;height: 40px;vertical-align: top;"></textarea>
         <input type="hidden" name="updateApplicationHistoryNotes" id="updateApplicationHistoryNotes" value="1" />
         <input type="hidden" name="applicationHistoryID" id="applicationHistoryID" value="<cfoutput>#applicationHistoryID#</cfoutput>" />
+        <input type="hidden" name="host_lead_referer" id="host_lead_referer" value="<cfoutput>#FORM.host_lead_referer#</cfoutput>" />
         <br />
 
         <input type="submit" value="Save"  alt="Save" border="0" class="buttonBlue" style="margin-top:5px" />

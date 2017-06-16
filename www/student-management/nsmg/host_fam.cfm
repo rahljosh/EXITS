@@ -336,7 +336,7 @@
             } else {
                 tableBody = '<tr bgcolor="#FFFFFF" id="' + hostID + '">';
             }
-                tableBody += '<td><a href="?curdoc=host_fam_info&hostid=' + hostID + '">' + hostID + '</a></td>';
+                tableBody += '<td><a href="?curdoc=host_fam_info&hostid=' + hostID + '" target="_blank">' + hostID + '</a></td>';
                 tableBody += '<td>' + nexits_id + '</a></td>';
                 tableBody += '<td>' + familylastname + '</a></td>';
                 tableBody += '<td>' + father + '</a></td>';
