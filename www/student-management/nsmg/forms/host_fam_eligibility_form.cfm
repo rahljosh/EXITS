@@ -2,6 +2,11 @@
 <cfparam name="FORM.isNotQualified" default="1">
 <cfparam name="FORM.explanation" default="">
 <cfparam name="FORM.submitted" default="">
+<cfparam name="FORM.closeWindow" default ="0">
+	<!---- If user is editing from the leads pipeline, we need to cloase the window after marked not qualified---->
+	<cfif isDefined('URL.seasonID')>
+		<cfset FORM.closeWindow = 1>
+	</cfif>
 
 <cfscript>
 	qGetHostEligibilityReason = APPLICATION.CFC.LOOKUPTABLES.getApplicationHistory(
@@ -71,7 +76,14 @@
             </cfscript>
 
       	</cfif>
-        
+       	<cfif val(FORM.closeWindow)>
+			<script language="javascript">
+							// Close Window After 1.5 Seconds
+							setTimeout(function() { parent.$.fn.colorbox.close(); }, 10);
+						</script> 
+					   <cfabort></cfabort>
+			<cfabort>
+		</cfif>
         <cflocation url="index.cfm?curdoc=host_fam_info&hostid=#URL.hostid#" addtoken="No">
         
     <!---</cfif>--->
@@ -126,6 +138,7 @@
                         <td align="center">
                             <a href="?curdoc=host_fam_info&hostid=<cfoutput>#URL.hostID#</cfoutput>"><img src="pics/back.gif" border=0 /></a>  &nbsp;
                             <input name="Submit" type="image" src="pics/submit.gif" border=0>
+                            <input type="hidden" name="closeWindow" value="<cfoutput>#FORM.closeWindow#</cfoutput>">
                         </td>
                     </tr>
                 </table>
