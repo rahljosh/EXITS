@@ -24,7 +24,7 @@
                     <td background="../pics/header_background.gif"><h2>&nbsp;&nbsp;Host Status</h2></td>
                     <td background="../pics/header_background.gif" width=16>
                         <cfif APPLICATION.CFC.USER.isOfficeUser()>
-                        	<span class="buttonBlue smallerButton" onclick="window.location.href='index.cfm?curdoc=forms/host_fam_eligibility_form&hostID=#qGetHostInfo.hostID#'">Edit</span>
+                        	<span class="buttonBlue smallerButton" onclick="window.location.href='../index.cfm?curdoc=forms/host_fam_eligibility_form&hostID=<cfoutput>#qGetHostInfo.hostID#</cfoutput>&status=9&seasonID=14&active_rep=2&ny_office=2'">Edit</span>
                         </cfif>
                     </td>
                     <td width=17 background="../pics/header_rightcap.gif">&nbsp;</td>
