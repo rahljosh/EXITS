@@ -1191,7 +1191,7 @@
                 FROM
                 (
                     SELECT
-                       h.hostID, h.uniqueID, h.familyLastName, h.fatherFirstName, h.motherFirstName, h.email as hostEmail, h.city as hostCity, h.state as hostState,
+                       h.hostID, h.uniqueID, h.familyLastName, h.fatherFirstName, h.motherFirstName, h.email as hostEmail, h.city as hostCity, h.state as hostState, h.phone as host_phone,
                         <!--- Host Family Display Name --->
                       CAST( 
 							CONCAT(                      
@@ -1401,7 +1401,6 @@
                         </cfif>
                         
 					</cfif>
-                    	AND (h.call_back != <cfqueryparam cfsqltype="cf_sql_integer" value="2"> )
                         AND smg_host_app_season.activeApp = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                     <cfswitch expression="#ARGUMENTS.userType#">
                         
