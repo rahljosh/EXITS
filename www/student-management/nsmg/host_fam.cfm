@@ -473,7 +473,7 @@
     <gui:tableHeader
         imageName="family.gif"
         tableTitle="Host Families"
-        tableRightTitle='<a href="index.cfm?curdoc=forms/host_fam_form">Add Host Family</a>'
+        tableRightTitle='<a href="index.cfm?curdoc=forms/new_host_fam_form">Add Host Family</a>'
     />
 
     <!---<cfform action="?curdoc=host_fam" method="post">--->
