@@ -311,7 +311,7 @@ div.scroll2 {
                             </span>
                         	&nbsp;
                        	</cfif>
-                        <span class="buttonBlue smallerButton" onclick="window.location.href='?curdoc=forms/host_fam_form&hostID=#qGetHostInfo.hostID#'">
+                        <span class="buttonBlue smallerButton" onclick="window.location.href='?curdoc=forms/new_host_fam_form&hostID=#qGetHostInfo.hostID#'">
                         	Edit
                       	</span>
                         &nbsp;
