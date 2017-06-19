@@ -740,4 +740,59 @@
 		End of PHP School Information
 	--------------------------------------------------->
 
+
+    <!--- ------------------------------------------------------------------------- ----
+        Start of Remote Functions
+    ----- ------------------------------------------------------------------------- --->
+
+    <!--- Auto Suggest --->
+    <cffunction name="remoteLookUpSchool" access="remote" returnFormat="json" output="false" hint="Remote function to get schools, returns an array">
+        <cfargument name="searchString" type="string" default="" hint="Search is not required">
+        <cfargument name="maxRows" type="numeric" required="false" default="30" hint="Max Rows is not required" />
+        <cfargument name="companyID" default="#CLIENT.companyID#" hint="CompanyID is not required">
+        
+        <cfscript>
+            var vReturnArray = arrayNew(1);
+        </cfscript>
+        
+        <!--- Do search --->
+        <cfquery 
+            name="qRemoteLookUpSchools" 
+            datasource="#APPLICATION.DSN#">
+                SELECT DISTINCT
+                    s.schoolID,
+                    CAST( CONCAT(s.schoolname, ' - ', s.city, '/', s.state , ' (##', s.schoolID, ')' ) AS CHAR) AS displayName                     
+                FROM 
+                    smg_schools s
+                WHERE 
+                    <cfif IsNumeric(ARGUMENTS.searchString)>
+                        (s.schoolID LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">)
+                    <cfelse>
+                            (s.schoolname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#ARGUMENTS.searchString#%">
+                        OR
+                            s.city LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#ARGUMENTS.searchString#%">)
+                    </cfif> 
+                ORDER BY 
+                    s.schoolname,
+                    s.city
+                LIMIT 
+                    <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.maxRows#" />                 
+        </cfquery>
+
+        <cfscript>
+            // Loop through query
+            For ( i=1; i LTE qRemoteLookUpSchools.recordCount; i=i+1 ) {
+
+                vUserStruct             = structNew();
+                vUserStruct.schoolID    = qRemoteLookUpSchools.schoolID[i];
+                vUserStruct.displayName  = qRemoteLookUpSchools.displayName[i];
+                
+                ArrayAppend(vReturnArray,vUserStruct);
+            }
+            
+            return vReturnArray;
+        </cfscript>
+
+    </cffunction>
+
 </cfcomponent>
