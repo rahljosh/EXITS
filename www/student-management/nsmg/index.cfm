@@ -9,13 +9,22 @@
 				07/17/2013 - Redirect to home page and show message when a page does not exist. (James Griffiths)
 				
 ----- ------------------------------------------------------------------------- --->
-
+ 
+		
 <!--- Kill Extra Output --->
-<cfsilent>
+
 	
     <!--- Default Page --->
-    <cfparam name="URL.curdoc" default="initial_welcome">
+
+<cfparam name="URL.curdoc" default="initial_welcome">
+
+	<cfset unify = 0>
+  <!--forms/add_user,forms/user_form, user/index,-->
+   <cfif val(listContains('forms/host_fam_form_lead, hostLeads/index, hostApplication/listOfApps, students','#url.curdoc#'))>
+	   	<cfset unify=1>
+   </cfif>
     
+
     <cfscript>
 		pageNotAvailable = 0;
 		// Redirect to initial_welcome of URL.curdoc isn't present.
@@ -37,7 +46,8 @@
 		}
 	</cfscript>
     
-</cfsilent>
+
+
 
 <!--- Alert the user if the page they are trying to load can not be found.--->
 <cfif VAL(pageNotAvailable)>
@@ -49,7 +59,10 @@
 </cfif>
 
 <!--- Include Header --->
-<cfinclude template="header.cfm">
+
+	<cfinclude template="header.cfm">
+
+
 
 <table align="center" width="98%" cellpadding="0" cellspacing="0"  border="0"> 
 	<tr>
@@ -64,4 +77,8 @@
 </table>
 
 <!--- Include Footer --->
-<cfinclude template="footer.cfm">
+<Cfif 1 eq 2>
+	<cfinclude template="unify-footer.cfm">
+<cfelse>
+	<cfinclude template="footer.cfm">
+</Cfif>
