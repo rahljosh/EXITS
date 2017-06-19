@@ -14,7 +14,7 @@
 
 	<!--- Import CustomTag --->
     <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
-
+	
     <cfscript>	
 		// Param FORM Variables
 		param name="FORM.keyword" default="";
@@ -49,10 +49,11 @@
 		qGetStatus = APPLICATION.CFC.LOOKUPTABLES.getApplicationLookUp(fieldKey='hostLeadStatus');
 	</cfscript>	
 	
-
+	<Cfif isDefined('url.status')>
+   		<cfset FORM.statusID = #url.status#>
+    </Cfif>
 
 	 <cfif APPLICATION.CFC.USER.isOfficeUser()>
-
 			<cfscript>
 				qGetAreaRepList = APPLICATION.CFC.USER.getUsers(
 					userType = ('5,6,7'),
@@ -60,9 +61,7 @@
 					companyID = CLIENT.companyID
 				);
 			</cfscript>
-
-		<cfelse>
-
+	<cfelse>
 			<cfscript>
 				qGetAreaRepList = APPLICATION.CFC.USER.getUsers(
 					userType = ('5,6,7'),
@@ -71,7 +70,7 @@
 					regionID = CLIENT.regionID
 				);
 			</cfscript>
-		</cfif>
+	</cfif>
 
 	   <cfquery name="qGetCities" datasource="#APPLICATION.DSN#">
 			SELECT DISTINCT TRIM(city) AS city
@@ -88,10 +87,11 @@
 
 	<!--- Ajax Call to the Component --->
     <cfajaxproxy cfc="nsmg.extensions.components.host" jsclassname="hostFamily">
-    <cfset quote = #RandRange(1,3)#>
+
     
 </cfsilent>    
-
+  
+           
 <script language="javascript">
 	// Function to find the index in an array of the first entry with a specific value. 
 	// It is used to get the index of a column in the column list. 
@@ -332,8 +332,9 @@
 			width:"60%", 
 			height:"90%", 
 			iframe:true,
-			overlayClose:false,
+			overlayClose:true,
 			escKey:true,
+			closeButton:true,
 			onClosed:function(){ getHostLeadList(); }
 		});		
 
