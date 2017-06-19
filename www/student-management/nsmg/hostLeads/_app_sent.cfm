@@ -17,6 +17,7 @@
 				Area Rep.    	Update status and comments (optional)																	
 				
 ----- ------------------------------------------------------------------------- --->
+
 <!-- CSS Global Compulsory -->
 	<link rel="stylesheet" href="../assets/plugins/bootstrap/css/bootstrap.min.css">
 	<link rel="stylesheet" href="../assets/css/style.css">
@@ -134,36 +135,56 @@
 	</cfscript>	
 	
 		<cfif val(FORM.submitted)>
-	
-			<cfscript>
-				// FORM SUBMITTED
-				// Update / Add History Host Lead
-					APPLICATION.CFC.HOST.updateHostLead(
-						ID=FORM.leadID,					
-						followUpID=qGetHostLead.followUpID,
-						regionID=qGetHostLead.regionID,
-						areaRepID=qGetHostLead.areaRepID,
-						statusID=14,
-						enteredByID=CLIENT.userID,
-						hostID = FORM.hostID,
-						comments='Lead assigned to existing host application.'					
-					);
-					// Set Page Message
-					SESSION.pageMessages.Add("Lead succesfully assocaited with host.");
+		
+			
+         <cfquery datasource="#APPLICATION.DSN#">
+                UPDATE
+                    smg_host_lead
+                SET
+                    statusID = 14,
+                    <cfif VAL(qGetHostLead.regionID)>
+                    regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostLead.regionID)#">,
+		 			</cfif>
+                    <cfif VAL(qGetHostLead.areaRepID)>
+                    areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostLead.areaRepID)#">,
+                    </cfif>
+                    dateConverted = <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
 
-					// Refresh Page
-					// Location("#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#", "no"); 
-			</cfscript>
+                    hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.hostID)#">
+                WHERE	                        
+                    ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostLead.ID#">
+         </cfquery>
+ 		<cfif NOT val(FORM.current_host_active)>
+			 <cfquery datasource="#APPLICATION.DSN#">
+					UPDATE
+						smg_hosts
+					SET
+						<cfif VAL(qGetHostLead.regionID)>
+						regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostLead.regionID)#">,
+						</cfif>
+						<cfif VAL(qGetHostLead.areaRepID)>
+						areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetHostLead.areaRepID)#">,
+						</cfif>
+						active = 1
+					WHERE	                        
+						 hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.hostID)#">
+			</cfquery>
+		</cfif>
+				<script type="text/javascript" language="JavaScript">
+			 	<cfoutput>
+				  var #toScript(FORM.hostid, "hostID")#;
+			  	</cfoutput>
+	
+			  $(function() {
+				    if ('app' !== $('body').attr('id')) {
+					window.top.location.href = '../?curdoc=host_fam_info&hostid='+hostID;
+				  }
+				});
+			</script>
 			<script language="javascript">
                 // Close Window After 1/5 Seconds
-                setTimeout(function() { parent.$.fn.colorbox.close(); }, 1500);
+                setTimeout(function() { parent.$.fn.colorbox.close(); }, 15);
             </script>
-            
-            <gui:displayPageMessages 
-            pageMessages="#SESSION.pageMessages.GetCollection()#"
-            messageType="tableSection"
-            width="95%"
-            />
             <cfabort></cfabort>
 		<cfelse>
 			<Cfscript>
@@ -177,12 +198,6 @@
 			</Cfscript>
 		
 		</cfif>
-		
-		<Cfscript>
-		// search
-		vQuickSearchNotFound = 0;
-		</Cfscript>
-		
  
     <cfquery name="checkHostAppExist" datasource="#application.dsn#">
     select *,
@@ -206,50 +221,9 @@
     </cfif>
   
 	</cfquery>
-   
+		
+	
 <body>
-<!----<cfinclude template="analytics.cfm">---->
-<script type="text/javascript">
-	// Avoid two selections on quick search
-	var quickSearchValidation = function() {		
-		$(".quickSearchField").val("");
-	}
-	
-	$(function() {
-
-		// Quick Search - Host Auto Suggest  
-		$("#quickSearchAutoSuggestHostID").autocomplete({
-
-			source: function(request, response) {
-				$.ajax({
-					url: "../extensions/components/host.cfc?method=remoteLookUpHost",
-					dataType: "json",
-					data: { 
-						searchString: request.term
-					},
-					success: function(data) {
-						response( $.map( data, function(item) {
-							return {
-								//label: item.DISPLAYNAME,
-								value: item.DISPLAYNAME,
-								valueID: item.HOSTID
-							}
-						}));
-					}
-				})
-			},
-			select: function(event, ui) {
-				$("#quickSearchHostID").val(ui.item.valueID);
-				$("#quickSearchForm").submit();
-			}, 
-			minLength: 2
-			
-		});
-		
-	
-		
-	});	
-</script>
 
 <Cfif val(qGetHostLead.hostid)>
     <cfquery name=qGetHostInfo datasource="#application.dsn#">
@@ -260,21 +234,19 @@
 </Cfif>
     	<div class="container content">
 				<div class="row">
-
 					<!-- Begin Content -->
 					<div class="col-md-12">
 						<!-- Alert Tabs -->
 						<div class="tab-v2 margin-bottom-40">
-							 <div class="headline"><h2 class="heading-lg">Assign to Current Host Family</h2></div>
+							 <div class="headline"><h2 class="heading-lg">Hey! Existing Host Family information was found!</h2></div>
 								<div class="row">
-								
 									<div class="col-sm-10">
-										<div class="tag-box tag-box-v3">
-										
-										
-											<h2>Host Family Match</h2>
+										<div class="tag-box tag-box-v3">	
 										<Cfif checkHostAppExist.recordcount gt 0 and  manual_assign_host eq 0 >	
-											<p>Based on the email address assocated with this lead, it looks like the email address is already associtaed with the <cfoutput>#checkHostAppExist.FamilyLastName# (#checkHostAppExist.hostid#</cfoutput>)</a> family.</p><br>
+											<h3>Are these two families the same?</h3>
+
+<p>Based on the email address enetered in this lead, this HF exists in the system.</p>
+<p>Two different HF cannot have the same email address.</p<br>
 										<cfelseif val(manual_assign_host)>
 											<p>Please review the details below that where returned based on your search on the <cfoutput>#checkHostAppExist.FamilyLastName# (#checkHostAppExist.hostid#</cfoutput>)</a> family.   </p><br>
 										<cfelse>
@@ -284,7 +256,7 @@
 				 							
 												<div class="col-sm-6">
 												<div class="heading heading-v4 margin-bottom-10">
-														<h5>Lead Details</h5>
+														<h4>Lead Details</h4>
 														</div>
 													<div class="tag-box tag-box-v4">
 														
@@ -299,7 +271,7 @@
 									
 												<div class="col-sm-6">
 												<div class="heading heading-v4 margin-bottom-10">
-														<h5>Host Family Details</h5>
+														<h4>Existing Host Family Details</h4>
 														</div>
 													<div class="tag-box tag-box-v4">
 													<Cfif checkHostAppExist.recordcount gt 0>	
@@ -326,12 +298,6 @@
 													</div>
 												</div>
 											</div>
-												<cfoutput>
-												
-											
-											
-											
-											<p>If you would like to associate LEAD Deatails with Host Family Information, click the button below.</p><br>
 											<!----
 											<p>If you would like to associate this lead with a DIFFERENT family, please search there name or ID number here.</p><br>
 											<cfform name="quickSearchForm" id="quickSearchForm" method="post" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#">
@@ -341,19 +307,33 @@
                 							</cfform>
            									<br>
            									---->
-											<p>Once you associate this lead with a family, the family will be  removed from your list.</p><br>
-											
-											
-											<cfform name="assignCurrentHost" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" class="defaultForm">
-													<input type="hidden" name="leadID" value="#url.id#">
-													<input type="hidden" name="hostID" value="#checkHostAppExist.hostID#">
-													<input type="hidden" name="submitted" value=1>
-													
-													<p align=center><button type="submit" class="btn btn-u">Associate Lead with Host</button></p>
-											</cfform>	 
-											
-											</cfoutput>
-											
+												
+												<br>
+												<div class="row">
+													<div class="col-sm-6">
+														<cfoutput>
+															<cfform name="assignCurrentHost" action="convert_lead.cfm?leadID=#URL.id#&hostID=#checkHostAppExist.hostID#&key=#URL.key#&skip=1" method="post">
+																<input type="hidden" name="leadID" value="#url.id#">
+																<input type="hidden" name="hostID" value="#checkHostAppExist.hostID#">
+																<input type="hidden" name="dont_check" value=1>
+																<p align=center><button type="submit" class="btn btn-u btn-u-lg btn-u-orange"><i class="fa fa-random" aria-hidden="true"></i> NO, update email</button></p>
+															</cfform>	 
+														</cfoutput>
+													</div>
+													<div class="col-sm-6">
+														<cfoutput>
+															<cfform name="assignCurrentHost" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post">
+																<input type="hidden" name="leadID" value="#url.id#">
+																<input type="hidden" name="hostID" value="#checkHostAppExist.hostID#">
+																<input type="hidden" name="current_host_active" value="#checkHostAppExist.active#">
+																<input type="hidden" name="submitted" value=1>
+																<input type="hidden" name="checkHost" value=1>
+																
+																<p align=center><button type="submit" class="btn btn-u btn-u-lg "><i class="fa fa-user-circle" aria-hidden="true"></i> YES, check HF Status</button></p>
+															</cfform>	 
+														</cfoutput>
+													</div>	
+												</div>
 											</div>
 										</div>
 									
@@ -363,7 +343,8 @@
 						</div>
 					</div>
 				</div>  
-			
+
+
 				  <!---- Live serach for host family  ---->
 
 

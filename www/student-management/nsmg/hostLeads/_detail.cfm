@@ -18,6 +18,7 @@
 				
 ----- ------------------------------------------------------------------------- --->
 <!-- CSS Global Compulsory -->
+
 	<link rel="stylesheet" href="../assets/plugins/bootstrap/css/bootstrap.min.css">
 	<link rel="stylesheet" href="../assets/css/style.css">
 
@@ -90,11 +91,7 @@
 			Check to see if passed key is the correct hash for the record. 
 			This will stop people from tampering with the URLs.
 		*/
-		if ( Compare(APPLICATION.CFC.UDF.HashID(URL.id), URL.key) ) {
-			// Wrong Key - Display message to user
-			familyFound=0;
-			SESSION.formErrors.Add('Host Family Lead could not be found (hashID mismatch). Please try again.');
-		} 
+		
 
 		// Get the given host family lead record
 		qGetHostLead = APPLICATION.CFC.HOST.getHostLeadByID(ID=URL.ID);
@@ -121,7 +118,8 @@
 		
 		// FORM SUBMITTED
 		if ( FORM.submitted ) {
-			
+		
+		
 			// Host Lead User is able to enter a comment only
 			if ( CLIENT.userType NEQ 26 ) {
 			
@@ -159,7 +157,7 @@
 				// Update / Add History Host Lead
 				APPLICATION.CFC.HOST.updateHostLead(
 					ID=FORM.ID,					
-					followUpID=FORM.followUpID,
+					followUpID=FORM.areaRepID,
 					regionID=FORM.regionID,
 					areaRepID=FORM.areaRepID,
 					statusID=FORM.statusID,
@@ -385,7 +383,7 @@
 							 <div class="row row-eq-height">
 								<div class="col-md-4">
 									<div class="bg-light"><!-- You can delete "bg-light" class. It is just to make background color -->
-										<h4><i class="fa fa-home"></i>Contact Information</h4>
+										<h4><i class="fa fa-home"></i>Potential Host Family</h4>
 										<p>#qGetHostLead.firstname# #qGetHostLead.lastname#</p>
 										<p>#qGetHostLead.address#</p>
 										<p>#qGetHostLead.address2#</p>
@@ -396,7 +394,7 @@
 								</div>
 								<div class="col-md-4">
 									<div class="bg-light"><!-- You can delete "bg-light" class. It is just to make background color -->
-										<h4><i class="fa fa-gears"></i>Account Information</h4>
+										<h4><i class="fa fa-gears"></i>Lead Information</h4>
 							
 										<p>Source: #qGetHostLead.hearAboutUs# #qGetHostLead.hearAboutUsDetail# </p>
 										<p>Created: #DateFormat(qGetHostLead.dateCreated, 'mmmm d, yyyy')#</p>
@@ -405,7 +403,7 @@
 										<cfif isDate(#qGetHostLead.dateConverted#)>
 										#DateFormat(qGetHostLead.dateConverted, 'mmmm d, yyyy')#
 										<cfelse>
-										Don't give up!
+										Not yet! Don't give up!
 									
 										</cfif>
 										</p>
@@ -419,29 +417,31 @@
 								</div>
 								<div class="col-md-4">
 									<div class="bg-light"><!-- You can delete "bg-light" class. It is just to make background color -->
-										<h4><i class="fa fa-address-book"></i>Contact People</h4>
+										<h4><i class="fa fa-address-book"></i>#CLIENT.companyshort# Contacts</h4>
 							
-										<p>Previously Talking With: 
-											 <cfif LEN(qGetHostLead.contactWithRepName)>#qGetHostLead.contactWithRepName#<cfelse>Nobody</cfif></p>
 										<p>Program Manager: 
 											<cfif LEN(qGetHostLead.companyShort)>
 												#qGetHostLead.companyShort#
 											<cfelse>
-												n/a
+												N/A
 											</cfif></p>
+										 <p>Region:
+											<cfif LEN(qGetHostLead.regionAssigned)>
+											#qGetHostLead.regionAssigned#
+											<cfelse>
+												N/A
+											</cfif>
+										</p>
+										 <p>First Contact Rep: 
+											 <cfif LEN(qGetHostLead.contactWithRepName)>#qGetHostLead.contactWithRepName#<cfelse>Nobody</cfif></p>
+										
 										<p>Current Rep: 
 											<cfif LEN(qGetHostLead.areaRepAssigned)>
 											#qGetHostLead.areaRepAssigned#
 											<cfelse>
-												n/a
+												N/A
 											</cfif></p>
-										<p>Current Region:
-											<cfif LEN(qGetHostLead.regionAssigned)>
-											#qGetHostLead.regionAssigned#
-											<cfelse>
-												n/a
-											</cfif>
-										</p>
+										
 										
 										
 									</div>
@@ -489,8 +489,11 @@
 												<i></i>
 											</label>
 										</section>
+										<Cfelse>
+											
+											  <input type="hidden" name="companyID" value="#FORM.companyID#" />
 										</cfif>
-										  <input type="hidden" name="companyID" value="#FORM.companyID#" />
+									
 										<cfif CLIENT.userType EQ 5>
 										<input type="hidden" name="regionID" value="#FORM.regionID#" />
 											<section>
@@ -508,6 +511,8 @@
 													<i></i>
 												</label>
 											</section>
+										<Cfelse>
+											 <input type="hidden" name="areaRepID" value="#FORM.areaRepID#" />
 										</cfif>
 										<section class="col-md-12">
 											<label class="label">Status</label>
@@ -534,19 +539,13 @@
 										
 											<div class="row padding-top-5">
 												
-												<div class="col-md-6">
+												<div class="col-md-12">
 													<div align="center">
-														<button type="submit" class="btn-u btn-u-lg  btn-u-orange center"><i class="fa fa-cloud" aria-hidden="true"></i> Save Changes</button>
+														<button type="submit" class="btn-u btn-u-lg  btn-u-orange center"><i class="fa fa-cloud-upload" aria-hidden="true"></i> Update</button>
 													</div>
 												
 												</div> 
-												<div class="col-md-6">
-													<div align="center">
-													
-														<a href="convert_lead.cfm?leadID=#URL.id#"><button type="button" class="btn-u btn-u-lg btn-u-green"><i class="fa fa-retweet" aria-hidden="true"></i> Convert Lead to a Host</button></a>
-													</div>
-												</div>
- 
+											
 											</div>	
 										</cfif>
 									</fieldset>
@@ -567,10 +566,13 @@
 					<ul class="timeline-v2">
 					  <cfloop query="qGetHostLeadHistory">
 						<li class="equal-height-columns">
-							<div class="cbp_tmtime equal-height-column"><span>#TimeFormat(qGetHostLeadHistory.dateUpdated, 'hh:mm tt')#</span> <span>#DateFormat(qGetHostLeadHistory.dateUpdated, 'mmm d, yyyy')# </span></div>
+							<div class="cbp_tmtime equal-height-column">
+							 <span></span>
+							 <span>#DateFormat(qGetHostLeadHistory.dateUpdated, 'mmm d, yyyy')# </span>
+							</div>
 							<i class="cbp_tmicon rounded-x hidden-xs"></i>
 							<div class="cbp_tmlabel equal-height-column">
-								<h2><cfoutput>#qGetHostLeadHistory.actions#</cfoutput></h2>
+								<h4><cfoutput>#qGetHostLeadHistory.actions#</cfoutput></h4>
 								<p><cfoutput>#qGetHostLeadHistory.comments#</cfoutput></p>
 							</div>
 						</li>

@@ -44,12 +44,28 @@
     <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
 
     <!--- Ajax Call to the Component --->
-    <cfajaxproxy cfc="nsmg.extensions.components.udf" jsclassname="UDFComponent">
-
+	
+	
     <!--- Param URL Variables --->
     <cfparam name="URL.hostID" default="">
     <cfparam name="URL.leadID" default="">
-
+    <cfparam name="URL.skip" default="0">
+    <cfparam name="URL.skip" default="0">
+    	<cfoutput>
+			<link rel="stylesheet" href="#APPLICATION.PATH.jQueryTheme#" type="text/css" /> <!-- JQuery UI 1.8 Tab Style Sheet --> 
+			<script type="text/javascript" src="#APPLICATION.PATH.jQuery#"></script> <!-- jQuery -->
+			<script type="text/javascript" src="#APPLICATION.PATH.jQueryUI#"></script> <!-- JQuery UI 1.8 Tab -->
+		</cfoutput> 
+			<script type="text/javascript" src="../assets/js/jquery.maskedinput.js"></script>
+	<script>
+	jQuery(function($){
+	  
+	   $("#father_cell").mask("(999) 999-9999");
+	  
+	});	
+	
+	</script>
+	
 	<!--- Param FORM Variables --->
 	<cfparam name="FORM.submitted" default="0">
 	<cfparam name="FORM.hostID" default="0">    
@@ -90,7 +106,10 @@
     <cfparam name="FORM.sourceType" default="">
     <cfparam name="FORM.sourceOther" default="">
 	<cfparam name="FORM.leadID" default="#url.leadID#">
-	
+	<cfparam name="FORM.skip" default="0">
+	<cfif val(FORM.skip)>
+		<cfset URL.skip =1>	
+    </cfif>
 
 
 		<cfscript>
@@ -160,6 +179,7 @@
 				FORM.zip = qGetHostLead.zipCode;
 				FORM.phone = qGetHostLead.phone;
 				FORM.email = qGetHostLead.email;
+				
 				FORM.regionID = qGetHostLead.regionid;
 				FORM.sourceCode = qGetHostLead.hearAboutUs;
 				FORM.sourceOther = qGetHostLead.hearAboutUsDetail;
@@ -169,6 +189,10 @@
 		}
 			
 	</cfscript>
+   <cfif URL.skip eq 1>
+
+   <cfelse>
+
 	   <cfquery name="checkHostAppExist" datasource="#application.dsn#">
 		select *,
 		CAST( 
@@ -186,15 +210,15 @@
 		where email =<cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">
 		</cfquery>
 
-	<cfif checkHostAppExist.recordcount gt 0>
-		<cfquery name="getHashID" datasource="#application.dsn#">
-			SELECT hashID
-			FROM smg_host_lead
-			WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.leadID#"> 
-		</cfquery>
-		<cflocation url="_app_sent.cfm?id=#FORM.leadID#&key=#getHashID.hashID#" addtoken="No">
+		<cfif checkHostAppExist.recordcount gt 0>
+			<cfquery name="getHashID" datasource="#application.dsn#">
+				SELECT hashID
+				FROM smg_host_lead
+				WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.leadID#"> 
+			</cfquery>
+			<cflocation url="_app_sent.cfm?id=#FORM.leadID#&key=#getHashID.hashID#" addtoken="No">
+		</cfif>
 	</cfif>
-		
     <!--- FORM Submitted --->
     <cfif VAL(FORM.submitted)>      	
     		<cfif (FORM.fatherLastname eq FORM.motherLastName) OR (LEN(FORM.motherLastName) eq 0) >
@@ -205,100 +229,44 @@
                		<cfset  FORM.familyLastName = #TRIM(FORM.fatherLastName)#>
                	</cfif>
 		<cfscript>
+		SESSION.FormErrors.clear();
 			// Data Validation - Check required Fields
-			if ( NOT LEN(FORM.familyLastName) ) {
-				SESSION.formErrors.Add("Please enter the Family Name.");
-			}
-			
-			if ( NOT LEN(FORM.address) ) {
-				SESSION.formErrors.Add("Please enter an Address.");
-			}
-			
-			if ( NOT LEN(FORM.city) ) {
-				SESSION.formErrors.Add("Please enter a City.");
-			}
-			
-			if ( NOT LEN(FORM.state) ) {
-				if (client.companyid neq 13) {
-				SESSION.formErrors.Add("Please select a State.");
-				}else{
-				SESSION.formErrors.Add("Please select a Province.");	
-				}
-			}
-			
-			if (client.companyid neq 13) {
-				if ( NOT isValid("zipcode", Trim(FORM.zip)) ) {
-					SESSION.formErrors.Add("Please enter a valid Zip.");     
-				}
-			}else{
-				if ( NOT len(Trim(FORM.zip)) ) {
-					SESSION.formErrors.Add("Please enter a valid Zip.");     
-				}
-			}
-			
-			if ( NOT LEN(FORM.phone) AND NOT LEN(FORM.father_cell) AND NOT LEN(FORM.mother_cell) ) {
-				SESSION.formErrors.Add("Please enter one of the Phone fields.");
+		
+			if ( NOT LEN(FORM.father_cell) ) {
+				SESSION.formErrors.Add("father_cell");
 			}    
 			
-			if ( LEN(FORM.phone) AND NOT isValid("telephone", Trim(FORM.phone)) ) {
-				SESSION.formErrors.Add("Please enter a valid Phone.");
-			}    
-			
+
 			if ( LEN(FORM.email) AND NOT isValid("email", Trim(FORM.email)) ) {
-				SESSION.formErrors.Add("Please enter a valid Email.");
+				SESSION.formErrors.Add("email");
 			}    
 			
-			if ( NOT LEN(FORM.fatherFirstName) AND NOT LEN(FORM.motherFirstName) OR NOT LEN(FORM.fatherLastName) AND NOT LEN(FORM.motherLastName) ) {
-				SESSION.formErrors.Add("Please enter at least one of the parents information.");
+			if (  NOT LEN(FORM.fatherFirstName)  ) {
+				SESSION.formErrors.Add("fatherFirstName");
 			}
 			
-			if ( LEN(FORM.fatherDOB) AND NOT IsDate(FORM.fatherDOB) ) {
-				FORM.fatherDOB = '';
-				SESSION.formErrors.Add("Please enter a valid Father's Date of Birth.");				
-			}    
-			
-			if ( LEN(FORM.fatherSSN) AND Left(FORM.fatherSSN, 3) NEQ 'XXX' AND NOT isValid("social_security_number", Trim(FORM.fatherSSN)) ) {
-				SESSION.formErrors.Add("Please enter a valid Father's SSN.");
-			}    
-			
-			if ( LEN(FORM.father_cell) AND NOT isValid("telephone", Trim(FORM.father_cell)) ) {
-				SESSION.formErrors.Add("Please enter a valid Father's Cell Phone.");
-			}    
-			
-			if ( LEN(FORM.motherDOB) AND NOT IsDate(FORM.motherDOB) ) {
-				FORM.motherDOB = '';
-				SESSION.formErrors.Add("Please enter a valid Mother's Date of Birth.");				
+			if (  NOT LEN(FORM.fatherLastName)  ) {
+				SESSION.formErrors.Add("fatherLastName");
 			}
-			
-			if ( LEN(FORM.motherSSN) AND Left(FORM.motherSSN, 3) NEQ 'XXX' AND NOT isValid("social_security_number", Trim(FORM.motherSSN)) ) {
-				SESSION.formErrors.Add("Please enter a valid Mother's SSN.");
-			}
-			
-			if ( LEN(FORM.mother_cell) AND NOT isValid("telephone", Trim(FORM.mother_cell)) ) {
-				SESSION.formErrors.Add("Please enter a valid Mother's Cell Phone.");
-			}
-			
-			if ( NOT VAL(qGetHostFamilyInfo.recordCount) AND NOT VAL(FORM.regionid) ) {
-				SESSION.formErrors.Add("Please select a Region.");
+
+			if (NOT VAL(FORM.regionid) ) {
+				SESSION.formErrors.Add("regionID");
 			}
 			
 			if ( NOT LEN(FORM.sourceCode) ) {
-				SESSION.formErrors.Add("Please select a Source Code.");
-			}
-			if ( FORM.sourceCode EQ 'Other' AND NOT LEN(TRIM(FORM.sourceOther)) ) {
-				//Get all the missing items in a list
-				SESSION.formErrors.Add("Please provide Other description for source.");
-			}
-			// Check for email address. 
-			if ( FORM.subAction EQ 'eHost' AND NOT LEN(TRIM(FORM.email)) ) {
-				//Get all the missing items in a list
-				SESSION.formErrors.Add("Please enter an email address.");
+				SESSION.formErrors.Add("source");
 			}
 			
 			// Check for email address. 
-			if ( FORM.subAction EQ 'eHost' AND LEN(TRIM(FORM.email)) AND NOT isValid("email", TRIM(FORM.email)) ) {
+			if ( NOT LEN(TRIM(FORM.email)) ) {
 				//Get all the missing items in a list
-				SESSION.formErrors.Add("Please enter a valid email address.");
+				SESSION.formErrors.Add("email");
+			}
+			
+			// Check for email address. 
+			if ( LEN(TRIM(FORM.email)) AND NOT isValid("email", TRIM(FORM.email)) ) {
+				//Get all the missing items in a list
+				SESSION.formErrors.Add("email");
 			}
         </cfscript>
     
@@ -322,39 +290,6 @@
         
         <!--- // Check if there are no errors --->
         <cfif NOT SESSION.formErrors.length()>
-
-            <cfscript>
-                // Father SSN - Will update if it's blank or there is a new number
-                if ( VAL(vDisplayFatherSSN) AND isValid("social_security_number", Trim(FORM.fatherSSN)) ) {
-                    // Encrypt Social
-                    FORM.fatherSSN = APPLICATION.CFC.UDF.encryptVariable(FORM.fatherSSN);
-                    // Update
-                    vUpdateFatherSSN = 1;
-                } else if ( NOT LEN(FORM.fatherSSN) ) {
-                    // Update - Erase SSN
-                    // vUpdateFatherSSN = 0;
-                }
-                
-                // Mother SSN - Will update if it's blank or there is a new number
-                if ( VAL(vDisplayMotherSSN) AND isValid("social_security_number", Trim(FORM.motherSSN)) ) {
-                    // Encrypt Social
-                    FORM.motherSSN = APPLICATION.CFC.UDF.encryptVariable(FORM.motherSSN);
-                    // Update
-                    vUpdateMotherSSN = 1;
-                } else if ( NOT LEN(FORM.motherSSN) ) {
-                    // Update - Erase SSN
-                    // vUpdateMotherSSN = 0;
-                }
-                
-                // set the birth year field from the birth date field
-                if ( IsDate(FORM.fatherDOB) ) {
-                    FORM.fatherBirth = Year(FORM.fatherDOB);
-                }
-                
-                if ( IsDate(FORM.motherDOB) ) {
-                    FORM.motherBirth = Year(FORM.motherDOB);
-                }				
-            </cfscript>
             
             <!--- Update --->
             <cfif VAL(FORM.hostID)>
@@ -368,27 +303,10 @@
                         fatherLastName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.fatherLastName)#">,
                         fatherFirstName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.fatherFirstName)#">,
                         fatherMiddleName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.fatherMiddleName)#">,
-                        fatherBirth = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.fatherBirth)#">,
-                        fatherDOB = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.fatherDOB#" null="#NOT IsDate(FORM.fatherDOB)#">,
+                     
                         <!--- Father SSN --->
-                        <cfif VAL(vUpdateFatherSSN)>
-                            fatherSSN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherSSN#">,
-                        </cfif>
                         fatherGender = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherGender#">,
-                        fatherWorkType = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherWorkType#">,
                         father_cell = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.father_cell#">,
-                        motherFirstName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.motherFirstName)#">,
-                        motherLastName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.motherLastName)#">,
-                        motherMiddleName = <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.motherMiddleName)#">,
-                        motherBirth = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.motherBirth)#">,
-                        motherDOB = <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.motherDOB#" null="#NOT IsDate(FORM.motherDOB)#">,
-                        <!--- Mother SSN ---->
-                        <cfif VAL(vUpdateMotherSSN)>
-                            motherSSN = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherSSN#">,
-                        </cfif>
-                        motherGender = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherGender#">,
-                        motherWorkType = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherWorkType#">,
-                        mother_cell = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.mother_cell#">,
                         address = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address#">,
                         address2 = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address2#">,
                         city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city#">,
@@ -436,27 +354,8 @@
                         fatherLastName, 
                         fatherFirstName, 
                         fatherMiddleName, 
-                        fatherBirth, 
-                        fatherDOB, 
-                        <!--- Father SSN --->
-                        <cfif VAL(vUpdateFatherSSN)>
-                        fatherSSN, 
-                        </cfif>
-                        fatherGender,
-                        fatherWorkType, 
+                        fatherGender, 
                         father_cell,
-                        motherFirstName, 
-                        motherLastName, 
-                        motherMiddleName, 
-                        motherBirth, 
-                        motherDOB, 
-                        <!--- Mother SSN --->
-                        <cfif VAL(vUpdateMotherSSN)>
-                        motherSSN,
-                        </cfif>     
-                        motherGender,                
-                        motherWorkType, 
-                        mother_cell,
                         address, 
                         address2, 
                         city, 
@@ -478,37 +377,18 @@
                     VALUES 
                     (
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#CreateUUID()#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.familyLastName)#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.fatherLastName)#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.fatherLastName)#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.fatherFirstName)#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.fatherMiddleName)#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.fatherBirth)#">,
-                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.fatherDOB#" null="#NOT IsDate(FORM.fatherDOB)#">,
-                        <!--- Father SSN --->
-                        <cfif VAL(vUpdateFatherSSN)>
-                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherSSN#">,
-                        </cfif>
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherGender#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherWorkType#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.father_cell#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.motherFirstName)#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.motherLastName)#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#TRIM(FORM.motherMiddleName)#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.motherBirth)#">,
-                        <cfqueryparam cfsqltype="cf_sql_date" value="#FORM.motherDOB#" null="#NOT IsDate(FORM.motherDOB)#">,
-                        <!--- Mother SSN --->
-                        <cfif VAL(vUpdateMotherSSN)>
-                            <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherSSN#">,
-                        </cfif>
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fatherGender#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.motherWorkType#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.mother_cell#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.address2#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.state#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.zip#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#">,
+                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.father_cell#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#strPassword#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">,
@@ -567,15 +447,20 @@
 					comments='Host Family created and Application sent.'					
 				);
 				
+   				
+ 				 
+ 				 // Create Online Appliation
 				
-				// Set Page Message
-				SESSION.pageMessages.Add("Application created and an email was sent to the host family.");
-				
-					
+				APPLICATION.CFC.HOST.setHostSeasonStatus(hostID=FORM.hostID);	
+			
+ 			
+
+
             </cfscript>
+            
              <script language="javascript">
                 // Close Window After 1.5 Seconds
-                setTimeout(function() { parent.$.fn.colorbox.close(); }, 1500);
+                setTimeout(function() { parent.$.fn.colorbox.close(); }, 100);
             </script>
 		</cfif>
         
@@ -587,26 +472,16 @@
 				FORM.fatherLastName = qGetHostFamilyInfo.fatherLastName;
 				FORM.fatherFirstName = qGetHostFamilyInfo.fatherFirstName;
 				FORM.fatherMiddleName = qGetHostFamilyInfo.fatherMiddleName;
-				FORM.fatherDOB = qGetHostFamilyInfo.fatherDOB;
-				FORM.fatherSSN = APPLICATION.CFC.UDF.displaySSN(varString=qGetHostFamilyInfo.fatherSSN, displayType='hostFamily');
 				FORM.fatherGender = qGetHostFamilyInfo.fatherGender;
 				FORM.fatherWorkType = qGetHostFamilyInfo.fatherWorkType;
 				FORM.father_cell = qGetHostFamilyInfo.father_cell;
-				FORM.motherFirstName = qGetHostFamilyInfo.motherFirstName;
-				FORM.motherLastName = qGetHostFamilyInfo.motherLastName;
-				FORM.motherMiddleName = qGetHostFamilyInfo.motherMiddleName;
-				FORM.motherDOB = qGetHostFamilyInfo.motherDOB;
-				FORM.motherSSN = APPLICATION.CFC.UDF.displaySSN(varString=qGetHostFamilyInfo.motherSSN, displayType='hostFamily');
-				FORM.motherGender = qGetHostFamilyInfo.motherGender;
-				FORM.motherWorkType = qGetHostFamilyInfo.motherWorkType;
-				FORM.mother_cell = qGetHostFamilyInfo.mother_cell;
 				FORM.address = qGetHostFamilyInfo.address;
 				FORM.address2 = qGetHostFamilyInfo.address2;
 				FORM.city = qGetHostFamilyInfo.city;
 				FORM.state = qGetHostFamilyInfo.state;
 				FORM.zip = qGetHostFamilyInfo.zip;
 				FORM.phone = qGetHostFamilyInfo.phone;
-				FORM.email = qGetHostFamilyInfo.email;
+				FORM.email = qGetHostFamilyInfo.email;				
 				FORM.password = qGetHostFamilyInfo.password;
 				FORM.companyID = qGetHostFamilyInfo.companyID;
 				FORM.regionid = qGetHostFamilyInfo.regionid;
@@ -620,10 +495,12 @@
 					FORM.father_cell = '';
 				}
 
-				if ( FORM.mother_cell EQ 'na') {
-					FORM.mother_cell = '';
-				}
+			
 			</cfscript>
+			
+			<Cfif val(#URL.skip#)>
+				<Cfset FORM.email = ''>
+			</Cfif>
 		</cfif>
     </cfif> <!--- FORM Submitted --->
    
@@ -634,21 +511,12 @@
 		<div class="tab-v2 margin-bottom-40">
 							
 	
+	<div class="row">
+
 		
+	</div>	
 		<!--=== End Breadcrumbs ===-->
-	<!--- Page Messages --->
-    <gui:displayPageMessages 
-        pageMessages="#SESSION.pageMessages.GetCollection()#"
-        messageType="tableSection"
-        width="95%"
-        />
-    
-    <!--- Form Errors --->
-    <gui:displayFormErrors 
-        formErrors="#SESSION.formErrors.GetCollection()#"
-        messageType="tableSection"
-        width="95%"
-        />
+
 		<!--=== Content Part ===-->
 		<div class="container content">
 			<div class="row">
@@ -661,7 +529,9 @@
 					
 					<!-- Checkout-Form -->
 					<form name="hostFamilyInfo" id="hostFamilyInfo" action="#CGI.SCRIPT_NAME#?curdoc=forms/host_fam_form_lead&leadID=#form.leadID#" method="post" id="sky-form" class="sky-form">
-					
+					<Cfif val(#URL.skip#)>
+					<input type="hidden" name="skip" value="1">
+					</Cfif>
 					<input type="hidden" name="submitted" value="1">
 					<input type="hidden" name="leadID" value="#FORM.leadID#">
 					<input type="hidden" name="followUpID" value="#FORM.followUpID#">
@@ -683,14 +553,14 @@
 									</div>
 								</section>
 									<section class="col col-4">
-									<label class="input <cfif #arrayFind( #SESSION.formErrors.GetCollection()#, "middlename" )#> state-error</cfif>">
+									<label class="input <cfif #arrayFind( #SESSION.formErrors.GetCollection()#, "fatherMiddleName" )#> state-error</cfif>">
 										<i class="icon-prepend fa fa-user"></i>
 										<input type="text" name="fatherMiddleName" placeholder="Middle name" value="#FORM.fathermiddleName#">
 									</label>
 									<div class="note">Legal middle name</div>
 								</section>
 								<section class="col col-4">
-									<label class="input <cfif #arrayFind( #SESSION.formErrors.GetCollection()#, "lastname" )#> state-error</cfif>">
+									<label class="input <cfif #arrayFind( #SESSION.formErrors.GetCollection()#, "fatherLastName" )#> state-error</cfif>">
 										<i class="icon-prepend fa fa-user"></i>
 										<input type="text" name="fatherLastName" placeholder="Last name"value="#FORM.fatherLastName#">
 									</label>
@@ -730,11 +600,11 @@
 							</section>
 -->
 								<section class="col col-6">
-							<label class="input <cfif #arrayFind( #SESSION.formErrors.GetCollection()#, "social" )#> state-error</cfif>">
+							<label class="input <cfif #arrayFind( #SESSION.formErrors.GetCollection()#, "father_cell" )#> state-error</cfif>">
 								<i class="icon-prepend fa fa-mobile-phone"></i>
-								<input type="text" name="father_cell" id="father_cell" placeholder="Mobile Phone" value="#FORM.father_cell#">
+								<input type="text" name="father_cell" id="father_cell" placeholder="Phone" value="#FORM.father_cell#">
 							</label>
-							<cfif #arrayFind( #SESSION.formErrors.GetCollection()#, "social" )#>
+							<cfif #arrayFind( #SESSION.formErrors.GetCollection()#, "father_cell" )#>
 								<div class="note note-error">Enter a valid phone number</div>
 							</cfif>
 							</section>
@@ -796,7 +666,7 @@
 							<section class="col col-6">
 							<label class="input <cfif #arrayFind( #SESSION.formErrors.GetCollection()#, "social" )#> state-error</cfif>">
 								<i class="icon-prepend fa fa-mobile-phone"></i>
-								<input type="text" name="mother_cell" id="mother_cell" placeholder="Mobile Phone" value="#FORM.mother_cell#">
+								<input type="text" name="mother_cell" id="mother_cell" placeholder="Mobile Phone" value="#FORM.mother_cell# ">
 							</label>
 							<cfif #arrayFind( #SESSION.formErrors.GetCollection()#, "social" )#>
 								<div class="note note-error">Enter a valid phone number</div>
@@ -894,7 +764,7 @@
 							
 							<section class="col col-6">
 								
-								<label class="select <cfif #arrayFind( #SESSION.formErrors.GetCollection()#, "gender" )#> state-error</cfif>">
+								<label class="select <cfif #arrayFind( #SESSION.formErrors.GetCollection()#, "source" )#> state-error</cfif>">
 								
 									<select name="sourceCode">
 										 <option value="">Select Source</option>
@@ -913,14 +783,14 @@
 									</select>
 								
 								</label>
-								<cfif #arrayFind( #SESSION.formErrors.GetCollection()#, "sourceCode" )#>
+								<cfif #arrayFind( #SESSION.formErrors.GetCollection()#, "source" )#>
 								<div class="note note-error">Source is required</div>
 								</cfif>
 							</section>
 
 							<section class="col col-6">
 								
-								<label class="select <cfif #arrayFind( #SESSION.formErrors.GetCollection()#, "gender" )#> state-error</cfif>">
+								<label class="select <cfif #arrayFind( #SESSION.formErrors.GetCollection()#, "regionID" )#> state-error</cfif>">
 								
 									<select name="regionid">
 										 <cfif APPLICATION.CFC.USER.isOfficeUser()>
@@ -978,7 +848,10 @@
 						postal_code: '#zip'
 					}]
 				});
+			
+		
 	</script>
+
 
 	<cfif val(#unify#)>
 	
@@ -1011,9 +884,15 @@
 				Validation.initValidation();
 				StyleSwitcher.initStyleSwitcher();
 			});
+			
+		
+
 		</script>
 	</cfif>
-	
+	<!----clear errors so they don't show up if closed---->
+	<cfscript>
+		SESSION.FormErrors.clear();
+	</cfscript>
 	<!--[if lt IE 9]>
 	<script src="assets/plugins/respond.js"></script>
 	<script src="assets/plugins/html5shiv.js"></script>
