@@ -31,12 +31,17 @@
 
 	<!-- CSS Customization -->
 	<link rel="stylesheet" href="assets/css/custom.css">
+
+
+	<script src="assets/js/app.js"></script>
 	<!--Format Date Picker-->	
+		<!---
 	  <script type="text/javascript">
 	   $(function() {
-			   $("#datepicker").datepicker({ dateFormat: "yy-mm-dd" }).val()
+			  $("#datepicker").datepicker({ dateFormat: "yy-mm-dd" }).val()
 	   });
 	  </script>
+		--->
 		<!--Smarty Streets-->
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 		<script src="//d79i1fxsrar4t.cloudfront.net/jquery.liveaddress/3.2/jquery.liveaddress.min.js"></script>
@@ -56,8 +61,11 @@
 					}]
 				});
 	</script>
+
+	<!---
 	<script>
 	$(document).ready(function(){
 		$('.phone').mask('(000) 000-0000');
-	}
+	});
 	</script>
+	--->
