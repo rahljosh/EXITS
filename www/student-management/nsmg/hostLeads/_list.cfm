@@ -328,7 +328,7 @@
 		} 
 
 		// JQuery Modal
-		$(".jQueryModal").colorbox( {
+		/*$(".jQueryModal").colorbox( {
 			width:"60%", 
 			height:"90%", 
 			iframe:true,
@@ -336,7 +336,7 @@
 			escKey:true,
 			closeButton:true,
 			
-		});		
+		});		*/
 
 	}
 	// --- END OF HOST LEADS LIST --- //
@@ -462,6 +462,17 @@
 
 <cfoutput>
 
+	<!--=== PAGE TITLE ===-->
+		<div class="breadcrumbs">
+			<div class="container">
+				<h1 class="pull-left"><Cfoutput>Host Family Leads</Cfoutput></h1>
+				<ul class="pull-right breadcrumb">
+					To host or not to host is just a phone call away!
+				</ul>
+			</div>
+		</div>
+		<!--=== END PAGE TITLE ===-->
+		<br>
 
 	<!--- This holds the student information messages --->
     <table width="100%" border="0" cellpadding="4" cellspacing="0" class="section pageMessages displayNone" align="center">
