@@ -19,7 +19,7 @@
 		// Param FORM Variables
 		param name="FORM.keyword" default="";
 		param name="FORM.followUpID" default=0;	
-		param name="FORM.regionID" default=0;	
+		param name="FORM.regionID" default=99999;	
 		param name="FORM.stateID" default=0;	
 		param name="FORM.statusID" default="";	
 		param name="FORM.sortBy" default="dateCreated";		
@@ -335,7 +335,7 @@
 			overlayClose:true,
 			escKey:true,
 			closeButton:true,
-			onClosed:function(){ getHostLeadList(); }
+			
 		});		
 
 	}
@@ -481,8 +481,9 @@
             <td>
                Region<br />   
                 <select name="regionID" id="regionID">
+              		 <option value="999999">All Regions</option>
                 	<cfif ListFind("1,2,3,4", CLIENT.userType)>
-                		<option value="0" <cfif NOT VAL(FORM.regionID)>selected="selected"</cfif> ></option>
+                		<option value="0" <cfif NOT VAL(FORM.regionID)>selected="selected"</cfif> >Unassigned</option>
                     </cfif>
                     <cfloop query="qGetRegions">
                     	<option value="#qGetRegions.regionID#" <cfif FORM.regionID EQ qGetRegions.regionID>selected="selected"</cfif> >#qGetRegions.regionName#</option>
