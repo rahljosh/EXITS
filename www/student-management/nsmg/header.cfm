@@ -351,7 +351,7 @@
 		
 	});	
 </script>
-<Cfif 1 eq 2>
+<Cfif val(unify)>
 	<cfinclude template="includes/_unify-header.cfm">
 <cfelse>
 	<cfinclude template="includes/_classic-header.cfm">
