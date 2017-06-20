@@ -77,7 +77,7 @@
 </table>
 
 <!--- Include Footer --->
-<Cfif 1 eq 2>
+<Cfif val(unify)>
 	<cfinclude template="unify-footer.cfm">
 <cfelse>
 	<cfinclude template="footer.cfm">
