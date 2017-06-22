@@ -18,65 +18,17 @@
 				
 ----- ------------------------------------------------------------------------- --->
 
-<!-- CSS Global Compulsory -->
-	<link rel="stylesheet" href="../assets/plugins/bootstrap/css/bootstrap.min.css">
-	<link rel="stylesheet" href="../assets/css/style.css">
-
-	<!-- CSS Header and Footer -->
-	<link rel="stylesheet" href="../assets/css/headers/header-default.css">
-	<link rel="stylesheet" href="../assets/css/footers/footer-v1.css">
-
-	<!-- CSS Implementing Plugins -->
-	<link rel="stylesheet" href="../assets/plugins/animate.css">
-	<link rel="stylesheet" href="../assets/plugins/line-icons/line-icons.css">
-	<script src="https://use.fontawesome.com/b474fc74fd.js"></script>
-<!--	<link rel="stylesheet" href="../assets/plugins/font-awesome/css/font-awesome.min.css">-->
-
-	<!-- CSS Page Style -->
-	<link rel="stylesheet" href="../assets/css/pages/page_log_reg_v1.css">
-	<!----Profile---->
-	<link rel="stylesheet" href="../assets/css/pages/profile.css">
-	<link rel="stylesheet" href="../assets/plugins/scrollbar/css/jquery.mCustomScrollbar.css">
-
-	<!----Form Elements---->
-	<link rel="stylesheet" href="../assets/plugins/sky-forms-pro/skyforms/css/sky-forms.css">
-	<link rel="stylesheet" href="../assets/plugins/sky-forms-pro/skyforms/custom/custom-sky-forms.css">
-
-	<!-- CSS Implementing Plugins -->
-
-	<!----User Profile Elements---->
-	<!-- CSS Page Style -->
-	<link rel="stylesheet" href="../assets/css/pages/profile.css">
-
-
-	<!-- CSS Theme -->
-	<link rel="stylesheet" href="../assets/css/theme-colors/blue.css" id="style_color">
-	<link rel="stylesheet" href="../assets/css/theme-skins/dark.css">
-
-	<!-- CSS Customization -->
-	<link rel="stylesheet" href="../assets/css/custom.css">
-	<!--Format Date Picker-->	
-
 
 		
 <!--- Kill Extra Output --->
 
 
 	<cfparam name="FORM.quickSearchAutoSuggestHostID" default="">
-    <cfparam name="FORM.quickSearchHostID" default="">
+  <cfparam name="FORM.quickSearchHostID" default="">
 	<!--- Import CustomTag --->
-    <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
+  <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
 	
-	<!-- JS Global Compulsory -->
-	<cfoutput>
-		<link rel="stylesheet" href="#APPLICATION.PATH.jQueryTheme#" type="text/css" /> <!-- JQuery UI 1.8 Tab Style Sheet --> 
-		<script type="text/javascript" src="#APPLICATION.PATH.jQuery#"></script> <!-- jQuery -->
-		<script type="text/javascript" src="#APPLICATION.PATH.jQueryUI#"></script> <!-- JQuery UI 1.8 Tab -->	
-	</cfoutput>
-
 	<cfparam name="manual_assign_host" default=0>
-	<script type="text/javascript" src="../assets/plugins/bootstrap/js/bootstrap.min.js"></script>
-
 
 	<cfscript>
 		// Param URL Variables
@@ -232,7 +184,7 @@
 	where hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostLead.hostid#">
     </cfquery>
 </Cfif>
-    	<div class="container content">
+    	<div class="">
 				<div class="row">
 					<!-- Begin Content -->
 					<div class="col-md-12">
@@ -240,8 +192,8 @@
 						<div class="tab-v2 margin-bottom-40">
 							 <div class="headline"><h2 class="heading-lg">Hey! Existing Host Family information was found!</h2></div>
 								<div class="row">
-									<div class="col-sm-10">
-										<div class="tag-box tag-box-v3">	
+									<div class="col-sm-12">
+										<div class="tag-box">	
 										<Cfif checkHostAppExist.recordcount gt 0 and  manual_assign_host eq 0 >	
 											<h3>Are these two families the same?</h3>
 
