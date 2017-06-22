@@ -40,7 +40,7 @@
 		param name="FORM.hostLeadJNID" default=0;
 		param name="FORM.followUpID" default=0;
 		param name="FORM.companyID" default=0;
-		param name="FORM.regionID_hf" default=0;
+		param name="FORM.regionID" default=0;
 		param name="FORM.areaRepID" default=0;
 		param name="FORM.statusID" default=0;
 		param name="FORM.comments" default='';
@@ -86,7 +86,7 @@
 			
 					
 				// Data Validation - Allow adding comment only up to 3 times, after that region is required
-				if ( NOT VAL(FORM.regionID_hf) AND qGetHostLeadHistory.recordCount GT 3 AND CLIENT.usertype eq 5 ) {
+				if ( NOT VAL(FORM.regionID) AND qGetHostLeadHistory.recordCount GT 3 AND CLIENT.usertype eq 5 ) {
 					// Get all the missing items in a list
 					SESSION.formErrors.Add('You must select a region');
 				}			
@@ -119,7 +119,7 @@
 				APPLICATION.CFC.HOST.updateHostLead(
 					ID=FORM.ID,					
 					followUpID=FORM.areaRepID,
-					regionID=FORM.regionID_hf,
+					regionID=FORM.regionID,
 					areaRepID=FORM.areaRepID,
 					statusID=FORM.statusID,
 					enteredByID=CLIENT.userID,
@@ -150,7 +150,7 @@
 			// Set FORM Values
 			FORM.followUpID = qGetHostLead.followUpID;
 			FORM.companyID = qGetHostLead.companyID;
-			FORM.regionID_hf = qGetHostLead.regionID;
+			FORM.regionID = qGetHostLead.regionID;
 			FORM.areaRepID = qGetHostLead.areaRepID;
 			FORM.statusID = qGetHostLead.statusID;
 			// FORM.comments = qGetHostLead.comments;
@@ -182,8 +182,7 @@
 
 
 		<script language="javascript">
-           
-      // Display Final Decision Warning
+            // Display Final Decision Warning
 			var displayFinalDecision = function() { 
                 // Get Status Value
 				vGetSelectedStatus = $("##statusID").val();
@@ -212,12 +211,12 @@
 					return true; 
 				}
 			}
-
+			
 			// Display warning when page is ready
-      $(document).ready(function() {
-          displayFinalDecision();
-      });
-    </script>
+        $(document).ready(function() {
+            displayFinalDecision();
+        });
+    	</script>
 		<cfif isDefined('url.startApp')>
           <!--- Check for duplicate accounts --->
 		<cfif isValid("email", qGetHostLead.email)>
@@ -276,7 +275,7 @@
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetHostLead.email#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetHostLead.password#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostLead.companyID#">,
-                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionid_hf#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.regionid#">,
                         <cfqueryparam cfsqltype="cf_sql_integer" value="9">,
                         <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetHostLead.hearAboutUs#">,
@@ -332,17 +331,17 @@
             width="95%"
             />
       
-
-<div class="">
-	<!-- Begin Content -->
-	<div class="col-md-12">
-		<!-- Alert Tabs -->
-		<div class="tab-v2 margin-bottom-40">
+      		<div class="">
+				<div class="row">
+					<!-- Begin Content -->
+					<div class="col-md-12">
+						<!-- Alert Tabs -->
+						<div class="tab-v2 margin-bottom-40">
 							 
-			<div class="tag-box">
-				<!-- Heading v6 -->
-				<div class="heading heading-v6"><h2>#qGetHostLead.statusAssigned#</h2></div>
-					<div class="row row-eq-height">
+						<div class="tag-box tag-box-v3">
+						<!-- Heading v6 -->
+						<div class="heading heading-v6"><h2>#qGetHostLead.statusAssigned#</h2></div>
+							 <div class="row row-eq-height">
 								<div class="col-md-4">
 									<div class="bg-light"><!-- You can delete "bg-light" class. It is just to make background color -->
 										<h4><i class="fa fa-home"></i>Potential Host Family</h4>
@@ -414,7 +413,7 @@
 						</div>
 						<!----Action to take---->
 						
-						<div class="tag-box">
+						<div class="tag-box tag-box-v3">
 							<div class="heading heading-v6"><h2>Make an Update</h2></div>
 							
 								  <cfform name="hostLeadDetail" action="#CGI.SCRIPT_NAME#?#CGI.QUERY_STRING#" method="post" class="sky-form">
@@ -440,12 +439,12 @@
 											<label class="label">Region</label>
 											<label class="select">
 												 <cfselect
-													name="regionID_hf" 
-													id="regionID_hf"
+													name="regionID" 
+													id="regionID"
 													class="xLargeField"
 													value="regionID"
 													display="regionInfo"
-													selected="#FORM.regionID_hf#" 
+													selected="#FORM.regionID#" 
 													bindonload="yes"
 													bind="cfc:nsmg.extensions.components.region.getRegionRemote({companyID})" />
 												<i></i>
@@ -457,7 +456,7 @@
 										</cfif>
 									
 										<cfif CLIENT.userType EQ 5>
-										<input type="hidden" name="regionID_hf" value="#FORM.regionID_hf#" />
+										<input type="hidden" name="regionID" value="#FORM.regionID#" />
 											<section>
 												<label class="label">Area Representative</label>
 												<label class="select">
@@ -516,43 +515,58 @@
 							
 							</div>
 							
+						</div>
+						<!-- End Heading v6 -->
+						
+						
+					<div class="tag-box tag-box-v3">
+							<div class="heading heading-v6"><h2>History</h2></div>
+			<div class="row">
+								<!-- Begin Content -->
+				<div class="col-md-12">
+					<ul class="timeline-v2">
+					  <cfloop query="qGetHostLeadHistory">
+						<li class="equal-height-columns">
+							<div class="cbp_tmtime equal-height-column">
+							 <span></span>
+							 <span>#DateFormat(qGetHostLeadHistory.dateUpdated, 'mmm d, yyyy')# </span>
 							</div>
-							<!-- End Heading v6 -->
-						
-						
-							<div class="tag-box"> <!-- Start tag-box -->
-								<div class="heading heading-v6"><h2>History</h2></div>
-								<div class="row"> <!-- Start Row -->
-									
-									<!-- Begin Content -->
-									<div class="col-md-12">
-										<ul class="timeline-v2">
-										  <cfloop query="qGetHostLeadHistory">
-											<li class="equal-height-columns">
-												<div class="cbp_tmtime equal-height-column">
-												 <span></span>
-												 <span>#DateFormat(qGetHostLeadHistory.dateUpdated, 'mmm d, yyyy')# </span>
-												</div>
-												<i class="cbp_tmicon rounded-x hidden-xs"></i>
-												<div class="cbp_tmlabel equal-height-column">
-													<h4><cfoutput>#qGetHostLeadHistory.actions#</cfoutput></h4>
-													<p><cfoutput>#qGetHostLeadHistory.comments#</cfoutput></p>
-												</div>
-											</li>
-											</cfloop>
-										</ul>
-									</div> <!-- End Content -->
-
-								</div><!-- Start Row -->
-							</div><!-- End tag-box -->
+							<i class="cbp_tmicon rounded-x hidden-xs"></i>
+							<div class="cbp_tmlabel equal-height-column">
+								<h4><cfoutput>#qGetHostLeadHistory.actions#</cfoutput></h4>
+								<p><cfoutput>#qGetHostLeadHistory.comments#</cfoutput></p>
+							</div>
+						</li>
+						</cfloop>
+					</ul>
+				</div>
+				<!-- End Content -->
 
 							
-				</div> <!-- End Heading v6 -->
-			</div>	
-		</div> <!-- End Alert Tabs -->
-	</div> <!-- End Content -->
-</div>
+						</div>
+						<!-- End Heading v6 -->
+							</div>	
+						
+						
+						
+						
+			
+						
+						
+						</div>		
+					</div>
+				</div>		
+			  </div>
+		
+      
+      
+      
+      
+      	
+      
 
-<br clear="all" />
+
+      
+
 
 </cfoutput>

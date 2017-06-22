@@ -1,6 +1,7 @@
 <!-- CSS Global Compulsory -->
 
-	<link rel="stylesheet" href="assets/plugins/bootstrap/css/bootstrap.min.css">
+
+	<link rel="stylesheet" href="assets/css/bootstrap.min.css">
 	<link rel="stylesheet" href="assets/css/style.css">
 
 
@@ -31,19 +32,15 @@
 
 	<!-- CSS Customization -->
 	<link rel="stylesheet" href="assets/css/custom.css">
-
-
-	<script src="assets/js/app.js"></script>
 	<!--Format Date Picker-->	
-		<!---
 	  <script type="text/javascript">
 	   $(function() {
-			  $("#datepicker").datepicker({ dateFormat: "yy-mm-dd" }).val()
+			   $("#datepicker").datepicker({ dateFormat: "yy-mm-dd" }).val()
 	   });
 	  </script>
-		--->
 		<!--Smarty Streets-->
-	
+		
+
 		<script src="//d79i1fxsrar4t.cloudfront.net/jquery.liveaddress/3.2/jquery.liveaddress.min.js"></script>
 		<script> var liveaddress = jQuery.LiveAddress({
 					key: '19728119051131453',
@@ -61,11 +58,10 @@
 					}]
 				});
 	</script>
-
-	<!---
+	
+	
 	<script>
 	$(document).ready(function(){
 		$('.phone').mask('(000) 000-0000');
-	});
+	}
 	</script>
-	--->

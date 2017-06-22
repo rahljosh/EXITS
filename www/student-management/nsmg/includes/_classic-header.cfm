@@ -90,8 +90,7 @@
                 
                 	<input type="hidden" name="quickSearchStudentID" id="quickSearchStudentID" value="#FORM.quickSearchStudentID#" class="quickSearchField" />
                     <input type="hidden" name="quickSearchHostID" id="quickSearchHostID" value="#FORM.quickSearchHostID#" class="quickSearchField" /> 
-                    <input type="hidden" name="quickSearchUserID" id="quickSearchUserID" value="#FORM.quickSearchUserID#" class="quickSearchField" />  
-                    <input type="hidden" name="quickSearchSchoolID" id="quickSearchSchoolID" value="#FORM.quickSearchSchoolID#" class="quickSearchField" />                
+                    <input type="hidden" name="quickSearchUserID" id="quickSearchUserID" value="#FORM.quickSearchUserID#" class="quickSearchField" />                
                 
                     <table width="430px" cellpadding="2" cellspacing="0" class="quickSearchTable" align="right">
                         <tr>
@@ -112,11 +111,7 @@
                         <tr class="on">
                             <td class="subTitleRightNoBorderMiddle">Host Family: </td>
                             <td><input type="text" name="quickSearchAutoSuggestHostID" id="quickSearchAutoSuggestHostID" value="#FORM.quickSearchAutoSuggestHostID#" onclick="quickSearchValidation();" class="mediumField quickSearchField" maxlength="20" /></td>
-                            <td class="subTitleRightNoBorderMiddle">School: </td>
-                            <td><input type="text" name="quickSearchAutoSuggestSchoolID" id="quickSearchAutoSuggestSchoolID" value="#FORM.quickSearchAutoSuggestSchoolID#" onclick="quickSearchValidation();" class="mediumField quickSearchField" maxlength="20" /></td>
-                        </tr>
-                        <tr>
-                            <td colspan="4" align="center"><span class="note">Type in ID ##, Name or Business Name</span></td>
+                            <td colspan="2" align="center"><span class="note">Type in ID ##, Name or Business Name</span></td>
                         </tr>
                     </table>
                 </cfform> 
