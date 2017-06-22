@@ -1,43 +1,6 @@
 	<!--- Kill extra output --->
 
-  <!-- CSS Global Compulsory -->
-	<link rel="stylesheet" href="../assets/plugins/bootstrap/css/bootstrap.min.css">
-	<link rel="stylesheet" href="../assets/css/style.css">
 
-	<!-- CSS Header and Footer -->
-	<link rel="stylesheet" href="../assets/css/headers/header-default.css">
-	<link rel="stylesheet" href="../assets/css/footers/footer-v1.css">
-
-	<!-- CSS Implementing Plugins -->
-	<link rel="stylesheet" href="../assets/plugins/animate.css">
-	<link rel="stylesheet" href="../assets/plugins/line-icons/line-icons.css">
-	<script src="https://use.fontawesome.com/b474fc74fd.js"></script>
-<!--	<link rel="stylesheet" href="../assets/plugins/font-awesome/css/font-awesome.min.css">-->
-
-	<!-- CSS Page Style -->
-	<link rel="stylesheet" href="../assets/css/pages/page_log_reg_v1.css">
-	<!----Profile---->
-	<link rel="stylesheet" href="../assets/css/pages/profile.css">
-	<link rel="stylesheet" href="../assets/plugins/scrollbar/css/jquery.mCustomScrollbar.css">
-
-	<!----Form Elements---->
-	<link rel="stylesheet" href="../assets/plugins/sky-forms-pro/skyforms/css/sky-forms.css">
-	<link rel="stylesheet" href="../assets/plugins/sky-forms-pro/skyforms/custom/custom-sky-forms.css">
-
-	<!-- CSS Implementing Plugins -->
-
-	<!----User Profile Elements---->
-	<!-- CSS Page Style -->
-	<link rel="stylesheet" href="../assets/css/pages/profile.css">
-
-
-	<!-- CSS Theme -->
-	<link rel="stylesheet" href="../assets/css/theme-colors/blue.css" id="style_color">
-	<link rel="stylesheet" href="../assets/css/theme-skins/dark.css">
-
-	<!-- CSS Customization -->
-	<link rel="stylesheet" href="../assets/css/custom.css">
-	<!--Format Date Picker-->	
 
 	<cfparam name="unify" default="">
     <!--- Import CustomTag --->
@@ -51,12 +14,8 @@
     <cfparam name="URL.leadID" default="">
     <cfparam name="URL.skip" default="0">
     <cfparam name="URL.skip" default="0">
-    	<cfoutput>
-			<link rel="stylesheet" href="#APPLICATION.PATH.jQueryTheme#" type="text/css" /> <!-- JQuery UI 1.8 Tab Style Sheet --> 
-			<script type="text/javascript" src="#APPLICATION.PATH.jQuery#"></script> <!-- jQuery -->
-			<script type="text/javascript" src="#APPLICATION.PATH.jQueryUI#"></script> <!-- JQuery UI 1.8 Tab -->
-		</cfoutput> 
-			<script type="text/javascript" src="../assets/js/jquery.maskedinput.js"></script>
+
+	<script type="text/javascript" src="/nsmg/assets/js/jquery.maskedinput.js"></script>
 	<script>
 	jQuery(function($){
 	  
@@ -518,14 +477,13 @@
 		<!--=== End Breadcrumbs ===-->
 
 		<!--=== Content Part ===-->
-		<div class="container content">
+		<div class="">
 			<div class="row">
 				<cfoutput>
 	
 
 				<!-- Begin Content --> 
 				<div class="col-md-12 tab-pane fade in active">
-				<div class="headline"><h2 class="heading-lg">Start Host App from Lead Information</h2></div>
 					
 					<!-- Checkout-Form -->
 					<form name="hostFamilyInfo" id="hostFamilyInfo" action="#CGI.SCRIPT_NAME#?curdoc=forms/host_fam_form_lead&leadID=#form.leadID#" method="post" id="sky-form" class="sky-form">
@@ -834,8 +792,8 @@
 </div>
 
 		<!--Smarty Streets-->
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
-		<script src="//d79i1fxsrar4t.cloudfront.net/jquery.liveaddress/3.2/jquery.liveaddress.min.js"></script>
+	
+		
 		<script> var liveaddress = jQuery.LiveAddress({
 					key: '19728119051131453',
 					autocomplete: 5,
@@ -848,60 +806,21 @@
 						postal_code: '#zip'
 					}]
 				});
-			
 		
 	</script>
 
+	<style>
+	.smarty-ui {
+		z-index: 999999999 !important;
+	}
+	</style>
 
-	<cfif val(#unify#)>
+
 	
-		<!-- JS Global Compulsory -->
-		<script type="text/javascript" src="assets/plugins/jquery/jquery.min.js"></script>
-		<script type="text/javascript" src="assets/plugins/jquery/jquery-migrate.min.js"></script>
-		<script type="text/javascript" src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
-		<!-- JS Implementing Plugins -->
-		<script type="text/javascript" src="assets/plugins/back-to-top.js"></script>
-		<script type="text/javascript" src="assets/plugins/smoothScroll.js"></script>
-		<script src="assets/plugins/sky-forms-pro/skyforms/js/jquery.validate.min.js"></script>
-		<script src="assets/plugins/sky-forms-pro/skyforms/js/jquery.maskedinput.min.js"></script>
-		<script src="assets/plugins/sky-forms-pro/skyforms/js/jquery-ui.min.js"></script>
-		<script src="assets/plugins/sky-forms-pro/skyforms/js/jquery.form.min.js"></script>
-		<!-- JS Customization -->
-		<script type="text/javascript" src="assets/js/custom.js"></script>
-		<!-- JS Page Level -->
-		<script type="text/javascript" src="assets/js/app.js"></script>
-		<script type="text/javascript" src="assets/js/forms/order.js"></script>
-		<script type="text/javascript" src="assets/js/plugins/masking.js"></script>
-		<script type="text/javascript" src="assets/js/forms/review.js"></script>
-		<script type="text/javascript" src="assets/js/plugins/validation.js"></script>
-		<script type="text/javascript" src="assets/js/plugins/datepicker.js"></script>
-		<script type="text/javascript" src="assets/js/plugins/style-switcher.js"></script>
-		<script type="text/javascript">
-			jQuery(document).ready(function() {
-				App.init();
-				Masking.initMasking();
-				Datepicker.initDatepicker();
-				Validation.initValidation();
-				StyleSwitcher.initStyleSwitcher();
-			});
-			
-		
-
-		</script>
-	</cfif>
 	<!----clear errors so they don't show up if closed---->
 	<cfscript>
 		SESSION.FormErrors.clear();
 	</cfscript>
-	<!--[if lt IE 9]>
-	<script src="assets/plugins/respond.js"></script>
-	<script src="assets/plugins/html5shiv.js"></script>
-	<script src="assets/plugins/placeholder-IE-fixes.js"></script>
-	<script src="assets/plugins/sky-forms-pro/skyforms/js/sky-forms-ie8.js"></script>
-	<![endif]-->
-
-	<!--[if lt IE 10]>
-	<script src="assets/plugins/sky-forms/version-2.0.1/js/jquery.placeholder.min.js"></script>
-	<![endif]-->
+	
 </body>
 </html>

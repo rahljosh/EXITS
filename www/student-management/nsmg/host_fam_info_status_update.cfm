@@ -256,6 +256,18 @@
             );
         </cfscript>
         <cfset newStatus = 'Call Back Next SY' />
+    <Cfelseif FORM.call_back EQ 3>
+        <cfscript>
+            applicationHistory = APPLICATION.CFC.LOOKUPTABLES.insertApplicationHistory(
+                applicationID=7,
+                foreignTable='smg_hosts',
+                foreignID=URL.hostID,
+                enteredByID=CLIENT.userID,
+                dateCreated=NOW(),
+                status_update='Email Back'
+            );
+        </cfscript>
+        <cfset newStatus = 'Email Back' />
     </Cfif>
 
     <cfset applicationHistoryID = applicationHistory />

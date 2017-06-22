@@ -23,7 +23,7 @@
 		<div class="header">
 			<div class="container">
 				<!-- Logo -->
-				<a class="logo" href="index.html">
+				<a class="logo" href="index.cfm">
 					<img src="assets/img/logos/ise-eagle.png" alt="Logo">
 				</a>
 				<!-- End Logo -->
@@ -343,11 +343,19 @@
 						<li>
 							<i class="search fa fa-search search-btn"></i>
 							<div class="search-open">
-								<div class="input-group animated fadeInDown">
-									<input type="text" class="form-control" placeholder="Search">
-									<span class="input-group-btn">
-										<button class="btn-u" type="button">Go</button>
-									</span>
+								<div class="input-group animated fadeInDown" style="display: inline !important">
+								<cfform name="quickSearchForm" id="quickSearchForm" method="post" action="/nsmg/index.cfm?curdoc=#URL.curdoc#" style="margin:0px; padding:0px;">
+									<select name="quick_search_by" id="quick_search_by" class="form-control"  style="float:left; width:35%" onchange="cleanQuickSearch()">
+										<option value="student">Student</option>
+										<option value="host_family">Host Family</option>
+										<option value="user">User</option>
+										<option value="school">School</option>
+									</select>
+
+									<input type="text" name="quickSearchAutoSuggestID" id="quickSearchAutoSuggestID" value="" style="float:right; width:63%" maxlength="20" class="form-control" placeholder="Search" />
+									
+									<input type="hidden" name="quickSearchID" id="quickSearchID" value="#FORM.quickSearchID#" class="quickSearchField" />  
+									</cfform>  
 								</div>
 							</div>
 						</li>

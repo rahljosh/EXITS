@@ -20,7 +20,7 @@
     <cfparam name="hosting" default="">
     <cfparam name="active" default="">
     <cfparam name="active_rep" default="">
-    <cfparam name="available_to_host" default="">
+    <cfparam name="available_to_host" default="1">
     <cfparam name="area_rep" default="" />
     <cfparam name="HFstatus" default="" />
     <cfparam name="HFyear" default="" />
@@ -591,6 +591,7 @@
                         <option value="Call Back Next SY" <cfif HFstatus EQ "Call Back Next SY">selected</cfif>>Call Back Next SY</option>
                         <option value="Current Season" <cfif HFstatus EQ "Current Season">selected</cfif>>Current Season</option>
                         <option value="Decided Not to Host" <cfif HFstatus EQ "Decided Not to Host">selected</cfif>>Decided Not to Host</option>
+                        <option value="Email Back" <cfif HFstatus EQ "Email Back">selected</cfif>>Email Back</option>
                         <option value="Not Qualified to Host" <cfif HFstatus EQ "Not Qualified to Host">selected</cfif>>Not Qualified to Host</option>
                         <option value="With Other Sponsor" <cfif HFstatus EQ "With Other Sponsor">selected</cfif>>With Other Sponsor</option>
                     </select>

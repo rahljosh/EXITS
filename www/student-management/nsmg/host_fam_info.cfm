@@ -727,7 +727,7 @@ div.scroll2 {
                                 </cfif>
                                 
                             </cfif>
-                            <cfif VAL(qGetHostInfo.isHosting) AND (NOT VAL(vCurrentSeasonStatus.applicationStatusID) OR NOT VAL(qGetHostInfo.activeApp))>
+                            <cfif VAL(qGetHostInfo.isHosting) AND (NOT VAL(qGetHostInfo.activeApp))>
                                 <form method="post" action="index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" style="display:inline;">
                                     <input type="hidden" name="hostNewSeason" value="1"/>
                                     <input type="submit" value="Host #qCurrentSeason.season#"  alt="Host #qCurrentSeason.season#" border="0" class="buttonGreen" />
@@ -739,16 +739,21 @@ div.scroll2 {
                     <tr>
                         <td style="text-align:center" colspan="2">
 
-                                <cfform method="post" action="index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" style="display:inline;">
-                                    <input type="hidden" name="StatusUpdateSub"  value="1"/>
-                                    <input type="hidden" name="call_back" value="1"/>
-                                    <input type="submit" value="Call Back"  alt="Call Back" border="0" class="buttonBlue"/>
-                                </cfform>
-                                <cfform method="post" action="index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" style="display:inline;">
-                                    <input type="hidden" name="StatusUpdateSub"  value="1"/>
-                                    <input type="hidden" name="call_back" value="2"/>
-                                    <input type="submit" value="Call Back Next SY"  alt="Call Back Next SY" border="0" class="buttonBlue"/>
-                                </cfform>
+                            <cfform method="post" action="index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" style="display:inline;">
+                                <input type="hidden" name="StatusUpdateSub"  value="1"/>
+                                <input type="hidden" name="call_back" value="1"/>
+                                <input type="submit" value="Call Back"  alt="Call Back" border="0" class="buttonBlue"/>
+                            </cfform>
+                            <cfform method="post" action="index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" style="display:inline;">
+                                <input type="hidden" name="StatusUpdateSub"  value="1"/>
+                                <input type="hidden" name="call_back" value="2"/>
+                                <input type="submit" value="Call Back Next SY"  alt="Call Back Next SY" border="0" class="buttonBlue"/>
+                            </cfform>
+                            <cfform method="post" action="index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" style="display:inline;">
+                                <input type="hidden" name="StatusUpdateSub"  value="1"/>
+                                <input type="hidden" name="call_back" value="3"/>
+                                <input type="submit" value="Email Back"  alt="Email Back" border="0" class="buttonBlue"/>
+                            </cfform>
 
                         </td>
                     </tr>
@@ -855,7 +860,9 @@ div.scroll2 {
                         
                         <cfelseif NOT VAL(qGetHostInfo.isHosting)
                             AND NOT VAL(qGetHostInfo.isNotQualifiedToHost)
-                            AND NOT VAL(qGetHostInfo.with_competitor)>
+                            AND NOT VAL(qGetHostInfo.with_competitor)
+                            AND NOT VAL(qGetHostInfo.call_back)
+                            AND NOT VAL(vCurrentSeasonStatus.activeApp)>
                             <p style="font-weight: bold;">Decided Not to Host</p>
                             <p><em>Change is possible. You must want it enough for the change to take place.<br />
                                 - Lailah Gifty Akita</em></p>
@@ -864,14 +871,14 @@ div.scroll2 {
                             AND VAL(qGetHostInfo.isHosting)
                             AND NOT VAL(qGetHostInfo.with_competitor)
                             AND NOT VAL(qGetHostInfo.call_back)
-                            AND NOT VAL(vCurrentSeasonStatus.applicationStatusID)>
+                            AND NOT VAL(vCurrentSeasonStatus.activeApp)>
                             <p style="font-weight: bold;">Available to Host</p>
                             <p><em> To host or not to host is just a phone call away!</em></p>
                         
                         <cfelseif NOT VAL(qGetHostInfo.isNotQualifiedToHost)
                             AND VAL(qGetHostInfo.isHosting)
                             AND NOT VAL(qGetHostInfo.with_competitor)
-                            AND VAL(vCurrentSeasonStatus.applicationStatusID)
+                            AND NOT VAL(qGetHostInfo.call_back)
                             AND VAL(vCurrentSeasonStatus.activeApp)>
                             <!--- Current Season --->
 
@@ -902,8 +909,11 @@ div.scroll2 {
                                 <p style="margin-bottom:0"><em>Reaching out to the family to find out if they've received their login information helps them start the application process.</em></p>
                             </cfif>
                         
-                        <cfelseif NOT VAL(qGetHostInfo.call_back)
-                            AND VAL(qGetHostInfo.with_competitor)>
+                        <cfelseif NOT VAL(qGetHostInfo.isNotQualifiedToHost)
+                            AND NOT VAL(qGetHostInfo.isHosting)
+                            AND VAL(qGetHostInfo.with_competitor)
+                            AND NOT VAL(qGetHostInfo.call_back)
+                            AND NOT VAL(vCurrentSeasonStatus.activeApp)>
                             <!--- With Other Sponsor --->
                             <p style="font-weight: bold">With Other Sponsor</p>
                             <p><em>"Yesterday is not ours to recover, but tomorrow is ours to win or lose.<br />
@@ -920,6 +930,13 @@ div.scroll2 {
                             <p style="font-weight: bold">Call Back Next SY</p>
                             <p><em>"Paralyze resistance with persistence."<br />
                                 - Woody Hayes</em></p>
+
+                        <cfelseif VAL(qGetHostInfo.call_back) AND qGetHostInfo.call_back EQ 3>
+                            <!--- Call Back --->
+                            <p style="font-weight: bold">Email Back</p>
+                            <p><em>"Patience, persistence and perspiration make an unbeatable combination for success.<br />
+                                - Napoleon Hill"</em></p>
+
                         </cfif>
 
                     </td>

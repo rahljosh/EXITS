@@ -86,11 +86,10 @@
 
 
 	<!--- Ajax Call to the Component --->
-    <cfajaxproxy cfc="nsmg.extensions.components.host" jsclassname="hostFamily">
-
-    
+  <cfajaxproxy cfc="nsmg.extensions.components.host" jsclassname="hostFamily">
 </cfsilent>    
-  
+
+<cfhtmlhead text="<title>EXITS - Host Family Leads</title>">
            
 <script language="javascript">
 	// Function to find the index in an array of the first entry with a specific value. 
@@ -115,6 +114,10 @@
 
 	// Use an asynchronous call to get the student details. The function is called when the user selects a student. 
 	var getHostLeadList = function(pageNumber, titleSortBy) { 
+
+		$("#loadingDiv").show();
+    $("#loadHostList").hide();
+    $("#loadPaginationInfo").hide();
 		
 		// pageNumber could be passed to the function, if not set it to 1
 		if ( pageNumber == '' ) {
@@ -254,7 +257,10 @@
 		
 		
 		// Clear current result and append Table Header to HTML
-		$("#loadHostLeadList").empty().append(tableHeader);
+		$("#loadingDiv").hide();
+    $("#loadHostList").show();
+    $("#loadPaginationInfo").show();
+    $("#loadHostLeadList").empty().append(tableHeader);
 		
 		// Add click handlers to handle sorting by. They cause query to be returned in the order selected by the user. Update sortBy value
 		$('#firstName').click(function (){getHostLeadList(pageNumber,this.id);});
@@ -301,8 +307,8 @@
 			
 				tableBody = '<tr id="' + id + '">';
 			
-				tableBody += '<td><a href="hostLeads/index.cfm?action=detail&id=' + id + '&key=' + hashID + '" class="modalDialog">' + firstName + '</a></td>';
-				tableBody += '<td><a href="hostLeads/index.cfm?action=detail&id=' + id + '&key=' + hashID + '" class="jQueryModal">' + lastName + '</a></td>';
+				tableBody += '<td><a id="hostLeads/index.cfm?action=detail&id=' + id + '&key=' + hashID + '" class="openHFleadModal" href="#" >' + firstName + '</a></td>';
+				tableBody += '<td><a id="hostLeads/index.cfm?action=detail&id=' + id + '&key=' + hashID + '" class="openHFleadModal" href="#">' + lastName + '</a></td>';
 				tableBody += '<td>' + city + '</a></td>';
 				tableBody += '<td>' + state + '</td>';
 				// tableBody += '<td>' + zipCode + '</td>';
@@ -316,9 +322,9 @@
 				tableBody += '<td>' + dateCreated + '</td>';
 				tableBody += '<td>' + dateUpdated + '</td>';
 				if (statusAssigned == 'Converted to Host'){
-				tableBody += '<td align="center"> <a href="hostLeads/index.cfm?action=detail&id=' + id + '&key=' + hashID + '" class="jQueryModal"><button type="button" class="btn-u btn-u-orange">Details</button></a>';
+				tableBody += '<td align="center"><button type="button" id="hostLeads/index.cfm?action=detail&id=' + id + '&key=' + hashID + '" class="btn-u btn-u-orange openHFleadModal">Details</button>';
 				}else{
-					tableBody += '<td align="center"><a href="hostLeads/convert_lead.cfm?leadID=' + id + '&key=' + hashID + '" class="jQueryModal"><button type="button" class="btn-u btn-u-green">Convert</button></a>  <a href="hostLeads/index.cfm?action=detail&id=' + id + '&key=' + hashID + '" class="jQueryModal"><button type="button" class="btn-u btn-u-orange">Update</button></a>';
+					tableBody += '<td align="center"><button id="hostLeads/convert_lead.cfm?leadID=' + id + '&key=' + hashID + '" class="openHFconvertModal btn-u btn-u-green" type="button">Convert</button> <button type="button" id="hostLeads/index.cfm?action=detail&id=' + id + '&key=' + hashID + '" class="btn-u btn-u-orange openHFconvertModal">Update</button></a>';
 					tableBody += ' <a href="javascript:confirmDeleteHostLead(' + id + ');"><button type="button" class="btn-u btn-u-red">Not Interested</button></a>';
 						
 				}
@@ -327,16 +333,27 @@
 			$("#loadHostLeadList").append(tableBody);
 		} 
 
-		// JQuery Modal
-		/*$(".jQueryModal").colorbox( {
-			width:"60%", 
-			height:"90%", 
-			iframe:true,
-			overlayClose:true,
-			escKey:true,
-			closeButton:true,
-			
-		});		*/
+		$(".openHFleadModal").on('click', function () {
+			$('#HFleadModal .modal-title').html('Host Family Lead Information');
+      $('#HFleadModal .modal-body').load($(this).attr('id')); 
+      $('#HFleadModal').modal('show');
+		});
+
+		$('#HFleadModal').on('hide.bs.modal', function () { 
+			$('#HFleadModal').removeData('bs.modal'); 
+			$('#HFleadModal .modal-body').html('<div style="width:100%; text-align:center"><img src="/nsmg/pics/loading.gif" style="margin:20px 0" /></div>'); 
+		});
+
+		$(".openHFconvertModal").on('click', function () {
+			$('#HFleadModal .modal-title').html('Start Host App from Lead Information');
+      $('#HFleadModal .modal-body').load($(this).attr('id')); 
+      $('#HFleadModal').modal('show');
+		});
+
+		$('#openHFconvertModal').on('hide.bs.modal', function () { 
+			$('#HFleadModal').removeData('bs.modal'); 
+			$('#HFleadModal .modal-body').html('<div style="width:100%; text-align:center"><img src="/nsmg/pics/loading.gif" style="margin:20px 0" /></div>'); 
+		});
 
 	}
 	// --- END OF HOST LEADS LIST --- //
@@ -591,6 +608,14 @@
         ---->
         <!--- Pagination information goes here --->
         <tr id="loadPaginationInfo"></tr>
+
+        <tr>
+				    <td colspan="13">
+				        <div id="loadingDiv" style="display: none; width: 100%; text-align: center">
+				            <img src="/nsmg/pics/loading.gif" />
+				        </div>
+				    </td>
+				</tr>
     </table>
 
     <!--- Host Leads List --->
@@ -617,6 +642,28 @@
 			</td>
 		</tr>
  	</table>
+
+
+ 	<!-- Modal -->
+<div class="modal fade" id="HFleadModal" tabindex="-1" role="dialog" aria-labelledby="Host Family Lead" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+         	<div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                 <h4 class="modal-title">Host Family Lead Information</h4>
+            </div>
+            <div class="modal-body">
+            	<div style="width:100%; text-align:center">
+            		<img src="/nsmg/pics/loading.gif" style="margin:20px 0" />
+            	</div>
+            </div>
+         	
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+<!-- /.modal -->
 
 </cfoutput>
 

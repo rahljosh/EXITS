@@ -43,7 +43,7 @@
 	  </script>
 		--->
 		<!--Smarty Streets-->
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+	
 		<script src="//d79i1fxsrar4t.cloudfront.net/jquery.liveaddress/3.2/jquery.liveaddress.min.js"></script>
 		<script> var liveaddress = jQuery.LiveAddress({
 					key: '19728119051131453',
