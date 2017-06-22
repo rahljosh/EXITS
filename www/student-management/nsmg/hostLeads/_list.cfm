@@ -19,7 +19,7 @@
 		// Param FORM Variables
 		param name="FORM.keyword" default="";
 		param name="FORM.followUpID" default=0;	
-		param name="FORM.regionID" default=99999;	
+		param name="FORM.regionID" default=0;	
 		param name="FORM.stateID" default=0;	
 		param name="FORM.statusID" default="";	
 		param name="FORM.sortBy" default="dateCreated";		
@@ -86,10 +86,11 @@
 
 
 	<!--- Ajax Call to the Component --->
-  <cfajaxproxy cfc="nsmg.extensions.components.host" jsclassname="hostFamily">
-</cfsilent>    
+    <cfajaxproxy cfc="nsmg.extensions.components.host" jsclassname="hostFamily">
 
-<cfhtmlhead text="<title>EXITS - Host Family Leads</title>">
+    
+</cfsilent>    
+  
            
 <script language="javascript">
 	// Function to find the index in an array of the first entry with a specific value. 
@@ -114,10 +115,6 @@
 
 	// Use an asynchronous call to get the student details. The function is called when the user selects a student. 
 	var getHostLeadList = function(pageNumber, titleSortBy) { 
-
-		$("#loadingDiv").show();
-    $("#loadHostList").hide();
-    $("#loadPaginationInfo").hide();
 		
 		// pageNumber could be passed to the function, if not set it to 1
 		if ( pageNumber == '' ) {
@@ -257,10 +254,7 @@
 		
 		
 		// Clear current result and append Table Header to HTML
-		$("#loadingDiv").hide();
-    $("#loadHostList").show();
-    $("#loadPaginationInfo").show();
-    $("#loadHostLeadList").empty().append(tableHeader);
+		$("#loadHostLeadList").empty().append(tableHeader);
 		
 		// Add click handlers to handle sorting by. They cause query to be returned in the order selected by the user. Update sortBy value
 		$('#firstName').click(function (){getHostLeadList(pageNumber,this.id);});
@@ -324,7 +318,7 @@
 				if (statusAssigned == 'Converted to Host'){
 				tableBody += '<td align="center"><button type="button" id="hostLeads/index.cfm?action=detail&id=' + id + '&key=' + hashID + '" class="btn-u btn-u-orange openHFleadModal">Details</button>';
 				}else{
-					tableBody += '<td align="center"><button id="hostLeads/convert_lead.cfm?leadID=' + id + '&key=' + hashID + '" class="openHFconvertModal btn-u btn-u-green" type="button">Convert</button> <button type="button" id="hostLeads/index.cfm?action=detail&id=' + id + '&key=' + hashID + '" class="btn-u btn-u-orange openHFconvertModal">Update</button></a>';
+					tableBody += '<td align="center"><button id="hostLeads/convert_lead.cfm?leadID=' + id + '&key=' + hashID + '" class="openHFconvertModal btn-u btn-u-green" type="button">Convert</button> <button type="button" id="hostLeads/index.cfm?action=detail&id=' + id + '&key=' + hashID + '" class="btn-u btn-u-orange openHFleadModal">Update</button></a>';
 					tableBody += ' <a href="javascript:confirmDeleteHostLead(' + id + ');"><button type="button" class="btn-u btn-u-red">Not Interested</button></a>';
 						
 				}
@@ -354,6 +348,16 @@
 			$('#HFleadModal').removeData('bs.modal'); 
 			$('#HFleadModal .modal-body').html('<div style="width:100%; text-align:center"><img src="/nsmg/pics/loading.gif" style="margin:20px 0" /></div>'); 
 		});
+
+		// JQuery Modal
+		/*$(".jQueryModal").colorbox( {
+			width:"60%", 
+			height:"90%", 
+			iframe:true,
+			overlayClose:true,
+			escKey:true,
+			closeButton:true
+		});	*/	
 
 	}
 	// --- END OF HOST LEADS LIST --- //
@@ -479,17 +483,6 @@
 
 <cfoutput>
 
-	<!--=== PAGE TITLE ===-->
-		<div class="breadcrumbs">
-			<div class="container">
-				<h1 class="pull-left"><Cfoutput>Host Family Leads</Cfoutput></h1>
-				<ul class="pull-right breadcrumb">
-					To host or not to host is just a phone call away!
-				</ul>
-			</div>
-		</div>
-		<!--=== END PAGE TITLE ===-->
-		<br>
 
 	<!--- This holds the student information messages --->
     <table width="100%" border="0" cellpadding="4" cellspacing="0" class="section pageMessages displayNone" align="center">
@@ -509,9 +502,8 @@
             <td>
                Region<br />   
                 <select name="regionID" id="regionID">
-              		 <option value="999999">All Regions</option>
                 	<cfif ListFind("1,2,3,4", CLIENT.userType)>
-                		<option value="0" <cfif NOT VAL(FORM.regionID)>selected="selected"</cfif> >Unassigned</option>
+                		<option value="0" <cfif NOT VAL(FORM.regionID)>selected="selected"</cfif> ></option>
                     </cfif>
                     <cfloop query="qGetRegions">
                     	<option value="#qGetRegions.regionID#" <cfif FORM.regionID EQ qGetRegions.regionID>selected="selected"</cfif> >#qGetRegions.regionName#</option>
@@ -608,14 +600,6 @@
         ---->
         <!--- Pagination information goes here --->
         <tr id="loadPaginationInfo"></tr>
-
-        <tr>
-				    <td colspan="13">
-				        <div id="loadingDiv" style="display: none; width: 100%; text-align: center">
-				            <img src="/nsmg/pics/loading.gif" />
-				        </div>
-				    </td>
-				</tr>
     </table>
 
     <!--- Host Leads List --->
@@ -663,7 +647,6 @@
     </div>
     <!-- /.modal-dialog -->
 </div>
-<!-- /.modal -->
 
 </cfoutput>
 

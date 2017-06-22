@@ -1,19 +1,20 @@
 	<!--- Kill extra output --->
 
-
+  
+	<!--Format Date Picker-->	
 
 	<cfparam name="unify" default="">
-    <!--- Import CustomTag --->
-    <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
+  <!--- Import CustomTag --->
+  <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
 
-    <!--- Ajax Call to the Component --->
-	
-	
-    <!--- Param URL Variables --->
-    <cfparam name="URL.hostID" default="">
-    <cfparam name="URL.leadID" default="">
-    <cfparam name="URL.skip" default="0">
-    <cfparam name="URL.skip" default="0">
+  <!--- Ajax Call to the Component --->
+
+
+  <!--- Param URL Variables --->
+  <cfparam name="URL.hostID" default="">
+  <cfparam name="URL.leadID" default="">
+  <cfparam name="URL.skip" default="0">
+  <cfparam name="URL.skip" default="0">
 
 	<script type="text/javascript" src="/nsmg/assets/js/jquery.maskedinput.js"></script>
 	<script>
@@ -792,8 +793,8 @@
 </div>
 
 		<!--Smarty Streets-->
-	
-		
+
+
 		<script> var liveaddress = jQuery.LiveAddress({
 					key: '19728119051131453',
 					autocomplete: 5,
@@ -806,21 +807,60 @@
 						postal_code: '#zip'
 					}]
 				});
+			
 		
 	</script>
 
-	<style>
-	.smarty-ui {
-		z-index: 999999999 !important;
-	}
-	</style>
 
-
+	<cfif val(#unify#)>
 	
+		<!-- JS Global Compulsory -->
+		<script type="text/javascript" src="assets/plugins/jquery/jquery.min.js"></script>
+		<script type="text/javascript" src="assets/plugins/jquery/jquery-migrate.min.js"></script>
+		<script type="text/javascript" src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+		<!-- JS Implementing Plugins -->
+		<script type="text/javascript" src="assets/plugins/back-to-top.js"></script>
+		<script type="text/javascript" src="assets/plugins/smoothScroll.js"></script>
+		<script src="assets/plugins/sky-forms-pro/skyforms/js/jquery.validate.min.js"></script>
+		<script src="assets/plugins/sky-forms-pro/skyforms/js/jquery.maskedinput.min.js"></script>
+		<script src="assets/plugins/sky-forms-pro/skyforms/js/jquery-ui.min.js"></script>
+		<script src="assets/plugins/sky-forms-pro/skyforms/js/jquery.form.min.js"></script>
+		<!-- JS Customization -->
+		<script type="text/javascript" src="assets/js/custom.js"></script>
+		<!-- JS Page Level -->
+		<script type="text/javascript" src="assets/js/app.js"></script>
+		<script type="text/javascript" src="assets/js/forms/order.js"></script>
+		<script type="text/javascript" src="assets/js/plugins/masking.js"></script>
+		<script type="text/javascript" src="assets/js/forms/review.js"></script>
+		<script type="text/javascript" src="assets/js/plugins/validation.js"></script>
+		<script type="text/javascript" src="assets/js/plugins/datepicker.js"></script>
+		<script type="text/javascript" src="assets/js/plugins/style-switcher.js"></script>
+		<script type="text/javascript">
+			jQuery(document).ready(function() {
+				App.init();
+				Masking.initMasking();
+				Datepicker.initDatepicker();
+				Validation.initValidation();
+				StyleSwitcher.initStyleSwitcher();
+			});
+			
+		
+
+		</script>
+	</cfif>
 	<!----clear errors so they don't show up if closed---->
 	<cfscript>
 		SESSION.FormErrors.clear();
 	</cfscript>
-	
+	<!--[if lt IE 9]>
+	<script src="assets/plugins/respond.js"></script>
+	<script src="assets/plugins/html5shiv.js"></script>
+	<script src="assets/plugins/placeholder-IE-fixes.js"></script>
+	<script src="assets/plugins/sky-forms-pro/skyforms/js/sky-forms-ie8.js"></script>
+	<![endif]-->
+
+	<!--[if lt IE 10]>
+	<script src="assets/plugins/sky-forms/version-2.0.1/js/jquery.placeholder.min.js"></script>
+	<![endif]-->
 </body>
 </html>

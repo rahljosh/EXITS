@@ -19,10 +19,16 @@
 <cfparam name="URL.curdoc" default="initial_welcome">
 
 	<cfset unify = 0>
+	<cfset includebootstrap = 0>
   <!--forms/add_user,forms/user_form, user/index,-->
-   <cfif val(listContains('forms/host_fam_form_lead, hostLeads/index, hostApplication/listOfApps, students','#url.curdoc#'))>
+   	<!---
+   	<cfif val(listContains('forms/host_fam_form_lead, hostLeads/index, hostApplication/listOfApps, students','#url.curdoc#'))>
 	   	<cfset unify=1>
-   </cfif>
+   	</cfif>
+ 		--->
+ 		<cfif val(listContains('hostLeads/index','#url.curdoc#'))>
+	   	<cfset includebootstrap=1>
+   	</cfif>
     
 
     <cfscript>

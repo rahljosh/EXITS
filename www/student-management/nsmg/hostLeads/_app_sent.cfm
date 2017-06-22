@@ -24,11 +24,15 @@
 
 
 	<cfparam name="FORM.quickSearchAutoSuggestHostID" default="">
-  <cfparam name="FORM.quickSearchHostID" default="">
+    <cfparam name="FORM.quickSearchHostID" default="">
 	<!--- Import CustomTag --->
-  <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
+    <cfimport taglib="../extensions/customTags/gui/" prefix="gui" />	
 	
+
+
 	<cfparam name="manual_assign_host" default=0>
+
+
 
 	<cfscript>
 		// Param URL Variables
@@ -192,8 +196,8 @@
 						<div class="tab-v2 margin-bottom-40">
 							 <div class="headline"><h2 class="heading-lg">Hey! Existing Host Family information was found!</h2></div>
 								<div class="row">
-									<div class="col-sm-12">
-										<div class="tag-box">	
+									<div class="col-sm-10">
+										<div class="tag-box tag-box-v3">	
 										<Cfif checkHostAppExist.recordcount gt 0 and  manual_assign_host eq 0 >	
 											<h3>Are these two families the same?</h3>
 
