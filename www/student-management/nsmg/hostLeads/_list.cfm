@@ -483,6 +483,7 @@
 
 <cfoutput>
 
+	
 
 	<!--- This holds the student information messages --->
     <table width="100%" border="0" cellpadding="4" cellspacing="0" class="section pageMessages displayNone" align="center">
@@ -502,8 +503,10 @@
             <td>
                Region<br />   
                 <select name="regionID" id="regionID">
+                	
                 	<cfif ListFind("1,2,3,4", CLIENT.userType)>
-                		<option value="0" <cfif NOT VAL(FORM.regionID)>selected="selected"</cfif> ></option>
+                	<option value="99999"<cfif NOT VAL(FORM.regionID)>selected="selected"</cfif> >All</option>
+                		<option value="0"<cfif NOT VAL(FORM.regionID)>selected="selected"</cfif> >Unassinged</option>
                     </cfif>
                     <cfloop query="qGetRegions">
                     	<option value="#qGetRegions.regionID#" <cfif FORM.regionID EQ qGetRegions.regionID>selected="selected"</cfif> >#qGetRegions.regionName#</option>
