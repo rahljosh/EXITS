@@ -4492,6 +4492,10 @@
                         
                         WHEN h.call_back = 2
                             THEN 'Call Back Next SY'
+
+                        WHEN h.call_back = 3
+                            THEN 'Email Back'
+
                     END 
                     AS HFstatus
 
@@ -4626,6 +4630,9 @@
 
                     <cfelseif ARGUMENTS.HFstatus EQ "Call Back Next SY">
                         AND h.call_back = 2
+
+                    <cfelseif ARGUMENTS.HFstatus EQ "Email Back">
+                        AND h.call_back = 3
 
                     </cfif>
                 </cfif>
@@ -5012,6 +5019,10 @@
                         
                         WHEN h.call_back = 2
                             THEN 'Call Back Next SY'
+
+                        WHEN h.call_back = 3
+                            THEN 'Email Back'
+
                     END 
                     AS HFstatus
 
@@ -5129,6 +5140,9 @@
 
                     <cfelseif ARGUMENTS.HFstatus EQ "Call Back Next SY">
                         AND h.call_back = 2
+
+                    <cfelseif ARGUMENTS.HFstatus EQ "Email Back">
+                        AND h.call_back = 3
 
                     </cfif>
                 </cfif>
