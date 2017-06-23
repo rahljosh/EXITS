@@ -1467,6 +1467,9 @@
                              
                 ORDER BY 
                     dateUpdated
+                    <cfif val(ARGUMENTS.statusID) eq 3>
+                     DESC
+					</cfif>
 		</cfquery>
 
 		<cfreturn qGetApplicationList>
@@ -3850,7 +3853,7 @@
                     AND
                         hl.areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.areaRepID#">
                 </cfif>
-				<cfif VAL(ARGUMENTS.regionID)>
+				<cfif VAL(ARGUMENTS.regionID) NEQ '99999'>
                     AND
                         hl.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#">
                 </cfif>
