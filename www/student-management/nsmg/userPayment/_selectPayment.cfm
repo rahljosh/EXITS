@@ -78,6 +78,7 @@
             OR
             	paymentType = <cfqueryparam cfsqltype="cf_sql_varchar" value="">
             )
+            order by SortOrder
     </cfquery>
     
     <cfquery name="qGetPlacedPaymentType" datasource="#APPLICATION.DSN#">
