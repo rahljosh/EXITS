@@ -1186,14 +1186,16 @@
         <cfargument name="userType" default="#CLIENT.userType#" hint="userType is not required">
         <cfargument name="regionID" default="#CLIENT.regionID#" hint="regionID is not required">
         <cfargument name="userID" default="#CLIENT.userID#" hint="userID is not required">
-        <cfargument name="active_rep" default="" hint="userID is not required">
-        <cfargument name="ny_office" default="" hint="userID is not required">
-      
+        <cfargument name="active_rep" default="" hint="active_rep is not required">
+        <cfargument name="ny_office" default="" hint="ny_office is not required">
+      	<cfargument name="currently_hosting" default="2" hint="currently_hosting is not required">
+      	
         <cfquery 
 
 			name="qGetApplicationList" 
 			datasource="#APPLICATION.DSN#">
-                SELECT DISTINCT
+             
+                  SELECT DISTINCT
                 	*,
                      <!--- Total Family At Home --->
                     
@@ -1214,7 +1216,7 @@
                 FROM
                 (
                     SELECT
-                       h.hostID, h.uniqueID, h.familyLastName, h.fatherFirstName, h.motherFirstName, h.email as hostEmail, h.city as hostCity, h.state as hostState, h.phone as host_phone,
+                       h.hostID, h.familyLastName, h.fatherFirstName, h.motherFirstName, h.email as hostEmail, h.city as hostCity, h.state as hostState, h.phone as host_phone,
                         <!--- Host Family Display Name --->
                       CAST( 
 							CONCAT(                      
@@ -1334,7 +1336,23 @@
                         c.team_id AS programManager,
                         c.pm_email AS programManagerEmail,
                         c.projectManagerName,
-                        <!--- Host Season-based approval status --->
+						
+                         <!--- Total of students hosting --->
+                        
+                        (
+                            SELECT 
+                                COUNT(hostid) as totalCount
+                            FROM 
+                                smg_students 
+                            LEFT JOIN 
+                            	smg_programs on smg_programs.programid = smg_students.programid
+                            WHERE
+                                smg_students.hostID = h.hostID
+                            AND
+                                smg_programs.seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
+                           
+                        ) as totalNumberCurrentStudents,
+                           <!--- Host Season-based approval status --->
                         smg_host_app_season.applicationStatusID,
                         smg_host_app_season.repNotes,
                         smg_host_app_season.dateSent,
@@ -1382,6 +1400,8 @@
                     AND 
                     	areaRep.active = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
                     </Cfif>
+                      <!----Show only currently hosting---->
+                   
                      <!----Show only assigned to NY Office---->
                      <Cfif val(ARGUMENTS.ny_office) eq 1>
                     AND 
@@ -1464,14 +1484,22 @@
 				<!--- Regional Manager Info --->
                 LEFT OUTER JOIN
                     smg_users rm ON rm.userID = regionalManagerID
-                             
+                 
+             	<Cfif ARGUMENTS.currently_hosting eq 1>
+                   	WHERE 
+                   		totalNumberCurrentStudents > 0
+				<Cfelseif ARGUMENTS.currently_hosting eq 2>
+					WHERE 
+						totalNumberCurrentStudents = 0
+				</Cfif>	  
+                         
                 ORDER BY 
                     dateUpdated
                     <cfif val(ARGUMENTS.statusID) eq 3>
                      DESC
 					</cfif>
+				
 		</cfquery>
-
 		<cfreturn qGetApplicationList>
 	</cffunction>
     <!---End of Basics for Host App List---->
