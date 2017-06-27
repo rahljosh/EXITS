@@ -29,6 +29,7 @@
     <cfparam name="URL.hostID" default="0">
     <cfparam name="URL.seasonID" default="0"> 
     <cfparam name="URL.active_rep" default="2">  
+    <cfparam name="URL.currently_hosting" default="0">  
     <cfparam name="URL.ny_office" default="2">   
     <!--- Param FORM Variables --->  
 
@@ -75,7 +76,7 @@
         }
 		
 		// Get List of Host Family Applications
-		qGetHostApplications = APPLICATION.CFC.HOST.getApplicationListLimitedHostInfo(statusID=URL.status,seasonID=URL.seasonID,active_rep=URL.active_rep,ny_office=URL.ny_office,regionID=URL.regionID);	
+		qGetHostApplications = APPLICATION.CFC.HOST.getApplicationListLimitedHostInfo(statusID=URL.status,seasonID=URL.seasonID,active_rep=URL.active_rep,ny_office=URL.ny_office,regionID=URL.regionID,currently_hosting=URL.currently_hosting);	
    
       // Get User Regions
         qGetRegionList = APPLICATION.CFC.REGION.getUserRegions(
@@ -135,18 +136,18 @@
 <!-- Checkout-Form -->
 <div class="sky-form">
 	<div class="row">
-		<section class="col col-3">
+		<section class="col col-2">
 			<h1>Status</h1>
 			<label class="select ">
 			<select name="statusID" id="statusID" onChange="top.location.href=this.options[this.selectedIndex].value;">
 
-				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=9&seasonID=#url.seasonid#&active_rep=#url.active_rep#&ny_office=#URL.ny_office#" <cfif val(URL.status) eq 9>selected="selected"</cfif>  >Applications with HF: Not Started</option>
-				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=8&seasonID=#url.seasonid#&active_rep=#url.active_rep#&ny_office=#URL.ny_office#" <cfif val(URL.status) eq 8>selected="selected"</cfif> >Applications with HF: In Process</option>
-				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=7&seasonID=#url.seasonid#&active_rep=#url.active_rep#&ny_office=#URL.ny_office#"  <cfif val(URL.status) eq 7>selected="selected"</cfif> >Applications with Field: Area Rep.</option>
-				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=6&seasonID=#url.seasonid#&active_rep=#url.active_rep#&ny_office=#URL.ny_office#"<cfif val(URL.status) eq 6>selected="selected"</cfif> >Applications with Field: Advisor</option>
-				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=5&seasonID=#url.seasonid#&active_rep=#url.active_rep#&ny_office=#URL.ny_office#"  <cfif val(URL.status) eq 5>selected="selected"</cfif> >Applications with Field: Manager</option>
-				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=4&seasonID=#url.seasonid#&active_rep=#url.active_rep#&ny_office=#URL.ny_office#"  <cfif val(URL.status) eq 4>selected="selected"</cfif> >Applications with #CLIENT.companyshort#: HQ</option>
-				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=3&seasonID=#url.seasonid#&active_rep=#url.active_rep#&ny_office=#URL.ny_office#"  <cfif val(URL.status) eq 3>selected="selected"</cfif> >Applications with #CLIENT.companyshort#: Approved</option>
+				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=9&seasonID=#url.seasonid#&active_rep=#url.active_rep#&ny_office=#URL.ny_office#&currently_hosting=#URL.currently_hosting#" <cfif val(URL.status) eq 9>selected="selected"</cfif>  >Applications with HF: Not Started</option>
+				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=8&seasonID=#url.seasonid#&active_rep=#url.active_rep#&ny_office=#URL.ny_office#&currently_hosting=#URL.currently_hosting#" <cfif val(URL.status) eq 8>selected="selected"</cfif> >Applications with HF: In Process</option>
+				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=7&seasonID=#url.seasonid#&active_rep=#url.active_rep#&ny_office=#URL.ny_office#&currently_hosting=#URL.currently_hosting#"  <cfif val(URL.status) eq 7>selected="selected"</cfif> >Applications with Field: Area Rep.</option>
+				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=6&seasonID=#url.seasonid#&active_rep=#url.active_rep#&ny_office=#URL.ny_office#&currently_hosting=#URL.currently_hosting#"<cfif val(URL.status) eq 6>selected="selected"</cfif> >Applications with Field: Advisor</option>
+				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=5&seasonID=#url.seasonid#&active_rep=#url.active_rep#&ny_office=#URL.ny_office#&currently_hosting=#URL.currently_hosting#"  <cfif val(URL.status) eq 5>selected="selected"</cfif> >Applications with Field: Manager</option>
+				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=4&seasonID=#url.seasonid#&active_rep=#url.active_rep#&ny_office=#URL.ny_office#&currently_hosting=#URL.currently_hosting#"  <cfif val(URL.status) eq 4>selected="selected"</cfif> >Applications with #CLIENT.companyshort#: HQ</option>
+				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=3&seasonID=#url.seasonid#&active_rep=#url.active_rep#&ny_office=#URL.ny_office#&currently_hosting=#URL.currently_hosting#"  <cfif val(URL.status) eq 3>selected="selected"</cfif> >Applications with #CLIENT.companyshort#: Approved</option>
 			</select>
 		</label>
 		</section>
@@ -155,10 +156,10 @@
 		<label class="select ">
 		<select name="regionID" id="active_rep"  onChange="top.location.href=this.options[this.selectedIndex].value;">
 			<cfif client.usertype LTE 4>
-			<option value="?curdoc=hostApplication/listOfApps&status=#URL.status#&seasonID=#url.seasonid#&active_rep=2&ny_office=#URL.ny_office#" <cfif regionID EQ URL.regionID>selected="selected"</cfif>>All</otpion>
+			<option value="?curdoc=hostApplication/listOfApps&status=#URL.status#&seasonID=#url.seasonid#&active_rep=2&ny_office=#URL.ny_office#&currently_hosting=#URL.currently_hosting#" <cfif regionID EQ URL.regionID>selected="selected"</cfif>>All</otpion>
 			</cfif>
 			<cfloop query="qGetRegionList">
-				<option value="?curdoc=hostApplication/listOfApps&regionid=#qGetRegionList.regionID#&status=#URL.status#&seasonID=#url.seasonid#&active_rep=2&ny_office=#URL.ny_office#" <cfif regionID EQ URL.regionID>selected="selected"</cfif>>#qGetRegionList.regionname#</option>
+				<option value="?curdoc=hostApplication/listOfApps&regionid=#qGetRegionList.regionID#&status=#URL.status#&seasonID=#url.seasonid#&active_rep=2&ny_office=#URL.ny_office#&currently_hosting=#URL.currently_hosting#" <cfif regionID EQ URL.regionID>selected="selected"</cfif>>#qGetRegionList.regionname#</option>
 			</cfloop>
 			</select>  
 
@@ -168,21 +169,33 @@
 		<h1>With Active Rep</h1>
 		<label class="select ">
 			<select name="active_rep" id="active_rep"  onChange="top.location.href=this.options[this.selectedIndex].value;">
-				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=#URL.status#&seasonID=#url.seasonid#&active_rep=2&ny_office=#URL.ny_office#" <cfif URL.active_rep EQ 2>selected</cfif>>All</option>
-				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=#URL.status#&seasonID=#url.seasonid#&active_rep=1&ny_office=#URL.ny_office#" <cfif URL.active_rep EQ 1>selected</cfif>>Yes</option>
-				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=#URL.status#&seasonID=#url.seasonid#&active_rep=0&ny_office=#URL.ny_office#" <cfif URL.active_rep EQ 0>selected</cfif>>No</option>
+				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=#URL.status#&seasonID=#url.seasonid#&active_rep=2&ny_office=#URL.ny_office#&currently_hosting=#URL.currently_hosting#" <cfif URL.active_rep EQ 2>selected</cfif>>All</option>
+				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=#URL.status#&seasonID=#url.seasonid#&active_rep=1&ny_office=#URL.ny_office#&currently_hosting=#URL.currently_hosting#" <cfif URL.active_rep EQ 1>selected</cfif>>Yes</option>
+				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=#URL.status#&seasonID=#url.seasonid#&active_rep=0&ny_office=#URL.ny_office#&currently_hosting=#URL.currently_hosting#" <cfif URL.active_rep EQ 0>selected</cfif>>No</option>
 			</select>  
 
 		</label>
 		</section>
+		<cfif URL.status eq 3>
+			<section class="col col-2">
+			<h1>Currently Hosting</h1>
+			<label class="select ">
+				<select name="currently_hosting" id="active_rep"  onChange="top.location.href=this.options[this.selectedIndex].value;">
+					<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=#URL.status#&seasonID=#url.seasonid#&active_rep=#url.active_rep#&ny_office=#URL.ny_office#&currently_hosting=0" <cfif URL.currently_hosting EQ 0>selected</cfif>>All</option>
+					<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=#URL.status#&seasonID=#url.seasonid#&active_rep=#url.active_rep#&ny_office=#URL.ny_office#&currently_hosting=1" <cfif URL.currently_hosting EQ 1>selected</cfif>>Yes</option>
+					<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=#URL.status#&seasonID=#url.seasonid#&active_rep=#url.active_rep#&ny_office=#URL.ny_office#&currently_hosting=2" <cfif URL.currently_hosting EQ 2>selected</cfif>>No</option>
+				</select>  
 
+			</label>
+			</section>
+		</cfif>
 		<section class="col col-2">
 		<h1>NY Office Rep</h1>
 			<label class="select ">
 			<select name="ny_office" id="ny_office"  onChange="top.location.href=this.options[this.selectedIndex].value;">
-				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=#URL.status#&seasonID=#url.seasonid#&active_rep=#url.active_rep#&ny_office=2" <cfif URL.ny_office EQ 2>selected</cfif>>All</option>
+				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=#URL.status#&seasonID=#url.seasonid#&active_rep=#url.active_rep#&ny_office=0" <cfif URL.ny_office EQ 2>selected</cfif>>All</option>
 				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=#URL.status#&seasonID=#url.seasonid#&active_rep=#url.active_rep#&ny_office=1" <cfif URL.ny_office EQ 1>selected</cfif>>Yes</option>
-				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=#URL.status#&seasonID=#url.seasonid#&active_rep=#url.active_rep#&ny_office=0" <cfif URL.ny_office EQ 0>selected</cfif>>No</option>
+				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=#URL.status#&seasonID=#url.seasonid#&active_rep=#url.active_rep#&ny_office=2" <cfif URL.ny_office EQ 0>selected</cfif>>No</option>
 			</select>    
 			</label>
 		</section>
@@ -209,14 +222,11 @@
 		</tr>
 
 	</thead>
+	
 
-	<cfif NOT qGetHostApplications.recordcount>
-		<tr>
-			<td colspan="8">There are no applications to display</td>
-		</tr>
-	</cfif>
-
+	<Cfset displayCount = 0>
 	<cfloop query="qGetHostApplications">
+
 		<cfif ((url.status eq 9) AND DateDiff('d',dateUpdated, now()) gt 3)>
 		  <tr class="danger">
 		 <cfelseif ((url.status eq 8) AND DateDiff('d',dateUpdated, now()) gt 7)>
@@ -233,7 +243,11 @@
 
 
 			<td>#DateFormat(dateUpdated, 'mmm d, yyyy')#</td>
-			 <td><a href="index.cfm?curdoc=host_fam_info&hostID=#qGetHostApplications.hostID#" title="View Details">#qGetHostApplications.displayHostFamily#</a></td>
+			 <td><a href="index.cfm?curdoc=host_fam_info&hostID=#qGetHostApplications.hostID#" title="View Details">#qGetHostApplications.displayHostFamily#</a>
+			 <cfif val(qGetHostApplications.totalNumberCurrentStudents)><br>
+			<mark> <em>Hosting #qGetHostApplications.totalNumberCurrentStudents# student<cfif val(qGetHostApplications.totalNumberCurrentStudents) gt 1>s</cfif></em></mark>
+			 </cfif>
+			 </td>
 			<td>#qGetHostApplications.hostCity#, #qGetHostApplications.hostState#</td>
 			<td>#qGetHostApplications.hostEmail#<br>#qGetHostApplications.host_phone#</td>
 			<td>#qGetHostApplications.regionName#</td>
@@ -274,7 +288,13 @@
 
 			</td>
 		</tr>
+	
 	</cfloop>
+		<cfif (qGetHostApplications.recordcount eq 0)>
+		<tr>
+			<td colspan="8">There are no applications to display</td>
+		</tr>
+	</cfif>
 </table>
             
      
