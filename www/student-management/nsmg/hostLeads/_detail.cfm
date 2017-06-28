@@ -18,6 +18,43 @@
 				
 ----- ------------------------------------------------------------------------- --->
 
+	<link rel="stylesheet" href="../assets/plugins/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../assets/css/style.css">
+
+	<!-- CSS Header and Footer -->
+	<link rel="stylesheet" href="../assets/css/headers/header-default.css">
+	<link rel="stylesheet" href="../assets/css/footers/footer-v1.css">
+
+	<!-- CSS Implementing Plugins -->
+	<link rel="stylesheet" href="../assets/plugins/animate.css">
+	<link rel="stylesheet" href="../assets/plugins/line-icons/line-icons.css">
+	<script src="https://use.fontawesome.com/b474fc74fd.js"></script>
+<!--	<link rel="stylesheet" href="../assets/plugins/font-awesome/css/font-awesome.min.css">-->
+
+	<!-- CSS Page Style -->
+	<link rel="stylesheet" href="../assets/css/pages/page_log_reg_v1.css">
+	<!----Profile---->
+	<link rel="stylesheet" href="../assets/css/pages/profile.css">
+	<link rel="stylesheet" href="../assets/plugins/scrollbar/css/jquery.mCustomScrollbar.css">
+
+	<!----Form Elements---->
+	<link rel="stylesheet" href="../assets/plugins/sky-forms-pro/skyforms/css/sky-forms.css">
+	<link rel="stylesheet" href="../assets/plugins/sky-forms-pro/skyforms/custom/custom-sky-forms.css">
+
+	<!-- CSS Implementing Plugins -->
+
+	<!----User Profile Elements---->
+	<!-- CSS Page Style -->
+	<link rel="stylesheet" href="../assets/css/pages/profile.css">
+<!-- Timeline CSS-->
+	<link rel="stylesheet" href="../assets/css/pages/shortcode_timeline2.css">
+
+	<!-- CSS Theme -->
+	<link rel="stylesheet" href="../assets/css/theme-colors/blue.css" id="style_color">
+	<link rel="stylesheet" href="../assets/css/theme-skins/dark.css">
+
+	<!-- CSS Customization -->
+	<link rel="stylesheet" href="../assets/css/custom.css">
 
 <!--- Kill Extra Output --->
 <cfsilent>
@@ -541,32 +578,11 @@
 					</ul>
 				</div>
 				<!-- End Content -->
-
-							
 						</div>
 						<!-- End Heading v6 -->
-							</div>	
-						
-						
-						
-						
-			
-						
-						
+							</div>		
 						</div>		
 					</div>
 				</div>		
 			  </div>
-		
-      
-      
-      
-      
-      	
-      
-
-
-      
-
-
 </cfoutput>

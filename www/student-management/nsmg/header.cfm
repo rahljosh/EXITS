@@ -201,16 +201,23 @@
 			<link rel="stylesheet" href="assets/css/style.css">
 			<cfoutput>
 			<link rel="stylesheet" href="#APPLICATION.PATH.jQueryTheme#" type="text/css" /> <!-- JQuery UI 1.8 Tab Style Sheet -->
+				<!----Jquery fixing josh---->
+				<script type="text/javascript" src="#APPLICATION.PATH.jQuery#"></script> <!-- jQuery -->
+				<script type="text/javascript" src="#APPLICATION.PATH.jQueryUI#"></script> <!-- JQuery UI 1.8 Tab -->
+				<script type="text/javascript" src="linked/js/jquery.tools.min.js"></script> 
 			</cfoutput>
   		<!-- JS Global Compulsory -->
+<!----
 			<script type="text/javascript" src="/nsmg/assets/plugins/jquery/jquery.min.js"></script>
 			<script type="text/javascript" src="/nsmg/assets/plugins/jquery/jquery-migrate.min.js"></script>
+---->
 			<script type="text/javascript" src="/nsmg/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
 			<!-- JS Customization -->
 			
 			<script type="text/javascript" src="/nsmg/assets/js/plugins/style-switcher.js"></script>
-
-			<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+			<!-- CSS Customization -->
+			<link rel="stylesheet" href="assets/css/custom.css">
+<!----			<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>---->
   	<cfelse>
 
   		<cfoutput>

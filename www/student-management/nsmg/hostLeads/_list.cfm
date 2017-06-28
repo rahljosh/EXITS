@@ -19,7 +19,7 @@
 		// Param FORM Variables
 		param name="FORM.keyword" default="";
 		param name="FORM.followUpID" default=0;	
-		param name="FORM.regionID" default=0;	
+		param name="FORM.regionID" default=99999;	
 		param name="FORM.stateID" default=0;	
 		param name="FORM.statusID" default="";	
 		param name="FORM.sortBy" default="dateCreated";		
@@ -294,6 +294,7 @@
 			var regionAssigned = hostLeadData.QUERY.DATA[i][hostLeadData.QUERY.COLUMNS.findIdx('REGIONASSIGNED')];
 			var areaRepAssigned = hostLeadData.QUERY.DATA[i][hostLeadData.QUERY.COLUMNS.findIdx('AREAREPASSIGNED')];
 			var statusAssigned = hostLeadData.QUERY.DATA[i][hostLeadData.QUERY.COLUMNS.findIdx('STATUSASSIGNED')];
+			var hostID = hostLeadData.QUERY.DATA[i][hostLeadData.QUERY.COLUMNS.findIdx('HOSTID')];
 		
 			
 			// Create Table Rows
@@ -301,8 +302,8 @@
 			
 				tableBody = '<tr id="' + id + '">';
 			
-				tableBody += '<td><a id="hostLeads/index.cfm?action=detail&id=' + id + '&key=' + hashID + '" class="openHFleadModal" href="#" >' + firstName + '</a></td>';
-				tableBody += '<td><a id="hostLeads/index.cfm?action=detail&id=' + id + '&key=' + hashID + '" class="openHFleadModal" href="#">' + lastName + '</a></td>';
+				tableBody += '<td><a href="hostLeads/index.cfm?action=detail&id=' + id + '&key=' + hashID + '" class="modalDialog">' + firstName + '</a></td>';
+				tableBody += '<td><a href="hostLeads/index.cfm?action=detail&id=' + id + '&key=' + hashID + '" class="jQueryModal">' + lastName + '</a></td>';
 				tableBody += '<td>' + city + '</a></td>';
 				tableBody += '<td>' + state + '</td>';
 				// tableBody += '<td>' + zipCode + '</td>';
@@ -316,9 +317,9 @@
 				tableBody += '<td>' + dateCreated + '</td>';
 				tableBody += '<td>' + dateUpdated + '</td>';
 				if (statusAssigned == 'Converted to Host'){
-				tableBody += '<td align="center"><button type="button" id="hostLeads/index.cfm?action=detail&id=' + id + '&key=' + hashID + '" class="btn-u btn-u-orange openHFleadModal">Details</button>';
+				tableBody += '<td align="center"><A href="index.cfm?curdoc=host_fam_info&hostid=' + hostID + '" target="_new"><button type="button" class="btn-u btn-u-orange">View Profile</button></a>';
 				}else{
-					tableBody += '<td align="center"><button id="hostLeads/convert_lead.cfm?leadID=' + id + '&key=' + hashID + '" class="openHFconvertModal btn-u btn-u-green" type="button">Convert</button> <button type="button" id="hostLeads/index.cfm?action=detail&id=' + id + '&key=' + hashID + '" class="btn-u btn-u-orange openHFleadModal">Update</button></a>';
+					tableBody += '<td align="center"><a href="hostLeads/convert_lead.cfm?leadID=' + id + '&key=' + hashID + '" class="jQueryModal"><button type="button" class="btn-u btn-u-green">Convert</button></a>  <a href="hostLeads/index.cfm?action=detail&id=' + id + '&key=' + hashID + '" class="jQueryModal"><button type="button" class="btn-u btn-u-orange">Update</button></a>';
 					tableBody += ' <a href="javascript:confirmDeleteHostLead(' + id + ');"><button type="button" class="btn-u btn-u-red">Not Interested</button></a>';
 						
 				}
@@ -327,37 +328,15 @@
 			$("#loadHostLeadList").append(tableBody);
 		} 
 
-		$(".openHFleadModal").on('click', function () {
-			$('#HFleadModal .modal-title').html('Host Family Lead Information');
-      $('#HFleadModal .modal-body').load($(this).attr('id')); 
-      $('#HFleadModal').modal('show');
-		});
-
-		$('#HFleadModal').on('hide.bs.modal', function () { 
-			$('#HFleadModal').removeData('bs.modal'); 
-			$('#HFleadModal .modal-body').html('<div style="width:100%; text-align:center"><img src="/nsmg/pics/loading.gif" style="margin:20px 0" /></div>'); 
-		});
-
-		$(".openHFconvertModal").on('click', function () {
-			$('#HFleadModal .modal-title').html('Start Host App from Lead Information');
-      $('#HFleadModal .modal-body').load($(this).attr('id')); 
-      $('#HFleadModal').modal('show');
-		});
-
-		$('#openHFconvertModal').on('hide.bs.modal', function () { 
-			$('#HFleadModal').removeData('bs.modal'); 
-			$('#HFleadModal .modal-body').html('<div style="width:100%; text-align:center"><img src="/nsmg/pics/loading.gif" style="margin:20px 0" /></div>'); 
-		});
-
 		// JQuery Modal
-		/*$(".jQueryModal").colorbox( {
+		$(".jQueryModal").colorbox( {
 			width:"60%", 
 			height:"90%", 
 			iframe:true,
 			overlayClose:true,
 			escKey:true,
 			closeButton:true
-		});	*/	
+		});		
 
 	}
 	// --- END OF HOST LEADS LIST --- //
@@ -483,7 +462,6 @@
 
 <cfoutput>
 
-	
 
 	<!--- This holds the student information messages --->
     <table width="100%" border="0" cellpadding="4" cellspacing="0" class="section pageMessages displayNone" align="center">
@@ -505,14 +483,14 @@
                 <select name="regionID" id="regionID">
                 	
                 	<cfif ListFind("1,2,3,4", CLIENT.userType)>
-                	<option value="99999"<cfif NOT VAL(FORM.regionID)>selected="selected"</cfif> >All</option>
+                		<option value="99999"<cfif NOT VAL(FORM.regionID)>selected="selected"</cfif> >All</option>
                 		<option value="0"<cfif NOT VAL(FORM.regionID)>selected="selected"</cfif> >Unassinged</option>
                     </cfif>
                     <cfloop query="qGetRegions">
                     	<option value="#qGetRegions.regionID#" <cfif FORM.regionID EQ qGetRegions.regionID>selected="selected"</cfif> >#qGetRegions.regionName#</option>
                     </cfloop>
                 </select>
-            </td>    
+            </td>      
             <td>
                 <label for="keyword">Keyword</label> <br />
                 <input type="text" name="keyword" id="keyword" maxlength="50" />
@@ -608,9 +586,9 @@
     <!--- Host Leads List --->
     <table id="loadHostLeadList" border="0" cellpadding="4" cellspacing="0" class="table table-striped table-hover" width="100%"></table>
 
- 	<table width="100%">
+ 	<table width="60%" align="center">
  		<tr>
-			<td colspan="13" style="text-align:center">
+			<td style="text-align:center">
 				<cfform action="?curdoc=hostLeads/host_lead_export" id="exportForm" name="exportForm" onsubmit="return checkSearchFields();">
 
 					<input type="hidden" name="keyword" id="keyword_export" />
@@ -627,29 +605,13 @@
 
 				</cfform>
 			</td>
+			<td style="text-align:center">
+				
+        		<button type="button" class="btn-u btn-u-blue"><i class="fa fa-folder-open-o" aria-hidden="true"></i> Add New Lead</button>
+        	
+			</td>
 		</tr>
  	</table>
-
-
- 	<!-- Modal -->
-<div class="modal fade" id="HFleadModal" tabindex="-1" role="dialog" aria-labelledby="Host Family Lead" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-         	<div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                 <h4 class="modal-title">Host Family Lead Information</h4>
-            </div>
-            <div class="modal-body">
-            	<div style="width:100%; text-align:center">
-            		<img src="/nsmg/pics/loading.gif" style="margin:20px 0" />
-            	</div>
-            </div>
-         	
-        </div>
-        <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
-</div>
 
 </cfoutput>
 

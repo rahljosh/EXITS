@@ -1355,7 +1355,8 @@
                                 smg_students.hostID = h.hostID
                             AND
                                 smg_programs.seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
-                           
+                           	AND
+                           		canceldate is NULL
                         ) as totalNumberCurrentStudents,
                         <!--- Host Season-based approval status --->
                         smg_host_app_season.applicationStatusID,
@@ -3336,19 +3337,8 @@
                     	<!--- Get New Host Leads | 3 = Not Interested | 8 = Committed to Host | 9 - Interested in Hosting in the Future | 10 - Not Qualified to Host --->
                     	hl.dateUpdated >= <cfqueryparam cfsqltype="cf_sql_timestamp" value="#ARGUMENTS.lastLogin#">
 					 AND
-                     	hl.statusID NOT IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="3,8,9,10" list="yes"> )
+                     	hl.statusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,12,13" list="yes"> )
 
-                     OR
-                     	<!--- Get Host Leads That do not have a final disposition --->
-                     	hl.ID NOT IN (
-                        	SELECT
-                            	ID
-                            FROM
-                            	smg_host_lead
-                            WHERE	
-                            	statusID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="3,8,10" list="yes"> )
-                        )
-                     
                      )
                 ORDER BY
                     hl.dateCreated,
@@ -3803,6 +3793,7 @@
 					<!--- CAST(hl.hashID AS CHAR) AS hashID, --->
                     <!--- CONVERT(hl.hashID USING utf8) AS hashID, --->                    
                     CONCAT(hl.hashID, '&') AS hashID,
+                    hl.hostID,
                     hl.statusID,
                     hl.followUpID,
                     hl.regionID,
@@ -4010,7 +4001,9 @@
                 </cfswitch>   
             
 		</cfquery>
-
+			
+      
+       
         <cfscript>
 			// Set return structure that will store query + pagination information
 			stResult = StructNew();
@@ -4036,7 +4029,7 @@
 			}
 
 			// Populate structure with query
-			resultQuery = QueryNew("ID, hashID, firstName, lastName, address, city, state, zipCode, phone, email, dateCreated, dateUpdated, dateLastLoggedIn, statusAssigned, regionAssigned, areaRepAssigned");
+			resultQuery = QueryNew("ID, hashID, hostID, firstName, lastName, address, city, state, zipCode, phone, email, dateCreated, dateUpdated, dateLastLoggedIn, statusAssigned, regionAssigned, areaRepAssigned");
 			
 			if ( qGetHostLeadsRemote.recordCount < stResult.recordTo ) {
 				stResult.recordTo = qGetHostLeadsRemote.recordCount;
@@ -4049,6 +4042,7 @@
 					QueryAddRow(resultQuery);
 					QuerySetCell(resultQuery, "ID", qGetHostLeadsRemote.ID[i]);
 					QuerySetCell(resultQuery, "HASHID", qGetHostLeadsRemote.hashID[i]);
+					QuerySetCell(resultQuery, "hostID", qGetHostLeadsRemote.hostID[i]);
 					QuerySetCell(resultQuery, "firstName", qGetHostLeadsRemote.firstName[i]);
 					QuerySetCell(resultQuery, "lastName", qGetHostLeadsRemote.lastName[i]);
 					QuerySetCell(resultQuery, "address", qGetHostLeadsRemote.address[i]);
