@@ -34,6 +34,12 @@ var OpenHistory = function(url) {
 	if (window.focus) {newwindow.focus()}
 }
 
+//open region / program history
+var OpenHistoryLarge = function(url) {		
+	newwindow=window.open(url, 'Application', 'height=400, width=800, location=no, scrollbars=yes, menubar=no, toolbars=no, resizable=yes'); 
+	if (window.focus) {newwindow.focus()}
+}
+
 // open online application 
 var OpenApp = function(url) {
 	newwindow=window.open(url, 'Application', 'height=580, width=790, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); 

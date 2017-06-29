@@ -194,6 +194,7 @@
     <link rel="stylesheet" href="linked/css/baseStyle.css" type="text/css"> <!-- BaseStyle -->
     <link media="screen" rel="stylesheet" href="linked/css/colorbox.css" /> <!-- Modal ColorBox -->
     <link media="screen" rel="stylesheet" href="linked/css/buttons.css" /> <!-- Css Buttons -->
+    <link media="screen" rel="stylesheet" href="assets/css/custom.css" />
     <!-- Overrides to Bootstrap use assets/css/custom.css-->
 
   	<cfif VAL(includebootstrap)>
@@ -212,7 +213,7 @@
 			<script type="text/javascript" src="/nsmg/assets/plugins/jquery/jquery-migrate.min.js"></script>
 ---->
 			<script type="text/javascript" src="/nsmg/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
-			<!-- JS Customization -->
+
 			
 			<script type="text/javascript" src="/nsmg/assets/js/plugins/style-switcher.js"></script>
 			<!-- CSS Customization -->

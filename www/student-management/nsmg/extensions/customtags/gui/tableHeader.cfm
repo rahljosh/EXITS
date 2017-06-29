@@ -69,13 +69,13 @@
 <!--- Header of Table --->
 <table width="#ATTRIBUTES.width#" align="center" cellpadding="0" cellspacing="0" border="0">
     <tr valign="middle" height="24">
-        <td width="13" height="24" background="#ATTRIBUTES.imagePath#pics/header_leftcap.gif">&nbsp;</td>
-        <td width="26" background="#ATTRIBUTES.imagePath#pics/header_background.gif"><img src="#ATTRIBUTES.imagePath#pics/#ATTRIBUTES.imageName#"></td>
-        <td background="#ATTRIBUTES.imagePath#pics/header_background.gif"><h2>#ATTRIBUTES.tableTitle#</h2></td>
+        <td width="13" height="24" <cfif ATTRIBUTES.tableTitle NEQ 'Students'>background="#ATTRIBUTES.imagePath#pics/header_leftcap.gif"</cfif>>&nbsp;</td>
+        <td width="26" <cfif ATTRIBUTES.tableTitle NEQ 'Students'>background="#ATTRIBUTES.imagePath#pics/header_background.gif"</cfif>><img src="#ATTRIBUTES.imagePath#pics/#ATTRIBUTES.imageName#"></td>
+        <td <cfif ATTRIBUTES.tableTitle NEQ 'Students'>background="#ATTRIBUTES.imagePath#pics/header_background.gif"</cfif>><h2>#ATTRIBUTES.tableTitle#</h2></td>
         <cfif LEN(ATTRIBUTES.tableRightTitle)>
-	        <td align="right" background="#ATTRIBUTES.imagePath#pics/header_background.gif">#ATTRIBUTES.tableRightTitle#</td>
+	        <td align="right" <cfif ATTRIBUTES.tableTitle NEQ 'Students'>background="#ATTRIBUTES.imagePath#pics/header_background.gif"</cfif>>#ATTRIBUTES.tableRightTitle#</td>
         </cfif>
-        <td width="17" background="#ATTRIBUTES.imagePath#pics/header_rightcap.gif">&nbsp;</td>
+        <td width="17" <cfif ATTRIBUTES.tableTitle NEQ 'Students'>background="#ATTRIBUTES.imagePath#pics/header_rightcap.gif"</cfif>>&nbsp;</td>
     </tr>
 </table>
 
