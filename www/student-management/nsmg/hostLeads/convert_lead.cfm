@@ -61,14 +61,18 @@
   <cfparam name="URL.skip" default="0">
   <cfparam name="URL.skip" default="0">
 
-	<script type="text/javascript" src="/nsmg/assets/js/jquery.maskedinput.js"></script>
+ 	<cfoutput>
+			<link rel="stylesheet" href="#APPLICATION.PATH.jQueryTheme#" type="text/css" /> <!-- JQuery UI 1.8 Tab Style Sheet --> 
+			<script type="text/javascript" src="#APPLICATION.PATH.jQuery#"></script> <!-- jQuery -->
+			<script type="text/javascript" src="#APPLICATION.PATH.jQueryUI#"></script> <!-- JQuery UI 1.8 Tab -->
+		</cfoutput> 
+	<script type="text/javascript" src="../assets/js/jquery.maskedinput.js"></script>
 	<script>
 	jQuery(function($){
 	  
 	   $("#father_cell").mask("(999) 999-9999");
 	  
 	});	
-	
 	</script>
 	
 	<!--- Param FORM Variables --->
@@ -522,15 +526,26 @@
 	</div>	
 		<!--=== End Breadcrumbs ===-->
 
-		<!--=== Content Part ===-->
-		<div class="">
+
+
+	<!--=== Content Part ===-->
+		<div class="container content">
 			<div class="row">
 				<cfoutput>
 	
 
 				<!-- Begin Content --> 
 				<div class="col-md-12 tab-pane fade in active">
+				<div class="headline"><h2 class="heading-lg">Start Host App from Lead Information</h2>
+				
+				<span class="pull-right"> 
+				<form method="post" action="_app_sent.cfm?ID=#FORM.leadID#&key=#URL.key#">
+				<input type="hidden" name="leadID" value="#FORM.leadID#">
+				<input type="submit" class="btn-u btn-u-purple" value="Already a host family?"></input>	
+				</form>
+				</div>
 					
+
 					<!-- Checkout-Form -->
 					<form name="hostFamilyInfo" id="hostFamilyInfo" action="#CGI.SCRIPT_NAME#?curdoc=forms/host_fam_form_lead&leadID=#form.leadID#" method="post" id="sky-form" class="sky-form">
 					<Cfif val(#URL.skip#)>
@@ -541,7 +556,7 @@
 					<input type="hidden" name="followUpID" value="#FORM.followUpID#">
 					<input type="hidden" name="areaRepID" value="#FORM.areaRepID#">
 		
-						<header>Primary Host Parent Information</header>
+						<header>Primary Host Parent Information </header>
 
 						<fieldset>
 							<div class="row">
@@ -837,13 +852,13 @@
 		<!--=== End Content Part ===-->
 </div>
 
-		<!--Smarty Streets-->
-
-
-		<script> var liveaddress = jQuery.LiveAddress({
+	<!--Smarty Streets-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="//d79i1fxsrar4t.cloudfront.net/jquery.liveaddress/3.4/jquery.liveaddress.min.js"></script>
+	<script> var liveaddress = jQuery.LiveAddress({
 					key: '19728119051131453',
 					autocomplete: 5,
-				
+
 					addresses: [{
 						address1: '#address',
 						address2: '#address2',	// Not all these fields are required
@@ -852,9 +867,7 @@
 						postal_code: '#zip'
 					}]
 				});
-			
-		
-	</script>
+		</script>
 
 
 	<cfif val(#unify#)>
