@@ -1685,15 +1685,13 @@
                     WHERE 
                     	u.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
            			
-					<cfif VAL(ARGUMENTS.regionID)>
-                        AND
-                            uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#">
-                	</cfif>
+										<cfif VAL(ARGUMENTS.regionID)>
+                      AND uar.regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#">
+                		</cfif>
                     
-					<cfif LEN(ARGUMENTS.regionIDList)>
-                        AND
-                           uar.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionIDList#" list="yes"> )
-                	</cfif>
+										<cfif LEN(ARGUMENTS.regionIDList)>
+                      AND uar.regionID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionIDList#" list="yes"> )
+                		</cfif>
                     
                     <cfif VAL(is2ndVisitIncluded)>
                         AND 
@@ -3570,10 +3568,14 @@
         <cfargument name="searchString" type="string" default="" hint="Search is not required">
         <cfargument name="maxRows" type="numeric" required="false" default="30" hint="Max Rows is not required" />
         <cfargument name="companyID" default="#CLIENT.companyID#" hint="CompanyID is not required">
+        <cfargument name="userTypeID" default="" hint="userTypeID is not required">
+        <cfargument name="regionID" default="" hint="regionID is not required">
         
         <cfscript>
-			var vReturnArray = arrayNew(1);
-		</cfscript>
+					var vReturnArray = arrayNew(1);
+					// Get Current Paperwork Season ID
+					vCurrentSeasonID = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID;
+				</cfscript>
         
         <!--- Do search --->
         <cfquery 
@@ -3593,32 +3595,40 @@
                     ) AS displayName                      
                 FROM 
                 	smg_users u
-                INNER JOIN
-                	user_access_rights uar ON uar.userID = u.userID
-					<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, ARGUMENTS.companyID)>
-                        AND          
-                            uar.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
-                    <cfelseif VAL(ARGUMENTS.companyID)>
-
-                        AND          
-                            uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
-                    </cfif>
+                INNER JOIN user_access_rights uar ON uar.userID = u.userID
+									<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, ARGUMENTS.companyID)>
+                    AND uar.companyID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> )
+                  <cfelseif VAL(ARGUMENTS.companyID)>
+                  	AND uar.companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#"> 
+                  </cfif>
+                LEFT OUTER JOIN smg_users_paperwork sup ON sup.userID = u.userID
                 WHERE 
-                   
-					<cfif IsNumeric(ARGUMENTS.searchString)>
-                    	u.userID LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
-                    <cfelse>
-                            u.lastName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
-                        OR
-                            u.firstName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
-                        OR
-                            u.businessName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
-					</cfif>				
+									<cfif IsNumeric(ARGUMENTS.searchString)>
+										(u.userID LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">)
+                  <cfelse>
+										(u.lastName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
+                    OR u.firstName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">
+                    OR u.businessName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.searchString#%">)
+									</cfif>	
+
+									AND u.active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+
+									<cfif LEN(ARGUMENTS.regionID)>
+										AND uar.regionID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#">)
+									</cfif>
+
+									<cfif LEN(ARGUMENTS.userTypeID)>
+                    AND	(uar.usertype IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userTypeID#" list="yes"> ))
+									</cfif>
+
+									<cfif CLIENT.companyID NEQ 13>
+										AND sup.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(vCurrentSeasonID)#">
+									</cfif>
                     
                 ORDER BY 
                     u.lastName,
                     u.firstName
-				LIMIT 
+								LIMIT 
                 	<cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.maxRows#" />                 
         </cfquery>
 

@@ -26,7 +26,7 @@
 	   	<cfset unify=1>
    	</cfif>
  		--->
- 		<cfif val(listContains('hostLeads/index','#url.curdoc#'))>
+ 		<cfif val(listContains('hostLeads/index, students','#url.curdoc#'))>
 	   	<cfset includebootstrap=1>
    	</cfif>
     

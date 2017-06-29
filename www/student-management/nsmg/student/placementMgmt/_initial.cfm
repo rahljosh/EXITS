@@ -47,6 +47,21 @@
     <!--- Rejecting / Unplacing / Resubmitting --->
     <cfparam name="FORM.reason" default="" /> 
 
+
+    <cfparam name="URL.pre_hostID" default="" /> 
+    <cfparam name="URL.pre_areaRepID" default="" /> 
+    <cfparam name="URL.pre_schoolID" default="" /> 
+    
+    <cfif CLIENT.companyID eq 15>
+    	<cfset host_supervising_distance_max = 250>
+        <Cfset alertDistance = 275>
+		<cfset attentionDistance = 250>
+    <cfelse>
+    	<cfset host_supervising_distance_max = 120>
+        <Cfset alertDistance = 125>
+		<cfset attentionDistance  = 120>
+    </cfif>
+
 	<!--- check if the double placement form was uploaded in the student's app --->
 	<cfdirectory directory="#AppPath.onlineApp.inserts#page23" name="doublePlacementFile" filter="#qGetStudentInfo.studentID#.*">
 
@@ -70,7 +85,8 @@
 				secondVisitRepID=qGetPlacementHistoryByID.secondVisitRepID,
 				schoolAcceptanceDate=qGetPlacementHistoryByID.doc_school_accept_date,
 				crossDataUserCBC=1,
-				representativeDistanceInMiles=qGetPlacementHistoryByID.hfSupervisingDistance
+				representativeDistanceInMiles=qGetPlacementHistoryByID.hfSupervisingDistance,
+				maxDistance = host_supervising_distance_max
 			);
 			
 			// Check if compliance_review is checked
@@ -411,6 +427,16 @@
 					userType = CLIENT.userType,
 					placementStatus = vPlacementStatus
 				);
+
+				//Remove Hold Status
+				APPLICATION.CFC.STUDENT.addHoldStatus(
+					hold_status_id: 1,
+          student_id: FORM.studentID,
+          area_rep_id: 0,
+          host_family_id: 0,
+          school_id: 0,
+          create_by: CLIENT.userID
+				);
 			
 				// Set Page Message
 				SESSION.pageMessages.Add("Form successfully submitted.");
@@ -651,6 +677,24 @@
 		$('form').submit(function() {
 		   $('input[type=image]', this).attr('disabled', 'disabled').css('opacity',0.5);
 		});
+
+		<cfif VAL(URL.pre_schoolID)>
+			$("#schoolID").val(<cfoutput>#URL.pre_schoolID#</cfoutput>);
+		</cfif>
+
+		<cfif VAL(URL.pre_areaRepID)>
+			$("#placeRepID").val(<cfoutput>#URL.pre_areaRepID#</cfoutput>);
+		</cfif>
+
+		<cfif VAL(URL.pre_hostID)>
+			<cfquery name="qGetHF" datasource="#APPLICATION.DSN#">
+				SELECT *
+				FROM smg_hosts
+				WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(URL.pre_hostID)#">
+			</cfquery>
+			$("#hostIDSuggest").val(<cfoutput>"#qGetHF.familyLastName# - #qGetHF.fatherFirstName# #qGetHF.motherFirstName# (###URL.pre_hostID#)"</cfoutput>);
+			$("#hostID").val(<cfoutput>#URL.pre_hostID#</cfoutput>);
+		</cfif>
 
 	});
 
@@ -1004,7 +1048,8 @@
         width="90%"
         />
 
-    <table width="90%" cellpadding="2" cellspacing="0" class="section" align="center" style="padding:10px 0px 10px 0px;">      
+    <table width="90%" cellpadding="2" cellspacing="0" class="section" align="center" style="padding:10px 0px 10px 0px;">     
+    	
         <cfswitch expression="#vPlacementStatus#">
             
             <cfcase value="Rejected">
@@ -1220,21 +1265,23 @@
         </cfif> 
 
 		<!--- Display Distance in Miles --->
-        <cfif APPLICATION.CFC.USER.isOfficeUser() AND vPlacementStatus NEQ 'unplaced' AND qGetPlacementHistoryByID.hfSupervisingDistance GTE 100>
-            
+        
+        	<cfif APPLICATION.CFC.USER.isOfficeUser() AND vPlacementStatus NEQ 'unplaced' AND qGetPlacementHistoryByID.hfSupervisingDistance GTE #host_supervising_distance_max#>
+           
 			<cfscript>
 				vSetColorCode = '';
 				
-				if ( VAL(qGetPlacementHistoryByID.hfSupervisingDistance) GT 120 ) {
+				
+				if ( VAL(qGetPlacementHistoryByID.hfSupervisingDistance) GT alertDistance ) {
 					vSetColorCode = 'class="alert"';	
-				} else if ( VAL(qGetPlacementHistoryByID.hfSupervisingDistance) GTE 100 ) {
+				} else if ( VAL(qGetPlacementHistoryByID.hfSupervisingDistance) GTE attentionDistance ) {
 					vSetColorCode = 'class="attention"';	
 				}
 			</cfscript>
 
             <tr>
                 <td align="center" style="padding:10px 0px 10px 0px; color:##3b5998;">
-                    <p>Supervising Representative is <span #vSetColorCode#> #qGetPlacementHistoryByID.hfSupervisingDistance# mi </span> away from Host Family</p>                    
+                    <p>Supervising Representative is <span #vSetColorCode#> #qGetPlacementHistoryByID.hfSupervisingDistance# mi </span> away from the Host Family</p>                    
                 </td>
             </tr>
             
@@ -1354,7 +1401,7 @@
                     	
                         <!--- Choose Host --->
 						<div id="divHostID" class="displayNone">
-                            
+                         
                             <cfinput
                             	type="text" 
                                 name="hostIDSuggest" 

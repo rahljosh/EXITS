@@ -472,6 +472,52 @@
 	</cffunction>
 
 
+    <cffunction name="getCountriesFromSeason" access="remote" returnFormat="json" output="false" hint="Returns a list of countries for the season">
+        <cfargument name="seasonIDs" default="" required="true" hint="seasonID is required">
+
+        <cfquery 
+            name="qGetResults"
+            datasource="#APPLICATION.DSN#">
+                SELECT 
+                    countryID,
+                    countryName,
+                    countryCode
+                FROM
+                    smg_countrylist c
+                    INNER JOIN smg_students s ON (s.countryresident = c.countryID)
+                    INNER JOIN smg_programs p ON (p.programID = s.programID)
+                    
+                WHERE p.seasonID IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.seasonIDs#" >)
+                    AND s.companyID = #CLIENT.companyID#
+                GROUP BY countryID
+                ORDER BY countryName                    
+        </cfquery> 
+
+        <cfscript>
+            // Set return structure that will store query + pagination information
+            stResult = StructNew();
+
+            // Populate structure with query
+            resultQuery = QueryNew("countryID, countryName");
+            
+            // Populate query below
+            if ( qGetResults.recordCount ) {
+                For ( i=1; i LTE qGetResults.recordCount; i++ ) {
+                    QueryAddRow(resultQuery);
+                    QuerySetCell(resultQuery, "countryID", qGetResults.countryID[i]);
+                    QuerySetCell(resultQuery, "countryName", qGetResults.countryName[i]);
+                }
+            }
+            
+            // Add query to structure
+            stResult.query = resultQuery;
+            
+            // return structure
+            return stResult;            
+        </cfscript>
+    </cffunction>
+
+
 	<cffunction name="getCountryList" access="public" returntype="query" output="false" hint="Returns a list of countries assigned to active students">
 
         <cfquery 

@@ -5567,12 +5567,675 @@
             
 		<cfreturn qGetProjectHelpReport>
 	</cffunction>
-
-
 	<!--- ------------------------------------------------------------------------- ----
 		
 		END OF PROJECT HELP
 	
 	----- ------------------------------------------------------------------------- --->
+
+
+    <cffunction name="addHoldStatus" access="remote" returntype="void" hint="">
+        <cfargument name="student_id" type="numeric" required="yes" hint="The student ID for this secondary language">    
+        <cfargument name="hold_status_id" type="numeric" required="yes" hint="The field ID of the language to be added">        
+        <cfargument name="create_by" type="numeric" required="yes" hint="1 for primary, 0 for secondary">
+        <cfargument name="school_id" type="numeric" default="0" required="no" hint="1 for primary, 0 for secondary">
+        <cfargument name="host_family_id" type="numeric" default="0" required="no" hint="1 for primary, 0 for secondary">
+        <cfargument name="area_rep_id" type="numeric" default="0" required="no" hint="1 for primary, 0 for secondary">
+        
+        <cfquery 
+            datasource="#APPLICATION.DSN#">
+                INSERT INTO
+                    smg_student_hold_status
+                    (
+                        hold_status_id,
+                        student_id,
+                        area_rep_id,
+                        host_family_id,
+                        school_id,
+                        create_by,
+                        create_date
+                    )
+                VALUES
+                    (
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.hold_status_id#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.student_id#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.area_rep_id#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.host_family_id#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.school_id#">,
+                        <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.create_by#">,
+                        <cfqueryparam cfsqltype="cf_sql_timestamp" value="#now()#"> 
+                    )
+        </cfquery>
+    </cffunction>
+
+
+
+    <cffunction name="getStudentsRemote" access="remote" returnFormat="json" output="false" hint="Returns host leads in Json format">
+        <cfargument name="pageNumber" type="numeric" default="1" hint="Page number is not required">
+        <cfargument name="regionID" type="string" default="" hint="not required">
+        <cfargument name="keyword" type="string" default="" hint="not required">
+        <cfargument name="placed" type="string" default="" hint="not required">
+        <cfargument name="placement_status" type="string" default="" hint="not required">
+        <cfargument name="priority_student" type="string" default="" hint="not required">
+        <cfargument name="double_placement" type="string" default="" hint="not required">
+        <cfargument name="hold_status_id" type="string" default="" hint="not required">
+        <cfargument name="cancelled" type="string" default="" hint="not required">
+        <cfargument name="active" type="string" default="" hint="not required">
+        <cfargument name="seasonID" type="string" default="" hint="not required">
+        <cfargument name="sortBy" type="string" default="studentID" hint="not required">
+        <cfargument name="sortOrder" type="string" default="ASC" hint="not required">
+        <cfargument name="pageSize" type="numeric" default="30" hint="Page number is not required">
+
+        <cfargument name="adv_search" type="string" default="" hint="not required">
+        <cfargument name="familyLastName" type="string" default="" hint="not required">
+        <cfargument name="firstName" type="string" default="" hint="not required">
+        <cfargument name="age" type="string" default="" hint="not required">
+        <cfargument name="sex" type="string" default="" hint="not required">
+        <cfargument name="preayp" type="string" default="" hint="not required">
+        <cfargument name="direct" type="string" default="" hint="not required">
+        <cfargument name="privateschool" type="string" default="" hint="not required">
+        <cfargument name="grade" type="string" default="" hint="not required">
+        <cfargument name="graduate" type="string" default="" hint="not required">
+        <cfargument name="religionid" type="string" default="" hint="not required">
+        <cfargument name="interestid" type="string" default="" hint="not required">
+        <cfargument name="sports" type="string" default="" hint="not required">
+        <cfargument name="interests_other" type="string" default="" hint="not required">
+        <cfargument name="placementStatus" type="string" default="" hint="not required">
+        <cfargument name="countryID" type="string" default="" hint="not required">
+        <cfargument name="intrep" type="string" default="" hint="not required">
+        <cfargument name="stateid" type="string" default="" hint="not required">
+        <cfargument name="state_placed_id" type="string" default="" hint="not required">
+        <cfargument name="programID" type="string" default="" hint="not required">
+
+        <cfargument name="searchStudentID" type="string" default="" hint="not required">
+
+        <cfargument name="clientUserType" type="string" default="" hint="not required">
+
+        <!--- STUDENTS UNDER ADVISOR --->       
+        <cfif CLIENT.usertype EQ 6>
+        
+            <!--- show only placed by the reps under the advisor --->
+            <cfquery name="get_users_under_adv" datasource="#application.dsn#">
+                SELECT DISTINCT 
+                    userid
+                FROM 
+                    user_access_rights
+                WHERE 
+                    advisorid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
+                AND 
+                    regionID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionID#">
+            </cfquery>
+            
+            <cfscript>
+                vUserUnderAdvisorList = '';
+                vUserUnderAdvisorList = valueList(get_users_under_adv.userid);
+                // include the current user on the list.
+                vUserUnderAdvisorList = listAppend(vUserUnderAdvisorList, CLIENT.userid);
+            </cfscript>
+            
+        </cfif>
+        
+
+
+        <cfquery name="qGetResults" datasource="#application.dsn#">
+            SELECT  
+                s.studentID, 
+                s.nexits_id,
+                s.uniqueid, 
+                s.programID,
+                s.hostID,
+                s.firstName,
+                s.familyLastName, 
+                s.sex, 
+                s.email, 
+                s.active, 
+                s.dateassigned, 
+                s.dateplaced,
+                s.intrep, 
+                s.branchID,
+                s.regionguar,
+                s.state_guarantee, 
+                s.app_additional_program,
+                s.app_region_guarantee,
+                s.scholarship, 
+                s.privateschool,
+                s.host_fam_approved,
+                smg_regions.regionName, 
+                smg_g.regionName as r_guarantee, 
+                smg_states.state,             
+                p.programname,
+                p2.app_program as add_program,
+                c.countryname, 
+                co.companyShort, 
+                smg_hosts.familyLastName AS hostname,
+                sh1.hold_status_id,
+                DATE_FORMAT(sh1.create_date,'%m/%d/%Y') AS hold_create_date,
+                sasr.state1,
+                sasr.state2,
+                sasr.state3,
+                st1.state AS state1name,
+                st2.state AS state2name,
+                st3.state AS state3name,
+                aypori.name AS ayporientation,
+                aypeng.name AS aypenglish, 
+                u.businessname,
+                u2.businessname AS branchName,
+
+                CASE 
+                    WHEN canceldate IS NOT NULL
+                    THEN 'Cancelled'
+
+                    WHEN sh1.hold_status_id = <cfqueryparam cfsqltype="cf_sql_integer" value="2">
+                        AND canceldate IS NULL
+                    THEN 'Showing'
+
+                    WHEN sh1.hold_status_id = <cfqueryparam cfsqltype="cf_sql_integer" value="3">
+                        AND canceldate IS NULL
+                    THEN 'Committed'
+
+                    WHEN s.host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7,10" list="yes"> )
+                        AND (sh1.hold_status_id <= <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                            OR sh1.hold_status_id IS NULL)
+                        AND s.hostID > <cfqueryparam cfsqltype="cf_sql_integer" value="0">   
+                        AND canceldate IS NULL   
+                    THEN 'Pending'
+
+                    WHEN s.host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4" list="yes"> ) 
+                        AND (sh1.hold_status_id <= <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                            OR sh1.hold_status_id IS NULL)
+                        AND canceldate IS NULL   
+                    THEN 'Placed'
+
+                    WHEN s.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
+                        AND canceldate IS NULL   
+                    THEN 'Unplaced'
+                END 
+                AS stu_status,
+
+                CONCAT('',
+                CASE 
+                    WHEN (st1.state IS NOT NULL OR st2.state IS NOT NULL OR st3.state IS NOT NULL)
+                    THEN CONCAT(st1.state, ' ', st2.state, ' ', st3.state)
+                    ELSE ''
+                END,
+                CASE 
+                    WHEN app_region_guarantee = 6 
+                    THEN 'West Region'
+                    WHEN app_region_guarantee = 7
+                    THEN 'Central Region'
+                    WHEN app_region_guarantee = 8 
+                    THEN 'South Region'
+                    WHEN app_region_guarantee = 9 
+                    THEN 'East Region' 
+                    ELSE ''
+                END,
+                ' ', 
+                CASE 
+                    WHEN p2.app_program = 'New York Orientation'
+                    THEN '<strong>NY Orientation</strong>'
+                    WHEN p2.app_program = 'Pre AYP English'
+                    THEN'<strong>Pre-AYP</strong>'
+                    WHEN (p2.app_program IS NOT NULL AND p2.app_program != '')
+                    THEN p2.app_program
+                    ELSE ''
+                END) AS stu_requests,
+
+                CASE 
+                    WHEN sh1.hold_status_id > 1
+                        THEN hs.name 
+                    ELSE 'Not on Hold'
+                END 
+                AS hold_status_name
+
+            FROM smg_students s
+            INNER JOIN smg_companies co ON s.companyID = co.companyID
+            LEFT OUTER JOIN smg_regions ON s.regionassigned = smg_regions.regionID
+            LEFT OUTER JOIN smg_countrylist c ON s.countryresident = c.countryID
+            LEFT OUTER JOIN smg_regions smg_g ON s.regionalguarantee = smg_g.regionID
+            LEFT OUTER JOIN smg_states ON s.state_guarantee = smg_states.id
+            LEFT OUTER JOIN smg_hosts ON s.hostID = smg_hosts.hostID
+            LEFT OUTER JOIN smg_programs p ON s.programID = p.programID
+            LEFT JOIN smg_student_app_programs p2 ON p2.app_programid = s.app_additional_program
+
+            LEFT OUTER JOIN smg_student_app_state_requested sasr ON sasr.studentid = s.studentiD
+            LEFT OUTER JOIN smg_states st1 ON st1.id = sasr.state1
+            LEFT OUTER JOIN smg_states st2 ON st2.id = sasr.state2
+            LEFT OUTER JOIN smg_states st3 ON st3.id = sasr.state3
+
+            LEFT OUTER JOIN (
+                          SELECT    MAX(id) id, student_id
+                          FROM      smg_student_hold_status
+                          GROUP BY  student_id
+                      ) sh ON (sh.student_id = s.studentID)
+
+            LEFT OUTER JOIN smg_student_hold_status sh1 ON (sh1.id = sh.id)
+            LEFT OUTER JOIN smg_hold_status hs ON hs.id = sh1.hold_status_id
+            LEFT OUTER JOIN smg_aypcamps aypeng ON (s.aypenglish = aypeng.campid)
+            LEFT OUTER JOIN smg_aypcamps aypori ON (s.ayporientation = aypori.campid)
+
+            LEFT OUTER JOIN smg_users u ON s.intrep = u.userid
+            LEFT OUTER JOIN smg_users u2 ON s.branchID = u2.userid
+            
+            WHERE 
+            
+                <!--- SHOW ONLY APPS APPROVED --->
+                s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">
+            
+            <!--- OFFICE PEOPLE --->
+            <cfif APPLICATION.CFC.USER.isOfficeUser()>
+            
+                <!--- Students under companies --->
+                <cfif CLIENT.companyID EQ 5>
+                    AND s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> ) 
+                <cfelse>
+                    AND s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
+                </cfif>
+                
+                <cfif VAL(ARGUMENTS.regionID)>
+                    AND s.regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#">
+                </cfif>
+
+                <cfif ARGUMENTS.hold_status_id EQ 0>
+                    AND (sh1.hold_status_id = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                        OR sh1.hold_status_id = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                        OR sh1.hold_status_id IS NULL
+                        OR sh1.hold_status_id = '')
+                <cfelseif ARGUMENTS.hold_status_id GT 0>
+                    AND sh1.hold_status_id > <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                    AND canceldate IS NULL
+                </cfif>
+                
+                <cfif ARGUMENTS.cancelled EQ 1>
+                    AND canceldate IS NOT NULL
+                <cfelseif ARGUMENTS.cancelled EQ 0>
+                    AND canceldate IS NULL
+                </cfif>
+                
+                <cfif LEN(ARGUMENTS.active)>
+                    AND s.active = <cfqueryparam cfsqltype="cf_sql_bit" value="#active#">
+                </cfif>
+                
+                <cfif ARGUMENTS.privateschool EQ 0>
+                    AND privateschool != <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.privateschool#">
+                <cfelseif VAL(ARGUMENTS.privateschool)>
+                    AND privateschool = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.privateschool#">
+                </cfif>
+
+                <cfif ARGUMENTS.placed EQ 1>
+                    AND s.host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4" list="yes"> ) 
+                    AND (sh1.hold_status_id <= <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                        OR sh1.hold_status_id IS NULL)
+                    AND canceldate IS NULL   
+
+                <cfelseif ARGUMENTS.placed EQ 0>
+                    AND 
+                        (
+                            (sh1.hold_status_id = <cfqueryparam cfsqltype="cf_sql_integer" value="2">
+                            OR sh1.hold_status_id = <cfqueryparam cfsqltype="cf_sql_integer" value="3">
+                            OR s.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> )
+                        OR 
+                            (s.host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7,10" list="yes"> )
+                            AND (sh1.hold_status_id <= <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                            OR sh1.hold_status_id IS NULL)
+                            AND s.hostID > <cfqueryparam cfsqltype="cf_sql_integer" value="0">))
+
+                    AND canceldate IS NULL                   
+                </cfif>
+
+
+            
+            <!--- Guest Account --->
+            <cfelseif CLIENT.usertype EQ 27>
+            
+                <!--- Students under companies --->
+                <cfif ARGUMENTS.companyID EQ 5>
+                    AND s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> ) 
+                <cfelse>
+                    AND s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
+                </cfif>
+
+                AND s.studentID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#VAL(ARGUMENTS.searchStudentID)#">
+            
+            <!--- FIELD --->
+            <cfelse>
+            
+                AND s.regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.regionID#">
+                
+                <!--- Don't show 08 programs --->
+                AND fieldviewable = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                AND s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                    
+                <cfif ARGUMENTS.placed EQ 1>
+                    AND s.hostID != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                      
+                    <!--- STUDENTS UNDER REGIONAL ADVISOR --->  
+                    <cfif ARGUMENTS.clientUserType EQ 6>
+                        AND (
+                                s.arearepid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.vUserUnderAdvisorList#" list="yes"> )
+                                OR s.placerepid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.vUserUnderAdvisorList#" list="yes"> )
+                            )
+                            
+                    <!--- STUDENTS UNDER AN AREA REPRESENTATIVE --->
+                    <cfelseif ARGUMENTS.clientUserType EQ 7>
+                        AND (
+                                s.arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+                                OR s.placerepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+                            )
+                    </cfif> 
+                               
+                <cfelseif ARGUMENTS.placed EQ 0>
+                    AND s.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                </cfif>
+                
+            </cfif>
+
+            
+            <cfif ARGUMENTS.placement_status EQ "Cancelled">
+                AND canceldate IS NOT NULL
+            <cfelseif ARGUMENTS.placement_status EQ "Showing">
+                AND sh1.hold_status_id = <cfqueryparam cfsqltype="cf_sql_integer" value="2">
+                AND canceldate IS NULL
+            <cfelseif ARGUMENTS.placement_status EQ "Committed">
+                AND sh1.hold_status_id = <cfqueryparam cfsqltype="cf_sql_integer" value="3"> 
+                AND canceldate IS NULL
+            <cfelseif ARGUMENTS.placement_status EQ "Pending">
+                AND s.host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7" list="yes"> )   
+                AND (sh1.hold_status_id <= <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                    OR sh1.hold_status_id IS NULL)     
+                AND s.hostID > <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                AND canceldate IS NULL
+            <cfelseif ARGUMENTS.placement_status EQ "Placed">
+                AND s.host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4" list="yes"> ) 
+                AND (sh1.hold_status_id <= <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                    OR sh1.hold_status_id IS NULL) 
+                AND canceldate IS NULL
+            <cfelseif ARGUMENTS.placement_status EQ "Unplaced">
+                AND s.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+                AND canceldate IS NULL
+            </cfif>
+
+            <cfif ARGUMENTS.priority_student EQ 0>
+                AND (s.AYPEnglish = 0 OR s.AYPEnglish IS NULL)
+                AND (s.ayporientation = 0 OR s.ayporientation IS NULL)
+                AND (s.app_region_guarantee = 0 OR s.app_region_guarantee IS NULL)
+                AND (sasr.state1 = 0 OR sasr.state1 IS NULL)
+                AND (sasr.state2 = 0 OR sasr.state2 IS NULL)
+                AND (sasr.state3 = 0 OR sasr.state3 IS NULL)
+            <cfelseif ARGUMENTS.priority_student EQ 1>
+                AND (s.AYPEnglish > 0
+                    OR s.ayporientation > 0
+                    OR s.app_region_guarantee > 0
+                    OR sasr.state1 > 0
+                    OR sasr.state2 > 0
+                    OR sasr.state3 > 0)
+            </cfif>
+                    
+            <!--- Search --->            
+            <cfif LEN(trim(ARGUMENTS.keyword))>
+                AND (  s.studentID = <cfqueryparam cfsqltype="cf_sql_varchar" value="#trim(ARGUMENTS.keyword)#">
+                    OR s.familyLastName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(ARGUMENTS.keyword)#%">
+                    OR s.firstName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(ARGUMENTS.keyword)#%">
+                    OR c.countryname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(ARGUMENTS.keyword)#%">
+                    OR smg_regions.regionName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(ARGUMENTS.keyword)#%">
+                    OR p.programname LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(ARGUMENTS.keyword)#%">
+                    OR smg_hosts.familyLastName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(ARGUMENTS.keyword)#%">)
+            </cfif>
+            
+            <!--- advanced search items. --->        
+            <cfif VAL(ARGUMENTS.adv_search)>
+            
+                <cfif LEN(ARGUMENTS.familyLastName)>
+                    AND s.familyLastName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(ARGUMENTS.familyLastName)#%">
+                </cfif>
+                
+                <cfif LEN(ARGUMENTS.firstName)>
+                    AND s.firstName LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(ARGUMENTS.firstName)#%">
+                </cfif>
+                
+                <cfif LEN(ARGUMENTS.direct)>
+                    AND s.direct_placement = <cfqueryparam cfsqltype="cf_sql_bit" value="#ARGUMENTS.direct#">
+                </cfif>
+                
+                <cfif VAL(ARGUMENTS.age)>
+                    AND FLOOR(DATEDIFF(now(), s.dob) / 365) = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.age#">
+                </cfif>
+                
+                <cfif LEN(ARGUMENTS.sex)>
+                    AND s.sex = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.sex#">
+                </cfif>
+                
+                <cfif VAL(ARGUMENTS.grade)>
+                    AND s.grades = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.grade#">
+                </cfif>
+                
+                <cfif LEN(ARGUMENTS.graduate)>
+                    AND ( s.grades = 12
+                          OR ( s.grades = 11 
+                               AND s.countryresident IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="49,237" list="yes"> ) 
+                            )
+                    )
+                </cfif>
+                
+                <cfif VAL(ARGUMENTS.religionid)>
+                    AND s.religiousaffiliation = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.religionid#"> 
+                </cfif> 
+                
+                <cfif LEN(ARGUMENTS.interestid)>
+                    <!--- s.interests is a comma-delimited list of interestid's.  check single item, beginning of list, middle of list, end of list. --->
+                    AND (  s.interests = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.interestid#">
+                        OR s.interests LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.interestid#,%">
+                        OR s.interests LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#ARGUMENTS.interestid#,%">
+                        OR s.interests LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%,#ARGUMENTS.interestid#">
+                        )
+                </cfif> 
+                
+                <cfif LEN(ARGUMENTS.sports)>
+                    AND s.comp_sports = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.sports#">
+                </cfif>
+                
+                <cfif LEN(ARGUMENTS.interests_other)>
+                    AND s.interests_other LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="%#trim(ARGUMENTS.interests_other)#%">
+                </cfif>
+                
+                <cfif ARGUMENTS.placementStatus EQ 'Approved'>
+                    AND s.host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4" list="yes"> )   
+                <cfelseif ARGUMENTS.placementStatus EQ 'Pending'>
+                    AND s.host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7" list="yes"> )              
+                </cfif>
+                
+                <cfif VAL(ARGUMENTS.countryID)>
+                    AND s.countryresident = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.countryID#">
+                </cfif>
+                
+                <cfif VAL(ARGUMENTS.intrep)>
+                    AND s.intrep = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.intrep#">
+                </cfif>
+                
+                <cfif VAL(ARGUMENTS.stateid)>
+                    AND s.state_guarantee = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.stateid#">
+                </cfif> 
+
+                <cfif LEN(ARGUMENTS.state_placed_id)>
+                    AND smg_hosts.state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.state_placed_id#">
+                </cfif> 
+                    
+                <cfif VAL(ARGUMENTS.programID)>
+                    AND s.programID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.programID#" list="yes"> )
+                </cfif>
+
+                <cfif ARGUMENTS.preayp EQ 'english'>
+                    AND s.aypenglish > 0
+                <cfelseif ARGUMENTS.preayp EQ 'orient'>
+                    AND s.ayporientation
+                </cfif>
+
+                <cfif ARGUMENTS.double_placement EQ 0>
+
+                <cfelseif ARGUMENTS.double_placement EQ 1>
+
+                </cfif>
+                        
+            </cfif>
+
+            <cfif VAL(ARGUMENTS.seasonID)>
+                AND p.seasonID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.seasonID#" list="yes"> )
+            </cfif>
+            
+            ORDER BY 
+                <cfswitch expression="#ARGUMENTS.sortBy#">
+
+                    <cfcase value="studentID">                    
+                        s.studentID #ARGUMENTS.sortOrder#,
+                        s.familylastname
+                    </cfcase>
+
+                    <cfcase value="lastName">                    
+                        s.familylastname #ARGUMENTS.sortOrder#,
+                        s.firstname
+                    </cfcase>
+
+                    <cfcase value="firstName">                    
+                        s.firstname #ARGUMENTS.sortOrder#,
+                        s.familylastname
+                    </cfcase>
+
+                    <cfcase value="sex">                    
+                        s.sex #ARGUMENTS.sortOrder#,
+                        s.familylastname
+                    </cfcase>
+
+                    <cfcase value="country">                    
+                        c.countryname #ARGUMENTS.sortOrder#,
+                        s.familylastname
+                    </cfcase>
+
+                    <cfcase value="stu_status">                    
+                        stu_status #ARGUMENTS.sortOrder#,
+                        s.familylastname
+                    </cfcase>
+
+                    <cfcase value="hold_create_date">                    
+                        sh1.create_date #ARGUMENTS.sortOrder#,
+                        s.familylastname
+                    </cfcase>
+
+                    <cfcase value="region">                    
+                        smg_regions.regionName #ARGUMENTS.sortOrder#,
+                        s.familylastname
+                    </cfcase>
+
+                    <cfcase value="program">                    
+                        p.programname #ARGUMENTS.sortOrder#,
+                        s.familylastname
+                    </cfcase>
+
+                    <cfcase value="hostName">                    
+                        s.hostname #ARGUMENTS.sortOrder#,
+                        s.familylastname
+                    </cfcase>
+
+                    <cfcase value="requests">                    
+                        stu_requests #ARGUMENTS.sortOrder#,
+                        s.familylastname
+                    </cfcase>
+ 
+                    <cfdefaultcase>
+                        s.familyLastName ASC,
+                        s.firstname
+                    </cfdefaultcase>
+                            
+                </cfswitch>
+        </cfquery>
+
+        <cfscript>
+            // Set return structure that will store query + pagination information
+            stResult = StructNew();
+            
+            // Populate structure with pagination information
+            stResult.pageNumber = ARGUMENTS.pageNumber;
+            stResult.numberOfRecordsOnPage = ARGUMENTS.pageSize;
+            stResult.numberOfPages = Ceiling( qGetResults.recordCount / stResult.numberOfRecordsOnPage );
+            stResult.numberOfRecords = qGetResults.recordCount;
+            stResult.sortBy = ARGUMENTS.sortBy;
+            stResult.sortOrder = ARGUMENTS.sortOrder;
+            
+            // Here using url.pagenumber to work out what records to display on current page
+            stResult.recordFrom = ( (ARGUMENTS.pageNumber * stResult.numberOfRecordsOnPage) - stResult.numberOfRecordsOnPage) + 1;
+            stResult.recordTo = ( ARGUMENTS.pageNumber * stResult.numberOfRecordsOnPage );
+            
+            /* 
+                if on last page display the actual number of records in record set as the last to 'figure'. Otherwise it gives 
+                a false reading and gives the pagenumber * numberOfRecordsOnPage which is always a multiple of 10
+            */
+            if ( stResult.recordTo EQ (stResult.numberOfPages * 10) ) {
+                stResult.recordTo = qGetResults.recordCount;
+            }
+
+            // Populate structure with query
+            resultQuery = QueryNew("studentID, nexits_id, uniqueid, programID, hostID, firstName, familyLastName, sex, email, active, dateassigned, regionguar,state_guarantee, aypenglish, ayporientation, scholarship, privateschool, host_fam_approved, regionName, r_guarantee, state, programname, countryname, companyShort, hostname, hold_status_id, hold_create_date, hold_status_name, state1name, state2name, state3name, app_region_guarantee, add_program, stu_status, hostID, requests, datePlaced, intrepID, businessname, branchID, branchName");
+            
+            if ( qGetResults.recordCount < stResult.recordTo ) {
+                stResult.recordTo = qGetResults.recordCount;
+            }
+            
+            // Populate query below
+            if ( qGetResults.recordCount ) {
+                For ( i=stResult.recordFrom; i LTE stResult.recordTo; i++ ) {
+                    QueryAddRow(resultQuery);
+                    QuerySetCell(resultQuery, "studentid", qGetResults.studentid[i]);
+                    QuerySetCell(resultQuery, "nexits_id", qGetResults.studentid[i]);
+                    QuerySetCell(resultQuery, "uniqueID", qGetResults.uniqueID[i]);
+                    QuerySetCell(resultQuery, "hostID", qGetResults.hostID[i]);
+                    QuerySetCell(resultQuery, "firstName", qGetResults.firstName[i]);
+                    QuerySetCell(resultQuery, "familyLastName", qGetResults.familyLastName[i]);
+                    QuerySetCell(resultQuery, "sex", qGetResults.sex[i]);
+                    QuerySetCell(resultQuery, "email", qGetResults.email[i]);
+                    QuerySetCell(resultQuery, "active", qGetResults.active[i]);
+                    QuerySetCell(resultQuery, "dateassigned", qGetResults.dateassigned[i]);
+                    QuerySetCell(resultQuery, "state_guarantee", qGetResults.state[i]);
+                    QuerySetCell(resultQuery, "aypenglish", qGetResults.aypenglish[i]);
+                    QuerySetCell(resultQuery, "ayporientation", qGetResults.ayporientation[i]);
+                    QuerySetCell(resultQuery, "scholarship", qGetResults.scholarship[i]);
+                    QuerySetCell(resultQuery, "privateschool", qGetResults.privateschool[i]);
+                    QuerySetCell(resultQuery, "host_fam_approved", qGetResults.host_fam_approved[i]);
+                    QuerySetCell(resultQuery, "regionName", qGetResults.regionName[i]);
+                    QuerySetCell(resultQuery, "r_guarantee", qGetResults.r_guarantee[i]);
+                    QuerySetCell(resultQuery, "state", qGetResults.state[i]);
+                    QuerySetCell(resultQuery, "programname", qGetResults.programname[i]);
+                    QuerySetCell(resultQuery, "countryname", qGetResults.countryname[i]);
+                    QuerySetCell(resultQuery, "companyShort", qGetResults.companyShort[i]);
+                    QuerySetCell(resultQuery, "hostname", qGetResults.hostname[i]);
+                    QuerySetCell(resultQuery, "hold_status_id", qGetResults.hold_status_id[i]);
+                    QuerySetCell(resultQuery, "hold_create_date", qGetResults.hold_create_date[i]);
+                    QuerySetCell(resultQuery, "hold_status_name", qGetResults.hold_status_name[i]);
+
+                    QuerySetCell(resultQuery, "state1name", qGetResults.state1name[i]);
+                    QuerySetCell(resultQuery, "state2name", qGetResults.state2name[i]);
+                    QuerySetCell(resultQuery, "state3name", qGetResults.state3name[i]);
+
+                    QuerySetCell(resultQuery, "app_region_guarantee", qGetResults.app_region_guarantee[i]);
+                    QuerySetCell(resultQuery, "add_program", qGetResults.add_program[i]);
+
+                    QuerySetCell(resultQuery, "stu_status", qGetResults.stu_status[i]);
+                    QuerySetCell(resultQuery, "hostID", qGetResults.hostID[i]);
+
+                    QuerySetCell(resultQuery, "requests", qGetResults.stu_requests[i]);
+
+                    QuerySetCell(resultQuery, "datePlaced", qGetResults.datePlaced[i]);
+                    QuerySetCell(resultQuery, "intrepID", qGetResults.intrep[i]);
+                    QuerySetCell(resultQuery, "businessname", qGetResults.businessname[i]);
+                    QuerySetCell(resultQuery, "branchID", qGetResults.branchID[i]);
+                    QuerySetCell(resultQuery, "branchName", qGetResults.branchname[i]);
+                }
+            
+            }
+            
+            // Add query to structure
+            stResult.query = resultQuery;
+            
+            // return structure
+            return stResult;            
+        </cfscript>
+    </cffunction>
 
 </cfcomponent>

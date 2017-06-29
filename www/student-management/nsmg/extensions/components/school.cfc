@@ -149,7 +149,7 @@
 			
 			// ISE
 			if ( listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID) ) {
-				vEmailTo = APPLICATION.EMAIL.ISESchoolNotification & ',' & qGetStudentsAssignedtoSchool.rmEmail;
+				vEmailTo = APPLICATION.EMAIL.ISESchoolNotification;
 			// CASE
 			} else if ( CLIENT.companyID EQ 10 ) {
 				vEmailTo = APPLICATION.EMAIL.CASESchoolNotification;
