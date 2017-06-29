@@ -1,10 +1,10 @@
 <!--- Kill extra output --->
 <cfsilent>
 
-	<!--- Import CustomTag --->
-    <cfimport taglib="extensions/customTags/gui/" prefix="gui" />	
+    <!--- Import CustomTag --->
+    <cfimport taglib="extensions/customTags/gui/" prefix="gui" />   
 
-	<!--- Param variables --->
+    <!--- Param variables --->
     <cfparam name="FORM.edit" default="no">
     <cfparam name="FORM.quickSearchAutoSuggestHoldAreaRepID" default="">
     <cfparam name="FORM.quickSearchHoldAreaRepID" default="">
@@ -18,133 +18,133 @@
     <cfparam name="studentID" default="0">
     <cfset session.studentlist = ''>
     <cfscript>
-		if ( VAL(studentID) ) {
-			CLIENT.studentID = studentID;
-		}
-		
-		// Only allow edits if USER is LTE 4 
-		if ( CLIENT.usertype GT 4 ) {
-			FORM.edit = 'no';
-		}
-		
-		// Set currentDate
-		currentDate = now();
-		
-		vAllowedDivisionChangeList = "8731,8743,12431,16718,12389,17993,16552,17972,18061,24206";  // Bill, Bob, Gary, Tal and Merri, Jan McInvale, Steve S, john	
-		
-		// Get Student Information 
-		qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(studentID=VAL(studentID));
-		
-		// Get Placement History List
-		qGetPlacementHistoryList = APPLICATION.CFC.STUDENT.getPlacementHistory(studentID=qGetStudentInfo.studentID);
-		
-		// Get Placement History By ID - First record of qGetPlacementHistoryList is the current record
-		if ( VAL(qGetPlacementHistoryList.isActive) ) {
-			// Get Current History
-			qGetPlacementHistoryByID = APPLICATION.CFC.STUDENT.getHostHistoryByID(studentID=qGetStudentInfo.studentID, historyID=qGetPlacementHistoryList.historyID);
-		} else {
-			// Student is unplaced 
-			qGetPlacementHistoryByID = APPLICATION.CFC.STUDENT.getHostHistoryByID(studentID=qGetStudentInfo.studentID, historyID=0);
-		};
+        if ( VAL(studentID) ) {
+            CLIENT.studentID = studentID;
+        }
+        
+        // Only allow edits if USER is LTE 4 
+        if ( CLIENT.usertype GT 4 ) {
+            FORM.edit = 'no';
+        }
+        
+        // Set currentDate
+        currentDate = now();
+        
+        vAllowedDivisionChangeList = "8731,8743,12431,16718,12389,17993,16552,17972,18061,24206";  // Bill, Bob, Gary, Tal and Merri, Jan McInvale, Steve S, john   
+        
+        // Get Student Information 
+        qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(studentID=VAL(studentID));
+        
+        // Get Placement History List
+        qGetPlacementHistoryList = APPLICATION.CFC.STUDENT.getPlacementHistory(studentID=qGetStudentInfo.studentID);
+        
+        // Get Placement History By ID - First record of qGetPlacementHistoryList is the current record
+        if ( VAL(qGetPlacementHistoryList.isActive) ) {
+            // Get Current History
+            qGetPlacementHistoryByID = APPLICATION.CFC.STUDENT.getHostHistoryByID(studentID=qGetStudentInfo.studentID, historyID=qGetPlacementHistoryList.historyID);
+        } else {
+            // Student is unplaced 
+            qGetPlacementHistoryByID = APPLICATION.CFC.STUDENT.getHostHistoryByID(studentID=qGetStudentInfo.studentID, historyID=0);
+        };
 
-		// Get Super Rep
-		qGetSuperRep = APPLICATION.CFC.USER.getUserByID(userID=VAL(qGetStudentInfo.arearepid));
+        // Get Super Rep
+        qGetSuperRep = APPLICATION.CFC.USER.getUserByID(userID=VAL(qGetStudentInfo.arearepid));
 
-		// Get Place Rep
-		qGetPlaceRep = APPLICATION.CFC.USER.getUserByID(userID=VAL(qGetStudentInfo.placerepid));
+        // Get Place Rep
+        qGetPlaceRep = APPLICATION.CFC.USER.getUserByID(userID=VAL(qGetStudentInfo.placerepid));
 
-		// Get Super Rep
-		qEnteredBy = APPLICATION.CFC.USER.getUserByID(userID=VAL(qGetStudentInfo.entered_by));
-		
-		// Get 2nd Visit Rep
-		qGet2ndVisitRep = APPLICATION.CFC.USER.getUserByID(userID=VAL(qGetStudentInfo.secondVisitRepID));
-		
-		// Get Student Company Assigned
-		qAssignedCompany = APPLICATION.CFC.COMPANY.getCompanyByID(companyID=qGetStudentInfo.companyID);
+        // Get Super Rep
+        qEnteredBy = APPLICATION.CFC.USER.getUserByID(userID=VAL(qGetStudentInfo.entered_by));
+        
+        // Get 2nd Visit Rep
+        qGet2ndVisitRep = APPLICATION.CFC.USER.getUserByID(userID=VAL(qGetStudentInfo.secondVisitRepID));
+        
+        // Get Student Company Assigned
+        qAssignedCompany = APPLICATION.CFC.COMPANY.getCompanyByID(companyID=qGetStudentInfo.companyID);
 
-		// Get Student Region Assigned
-		qRegionAssigned = APPLICATION.CFC.REGION.getRegions(regionID=qGetStudentInfo.regionAssigned);
-		
-		// Insurance Information
-		qInsuranceHistory = APPLICATION.CFC.INSURANCE.getInsuranceHistoryByStudent(studentID=qGetStudentInfo.studentID, type='N,R,EX,X');
-		
-		// Get Private Schools Prices
-		qPrivateSchools = APPLICATION.CFC.SCHOOL.getPrivateSchools();
-		
-		// Get IFF Schools
-		qIFFSchools = APPLICATION.CFC.SCHOOL.getIFFSchools();
-		
-		// Get AYP English Camps
-		qAYPEnglishCamps = APPLICATION.CFC.SCHOOL.getAYPCamps(campType='english');
+        // Get Student Region Assigned
+        qRegionAssigned = APPLICATION.CFC.REGION.getRegions(regionID=qGetStudentInfo.regionAssigned);
+        
+        // Insurance Information
+        qInsuranceHistory = APPLICATION.CFC.INSURANCE.getInsuranceHistoryByStudent(studentID=qGetStudentInfo.studentID, type='N,R,EX,X');
+        
+        // Get Private Schools Prices
+        qPrivateSchools = APPLICATION.CFC.SCHOOL.getPrivateSchools();
+        
+        // Get IFF Schools
+        qIFFSchools = APPLICATION.CFC.SCHOOL.getIFFSchools();
+        
+        // Get AYP English Camps
+        qAYPEnglishCamps = APPLICATION.CFC.SCHOOL.getAYPCamps(campType='english');
 
-		// Get AYP Orientation Camps
-		qAYPOrientationCamps = APPLICATION.CFC.SCHOOL.getAYPCamps(campType='orientation');
+        // Get AYP Orientation Camps
+        qAYPOrientationCamps = APPLICATION.CFC.SCHOOL.getAYPCamps(campType='orientation');
 
-		// Get Intl. Rep List
-		qIntRepsList = APPLICATION.CFC.USER.getUsers(usertype=8);
+        // Get Intl. Rep List
+        qIntRepsList = APPLICATION.CFC.USER.getUsers(usertype=8);
 
-		// Check User Compliance Access
-		qUserCompliance = APPLICATION.CFC.USER.getUserByID(userID=CLIENT.userid);
+        // Check User Compliance Access
+        qUserCompliance = APPLICATION.CFC.USER.getUserByID(userID=CLIENT.userid);
 
-		// Get Company Information
-		qCompanyShort = APPLICATION.CFC.COMPANY.getCompanies(companyID=CLIENT.companyID);
-		
-		// Get a list of regions for this companyID
-		qRegions = APPLICATION.CFC.REGION.getRegions(companyID=CLIENT.companyID);
-		
-		// Get Available teams
-		qAvailableTeams = APPLICATION.CFC.COMPANY.getCompanies(website=CLIENT.company_submitting);
+        // Get Company Information
+        qCompanyShort = APPLICATION.CFC.COMPANY.getCompanies(companyID=CLIENT.companyID);
+        
+        // Get a list of regions for this companyID
+        qRegions = APPLICATION.CFC.REGION.getRegions(companyID=CLIENT.companyID);
+        
+        // Get Available teams
+        qAvailableTeams = APPLICATION.CFC.COMPANY.getCompanies(website=CLIENT.company_submitting);
 
-		// Virtual Folder Directory
-		virtualDirectory = "#AppPath.onlineApp.virtualFolder##qGetStudentInfo.studentID#";
-		
-		// Internal Virtual Folder Directory
-		internalVirtualDirectory = "#AppPath.onlineApp.internalVirtualFolder##qGetStudentInfo.studentID#";
-		
-		// Get Facilitator for this Region
-		qFacilitator = APPLICATION.CFC.USER.getUserByID(userID=VAL(qRegionAssigned.regionfacilitator));
-		
-		// Get Facilitator for this Region
-		qStudentsCases = APPLICATION.CFC.caseMgmt.studentsCases(studentid=VAL(qGetStudentInfo.studentID));
-		//Get available programs
-		if ( CLIENT.companyid eq 13 OR client.companyid eq 14){
-			qGetActivePrograms = APPLICATION.CFC.PROGRAM.getPrograms(companyid=client.companyid,isActive=1);
-		}
-		else
-			{
-			qGetActivePrograms = APPLICATION.CFC.PROGRAM.getPrograms(isActive=1);
-		}
-		
-		// Set Placement Status (Unplaced / Rejected / Approved / Pending / Incomplete)
-		vPlacementStatus = '';
-		
-		if ( 
-			NOT VAL(qGetPlacementHistoryByID.hostID) 
-			AND NOT VAL(qGetPlacementHistoryByID.schoolID) 
-			AND NOT VAL(qGetPlacementHistoryByID.placeRepID) 
-			AND NOT VAL(qGetPlacementHistoryByID.areaRepID) ) {
-			
-			vPlacementStatus = 'Unplaced';
-		} else if ( 
-			VAL(qGetPlacementHistoryByID.hostID) 
-			AND VAL(qGetPlacementHistoryByID.schoolID) 
-			AND VAL(qGetPlacementHistoryByID.placeRepID) 
-			AND VAL(qGetPlacementHistoryByID.areaRepID) ) {			
-			
-			if ( qGetStudentInfo.host_fam_approved EQ 99 ) {
-				// Placement Rejected
-				vPlacementStatus = 'Rejected';
-			} else if ( ListFind("1,2,3,4", qGetStudentInfo.host_fam_Approved) ) {
-				// Placement Approved
-				vPlacementStatus = 'Approved';
-			} else {
-				// Pending Approval
-				vPlacementStatus = 'Pending';
-			}
-		} else {
-			vPlacementStatus = 'Incomplete';
-		}
-	</cfscript>
+        // Virtual Folder Directory
+        virtualDirectory = "#AppPath.onlineApp.virtualFolder##qGetStudentInfo.studentID#";
+        
+        // Internal Virtual Folder Directory
+        internalVirtualDirectory = "#AppPath.onlineApp.internalVirtualFolder##qGetStudentInfo.studentID#";
+        
+        // Get Facilitator for this Region
+        qFacilitator = APPLICATION.CFC.USER.getUserByID(userID=VAL(qRegionAssigned.regionfacilitator));
+        
+        // Get Facilitator for this Region
+        qStudentsCases = APPLICATION.CFC.caseMgmt.studentsCases(studentid=VAL(qGetStudentInfo.studentID));
+        //Get available programs
+        if ( CLIENT.companyid eq 13 OR client.companyid eq 14){
+            qGetActivePrograms = APPLICATION.CFC.PROGRAM.getPrograms(companyid=client.companyid,isActive=1);
+        }
+        else
+            {
+            qGetActivePrograms = APPLICATION.CFC.PROGRAM.getPrograms(isActive=1);
+        }
+        
+        // Set Placement Status (Unplaced / Rejected / Approved / Pending / Incomplete)
+        vPlacementStatus = '';
+        
+        if ( 
+            NOT VAL(qGetPlacementHistoryByID.hostID) 
+            AND NOT VAL(qGetPlacementHistoryByID.schoolID) 
+            AND NOT VAL(qGetPlacementHistoryByID.placeRepID) 
+            AND NOT VAL(qGetPlacementHistoryByID.areaRepID) ) {
+            
+            vPlacementStatus = 'Unplaced';
+        } else if ( 
+            VAL(qGetPlacementHistoryByID.hostID) 
+            AND VAL(qGetPlacementHistoryByID.schoolID) 
+            AND VAL(qGetPlacementHistoryByID.placeRepID) 
+            AND VAL(qGetPlacementHistoryByID.areaRepID) ) {         
+            
+            if ( qGetStudentInfo.host_fam_approved EQ 99 ) {
+                // Placement Rejected
+                vPlacementStatus = 'Rejected';
+            } else if ( ListFind("1,2,3,4", qGetStudentInfo.host_fam_Approved) ) {
+                // Placement Approved
+                vPlacementStatus = 'Approved';
+            } else {
+                // Pending Approval
+                vPlacementStatus = 'Pending';
+            }
+        } else {
+            vPlacementStatus = 'Incomplete';
+        }
+    </cfscript>
 
     <cfif APPLICATION.CFC.USER.isOfficeUser()>
         <cfscript>
@@ -174,10 +174,10 @@
         </cfscript>
     </cfif>
 
-	<!--- Student Picture --->
-	<cfdirectory directory="#AppPath.onlineApp.picture#" name="studentPicture" filter="#qGetStudentInfo.studentID#.*">
+    <!--- Student Picture --->
+    <cfdirectory directory="#AppPath.onlineApp.picture#" name="studentPicture" filter="#qGetStudentInfo.studentID#.*">
 
-	<!--- check virtual folder files --->
+    <!--- check virtual folder files --->
     <cfdirectory name="getVirtualFolder" directory="#virtualDirectory#" filter="*.*">
     
     <!--- check internal virtual folder files --->
@@ -186,7 +186,7 @@
     <!----International Rep---->
     <cfquery name="qGetIntlRep" datasource="#APPLICATION.DSN#">
         SELECT 
-        	u.businessname, 
+            u.businessname, 
             u.firstname, 
             u.lastname, 
             u.userid, 
@@ -194,13 +194,13 @@
             u.insurance_typeid,
             insu.type 
         FROM 
-        	smg_users u
+            smg_users u
         LEFT JOIN 
-        	smg_insurance_type insu ON insu.insutypeid = u.insurance_typeid
+            smg_insurance_type insu ON insu.insutypeid = u.insurance_typeid
         LEFT JOIN 
-        	smg_insurance_codes codes ON codes.insutypeid = insu.insutypeid
+            smg_insurance_codes codes ON codes.insutypeid = insu.insutypeid
         WHERE 
-        	u.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.intrep)#">
+            u.userid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.intrep)#">
     </cfquery>
 
 
@@ -232,44 +232,44 @@
    <!----
     <cfquery name="qGetActivePrograms" datasource="#APPLICATION.DSN#">
         SELECT 
-        	programname, 
+            programname, 
             programID, 
             enddate,
             seasonID
         FROM 
-        	smg_programs
+            smg_programs
         WHERE 
-			is_deleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+            is_deleted = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
         AND 
-        	companyid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10,12,13" list="yes">)
+            companyid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10,12,13" list="yes">)
         AND 
-        	enddate > #currentDate#
+            enddate > #currentDate#
         OR
-        	programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.programID#">
+            programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetStudentInfo.programID#">
         ORDER BY
-        	programname
+            programname
     </cfquery>
       ---->
       
     <cfquery name="qGetSelectedProgram" dbtype="query">
         SELECT 
-        	*
+            *
         FROM 
-        	qGetActivePrograms
+            qGetActivePrograms
         WHERE 
-			programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.programID)#">
+            programID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.programID)#">
     </cfquery>
   
     <!----Ins. Policy Code---->
     <Cfquery name="qGetInsurancePolicyInfo" datasource="#APPLICATION.DSN#">
         SELECT 
-        	policycode
+            policycode
         FROM 
-        	smg_insurance_codes
+            smg_insurance_codes
         WHERE 
-        	seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetSelectedProgram.seasonID)#">
+            seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetSelectedProgram.seasonID)#">
             
-		<!--- Combine ISE Companies --->  
+        <!--- Combine ISE Companies --->  
         <cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISE, CLIENT.companyID)>
             AND
                 companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
@@ -292,133 +292,133 @@
     <!----Get Expired Student Programs---->
     <cfquery name="qCheckForExpiredProgram" datasource="#APPLICATION.DSN#">
         SELECT 
-        	smg_students.studentID, 
+            smg_students.studentID, 
             smg_students.programID, 
             smg_programs.programname
         FROM 
-        	smg_programs 
+            smg_programs 
         INNER JOIN 
-        	smg_students ON smg_programs.programID = smg_students.programID
+            smg_students ON smg_programs.programID = smg_students.programID
         WHERE 
-        	smg_programs.enddate <= #currentDate# 
+            smg_programs.enddate <= #currentDate# 
         AND 
-        	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentID)#">
+            studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentID)#">
     </cfquery>
         
     <cfquery name="qStates" datasource="#APPLICATION.DSN#">
         SELECT 
-        	id, 
+            id, 
             statename
         FROM 
-        	smg_states
+            smg_states
         WHERE 
-        	id != <cfqueryparam cfsqltype="cf_sql_integer" value="2">
+            id != <cfqueryparam cfsqltype="cf_sql_integer" value="2">
         AND 
-        	id != <cfqueryparam cfsqltype="cf_sql_integer" value="11">
+            id != <cfqueryparam cfsqltype="cf_sql_integer" value="11">
         ORDER BY 
-        	id
+            id
     </cfquery>
         
     <cfquery name="qSevisStatus" datasource="#APPLICATION.DSN#">
         SELECT 
-        	batchid, 
+            batchid, 
             received, 
             datecreated
         FROM 
-        	smg_sevis
+            smg_sevis
         INNER JOIN 
-        	smg_students s ON s.sevis_activated = smg_sevis.batchid
+            smg_students s ON s.sevis_activated = smg_sevis.batchid
         WHERE 
-        	s.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentID)#">
+            s.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentID)#">
         AND 
-        	received = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">
+            received = <cfqueryparam cfsqltype="cf_sql_varchar" value="yes">
     </cfquery>
     
     <cfquery name="qGetSevisHistory" datasource="#APPLICATION.DSN#">
         SELECT 
-        	his.start_date, 
+            his.start_date, 
             his.end_date,
             his.school_name,
             his.hostID,
             host.familyLastName
         FROM 
-        	smg_sevis_history his
-      	LEFT OUTER JOIN
-        	smg_hosts host ON host.hostID = his.hostID
+            smg_sevis_history his
+        LEFT OUTER JOIN
+            smg_hosts host ON host.hostID = his.hostID
         WHERE 
-        	his.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentID)#">
+            his.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentID)#">
         AND
-        	his.isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+            his.isActive = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
         ORDER BY 
-        	his.historyid DESC 
+            his.historyid DESC 
     </cfquery>
     
     <!----Date of last phone contact---->
     <cfquery name="qLastContact" datasource="#APPLICATION.DSN#">
         SELECT 
-        	max(date) as qLastContact
+            max(date) as qLastContact
         FROM 
-        	smg_student_phone_call_log
+            smg_student_phone_call_log
         WHERE 
-        	fk_studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentID)#">
+            fk_studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(qGetStudentInfo.studentID)#">
     </cfquery>
     
 </cfsilent>
 <style type="text/css">
 .alertRed{
-	margin-left:auto;
-	margin-right:auto;
-	width:770px;
-	height:55px;
-	border:#666;
-	background-color:#FF9797;
-	-moz-border-radius: 15px;
-	border-radius: 15px;
-	vertical-align:center;
+    margin-left:auto;
+    margin-right:auto;
+    width:770px;
+    height:55px;
+    border:#666;
+    background-color:#FF9797;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    vertical-align:center;
 
-	
+    
 }
 .alertGreen{
-	margin-left:auto;
-	margin-right:auto;
-	width:770px;
-	height:55px;
-	border:#666;
-	background-color:#DEEAE1;
-	-moz-border-radius: 15px;
-	border-radius: 15px;
-	vertical-align:center;
+    margin-left:auto;
+    margin-right:auto;
+    width:770px;
+    height:55px;
+    border:#666;
+    background-color:#DEEAE1;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    vertical-align:center;
 }
 .hold_options {
     display: none;
 }
 </style>
 <script type="text/javascript" src="student_info.js"></script>
-	
-<script language="javascript">	
+    
+<script language="javascript">  
     // Document Ready!
     $(document).ready(function() {
-		// call the function to hide and show certain elements according to region guarantee choice 
-		displayGuaranteed();
+        // call the function to hide and show certain elements according to region guarantee choice 
+        displayGuaranteed();
 
-		// JQuery Modal - Refresh Student Info page after closing placement management
-		$(".jQueryModalPL").colorbox( {
-			width:"60%", 
-			height:"90%", 
-			iframe:true,
-			overlayClose:false,
-			escKey:false, 
-			onClosed:function(){ window.location.reload(); }
-		});	
+        // JQuery Modal - Refresh Student Info page after closing placement management
+        $(".jQueryModalPL").colorbox( {
+            width:"60%", 
+            height:"90%", 
+            iframe:true,
+            overlayClose:false,
+            escKey:false, 
+            onClosed:function(){ window.location.reload(); }
+        }); 
 
-		// JQuery Modal
-		$(".jQueryModal").colorbox( {
-			width:"60%", 
-			height:"90%", 
-			iframe:true,
-			overlayClose:false,
-			escKey:false
-		});	
+        // JQuery Modal
+        $(".jQueryModal").colorbox( {
+            width:"60%", 
+            height:"90%", 
+            iframe:true,
+            overlayClose:false,
+            escKey:false
+        }); 
 
         // Quick Search - User Auto Suggest
         $("#quickSearchAutoSuggestHoldAreaRepID").autocomplete({
@@ -519,7 +519,33 @@
         <cfelse>
             $(".hold_options").hide();
         </cfif>
-	});
+    });
+
+    function checkHostFamily(url) {
+        $.ajax({
+            url: "extensions/components/host.cfc?method=checkIsFamilyApproved",
+            dataType: "json",
+            data: { 
+                hostID: $("#quickSearchHoldHostID").val(),
+                programID: <cfoutput>#qGetStudentInfo.programID#</cfoutput>
+            },
+            success: function(data) {
+                if (data.DATA.length > 0) {
+                    $.colorbox( {
+                        width:"60%", 
+                        height:"90%", 
+                        iframe:true,
+                        overlayClose:false,
+                        escKey:false, 
+                        href: url,
+                        onClosed:function(){ window.location.reload(); }
+                    });
+                } else {
+                    alert('The Host Family is not approved.');
+                }
+            }
+        })
+    }
 
     function toggle_hold_options() {
         if ($("#hold_status_id").val() == "1") {
@@ -624,39 +650,39 @@
         $("#hold_status_edit_button").hide();
         toggle_hold_options(); 
     }
-</script> 	
+</script>   
 
 <cfoutput>
 
 <!--- student does not exist --->
 <cfif NOT VAL(qGetStudentInfo.recordcount)>
-	The student ID you are looking for, #studentID#, was not found. This could be for a number of reasons.<br /><br />
-	<ul>
-		<li>the student record was deleted or renumbered
-		<li>the link you are following is out of date
-		<li>you do not have proper access rights to view the student
-	</ul>
-	If you feel this is incorrect, please contact <a href="mailto:#APPLICATION.EMAIL.support#">Support</a>
-	<cfabort>
+    The student ID you are looking for, #studentID#, was not found. This could be for a number of reasons.<br /><br />
+    <ul>
+        <li>the student record was deleted or renumbered
+        <li>the link you are following is out of date
+        <li>you do not have proper access rights to view the student
+    </ul>
+    If you feel this is incorrect, please contact <a href="mailto:#APPLICATION.EMAIL.support#">Support</a>
+    <cfabort>
 </cfif>
 
 </cfoutput>
 
 <!--- student's view only - transfer to profile --->
 <cfif CLIENT.usertype EQ 9>
-	<cflocation url="index.cfm?curdoc=student_profile&uniqueid=#qGetStudentInfo.uniqueid#" addtoken="no">
+    <cflocation url="index.cfm?curdoc=student_profile&uniqueid=#qGetStudentInfo.uniqueid#" addtoken="no">
 </cfif>
 
 <!--- Block if users try to change the student id in the address bar --->
 <cfif CLIENT.usertype GT 4>
 
-	<cfif ListFind("6,7",CLIENT.userType)>
+    <cfif ListFind("6,7",CLIENT.userType)>
     
-    	<cfset vGrantAccess = 0>
+        <cfset vGrantAccess = 0>
         
-  		<cfif CLIENT.userType EQ 6>
+        <cfif CLIENT.userType EQ 6>
         
-        	<cfquery name="qGetReps" datasource="#APPLICATION.DSN#">
+            <cfquery name="qGetReps" datasource="#APPLICATION.DSN#">
                 SELECT DISTINCT
                     userid
                 FROM 
@@ -682,7 +708,7 @@
                     AND
                         regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionid#">
                     AND
-                        ( 	
+                        (   
                             arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetReps.userid#">
                         OR 
                             placerepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
@@ -703,26 +729,26 @@
                 FROM
                     smg_students
                 WHERE
-                	studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.studentID#">
-               	AND
-                	regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionid#">
-              	AND
-                    ( 	
+                    studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.studentID#">
+                AND
+                    regionassigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionid#">
+                AND
+                    (   
                         arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
                     OR 
                         placerepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#">
-                   	OR
-                    	hostid = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                    OR
+                        hostid = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
                     )
             </cfquery>
-			<cfif VAL(qCheckStudents.recordCount)>
+            <cfif VAL(qCheckStudents.recordCount)>
                 <cfset vGrantAccess = 1>
             </cfif>
             
         </cfif>
         
         <cfif vGrantAccess EQ 0>
-        	<table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
+            <table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
                 <tr valign=middle height=24>
                     <td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
                     <td width=26 background="pics/header_background.gif"><img src="pics/school.gif"></td>
@@ -736,47 +762,47 @@
                     </td>
                 </tr>
                 <tr><td align="center">If you think this is a mistake please contact <cfoutput>#APPLICATION.EMAIL.support#</cfoutput></td></tr>
-                <tr><td align="center">You can view your account by clicking <a href="?curdoc=user_info&userid=<cfoutput>#CLIENT.userid#</cfoutput>">here<a/>.<br /><br /></td></tr>			
+                <tr><td align="center">You can view your account by clicking <a href="?curdoc=user_info&userid=<cfoutput>#CLIENT.userid#</cfoutput>">here<a/>.<br /><br /></td></tr>            
             </table>
             <cfinclude template="table_footer.cfm">
             <cfabort>
         </cfif>
-        	
-	<cfelseif qGetStudentInfo.regionassigned NEQ CLIENT.regionid>
-    	<br />
-		<table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
-			<tr valign=middle height=24>
-				<td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
-				<td width=26 background="pics/header_background.gif"><img src="pics/helpdesk.gif"></td>
-				<td background="pics/header_background.gif"><h2>Students View - Error </h2></td>
-				<td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
-			</tr>
-		</table>
-		<table width=100% border=0 cellpadding=4 cellspacing=0 class="section">
-			<tr>
-				<td align="center">
-					<br /><div align="justify"><img src="pics/error_exclamation.gif" align="left"><h3>
-					<p>You are trying to access a student that is not assigned to this company or to your region.</p>
-					<p>If you have access rights to the company the student belongs to, you must change company views, then access the student.</p></h3></div>
-				</td>
-			</tr>
-		<tr><td align="center"><input type="image" value="Back" onClick="history.go(-1)" src="pics/back.gif"></td></tr>
-		</table>
-		<table width=100% cellpadding=0 cellspacing=0 border=0>
-			<tr valign="bottom"><td width=9 valign="top" height=12><img src="pics/footer_leftcap.gif" ></td>
-				<td width=100% background="pics/header_background_footer.gif"></td>
-				<td width=9 valign="top"><img src="pics/footer_rightcap.gif"></td>
-			</tr>
-		</table>
-		<cfabort>
-	</cfif>
+            
+    <cfelseif qGetStudentInfo.regionassigned NEQ CLIENT.regionid>
+        <br />
+        <table width=100% cellpadding=0 cellspacing=0 border=0 height=24>
+            <tr valign=middle height=24>
+                <td height=24 width=13 background="pics/header_leftcap.gif">&nbsp;</td>
+                <td width=26 background="pics/header_background.gif"><img src="pics/helpdesk.gif"></td>
+                <td background="pics/header_background.gif"><h2>Students View - Error </h2></td>
+                <td width=17 background="pics/header_rightcap.gif">&nbsp;</td>
+            </tr>
+        </table>
+        <table width=100% border=0 cellpadding=4 cellspacing=0 class="section">
+            <tr>
+                <td align="center">
+                    <br /><div align="justify"><img src="pics/error_exclamation.gif" align="left"><h3>
+                    <p>You are trying to access a student that is not assigned to this company or to your region.</p>
+                    <p>If you have access rights to the company the student belongs to, you must change company views, then access the student.</p></h3></div>
+                </td>
+            </tr>
+        <tr><td align="center"><input type="image" value="Back" onClick="history.go(-1)" src="pics/back.gif"></td></tr>
+        </table>
+        <table width=100% cellpadding=0 cellspacing=0 border=0>
+            <tr valign="bottom"><td width=9 valign="top" height=12><img src="pics/footer_leftcap.gif" ></td>
+                <td width=100% background="pics/header_background_footer.gif"></td>
+                <td width=9 valign="top"><img src="pics/footer_rightcap.gif"></td>
+            </tr>
+        </table>
+        <cfabort>
+    </cfif>
 </cfif>
 
 <!--- Table Header --->
 <gui:tableHeader
-	imageName="students.gif"
-	tableTitle="Student Information"
-	tableRightTitle=""
+    imageName="students.gif"
+    tableTitle="Student Information"
+    tableRightTitle=""
 />
 
 <cfoutput query="qGetStudentInfo">
@@ -787,32 +813,32 @@
 <div class="section"><br />
 
 
-<table width="770" border=0 cellpadding=0 cellspacing=0 align="center">	
-	<tr>
-		<td valign="top" width="590">
-			<cfif hostid eq 0 and NOT LEN(cancelDate)>
-			 <table background="pics/unplaced.jpg" cellpadding="0" cellspacing="0" width="100%"> 
-			<cfelseif LEN(canceldate)>
-			 <table background="pics/canceled.jpg" cellpadding="0" cellspacing="0" width="100%"> 
-			<cfelse>
-			 <table width=100% align="Center" cellpadding="0" cellspacing="0">				
-			</cfif>
-				<tr>
-					<td width="135" valign="top">
-						<table width="100%" cellpadding="0" cellspacing="0">
-							<tr>
-                            	<td width="135" style="text-align: center">
+<table width="770" border=0 cellpadding=0 cellspacing=0 align="center"> 
+    <tr>
+        <td valign="top" width="590">
+            <cfif hostid eq 0 and NOT LEN(cancelDate)>
+             <table background="pics/unplaced.jpg" cellpadding="0" cellspacing="0" width="100%"> 
+            <cfelseif LEN(canceldate)>
+             <table background="pics/canceled.jpg" cellpadding="0" cellspacing="0" width="100%"> 
+            <cfelse>
+             <table width=100% align="Center" cellpadding="0" cellspacing="0">              
+            </cfif>
+                <tr>
+                    <td width="135" valign="top">
+                        <table width="100%" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td width="135" style="text-align: center">
                                     <!--- Use a cftry instead of cfif. Using cfif when image is not available CF throws an error. --->
                                     <cftry>
                                     
-										<cfscript>
-											// CF throws errors if can't read head of the file "ColdFusion was unable to create an image from the specified source file". 
-											// Possible cause is a gif file renamed as jpg. Student #17567 per instance.
-										
+                                        <cfscript>
+                                            // CF throws errors if can't read head of the file "ColdFusion was unable to create an image from the specified source file". 
+                                            // Possible cause is a gif file renamed as jpg. Student #17567 per instance.
+                                        
                                             // this file is really a gif, not a jpeg
                                             pathToImage = AppPath.onlineApp.picture & studentPicture.name;
                                             imageFile = createObject("java", "java.io.File").init(pathToImage);
-											
+                                            
                                             // read the image into a BufferedImage
                                             ImageIO = createObject("java", "javax.imageio.ImageIO");
                                             bi = ImageIO.read(imageFile);
@@ -858,32 +884,32 @@
                                             <br /><em><font size=-1><a href="javascript:SendEmail('student_app/email_form.cfm?unqid=#uniqueid#', 400, 450);"><img src="pics/send-email.gif" border="0"  style="margin-right:20px"></a>
                                         </cfif>                                    
                                     </cfif> 
-								</td>
+                                </td>
                             </tr>
-						</table>
-					</td>
-					<td width="450" valign="top">
-						
+                        </table>
+                    </td>
+                    <td width="450" valign="top">
+                        
                         <table width="100%" cellpadding="0" cellspacing="0">
-							
+                            
                             <tr>
                                 <td align="center" colspan="2"><h1 style="padding-top:0">#firstname# #middlename# #familylastname# (###studentID#)</h1></td>
                             </tr>
                             <cfif val(#nexits_id#)>
                                 <tr><td align="center" colspan="2">NEXITS ID: (###nexits_id#)</td></tr>
                             </cfif>
-							<tr>
-                            	<td align="center" colspan="2">
-                            		<font size=-1><span class="edit_link">
+                            <tr>
+                                <td align="center" colspan="2">
+                                    <font size=-1><span class="edit_link">
                                     [ 
-										<cfif APPLICATION.CFC.USER.isOfficeUser()>
-                                        	<a href="index.cfm?curdoc=forms/edit_student_app_1">edit</a> &middot; 
+                                        <cfif APPLICATION.CFC.USER.isOfficeUser()>
+                                            <a href="index.cfm?curdoc=forms/edit_student_app_1">edit</a> &middot; 
                                             <a href='studentProfileFull.cfm?uniqueid=#uniqueid#'>full profile</a> &middot;
                                         </cfif> 
-                                    	<a href='student_profile.cfm?uniqueid=#uniqueid#&profileType=web'>profile</a> &middot;
+                                        <a href='student_profile.cfm?uniqueid=#uniqueid#&profileType=web'>profile</a> &middot;
                                         <a href='student_profile.cfm?uniqueid=#uniqueid#&profileType=pdf'> <img src="pics/pdficon_small.gif" border=0></a> &middot;
-										<cfif ListFind("1,2,3,4,5,6,7", CLIENT.usertype)>  <!--- Only Office & Managers --->
-	                                        <a href="javascript:SendEmail('student_profile.cfm?uniqueid=#uniqueid#&profileType=email', 300, 400);" title="Email Student Profile and Letters"> email profile <img src="pics/email.gif" border="0" alt="Email Student Profile and Letters"> </a>
+                                        <cfif ListFind("1,2,3,4,5,6,7", CLIENT.usertype)>  <!--- Only Office & Managers --->
+                                            <a href="javascript:SendEmail('student_profile.cfm?uniqueid=#uniqueid#&profileType=email', 300, 400);" title="Email Student Profile and Letters"> email profile <img src="pics/email.gif" border="0" alt="Email Student Profile and Letters"> </a>
                                         </cfif>
                                     ]
                                     </span></font>
@@ -916,20 +942,20 @@
                                 <td>#countryresidency.countryname#</td>
                             </tr>
 
-							
+                            
                             <tr>
                                 <td>Intl. Rep.: </td>
-								<td><select name="intrep" <cfif FORM.edit EQ 'no'>disabled</cfif> >
-                                        <option value="0" selected></option>		
+                                <td><select name="intrep" <cfif FORM.edit EQ 'no'>disabled</cfif> >
+                                        <option value="0" selected></option>        
                                         <cfloop query="qIntRepsList">
-                                        	<option value="#qIntRepsList.userid#" <cfif qIntRepsList.userid EQ qGetStudentInfo.intrep> selected </cfif> >
-												<cfif len(businessname) gt 50>#Left(businessname, 47)#...<cfelse>#businessname#</cfif>
+                                            <option value="#qIntRepsList.userid#" <cfif qIntRepsList.userid EQ qGetStudentInfo.intrep> selected </cfif> >
+                                                <cfif len(businessname) gt 50>#Left(businessname, 47)#...<cfelse>#businessname#</cfif>
                                             </option>
                                         </cfloop>
-									</select>
-								</td>
-							</tr>
-							
+                                    </select>
+                                </td>
+                            </tr>
+                            
                             
 
                             <tr>
@@ -997,94 +1023,94 @@
                                 </td>
                             </tr>
                                     
-						</table>
-					</td>
-				</tr>
-			</table>
-		</td>
-		
-		<td align="right" valign="top" width="180">
-		<div id="subMenuNav"> 
-			<div id="subMenuLinks">  
-				<!----All Users---->
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+        
+        <td align="right" valign="top" width="180">
+        <div id="subMenuNav"> 
+            <div id="subMenuLinks">  
+                <!----All Users---->
                 <a href="student/placementMgmt/index.cfm?uniqueID=#qGetStudentInfo.uniqueID#" class="jQueryModalPL">Placement Management</a>
                 <a href="student/placementMgmt/index.cfm?uniqueID=#qGetStudentInfo.uniqueID#&action=paperwork" class="jQueryModalPL">Placement Paperwork</a>
                 
-				<!--- OFFICE USERS ONLY --->
-				<cfif APPLICATION.CFC.USER.isOfficeUser()> 
-					<!---- <a href="" onClick="javascript: win=window.open('insurance/insurance_management.cfm?studentID=#qGetStudentInfo.studentID#', 'Settings', 'height=400, width=800, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Insurance Management</a> ---->	
-					<a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentid=#qGetStudentInfo.studentID#', 700, 500);" class="nav_bar">Representative Payments</a> 					
+                <!--- OFFICE USERS ONLY --->
+                <cfif APPLICATION.CFC.USER.isOfficeUser()> 
+                    <!---- <a href="" onClick="javascript: win=window.open('insurance/insurance_management.cfm?studentID=#qGetStudentInfo.studentID#', 'Settings', 'height=400, width=800, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Insurance Management</a> ---->   
+                    <a href="javascript:openPopUp('userPayment/index.cfm?action=studentPaymentHistory&studentid=#qGetStudentInfo.studentID#', 700, 500);" class="nav_bar">Representative Payments</a>                   
                     <a href="javascript:openPopUp('forms/missing_documents.cfm', 450, 500);" class="nav_bar">Missing Documents</a>
-					<a href="javascript:openPopUp('forms/notes.cfm', 450, 500);" class="nav_bar"><cfif LEN(qGetStudentInfo.notes)><img src="pics/green_check.gif" border="0">&nbsp;</cfif>Notes</a> 	
-                    <a href="javascript:openPopUp('forms/ssp.cfm?studentid=#CLIENT.studentid#', 600, 450);" class="nav_bar">Student Issues</a>	
-				</cfif> 
-                
-				<!--- OFFICE - MANAGERS ONLY --->
-				<cfif CLIENT.usertype LTE 5> 
-					<a href="" onClick="javascript: win=window.open('forms/profile_adjustments.cfm', 'Settings', 'height=500, width=663, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Profile Adjustments</a>		
+                    <a href="javascript:openPopUp('forms/notes.cfm', 450, 500);" class="nav_bar"><cfif LEN(qGetStudentInfo.notes)><img src="pics/green_check.gif" border="0">&nbsp;</cfif>Notes</a>     
+                    <a href="javascript:openPopUp('forms/ssp.cfm?studentid=#CLIENT.studentid#', 600, 450);" class="nav_bar">Student Issues</a>  
                 </cfif> 
-                		
-				<!----All Users		
-				<a href="" onClick="javascript: win=window.open('virtualfolder/list_vfolder.cfm?unqid=#qGetStudentInfo.uniqueid#', 'Settings', 'height=600, width=700, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><cfif VAL(getVirtualFolder.recordcount)><img src="pics/green_check.gif" border="0">&nbsp;</cfif>Virtual Folder</a>
+                
+                <!--- OFFICE - MANAGERS ONLY --->
+                <cfif CLIENT.usertype LTE 5> 
+                    <a href="" onClick="javascript: win=window.open('forms/profile_adjustments.cfm', 'Settings', 'height=500, width=663, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Profile Adjustments</a>        
+                </cfif> 
+                        
+                <!----All Users     
+                <a href="" onClick="javascript: win=window.open('virtualfolder/list_vfolder.cfm?unqid=#qGetStudentInfo.uniqueid#', 'Settings', 'height=600, width=700, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><cfif VAL(getVirtualFolder.recordcount)><img src="pics/green_check.gif" border="0">&nbsp;</cfif>Virtual Folder</a>
              
-				<!--- OFFICE USERS ONLY --->
-				<cfif APPLICATION.CFC.USER.isOfficeUser()>
-                	<a href="" onClick="javascript: win=window.open('virtualfolder/list_ivfolder.cfm?unqid=#qGetStudentInfo.uniqueid#', 'Settings', 'height=600, width=700, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><cfif VAL(getInternalVirtualFolder.recordcount)><img src="pics/green_check.gif" border="0">&nbsp;</cfif>Internal Virtual Folder</a>
-             	</cfif>
-					---->	
-               	
+                <!--- OFFICE USERS ONLY --->
+                <cfif APPLICATION.CFC.USER.isOfficeUser()>
+                    <a href="" onClick="javascript: win=window.open('virtualfolder/list_ivfolder.cfm?unqid=#qGetStudentInfo.uniqueid#', 'Settings', 'height=600, width=700, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;"><cfif VAL(getInternalVirtualFolder.recordcount)><img src="pics/green_check.gif" border="0">&nbsp;</cfif>Internal Virtual Folder</a>
+                </cfif>
+                    ---->   
+                
                   <a href="index.cfm?curdoc=virtualFolder/view&unqid=#qGetStudentInfo.uniqueID#" >Virtual Folder</a>
                
-				<a href="" onClick="javascript: win=window.open('forms/received_progress_reports.cfm?stuid=#qGetStudentInfo.studentID#', 'Reports', 'height=450, width=700, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Progress Reports</A>  
+                <a href="" onClick="javascript: win=window.open('forms/received_progress_reports.cfm?stuid=#qGetStudentInfo.studentID#', 'Reports', 'height=450, width=700, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Progress Reports</A>  
                 <a href="student/index.cfm?action=flightInformation&uniqueID=#qGetStudentInfo.uniqueID#&programID=#qGetStudentInfo.programID#" class="jQueryModal">Flight Information</a>
                 <a href="" onClick="javascript: win=window.open('tours/trips.cfm', 'Settings', 'height=450, width=800, location=no, scrollbars=yes, menubars=no, toolbars=no, resizable=yes'); win.opener=self; return false;">Student Trips</a>
                 <Cfif client.usertype lte 4>
                <a href="index.cfm?curdoc=caseMgmt/index&studentid=#qGetStudentInfo.studentid#"> <cfif val(qStudentsCases.recordcount)><img src="pics/attention.png" border=0 /></cfif> Case Management</a>
-				</Cfif>
+                </Cfif>
                
-			</div>
-		</div>
-		</td>
-	</tr>
+            </div>
+        </div>
+        </td>
+    </tr>
 </table>
 
 <br />
 
 <!---<cfif CLIENT.companyid neq qAssignedCompany.companyid> 
-	<div class="alertRed">
-    	<table>
-        	<tr>
-            	<Td>
-                	<i class="fa fa-exclamation-triangle fa-3x"></i>
+    <div class="alertRed">
+        <table>
+            <tr>
+                <Td>
+                    <i class="fa fa-exclamation-triangle fa-3x"></i>
                 </Td>
                 <td>
-                	<h1>Change Program Managers</h1>
-                	<em>This student is assigned to #qAssignedCompany.team_id#.</em>
-            	</td>
-         	</Tr>
-       	</table>
-  	</div>
+                    <h1>Change Program Managers</h1>
+                    <em>This student is assigned to #qAssignedCompany.team_id#.</em>
+                </td>
+            </Tr>
+        </table>
+    </div>
     <br /><br />
 </cfif>--->
 
-<cfdirectory directory="#APPLICATION.PATH.uploadedFiles#/online_app/page23/" name="file" filter="#qGetStudentInfo.studentid#.*">	
+<cfdirectory directory="#APPLICATION.PATH.uploadedFiles#/online_app/page23/" name="file" filter="#qGetStudentInfo.studentid#.*">    
     
 <cfif VAL(file.recordcount)>
           <div class="alertGreen">
           <table>
-          	<Tr>
-            	<Td>
+            <Tr>
+                <Td>
                 <i class="fa fa-users fa-3x"></i>
                 </Td>
                 <td>
                 <h1>Student Accepts Double Placement</h1>
                 <em>Double Placment acceptence form has been signed in the student applicaiton.</em>
-            	</td>
+                </td>
                </Tr>
              </table>
              
             </div>
-    	<br /><br />
+        <br /><br />
 </cfif>
 
 
@@ -1247,7 +1273,7 @@
                     AND qGetStudentHoldStatuses.hold_status_id GT 1>
                 <tr>
                     <td colspan="2" style="text-align: center">
-                        [ <a href="student/placementMgmt/index.cfm?uniqueID=#uniqueID#&pre_hostID=#qGetStudentHoldStatuses.hostID#&pre_schoolID=#qGetStudentHoldStatuses.schoolID#&pre_arearepID=#qGetStudentHoldStatuses.arearepID#" class="jQueryModalPL cboxElement">Place</a> ] 
+                        [ <a href="##" onclick="checkHostFamily('student/placementMgmt/index.cfm?uniqueID=#uniqueID#&pre_hostID=#qGetStudentHoldStatuses.hostID#&pre_schoolID=#qGetStudentHoldStatuses.schoolID#&pre_arearepID=#qGetStudentHoldStatuses.arearepID#'); return false;">Place</a> ] 
                     </td>
                 </tr>
                 </cfif>
@@ -1798,7 +1824,7 @@
 
 <!--- UPDATE BUTTON --->
 <cfif FORM.edit NEQ 'no'>
-    <table width="100%" border=0 cellpadding=0 cellspacing=0 align="center" class="section">	
+    <table width="100%" border=0 cellpadding=0 cellspacing=0 align="center" class="section">    
     <tr><td align="center">
         <input name="Submit" type="image" src="pics/update.gif" alt="Update Profile"  border=0></input>
     </td></tr>
@@ -1806,10 +1832,10 @@
 </cfif>
 
 </cfform>
-		
+        
 <!---- EDIT BUTTON - OFFICE USERS ---->
 <cfif APPLICATION.CFC.USER.isOfficeUser() AND FORM.edit EQ 'no'>
-    <table width="100%" border=0 cellpadding=0 cellspacing=0 align="center" class="section">	
+    <table width="100%" border=0 cellpadding=0 cellspacing=0 align="center" class="section">    
     <tr><td align="center">
         <form action="?curdoc=student_info&studentID=#qGetStudentInfo.studentID#" method="post">&nbsp;
             <input type="hidden" name="edit" value="yes">

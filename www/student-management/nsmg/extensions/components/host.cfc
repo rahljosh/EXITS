@@ -5370,4 +5370,43 @@
         </cfscript>
     </cffunction>
 
+    <cffunction name="checkIsFamilyApproved" access="remote" returnFormat="json" output="false" hint="Returns host ">
+        <cfargument name="hostID" type="numeric" default="0" required="true" hint="HostID is required">
+        <cfargument name="programID" type="numeric" default="0" required="true" hint="HostID is required">
+
+        <cfscript>
+            vSeasonID = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID;
+            if (LEN(ARGUMENTS.programID)) {
+                vSeasonID = APPLICATION.CFC.PROGRAM.getPrograms(programID=ARGUMENTS.programID).seasonID;
+            }
+        </cfscript>
+        <cfset vNextSeasonID = #vSeasonID# + 1>
+
+        <!--- Do search --->
+        <cfquery name="qLookupHostFamily" datasource="#APPLICATION.DSN#">
+            SELECT hostID
+            FROM smg_hosts
+            WHERE active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
+                AND isNotQualifiedToHost = <cfqueryparam cfsqltype="cf_sql_bit" value="0">
+                AND hostID = <cfqueryparam cfsqltype="cf_sql_numeric" value="#ARGUMENTS.hostid#">
+                <!--- Check if family is approved --->
+                <cfif ListFind("15",CLIENT.companyID)>
+                    AND hostID IN (
+                        SELECT hostID 
+                        FROM smg_host_app_season 
+                        WHERE applicationStatusID < 9 
+                        AND seasonID IN ('#vSeasonID#,#vNextSeasonID#' ) )
+                <cfelseif NOT ListFind("13",CLIENT.companyID)>
+                    AND hostID IN (
+                        SELECT hostID 
+                        FROM smg_host_app_season 
+                        WHERE applicationStatusID < 4 
+                        AND seasonID >= #vSeasonID#  )
+                </cfif>
+            ORDER BY familyLastName
+        </cfquery>
+
+        <cfreturn qLookupHostFamily>
+    </cffunction>
+
 </cfcomponent>
