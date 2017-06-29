@@ -868,6 +868,8 @@
                                             <option value="Committed" >Committed</option>
                                             <option value="Pending" >Pending</option>
                                             <option value="Placed" >Placed</option>
+                                            <option value="Unplaced" >Unplaced</option>
+                                            <option value="Terminated" >Terminated</option>
                                         </select>            
                                     </td>
                                     <td>

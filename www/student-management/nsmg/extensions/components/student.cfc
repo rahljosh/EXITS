@@ -5722,32 +5722,43 @@
                 u2.businessname AS branchName,
 
                 CASE 
-                    WHEN canceldate IS NOT NULL
+                    WHEN s.canceldate IS NOT NULL
+                        AND s.termination_date IS NULL
                     THEN 'Cancelled'
 
+                    WHEN s.termination_date IS NOT NULL
+                        AND s.canceldate IS NULL
+                    THEN 'Terminated'
+
                     WHEN sh1.hold_status_id = <cfqueryparam cfsqltype="cf_sql_integer" value="2">
-                        AND canceldate IS NULL
+                        AND s.canceldate IS NULL
+                        AND s.termination_date IS NULL
                     THEN 'Showing'
 
                     WHEN sh1.hold_status_id = <cfqueryparam cfsqltype="cf_sql_integer" value="3">
-                        AND canceldate IS NULL
+                        AND s.canceldate IS NULL
+                        AND s.termination_date IS NULL
                     THEN 'Committed'
 
                     WHEN s.host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7,10" list="yes"> )
-                        AND (sh1.hold_status_id <= <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                        AND (sh1.hold_status_id <= 1
                             OR sh1.hold_status_id IS NULL)
                         AND s.hostID > <cfqueryparam cfsqltype="cf_sql_integer" value="0">   
-                        AND canceldate IS NULL   
+                        AND s.canceldate IS NULL
+                        AND s.termination_date IS NULL
                     THEN 'Pending'
 
                     WHEN s.host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4" list="yes"> ) 
-                        AND (sh1.hold_status_id <= <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                        AND (sh1.hold_status_id <= 1
                             OR sh1.hold_status_id IS NULL)
-                        AND canceldate IS NULL   
+                        AND s.canceldate IS NULL
+                        AND s.termination_date IS NULL  
                     THEN 'Placed'
 
                     WHEN s.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> 
-                        AND canceldate IS NULL   
+                        AND s.canceldate IS NULL
+                        AND s.termination_date IS NULL 
+                        AND (sh1.hold_status_id <= 1 OR sh1.hold_status_id IS NULL)
                     THEN 'Unplaced'
                 END 
                 AS stu_status,
@@ -5842,13 +5853,14 @@
                         OR sh1.hold_status_id = '')
                 <cfelseif ARGUMENTS.hold_status_id GT 0>
                     AND sh1.hold_status_id > <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-                    AND canceldate IS NULL
+                    AND s.canceldate IS NULL
+                    AND s.termination_date IS NULL
                 </cfif>
                 
                 <cfif ARGUMENTS.cancelled EQ 1>
-                    AND canceldate IS NOT NULL
+                    AND s.canceldate IS NOT NULL
                 <cfelseif ARGUMENTS.cancelled EQ 0>
-                    AND canceldate IS NULL
+                    AND s.canceldate IS NULL
                 </cfif>
                 
                 <cfif LEN(ARGUMENTS.active)>
@@ -5865,7 +5877,8 @@
                     AND s.host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4" list="yes"> ) 
                     AND (sh1.hold_status_id <= <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                         OR sh1.hold_status_id IS NULL)
-                    AND canceldate IS NULL   
+                    AND s.canceldate IS NULL   
+                    AND s.termination_date IS NULL
 
                 <cfelseif ARGUMENTS.placed EQ 0>
                     AND 
@@ -5879,7 +5892,8 @@
                             OR sh1.hold_status_id IS NULL)
                             AND s.hostID > <cfqueryparam cfsqltype="cf_sql_integer" value="0">))
 
-                    AND canceldate IS NULL                   
+                    AND s.canceldate IS NULL   
+                    AND s.termination_date IS NULL              
                 </cfif>
 
 
@@ -5929,29 +5943,39 @@
                 
             </cfif>
 
-            
-            <cfif ARGUMENTS.placement_status EQ "Cancelled">
-                AND canceldate IS NOT NULL
+            <cfif ARGUMENTS.placement_status EQ "Terminated">
+                AND s.termination_date IS NOT NULL
+                AND s.canceldate IS NULL
+            <cfelseif ARGUMENTS.placement_status EQ "Cancelled">
+                AND s.canceldate IS NOT NULL
+                AND s.termination_date IS NULL
             <cfelseif ARGUMENTS.placement_status EQ "Showing">
                 AND sh1.hold_status_id = <cfqueryparam cfsqltype="cf_sql_integer" value="2">
-                AND canceldate IS NULL
+                AND s.canceldate IS NULL
+                AND s.termination_date IS NULL
             <cfelseif ARGUMENTS.placement_status EQ "Committed">
                 AND sh1.hold_status_id = <cfqueryparam cfsqltype="cf_sql_integer" value="3"> 
-                AND canceldate IS NULL
+                AND s.canceldate IS NULL
+                AND s.termination_date IS NULL
             <cfelseif ARGUMENTS.placement_status EQ "Pending">
                 AND s.host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="5,6,7" list="yes"> )   
                 AND (sh1.hold_status_id <= <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                     OR sh1.hold_status_id IS NULL)     
                 AND s.hostID > <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-                AND canceldate IS NULL
+                AND s.canceldate IS NULL
+                AND s.termination_date IS NULL
             <cfelseif ARGUMENTS.placement_status EQ "Placed">
                 AND s.host_fam_approved IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4" list="yes"> ) 
                 AND (sh1.hold_status_id <= <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                     OR sh1.hold_status_id IS NULL) 
-                AND canceldate IS NULL
+                AND s.canceldate IS NULL
+                AND s.termination_date IS NULL
             <cfelseif ARGUMENTS.placement_status EQ "Unplaced">
                 AND s.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
-                AND canceldate IS NULL
+                AND (sh1.hold_status_id <= <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                    OR sh1.hold_status_id IS NULL) 
+                AND s.canceldate IS NULL
+                AND s.termination_date IS NULL
             </cfif>
 
             <cfif ARGUMENTS.priority_student EQ 0>
