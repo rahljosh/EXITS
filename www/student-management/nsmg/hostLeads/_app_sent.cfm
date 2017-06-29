@@ -221,8 +221,55 @@
     </cfif>
   
 	</cfquery>
-		
+    
+    <!---Check if matches on Address, use street and city combination---->
+	<cfquery name="checkHostAppExist_address" datasource="#application.dsn#">
+		select *,
+		CAST( 
+				CONCAT(                      
+					IFNULL(h.fatherFirstName, ''),  
+					IF(h.fatherLastName != h.motherLastName, ' ', ''), 
+					IF(h.fatherLastName != h.motherLastName, h.fatherlastname, ''),
+					IF(h.fatherFirstName != '', IF (h.motherFirstName != '', ' and ', ''), ''),
+					IFNULL(h.motherFirstName, ''), 
+					' ',
+					h.familyLastName
+					) 
+			AS CHAR) AS displayName
+		from smg_hosts h
+		where 
+		<cfif val(manual_assign_host)>
+			hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.quicksearchhostid#">
+		<Cfelse>
+			address = <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetHostLead.address#">
+			and city =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetHostLead.city#">
+		</cfif>
+	</cfquery>	
 	
+	 <!---Check if matches on Phone number---->
+	<cfquery name="checkHostAppExist_phone" datasource="#application.dsn#">
+		select *,
+		CAST( 
+				CONCAT(                      
+					IFNULL(h.fatherFirstName, ''),  
+					IF(h.fatherLastName != h.motherLastName, ' ', ''), 
+					IF(h.fatherLastName != h.motherLastName, h.fatherlastname, ''),
+					IF(h.fatherFirstName != '', IF (h.motherFirstName != '', ' and ', ''), ''),
+					IFNULL(h.motherFirstName, ''), 
+					' ',
+					h.familyLastName
+					) 
+			AS CHAR) AS displayName
+		from smg_hosts h
+		where 
+		<cfif val(manual_assign_host)>
+			hostid = <cfqueryparam cfsqltype="cf_sql_integer" value="#FORM.quicksearchhostid#">
+		<Cfelse>
+			(phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetHostLead.phone#">
+			OR father_cell =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetHostLead.phone#">
+			or mother_cell =  <cfqueryparam cfsqltype="cf_sql_varchar" value="#qGetHostLead.phone#">)
+		</cfif>
+	</cfquery>	
 <body>
 
 <Cfif val(qGetHostLead.hostid)>
@@ -289,6 +336,7 @@
 														#checkHostAppExist.city# #checkHostAppExist.state#, #checkHostAppExist.zip#<br>
 														#checkHostAppExist.email#
 													</cfoutput>
+													<p align=center><button type="submit" class="btn btn-u btn-u-sm "><i class="fa fa-user-circle" aria-hidden="true"></i> YES, associate with this HF</button></p>
 													<cfelse>
 													<div class="row">
 														<div class="col-sm-2">
@@ -308,15 +356,44 @@
 												<!----Address Results---->
 												<div class="col-sm-4">
 												<div class="heading heading-v4 margin-bottom-10">
-														<h4>Email Matches</h4>
+														<h4>Address Matches</h4>
 														</div>
 													<div class="tag-box tag-box-v4">
-													<Cfif checkHostAppExist.recordcount gt 0>	
+													<Cfif checkHostAppExist_address.recordcount gt 0>	
 													<cfoutput>
-														#checkHostAppExist.displayName#<br>
-														#checkHostAppExist.address#<br>
-														#checkHostAppExist.city# #checkHostAppExist.state#, #checkHostAppExist.zip#<br>
-														#checkHostAppExist.email#
+														#checkHostAppExist_address.displayName#<br>
+														#checkHostAppExist_address.address#<br>
+														#checkHostAppExist_address.city# #checkHostAppExist_address.state#, #checkHostAppExist_address.zip#<br>
+														#checkHostAppExist_address.email#
+													</cfoutput>
+													<cfelse>
+													<div class="row">
+														<div class="col-sm-2">
+														<span class="fa-stack fa-2x">
+														  <i class="fa fa-ban fa-stack-2x"></i>
+														  <i class="fa fa-users fa-stack-1x"></i>
+														</span>
+													</div>
+													<div class="col-sm-10">
+														We didn't find any host famalies with the same street address.
+													</div>
+													</div>
+													
+													</cfif>
+													</div>
+												</div>
+												<!----Phone Results---->
+												<div class="col-sm-4">
+												<div class="heading heading-v4 margin-bottom-10">
+														<h4>Phone Matches</h4>
+														</div>
+													<div class="tag-box tag-box-v4">
+													<Cfif checkHostAppExist_phone.recordcount gt 0>	
+													<cfoutput>
+														#checkHostAppExist_phone.displayName#<br>
+														#checkHostAppExist_phone.address#<br>
+														#checkHostAppExist_phone.city# #checkHostAppExist_phone.state#, #checkHostAppExist_phone.zip#<br>
+														#checkHostAppExist_phone.email#
 													</cfoutput>
 													<cfelse>
 													<div class="row">
