@@ -95,8 +95,22 @@
 		</cfscript>
         
         <cfquery name="qCheckEmail" datasource="#APPLICATION.DSN#">
-            SELECT hostID, familylastname, password
-            FROM smg_hosts
+            SELECT hostID, familylastname, password,
+			  CAST( 
+							CONCAT(                      
+								IFNULL(h.fatherFirstName, ''),  
+								IF(h.fatherLastName != h.motherLastName, ' ', ''), 
+								IF(h.fatherLastName != h.motherLastName, h.fatherlastname, ''),
+								IF(h.fatherFirstName != '', IF (h.motherFirstName != '', ' and ', ''), ''),
+								IFNULL(h.motherFirstName, ''), 
+								' ',
+								h.familyLastName,
+								' (##',
+								h.hostID,
+								')'                    
+								) 
+						AS CHAR) AS  displayHostFamily
+			FROM smg_hosts h
             WHERE active = <cfqueryparam cfsqltype="cf_sql_bit" value="1">
             AND companyID IN (<cfqueryparam cfsqltype="cf_sql_integer" value="#companyIDList#" list="yes">)
             AND email LIKE <cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.email#">
@@ -3432,7 +3446,6 @@
 		<cfreturn qGetHostLeadByID>
 	</cffunction>
     
-    
 	<cffunction name="setHostLeadDataIntegrity" access="public" returntype="void" output="false" hint="This makes sure that all records have a hashID and a history">
         
 		<!--- Insert HashID --->
@@ -3858,15 +3871,28 @@
                     AND
                         r.company = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
                 </cfif>
-
+				
                 <!--- Screnner --->
                 <cfif CLIENT.userType EQ 26>
                 	AND
                     	hl.followUpID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
                 </cfif>
                 
-                <!--- RA and AR can only see leads assigned to them --->
-                <cfif ListFind("6,7,9", CLIENT.userType)>
+                <!---- RA should be able to see the people under them ---->
+                <cfif ListFind("6", CLIENT.userType)>
+                	AND
+                    	(hl.areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#"> 
+                    	 OR
+                    	 hl.areaRepID in (
+                    	 	select userid 
+                    	 	from user_access_rights uar
+                    	 	where uar.advisorid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userid#"> 
+                    	 )
+                    	)
+                </cfif>
+                
+                <!---AR can only see leads assigned to them --->
+                <cfif ListFind("7,9", CLIENT.userType)>
                 	AND
                     	hl.areaRepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
                 </cfif>
