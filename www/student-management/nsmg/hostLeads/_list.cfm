@@ -606,9 +606,9 @@
 				</cfform>
 			</td>
 			<td style="text-align:center">
-				
-        		<button type="button" class="btn-u btn-u-blue"><i class="fa fa-folder-open-o" aria-hidden="true"></i> Add New Lead</button>
-        	
+				<a href="hostLeads/new_lead.cfm" class="jQueryModal" title="Add New Lead">
+        			<button type="button" class="btn-u btn-u-blue"><i class="fa fa-folder-open-o" aria-hidden="true"></i> Add New Lead</button>
+				</a>
 			</td>
 		</tr>
  	</table>
