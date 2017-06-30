@@ -60,7 +60,8 @@
                     isNotQualifiedToHost = 1,
                     call_back = 0,
                     call_back_updated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
-                    call_back_updated_by = #CLIENT.userid#
+                    call_back_updated_by = #CLIENT.userid#,
+                    school_issue = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
                 WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostID#">
             </cfquery>
             
@@ -93,7 +94,8 @@
                     isNotQualifiedToHost = 0,
                     call_back = 0,
                     call_back_updated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
-                    call_back_updated_by = #CLIENT.userid#
+                    call_back_updated_by = #CLIENT.userid#,
+                    school_issue = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
                 WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostID#">
             </cfquery>
 

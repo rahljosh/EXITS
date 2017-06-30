@@ -591,6 +591,7 @@
                         <option value="Call Back Next SY" <cfif HFstatus EQ "Call Back Next SY">selected</cfif>>Call Back Next SY</option>
                         <option value="Current Season" <cfif HFstatus EQ "Current Season">selected</cfif>>Current Season</option>
                         <option value="Decided Not to Host" <cfif HFstatus EQ "Decided Not to Host">selected</cfif>>Decided Not to Host</option>
+                        <option value="Dropped - School Issue" <cfif HFstatus EQ "Dropped - School Issue">selected</cfif>>Dropped - School Issue</option>
                         <option value="Email Back" <cfif HFstatus EQ "Email Back">selected</cfif>>Email Back</option>
                         <option value="Not Qualified to Host" <cfif HFstatus EQ "Not Qualified to Host">selected</cfif>>Not Qualified to Host</option>
                         <option value="With Other Sponsor" <cfif HFstatus EQ "With Other Sponsor">selected</cfif>>With Other Sponsor</option>

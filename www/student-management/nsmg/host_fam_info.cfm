@@ -700,9 +700,20 @@ div.scroll2 {
                         <td>
                             <input type="checkbox" disabled="disabled" /> Not Qualified
                         </td>
-                        <td>
+                        <td style="text-align:center">
                             <cfif CLIENT.usertype LTE 7>
                                 <cfif VAL(qGetHostInfo.isHosting) AND NOT VAL(qGetHostInfo.with_competitor)>
+                                    <cfif NOT VAL(qGetHostInfo.school_issue)>
+                                        <form 
+                                            method="post" 
+                                            action="index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" 
+                                            style="display:inline;" 
+                                            onsubmit="return confirm('Confirm new status: Dropped - School Issue')">
+                                            <input type="hidden" name="school_issue" value="1"/>
+                                            <input type="submit" value="Dropped - School Issue"  alt="Dropped - School Issue" border="0" class="buttonOrange" />
+                                        </form>
+                                    </cfif>
+
                                     <form 
                                         method="post" 
                                         action="index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" 
@@ -728,16 +739,18 @@ div.scroll2 {
                                 
                             </cfif>
                             <cfif VAL(qGetHostInfo.isHosting) AND (NOT VAL(qGetHostInfo.activeApp))>
+
                                 <form method="post" action="index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" style="display:inline;">
                                     <input type="hidden" name="hostNewSeason" value="1"/>
-                                    <input type="submit" value="Host #qCurrentSeason.season#"  alt="Host #qCurrentSeason.season#" border="0" class="buttonGreen" />
+                                    <input type="submit" value="Host #qCurrentSeason.season#"  alt="Host #qCurrentSeason.season#" border="0" class="buttonGreen" <cfif NOT VAL(qGetHostInfo.school_issue)> style="margin-top:15px</cfif>" />
                                 </form>
                          	</cfif>
                         </td>
                     </tr>
                     
                     <tr>
-                        <td style="text-align:center" colspan="2">
+                        <td>&nbsp;</td>
+                        <td style="text-align:center">
 
                             <cfform method="post" action="index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" style="display:inline;">
                                 <input type="hidden" name="StatusUpdateSub"  value="1"/>
@@ -862,7 +875,8 @@ div.scroll2 {
                             AND NOT VAL(qGetHostInfo.isNotQualifiedToHost)
                             AND NOT VAL(qGetHostInfo.with_competitor)
                             AND NOT VAL(qGetHostInfo.call_back)
-                            AND NOT VAL(vCurrentSeasonStatus.activeApp)>
+                            AND NOT VAL(vCurrentSeasonStatus.activeApp)
+                            AND NOT VAL(qGetHostInfo.school_issue) >
                             <p style="font-weight: bold;">Decided Not to Host</p>
                             <p><em>Change is possible. You must want it enough for the change to take place.<br />
                                 - Lailah Gifty Akita</em></p>
@@ -871,7 +885,8 @@ div.scroll2 {
                             AND VAL(qGetHostInfo.isHosting)
                             AND NOT VAL(qGetHostInfo.with_competitor)
                             AND NOT VAL(qGetHostInfo.call_back)
-                            AND NOT VAL(vCurrentSeasonStatus.activeApp)>
+                            AND NOT VAL(vCurrentSeasonStatus.activeApp)
+                            AND NOT VAL(qGetHostInfo.school_issue) >
                             <p style="font-weight: bold;">Available to Host</p>
                             <p><em> To host or not to host is just a phone call away!</em></p>
                         
@@ -879,7 +894,8 @@ div.scroll2 {
                             AND VAL(qGetHostInfo.isHosting)
                             AND NOT VAL(qGetHostInfo.with_competitor)
                             AND NOT VAL(qGetHostInfo.call_back)
-                            AND VAL(vCurrentSeasonStatus.activeApp)>
+                            AND VAL(vCurrentSeasonStatus.activeApp)
+                            AND NOT VAL(qGetHostInfo.school_issue) >
                             <!--- Current Season --->
 
                             <cfif vCurrentSeasonStatus.applicationStatusID EQ 3>
@@ -913,7 +929,8 @@ div.scroll2 {
                             AND NOT VAL(qGetHostInfo.isHosting)
                             AND VAL(qGetHostInfo.with_competitor)
                             AND NOT VAL(qGetHostInfo.call_back)
-                            AND NOT VAL(vCurrentSeasonStatus.activeApp)>
+                            AND NOT VAL(vCurrentSeasonStatus.activeApp)
+                            AND NOT VAL(qGetHostInfo.school_issue)>
                             <!--- With Other Sponsor --->
                             <p style="font-weight: bold">With Other Sponsor</p>
                             <p><em>"Yesterday is not ours to recover, but tomorrow is ours to win or lose.<br />
@@ -936,6 +953,13 @@ div.scroll2 {
                             <p style="font-weight: bold">Email Back</p>
                             <p><em>"Patience, persistence and perspiration make an unbeatable combination for success.<br />
                                 - Napoleon Hill"</em></p>
+
+                        <cfelseif VAL(qGetHostInfo.school_issue) 
+                            AND NOT VAL(qGetHostInfo.isNotQualifiedToHost)
+                            AND NOT VAL(qGetHostInfo.with_competitor)
+                            AND NOT VAL(qGetHostInfo.call_back)>
+                            <!--- Call Back --->
+                            <p style="font-weight: bold">Dropped - School Issue</p>
 
                         </cfif>
 
