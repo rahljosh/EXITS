@@ -2382,7 +2382,78 @@
                                 score = <cfqueryparam cfsqltype="cf_sql_float" value="#ARGUMENTS.score#">
                         )   
         </cfquery>
-        
+        <cfif ARGUMENTS.trainingID eq 2>
+        <!---Set GYRUS Variables---->
+        	<cfif CLIENT.companyID EQ 10 >
+				<cfset clientKey= "C1AFDE13043B">
+				<cfset clientSecret = "LgmCVP79Gv0Go+JBBC5GJsf19w9SkiMBLTzhbT8ghQTmQry3DSsIwG4eqvCSEi86+fzwVr2vHosDXShr">
+                <cfset OrgCode = "CASE">
+                <cfset SuperviserCode = "Manager Group: CULTURAL ACADEMIC STUDENT EXCHANGE, INC.">
+			<cfelse> 
+				<cfset clientKey= "F73DE6496539">
+				<cfset clientSecret = "dhxGOomiHdiDMt6TrNSPgGsoo4QZcQllF+wo9hhCtUWKjN1gdxYEE2AAWYbFXwgDELsiqzD6p5oygKTo">
+                <cfset OrgCode = "ISE">
+                <cfset SuperviserCode = "Manager Group: International Student Exchange">
+			</cfif>
+      		<!----We need the user info to submit to GYRUS---->
+       		<cfquery name='gyrusUsers' datasource="MySQL">
+       			select firstname, lastname, email
+       			from smg_users
+       			where userid =  <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userID#">
+       		</cfquery>
+       		<!---Set the user to expire a year from date trained, this keeps GYRUS in line with our records---->
+        		<Cfset expirationDate = #DateFormat(DateAdd("yyyy",1,ARGUMENTS.dateTrained),'mm/dd/yyyy')#>
+				
+				<cfprocessingdirective suppresswhitespace="Yes"> 
+				<cfcontent type="text/xml; charset=utf-8"> 
+				<cfxml variable="xmlobject"> 
+				<Root>
+				 <cfloop query="gyrusUsers">
+				   <Employee>
+					<EmployeeNumber><cfoutput>#gyrusUsers.email#</cfoutput></EmployeeNumber>
+					<FirstName><cfoutput>#gyrusUsers.firstname#</cfoutput></FirstName>
+					<LastName><cfoutput>#gyrusUsers.lastname#</cfoutput></LastName>
+					<Email><cfoutput>#gyrusUsers.email#</cfoutput></Email>
+					<Username><cfoutput>#gyrusUsers.email#</cfoutput></Username>
+					<TermDate><cfoutput>#expirationDate#</cfoutput></TermDate>
+					<ExpirationDate><cfoutput>#expirationDate#</cfoutput></ExpirationDate>
+					<OrganizationCode><cfoutput>#OrgCode#</cfoutput></OrganizationCode>
+					 <Supervisors>
+						<Supervisor>
+							<EmployeeNumber><cfoutput>#SuperviserCode#</cfoutput></EmployeeNumber>
+						</Supervisor>
+					</Supervisors>
+				   </Employee>
+				   </cfloop>
+					<Token>
+						 <ClientKey><cfoutput>#clientKey#</cfoutput></ClientKey>
+						 <ClientSecret><cfoutput>#clientSecret#</cfoutput></ClientSecret>
+					</Token>
+				</Root>
+				</cfxml> 
+				</cfprocessingdirective>
+
+
+				<cfset myvar=toString(xmlobject)>
+				<!---
+					Post the XML data to catch page. We are going
+					to post this value as an XML object will actually
+					just post it as an XML body.
+				--->
+				<cfhttp
+					url="https://dos.gyrus.com/gyrusaim/api/employee/update"
+					method="POST"
+					result="objGet">
+					<!---
+						When posting the xml data, remember to trim
+						the value so that it is valid XML.
+					--->
+					<cfhttpparam
+						type="XML"
+						value="#myvar.Trim()#"
+						/>
+				</cfhttp>
+        </cfif>
         <cfscript>
 			if ( ARGUMENTS.userID EQ CLIENT.userID ) {
 				// Update User Session Paperwork
@@ -2866,6 +2937,7 @@
             <!----This is where we are checking if soemthing is found.   If found, update password, if not, insert a new record---->
             <cfset Results = XMLParse(objGet.FileContent)>
           
+          	<Cfset expirationDate = #DateFormat(DateAdd("yyyy",1,now()))#>
            	 <cfif structKeyExists(Results.Employees, "Employee")>
             		<!----Updated the users info ---->
  					<cfprocessingdirective suppresswhitespace="Yes"> 
@@ -2878,7 +2950,7 @@
                                     <LastName><cfoutput>#qGetUserInfo.lastname#</cfoutput></LastName>
                                     <UserName><cfoutput>#qGetUserInfo.email#</cfoutput></UserName>
                                     <Email><cfoutput>#qGetUserInfo.email#</cfoutput></Email>
-                                    <ExpirationDate>12/31/9999</ExpirationDate>
+                                    <ExpirationDate>#expirationDate#</ExpirationDate>
                                     <OrganizationCode><cfoutput>#OrgCode#</cfoutput></OrganizationCode>
                                      <Supervisors>
                                         <Supervisor>
@@ -3081,7 +3153,7 @@
                
              <cfelse>
               <cfquery name="getUser" datasource="mysql">
-                    select userid 
+                    select userid, firstname, lastname, email 
                     from smg_users
                     where email = "#Results.Assessments.Assessment[i].EmployeeNumber.xmlText#"
                     and active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
@@ -3135,6 +3207,40 @@
                                             score = <cfqueryparam cfsqltype="cf_sql_float" value="#DecimalFormat(score)#">
                                     )   
                     </cfquery>
+                    
+                    
+                    	<Cfset expirationDate = #DateFormat(DateAdd("yyyy",1,Left(Results.Assessments.Assessment[i].DateCompleted.xmlText,10)),'mm/dd/yyyy')#>
+	
+						<!---Update expiration date in Gyrus to 1 year from training date---->
+							<cfprocessingdirective suppresswhitespace="Yes"> 
+							<cfcontent type="text/xml; charset=utf-8"> 
+							<cfxml variable="xmlobject"> 
+							<Root>
+							 <cfloop query="gyrusUsers">
+							   <Employee>
+								<EmployeeNumber><cfoutput>#getUser.email#</cfoutput></EmployeeNumber>
+								<FirstName><cfoutput>#getUser.firstname#</cfoutput></FirstName>
+								<LastName><cfoutput>#getUser.lastname#</cfoutput></LastName>
+								<Email><cfoutput>#getUser.email#</cfoutput></Email>
+								<Username><cfoutput>#getUser.email#</cfoutput></Username>
+								<TermDate><cfoutput>#expirationDate#</cfoutput></TermDate>
+								<ExpirationDate><cfoutput>#expirationDate#</cfoutput></ExpirationDate>
+								<OrganizationCode><cfoutput>#OrgCode#</cfoutput></OrganizationCode>
+								 <Supervisors>
+									<Supervisor>
+										<EmployeeNumber><cfoutput>#SuperviserCode#</cfoutput></EmployeeNumber>
+									</Supervisor>
+								</Supervisors>
+							   </Employee>
+							   </cfloop>
+								<Token>
+									 <ClientKey><cfoutput>#clientKey#</cfoutput></ClientKey>
+									 <ClientSecret><cfoutput>#clientSecret#</cfoutput></ClientSecret>
+								</Token>
+							</Root>
+							</cfxml> 
+							</cfprocessingdirective>
+
                     <cfelse>
 				
                 	<!---Get Gyrus User Info---->
@@ -3726,7 +3832,10 @@
                 INNER JOIN 
                     smg_usertype ut ON ut.userTypeID = uar.userType
                 WHERE 
-                    u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">                        
+                    u.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">   
+                <cfif client.usertype eq 6>
+                	AND uar.advisorid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#"> 
+                </cfif>                     
                 ORDER BY 
                     uar.userType,
                     u.lastName,
