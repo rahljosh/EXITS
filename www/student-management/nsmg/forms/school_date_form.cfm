@@ -1,3 +1,4 @@
+
 <cfparam name="url.schooldateid" default="">
 <cfif url.schooldateid EQ "">
 	<cfset new = true>
@@ -55,7 +56,7 @@
     <cfif errorMsg EQ ''>
 		<cfif new>
             <cfquery datasource="#application.dsn#">
-                INSERT INTO smg_school_dates (schoolid, seasonid, enrollment, year_begins, semester_ends, semester_begins, year_ends)
+                INSERT INTO smg_school_dates (schoolid, seasonid, enrollment, year_begins, semester_ends, semester_begins, year_ends, orientation_required)
                 VALUES (
                 <cfqueryparam cfsqltype="cf_sql_integer" value="#url.schoolid#">,
                 <cfqueryparam cfsqltype="cf_sql_integer" value="#form.seasonid#">,
@@ -66,7 +67,8 @@
                 <cfqueryparam cfsqltype="cf_sql_date" value="#form.year_begins#" null="#yesNoFormat(trim(form.year_begins) EQ '')#">,
                 <cfqueryparam cfsqltype="cf_sql_date" value="#form.semester_ends#" null="#yesNoFormat(trim(form.semester_ends) EQ '')#">,
                 <cfqueryparam cfsqltype="cf_sql_date" value="#form.semester_begins#" null="#yesNoFormat(trim(form.semester_begins) EQ '')#">,
-                <cfqueryparam cfsqltype="cf_sql_date" value="#form.year_ends#" null="#yesNoFormat(trim(form.year_ends) EQ '')#">
+                <cfqueryparam cfsqltype="cf_sql_date" value="#form.year_ends#" null="#yesNoFormat(trim(form.year_ends) EQ '')#">,
+                <cfqueryparam cfsqltype="cf_sql_bit" value="#form.orientation_required#">
                 )  
             </cfquery>
 		<!--- edit --->
@@ -82,7 +84,8 @@
                 year_begins = <cfqueryparam cfsqltype="cf_sql_date" value="#form.year_begins#" null="#yesNoFormat(trim(form.year_begins) EQ '')#">,
                 semester_ends = <cfqueryparam cfsqltype="cf_sql_date" value="#form.semester_ends#" null="#yesNoFormat(trim(form.semester_ends) EQ '')#">,
                 semester_begins = <cfqueryparam cfsqltype="cf_sql_date" value="#form.semester_begins#" null="#yesNoFormat(trim(form.semester_begins) EQ '')#">,
-                year_ends = <cfqueryparam cfsqltype="cf_sql_date" value="#form.year_ends#" null="#yesNoFormat(trim(form.year_ends) EQ '')#">
+                year_ends = <cfqueryparam cfsqltype="cf_sql_date" value="#form.year_ends#" null="#yesNoFormat(trim(form.year_ends) EQ '')#">,
+                orientation_required = <cfqueryparam cfsqltype="cf_sql_date" value="#form.orientation_required#">
 				WHERE schooldateid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.schooldateid#">
 			</cfquery>
 		</cfif>
@@ -123,7 +126,7 @@
 function checkForm() {
 	if (document.my_form.seasonid.value.length == 0) {alert("Please select the Season."); return false; }
 	if (!((document.my_form.year_begins.value.length != 0 && document.my_form.year_ends.value.length != 0) || (document.my_form.year_begins.value.length != 0 && document.my_form.semester_ends.value.length != 0) || (document.my_form.semester_begins.value.length != 0 && document.my_form.year_ends.value.length != 0))) {alert("Please enter one of the the date combinations."); return false; }
-	return true;
+    return true;
 }
 </script>
 
@@ -168,6 +171,13 @@ function checkForm() {
     <tr>
     	<td class="label">Enrollment/Orientation:</td>
         <td><cfinput type="text" name="enrollment" value="#dateFormat(form.enrollment, 'mm/dd/yyyy')#" class="datePicker" size="10" maxlength="10" mask="99/99/9999" validate="date" message="Please enter a valid Enrollment/Orientation."> mm/dd/yyyy</td>
+    </tr>
+    <tr>
+        <td class="label">Orientation Required:</td>
+        <td>
+            <input type="radio" name="orientation_required" id="orientation_required_yes" value="Yes" /> Yes &nbsp;
+            <input type="radio" name="orientation_required" id="orientation_required_no" value="No" checked /> No
+        </td>
     </tr>
     </cfif>
     <tr>
