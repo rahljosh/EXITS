@@ -188,7 +188,6 @@
 				FORM.zip = qGetHostLead.zipCode;
 				FORM.phone = qGetHostLead.phone;
 				FORM.email = qGetHostLead.email;
-				
 				FORM.regionID = qGetHostLead.regionid;
 				FORM.sourceCode = qGetHostLead.hearAboutUs;
 				FORM.sourceOther = qGetHostLead.hearAboutUsDetail;
@@ -240,10 +239,6 @@
 		<cfscript>
 		SESSION.FormErrors.clear();
 			// Data Validation - Check required Fields
-		
-			if ( NOT LEN(FORM.father_cell) ) {
-				SESSION.formErrors.Add("father_cell");
-			}    
 			
 
 			if ( LEN(FORM.email) AND NOT isValid("email", Trim(FORM.email)) ) {
@@ -302,8 +297,7 @@
             
             <!--- Update --->
             <cfif VAL(FORM.hostID)>
-			
-               		
+
                 <cfquery datasource="#APPLICATION.DSN#">
                     UPDATE 
                         smg_hosts 
@@ -420,17 +414,17 @@
 					if (FORM.subAction EQ 'eHost') {
 						APPLICATION.CFC.HOST.setHostSeasonStatus(hostID=FORM.hostID);	
 					}
-					
-					// Set Page Message
-					SESSION.pageMessages.Add("Host Family sucessfully created");
+				
                 </cfscript>
-				<Cfquery name="addHostIDToLead" datasource="#APPLICATION.DSN#">
-           		update smg_host_lead
-           			set hostid =  <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#FORM.hostID#">
-           				where id = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#FORM.leadID#">
-				</cfquery>
+				
             </cfif> <!--- val(FORM.hostID) --->
-            	<!--- Creating Host Family Application - Send Out Welcome Email --->
+            
+			<Cfquery name="addHostIDToLead" datasource="#APPLICATION.DSN#">
+			update smg_host_lead
+				set hostid =  <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#FORM.hostID#">
+					where id = <cfqueryparam cfsqltype="CF_SQL_INTEGER" value="#FORM.leadID#">
+			</cfquery>
+           	<!--- Creating Host Family Application - Send Out Welcome Email --->
             <cfscript>
                
                     // Email Host Family - Welcome Email
@@ -466,11 +460,33 @@
 
 
             </cfscript>
-            
+             <div class="row">
+			 	<div class="col-md-8">
+					<div class="panel panel-success">
+					  <div class="panel-heading">
+						<h3 class="panel-title">Success!</h3>
+					  </div>
+					  <div class="panel-body">
+					  <cfoutput>
+					  <ul>
+					  	<li>The #TRIM(FORM.familyLastName)# fmaily has been converted to a host family.</li>
+					  	<li>An email has been sent to them with a link to their host application.</li>
+					  	<li>Their Host ID is #FORM.hostID#</li>
+					  	<li>The #TRIM(FORM.familyLastName)# family can now be found in the HF Exploreer</li>
+					  </ul>
+						</cfoutput>
+						
+						
+						<br>
+					  </div>
+					</div>
+				 </div>
+			  </div>
              <script language="javascript">
                 // Close Window After 1.5 Seconds
-                setTimeout(function() { parent.$.fn.colorbox.close(); }, 100);
+                setTimeout(function() { parent.$.fn.colorbox.close(); }, 6000);
             </script>
+            <cfabort></cfabort>
 		</cfif>
         
 	<!--- FORM NOT SUBMITTED --->
@@ -541,13 +557,13 @@
 				<span class="pull-right"> 
 				<form method="post" action="_app_sent.cfm?ID=#FORM.leadID#&key=#URL.key#">
 				<input type="hidden" name="leadID" value="#FORM.leadID#">
-				<input type="submit" class="btn-u btn-u-purple" value="Already a host family?"></input>	
+				<input type="submit" class="btn-u btn-u-purple" value="Already a host family? Specify a Host ID"></input>	
 				</form>
 				</div>
 					
 
 					<!-- Checkout-Form -->
-					<form name="hostFamilyInfo" id="hostFamilyInfo" action="#CGI.SCRIPT_NAME#?curdoc=forms/host_fam_form_lead&leadID=#form.leadID#" method="post" id="sky-form" class="sky-form">
+					<form name="hostFamilyInfo" id="hostFamilyInfo" action="#CGI.SCRIPT_NAME#?leadID=#form.leadID#&key=#URL.key#" method="post" id="sky-form" class="sky-form">
 					<Cfif val(#URL.skip#)>
 					<input type="hidden" name="skip" value="1">
 					</Cfif>

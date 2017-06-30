@@ -179,8 +179,8 @@
 		
 		
 			//Display query set info
-			var paginationInfo = '<td id="topPageNavigation" colspan="12" align="center"> <p> Displaying <strong>' + recordFrom + '</strong> to: <strong>' + recordTo + '</strong> of <strong>' + numberOfRecords + '</strong> records <br />';
-				paginationInfo += 'Total Number of Pages: <strong>' + numberOfPages + '</strong></p></td>';
+			var paginationInfo = '<td id="topPageNavigation" colspan="8" align="center"> <p> Displaying <strong>' + recordFrom + '</strong> to: <strong>' + recordTo + '</strong> of <strong>' + numberOfRecords + '</strong> records <br />';
+				paginationInfo += 'Total Number of Pages: <strong>' + numberOfPages + '</strong></p></td><td valign="center"><a href="hostLeads/new_lead.cfm" class="jQueryModal" title="Add New Lead"><button type="button" class="btn-u btn-u-blue"><i class="fa fa-folder-open-o" aria-hidden="true"></i> Add New Lead</button></a>';
 	
 			// Clear current information and append pagination info
 			$("#loadPaginationInfo").empty().append(paginationInfo);
@@ -606,9 +606,7 @@
 				</cfform>
 			</td>
 			<td style="text-align:center">
-				<a href="hostLeads/new_lead.cfm" class="jQueryModal" title="Add New Lead">
-        			<button type="button" class="btn-u btn-u-blue"><i class="fa fa-folder-open-o" aria-hidden="true"></i> Add New Lead</button>
-				</a>
+				
 			</td>
 		</tr>
  	</table>

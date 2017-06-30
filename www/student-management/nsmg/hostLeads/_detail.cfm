@@ -488,20 +488,20 @@
 											</label>
 										</section>
 										<Cfelse>
-											
 											  <input type="hidden" name="companyID" value="#FORM.companyID#" />
+											  <input type="hidden" name="regionID" value="#FORM.regionID#" />
 										</cfif>
-									
-										<cfif CLIENT.userType EQ 5>
-										<input type="hidden" name="regionID" value="#FORM.regionID#" />
-											<section>
+										
+										<cfif ListFind("1,2,3,4,5,6", CLIENT.userType)>
+											
+											<section class="col-md-12">
 												<label class="label">Area Representative</label>
 												<label class="select">
 													<cfselect
 													name="areaRepID" 
 													id="areaRepID"
 													class="largeField"
-													value="userID"
+													value="userid"
 													display="userInformation"
 													selected="#FORM.areaRepID#" 
 													bindonload="yes"
