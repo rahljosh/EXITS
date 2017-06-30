@@ -29,7 +29,8 @@
             isNotQualifiedToHost = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
             call_back = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
             call_back_updated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
-            call_back_updated_by = #CLIENT.userid#
+            call_back_updated_by = #CLIENT.userid#,
+            school_issue = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
         WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostID#">
     </cfquery>
 
@@ -55,7 +56,42 @@
 
     <cfset applicationHistoryID = applicationHistory />
     <cfset newStatus = 'With Competitor' />
+</cfif>
 
+<cfif structKeyExists(FORM, "school_issue")>
+    <cfquery datasource="#APPLICATION.DSN#">
+        UPDATE smg_hosts
+        SET with_competitor = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
+            isNotQualifiedToHost = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
+            call_back = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
+            call_back_updated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
+            call_back_updated_by = #CLIENT.userid#,
+            school_issue = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+        WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostID#">
+    </cfquery>
+
+    <cfif vCurrentSeason.recordCount GT 0> 
+        <cfquery datasource="#APPLICATION.DSN#">
+            UPDATE smg_host_app_season
+            SET activeApp = 0
+            WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostID#">
+                AND seasonID = #qCurrentSeason.seasonID#
+        </cfquery>
+    </cfif>
+
+    <cfscript>
+        applicationHistory = APPLICATION.CFC.LOOKUPTABLES.insertApplicationHistory(
+            applicationID=7,
+            foreignTable='smg_hosts',
+            foreignID=URL.hostID,
+            enteredByID=CLIENT.userID,
+            dateCreated=NOW(),
+            status_update='Dropped - School Issue'
+        );
+    </cfscript>
+
+    <cfset applicationHistoryID = applicationHistory />
+    <cfset newStatus = 'Dropped - School Issue' />
 </cfif>
 
 
@@ -68,7 +104,8 @@
             isHosting = <cfqueryparam cfsqltype="cf_sql_bit" value="1">,
             call_back = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
             call_back_updated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
-            call_back_updated_by = #CLIENT.userid#
+            call_back_updated_by = #CLIENT.userid#,
+            school_issue = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
         WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostID#">
     </cfquery>
 
@@ -162,7 +199,8 @@
                 isNotQualifiedToHost = <cfqueryparam cfsqltype="cf_sql_bit" value="0">,
             </cfif>
             call_back_updated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
-            call_back_updated_by = #CLIENT.userid#
+            call_back_updated_by = #CLIENT.userid#,
+            school_issue = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
         WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostInfo.hostID#">
     </cfquery>
 
@@ -202,7 +240,8 @@
                 with_competitor = 0,
                 call_back = 0,
                 call_back_updated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
-                call_back_updated_by = #CLIENT.userid#
+                call_back_updated_by = #CLIENT.userid#,
+                school_issue = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
             WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#URL.hostID#">
         </cfquery>
 
@@ -228,7 +267,8 @@
             updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">,
             call_back = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.call_back)#">,
             call_back_updated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
-            call_back_updated_by = #CLIENT.userid#
+            call_back_updated_by = #CLIENT.userid#,
+            school_issue = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
         WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostInfo.hostID#">
     </cfquery>
 

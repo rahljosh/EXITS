@@ -863,6 +863,7 @@
                                         Status<br />
                                         <select name="placement_status" id="placement_status" onChange="getStudentList();">
                                             <option value="">All</option>
+                                            <option value="Active">Active</option>
                                             <option value="Cancelled" >Cancelled</option>
                                             <option value="Showing" >Showing</option>
                                             <option value="Committed" >Committed</option>

@@ -1322,7 +1322,7 @@
                             </td>
                             <td>
                             	<span class="readOnly displayNone">#DateFormat(qGetSecondVisitReport.dateCompliance, 'mm/dd/yyyy')#</span>
-                                <input type="checkbox" name="check_secondVisitDateCompliance" id="check_secondVisitDateCompliance" class="editPage displayNone complianceCheck complianceCheckAll" <cfif isDate(FORM.secondVisitDateCompliance)>checked</cfif> <cfif NOT qGetSecondVisitReport.recordCount>disabled="disabled"</cfif> >
+                                <input type="checkbox" name="check_secondVisitDateCompliance" id="check_secondVisitDateCompliance" class="editPage displayNone complianceCheck" <cfif isDate(FORM.secondVisitDateCompliance)>checked</cfif> <cfif NOT qGetSecondVisitReport.recordCount>disabled="disabled"</cfif> >
                                 <input type="hidden" name="secondVisitDateCompliance" id="secondVisitDateCompliance" class="datePicker editPage displayNone" value="#DateFormat(FORM.secondVisitDateCompliance, 'mm/dd/yyyy')#">
                             </td>
                         </tr>

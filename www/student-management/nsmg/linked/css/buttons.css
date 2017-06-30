@@ -172,6 +172,41 @@
    border-top-color: #9c1a1d;
    background: #9c1a1d;
    }     
+
+/****Orange Button******/
+.buttonOrange {
+	border-top: 1px solid #ffbe5d;
+	background: #ffbe5d;
+	background: -webkit-gradient(linear, left top, left bottom, from(#ffbe5d), to(#d07f06));
+	background: -webkit-linear-gradient(top, #ffbe5d, #d07f06);
+	background: -moz-linear-gradient(top, #ffbe5d, #d07f06);
+	background: -ms-linear-gradient(top, #ffbe5d, #d07f06);
+	background: -o-linear-gradient(top, #ffbe5d, #d07f06);
+	padding: 5px 10px;
+	-webkit-border-radius: 8px;
+	-moz-border-radius: 8px;
+	border-radius: 8px;
+	-webkit-box-shadow: rgba(0,0,0,1) 0 1px 0;
+	-moz-box-shadow: rgba(0,0,0,1) 0 1px 0;
+	box-shadow: rgba(0,0,0,1) 0 1px 0;
+	text-shadow: rgba(0,0,0,.4) 0 1px 0;
+	color: white;
+	font-size: 12px;
+	font-family: Arial, Helvetica, sans-serif;
+	text-decoration: none;
+	vertical-align: middle;
+	font-weight: bold;
+   }
+.buttonOrange:hover {
+	border-top-color: #d07f06;
+	background: #d07f06;
+	color: #000;
+	cursor:pointer;
+   }
+.buttonOrange:active {
+   border-top-color: #d07f06;
+   background: #d07f06;
+   } 
    
 /*****Smaller Button*****/
 .smallerButton {

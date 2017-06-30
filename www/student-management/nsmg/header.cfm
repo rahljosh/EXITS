@@ -16,6 +16,8 @@
     <cfparam name="FORM.quickSearchUserID" default="">
     <cfparam name="FORM.quickSearchAutoSuggestHostID" default="">
     <cfparam name="FORM.quickSearchHostID" default="">
+    <cfparam name="FORM.quickSearchAutoSuggestSchoolID" default="">
+    <cfparam name="FORM.quickSearchSchoolID" default="">
     
     <cfparam name="client.alreadySawEmergency" default="0">
 
@@ -108,6 +110,11 @@
 			*/
 			
 		}
+
+		if ( VAL(FORM.quickSearchSchoolID) ) {
+			Location("?curdoc=school_info&schoolid=#FORM.quickSearchSchoolID#", "no");
+		}
+
 	</cfscript>
 
     <cfquery name="get_messages" datasource="#application.dsn#">
@@ -342,7 +349,34 @@
 			minLength: 2	
 			
 		});
-		
+
+		// Quick Search - School Auto Suggest
+		$("#quickSearchAutoSuggestSchoolID").autocomplete({
+														
+			source: function(request, response) {
+				$.ajax({
+					url: "extensions/components/school.cfc?method=remoteLookUpSchool",
+					dataType: "json",
+					data: { 
+						searchString: request.term
+					},
+					success: function(data) {
+						response( $.map( data, function(item) {
+							return {
+								//label: item.DISPLAYNAME,
+								value: item.DISPLAYNAME,
+								valueID: item.SCHOOLID
+							}
+						}));
+					}
+				})
+			},
+			select: function(event, ui) {
+				$("#quickSearchSchoolID").val(ui.item.valueID);
+				$("#quickSearchForm").submit();
+			},
+			minLength: 2	
+		});
 	});	
 </script>
 <Cfif 1 eq 2>

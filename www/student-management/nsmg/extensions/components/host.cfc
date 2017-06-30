@@ -4497,6 +4497,7 @@
                             AND h.with_competitor = 0
                             AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
                             AND (shas.activeApp = 0 OR shas.activeApp IS NULL)
+                            AND h.school_issue = 0
                             THEN 'Not Qualified to Host'
                         
                         WHEN h.isNotQualifiedToHost = 0
@@ -4504,6 +4505,7 @@
                             AND h.with_competitor = 0
                             AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
                             AND (shas.activeApp = 0 OR shas.activeApp IS NULL)
+                            AND h.school_issue = 0
                             THEN 'Decided Not to Host'
                         
                         WHEN h.isNotQualifiedToHost = 0
@@ -4511,6 +4513,7 @@
                             AND h.with_competitor = 0
                             AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
                             AND (shas.activeApp = 0 OR shas.activeApp IS NULL)
+                            AND h.school_issue = 0
                             THEN 'Available to Host'
                         
                         WHEN h.isNotQualifiedToHost = 0
@@ -4518,6 +4521,7 @@
                             AND h.with_competitor = 0
                             AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
                             AND shas.activeApp = 1
+                            AND h.school_issue = 0
                             THEN 'Current Season'
 
                         WHEN h.isNotQualifiedToHost = 0
@@ -4525,6 +4529,7 @@
                             AND h.with_competitor = 0
                             AND h.call_back = 1
                             AND shas.activeApp = 1
+                            AND h.school_issue = 0
                             THEN 'CS - Call Back'
 
                         WHEN h.isNotQualifiedToHost = 0
@@ -4532,6 +4537,7 @@
                             AND h.with_competitor = 0
                             AND h.call_back = 2
                             AND shas.activeApp = 1
+                            AND h.school_issue = 0
                             THEN 'CS - Call Back Next SY'
                         
                         WHEN h.isNotQualifiedToHost = 0
@@ -4539,6 +4545,7 @@
                             AND h.with_competitor = 1
                             AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
                             AND (shas.activeApp = 0 OR shas.activeApp IS NULL)
+                            AND h.school_issue = 0
                             THEN 'With Other Sponsor'
                         
                         WHEN h.call_back = 1
@@ -4549,6 +4556,12 @@
 
                         WHEN h.call_back = 3
                             THEN 'Email Back'
+
+                        WHEN h.school_issue = 1
+                            AND h.isNotQualifiedToHost = 0
+                            AND h.with_competitor = 0
+                            AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
+                            THEN 'Dropped - School Issue'
 
                     END 
                     AS HFstatus
@@ -4658,6 +4671,7 @@
                         AND h.with_competitor = 0
                         AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
                         AND (shas.activeApp = 0 OR shas.activeApp IS NULL)
+                        AND h.school_issue = 0
                     
                     <cfelseif ARGUMENTS.HFstatus EQ "Available to Host">
                         AND h.isHosting = 1
@@ -4665,12 +4679,14 @@
                         AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
                         AND h.with_competitor = 0
                         AND (shas.activeApp = 0 OR shas.activeApp IS NULL)
+                        AND h.school_issue = 0
 
                     <cfelseif ARGUMENTS.HFstatus EQ "Current Season">
                         AND h.isHosting = 1
                         AND h.isNotQualifiedToHost = 0
                         AND h.with_competitor = 0
                         AND shas.activeApp = 1
+                        AND h.school_issue = 0
 
                     <cfelseif ARGUMENTS.HFstatus EQ "With Other Sponsor">
                         AND h.isNotQualifiedToHost = 0
@@ -4678,6 +4694,7 @@
                         AND h.with_competitor = 1
                         AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
                         AND (shas.activeApp = 0 OR shas.activeApp IS NULL)
+                        AND h.school_issue = 0
 
                     <cfelseif ARGUMENTS.HFstatus EQ "Call Back">
                         AND h.call_back = 1
@@ -4687,6 +4704,12 @@
 
                     <cfelseif ARGUMENTS.HFstatus EQ "Email Back">
                         AND h.call_back = 3
+
+                    <cfelseif ARGUMENTS.HFstatus EQ "Dropped - School Issue">
+                        AND h.school_issue = 1
+                        AND h.isNotQualifiedToHost = 0
+                        AND h.with_competitor = 0
+                        AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
 
                     </cfif>
                 </cfif>
