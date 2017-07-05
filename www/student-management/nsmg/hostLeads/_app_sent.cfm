@@ -236,7 +236,7 @@
 					  </div>
 					  <div class="panel-body">
 						The lead has been linked to the host family.<br>
-						The lead status has been updated "Converted to Host"
+						The lead status has been updated to "Converted to Host"
 						<br>
 					  </div>
 					</div>
@@ -294,16 +294,23 @@
 				  }
 				});
 			</script>
-				<div class="panel panel-success">
-				  <div class="panel-heading">
-					<h3 class="panel-title">Success!</h3>
-				  </div>
-				  <div class="panel-body">
-					The lead has been linked to the host family.<br>
-					The lead status has been updated "Converted to Host"
-					<br>
-				  </div>
-				</div>
+			  <div class="row">
+			 	<div class="col-md-8">
+					<div class="panel panel-success">
+					  <div class="panel-heading">
+						<h3 class="panel-title">Success!</h3>
+					  </div>
+					  <div class="panel-body">
+					  <cfoutput>
+					  You lead was added and will show up in 'Initial - Please Contact' when the page is reloaded.
+						</cfoutput>
+						
+						
+						<br>
+					  </div>
+					</div>
+				 </div>
+			  </div>
 											
 			<script language="javascript">
                 // Close Window After 1/5 Seconds

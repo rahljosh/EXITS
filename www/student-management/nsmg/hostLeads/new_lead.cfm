@@ -125,10 +125,7 @@
 	<cfscript>
 		SESSION.FormErrors.clear();
 			// Data Validation - Check required Fields
-		
-			if ( NOT LEN(FORM.father_cell) ) {
-				SESSION.formErrors.Add("father_cell");
-			}    
+		   
 			
 
 			if ( LEN(FORM.email) AND NOT isValid("email", Trim(FORM.email)) ) {
