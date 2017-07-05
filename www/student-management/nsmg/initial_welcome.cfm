@@ -318,17 +318,7 @@
 	function DisplayDIV(d) { document.getElementById(d).style.display = "block"; }
 //-->
 </script>
-<!--- Display Host Lead Pop Up --->
-<cfif CLIENT.displayHostLeadPopUp>
 
-	<script language="javascript">
-		// JQuery ColorBox Modal
-		$(document).ready(function(){ 
-			$.fn.colorbox( {href:'hostLeads/index.cfm?action=needAttention', iframe:true,width:'60%',height:'50%', onLoad: function() { }} );
-		});
-	</script>
-
-</cfif>
 
 <style type="text/css">
   <style type="text/css">
@@ -587,10 +577,10 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                                     <a href="index.cfm?curdoc=secondVisitReports">Second Visit Reports</a>
                                 </td>
                                 <!---  WebEx --->
-                                <cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.publicHS, CLIENT.companyID)>
+                                <!----<cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.publicHS, CLIENT.companyID)>
                                     <td width="22"><img src="pics/icons/webex.png" /></td>
                                     <td><a href="index.cfm?curdoc=calendar/index">WebEx Calendar</a></td>
-                                </cfif>
+                                </cfif>---->
                 			</tr>
                             <tr>
 								<!--- Help Project --->
@@ -613,43 +603,7 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                 <!--- End of Online Reports --->
                 
                 
-                <!--- Incentives --->
-                <div class="rdholder" style="width:100%; float:right;"> 
-                
-                    <div class="rdtop"> 
-                        <span class="rdtitle">Incentives</span> 
-                    </div> <!-- end top --> 
-                    
-                    <div class="rdbox">
-                    
-                    	<!--- ISE --->
-						<cfif listFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG,CLIENT.companyID)>
-                         <!--- There are currently no available bonuses --->
-                            <table width="90%" align="center" cellpadding="4">
-                                <tr>
-                                    <td><img src="pics/icons/bonus.png" /></td>
-                                    <td><a href="uploadedfiles/pdf_docs/ISE/payment/2015-bonus-sheet.pdf" target="_blank">2015 Bonuses</a></td>
-                                </tr>
-                                <!--- <tr>
-                                    <td><img src="pics/icons/bonus2.png" /></td>
-                                    <td><a href="uploadedfiles/pdf_docs/ISE/payment/Fast%20Track%20Placement%20Bonus%20Pay%20Sheet(R).pdf " target="_blank">Fast Track Placement Bonus</a></td>
-                                </tr>
-                                <tr>
-                                    <td width="22"><img src="pics/icons/bonus.png" /></td>
-                                    <td><a href="uploadedfiles/pdf_docs/ISE/payment/On-Time%20Placement%20Bonus%20Pay%20Sheet(R).pdf" target="_blank">On-Time Placement Bonus</a></td>
-                                </tr> --->	
-                            </table>
-                            
-                        <cfelse>
-                            There are currently no available bonuses
-                        </cfif>
-                    </div>
-                    
-                	<div class="rdbottom"></div> <!-- end bottom --> 
-                
-                </div>
-                <!--- End of Incentives --->
-                
+              
                 
                 <!--- New Students --->
                 <div class="rdholder" style="width:100%; float:right;"> 
@@ -709,8 +663,8 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                         		</div> <!-- end top --> 
                         		<div class="rdbox" style="background-color: ##fef3b9;">
                         			<div align="center">
-                                    <strong>CONNECTIVITY TO GYRUS FOR DOS TESTING IS CURRENTLY NOT WORKING<br />GYRUS is looking at this and hopefully this will be updatd shortly.<br /></strong>
-                                                                			Your DOS Certification expires in #daysToExpire# day<cfif daysToExpire gt 1 or daysToExpire lt 1>s</cfif>.  You can re-certify by clicking the link below.<br /><br />
+                                 
+											Your DOS Certification expires in #daysToExpire# day<cfif daysToExpire gt 1 or daysToExpire lt 1>s</cfif>.  You can re-certify by clicking the link below.<br /><br />
                            				<a href="user/index.cfm?uniqueID=#CLIENT.uniqueID#&action=trainCasterLogin" target="_blank" title="Click Here to Take the DOS Test">
                                  			<img src="pics/buttons/DOScertification.png" border="0" title="Click Here to Take the DOS Certification Test" />
                             			</a>
@@ -726,7 +680,7 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                             </div> <!-- end top --> 
                             <div class="rdbox" style="background-color: ##fef3b9;">
                                 <div align="center">
-                                <strong>CONNECTIVITY TO GYRUS FOR DOS TESTING IS CURRENTLY NOT WORKING<br />GYRUS is looking at this and hopefully this will be updatd shortly.<br /></strong>
+                         
                                    Your DOS Certification has not been completed.<br /><br />
                                     <a href="user/index.cfm?uniqueID=#CLIENT.uniqueID#&action=trainCasterLogin" target="_blank" title="Click Here to Take the DOS Test">
                                         <img src="pics/buttons/DOScertification.png" border="0" title="Click Here to Take the DOS Certification Test" />
@@ -765,7 +719,19 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                         <div class="rdbottom"></div> <!-- end bottom --> 
 
                     </cfif>
-                				
+                	<cfif (client.userid eq 1 or client.userid eq 21963 or client.userid eq 11364 or client.userid eq 13799)>
+						  <br><br>
+						  <div class="rdtop"> 
+								<span class="rdtitle">Bonuses</span> 
+							</div> <!-- end top --> 
+
+							<div class="rdbox">
+								<cfinclude template="welcome_includes/adds.cfm">
+							</div>
+
+							<div class="rdbottom"></div> <!-- end bottom --> 
+
+                	</Cfif>		
                 </div>
                 <!--- End of Student Applications / Field Bonuses --->
  
@@ -894,19 +860,14 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                     
                         <table width=95% align="center" cellpadding=6 cellspacng=0>
                         	<tr>
-                            <cfif CLIENT.companyid NEQ 14>
-                            	<td width=50% bgcolor="##F78E1B" colspan="2" align="center"><font color="white">ARRC</td>
-                            </cfif>
+
                                 <td bgcolor="##1f4a79" <cfif client.companyid eq 14> colspan="4" <cfelse> colspan="4"</cfif> align="center"><font color="white">Printable Flyers</td>
                             </tr>
                             <!---_Available for All companies --->
                             <cfif ListFind("1,2,3,4,5,12", CLIENT.companyID) >
                            
                                 <tr>
-                                	<td colspan=2 align="center">
-                                       <a href="http://iseaarc.org/wordpress"> <img src="pics/logos/ARRC_final.jpg" height=60 /></a><Br />
-                                       Click Icon to Vist ARRC
-                                   </td>
+                                	
                                   	<td colspan=2 align="center">
                                       <a href="?curdoc=marketing/index&type=pr">  <img src="marketing/print-2.png" /></a><Br />Click Icon to View Materials
                 					</td>
@@ -1256,7 +1217,7 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                                     <td><a href="index.cfm?curdoc=project_help">H.E.L.P. Community Service Hours</a></td>
                                 </cfif>
                                 <!---  WebEx --->
-                                <cfif APPLICATION.CFC.USER.isOfficeUser() and (CLIENT.companyID LTE 5 or CLIENT.companyID EQ 12 or CLIENT.companyID eq 10)>
+                                <cfif APPLICATION.CFC.USER.isOfficeUser() and (CLIENT.companyID eq 10)>
                                     <td width="22"><img src="pics/icons/webex.png" /></td>
                                     <td><a href="index.cfm?curdoc=calendar/index">WebEx Calendar</a></td>
                                 </cfif>
@@ -1270,11 +1231,12 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                 <!--- End of Online Reports --->
 
                 <!--- Incentives --->
+                <!-----
                 <div class="rdholder" style="width:100%; float:right;"> 
                 
                     <div class="rdtop"> 
                         <span class="rdtitle">Incentives</span> 
-                    </div> <!-- end top --> 
+                    </div> 
                     
                     <div class="rdbox">
 						<cfif CLIENT.companyID lte 5>
@@ -1297,9 +1259,10 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                         </cfif>
                     </div>
                     
-                	<div class="rdbottom"></div> <!-- end bottom --> 
+                	<div class="rdbottom"></div> 
                 
                 </div>
+                ---->
                 <!--- End of Incentives --->
                            
             </div>
