@@ -102,7 +102,8 @@
         	company = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
             AND subofregion = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
             AND active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
-            AND regionname <> 'Office'
+
+            
         ORDER BY 
         	regionName
     </cfquery>
