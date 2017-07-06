@@ -54,6 +54,11 @@
 			} catch(any e) {
 				vErrors = vErrors & "<b>*ISE Departure Payments - " & e.message & ":</b> " & e.detail & "<br/>";	
 			}
+			try {
+			include "isePacificRimPayments.cfm";
+			} catch(any e) {
+				vErrors = vErrors & "<b>*ISE Pacific Rim Payments - " & e.message & ":</b> " & e.detail & "<br/>";	
+			}
 		}
 		
 		// CASE Payments
