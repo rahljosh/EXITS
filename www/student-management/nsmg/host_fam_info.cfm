@@ -936,19 +936,34 @@ div.scroll2 {
                             <p><em>"Yesterday is not ours to recover, but tomorrow is ours to win or lose.<br />
                                 - Lyndon B. Johnson</em></p>
                         
-                        <cfelseif VAL(qGetHostInfo.call_back) AND qGetHostInfo.call_back EQ 1>
+                        <cfelseif VAL(qGetHostInfo.call_back) 
+                            AND qGetHostInfo.call_back EQ 1
+                            AND VAL(qGetHostInfo.isHosting) 
+                            AND NOT VAL(qGetHostInfo.with_competitor)
+                            AND NOT VAL(qGetHostInfo.isNotQualifiedToHost)
+                            AND NOT VAL(qGetHostInfo.school_issue)>
                             <!--- Call Back --->
                             <p style="font-weight: bold">Call Back</p>
                             <p><em>"Patience, persistence and perspiration make an unbeatable combination for success.<br />
                                 - Napoleon Hill"</em></p>
                         
-                        <cfelseif VAL(qGetHostInfo.call_back) AND qGetHostInfo.call_back EQ 2>
+                        <cfelseif VAL(qGetHostInfo.call_back) 
+                            AND qGetHostInfo.call_back EQ 2
+                            AND VAL(qGetHostInfo.isHosting) 
+                            AND NOT VAL(qGetHostInfo.with_competitor)
+                            AND NOT VAL(qGetHostInfo.isNotQualifiedToHost)
+                            AND NOT VAL(qGetHostInfo.school_issue)>
                             <!--- Call Back Next SY --->
                             <p style="font-weight: bold">Call Back Next SY</p>
                             <p><em>"Paralyze resistance with persistence."<br />
                                 - Woody Hayes</em></p>
 
-                        <cfelseif VAL(qGetHostInfo.call_back) AND qGetHostInfo.call_back EQ 3>
+                        <cfelseif VAL(qGetHostInfo.call_back) 
+                            AND qGetHostInfo.call_back EQ 3
+                            AND VAL(qGetHostInfo.isHosting) 
+                            AND NOT VAL(qGetHostInfo.with_competitor)
+                            AND NOT VAL(qGetHostInfo.isNotQualifiedToHost)
+                            AND NOT VAL(qGetHostInfo.school_issue)>
                             <!--- Call Back --->
                             <p style="font-weight: bold">Email Back</p>
                             <p><em>"Patience, persistence and perspiration make an unbeatable combination for success.<br />

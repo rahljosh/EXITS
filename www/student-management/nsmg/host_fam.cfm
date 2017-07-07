@@ -28,8 +28,9 @@
     <cfparam name="stateID" default="" />
     <cfparam name="HFcity" default="" />
     <cfparam name="accepts_double" default="" />
-    <cfparam name="orderby" default="familylastname">
-    <cfparam name="recordsToShow" default="25">
+    <cfparam name="sortBy" default="lastName">
+    <cfparam name="sortOrder" default="ASC">
+    <cfparam name="recordsToShow" default="100">
     
     <cfparam name="URL.regionID" default="0">
     <cfif VAL(URL.regionID)>
@@ -597,8 +598,8 @@
                         <option value="With Other Sponsor" <cfif HFstatus EQ "With Other Sponsor">selected</cfif>>With Other Sponsor</option>
                     </select>
                     
-                    <input type="hidden" name="sortBy" class="selectSortBy" /> 
-                    <input type="hidden" name="sortOrder" class="selectSortOrder" />     
+                    <input type="hidden" name="sortBy" class="selectSortBy" value="#sortBy#" /> 
+                    <input type="hidden" name="sortOrder" class="selectSortOrder" value="#sortOrder#" />     
                 </td>
                 <td>
                     State<br />

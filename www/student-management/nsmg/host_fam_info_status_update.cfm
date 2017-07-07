@@ -268,7 +268,10 @@
             call_back = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.call_back)#">,
             call_back_updated = <cfqueryparam cfsqltype="cf_sql_date" value="#NOW()#">,
             call_back_updated_by = #CLIENT.userid#,
-            school_issue = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
+            school_issue = <cfqueryparam cfsqltype="cf_sql_integer" value="0">,
+            isNotQualifiedToHost = 0,
+            isHosting = 1,
+            with_competitor = 0
         WHERE hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#qGetHostInfo.hostID#">
     </cfquery>
 
