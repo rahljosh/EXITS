@@ -27,7 +27,7 @@ SELECT distinct
 	s.programID,
 	0,
 	s.hostID,
-	39,
+	40,
 	'payment',
 	(CASE
 		when (cl.countryname in ('Thailand','Vietnam','Korea North','Korea South','Taiwan','China') and s.ayporientation = 21) then 350
@@ -56,5 +56,5 @@ AND (s.programID = 443 or s.programid = 442)
 AND hh.dateplaced between '2017-07-06' and '2017-07-19'
 AND hh.isactive = 1
 AND hh.compliance_review IS NOT NULL
-AND NOT EXISTS (select ID from smg_users_payments pmt WHERE s.studentID = pmt.studentID AND paymenttype = 39)
+AND NOT EXISTS (select ID from smg_users_payments pmt WHERE s.studentID = pmt.studentID AND paymenttype = 40)
 </cfquery>
