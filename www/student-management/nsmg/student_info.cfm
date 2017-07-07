@@ -30,7 +30,8 @@
         // Set currentDate
         currentDate = now();
         
-        vAllowedDivisionChangeList = "8731,8743,12431,16718,12389,17993,16552,17972,18061,24206";  // Bill, Bob, Gary, Tal and Merri, Jan McInvale, Steve S, john   
+        vAllowedDivisionChangeList = "8731,8743,12431,16718,12389,17993,16552,17972,18061,24206,25584";  
+        // Bill, Bob, Gary, Tal and Merri, Jan McInvale, Steve S, john, joey   
         
         // Get Student Information 
         qGetStudentInfo = APPLICATION.CFC.STUDENT.getStudentByID(studentID=VAL(studentID));
@@ -1521,8 +1522,8 @@
             <br />
         </td>
 
-        <td width="2%" valign="top">
-            &nbsp;
+        <td width="2%" valign="top">&nbsp;
+            
         </td>
 
         <td width="49%" valign="top">
