@@ -25,9 +25,14 @@
     <cfelse>
     	 <cfparam name="URL.regionID" default="#CLIENT.regionID#">
     </cfif>
+	
+ 	 <cfscript>
+ 	 	vCurrentSeason = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID;
+ 	 </cfscript>
+  	 
   
     <cfparam name="URL.hostID" default="0">
-    <cfparam name="URL.seasonID" default="0"> 
+    <cfparam name="URL.seasonID" default="#vCurrentSeason#"> 
     <cfparam name="URL.active_rep" default="2">  
     <cfparam name="URL.currently_hosting" default="0">  
     <cfparam name="URL.ny_office" default="2">   
@@ -184,6 +189,7 @@
 					<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=#URL.status#&seasonID=#url.seasonid#&active_rep=#url.active_rep#&ny_office=#URL.ny_office#&currently_hosting=0" <cfif URL.currently_hosting EQ 0>selected</cfif>>All</option>
 					<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=#URL.status#&seasonID=#url.seasonid#&active_rep=#url.active_rep#&ny_office=#URL.ny_office#&currently_hosting=1" <cfif URL.currently_hosting EQ 1>selected</cfif>>Yes</option>
 					<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=#URL.status#&seasonID=#url.seasonid#&active_rep=#url.active_rep#&ny_office=#URL.ny_office#&currently_hosting=2" <cfif URL.currently_hosting EQ 2>selected</cfif>>No</option>
+					<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=#URL.status#&seasonID=#url.seasonid#&active_rep=#url.active_rep#&ny_office=#URL.ny_office#&currently_hosting=3" <cfif URL.currently_hosting EQ 3>selected</cfif>>Used for Relocation</option>
 				</select>  
 
 			</label>
@@ -212,6 +218,7 @@
 		<tr>
 		<th align="left">Since</th>
 		<th align="left">Host Family</th>
+		<th align="left"></Th>
 		<th align="left">City, State</th>
 		<th align="left">Contact</th>
 		<th align="left">Region</th>
@@ -248,6 +255,16 @@
 			<mark> <em>Hosting #qGetHostApplications.totalNumberCurrentStudents# student<cfif val(qGetHostApplications.totalNumberCurrentStudents) gt 1>s</cfif></em></mark>
 			 </cfif>
 			 </td>
+			<td>
+				<a href="hostApplication/app-notes.cfm?hostAppID=#qGetHostApplications.hostAppSeasonID#" class="jQueryModal" title="Open Application">
+				<cfif qGetHostApplications.appNotes is ''>
+					<button type="button" class="btn btn-default btn-sm"><i class="fa fa-comments-o" aria-hidden="true"></i> Add Notes</button>
+				<cfelse>
+					<button type="button" class="btn btn-warning btn-sm"><i class="fa fa-comments-o" aria-hidden="true"></i> See Notes</button>
+				</cfif>
+				
+				</a>
+			</td> 
 			<td>#qGetHostApplications.hostCity#, #qGetHostApplications.hostState#</td>
 			<td>#qGetHostApplications.hostEmail#<br>#qGetHostApplications.host_phone#</td>
 			<td>#qGetHostApplications.regionName#</td>
@@ -266,7 +283,7 @@
 					<button type="button" class="btn btn-success btn-sm"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> Review</button>
 				</a>
 			</cfif>
-
+			<!----
 			<cfif CLIENT.userType LTE 4 and url.status lte 3> 
 		 		<a href="hostApplication/viewPDF.cfm?hostID=#qGetHostApplications.hostID#&pdf&reportType=office&seasonID=#URL.seasonID#" class="jQueryModal">
 					<button type="button" class="btn btn-warning btn-sm"><i class="fa fa-print" aria-hidden="true"></i> Confidential </button>
@@ -276,7 +293,8 @@
 				</a>
 			 	
 			</cfif>
-			<cfif url.status gt 3> 
+			---->
+			<cfif url.status gt 2> 
 				<a href="hostApplication/host-status-change.cfm?hostID=#qGetHostApplications.hostID#&pdf&reportType=agent&seasonID=#URL.seasonID#" class="jQueryModal">
 						<button type="button" class="btn btn-danger btn-sm"><i class="fa fa-thumbs-o-down" aria-hidden="true"></i> Not Hosting</button>
 				</a>
