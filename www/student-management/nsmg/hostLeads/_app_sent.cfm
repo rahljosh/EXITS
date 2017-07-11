@@ -283,6 +283,7 @@
 						 hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(FORM.hostID)#">
 			</cfquery>
 		</cfif>
+			
 				<script type="text/javascript" language="JavaScript">
 			 	<cfoutput>
 				  var #toScript(FORM.hostid, "hostID")#;
@@ -290,7 +291,7 @@
 	
 			  $(function() {
 				    if ('app' !== $('body').attr('id')) {
-					window.top.location.href = '../?curdoc=host_fam_info&hostid='+hostID;
+					window.open = ('../?curdoc=host_fam_info&hostid='+hostID+'','_blank');
 				  }
 				});
 			</script>
