@@ -283,7 +283,9 @@
 					if ( LEN(stReturnMessage.formErrors) ) {
 						SESSION.formErrors.Add(stReturnMessage.formErrors);	
 					}
-					location("#CGI.SCRIPT_NAME#?curdoc=hostApplication/listOfApps&status=#qGetHostInfo.applicationStatusID#", "no");
+					
+					vCurrentSeason = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID;
+					location("#CGI.SCRIPT_NAME#?curdoc=hostApplication/listOfApps&status=#qGetHostInfo.applicationStatusID#&seasonid=#vCurrentSeason#", "no");
 				} else {
 					location("#CGI.SCRIPT_NAME#?curdoc=hostApplication/toDoList&hostID=#qGetHostInfo.hostID#", "no");	
 				}
