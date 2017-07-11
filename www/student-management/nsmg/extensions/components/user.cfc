@@ -3727,9 +3727,7 @@
                     AND	(uar.usertype IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userTypeID#" list="yes"> ))
 									</cfif>
 
-									<cfif CLIENT.companyID NEQ 13>
-										AND sup.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(vCurrentSeasonID)#">
-									</cfif>
+									
                     
                 ORDER BY 
                     u.lastName,
