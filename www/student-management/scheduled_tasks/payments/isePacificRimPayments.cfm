@@ -53,7 +53,7 @@ INNER JOIN smg_hosthistory hh on hh.hostid = s.hostid
 INNER JOIN smg_countrylist cl on cl.countryid = s.countryresident
 WHERE s.companyid in (1,2,3,4,5,12)
 AND (s.programID = 443 or s.programid = 442)
-AND hh.dateplaced between '2017-07-06' and '2017-07-19'
+AND hh.dateplaced between '2017-07-06' and '2017-07-19' AND hh.dateCreated  between '2017-07-06' and '2017-07-19'
 AND hh.isactive = 1
 AND hh.compliance_review IS NOT NULL
 AND NOT EXISTS (select ID from smg_users_payments pmt WHERE s.studentID = pmt.studentID AND paymenttype = 40)
