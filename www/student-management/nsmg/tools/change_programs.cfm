@@ -29,7 +29,7 @@
 <cfquery name="student_app_program_types" datasource="mysql">
 	SELECT app_programid, app_program 
 	FROM smg_student_app_programs
-	WHERE  companyid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10,12,13" list="yes">)
+	WHERE  companyid IN (<cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,5,10,12,13,15,16" list="yes">)
     and isActive = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
 	ORDER BY app_program
 </cfquery>
