@@ -262,7 +262,7 @@
             
                <!--- Host Leads - ISE Only --->
 				<cfif ListFind(APPLICATION.SETTINGS.COMPANYLIST.ISESMG, CLIENT.companyID) AND ListFind("5,6,7", CLIENT.userType)>
-					<li><a href="index.cfm?curdoc=hostLeads/index">Host Family Leads</a></li>           
+					<li><a href="index.cfm?curdoc=hostLeads/index">Host Leads</a></li>           
 				</cfif>
               
                 
