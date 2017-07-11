@@ -124,49 +124,39 @@ $(".paging a").click(function() {
 });</script>
 <cfoutput>
 <cfif client.companyshort is 'ISE'>
+<cfdirectory directory="C:\websites\student-management\nsmg\uploadedfiles\pdf_docs\ISE\addsFlyers" name="files">
+<cfdirectory directory="C:\websites\student-management\nsmg\uploadedfiles\pdf_docs\ISE\addsImg" name="images">	
+
 <div class="main_view">
     <div class="window">
         <div class="image_reel">
-        <!---<a href="slideshow/pdfs/ISE/Bonus-Sheet.pdf" rel="1" target="_new"> <img src="slideshow/images/ISE/BonusSheet.png" alt="" /></a>---->
-        	<a href="http://iseaarc.org/wordpress/wp-login.php" rel="1" target="_new"> <img src="slideshow/images/ISE/arrcExits.png" alt="" /></a>
-            <a href="uploadedFiles/Incentive_trip/incentiveTrip_12.pdf" rel="2" target="_new"> <img src="slideshow/images/ISE/dublin.png" alt="" /></a>
-            <a href="slideshow/pdfs/ISE/PreAypBonus.pdf" rel="3" target="_new"> <img src="slideshow/images/ISE/slide_1.jpg" alt="" /></a>
-            <a href="slideshow/images/ISE/BonusSheet.png" rel="4" target="_new"> <img src="slideshow/images/ISE/BonusSheet.png" alt"" /></a>
-            <a href="slideshow/images/ISE/WinterBonus.png" rel="5" target="_new"> <img src="slideshow/images/ISE/WinterBonus.png" alt"" /></a>
-            
-            
+			<cfloop query="#images#">
+				<a href="uploadedfiles/pdf_docs/ISE/addsFlyers/#images.currentrow#.pdf" rel="#images.currentrow#" target="_new"> <img src="uploadedfiles/pdf_docs/ISE/addsImg/#name#" alt="" /></a>
+				</cfloop>
         </div>
     </div>
     <div class="paging">
-   		<a href="http://iseaarc.org/wordpress/wp-login.php" rel="1">1</a>
-         <a href="uploadedFiles/Incentive_trip/incentiveTrip_12.pdf" rel="2">2</a>
-        <a href="slideshow/pdfs/ISE/Bonus-Sheet.pdf" rel="3">3</a>
-        <a href="slideshow/images/ISE/BonusSheet.png" rel="4">4</a>
-        <a href="slideshow/images/ISE/WinterBonus.png" rel="5">5</a>
-    	 <!---<a href="slideshow/pdfs/ISE/IncentiveTrip.pdf" rel="2">2</a>--->
-        
-
-         
+   		<cfloop query="#files#">
+       		 <a href="uploadedfiles/pdf_docs/ISE/addsFlyers/#name#" rel="#files.currentrow#">#files.currentrow#</a>
+		</cfloop>
     </div>
 </div>
 <cfelse>
+
+<cfdirectory directory="C:\websites\student-management\nsmg\uploadedfiles\pdf_docs\CASE\addsFlyers" name="files">
+<cfdirectory directory="C:\websites\student-management\nsmg\uploadedfiles\pdf_docs\CASE\addsImg" name="images">	
 <div class="main_view">
     <div class="window">
         <div class="image_reel">
-        <a href="slideshow/pdfs/CASE/PreAypBonus-2015.pdf" rel="1" target="_new"> <img src="slideshow/images/CASE/casePreAyp-EXITSicon.png" alt="" /></a>
-       <a href="slideshow/pdfs/CASE/CASEincentive(ireland).pdf" rel="2" target="_new"><img src="slideshow/images/CASE/dublin-ireland.png" alt="" /></a>
-       <a href="slideshow/pdfs/CASE/Bonus-Program-Sheet.pdf" rel="3" target="_new"><img src="slideshow/images/CASE/bonus-program.png" alt="" /></a> 
-       
-       <!----<a href="uploadedFiles/Incentive_trip/incentiveTrip_10.pdf" rel="2" target="_new"> <img src="slideshow/images/CASE/dublin.png" alt="" /></a> ---->
+			<cfloop query="#images#">
+				<a href="uploadedfiles/pdf_docs/CASE/addsFlyers/#images.currentrow#.pdf" rel="#images.currentrow#" target="_new"> <img src="uploadedfiles/pdf_docs/CASE/addsImg/#name#" alt="" /></a>
+				</cfloop>
         </div>
     </div>
     <div class="paging">
-    	 <a href="slideshow/pdfs/CASE/PreAypBonus-2015.pdff" rel="1">1</a>
-   		 <a href="slideshow/pdfs/CASE/CASEincentive(ireland).pdff" rel="2">2</a>
-		 <a href="slideshow/pdfs/CASE/Bonus-Program-Sheet.pdf" rel="3">3</a> 
-		 <!----<a href="slideshow/pdfs/CASE/JumpStart-dublin.pdf" rel="3">3</a>---->
-       <!---- <a href="uploadedFiles/Incentive_trip/incentiveTrip_10.pdf" rel="4">4</a>---->
-        
+   		<cfloop query="#files#">
+       		 <a href="uploadedfiles/pdf_docs/CASE/addsFlyers/#name#" rel="#files.currentrow#">#files.currentrow#</a>
+		</cfloop>
     </div>
 </div>
 
