@@ -53,7 +53,12 @@
 
 
 	<cfset URL.hostAppID = #FORM.hostAppID#>
-	<cfif val(form.existing)>
+	<cfquery name="checkIfNote" datasource="#APPLICATION.dsn#">
+		select * 
+		from smg_notes
+		where hostAppID = #URL.hostAppID# 
+	</cfquery>
+	<cfif checkIfNote.recordcount gt 0>
 	<cfquery name="updateHostInfo" datasource="#APPLICATION.dsn#">
 		update smg_notes
 		set appNotes = concat(IFNULL(appNotes,''),"#form.notes# <br> #client.name# - #DateFormat(now(), 'mmmm d, yyyy')#<hr>")
@@ -63,7 +68,7 @@
 		<cfquery name="updateHostInfo" datasource="#APPLICATION.dsn#">
 		insert into smg_notes(appNotes, hostAppID) 
 		values("#form.notes# <br> #client.name# - #DateFormat(now(), 'mmmm d, yyyy')#<hr>",#URL.hostAppID#)
-	</cfquery>
+		</cfquery>
 	</cfif>
 </cfif>
 <cfquery name="notes" datasource="MySQL">
