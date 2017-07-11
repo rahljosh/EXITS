@@ -51,9 +51,10 @@
                     	id = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.categoryID#">
                 </cfif>
 
-				<cfif VAL(ARGUMENTS.userTypeID)>
+				<cfif VAL(ARGUMENTS.userTypeID) GT 4>
                 	AND	
                     	userType_ID >= <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.userTypeID#">
+                            
                 </cfif>
                 AND 
                 	 companyAccess like "%#client.companyID#%"
