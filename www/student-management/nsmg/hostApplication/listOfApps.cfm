@@ -199,9 +199,9 @@
 		<h1>NY Office Rep</h1>
 			<label class="select ">
 			<select name="ny_office" id="ny_office"  onChange="top.location.href=this.options[this.selectedIndex].value;">
-				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=#URL.status#&seasonID=#url.seasonid#&active_rep=#url.active_rep#&ny_office=0" <cfif URL.ny_office EQ 2>selected</cfif>>All</option>
-				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=#URL.status#&seasonID=#url.seasonid#&active_rep=#url.active_rep#&ny_office=1" <cfif URL.ny_office EQ 1>selected</cfif>>Yes</option>
-				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=#URL.status#&seasonID=#url.seasonid#&active_rep=#url.active_rep#&ny_office=2" <cfif URL.ny_office EQ 0>selected</cfif>>No</option>
+				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=#URL.status#&seasonID=#url.seasonid#&active_rep=#url.active_rep#&ny_office=0&currently_hosting=#URL.currently_hosting#" <cfif URL.ny_office EQ 2>selected</cfif>>All</option>
+				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=#URL.status#&seasonID=#url.seasonid#&active_rep=#url.active_rep#&ny_office=1&currently_hosting=#URL.currently_hosting#" <cfif URL.ny_office EQ 1>selected</cfif>>Yes</option>
+				<option value="?curdoc=hostApplication/listOfApps&regionid=#URL.regionID#&status=#URL.status#&seasonID=#url.seasonid#&active_rep=#url.active_rep#&ny_office=2&currently_hosting=#URL.currently_hosting#" <cfif URL.ny_office EQ 0>selected</cfif>>No</option>
 			</select>    
 			</label>
 		</section>
@@ -278,7 +278,7 @@
 				<button type="button" class="btn btn-primary btn-sm"><i class="fa fa-folder-open-o" aria-hidden="true"></i> Open</button>
 			</a>
 
-			<cfif url.status lt 8>
+			<cfif url.status lte 8>
 				<a href="index.cfm?curdoc=hostApplication/toDoList&hostID=#qGetHostApplications.hostID#" title="View Details">
 					<button type="button" class="btn btn-success btn-sm"><i class="fa fa-thumbs-o-up" aria-hidden="true"></i> Review</button>
 				</a>
