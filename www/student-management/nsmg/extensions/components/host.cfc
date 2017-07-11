@@ -929,6 +929,12 @@
                     updatedBy = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(CLIENT.userID)#">
                 WHERE ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.ID)#">
             </cfquery>
+             <cfquery datasource="#APPLICATION.DSN#">
+                UPDATE smg_notes
+                SET 
+                    appNotes = ''
+                WHERE hostAppID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.ID)#">
+            </cfquery>
         <cfelse>
         	<cfquery datasource="#APPLICATION.DSN#">
             	INSERT INTO smg_host_app_season (
@@ -1367,11 +1373,28 @@
                             	smg_programs on smg_programs.programid = smg_students.programid
                             WHERE
                                 smg_students.hostID = h.hostID
-                            AND
-                                smg_programs.seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
+
+                           	AND
+                                smg_programs.seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">  
                            	AND
                            		canceldate is NULL
                         ) as totalNumberCurrentStudents,
+                        (
+                            SELECT 
+                                COUNT(hostid) as totalCount
+                            FROM 
+                                smg_students 
+                            LEFT JOIN 
+                            	smg_programs on smg_programs.programid = smg_students.programid
+                            WHERE
+                                smg_students.hostID = h.hostID
+
+                           	AND
+                                smg_programs.seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">  
+                           	AND
+                           		canceldate is NULL
+                        ) as totalNumberPreviousStudents,
+                        
                         <!--- Host Season-based approval status --->
                         smg_host_app_season.applicationStatusID,
                         smg_host_app_season.repNotes,
@@ -1379,7 +1402,8 @@
                         smg_host_app_season.dateStarted,
                         smg_host_app_season.dateSubmitted,
                         smg_host_app_season.dateUpdated,
-                        smg_host_app_season.ID AS hostAppSeasonID                      
+                        smg_host_app_season.ID AS hostAppSeasonID,   
+                        smg_notes.appNotes                  
                     FROM 
                         smg_hosts h
                   	<!--- Host Season-based approval status --->
@@ -1410,6 +1434,8 @@
                     <!--- Company/Program Manager Info --->
                     LEFT OUTER JOIN
                     	smg_companies c ON c.companyID = h.companyID
+                    LEFT OUTER JOIN 
+                    	smg_notes on smg_notes.hostAppID = smg_host_app_season.ID
                     WHERE
                         1 = 1 
                     <!----Show only assigned to an Active Rep---->
@@ -1503,7 +1529,7 @@
                 LEFT OUTER JOIN
                     smg_users rm ON rm.userID = regionalManagerID
                              
-             	<Cfif ARGUMENTS.currently_hosting eq 1>
+             	<Cfif (ARGUMENTS.currently_hosting eq 1 OR ARGUMENTS.currently_hosting eq 3)>
                    	WHERE 
                    		totalNumberCurrentStudents > 0
 				<Cfelseif ARGUMENTS.currently_hosting eq 2>
@@ -4454,9 +4480,9 @@
         <cfargument name="stateID" type="string" default="" hint="stateID is not required">
         <cfargument name="HFcity" type="string" default="" hint="HFcity is not required">
         <cfargument name="accepts_double" type="string" default="" hint="double_placement is not required">
-        <cfargument name="sortBy" type="string" default="lastName" hint="sortBy is not required">
-        <cfargument name="sortOrder" type="string" default="ASC" hint="sortOrder is not required">
-        <cfargument name="pageSize" type="numeric" default="100" hint="Page number is not required">
+        <cfargument name="sortBy" type="string" default="dateCreated" hint="sortBy is not required">
+        <cfargument name="sortOrder" type="string" default="DESC" hint="sortOrder is not required">
+        <cfargument name="pageSize" type="numeric" default="30" hint="Page number is not required">
 
         <cfscript>
             vCurrentSeason = APPLICATION.CFC.LOOKUPTABLES.getCurrentPaperworkSeason().seasonID;
@@ -4539,14 +4565,6 @@
                             AND shas.activeApp = 1
                             AND h.school_issue = 0
                             THEN 'CS - Call Back Next SY'
-
-                        WHEN h.isNotQualifiedToHost = 0
-                            AND h.isHosting = 1
-                            AND h.with_competitor = 0
-                            AND h.call_back = 3
-                            AND shas.activeApp = 1
-                            AND h.school_issue = 0
-                            THEN 'CS - Email Back'
                         
                         WHEN h.isNotQualifiedToHost = 0
                             AND h.isHosting = 0
@@ -4556,28 +4574,13 @@
                             AND h.school_issue = 0
                             THEN 'With Other Sponsor'
                         
-                        WHEN h.isNotQualifiedToHost = 0
-                            AND h.isHosting = 1
-                            AND h.with_competitor = 0
-                            AND h.call_back = 1
-                            AND (shas.activeApp = 0 OR shas.activeApp IS NULL)
-                            AND h.school_issue = 0
+                        WHEN h.call_back = 1
                             THEN 'Call Back'
                         
-                        WHEN h.isNotQualifiedToHost = 0
-                            AND h.isHosting = 1
-                            AND h.with_competitor = 0
-                            AND h.call_back = 2
-                            AND (shas.activeApp = 0 OR shas.activeApp IS NULL)
-                            AND h.school_issue = 0
+                        WHEN h.call_back = 2
                             THEN 'Call Back Next SY'
 
-                        WHEN h.isNotQualifiedToHost = 0
-                            AND h.isHosting = 1
-                            AND h.with_competitor = 0
-                            AND h.call_back = 3
-                            AND (shas.activeApp = 0 OR shas.activeApp IS NULL)
-                            AND h.school_issue = 0
+                        WHEN h.call_back = 3
                             THEN 'Email Back'
 
                         WHEN h.school_issue = 1
@@ -4720,25 +4723,13 @@
                         AND h.school_issue = 0
 
                     <cfelseif ARGUMENTS.HFstatus EQ "Call Back">
-                        AND h.isNotQualifiedToHost = 0
-                        AND h.isHosting = 1
-                        AND h.with_competitor = 0
                         AND h.call_back = 1
-                        AND h.school_issue = 0
 
                     <cfelseif ARGUMENTS.HFstatus EQ "Call Back Next SY">
-                        AND h.isNotQualifiedToHost = 0
-                        AND h.isHosting = 1
-                        AND h.with_competitor = 0
                         AND h.call_back = 2
-                        AND h.school_issue = 0
 
                     <cfelseif ARGUMENTS.HFstatus EQ "Email Back">
-                        AND h.isNotQualifiedToHost = 0
-                        AND h.isHosting = 1
-                        AND h.with_competitor = 0
                         AND h.call_back = 3
-                        AND h.school_issue = 0
 
                     <cfelseif ARGUMENTS.HFstatus EQ "Dropped - School Issue">
                         AND h.school_issue = 1
@@ -4779,9 +4770,7 @@
                     </cfcase>
     
                     <cfcase value="lastName">
-                        h.familylastname #ARGUMENTS.sortOrder#,
-                        h.fatherfirstname #ARGUMENTS.sortOrder#,
-                        h.motherFirstName #ARGUMENTS.sortOrder#
+                        h.familylastname #ARGUMENTS.sortOrder#
                     </cfcase>
     
                     <cfcase value="father">
@@ -5084,7 +5073,6 @@
                             AND h.with_competitor = 0
                             AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
                             AND (shas.activeApp = 0 OR shas.activeApp IS NULL)
-                            AND h.school_issue = 0
                             THEN 'Not Qualified to Host'
                         
                         WHEN h.isNotQualifiedToHost = 0
@@ -5092,7 +5080,6 @@
                             AND h.with_competitor = 0
                             AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
                             AND (shas.activeApp = 0 OR shas.activeApp IS NULL)
-                            AND h.school_issue = 0
                             THEN 'Decided Not to Host'
                         
                         WHEN h.isNotQualifiedToHost = 0
@@ -5100,7 +5087,6 @@
                             AND h.with_competitor = 0
                             AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
                             AND (shas.activeApp = 0 OR shas.activeApp IS NULL)
-                            AND h.school_issue = 0
                             THEN 'Available to Host'
                         
                         WHEN h.isNotQualifiedToHost = 0
@@ -5108,7 +5094,6 @@
                             AND h.with_competitor = 0
                             AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
                             AND shas.activeApp = 1
-                            AND h.school_issue = 0
                             THEN 'Current Season'
 
                         WHEN h.isNotQualifiedToHost = 0
@@ -5116,7 +5101,6 @@
                             AND h.with_competitor = 0
                             AND h.call_back = 1
                             AND shas.activeApp = 1
-                            AND h.school_issue = 0
                             THEN 'CS - Call Back'
 
                         WHEN h.isNotQualifiedToHost = 0
@@ -5124,54 +5108,23 @@
                             AND h.with_competitor = 0
                             AND h.call_back = 2
                             AND shas.activeApp = 1
-                            AND h.school_issue = 0
                             THEN 'CS - Call Back Next SY'
-
-                        WHEN h.isNotQualifiedToHost = 0
-                            AND h.isHosting = 1
-                            AND h.with_competitor = 0
-                            AND h.call_back = 3
-                            AND shas.activeApp = 1
-                            AND h.school_issue = 0
-                            THEN 'CS - Email Back'
                         
                         WHEN h.isNotQualifiedToHost = 0
                             AND h.isHosting = 0
                             AND h.with_competitor = 1
                             AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
                             AND (shas.activeApp = 0 OR shas.activeApp IS NULL)
-                            AND h.school_issue = 0
                             THEN 'With Other Sponsor'
                         
-                        WHEN h.isNotQualifiedToHost = 0
-                            AND h.isHosting = 1
-                            AND h.with_competitor = 0
-                            AND h.call_back = 1
-                            AND (shas.activeApp = 0 OR shas.activeApp IS NULL)
-                            AND h.school_issue = 0
+                        WHEN h.call_back = 1
                             THEN 'Call Back'
                         
-                        WHEN h.isNotQualifiedToHost = 0
-                            AND h.isHosting = 1
-                            AND h.with_competitor = 0
-                            AND h.call_back = 2
-                            AND (shas.activeApp = 0 OR shas.activeApp IS NULL)
-                            AND h.school_issue = 0
+                        WHEN h.call_back = 2
                             THEN 'Call Back Next SY'
 
-                        WHEN h.isNotQualifiedToHost = 0
-                            AND h.isHosting = 1
-                            AND h.with_competitor = 0
-                            AND h.call_back = 3
-                            AND (shas.activeApp = 0 OR shas.activeApp IS NULL)
-                            AND h.school_issue = 0
+                        WHEN h.call_back = 3
                             THEN 'Email Back'
-
-                        WHEN h.school_issue = 1
-                            AND h.isNotQualifiedToHost = 0
-                            AND h.with_competitor = 0
-                            AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
-                            THEN 'Dropped - School Issue'
 
                     END 
                     AS HFstatus
@@ -5264,7 +5217,6 @@
                         AND h.with_competitor = 0
                         AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
                         AND (shas.activeApp = 0 OR shas.activeApp IS NULL)
-                        AND h.school_issue = 0
                     
                     <cfelseif ARGUMENTS.HFstatus EQ "Available to Host">
                         AND h.isHosting = 1
@@ -5272,14 +5224,12 @@
                         AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
                         AND h.with_competitor = 0
                         AND (shas.activeApp = 0 OR shas.activeApp IS NULL)
-                        AND h.school_issue = 0
 
                     <cfelseif ARGUMENTS.HFstatus EQ "Current Season">
                         AND h.isHosting = 1
                         AND h.isNotQualifiedToHost = 0
                         AND h.with_competitor = 0
                         AND shas.activeApp = 1
-                        AND h.school_issue = 0
 
                     <cfelseif ARGUMENTS.HFstatus EQ "With Other Sponsor">
                         AND h.isNotQualifiedToHost = 0
@@ -5287,34 +5237,15 @@
                         AND h.with_competitor = 1
                         AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
                         AND (shas.activeApp = 0 OR shas.activeApp IS NULL)
-                        AND h.school_issue = 0
 
                     <cfelseif ARGUMENTS.HFstatus EQ "Call Back">
-                        AND h.isNotQualifiedToHost = 0
-                        AND h.isHosting = 1
-                        AND h.with_competitor = 0
                         AND h.call_back = 1
-                        AND h.school_issue = 0
 
                     <cfelseif ARGUMENTS.HFstatus EQ "Call Back Next SY">
-                        AND h.isNotQualifiedToHost = 0
-                        AND h.isHosting = 1
-                        AND h.with_competitor = 0
                         AND h.call_back = 2
-                        AND h.school_issue = 0
 
                     <cfelseif ARGUMENTS.HFstatus EQ "Email Back">
-                        AND h.isNotQualifiedToHost = 0
-                        AND h.isHosting = 1
-                        AND h.with_competitor = 0
                         AND h.call_back = 3
-                        AND h.school_issue = 0
-
-                    <cfelseif ARGUMENTS.HFstatus EQ "Dropped - School Issue">
-                        AND h.school_issue = 1
-                        AND h.isNotQualifiedToHost = 0
-                        AND h.with_competitor = 0
-                        AND (h.call_back = '' OR h.call_back = 0 OR h.call_back IS NULL)
 
                     </cfif>
                 </cfif>
