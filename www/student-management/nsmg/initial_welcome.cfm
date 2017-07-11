@@ -455,7 +455,7 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                 
                     <div class="rdtop"> 
                         <span class="rdtitle">
-                        	Host  Applications 
+                        	Host Family Pipeline 
                             <span style="float:right; margin-right:5px;">
                                 <font size="-1">SEASON: </font>
                                 <select name="seasonID" id="seasonID" onchange="reloadWithSelectedSeason()">
@@ -522,10 +522,7 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                         <div class="rdtopTab" style="width: 170px; float: left;">
                         <span class="rdtitleTab" onmouseover="HideDIV('receivedStatus');DisplayDIV('missingDocs')" style="cursor:pointer;">Missing Placement Doc</a></span></div><!-- end top -->
                             
-                          <div class="rdtopTab" style="width: 240px; float: left;">
-                            <span class="rdtitleTab" onmouseover="HideDIV('missingDocs');DisplayDIV('receivedStatus')"  style="cursor:pointer;">Received/Missing Host Application</span>  
-                                
-                        </div><!-- end top -->
+                         <!-- end top -->
                             
                         </div>
                         <div class="clearfix"></div>
@@ -538,14 +535,7 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                                 <cfinclude template="reports/welcomePageMissingPlacementDocs.cfm">
                             </span>
                         </div>
-                    <!---Recieived Students---->
-                    <div id="receivedStatus" class="mybox" style="display:none;":>
-                        <span class="MOtext" style="background-color: ##E6F2D5;">
                         
-                      			<cfinclude template="reports/welcomePageHostReceivedStatus.cfm">  
-                      
-                       	</span>
-                    </div>
                 </div>
                    
                 	<div class="rdbottom"></div> <!-- end bottom --> 
