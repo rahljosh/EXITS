@@ -930,9 +930,8 @@
                 WHERE ID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.ID)#">
             </cfquery>
              <cfquery datasource="#APPLICATION.DSN#">
-                UPDATE smg_notes
-                SET 
-                    appNotes = ''
+               delete from
+                    smg_notes 
                 WHERE hostAppID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.ID)#">
             </cfquery>
         <cfelse>
@@ -1214,7 +1213,7 @@
         <cfargument name="active_rep" default="" hint="active_rep is not required">
         <cfargument name="ny_office" default="" hint="ny_office is not required">
       	<cfargument name="currently_hosting" default="2" hint="currently_hosting is not required">
-      
+      	<cfset vPreviousSeason = #ARGUMENTS.seasonID# - 1>
         <cfquery 
 
 			name="qGetApplicationList" 
@@ -1388,13 +1387,23 @@
                             	smg_programs on smg_programs.programid = smg_students.programid
                             WHERE
                                 smg_students.hostID = h.hostID
-
-                           	AND
-                                smg_programs.seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">  
+                            AND
+                                smg_programs.seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#vPreviousSeason#">  
                            	AND
                            		canceldate is NULL
-                        ) as totalNumberPreviousStudents,
-                        
+                        ) as totalNumberPrevousAppStudents,
+                         (
+                            SELECT 
+                                COUNT(hostid) as totalCount
+                            FROM 
+                                smg_host_app_season 
+                       
+                            WHERE
+                                smg_host_app_season.hostID = h.hostID
+							AND 
+                          		smg_host_app_season.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#vPreviousSeason#">  
+                           
+                        ) as PreviousHostAppSeason,
                         <!--- Host Season-based approval status --->
                         smg_host_app_season.applicationStatusID,
                         smg_host_app_season.repNotes,
@@ -1529,12 +1538,15 @@
                 LEFT OUTER JOIN
                     smg_users rm ON rm.userID = regionalManagerID
                              
-             	<Cfif (ARGUMENTS.currently_hosting eq 1 OR ARGUMENTS.currently_hosting eq 3)>
+             	<Cfif ARGUMENTS.currently_hosting eq 1>
                    	WHERE 
                    		totalNumberCurrentStudents > 0
 				<Cfelseif ARGUMENTS.currently_hosting eq 2>
 					WHERE 
 						totalNumberCurrentStudents = 0
+				<Cfelseif ARGUMENTS.currently_hosting eq 3>	
+					WHERE
+						(totalNumberCurrentStudents = 0 and totalNumberPrevousAppStudents  > 0 and PreviousHostAppSeason = 0 )   
 				</Cfif>	  
                          
                 ORDER BY 
