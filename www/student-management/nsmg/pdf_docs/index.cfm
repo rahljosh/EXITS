@@ -141,9 +141,7 @@
             Please Select a Category Below:
         </td>
         <td align="right">
-            <a href="http://www.adobe.com/products/acrobat/readstep.html" target="_blank">
-                <img src="pics/getacro.gif" width="88" height="31" alt="Download Adobe Acrobat Reader" border="0">
-            </a>
+           
         </td>
 	</tr>
 	<tr>
@@ -195,7 +193,7 @@
     </cfscript>
     
     <!--- Get a Directory List for Each Category --->
-    <cfdirectory name="listCategory#qGetPDFCategory.ID#" action="List" directory="#setFolderPath#" sort="name asc" filter="*.pdf">
+    <cfdirectory name="listCategory#qGetPDFCategory.ID#" action="List" directory="#setFolderPath#" sort="name asc" filter="">
 
     <div id="divCategory#qGetPDFCategory.ID#" style="display:none;" class="divCategory">
     
