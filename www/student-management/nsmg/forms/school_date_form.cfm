@@ -1,4 +1,3 @@
-
 <cfparam name="url.schooldateid" default="">
 <cfif url.schooldateid EQ "">
 	<cfset new = true>
@@ -18,7 +17,7 @@
 	</cfif>
 </cfif>
 
-<cfset field_list = 'seasonid,enrollment,year_begins,semester_ends,semester_begins,year_ends'>
+<cfset field_list = 'seasonid,enrollment,year_begins,semester_ends,semester_begins,year_ends,orientation_required'>
 <cfset errorMsg = ''>
 
 <!--- Process Form Submission --->
@@ -68,7 +67,7 @@
                 <cfqueryparam cfsqltype="cf_sql_date" value="#form.semester_ends#" null="#yesNoFormat(trim(form.semester_ends) EQ '')#">,
                 <cfqueryparam cfsqltype="cf_sql_date" value="#form.semester_begins#" null="#yesNoFormat(trim(form.semester_begins) EQ '')#">,
                 <cfqueryparam cfsqltype="cf_sql_date" value="#form.year_ends#" null="#yesNoFormat(trim(form.year_ends) EQ '')#">,
-                <cfqueryparam cfsqltype="cf_sql_bit" value="#form.orientation_required#">
+                <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(form.orientation_requ)#">
                 )  
             </cfquery>
 		<!--- edit --->
@@ -85,7 +84,7 @@
                 semester_ends = <cfqueryparam cfsqltype="cf_sql_date" value="#form.semester_ends#" null="#yesNoFormat(trim(form.semester_ends) EQ '')#">,
                 semester_begins = <cfqueryparam cfsqltype="cf_sql_date" value="#form.semester_begins#" null="#yesNoFormat(trim(form.semester_begins) EQ '')#">,
                 year_ends = <cfqueryparam cfsqltype="cf_sql_date" value="#form.year_ends#" null="#yesNoFormat(trim(form.year_ends) EQ '')#">,
-                orientation_required = <cfqueryparam cfsqltype="cf_sql_date" value="#form.orientation_required#">
+                orientation_required = <cfqueryparam cfsqltype="cf_sql_bit" value="#VAL(form.orientation_requ)#">
 				WHERE schooldateid = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.schooldateid#">
 			</cfquery>
 		</cfif>
@@ -175,8 +174,8 @@ function checkForm() {
     <tr>
         <td class="label">Orientation Required:</td>
         <td>
-            <input type="radio" name="orientation_required" id="orientation_required_yes" value="Yes" /> Yes &nbsp;
-            <input type="radio" name="orientation_required" id="orientation_required_no" value="No" checked /> No
+            <input type="radio" name="orientation_requ" value="1" <cfif VAL(FORM.orientation_required) EQ 1>checked</cfif> /> Yes &nbsp;
+            <input type="radio" name="orientation_requ" value="0" <cfif VAL(FORM.orientation_required) EQ 0>checked</cfif> /> No
         </td>
     </tr>
     </cfif>

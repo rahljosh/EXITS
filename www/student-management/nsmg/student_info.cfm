@@ -1772,6 +1772,8 @@
             </table>
 
             <br />
+
+           
             
             <table cellpadding="2" width="100%">
                 <tr bgcolor="##EAE8E8"><td colspan="2"><span class="get_attention"><b>:: </b></span>Double Placement Letters</td></tr>
@@ -1786,7 +1788,7 @@
                     <td width="50%">: : <a href="javascript:OpenLetter('reports/double_placement_students.cfm');">Students</a></td>
                     <td width="50%"></td>
                 </tr>
-                </cfif>
+               </cfif>
             
             <!--- FIELD USERS --->
             <cfif CLIENT.usertype GTE '5' AND CLIENT.usertype LTE '7'>
@@ -1814,7 +1816,27 @@
                 </tr>
                 </cfif>
             </table>
+            <br>
+ <cfif ListFind("1,2,3,4,5,12", qGetStudentInfo.companyID)>
+                <table cellpadding="2" width="100%">
+                    <tr bgcolor="##EAE8E8"><td colspan="2"><span class="get_attention"><b>:: </b></span>School Acceptance Form</td></tr>
+                    <tr>
+                        <td>: : <a href="school_acceptance_form.cfm?studentID=#studentid#">Download Filled Out SAF</a></td>
+                    </tr>
+                </table>
 
+                <br />
+
+            <cfelseif ListFind("10", qGetStudentInfo.companyID)>
+                <table cellpadding="2" width="100%">
+                    <tr bgcolor="##EAE8E8"><td colspan="2"><span class="get_attention"><b>:: </b></span>School Acceptance Form</td></tr>
+                    <tr>
+                        <td>: : <a href="school_acceptance_form_case.cfm?studentID=#studentid#">Download Filled Out SAF</a></td>
+                    </tr>
+                </table>
+
+                <br />
+            </cfif>
         </td>
     </tr>
 </table>
