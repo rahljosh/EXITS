@@ -344,3 +344,67 @@ and (
 	) 
 
 </cfquery>
+
+
+<!---
+	Summer bonus for placements between June1 and July 15
+--->
+
+<cfquery datasource="#APPLICATION.DSN#">
+insert into smg_users_payments 
+	(agentID,
+	 companyID,
+	 studentID,
+	 programID,
+	 old_programID,
+	 hostID,
+	 paymenttype,
+	 transtype,
+	 amount,
+	 comment,
+	 date,
+	 inputby,
+	 ispaid,
+	 dateCreated)
+
+
+select distinct
+hh.placerepid,
+s.companyID,
+s.studentID,
+s.programID,
+0,
+s.hostID,
+39,
+'payment',
+(CASE
+	when s.sex ='male' and cl.continent = 'Asia' then 525
+	when s.sex ='male' and cl.continent != 'Asia' then 350
+	when s.sex ='female' then 175
+end),
+'Auto Processed - CASE',
+(CASE 
+	WHEN DAYOFWEEK(CURDATE()) = 3 THEN DATE_ADD(CURDATE(), INTERVAL 2 DAY)           
+    WHEN DAYOFWEEK(CURDATE()) = 4 THEN DATE_ADD(CURDATE(), INTERVAL 1 DAY)           
+    WHEN DAYOFWEEK(CURDATE()) = 5 THEN DATE_ADD(CURDATE(), INTERVAL 0 DAY)
+    WHEN DAYOFWEEK(CURDATE()) = 6 THEN DATE_ADD(CURDATE(), INTERVAL 3 DAY)  
+    WHEN DAYOFWEEK(CURDATE()) = 7 THEN DATE_ADD(CURDATE(), INTERVAL 2 DAY)  
+    WHEN DAYOFWEEK(CURDATE()) = 1 THEN DATE_ADD(CURDATE(), INTERVAL 1 DAY)  
+    WHEN DAYOFWEEK(CURDATE()) = 2 THEN DATE_ADD(CURDATE(), INTERVAL 0 DAY)
+END),
+"999999",
+0,
+CURRENT_DATE
+
+
+from smg_students s
+inner join smg_hosthistory hh on hh.hostid = s.hostid
+inner join smg_countrylist cl on cl.countryid = s.countryresident
+where s.companyid = 10
+and (s.programID = 443 or s.programid = 442)
+and hh.dateplaced between '2017-06-01' and '2017-07-15'
+and hh.isactive = 1
+and hh.compliance_review IS NOT NULL
+AND NOT EXISTS (select ID from smg_users_payments pmt WHERE s.studentID = pmt.studentID AND paymenttype = 39)
+
+</cfquery>
