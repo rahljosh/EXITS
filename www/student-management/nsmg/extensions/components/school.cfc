@@ -795,4 +795,18 @@
 
     </cffunction>
 
+
+    <cffunction name="removeSchoolContact" access="remote" returnformat="json" output="false" hint="">
+        <cfargument name="contactID" type="numeric" default="" required="true">
+        
+        <cfquery name="qRemoveSchoolContact" datasource="#APPLICATION.DSN#">
+            UPDATE smg_school_contacts
+            SET  active = 0
+            WHERE id = <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.contactID#">
+        </cfquery>
+
+        <cfreturn 1>
+
+    </cffunction>
+
 </cfcomponent>

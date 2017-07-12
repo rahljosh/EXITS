@@ -5763,6 +5763,38 @@
                 END 
                 AS stu_status,
 
+                CASE
+                    WHEN s.canceldate IS NOT NULL
+                    THEN DATE_FORMAT(s.canceldate, '%m/%d/%Y')
+                    
+                    WHEN s.termination_date IS NOT NULL
+                    THEN DATE_FORMAT(s.termination_date, '%m/%d/%Y')
+
+                    WHEN sh1.hold_status_id = 2
+                        AND s.canceldate IS NULL
+                        AND s.termination_date IS NULL
+                    THEN DATE_FORMAT(sh1.create_date, '%m/%d/%Y')
+
+                    WHEN sh1.hold_status_id = 3
+                        AND s.canceldate IS NULL
+                        AND s.termination_date IS NULL
+                    THEN DATE_FORMAT(sh1.create_date, '%m/%d/%Y')
+
+                    WHEN s.hostID > 0
+                        AND s.dateplaced IS NOT NULL
+                    THEN DATE_FORMAT(vspi.date_last_placement, '%m/%d/%Y')
+
+                    WHEN s.hostID > 0
+                        AND s.dateplaced IS NULL
+                    THEN DATE_FORMAT(vspi.date_last_pending, '%m/%d/%Y')
+
+                    WHEN s.app_current_status = 11
+                    THEN DATE_FORMAT(s.dateassigned, '%m/%d/%Y')                  
+
+                    ELSE NULL
+                END 
+                AS status_date,
+
                 CONCAT('',
                 CASE 
                     WHEN (st1.state IS NOT NULL OR st2.state IS NOT NULL OR st3.state IS NOT NULL)
@@ -5818,14 +5850,16 @@
                           FROM      smg_student_hold_status
                           GROUP BY  student_id
                       ) sh ON (sh.student_id = s.studentID)
-
             LEFT OUTER JOIN smg_student_hold_status sh1 ON (sh1.id = sh.id)
+
             LEFT OUTER JOIN smg_hold_status hs ON hs.id = sh1.hold_status_id
             LEFT OUTER JOIN smg_aypcamps aypeng ON (s.aypenglish = aypeng.campid)
             LEFT OUTER JOIN smg_aypcamps aypori ON (s.ayporientation = aypori.campid)
 
             LEFT OUTER JOIN smg_users u ON s.intrep = u.userid
             LEFT OUTER JOIN smg_users u2 ON s.branchID = u2.userid
+
+            LEFT OUTER JOIN v_student_placement_info vspi ON vspi.studentID = s.studentID
             
             WHERE 
             
@@ -5974,6 +6008,9 @@
                 AND s.hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="0">
                 AND (sh1.hold_status_id <= <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                     OR sh1.hold_status_id IS NULL) 
+                AND s.canceldate IS NULL
+                AND s.termination_date IS NULL
+            <cfelseif ARGUMENTS.placement_status EQ "Active">
                 AND s.canceldate IS NULL
                 AND s.termination_date IS NULL
             </cfif>
@@ -6138,8 +6175,8 @@
                         s.familylastname
                     </cfcase>
 
-                    <cfcase value="hold_create_date">                    
-                        sh1.create_date #ARGUMENTS.sortOrder#,
+                    <cfcase value="status_since">                    
+                        status_date #ARGUMENTS.sortOrder#,
                         s.familylastname
                     </cfcase>
 
@@ -6196,7 +6233,7 @@
             }
 
             // Populate structure with query
-            resultQuery = QueryNew("studentID, nexits_id, uniqueid, programID, hostID, firstName, familyLastName, sex, email, active, dateassigned, regionguar,state_guarantee, aypenglish, ayporientation, scholarship, privateschool, host_fam_approved, regionName, r_guarantee, state, programname, countryname, companyShort, hostname, hold_status_id, hold_create_date, hold_status_name, state1name, state2name, state3name, app_region_guarantee, add_program, stu_status, hostID, requests, datePlaced, intrepID, businessname, branchID, branchName");
+            resultQuery = QueryNew("studentID, nexits_id, uniqueid, programID, hostID, firstName, familyLastName, sex, email, active, dateassigned, regionguar,state_guarantee, aypenglish, ayporientation, scholarship, privateschool, host_fam_approved, regionName, r_guarantee, state, programname, countryname, companyShort, hostname, hold_status_id, hold_create_date, hold_status_name, state1name, state2name, state3name, app_region_guarantee, add_program, stu_status, hostID, requests, datePlaced, intrepID, businessname, branchID, branchName, status_date");
             
             if ( qGetResults.recordCount < stResult.recordTo ) {
                 stResult.recordTo = qGetResults.recordCount;
@@ -6250,6 +6287,8 @@
                     QuerySetCell(resultQuery, "businessname", qGetResults.businessname[i]);
                     QuerySetCell(resultQuery, "branchID", qGetResults.branchID[i]);
                     QuerySetCell(resultQuery, "branchName", qGetResults.branchname[i]);
+
+                    QuerySetCell(resultQuery, "status_date", qGetResults.status_date[i]);
                 }
             
             }
