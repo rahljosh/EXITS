@@ -437,9 +437,10 @@
             tableHeader += '<th id="country" class="listTitle" style="text-align:left"><a href="javascript:void(0);" title="Sort By Country">Country</a></th>';   
             tableHeader += '<th id="requests" class="listTitle" style="text-align:left"><a href="javascript:void(0);" title="Sort By Requests">Requests</a></th>';
             tableHeader += '<th id="stu_status" class="listTitle" style="text-align:left"><a href="javascript:void(0);" title="Sort By Status">Status</a></th>';
-            tableHeader += '<th id="hold_create_date" class="listTitle" style="text-align:left"><a href="javascript:void(0);" title="Sort By Hold Date">Hold Date</a></th>'; 
+            tableHeader += '<th id="status_since" class="listTitle" style="text-align:left"><a href="javascript:void(0);" title="Sort By Since">Since</a></th>'; 
             tableHeader += '<th id="region" class="listTitle" style="text-align:left"><a href="javascript:void(0);" title="Sort By Region">Region</a></th>';
             tableHeader += '<th id="program" class="listTitle" style="text-align:left"><a href="javascript:void(0);" title="Sort By Program">Program</a></th>';
+            tableHeader += '<th id="hostName" class="listTitle" style="text-align:left"><a href="javascript:void(0);" title="Sort By Host Family">Host Family</a></th>';
             tableHeader += '</tr></thead>';
         
         // Clear current result and append Table Header to HTML
@@ -456,7 +457,7 @@
         $('#country').click(function (){getStudentList(pageNumber,this.id);});
         $('#requests').click(function (){getStudentList(pageNumber,this.id);});
         $('#stu_status').click(function (){getStudentList(pageNumber,this.id);});
-        $('#hold_create_date').click(function (){getStudentList(pageNumber,this.id);});
+        $('#status_since').click(function (){getStudentList(pageNumber,this.id);});
         $('#region').click(function (){getStudentList(pageNumber,this.id);});
         $('#program').click(function (){getStudentList(pageNumber,this.id);});
         $('#hostName').click(function (){getStudentList(pageNumber,this.id);});
@@ -493,6 +494,9 @@
 
             var dateassigned = hostData.QUERY.DATA[i][hostData.QUERY.COLUMNS.findIdx('DATEASSIGNED')];
             var hostID = hostData.QUERY.DATA[i][hostData.QUERY.COLUMNS.findIdx('HOSTID')];
+            var hostName = hostData.QUERY.DATA[i][hostData.QUERY.COLUMNS.findIdx('HOSTNAME')];
+
+            var status_date = hostData.QUERY.DATA[i][hostData.QUERY.COLUMNS.findIdx('STATUS_DATE')];
 
             var bgcolor = '';
             if (dateassigned != '') {
@@ -513,16 +517,6 @@
                 da35.setDate(da1.getDate() - 35);
                 da49.setDate(da1.getDate() - 49);
                 da50.setDate(da1.getDate() - 50);
-
-                /*console.log(studentID);
-                console.log(da2);
-                console.log(da3);
-                console.log(da25);
-                console.log(da34);
-                console.log(da35);
-                console.log(da49);
-                console.log(da50);
-                console.log('-----');*/
 
                 if (da2.getTime() > da3.getTime()) {
                     bgcolor = "#eef5e1";
@@ -614,10 +608,9 @@
                 tableBody += '<td ' + styleColor + '>';
                 tableBody += stu_status + '</td>';
                 if ((stu_status != 'Showing') && (stu_status != 'Committed')) {
-                    tableBody += '<td></td>';
+                    tableBody += '<td>'+ status_date +'</td>';
                 } else {
-                    tableBody += '<td ' + styleColor + '>';
-                    tableBody += hold_status_date + '</td>';
+                    tableBody += '<td ' + styleColor + '>'+ status_date +'</td>';
                 }
                 
                 tableBody += '<td>' + regionname;
@@ -639,6 +632,7 @@
                 } 
                 tableBody += '</td>';
 
+                tableBody += '<td style="text-transform:capitalize"><a href="index.cfm?curdoc=host_fam_info&hostid='+ hostID +'" target="_blank">' + hostName + '</a></td>';
 
                 tableBody += '</tr>';
             // Append table rows
@@ -700,8 +694,6 @@
         $("#state_placed_id_export").val($("#state_placed_id").val());
         $("#programID_export").val($("#programID").val());
         $("#searchStudentID_export").val($("#searchStudentID").val());
-
-        //console.log($("#HFstatus_export").val());
 
         return true;
     }

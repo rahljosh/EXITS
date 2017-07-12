@@ -546,7 +546,7 @@
 									#firstname# #middlename# #lastname# - #userID#<br>
 									#address#<br>
 									<cfif address2 NEQ ''>#address2#<br></cfif>
-									#city#, #state# #zip# #country#<br>
+									#city#, #state# #zip# <br />#countryname#<br>
 									<cfif phone NEQ ''>Home: #phone#<br></cfif>
 									<cfif work_phone NEQ ''>Work: #work_phone#<br></cfif>
 									<cfif cell_phone NEQ ''>Cell: #cell_phone#<br></cfif>
@@ -1623,6 +1623,8 @@
 			<!--- ------------------------------------------------------------------------- ---->
             <!----Account Statement FOR INT REP---->
             <!--- ------------------------------------------------------------------------- ---->     
+           
+           
             <div class="rdholder" style="width:100%;float:right;" > 
 				<div class="rdtop"> 
                 <span class="rdtitle">Account Activity - Statement</span> 
@@ -1637,7 +1639,7 @@
                                 from smg_users
                                 where userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
                             </cfquery>
-                            <cfif (CLIENT.userID EQ 64 OR CLIENT.userID EQ 126 OR CLIENT.userID EQ 21517) OR (CLIENT.usertype NEQ 8 AND invoice_check.invoice_access NEQ 1)> 
+                            <cfif (CLIENT.userID EQ 64 OR CLIENT.userID EQ 126 OR CLIENT.userID EQ 21517 or CLIENT.userid EQ 24986) OR (CLIENT.usertype NEQ 8 AND invoice_check.invoice_access NEQ 1)> 
                                 <cfswitch expression="#CLIENT.companyid#">
                                 	<cfcase value="14">
                                     	Not available. <br /> If you wish a copy of your statement please contact Stacy Brewer at stacy@exchange-service.org
@@ -1656,6 +1658,7 @@
                  <div class="rdbottom"></div> 
                 
                  </div>
+             
             	<!--- ------------------------------------------------------------------------- ---->
             <!----END Account Statement FOR INT REP---->
             <!--- ------------------------------------------------------------------------- ---->  
@@ -2014,6 +2017,7 @@
                             <cfquery name="qGetPlacedStudents" datasource="#APPLICATION.DSN#">
                                 SELECT 
                                 	CAST(CONCAT(s.firstName, ' ', s.familyLastName,  ' ##', s.studentID) AS CHAR) AS studentDisplayName,
+                                    s.studentid,
                                     s.sex, 
                                     smg_countrylist.countryname, 
                                     p.programname
@@ -2044,6 +2048,7 @@
                             <cfquery name="qGetSupervisedStudents" datasource="#APPLICATION.DSN#">
                                 SELECT 
                                 	CAST(CONCAT(s.firstName, ' ', s.familyLastName,  ' ##', s.studentID) AS CHAR) AS studentDisplayName,
+                                    s.studentid,
                                     s.sex, 
                                     smg_countrylist.countryname, 
                                     p.programname
@@ -2125,7 +2130,7 @@
                                         </cfif>
                                         <cfloop query="qGetPlacedStudents">
                                         <tr bgcolor="#iif(qGetPlacedStudents.currentrow MOD 2 ,DE("efefef") ,DE("ffffff") )#">		
-                                            <td align="left">#qGetPlacedStudents.studentDisplayName#</td>
+                                            <td align="left"><a href="?curdoc=student_info&studentID=#qGetPlacedStudents.studentid#">#qGetPlacedStudents.studentDisplayName#</a></td>
                                             <td align="left">#qGetPlacedStudents.sex#</td>
                                             <td  align="left">#Left(qGetPlacedStudents.countryname,13)#</td>
                                             <td align="left"><u>#qGetPlacedStudents.programname#</u></td>
@@ -2150,7 +2155,7 @@
                                  </cfif>
                                 <cfloop query="qGetSupervisedStudents">
                                 	<tr bgcolor="#iif(qGetSupervisedStudents.currentrow MOD 2 ,DE("efefef") ,DE("ffffff") )#">		
-                                        <td align="left">#qGetSupervisedStudents.studentDisplayName#</td>
+                                        <td align="left"><a href="?curdoc=student_info&studentID=#qGetSupervisedStudents.studentid#">#qGetSupervisedStudents.studentDisplayName#</a></td>
                                         <td align="left">#qGetSupervisedStudents.sex#</td>
                                         <td  align="left">#Left(qGetSupervisedStudents.countryname,13)#</td>
                                         <td align="left"><u>#qGetSupervisedStudents.programname#</u></td>
