@@ -156,7 +156,8 @@
                 ORDER BY
                 	ah.dateCreated DESC
                 LIMIT 1
-			) AS placementAction                                	
+			) AS placementAction,
+			notes.appNotes                                	
 		FROM 
         	smg_students s
 		INNER JOIN 
@@ -180,6 +181,8 @@
             smg_users advisor ON uar.advisorID = advisor.userID
         LEFT OUTER JOIN 
             smg_aypcamps english ON s.aypenglish = english.campID
+        LEFT OUTER JOIN
+        	smg_notes notes ON notes.hostid = h.hostid
         WHERE 
         	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
         AND 
@@ -356,8 +359,7 @@
 			width:"60%", 
 			height:"90%", 
 			iframe:true,
-			overlayClose:false,
-			escKey:false, 
+			
 			onClosed:function(){ window.location.reload(); }
 		});	
 		
@@ -377,12 +379,10 @@
 		});
 
 	});
-	
-	// End -->
+
+		
 </script>
-<cfif client.userid eq 1>
-	<cfdump var="#qGetPendingHosts#">	
-</cfif>
+
 <cfoutput>
 
 	<!--- Table Header --->
@@ -473,12 +473,15 @@
             <td class="sectionHeader"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='regionName',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" title="Sort By Region">Region</a></td>
             <td class="sectionHeader"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='programName',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" title="Sort By Program">Program</a></td>
             <td class="sectionHeader"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='hostFamilyLastName',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" title="Sort By Host Family">Host Family</a></td>
-            <td class="sectionHeader" width="30%"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='placementAction',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" title="Sort By Reason">Reason</a></td>
+            <td class="sectionHeader" width="380"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='placementAction',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" title="Sort By Reason">Reason</a></td>
+            <td class="sectionHeader" width="120">Notes</td>
             <td class="sectionHeader"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='datePISEmailed',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" title="Sort By Date PIS Emailed">Date PIS Emailed</a></td>
 	        <td class="sectionHeader">Actions</td>
             <td class="sectionHeader" align="center"><a href="#APPLICATION.CFC.UDF.buildSortURL(columnName='timeOnPending',sortBy=URL.sortBy,sortOrder=URL.sortOrder)#" title="Sort By Time on pending..">Time on Pending</a></td>
         </tr>
-        
+        <td>
+				
+			</td> 
         <cfloop query="qGetPendingHosts">
         
 			<cfscript>
@@ -567,6 +570,15 @@
                         </a>            
                     </td>
                     <td class="sectionHeader">#qGetPendingHosts.placementAction#</td>
+                    <td class="sectionHeader">
+                    	<a href="pending-list/appNotes.cfm?hostID=#qGetPendingHosts.hostid#" class="jQueryModalPL" title="Open Notes">
+							<cfif qGetPendingHosts.appNotes is ''>
+								<button type="button" class="btn btn-default btn-sm"><i class="fa fa-comments-o" aria-hidden="true"></i> Add Notes</button>
+							<cfelse>
+								<button type="button" class="btn btn-warning btn-sm"><i class="fa fa-comments-o" aria-hidden="true"></i> See Notes</button>
+							</cfif>
+						</a>
+					</td>
                     <td class="sectionHeader">#vTimeOnPending#</td>
                     <td class="sectionHeader">
                         
