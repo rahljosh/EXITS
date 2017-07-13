@@ -19,16 +19,10 @@
 <cfparam name="URL.curdoc" default="initial_welcome">
 
 	<cfset unify = 0>
-	<cfset includebootstrap = 0>
   <!--forms/add_user,forms/user_form, user/index,-->
-   	<!---
-   	<cfif val(listContains('forms/host_fam_form_lead, hostLeads/index, hostApplication/listOfApps, students','#url.curdoc#'))>
+   <cfif val(listContainsNoCase('forms/host_fam_form_lead, hostLeads/index, hostApplication/listOfApps, students, pendingPlacementList','#url.curdoc#'))>
 	   	<cfset unify=1>
-   	</cfif>
- 		--->
- 		<cfif val(listContains('hostLeads/index, students','#url.curdoc#'))>
-	   	<cfset includebootstrap=1>
-   	</cfif>
+   </cfif>
     
 
     <cfscript>
@@ -83,7 +77,7 @@
 </table>
 
 <!--- Include Footer --->
-<Cfif val(unify)>
+<Cfif 1 eq 2>
 	<cfinclude template="unify-footer.cfm">
 <cfelse>
 	<cfinclude template="footer.cfm">
