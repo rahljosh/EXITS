@@ -5456,13 +5456,15 @@
                         SELECT hostID 
                         FROM smg_host_app_season 
                         WHERE applicationStatusID < 9 
-                        AND seasonID IN ('#vSeasonID#,#vNextSeasonID#' ) )
+                        AND seasonID IN ('#vSeasonID#,#vNextSeasonID#' )
+                        AND activeApp = 1 )
                 <cfelseif NOT ListFind("13",CLIENT.companyID)>
                     AND hostID IN (
                         SELECT hostID 
                         FROM smg_host_app_season 
                         WHERE applicationStatusID < 4 
-                        AND seasonID >= #vSeasonID#  )
+                        AND seasonID >= #vSeasonID#
+                        AND activeApp = 1  )
                 </cfif>
             ORDER BY familyLastName
         </cfquery>

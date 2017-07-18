@@ -710,7 +710,7 @@ div.scroll2 {
                                             style="display:inline;" 
                                             onsubmit="return confirm('Confirm new status: Dropped - School Issue')">
                                             <input type="hidden" name="school_issue" value="1"/>
-                                            <input type="submit" value="Dropped - School Issue"  alt="Dropped - School Issue" border="0" class="buttonOrange" />
+                                            <input type="submit" value="Dropped - School Issue"  alt="Dropped - School Issue" border="0" class="buttonOrange" style="margin:4px 0" />
                                         </form>
                                     </cfif>
 
@@ -720,7 +720,7 @@ div.scroll2 {
                                         style="display:inline;" 
                                         onsubmit="return confirm('Are you sure this family does not want to host this year?')">
                                         <input type="hidden" name="decideToHost" value="0"/>
-                                        <input type="submit" value="Decided Not To Host"  alt="Decided Not To Host" border="0" class="buttonRed" />
+                                        <input type="submit" value="Decided Not To Host"  alt="Decided Not To Host" border="0" class="buttonRed" style="margin:4px 0" />
                                     </form>
                                     <form 
                                         method="post" 
@@ -728,12 +728,12 @@ div.scroll2 {
                                         style="display:inline;" 
                                         onsubmit="return confirm('Are you sure the family is with a competitor?')">
                                         <input type="hidden" name="withCompetitor" value="1"/>
-                                        <input type="submit" value="With Other Sponsor"  alt="With Other Sponsor" border="0" class="buttonRed" />
+                                        <input type="submit" value="With Other Sponsor"  alt="With Other Sponsor" border="0" class="buttonRed" style="margin:4px 0" />
                                     </form>
                                 <cfelse>
                                     <form method="post" action="index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" style="display:inline;">
                                         <input type="hidden" name="decideToHost" value="1"/>
-                                        <input type="submit" value="Host #qCurrentSeason.season#"  alt="Host #qCurrentSeason.season#" border="0" class="buttonGreen" />
+                                        <input type="submit" value="Host #qCurrentSeason.season#"  alt="Host #qCurrentSeason.season#" border="0" class="buttonGreen" style="margin:4px 0" />
                                     </form>
                                 </cfif>
                                 
@@ -742,7 +742,7 @@ div.scroll2 {
 
                                 <form method="post" action="index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" style="display:inline;">
                                     <input type="hidden" name="hostNewSeason" value="1"/>
-                                    <input type="submit" value="Host #qCurrentSeason.season#"  alt="Host #qCurrentSeason.season#" border="0" class="buttonGreen" <cfif NOT VAL(qGetHostInfo.school_issue)> style="margin-top:15px</cfif>" />
+                                    <input type="submit" value="Host #qCurrentSeason.season#"  alt="Host #qCurrentSeason.season#" border="0" class="buttonGreen" style="margin:4px 0" />
                                 </form>
                          	</cfif>
                         </td>
