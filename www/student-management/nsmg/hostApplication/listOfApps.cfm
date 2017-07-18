@@ -217,7 +217,11 @@
 	<thead>
 		<tr>
 		<th align="left">Since</th>
+		
 		<th align="left">Host Family</th>
+		<cfif url.status eq 8>
+		<th align="left">App Updated</th>
+		</cfif>
 		<th align="left"></Th>
 		<th align="left">City, State</th>
 		<th align="left">Contact</th>
@@ -234,24 +238,28 @@
 	<Cfset displayCount = 0>
 	<cfloop query="qGetHostApplications">
 
-		<cfif ((url.status eq 9) AND DateDiff('d',dateUpdated, now()) gt 3)>
+		<cfif ((url.status eq 9) AND DateDiff('d',appUpdated, now()) gt 3)>
 		  <tr class="danger">
-		 <cfelseif ((url.status eq 8) AND DateDiff('d',dateUpdated, now()) gt 7)>
+		 <cfelseif ((url.status eq 8) AND DateDiff('d',appUpdated, now()) gt 7)>
 		  <tr class="danger">
-		 <cfelseif ((url.status eq 7) AND DateDiff('d',dateUpdated, now()) gt 3)>
+		 <cfelseif ((url.status eq 7) AND DateDiff('d',appUpdated, now()) gt 3)>
 		  <tr class="danger">
-		 <cfelseif ((url.status eq 6) AND DateDiff('d',dateUpdated, now()) gt 1)>
+		 <cfelseif ((url.status eq 6) AND DateDiff('d',appUpdated, now()) gt 1)>
 		  <tr class="danger">
-		 <cfelseif ((url.status eq 5) AND DateDiff('d',dateUpdated, now()) gt 1)>
+		 <cfelseif ((url.status eq 5) AND DateDiff('d',appUpdated, now()) gt 1)>
 		  <tr class="danger">
 		 <cfelse>
 		  <tr>
 		</cfif> 
 
 
-			<td>#DateFormat(dateUpdated, 'mmm d, yyyy')#</td>
+			<td>#DateFormat(appUpdated, 'mmm d, yyyy')#</td>
+			
 			 <td><a href="index.cfm?curdoc=host_fam_info&hostID=#qGetHostApplications.hostID#" title="View Details">#qGetHostApplications.displayHostFamily#</a>
-			 <cfif val(qGetHostApplications.totalNumberCurrentStudents)><br>
+			<cfif url.status eq 8>
+			<td align="left">#DateFormat(dateUpdated, 'mmm d, yyyy')#</td>
+			</cfif>
+			  <cfif val(qGetHostApplications.totalNumberCurrentStudents)><br>
 			<mark> <em>Hosting #qGetHostApplications.totalNumberCurrentStudents# student<cfif val(qGetHostApplications.totalNumberCurrentStudents) gt 1>s</cfif></em></mark>
 			 </cfif>
 			 </td>
