@@ -5675,15 +5675,12 @@
             
         </cfif>
         
-
-
         <cfquery name="qGetResults" datasource="#application.dsn#">
             SELECT  
                 s.studentID, 
                 s.nexits_id,
                 s.uniqueid, 
                 s.programID,
-                s.hostID,
                 s.firstName,
                 s.familyLastName, 
                 s.sex, 
@@ -5707,7 +5704,6 @@
                 p2.app_program as add_program,
                 c.countryname, 
                 co.companyShort, 
-                smg_hosts.familyLastName AS hostname,
                 sh1.hold_status_id,
                 DATE_FORMAT(sh1.create_date,'%m/%d/%Y') AS hold_create_date,
                 sasr.state1,
@@ -5720,6 +5716,42 @@
                 aypeng.name AS aypenglish, 
                 u.businessname,
                 u2.businessname AS branchName,
+                p.seasonID,
+                
+
+                CASE
+                    WHEN s.hostID > 0
+                    THEN smg_hosts.familyLastName
+
+                    WHEN sh1.host_family_id > 0
+                    THEN smg_hosts2.familyLastName
+                END AS hostName,
+
+                CASE
+                    WHEN s.hostID > 0
+                    THEN s.hostID
+
+                    WHEN sh1.host_family_id > 0
+                    THEN sh1.host_family_id
+                END AS hostID,
+
+                CASE
+                    WHEN s.hostID > 0
+                    THEN shasl.name
+
+                    WHEN sh1.host_family_id > 0
+                    THEN shasl2.name
+                END AS HF_App_Status,
+
+                CASE
+                    WHEN s.hostID > 0
+                    THEN vhaa.applicationStatusID
+
+                    WHEN sh1.host_family_id > 0
+                    THEN vhaa2.applicationStatusID
+                END AS applicationStatusID,
+
+                
 
                 CASE 
                     WHEN s.canceldate IS NOT NULL
@@ -5836,8 +5868,8 @@
             LEFT OUTER JOIN smg_countrylist c ON s.countryresident = c.countryID
             LEFT OUTER JOIN smg_regions smg_g ON s.regionalguarantee = smg_g.regionID
             LEFT OUTER JOIN smg_states ON s.state_guarantee = smg_states.id
-            LEFT OUTER JOIN smg_hosts ON s.hostID = smg_hosts.hostID
             LEFT OUTER JOIN smg_programs p ON s.programID = p.programID
+            LEFT OUTER JOIN smg_hosts ON s.hostID = smg_hosts.hostID
             LEFT JOIN smg_student_app_programs p2 ON p2.app_programid = s.app_additional_program
 
             LEFT OUTER JOIN smg_student_app_state_requested sasr ON sasr.studentid = s.studentiD
@@ -5853,6 +5885,9 @@
             LEFT OUTER JOIN smg_student_hold_status sh1 ON (sh1.id = sh.id)
 
             LEFT OUTER JOIN smg_hold_status hs ON hs.id = sh1.hold_status_id
+
+            LEFT OUTER JOIN smg_hosts smg_hosts2 ON sh1.host_family_id = smg_hosts2.hostID
+
             LEFT OUTER JOIN smg_aypcamps aypeng ON (s.aypenglish = aypeng.campid)
             LEFT OUTER JOIN smg_aypcamps aypori ON (s.ayporientation = aypori.campid)
 
@@ -5860,11 +5895,18 @@
             LEFT OUTER JOIN smg_users u2 ON s.branchID = u2.userid
 
             LEFT OUTER JOIN v_student_placement_info vspi ON vspi.studentID = s.studentID
+
+            LEFT OUTER JOIN v_host_app_active vhaa ON (vhaa.hostID = s.hostID AND vhaa.seasonID = p.seasonID)
+            LEFT OUTER JOIN smg_host_app_status_lookup shasl ON (shasl.statusID = vhaa.applicationStatusID)
+
+            LEFT OUTER JOIN v_host_app_active vhaa2 ON (vhaa2.hostID = sh1.host_family_id AND vhaa2.seasonID = p.seasonID)
+            LEFT OUTER JOIN smg_host_app_status_lookup shasl2 ON (shasl2.statusID = vhaa2.applicationStatusID)
             
             WHERE 
             
                 <!--- SHOW ONLY APPS APPROVED --->
                 s.app_current_status = <cfqueryparam cfsqltype="cf_sql_integer" value="11">
+                
             
             <!--- OFFICE PEOPLE --->
             <cfif APPLICATION.CFC.USER.isOfficeUser()>
@@ -5929,8 +5971,6 @@
                     AND s.canceldate IS NULL   
                     AND s.termination_date IS NULL              
                 </cfif>
-
-
             
             <!--- Guest Account --->
             <cfelseif CLIENT.usertype EQ 27>
@@ -6191,12 +6231,17 @@
                     </cfcase>
 
                     <cfcase value="hostName">                    
-                        s.hostname #ARGUMENTS.sortOrder#,
+                        hostName #ARGUMENTS.sortOrder#,
                         s.familylastname
                     </cfcase>
 
                     <cfcase value="requests">                    
                         stu_requests #ARGUMENTS.sortOrder#,
+                        s.familylastname
+                    </cfcase>
+
+                    <cfcase value="hostStatus">                    
+                        HF_App_Status #ARGUMENTS.sortOrder#,
                         s.familylastname
                     </cfcase>
  
@@ -6233,7 +6278,7 @@
             }
 
             // Populate structure with query
-            resultQuery = QueryNew("studentID, nexits_id, uniqueid, programID, hostID, firstName, familyLastName, sex, email, active, dateassigned, regionguar,state_guarantee, aypenglish, ayporientation, scholarship, privateschool, host_fam_approved, regionName, r_guarantee, state, programname, countryname, companyShort, hostname, hold_status_id, hold_create_date, hold_status_name, state1name, state2name, state3name, app_region_guarantee, add_program, stu_status, hostID, requests, datePlaced, intrepID, businessname, branchID, branchName, status_date");
+            resultQuery = QueryNew("studentID, nexits_id, uniqueid, programID, hostID, firstName, familyLastName, sex, email, active, dateassigned, regionguar,state_guarantee, aypenglish, ayporientation, scholarship, privateschool, host_fam_approved, regionName, r_guarantee, state, programname, countryname, companyShort, hostname, hold_status_id, hold_create_date, hold_status_name, state1name, state2name, state3name, app_region_guarantee, add_program, stu_status, hostID, requests, datePlaced, intrepID, businessname, branchID, branchName, status_date, applicationStatusID, HF_App_Status");
             
             if ( qGetResults.recordCount < stResult.recordTo ) {
                 stResult.recordTo = qGetResults.recordCount;
@@ -6289,16 +6334,19 @@
                     QuerySetCell(resultQuery, "branchName", qGetResults.branchname[i]);
 
                     QuerySetCell(resultQuery, "status_date", qGetResults.status_date[i]);
+
+                    QuerySetCell(resultQuery, "HF_App_Status", qGetResults.HF_App_Status[i]);
                 }
             
             }
             
             // Add query to structure
-            stResult.query = resultQuery;
-            
+            stResult.query = resultQuery; 
+
             // return structure
-            return stResult;            
+            return stResult;    
         </cfscript>
     </cffunction>
+
 
 </cfcomponent>

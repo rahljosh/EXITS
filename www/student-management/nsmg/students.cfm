@@ -15,7 +15,11 @@
 	
     <!--- Param Variables --->
     <cfparam name="submitted" default="0">
-    <cfparam name="regionID" default="#CLIENT.regionID#">
+    <cfif APPLICATION.CFC.USER.isOfficeUser()>
+        <cfset regionID= ''>
+    <cfelse>
+        <cfset regionID= CLIENT.regionID />
+    </cfif>
     <cfparam name="keyword" default="">
     <cfparam name="orderby" default="familyLastName">
     <cfparam name="recordsToShow" default="25">
@@ -205,8 +209,6 @@
 	</cfif>
 
 </cfsilent>
-
-
 
 <!--- Ajax Call to the Component --->
 <cfajaxproxy cfc="nsmg.extensions.components.student" jsclassname="studentCFC">
@@ -441,6 +443,7 @@
             tableHeader += '<th id="region" class="listTitle" style="text-align:left"><a href="javascript:void(0);" title="Sort By Region">Region</a></th>';
             tableHeader += '<th id="program" class="listTitle" style="text-align:left"><a href="javascript:void(0);" title="Sort By Program">Program</a></th>';
             tableHeader += '<th id="hostName" class="listTitle" style="text-align:left"><a href="javascript:void(0);" title="Sort By Host Family">Host Family</a></th>';
+            tableHeader += '<th id="hostStatus" class="listTitle" style="text-align:left"><a href="javascript:void(0);" title="Sort By Host Family Status">HF App Status</a></th>';
             tableHeader += '</tr></thead>';
         
         // Clear current result and append Table Header to HTML
@@ -461,6 +464,7 @@
         $('#region').click(function (){getStudentList(pageNumber,this.id);});
         $('#program').click(function (){getStudentList(pageNumber,this.id);});
         $('#hostName').click(function (){getStudentList(pageNumber,this.id);});
+        $('#hostStatus').click(function (){getStudentList(pageNumber,this.id);});
         
         // No data returned, display message
         if( hostData.QUERY.DATA.length == 0) {          
@@ -497,6 +501,10 @@
             var hostName = hostData.QUERY.DATA[i][hostData.QUERY.COLUMNS.findIdx('HOSTNAME')];
 
             var status_date = hostData.QUERY.DATA[i][hostData.QUERY.COLUMNS.findIdx('STATUS_DATE')];
+            var applicationStatusID = hostData.QUERY.DATA[i][hostData.QUERY.COLUMNS.findIdx('APPLICATIONSTATUSID')];
+
+            var hf_app_status = hostData.QUERY.DATA[i][hostData.QUERY.COLUMNS.findIdx('HF_APP_STATUS')];
+            
 
             var bgcolor = '';
             if (dateassigned != '') {
@@ -600,8 +608,8 @@
                     var d2 = new Date(hold_status_date);
                     d1.setDate(d1.getDate() - 3);
 
-                    if ((d2.getTime() <= d1.getTime()) && (stu_status === 'Showing')) {
-                        styleColor = 'style="color:#CC0000"';
+                    if ((d2.getTime() <= d1.getTime()) && ((stu_status === 'Showing') || (stu_status === 'Committed'))) {
+                        styleColor = 'style="background-color:#CC0000; color:#fff; font-weight:bold"';
                     } 
                 } 
 
@@ -633,6 +641,8 @@
                 tableBody += '</td>';
 
                 tableBody += '<td style="text-transform:capitalize"><a href="index.cfm?curdoc=host_fam_info&hostid='+ hostID +'" target="_blank">' + hostName + '</a></td>';
+
+                tableBody += '<td style="text-transform:capitalize">' + hf_app_status + '</td>';
 
                 tableBody += '</tr>';
             // Append table rows

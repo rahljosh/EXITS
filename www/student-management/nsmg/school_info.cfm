@@ -90,7 +90,7 @@
         }
 
         function deleteContact(contact_id, contact_position) {
-            var checkDelete = confirm('You are about to delete this School. You will not be able to recover this information. Click OK to continue.');
+            var checkDelete = confirm('Are you sure you want to delete the contact? Click OK to continue.');
 
             if (checkDelete) {
                 $.ajax({
@@ -111,7 +111,7 @@
 
                         contactRemoved = true;
 
-                        alert('Contact Removed!');
+                        //alert('Contact Removed!');
                     }
                 })
             }
@@ -260,7 +260,7 @@
         </cfif>
 
         <cfset newContact = newContact & ' / ' & FORM.contact_name_2 />
-        <cfif VAL(FORM.contact_title_2) AND getTitle.recordCount GT 0 >
+        <cfif VAL(FORM.contact_title_2) AND getTitle2.recordCount GT 0 >
             <cfset newContact = newContact & ', ' & getTitle2.name  />
         </cfif>
 
@@ -297,7 +297,7 @@
         </cfif>
 
         <cfset newContact = newContact & ' / ' & FORM.contact_name_2 />
-        <cfif VAL(FORM.contact_title_2) AND getTitle.recordCount GT 0 >
+        <cfif VAL(FORM.contact_title_2) AND getTitle2.recordCount GT 0 >
             <cfset newContact = newContact & ', ' & getTitle2.name  />
         </cfif>
 
@@ -327,7 +327,7 @@
         </cfif>
 
         <cfset newContact = newContact & ' / ' & FORM.contact_name_3 />
-        <cfif VAL(FORM.contact_title_3) AND getTitle.recordCount GT 0 >
+        <cfif VAL(FORM.contact_title_3) AND getTitle3.recordCount GT 0 >
             <cfset newContact = newContact & ', ' & getTitle3.name  />
         </cfif>
 
@@ -364,7 +364,7 @@
         </cfif>
 
         <cfset newContact = newContact & ' / ' & FORM.contact_name_3 />
-        <cfif VAL(FORM.contact_title_3) AND getTitle.recordCount GT 0 >
+        <cfif VAL(FORM.contact_title_3) AND getTitle3.recordCount GT 0 >
             <cfset newContact = newContact & ', ' & getTitle3.name  />
         </cfif>
 
