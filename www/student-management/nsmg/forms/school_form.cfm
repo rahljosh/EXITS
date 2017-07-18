@@ -28,8 +28,6 @@
     <cfparam name="FORM.state" default="">
     <cfparam name="FORM.zip" default="">
     <cfparam name="FORM.zipLookup" default="">
-    <cfparam name="FORM.principal" default="">
-    <cfparam name="FORM.email" default="">
     <cfparam name="FORM.phone" default="">
     <cfparam name="FORM.phone_ext" default="">
     <cfparam name="FORM.fax" default="">
@@ -128,13 +126,13 @@
 					FORM.errorMsg = FORM.errorMsg & "Please enter a valid Zip. \n";
 				}
 	
-				if ( NOT LEN(TRIM(FORM.principal)) ) {
-					FORM.errorMsg = FORM.errorMsg & "Please enter the Contact. \n";
-				}
+				//if ( NOT LEN(TRIM(FORM.principal)) ) {
+				//	FORM.errorMsg = FORM.errorMsg & "Please enter the Contact. \n";
+				//}
 	
-				if ( LEN(TRIM(FORM.email)) AND NOT isValid("email", TRIM(FORM.email)) ) {
-					FORM.errorMsg = FORM.errorMsg & "Please enter a valid Contact Email. \n";
-				}
+				//if ( LEN(TRIM(FORM.email)) AND NOT isValid("email", TRIM(FORM.email)) ) {
+				//	FORM.errorMsg = FORM.errorMsg & "Please enter a valid Contact Email. \n";
+				//}
 	
 				if ( NOT isValid("telephone", TRIM(FORM.phone)) ) {
 					FORM.errorMsg = FORM.errorMsg & "Please enter a valid Phone. \n";
@@ -162,8 +160,6 @@
                         city = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city#">,
                         state = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.state#">,
                         zip = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.zip#">,
-                        principal = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.principal#">,
-                        email = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#" null="#yesNoFormat(TRIM(FORM.email) EQ '')#">,
                         phone = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#">,
                         phone_ext = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone_ext#" null="#yesNoFormat(TRIM(FORM.phone_ext) EQ '')#">,
                         fax = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fax#" null="#yesNoFormat(TRIM(FORM.fax) EQ '')#">,
@@ -187,8 +183,6 @@
                         city, 
                         state, 
                         zip, 
-                        principal, 
-                        email, 
                         phone, 
                         phone_ext, 
                         fax, 
@@ -204,8 +198,6 @@
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.city#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.state#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.zip#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.principal#">,
-                        <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.email#" null="#yesNoFormat(TRIM(FORM.email) EQ '')#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.phone_ext#" null="#yesNoFormat(TRIM(FORM.phone_ext) EQ '')#">,
                         <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.fax#" null="#yesNoFormat(TRIM(FORM.fax) EQ '')#">,
@@ -236,8 +228,6 @@
 			FORM.city = qGetSchoolInfo.city;
 			FORM.state = qGetSchoolInfo.state;
 			FORM.zip = qGetSchoolInfo.zip;
-			FORM.principal = qGetSchoolInfo.principal;
-			FORM.email = qGetSchoolInfo.email;
 			FORM.phone = qGetSchoolInfo.phone;
 			FORM.phone_ext = qGetSchoolInfo.phone_ext;
 			FORM.fax = qGetSchoolInfo.fax;
@@ -298,9 +288,9 @@
 		if($("#zip").val() == ''){
 			errorMessage = (errorMessage + 'Please enter the Zip. \n')
 		}
-		if($("#contact").val() == ''){
-			errorMessage = (errorMessage + 'Please enter the Contact. \n')
-		}
+		//if($("#contact").val() == ''){
+		//	errorMessage = (errorMessage + 'Please enter the Contact. \n')
+		//}
 		if($("#phone").val() == ''){
 			errorMessage = (errorMessage + 'Please enter a phone number. \n')
 		}
@@ -564,14 +554,14 @@
             </cfif>
 		</cfif>
 
-        <tr>
+        <!---<tr>
             <td class="label">Contact: <cfif client.companyid NEQ 13><span class="redtext">*</span></cfif></td>
             <td colspan="3"><cfinput type="text" name="principal" value="#FORM.principal#" size="30" maxlength="200" ></td>
         </tr>
         <tr>
             <td class="label">Contact Email:</td>
             <td colspan="3"><cfinput type="text" name="email" value="#FORM.email#" size="30" maxlength="200" ></td>
-        </tr>
+        </tr>--->
         
         <!--- Editing School --->
 		<cfif qGetSchoolInfo.recordCount>

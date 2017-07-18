@@ -391,6 +391,9 @@
         $("#stateID_export").val($("#stateID").val());
         $("#sortBy_export").val($("#sortBy").val());
 
+        $("#available_to_host_export").val($("#available_to_host").val());
+        $("#HFcity_export").val($("#HFcity").val());
+
         //console.log($("#HFstatus_export").val());
 
         return true;

@@ -488,7 +488,11 @@
                     INNER JOIN smg_programs p ON (p.programID = s.programID)
                     
                 WHERE p.seasonID IN (<cfqueryparam cfsqltype="cf_sql_varchar" value="#ARGUMENTS.seasonIDs#" >)
-                    AND s.companyID = #CLIENT.companyID#
+                    <cfif CLIENT.companyID EQ 5>
+                        AND s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.SETTINGS.COMPANYLIST.ISESMG#" list="yes"> ) 
+                    <cfelse>
+                        AND s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
+                    </cfif>
                 GROUP BY countryID
                 ORDER BY countryName                    
         </cfquery> 
