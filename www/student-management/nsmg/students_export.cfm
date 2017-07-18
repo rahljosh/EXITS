@@ -10,10 +10,11 @@
 ----- ------------------------------------------------------------------------- --->
 <!--- use cfsetting to block output of HTML outside of cfoutput tags --->
 <cfsetting enablecfoutputonly="Yes">
+
 <!--- "Content-Disposition" in cfheader also ensures relatively correct Internet Explorer behavior. --->
-<cfheader name="Content-Disposition" value="attachment;filename=StudentsList.xls">
+<!--- <cfheader name="Content-Disposition" value="attachment;filename=StudentsList.xls"> --->
 <!--- set content type --->
-<cfcontent type="application/msexcel"  reset="true">
+<!--- <cfcontent type="application/msexcel"  reset="true"> --->
 
 <!--- Kill Extra Output --->
 <cfsilent>
@@ -106,121 +107,109 @@
         stateid = FORM.stateid,
         state_placed_id = FORM.state_placed_id,
         programID = FORM.programID,
-        searchStudentID = FORM.searchStudentID);
+        searchStudentID = FORM.searchStudentID,
+        isExport = 1);
 	</cfscript>
     
 </cfsilent>
-<!--- Format data using cfoutput and a table. Excel converts the table to a spreadsheet.
-The cfoutput tags around the table tags force output of the HTML when using cfsetting enablecfoutputonly="Yes" --->
-<cfoutput>    
 
-    <table border="1" style="font-family:Verdana, Geneva, sans-serif; font-size:9pt;">
-        <tr>
-            <td colspan="13" style="font-size:16pt; font-weight:bold; text-align:center; border:none;">
-                Students Export  
-            </td>
-        </tr>
-        <tr>
-            <td style="width:50px; text-align:left; font-weight:bold;">ID</td>
-            <td style="width:75px; text-align:left; font-weight:bold;">Last Name</td>
-            <td style="width:75px; text-align:left; font-weight:bold;">First Name</td>
-            <td style="width:75px; text-align:left; font-weight:bold;">Sex</td>
-            <td style="width:150px; text-align:left; font-weight:bold;">Country</td>
-            <td style="width:150px; text-align:left; font-weight:bold;">Email</td>
-            <td style="width:250px; text-align:left; font-weight:bold;">Requests</td>
-            <td style="width:100px; text-align:left; font-weight:bold;">Status</td>
-            <td style="width:100px; text-align:left; font-weight:bold;">Hold Date</td>
-            <td style="width:100px; text-align:left; font-weight:bold;">Region</td>
-            <td style="width:100px; text-align:left; font-weight:bold;">Program</td>
-            <td style="width:100px; text-align:left; font-weight:bold;">Placement Date</td>
-            <td style="width:170px; text-align:left; font-weight:bold;">Int. Agent</td>
-        </tr>
-        
-        <cfloop query="getStudentsExport.QUERY">
-            <tr>
-                <td>#getStudentsExport.QUERY.studentid#</td>
-                <td>#getStudentsExport.QUERY.familylastname#</td>
-                <td>#getStudentsExport.QUERY.firstname#</td>
-                <td>#getStudentsExport.QUERY.sex#</td>
-                <td>#getStudentsExport.QUERY.countryname#</td>
-                <td>#getStudentsExport.QUERY.email#</td>
-                <td>
-                    <cfset hasState = 0 />
-                    <cfif (getStudentsExport.QUERY.state1name NEQ '') >
-                        <strong>State:</strong> #getStudentsExport.QUERY.state1name#
-                        <cfset hasState = 1 />
-                    </cfif>
-                    <cfif (getStudentsExport.QUERY.state2name NEQ '') >
-                        , #getStudentsExport.QUERY.state2name#
-                        <cfset hasState = 1 />
-                    </cfif>
-                    <cfif (getStudentsExport.QUERY.state3name NEQ '') >
-                        , #getStudentsExport.QUERY.state3name#
-                        <cfset hasState = 1 />
-                    </cfif>
+<cfset tempPath  =   APPLICATION.PATH.temp & "StudentsList.xls">
 
-                    <cfset hasRegion = 0 />
-                    <cfif  (getStudentsExport.QUERY.app_region_guarantee EQ 6) >
-                        <cfif (hasState EQ 1) > ;</cfif>
-                        <strong>Region:</strong> West Region 
-                        <cfset hasRegion = 1 />
-                    </cfif>
-                    <cfif (getStudentsExport.QUERY.app_region_guarantee EQ 7) >
-                        <cfif (hasState EQ 1) > ;</cfif>
-                        <strong>Region:</strong> Central Region 
-                        <cfset hasRegion = 1 />
-                    </cfif>
-                    <cfif (getStudentsExport.QUERY.app_region_guarantee EQ 8) >
-                        <cfif (hasState EQ 1) > ;</cfif>
-                        <strong>Region:</strong> South Region 
-                        <cfset hasRegion = 1 />
-                    </cfif>
-                    <cfif  (getStudentsExport.QUERY.app_region_guarantee EQ 9) >
-                        <cfif (hasState EQ 1) > ;</cfif>
-                        <strong>Region:</strong> East Region 
-                        <cfset hasRegion = 1 />
-                    </cfif>
+<cfset SpreadsheetObj = spreadsheetNew("Students")>
 
-                    <cfif ((getStudentsExport.QUERY.add_program NEQ '') && (getStudentsExport.QUERY.add_program NEQ 'None')) >
-                        <cfif ((hasState EQ 1) || (hasRegion EQ 1)) > ;</cfif>
-                        <cfif (getStudentsExport.QUERY.add_program EQ 'New York Orientation') >
-                            <strong>NY Orientation</strong>
-                        <cfelseif (getStudentsExport.QUERY.add_program EQ 'Pre-AYP English') >
-                            <strong>Pre-AYP</strong>
-                        <cfelse >
-                            #getStudentsExport.QUERY.add_program#;
-                        </cfif>
-                    </cfif>
-                </td>
-                <td>#stu_status#</td>
-                <td>#hold_create_date#</td>
-                <td>
-                    #regionname#
-                    <cfif (state_guarantee NEQ '') >
-                        <span style="color:##CC0000; font-weight:bold">* #state_guarantee#</span>
-                    </cfif>
-                    <cfif (r_guarantee NEQ '') >
-                        <span style="color:##CC0000; font-weight:bold">* #r_guarantee#</span>
-                    </cfif>
-                </td>
-                <td>#programname#</td>
-                <td>#DateFormat(dateplaced, 'mm/dd/yyyy')#</td>
-                <td>#businessname# (###intrepID#)
-                    <cfif VAL(branchID)>
-                        <br /><strong>Branch:</strong> #branchName#
-                    </cfif>
-                </td>
-            </tr>                    
-        </cfloop>
-        
-        <cfif NOT getStudentsExport.QUERY.recordCount>
-          <tr>
-              <td colspan="13" align="center">
-                  There are no students to be expoted at this time.
-                </td>
-           </tr>                        
+<cfset poiSheet = SpreadsheetObj.getWorkBook().getSheet("Students")>
+<cfset ps = poiSheet.getPrintSetup()>
+<cfset ps.setLandscape(true)>
+<cfset ps.setFitWidth(1)>
+<cfset poiSheet.setFitToPage(true)>
+<cfset poiSheet.setMargin( poiSheet.LeftMargin, 0.25)>
+<cfset poiSheet.setMargin( poiSheet.RightMargin, 0.25)>
+<cfset poiSheet.setMargin( poiSheet.TopMargin, 0.25)>
+<cfset poiSheet.setMargin( poiSheet.BottomMargin, 0.25)>
+
+<cfset spreadsheetAddRow(SpreadsheetObj, "StudentID, Last Name, First Name, Sex, Country, Email, Requests, Status, Since, Region, Program, Placement Date, Int. Agent")> 
+<cfloop query="getStudentsExport.QUERY" >
+
+    <cfset student_request = '' />
+    <cfset hasState = 0 />
+    <cfif (getStudentsExport.QUERY.state1name NEQ '') >
+        <cfset student_request = student_request & "State: #getStudentsExport.QUERY.state1name#" />
+        <cfset hasState = 1 />
+    </cfif>
+    <cfif (getStudentsExport.QUERY.state2name NEQ '') >
+        <cfset student_request = student_request & " #getStudentsExport.QUERY.state2name#" />
+        <cfset hasState = 1 />
+    </cfif>
+    <cfif (getStudentsExport.QUERY.state3name NEQ '') >
+        <cfset student_request = student_request & " #getStudentsExport.QUERY.state3name#" />
+        <cfset hasState = 1 />
+    </cfif>
+
+    <cfset hasRegion = 0 />
+    <cfif  (getStudentsExport.QUERY.app_region_guarantee EQ 6) >
+        <cfif (hasState EQ 1) ><cfset student_request = student_request & "; " /></cfif>
+        <cfset student_request = student_request & "Region: West Region " />
+        <cfset hasRegion = 1 />
+    </cfif>
+    <cfif (getStudentsExport.QUERY.app_region_guarantee EQ 7) >
+        <cfif (hasState EQ 1) ><cfset student_request = student_request & "; " /></cfif>
+        <cfset student_request = student_request & "Region: Central Region " />
+        <cfset hasRegion = 1 />
+    </cfif>
+    <cfif (getStudentsExport.QUERY.app_region_guarantee EQ 8) >
+        <cfif (hasState EQ 1) ><cfset student_request = student_request & "; " /></cfif>
+        <cfset student_request = student_request & "Region: South Region " />
+        <cfset hasRegion = 1 />
+    </cfif>
+    <cfif  (getStudentsExport.QUERY.app_region_guarantee EQ 9) >
+        <cfif (hasState EQ 1) ><cfset student_request = student_request & "; " /></cfif>
+        <cfset student_request = student_request & "Region: East Region " />
+        <cfset hasRegion = 1 />
+    </cfif>
+
+    <cfif ((getStudentsExport.QUERY.add_program NEQ '') && (getStudentsExport.QUERY.add_program NEQ 'None')) >
+        <cfif ((hasState EQ 1) || (hasRegion EQ 1)) > <cfset student_request = student_request & "; " /></cfif>
+        <cfif (getStudentsExport.QUERY.add_program EQ 'New York Orientation') >
+            <cfset student_request = student_request & "NY Orientation" />            
+        <cfelseif (getStudentsExport.QUERY.add_program EQ 'Pre-AYP English') >
+            <cfset student_request = student_request & " Pre-AYP" />
+        <cfelse >
+            <cfset student_request = student_request & " #getStudentsExport.QUERY.add_program#" />
         </cfif>
-        
-    </table>            
+    </cfif>
 
-</cfoutput>
+
+    <cfset student_region = regionname />
+    <cfif (state_guarantee NEQ '') >
+        <cfset student_region = regionname & " *#state_guarantee#" />
+    </cfif>
+    <cfif (r_guarantee NEQ '') >
+        <cfset student_region = regionname & " *#r_guarantee#" />
+    </cfif>
+
+    <cfset student_programname = programname />
+    <cfif (aypenglish NEQ '') >
+        <cfset student_programname = student_programname & ' *Pre-Ayp English' />
+    </cfif>
+    <cfif (ayporientation NEQ '') >
+        <cfset student_programname = student_programname & ' *NY Orient' />
+    </cfif>
+
+
+    <cfset student_intRep = "#businessname# (###intrepID#)" />
+    <cfif VAL(branchID)>
+        <cfset student_intRep = student_intRep & " Branch: #branchName#" />
+    </cfif>
+
+    <cfset spreadsheetAddRow(SpreadsheetObj, "#getStudentsExport.QUERY.studentid#, #replace(getStudentsExport.QUERY.familylastname,",","","all")#, #replace(getStudentsExport.QUERY.firstname,",","","all")#, #getStudentsExport.QUERY.sex#, #getStudentsExport.QUERY.countryname#, #getStudentsExport.QUERY.email#, #student_request#, #getStudentsExport.QUERY.stu_status#, #getStudentsExport.QUERY.status_date#, #student_region#, #student_programname#, #DateFormat(dateplaced, 'mm/dd/yyyy')#, #replace(student_intRep,",","","all")#")> 
+</cfloop>
+
+<cfset SpreadsheetformatRow(SpreadsheetObj, {bold=true,alignment='center'},1)> 
+
+
+<cfspreadsheet action="write" name="SpreadsheetObj" filename="#tempPath#" overwrite="true">
+
+<cfheader name="Content-Disposition" value="inline; filename=StudentsList.xls" >
+<cfcontent type="application/vnd.ms-excel" file="#tempPath#" deletefile="yes" >
+
+<cfabort />
