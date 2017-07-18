@@ -40,11 +40,22 @@
                         <td>
                             <cfif CLIENT.usertype LTE 7>
                                 <cfif VAL(qGetHostInfo.isHosting) AND NOT VAL(qGetHostInfo.with_competitor)>
+                                    <cfif NOT VAL(qGetHostInfo.school_issue)>
+                                        <cfform 
+                                            method="post" 
+                                            action="../index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" 
+                                            style="display:inline;" 
+                                            onsubmit="return confirm('Confirm new status: Dropped - School Issue')">
+                                            <input type="hidden" name="school_issue" value="1"/>
+                                            <input type="hidden" name="host_lead_referer" value="1">
+                                            <input type="submit" value="Dropped - School Issue"  alt="Dropped - School Issue" border="0" class="buttonOrange" style="margin:4px 0" />
+                                        </cfform>
+                                    </cfif>
+
                                      <cfform method="post" action="../index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" style="display:inline;">
                                         <input type="hidden" name="decideToHost" value="0"/>
                                         <input type="hidden" name="host_lead_referer" value="1">
-                                        <input type="submit" value="Decided Not To Host"  alt="Decided Not To Host" border="0" class="buttonRed" />
-                                        
+                                        <input type="submit" value="Decided Not To Host"  alt="Decided Not To Host" border="0" class="buttonRed" style="margin:4px 0" />
                                     </cfform>
                                    
                                        
@@ -52,7 +63,7 @@
 
                                         <input type="hidden" name="withCompetitor" value="1"/>
                                         <input type="hidden" name="host_lead_referer" value="1">
-                                        <input type="submit" value="With Other Sponsor"  alt="With Other Sponsor" border="0" class="buttonRed" />
+                                        <input type="submit" value="With Other Sponsor"  alt="With Other Sponsor" border="0" class="buttonRed" style="margin:4px 0"/>
                                     </cfform>
                                     <!---<cfif VAL(qGetHostInfo.applicationStatusID)>
                                          <cfform method="post" action="../index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" style="display:inline;">
@@ -66,7 +77,7 @@
                                   
                                         <input type="hidden" name="decideToHost" value="1"/>
                                          <input type="hidden" name="host_lead_referer" value="1">
-                                        <input type="submit" value="Decided To Host"  alt="Decided To Host" border="0" class="buttonYellow" />
+                                        <input type="submit" value="Decided To Host"  alt="Decided To Host" border="0" class="buttonYellow" style="margin:4px 0" />
                                     </cfform>
                                 </cfif>
                                 
@@ -75,7 +86,7 @@
                                  <cfform method="post" action="../index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" style="display:inline;">
                                     <input type="hidden" name="hostNewSeason" value="1"/>
                                      <input type="hidden" name="host_lead_referer" value="1">
-                                    <input type="submit" value="Host #qCurrentSeason.season#"  alt="Host Season X" border="0" class="buttonGreen" />
+                                    <input type="submit" value="Host #qCurrentSeason.season#"  alt="Host Season X" border="0" class="buttonGreen" style="margin:4px 0"/>
                                 </cfform>
                          	</cfif>
                         </td>
@@ -90,12 +101,20 @@
                                      <input type="hidden" name="host_lead_referer" value="1">
                                     <input type="submit" value="Call Back"  alt="Call Back" border="0" class="buttonBlue"/>
                                 </cfform>
+
                                 <cfform method="post" action="../index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" style="display:inline;">
                                     <input type="hidden" name="StatusUpdateSub"  value="1"/>
                                     <input type="hidden" name="call_back" value="2"/>
                                      <input type="hidden" name="host_lead_referer" value="1">
                                     <input type="submit" value="Call Back Next SY"  alt="Call Back Next SY" border="0" class="buttonBlue"/>
                                 </cfform>
+
+                                <cfform method="post" action="../index.cfm?curdoc=host_fam_info_status_update&hostid=#url.hostid#" style="display:inline;">
+                                <input type="hidden" name="StatusUpdateSub"  value="1"/>
+                                <input type="hidden" name="call_back" value="3"/>
+                                <input type="hidden" name="host_lead_referer" value="1">
+                                <input type="submit" value="Email Back"  alt="Email Back" border="0" class="buttonBlue"/>
+                            </cfform>
 
                         </td>
                     </tr>
