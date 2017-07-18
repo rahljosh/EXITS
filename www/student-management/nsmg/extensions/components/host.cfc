@@ -1410,9 +1410,10 @@
                         smg_host_app_season.dateSent,
                         smg_host_app_season.dateStarted,
                         smg_host_app_season.dateSubmitted,
-                        smg_host_app_season.dateUpdated,
+                        smg_host_app_season.dateUpdated as appUpdated,
                         smg_host_app_season.ID AS hostAppSeasonID,   
-                        smg_notes.appNotes                  
+                        smg_notes.appNotes,
+                        h.dateUpdated                 
                     FROM 
                         smg_hosts h
                   	<!--- Host Season-based approval status --->
@@ -1497,7 +1498,8 @@
                         </cfif>
                         
 					</cfif>
-                        AND smg_host_app_season.activeApp = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+                        AND 
+                        	smg_host_app_season.activeApp = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
                     <cfswitch expression="#ARGUMENTS.userType#">
                         
                         <!--- Regional Manager --->
@@ -1542,20 +1544,25 @@
                    	WHERE 
                    		totalNumberCurrentStudents > 0
 				<Cfelseif ARGUMENTS.currently_hosting eq 2>
-					WHERE 
-						totalNumberCurrentStudents = 0
+					WHERE
+						(totalNumberCurrentStudents = 0 and totalNumberPrevousAppStudents = 0 and PreviousHostAppSeason = 0)  
+					OR 
+				  		(totalNumberCurrentStudents = 0 and (totalNumberPrevousAppStudents > 0 and PreviousHostAppSeason > 0))  
+				  	OR 
+				  		(totalNumberCurrentStudents = 0 and (totalNumberPrevousAppStudents = 0 and PreviousHostAppSeason > 0))
 				<Cfelseif ARGUMENTS.currently_hosting eq 3>	
 					WHERE
 						(totalNumberCurrentStudents = 0 and totalNumberPrevousAppStudents  > 0 and PreviousHostAppSeason = 0 )   
 				</Cfif>	  
                          
                 ORDER BY 
-                    dateUpdated
+                    appUpdated
                     <cfif val(ARGUMENTS.statusID) eq 3>
                      DESC
 					</cfif>
 				
 		</cfquery>
+		
 		<cfreturn qGetApplicationList>
 	</cffunction>
     <!---End of Basics for Host App List---->

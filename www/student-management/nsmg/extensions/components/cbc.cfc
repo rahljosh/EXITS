@@ -1410,18 +1410,20 @@
 					
 					
 					
+
 					
                     // Reads XML File and Send Email CFC
-                    batchResult.message = sendEmailResult(
-                        companyID=ARGUMENTS.companyID,
-                        responseXML=responseXML,
-                        userType=ARGUMENTS.userType,
-                        hostID=ARGUMENTS.hostID,
-                        userID=ARGUMENTS.userID,
-                        lastName=ARGUMENTS.lastName,
-                        firstName=ARGUMENTS.firstName,
-						isRerun=ARGUMENTS.isRerun
-                    );				
+                    //batchResult.message = sendEmailResult(
+                    //    companyID=ARGUMENTS.companyID,
+                    //    responseXML=responseXML,
+                    //    userType=ARGUMENTS.userType,
+                    //    hostID=ARGUMENTS.hostID,
+                    //   userID=ARGUMENTS.userID,
+                    //    lastName=ARGUMENTS.lastName,
+                    //    firstName=ARGUMENTS.firstName,
+					//	isRerun=ARGUMENTS.isRerun
+                    //);				
+
     
                     // Get Report ID
 					try { 
