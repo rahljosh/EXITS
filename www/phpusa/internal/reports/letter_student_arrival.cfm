@@ -107,10 +107,10 @@
 
 <!--- PAGE BOTTON --->	
 <table width="660" align="center" border=0 cellpadding="1" cellspacing="1" style="font-size:13px">
-	<tr><td>Sincerely,</td></tr>	
+	<tr><td>Best Regards,</td></tr>	
 	<tr><td>&nbsp;</td></tr>
-	<tr><td><img src="../pics/lukesign.jpg" border="0"></td></tr>
-	<tr><td>Luke Davis</td></tr>
+	<tr><td><img src="../pics/diana_signature.png" border="0"></td></tr>
+	<tr><td>Diana DeClemente</td></tr>
 	<tr><td>Program Director</td></tr>	
 	<tr><td>#companyshort.companyname#</td></tr>			
 </table><br />
