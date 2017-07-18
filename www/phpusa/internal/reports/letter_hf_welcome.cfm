@@ -135,7 +135,7 @@ group by seasonid
 </table>
 
 <!--- PAGE BOTTON --->	
-<table width="660" align="center" border=0 cellpadding="1" cellspacing="1" style="font-size:13px">
+ <table width="660" align="center" border=0 cellpadding="1" cellspacing="1" style="font-size:13px">
 	<tr><td>Best Regards,</td></tr>	
 	<tr><td>&nbsp;</td></tr>
 	<tr><td><img src="../pics/diana_signature.png" border="0"></td></tr>
