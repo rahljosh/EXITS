@@ -4517,7 +4517,9 @@
                     h.nexits_id,
                     h.familylastname, 
                     h.fatherfirstname, 
+                    h.father_cell, 
                     h.motherfirstname,
+                    h.mother_cell, 
                     h.address,
                     h.address2,
                     h.city, 
@@ -5067,7 +5069,9 @@
                     h.nexits_id,
                     h.familylastname, 
                     h.fatherfirstname, 
+                    h.father_cell, 
                     h.motherfirstname, 
+                    h.mother_cell, 
                     h.address,
                     h.address2,
                     h.city, 
@@ -5391,7 +5395,7 @@
             }
 
             // Populate structure with query
-            resultQuery = QueryNew("hostid, nexits_id, familylastname, fatherfirstname, motherfirstname, address, address2, city, state, zip, isNotQualifiedToHost, isHosting, phone, email, call_back, area_rep_firstname, area_rep_lastname, programName, call_back_updated, with_competitor, HFstatus, regionname");
+            resultQuery = QueryNew("hostid, nexits_id, familylastname, fatherfirstname, father_cell, motherfirstname, mother_cell, address, address2, city, state, zip, isNotQualifiedToHost, isHosting, phone, email, call_back, area_rep_firstname, area_rep_lastname, programName, call_back_updated, with_competitor, HFstatus, regionname");
             
             if ( qGetResults.recordCount < stResult.recordTo ) {
                 stResult.recordTo = qGetResults.recordCount;
@@ -5406,7 +5410,9 @@
                     QuerySetCell(resultQuery, "nexits_id", qGetResults.nexits_id[i]);
                     QuerySetCell(resultQuery, "familylastname", qGetResults.familylastname[i]);
                     QuerySetCell(resultQuery, "fatherfirstname", qGetResults.fatherfirstname[i]);
+                    QuerySetCell(resultQuery, "father_cell", qGetResults.father_cell[i]);
                     QuerySetCell(resultQuery, "motherfirstname", qGetResults.motherfirstname[i]);
+                    QuerySetCell(resultQuery, "mother_cell", qGetResults.mother_cell[i]);
                     QuerySetCell(resultQuery, "address", qGetResults.address[i]);
                     QuerySetCell(resultQuery, "address2", qGetResults.address2[i]);
                     QuerySetCell(resultQuery, "city", qGetResults.city[i]);
