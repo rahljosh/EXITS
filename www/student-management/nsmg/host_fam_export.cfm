@@ -11,9 +11,9 @@
 <!--- use cfsetting to block output of HTML outside of cfoutput tags --->
 <cfsetting enablecfoutputonly="Yes">
 <!--- "Content-Disposition" in cfheader also ensures relatively correct Internet Explorer behavior. --->
-<cfheader name="Content-Disposition" value="attachment;filename=HostFamilyList.xls">
+<!--- <cfheader name="Content-Disposition" value="attachment;filename=HostFamilyList.xls"> --->
 <!--- set content type --->
-<cfcontent type="application/msexcel"  reset="true">
+<!--- <cfcontent type="application/msexcel"  reset="true"> --->
 
 <!--- Kill Extra Output --->
 <cfsilent>
@@ -46,80 +46,33 @@
 	</cfscript>
     
 </cfsilent>
-<!--- Format data using cfoutput and a table. Excel converts the table to a spreadsheet.
-The cfoutput tags around the table tags force output of the HTML when using cfsetting enablecfoutputonly="Yes" --->
-<cfoutput>    
 
-    <table border="1" style="font-family:Verdana, Geneva, sans-serif; font-size:9pt;">
-        <tr>
-            <td colspan="13" style="font-size:16pt; font-weight:bold; text-align:center; border:none;">
-                Host Family Export  
-            </td>
-        </tr>
-        <tr>
-            <td style="width:50px; text-align:left; font-weight:bold;">ID</td>
-            <td style="width:50px; text-align:left; font-weight:bold;">NX ID</td>
-            <td style="width:75px; text-align:left; font-weight:bold;">Last Name</td>
-            <td style="width:75px; text-align:left; font-weight:bold;">Father</td>
-            <td style="width:75px; text-align:left; font-weight:bold;">Mother</td>
-            <td style="width:150px; text-align:left; font-weight:bold;">Phone</td>
-            <td style="width:250px; text-align:left; font-weight:bold;">Email</td>
-            <td style="width:100px; text-align:left; font-weight:bold;">Address</td>
-            <td style="width:100px; text-align:left; font-weight:bold;">Address 2</td>
-            <td style="width:100px; text-align:left; font-weight:bold;">City</td>
-            <td style="width:50px; text-align:left; font-weight:bold;">State</td>
-            <td style="width:75px; text-align:left; font-weight:bold;">Zip</td>
-            <td style="width:75px; text-align:left; font-weight:bold;">Region</td>
-            <td style="width:200px; text-align:left; font-weight:bold;">Area Rep</td>
-            <td style="width:75px; text-align:left; font-weight:bold;">Last Hosted</td>
-            <td style="width:150px; text-align:left; font-weight:bold;">Status</td>
-            <td style="width:75px; text-align:left; font-weight:bold;">Status Updated</td>
-        </tr>
-        
-        <cfloop query="getHostExport.QUERY">
-            <tr>
-                <td>#hostid#</td>
-                <td>#nexits_id#</td>
-                <td>#familylastname#</td>
-                <td>#fatherfirstname#</td>
-                <td>#motherfirstname#</td>
-                <td>#phone#</td>
-                <td>#email#</td>
-                <td>#address#</td>
-                <td>#address2#</td>
-                <td>#city#</td>
-                <td>#state#</td>
-                <td>#zip#</td>
-                <td>#regionname#</td>
-                <td>#area_rep_firstname# #area_rep_lastname#</td>
-                <td>#programName#</td>
-                <td>
-                  <cfif isNotQualifiedToHost EQ 1 >
-                      Not Qualified to Host
-                  <cfelseif isHosting EQ 0>
-                      Decided not to host
-                  <cfelseif call_back EQ 1 >
-                      Call Back
-                  <cfelseif call_back EQ 2 >
-                      Call Back Next SY
-                  <cfelseif with_competitor EQ 1 >
-                      With Competitor
-                  <cfelse>
-                      Available to Host
-                  </cfif>
-                </td>
-                <td>#call_back_updated#</td>
-            </tr>                    
-        </cfloop>
-        
-        <cfif NOT getHostExport.QUERY.recordCount>
-          <tr>
-              <td colspan="3" align="center">
-                  There are no leads to be expoted at this time.
-                </td>
-           </tr>                        
-        </cfif>
-        
-    </table>            
 
-</cfoutput>
+<cfset tempPath  =   APPLICATION.PATH.temp & "HostFamilyList.xls">
+
+<cfset SpreadsheetObj = spreadsheetNew("Hosts")>
+
+<cfset poiSheet = SpreadsheetObj.getWorkBook().getSheet("Hosts")>
+<cfset ps = poiSheet.getPrintSetup()>
+<cfset ps.setLandscape(true)>
+<cfset ps.setFitWidth(1)>
+<cfset poiSheet.setFitToPage(true)>
+<cfset poiSheet.setMargin( poiSheet.LeftMargin, 0.25)>
+<cfset poiSheet.setMargin( poiSheet.RightMargin, 0.25)>
+<cfset poiSheet.setMargin( poiSheet.TopMargin, 0.25)>
+<cfset poiSheet.setMargin( poiSheet.BottomMargin, 0.25)>
+            
+
+<cfset spreadsheetAddRow(SpreadsheetObj, "Host ID, Last Name, Father, Father's Cellphone, Mother, Mother's Cellphone, Phone, Email, Address, Address 2, City, State, Zip, Region, Area Rep, Last Hosted, Status, Status Updated")> 
+<cfloop query="getHostExport.QUERY" >
+
+    <cfset spreadsheetAddRow(SpreadsheetObj, "#getHostExport.QUERY.hostid#, #replace(getHostExport.QUERY.familylastname,",","","all")#, #replace(getHostExport.QUERY.fatherfirstname,",","","all")#, #replace(getHostExport.QUERY.father_cell,",","","all")#, #getHostExport.QUERY.motherfirstname#, #replace(getHostExport.QUERY.mother_cell,",","","all")#, #getHostExport.QUERY.phone#, #getHostExport.QUERY.email#, #replace(getHostExport.QUERY.address,",","","all")#, #replace(getHostExport.QUERY.address2,",","","all")#, #replace(getHostExport.QUERY.city,",","","all")#, #getHostExport.QUERY.state#, #getHostExport.QUERY.zip#, #getHostExport.QUERY.regionname#, #replace(getHostExport.QUERY.area_rep_firstname,",","","all")# #getHostExport.QUERY.area_rep_lastname#, #getHostExport.QUERY.programName#, #getHostExport.QUERY.HFstatus#, #getHostExport.QUERY.call_back_updated#")> 
+</cfloop>
+
+<cfset SpreadsheetformatRow(SpreadsheetObj, {bold=true,alignment='center'},1)> 
+
+
+<cfspreadsheet action="write" name="SpreadsheetObj" filename="#tempPath#" overwrite="true">
+
+<cfheader name="Content-Disposition" value="inline; filename=HostFamilyList.xls" >
+<cfcontent type="application/vnd.ms-excel" file="#tempPath#" deletefile="yes" >
