@@ -13,18 +13,45 @@
             sc.address2 AS school_address2, sc.city AS school_city, sc.state AS school_state, sc.zip AS school_zip, 
             sc.phone AS school_phone, sc.fax AS school_fax, scd.year_begins, scd.semester_ends, scd.semester_begins, 
             scd.year_ends, scd.enrollment, scd.orientation_required, s.schoolID, s.grades, s.dob AS student_dob,
-            p.no_semesters
+            p.no_semesters, s.hostID
     FROM smg_students s
     LEFT JOIN smg_countrylist c ON (c.countryID = s.countryresident)
     LEFT JOIN smg_hosts h ON (h.hostID = s.hostID)
     LEFT JOIN smg_hosthistory hh ON (hh.studentid = s.studentid AND hh.hostid = s.hostid AND hh.isActive = 1)
     LEFT JOIN smg_users u ON (hh.areaRepID = u.userid)
     LEFT JOIN smg_schools sc ON (sc.schoolID = hh.schoolID)
-    LEFT JOIN smg_school_dates scd ON (scd.schoolID = s.schoolID AND seasonID = #qCurrentSeason.SeasonID#)
     LEFT JOIN smg_programs p ON (s.programID = p.programID)
+    LEFT JOIN smg_school_dates scd ON (scd.schoolID = s.schoolID AND scd.seasonID = p.SeasonID)
     WHERE s.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.studentID#">
     LIMIT 1
 </cfquery>
+
+<cfif NOT VAL(get_form_data.hostID)>
+    <cfquery name="get_form_data" datasource="#application.dsn#">
+        SELECT s.studentID, u.firstname, u.lastname, u.address, u.address2, u.city, u.state, u.zip, u.phone, u.cell_phone, 
+                u.email, s.firstname AS student_firstname, s.familylastname AS student_lastname, 
+                c.countryname AS student_country, s.phone AS student_phone, 
+                s.email AS student_email, h.fatherlastname AS host_fatherlastname, h.fatherfirstname AS host_fatherfirstname, 
+                h.motherlastname AS host_motherlastname, h.motherfirstname AS host_motherfirstname, h.primaryHostParent, 
+                h.address AS host_address, h.address2 AS host_address2, h.city AS host_city, h.state AS host_state, 
+                h.zip AS host_zip, h.phone AS host_phone, h.email AS host_email, sc.schoolname, sc.address AS school_address, 
+                sc.address2 AS school_address2, sc.city AS school_city, sc.state AS school_state, sc.zip AS school_zip, 
+                sc.phone AS school_phone, sc.fax AS school_fax, scd.year_begins, scd.semester_ends, scd.semester_begins, 
+                scd.year_ends, scd.enrollment, scd.orientation_required, sc.schoolID, s.grades, s.dob AS student_dob,
+                p.no_semesters
+        FROM smg_students s
+        LEFT JOIN smg_student_hold_status shs ON (s.studentID = shs.student_id)
+        LEFT JOIN smg_hosts h ON (h.hostID = shs.host_family_id)
+        LEFT JOIN smg_countrylist c ON (c.countryID = s.countryresident)
+        LEFT JOIN smg_users u ON (u.userid = shs.area_rep_id)
+        LEFT JOIN smg_schools sc ON (sc.schoolID = shs.school_id)
+        LEFT JOIN smg_programs p ON (s.programID = p.programID)
+        LEFT JOIN smg_school_dates scd ON (scd.schoolID = shs.school_id AND scd.seasonID = p.SeasonID)
+        WHERE s.studentID = <cfqueryparam cfsqltype="cf_sql_integer" value="#url.studentID#">
+        ORDER BY id DESC
+        LIMIT 1
+    </cfquery>
+</cfif>
 
 <cfcontent type="application/pdf">
 <cfheader name="Content-Disposition" value="attachment;filename=SAF_#get_form_data.student_lastname#(#URL.studentID#)_#DATEFORMAT(NOW(), 'MMDDYYYY')#.pdf">
@@ -33,7 +60,7 @@
     SELECT smg_school_contacts.id, ssct.name AS title, smg_school_contacts.name, email, phone, show_on_saf, smg_school_contacts.title AS title_id
         FROM smg_school_contacts 
         LEFT JOIN smg_school_contact_titles ssct ON (ssct.id = smg_school_contacts.title)
-        WHERE school_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#get_form_data.schoolid#">
+        WHERE school_id = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(get_form_data.schoolid)#">
             AND smg_school_contacts.active = '1'
             AND smg_school_contacts.show_on_saf = 1
         ORDER BY smg_school_contacts.id ASC
@@ -336,7 +363,7 @@
                     <td width="600">
                         <div style="width:20pt; height: 20pt; border:1px solid ##000;float:left; line-height: 26pt; text-align: center; margin-left:10pt">&nbsp;</div> 
                         <span style="float:left;">Yes &nbsp; </span>
-                        <div style="width:20pt; height: 20pt; border:1px solid ##000;float:left; line-height: 26pt; text-align: center">&nbsp;</div> 
+                        <div style="width:20pt; height: 20pt; border:1px solid ##000;float:left; line-height: 26pt; text-align: center">X</div> 
                         <span style="float:left">No</span>
                     </td>
                 </tr>

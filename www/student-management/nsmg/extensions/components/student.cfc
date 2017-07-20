@@ -5997,14 +5997,14 @@
                     AND s.hostID != <cfqueryparam cfsqltype="cf_sql_integer" value="0">
                       
                     <!--- STUDENTS UNDER REGIONAL ADVISOR --->  
-                    <cfif ARGUMENTS.clientUserType EQ 6>
+                    <cfif CLIENT.usertype EQ 6>
                         AND (
-                                s.arearepid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.vUserUnderAdvisorList#" list="yes"> )
-                                OR s.placerepid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.vUserUnderAdvisorList#" list="yes"> )
+                                s.arearepid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vUserUnderAdvisorList#" list="yes"> )
+                                OR s.placerepid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#vUserUnderAdvisorList#" list="yes"> )
                             )
                             
                     <!--- STUDENTS UNDER AN AREA REPRESENTATIVE --->
-                    <cfelseif ARGUMENTS.clientUserType EQ 7>
+                    <cfelseif CLIENT.usertype EQ 7>
                         AND (
                                 s.arearepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
                                 OR s.placerepid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
