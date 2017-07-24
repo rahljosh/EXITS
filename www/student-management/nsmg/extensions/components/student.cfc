@@ -5622,7 +5622,7 @@
         <cfargument name="cancelled" type="string" default="" hint="not required">
         <cfargument name="active" type="string" default="" hint="not required">
         <cfargument name="seasonID" type="string" default="" hint="not required">
-        <cfargument name="sortBy" type="string" default="studentID" hint="not required">
+        <cfargument name="sortBy" type="string" default="" hint="not required">
         <cfargument name="sortOrder" type="string" default="ASC" hint="not required">
         <cfargument name="pageSize" type="numeric" default="30" hint="Page number is not required">
 
@@ -5650,6 +5650,8 @@
         <cfargument name="searchStudentID" type="string" default="" hint="not required">
 
         <cfargument name="clientUserType" type="string" default="" hint="not required">
+
+        <cfsetting requesttimeout="60" />
 
         <!--- STUDENTS UNDER ADVISOR --->       
         <cfif CLIENT.usertype EQ 6>
@@ -6182,6 +6184,7 @@
                 AND p.seasonID IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="#ARGUMENTS.seasonID#" list="yes"> )
             </cfif>
             
+            <cfif LEN(ARGUMENTS.sortBy)>
             ORDER BY 
                 <cfswitch expression="#ARGUMENTS.sortBy#">
 
@@ -6251,6 +6254,7 @@
                     </cfdefaultcase>
                             
                 </cfswitch>
+            </cfif>
         </cfquery>
 
         <cfscript>
