@@ -1158,8 +1158,14 @@
                         </div>
 
                         <cfselect name="hold_status_id" id="hold_status_id" onchange="toggle_hold_options()">
+                            <cfset todayDate = NOW()> 
+                            
                             <cfloop query="qGetHoldStatuses">
+                                <cfif qGetStudentHoldStatuses.hold_status_id EQ 2 AND Month(todayDate) EQ 8>
+                                    <!--- NOT SHOW --->
+                                <cfelse>
                                 <option value="#qGetHoldStatuses.id#" <cfif qGetStudentHoldStatuses.hold_status_id EQ qGetHoldStatuses.id> selected</cfif>>#qGetHoldStatuses.name#</option>
+                                </cfif>
                             </cfloop>
                         </cfselect>
                     </td>
@@ -1817,7 +1823,7 @@
                 </cfif>
             </table>
             <br>
- <cfif ListFind("1,2,3,4,5,12", qGetStudentInfo.companyID)>
+            <cfif ListFind("1,2,3,4,5,12", qGetStudentInfo.companyID)>
                 <table cellpadding="2" width="100%">
                     <tr bgcolor="##EAE8E8"><td colspan="2"><span class="get_attention"><b>:: </b></span>School Acceptance Form</td></tr>
                     <tr>
@@ -1832,6 +1838,15 @@
                     <tr bgcolor="##EAE8E8"><td colspan="2"><span class="get_attention"><b>:: </b></span>School Acceptance Form</td></tr>
                     <tr>
                         <td>: : <a href="school_acceptance_form_case.cfm?studentID=#studentid#">Download Filled Out SAF</a></td>
+                    </tr>
+                </table>
+
+                <br />
+            <cfelseif ListFind("15", qGetStudentInfo.companyID)>
+                <table cellpadding="2" width="100%">
+                    <tr bgcolor="##EAE8E8"><td colspan="2"><span class="get_attention"><b>:: </b></span>School Acceptance Form</td></tr>
+                    <tr>
+                        <td>: : <a href="school_acceptance_form_dash.cfm?studentID=#studentid#">Download Filled Out SAF</a></td>
                     </tr>
                 </table>
 
