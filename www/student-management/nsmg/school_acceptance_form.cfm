@@ -122,7 +122,7 @@
 
             <div style="float:right; width: 75%">
                 <p style="text-align: justify;">Dear School Administrator:</p>
-                <p style="text-align: justify;">As an Area Representative, I am seeking your permission for the student described belot to attend your high school in a full course of study. It is our policy to obtain written school acceptance prior to the student's arrival from a school taht is duly recognized as an accredited educational institution and declared as such by the appropriate authority of the state in which such institution is located. Our organization is granted full listing by the CSIET and we are empowered to issue a DS-02019 to secure a J-1 Exchange Visitor Visa for this student. We thank you for your willingness to accept out international student and hope you have an enjoyable year.
+                <p style="text-align: justify;">As an Area Representative, I am seeking your permission for the student described below to attend your high school in a full course of study. It is our policy to obtain written school acceptance prior to the student's arrival from a school that is duly recognized as an accredited educational institution and declared as such by the appropriate authority of the state in which such institution is located. Our organization is granted full listing by the CSIET and we are empowered to issue a DS-2019 to secure a J-1 Exchange Visitor Visa for this student. We thank you for your willingness to accept out international student and hope you have an enjoyable year.
                 </p>
             </div>
 
