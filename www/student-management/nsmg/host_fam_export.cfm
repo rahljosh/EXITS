@@ -9,6 +9,7 @@
 				
 ----- ------------------------------------------------------------------------- --->
 <!--- use cfsetting to block output of HTML outside of cfoutput tags --->
+<cfsetting requesttimeout="90" />
 <cfsetting enablecfoutputonly="Yes">
 <!--- "Content-Disposition" in cfheader also ensures relatively correct Internet Explorer behavior. --->
 <!--- <cfheader name="Content-Disposition" value="attachment;filename=HostFamilyList.xls"> --->
@@ -38,10 +39,10 @@
     param name="FORM.stateID" type="string" default='';  
     param name="FORM.sortBy" type="string" default='';  
     param name="FORM.sortOrder" type="string" default='';  
-    param name="FORM.pageSize" type="numeric" default='10000';  
+    param name="FORM.pageSize" type="numeric" default='500000';  
 		
 	// Get History
-	getHostExport = APPLICATION.CFC.HOST.getHostsRemote(pageNumber = FORM.pageNumber, regionid = FORM.regionid, keyword = FORM.keyword,  active_rep = FORM.active_rep, hosting = FORM.hosting, active = FORM.active,cavailable_to_host = FORM.available_to_host, area_rep = FORM.area_rep, vHostIDList = FORM.vHostIDList, HFstatus = FORM.HFstatus, school_id = FORM.school_id, type = FORM.type, stateID = FORM.stateID, sortBy = FORM.sortBy, sortOrder = FORM.sortOrder, pageSize = FORM.pageSize
+	getHostExport = APPLICATION.CFC.HOST.getHostsRemote(pageNumber = FORM.pageNumber, regionid = FORM.regionid, keyword = FORM.keyword,  active_rep = FORM.active_rep, hosting = FORM.hosting, active = FORM.active,available_to_host = FORM.available_to_host, area_rep = FORM.area_rep, vHostIDList = FORM.vHostIDList, HFstatus = FORM.HFstatus, school_id = FORM.school_id, type = FORM.type, stateID = FORM.stateID, sortBy = FORM.sortBy, sortOrder = FORM.sortOrder, pageSize = FORM.pageSize
     );
 	</cfscript>
     
@@ -66,7 +67,7 @@
 <cfset spreadsheetAddRow(SpreadsheetObj, "Host ID, Last Name, Father, Father's Cellphone, Mother, Mother's Cellphone, Phone, Email, Address, Address 2, City, State, Zip, Region, Area Rep, Last Hosted, Status, Status Updated")> 
 <cfloop query="getHostExport.QUERY" >
 
-    <cfset spreadsheetAddRow(SpreadsheetObj, "#getHostExport.QUERY.hostid#, #replace(getHostExport.QUERY.familylastname,",","","all")#, #replace(getHostExport.QUERY.fatherfirstname,",","","all")#, #replace(getHostExport.QUERY.father_cell,",","","all")#, #getHostExport.QUERY.motherfirstname#, #replace(getHostExport.QUERY.mother_cell,",","","all")#, #getHostExport.QUERY.phone#, #getHostExport.QUERY.email#, #replace(getHostExport.QUERY.address,",","","all")#, #replace(getHostExport.QUERY.address2,",","","all")#, #replace(getHostExport.QUERY.city,",","","all")#, #getHostExport.QUERY.state#, #getHostExport.QUERY.zip#, #getHostExport.QUERY.regionname#, #replace(getHostExport.QUERY.area_rep_firstname,",","","all")# #getHostExport.QUERY.area_rep_lastname#, #getHostExport.QUERY.programName#, #getHostExport.QUERY.HFstatus#, #getHostExport.QUERY.call_back_updated#")> 
+    <cfset spreadsheetAddRow(SpreadsheetObj, "#getHostExport.QUERY.hostid#, #replace(getHostExport.QUERY.familylastname,",","","all")#, #replace(getHostExport.QUERY.fatherfirstname,",","","all")#, #replace(getHostExport.QUERY.father_cell,",","","all")#, #getHostExport.QUERY.motherfirstname#, #replace(getHostExport.QUERY.mother_cell,",","","all")#, #getHostExport.QUERY.phone#, #replace(getHostExport.QUERY.email,",",".","all")#, #replace(getHostExport.QUERY.address,",","","all")#, #replace(getHostExport.QUERY.address2,",","","all")#, #replace(getHostExport.QUERY.city,",","","all")#, #getHostExport.QUERY.state#, #getHostExport.QUERY.zip#, #getHostExport.QUERY.regionname#, #replace(getHostExport.QUERY.area_rep_firstname,",","","all")# #getHostExport.QUERY.area_rep_lastname#, #getHostExport.QUERY.programName#, #getHostExport.QUERY.HFstatus#, #getHostExport.QUERY.call_back_updated#")> 
 </cfloop>
 
 <cfset SpreadsheetformatRow(SpreadsheetObj, {bold=true,alignment='center'},1)> 

@@ -273,8 +273,286 @@
     <cfscript>
 		//get all cases that your involved in
 		qYourCasesInitial = APPLICATION.CFC.CASEMGMT.yourCasesInitial(personid=client.userid,caseOrder=url.caseOrder); 
-		qYourLoopedCasesInitial = APPLICATION.CFC.CASEMGMT.yourLoopedCasesInitial(personid=client.userid,caseOrder=url.caseOrder); 
+		qYourLoopedCasesInitial = APPLICATION.CFC.CASEMGMT.yourLoopedCasesInitial(personid=client.userid,caseOrder=url.caseOrder);
+
+        qAYPEnglishCamps = APPCFC.SCHOOL.getAYPCamps(campType='english').campID;    
 	</cfscript>
+
+
+    <cfquery name="qGetPendingHosts" datasource="#APPLICATION.DSN#">
+        SELECT DISTINCT s.hostid, sh.isRelocation, sh.datePISEmailed, s.studentid, sh.doc_school_accept_date, s.uniqueID,
+            s.aypenglish, sh.datePlaced, sh.isRelocation,sh.compliance_school_accept_date, h.fatherFirstName, 
+            h.motherFirstName,
+            sh.compliance_host_app_page1_date,
+            sh.compliance_host_app_page2_date,
+            sh.compliance_letter_rec_date,
+            sh.compliance_photos_rec_date,
+            sh.compliance_bedroom_photo,
+            sh.compliance_bathroom_photo,
+            sh.compliance_kitchen_photo,
+            sh.compliance_living_room_photo,
+            sh.compliance_outside_photo,
+            sh.compliance_rules_rec_date,
+            sh.compliance_rules_sign_date,
+            sh.compliance_school_profile_rec,
+            sh.compliance_income_ver_date,
+            sh.compliance_conf_host_rec,
+            sh.compliance_date_of_visit,
+            sh.compliance_ref_form_1,
+            sh.compliance_ref_check1,
+            sh.compliance_ref_form_2,
+            sh.compliance_ref_check2,
+            sht.doublePlacementHostFamilyDateCompliance,
+            sh.compliance_single_ref_form_1,
+            sh.compliance_single_ref_form_2,
+
+            sht.isDoublePlacementPaperworkRequired,
+            sht.doublePlacementParentsDateCompliance,
+            sht.doublePlacementStudentDateCompliance,
+
+            sh.compliance_single_place_auth,
+            sh.compliance_single_parents_sign_date,
+            sh.compliance_single_student_sign_date,
+            count(childid) AS totalChildren   
+        FROM smg_students s
+        INNER JOIN smg_hosts h ON s.hostid = h.hostid
+        INNER JOIN smg_programs p ON p.programid = s.programid
+        INNER JOIN smg_hosthistory sh ON sh.studentID = s.studentID
+            AND sh.isActive = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+            AND sh.assignedID = <cfqueryparam cfsqltype="cf_sql_integer" value="0"> <!--- Filter out PHP --->
+        INNER JOIN smg_companies c ON c.companyID = s.companyID            
+        INNER JOIN smg_regions r ON r.regionID = s.regionAssigned
+        INNER JOIN user_access_rights uar ON s.placeRepID = uar.userID
+            AND s.regionassigned = uar.regionID
+        LEFT JOIN smg_users advisor ON uar.advisorID = advisor.userID
+        LEFT JOIN smg_users arearep ON s.areaRepID = arearep.userid
+        LEFT JOIN smg_users facilitator ON  r.regionfacilitator = facilitator.userid 
+        LEFT JOIN smg_seasons season ON season.seasonid = p.seasonid
+        LEFT OUTER JOIN smg_aypcamps english ON s.aypenglish = english.campID
+        LEFT OUTER JOIN smg_notes notes ON notes.hostid = h.hostid
+        LEFT OUTER JOIN (
+                      SELECT    MAX(id) id, studentid, historyID
+                      FROM      smg_hosthistorytracking
+                      GROUP BY  studentid
+                  ) shtMax ON (shtMax.historyID = sh.historyID AND shtMax.studentID = s.studentID)
+        LEFT OUTER JOIN
+            smg_hosthistorytracking sht ON sht.id = shtMax.id
+
+        LEFT JOIN smg_host_children ON (smg_host_children.hostID = h.hostID 
+            AND liveAtHome = 'yes' 
+            AND smg_host_children.isDeleted = 0)
+        WHERE s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
+            AND s.host_fam_approved > <cfqueryparam cfsqltype="cf_sql_integer" value="4">   
+                
+            <cfif CLIENT.companyID EQ 5>
+                AND s.companyid IN ( <cfqueryparam cfsqltype="cf_sql_integer" value="1,2,3,4,12" list="yes"> )
+            <cfelse>            
+                AND s.companyid = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyID#">
+            </cfif>
+            
+        <cfswitch expression="#CLIENT.userType#">
+            
+            <!--- Filter Out Placements Waiting on AR --->
+            <cfcase value="1,2,3">
+                <!---
+                AND
+                    s.host_fam_approved != <cfqueryparam cfsqltype="cf_sql_integer" value="10">
+                --->
+            </cfcase>
+            <!--- Filter by Facilitator ---> 
+            <cfcase value="4">
+                AND
+                    r.regionFacilitator = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+                <!--- 
+                AND
+                    s.host_fam_approved != <cfqueryparam cfsqltype="cf_sql_integer" value="10">
+                --->
+            </cfcase>
+            
+            <!--- Filter by Regional Manager --->
+            <cfcase value="5">
+                AND 
+                    s.regionAssigned = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.regionID#">
+            </cfcase>
+        
+            <!--- Filter by Regional Advisor --->
+            <cfcase value="6">
+                AND
+                    s.placeRepID IN (
+                        SELECT DISTINCT 
+                            userID 
+                        FROM 
+                            user_access_rights
+                        WHERE
+                            userID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+                        OR
+                            ( 
+                                advisorID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#"> 
+                            AND 
+                                companyID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.companyid#">
+                            )
+                    )
+            </cfcase>
+        
+            <!--- Filter by Area Representative --->
+            <cfcase value="7">
+                AND 
+                    (
+                        s.arearepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+                    OR
+                        s.placerepID = <cfqueryparam cfsqltype="cf_sql_integer" value="#CLIENT.userID#">
+                    )
+            </cfcase>
+        
+        </cfswitch>
+       
+        GROUP BY
+            s.studentID
+    </cfquery>
+
+    <cfset totalShown = 0 />
+    <cfset toEmailIDs = '' />
+    <cfloop query="qGetPendingHosts">
+        <cfscript>
+            vDisplayEmailLink = 0;
+                    
+            // Do not check compliance for Wayne Brewer - Page will load quicker
+            if ( CLIENT.userID NEQ 1956 ) { 
+            
+                // Check if Host Family is in compliance
+                vHostInCompliance = APPLICATION.CFC.CBC.checkHostFamilyCompliance(
+                                        hostID=qGetPendingHosts.hostID, 
+                                        studentID=qGetPendingHosts.studentID,
+                                        schoolAcceptanceDate = qGetPendingHosts.doc_school_accept_date
+                                    );
+                
+                if ( NOT LEN(vHostInCompliance) ) {
+                    vDisplayEmailLink = 1;
+                }
+            
+            }
+        </cfscript>
+        <cfif NOT isDate(qGetPendingHosts.datePISEmailed) AND VAL(vDisplayEmailLink)>
+            <cfset totalShown = totalShown + 1 />
+            <cfif totalShown GT 1>
+                <cfset toEmailIDs = toEmailIDs & ", " />
+            </cfif>
+            <cfset toEmailIDs = toEmailIDs & "#qGetPendingHosts.hostID#" />
+        </cfif>
+    </cfloop>
+
+    <cfquery dbtype="query" name="qGetPendingHostsToApprove">
+        SELECT count(hostid) as total
+        FROM qGetPendingHosts
+        WHERE (compliance_school_accept_date IS NOT NULL AND compliance_school_accept_date <> '')
+            AND (compliance_host_app_page1_date IS NOT NULL AND compliance_host_app_page1_date <> '')
+            AND (compliance_host_app_page2_date IS NOT NULL AND compliance_host_app_page2_date <> '')
+            AND (compliance_letter_rec_date IS NOT NULL AND compliance_letter_rec_date <> '')
+            AND (compliance_photos_rec_date IS NOT NULL AND compliance_photos_rec_date <> '')
+            AND (compliance_bedroom_photo IS NOT NULL AND compliance_bedroom_photo <> '')
+            AND (compliance_bathroom_photo IS NOT NULL AND compliance_bathroom_photo <> '')
+            AND (compliance_kitchen_photo IS NOT NULL AND compliance_kitchen_photo <> '')
+            AND (compliance_living_room_photo IS NOT NULL AND compliance_living_room_photo <> '')
+            AND (compliance_outside_photo IS NOT NULL AND compliance_outside_photo <> '')
+            AND (compliance_rules_rec_date IS NOT NULL AND compliance_rules_rec_date <> '')
+            AND (compliance_rules_sign_date IS NOT NULL AND compliance_rules_sign_date <> '')
+            AND (compliance_school_profile_rec IS NOT  NULL AND compliance_school_profile_rec <> '')
+            AND (compliance_income_ver_date IS NOT NULL AND compliance_income_ver_date <> '')
+            AND (compliance_conf_host_rec IS NOT NULL AND compliance_conf_host_rec <> '')
+            AND (compliance_date_of_visit IS NOT NULL AND compliance_date_of_visit <> '')
+            AND (compliance_ref_form_1 IS NOT NULL AND compliance_ref_form_1 <> '')
+            AND (compliance_ref_check1 IS NOT NULL AND compliance_ref_check1 <> '')
+            AND (compliance_ref_form_2 IS NOT NULL AND compliance_ref_form_2 <> '')
+            AND (compliance_ref_check2 IS NOT NULL AND compliance_ref_check2 <> '')
+
+            AND ((fatherFirstName IS NOT NULL AND fatherFirstName <> '' AND motherFirstName IS NOT NULL AND motherFirstName <> '')
+                OR ((fatherFirstName IS NULL OR fatherFirstName = '' OR motherFirstName IS NULL OR motherFirstName = '')
+                AND (totalChildren = 0 OR totalChildren IS NULL)
+                AND compliance_single_ref_form_1 IS NOT NULL 
+                AND compliance_single_ref_form_1 <> ''
+                AND compliance_single_ref_form_2 IS NOT NULL 
+                AND compliance_single_ref_form_2 <> ''))
+                
+            AND ((isDoublePlacementPaperworkRequired = 0 OR isDoublePlacementPaperworkRequired IS NULL)
+                OR (isDoublePlacementPaperworkRequired = 1
+                AND doublePlacementHostFamilyDateCompliance IS NOT NULL 
+                AND doublePlacementHostFamilyDateCompliance <> ''))
+
+            AND ((isDoublePlacementPaperworkRequired = 0 OR isDoublePlacementPaperworkRequired IS NULL)
+                OR (isDoublePlacementPaperworkRequired = 1
+                AND doublePlacementParentsDateCompliance IS NOT NULL 
+                AND doublePlacementParentsDateCompliance <> ''
+                AND doublePlacementStudentDateCompliance IS NOT NULL 
+                AND doublePlacementStudentDateCompliance = ''))
+            
+            AND ((fatherFirstName IS NOT NULL AND fatherFirstName <> '' AND motherFirstName IS NOT NULL AND motherFirstName <> '')
+                OR ((fatherFirstName IS NULL OR fatherFirstName = '' OR motherFirstName IS NULL OR motherFirstName = '')
+                AND (totalChildren = 0 OR totalChildren IS NULL)
+                AND compliance_single_place_auth IS NOT NULL 
+                AND compliance_single_place_auth <> ''
+                AND compliance_single_parents_sign_date IS NOT NULL 
+                AND compliance_single_parents_sign_date <> ''
+                AND compliance_single_student_sign_date IS NOT NULL 
+                AND compliance_single_student_sign_date <> ''))
+    </cfquery>
+
+    <cfquery dbtype="query" name="qGetPendingHostsPreAYP">
+        SELECT count(hostID) AS total
+        FROM qGetPendingHosts
+        WHERE aypenglish > 0
+    </cfquery>
+
+    <cfquery dbtype="query" name="qGetPendingHostsSafAndHF">
+        SELECT count(hostID) AS total
+        FROM qGetPendingHosts
+        WHERE datePlaced IS NULL
+            AND (((compliance_school_accept_date IS NULL OR compliance_school_accept_date = '')
+                OR (compliance_host_app_page1_date IS NULL OR compliance_host_app_page1_date = '')
+                OR (compliance_host_app_page2_date IS NULL OR compliance_host_app_page2_date = '')
+                OR (compliance_letter_rec_date IS NULL OR compliance_letter_rec_date = '')
+                OR (compliance_photos_rec_date IS NULL OR compliance_photos_rec_date = '')
+                OR (compliance_bedroom_photo IS NULL OR compliance_bedroom_photo = '')
+                OR (compliance_bathroom_photo IS NULL OR compliance_bathroom_photo = '')
+                OR (compliance_kitchen_photo IS NULL OR compliance_kitchen_photo = '')
+                OR (compliance_living_room_photo IS NULL OR compliance_living_room_photo = '')
+                OR (compliance_outside_photo IS NULL OR compliance_outside_photo = '')
+                OR (compliance_rules_rec_date IS NULL OR compliance_rules_rec_date = '')
+                OR (compliance_rules_sign_date IS NULL OR compliance_rules_sign_date = '')
+                OR (compliance_school_profile_rec IS  NULL OR compliance_school_profile_rec = '')
+                OR (compliance_income_ver_date IS NULL OR compliance_income_ver_date = '')
+                OR (compliance_conf_host_rec IS NULL OR compliance_conf_host_rec = '')
+                OR (compliance_date_of_visit IS NULL OR compliance_date_of_visit = '')
+                OR (compliance_ref_form_1 IS NULL OR compliance_ref_form_1 = '')
+                OR (compliance_ref_check1 IS NULL OR compliance_ref_check1 = '')
+                OR (compliance_ref_form_2 IS NULL OR compliance_ref_form_2 = '')
+                OR (compliance_ref_check2 IS NULL OR compliance_ref_check2 = ''))
+
+                OR (((fatherFirstName IS NULL OR fatherFirstName = '' OR motherFirstName IS NULL OR motherFirstName = '')
+                    AND (totalChildren = 0 OR totalChildren IS NULL))
+                    AND ((compliance_single_ref_form_1 IS NULL OR compliance_single_ref_form_1 = '')
+                        OR (compliance_single_ref_form_2 IS NULL OR compliance_single_ref_form_2 = '')))
+                
+                OR ((isDoublePlacementPaperworkRequired = 1)
+                    AND (doublePlacementHostFamilyDateCompliance IS NULL OR doublePlacementHostFamilyDateCompliance = '')))
+    </cfquery>
+
+    <cfquery dbtype="query" name="qGetPendingHostsIntAgent">
+        SELECT count(hostID) AS total
+        FROM qGetPendingHosts
+        WHERE datePlaced IS NULL
+            AND ((isDoublePlacementPaperworkRequired = 1
+                AND (doublePlacementParentsDateCompliance IS NULL OR doublePlacementParentsDateCompliance = ''
+                    OR doublePlacementStudentDateCompliance IS NULL OR doublePlacementStudentDateCompliance = ''))
+            
+                OR ((fatherFirstName IS NULL OR fatherFirstName = '' OR motherFirstName IS NULL OR motherFirstName = '')
+                    AND (totalChildren = 0 OR totalChildren IS NULL)
+                    AND (compliance_single_place_auth IS NULL OR compliance_single_place_auth = ''
+                        OR compliance_single_parents_sign_date IS NULL OR compliance_single_parents_sign_date = ''
+                        OR compliance_single_student_sign_date IS NULL OR compliance_single_student_sign_date = '')))
+    </cfquery>
+
+
+    
 </cfsilent>    
 
 <script type="text/javascript">
@@ -295,11 +573,18 @@
 	}
 	// End -->
 </script>
+
+
+
 <script>
 	jQuery(document).ready(function($) {
 		$(".clickableRow").click(function() {
       		window.document.location = $(this).attr("href");
       	});
+
+          $( function() {
+            $( "#accordion" ).accordion();
+          } );
 	});
 
 	// Set a new season
@@ -425,6 +710,29 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
   .rdtitleTab:hover {
 	color: #666;
  }
+
+ .ui-state-active {
+    background: #90B2D5 !important;
+    color: #fff !important;
+ }
+
+ .highlightNumber {
+    background-color: #e45400;
+    color: #fff;
+    padding: 3px 9px;
+    border-radius: 5px;
+    float:right;
+    margin-top:-3px;
+ }
+
+ .highlightNumberOFF {
+    background-color: #ccc;
+    color: #fff;
+    padding: 3px 9px;
+    border-radius: 5px;
+    float:right;
+    margin-top:-3px;
+ }
 	
 </style>
 
@@ -540,6 +848,70 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                    
                 	<div class="rdbottom"></div> <!-- end bottom --> 
                 </div>
+
+                <!--- ToDo --->
+                <div class="rdholder" style="width:100%; float:left;"> 
+                    
+                    <div class="rdtop"> 
+                        <span class="rdtitle">To Do Board</span> 
+                    </div> <!-- end top --> 
+                    
+                    <div class="rdbox">
+                        <div id="accordion">
+                            <h3 style="padding:8px 10px 8px 26px">Pending Placements <span class="highlightNumber<cfif NOT VAL(qGetPendingHosts.recordCount)>OFF</cfif>" >#VAL(qGetPendingHosts.recordCount)#</span></h3>
+
+                            <ul style="padding:5px 20px !important; border-top:1px solid ##33 !important">
+                                <a href="index.cfm?curdoc=pendingPlacementList">
+                                    <li style="padding:8px; font-size: 12px; background-color:##eee">
+                                        All Pending Placements <span class="highlightNumber<cfif NOT VAL(qGetPendingHosts.recordCount)>OFF</cfif>">#VAL(qGetPendingHosts.recordCount)#</span>
+                                    </li>
+                                </a>
+                                <a href="index.cfm?curdoc=pendingPlacementList&pending_status=to_approve">
+                                    <li style="padding:8px; font-size: 12px">
+                                        Review & Approve <span class="highlightNumber<cfif NOT VAL(qGetPendingHostsToApprove.total)>OFF</cfif>">#VAL(qGetPendingHostsToApprove.total)#</span>
+                                    </li>
+                                </a>
+                                <cfif APPLICATION.CFC.USER.isOfficeUser()>
+                                    <a href="index.cfm?curdoc=pendingPlacementList&toEmail=1">
+                                        <li style="padding:8px; font-size: 12px; background-color:##eee">
+                                            Email PIS <span class="highlightNumber<cfif NOT VAL(totalShown)>OFF</cfif>">#totalShown#</span>
+                                        </li>
+                                    </a>
+                                </cfif>
+
+                                <a href="index.cfm?curdoc=pendingPlacementList&preAypCamp=#qAYPEnglishCamps#">
+                                    <li style="padding:8px; font-size: 12px;<cfif NOT APPLICATION.CFC.USER.isOfficeUser()>background-color:##eee</cfif>">
+                                        Pre-AYP Students <span class="highlightNumber<cfif NOT VAL(qGetPendingHostsPreAYP.total)>OFF</cfif>">#VAL(qGetPendingHostsPreAYP.total)#</span>
+                                    </li>
+                                </a>
+                                <a href="index.cfm?curdoc=pendingPlacementList&pending_status=saf_and_hf">
+                                    <li style="padding:8px; font-size: 12px; <cfif APPLICATION.CFC.USER.isOfficeUser()>background-color:##eee</cfif>">
+                                        Missing SAF and/or HF Info <span  class="highlightNumber<cfif NOT VAL(qGetPendingHostsSafAndHF.total)>OFF</cfif>">#VAL(qGetPendingHostsSafAndHF.total)#</span>
+                                    </li>
+                                </a>
+                                
+                                <cfif APPLICATION.CFC.USER.isOfficeUser()>
+                                    <a href="index.cfm?curdoc=pendingPlacementList&pending_status=int_agent">
+                                        <li style="padding:8px; font-size: 12px">
+                                            Missing Docs from Inter.Reps <span class="highlightNumber<cfif NOT VAL(qGetPendingHostsIntAgent.total)>OFF</cfif>">#VAL(qGetPendingHostsIntAgent.total)#</span>
+                                        </li>
+                                    </a>
+                                </cfif>
+                            </ul>
+                              
+                            <h3 style="padding:5px 10px 5px 26px">Progress Reports</h3>
+                            <ul style="padding:5px 20px !important; border-top:1px solid ##33 !important">
+                                <li style="padding:4px; font-size: 12px">Coming soon</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="rdbottom"></div> <!-- end bottom --> 
+                
+                </div>
+                <!--- End of ToDo --->
+
+
 				<!--- Online Reports --->
                 <div class="rdholder" style="width:100%; float:left;"> 
                 	
@@ -553,10 +925,10 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                                 <td><img src="pics/icons/annualPaperwork.png" border="0" title="Click Here to fill out  your annual paperwork" /></td>
                                 <td><a href="index.cfm?curdoc=user/index">Yearly Paperwork</a></td>
 								<!--- View Pending Placements --->
-                                <cfif CLIENT.usertype LTE 7>
+                                <!---<cfif CLIENT.usertype LTE 7>
                                     <td width="22"><img src="pics/icons/viewPlacements.png" /></td>
                                     <td><a href="index.cfm?curdoc=pendingPlacementList">View Pending Placements</a></td>
-                                </cfif>
+                                </cfif>--->
                				</tr>
                 			<tr>
 								<!--- Progress Reports --->
