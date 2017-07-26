@@ -1413,6 +1413,7 @@
                         smg_host_app_season.dateUpdated as appUpdated,
                         smg_host_app_season.ID AS hostAppSeasonID,   
                         smg_notes.appNotes,
+                        smg_notes.dateUpdated AS noteDate,
                         h.dateUpdated                 
                     FROM 
                         smg_hosts h

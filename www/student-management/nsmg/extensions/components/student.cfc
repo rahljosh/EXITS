@@ -2106,6 +2106,8 @@
                             doc_school_sign_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                             doc_class_schedule = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
                             datePISEmailed = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                            compliance_school_accept_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
+                            compliance_school_sign_date = <cfqueryparam cfsqltype="cf_sql_date" null="yes">,
 						</cfif>
                         
                         <cfif VAL(vHasPlaceRepIDChanged)>

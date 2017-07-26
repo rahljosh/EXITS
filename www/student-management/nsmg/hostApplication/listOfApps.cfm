@@ -268,7 +268,13 @@
 				<cfif qGetHostApplications.appNotes is ''>
 					<button type="button" class="btn btn-default btn-sm"><i class="fa fa-comments-o" aria-hidden="true"></i> Add Notes</button>
 				<cfelse>
-					<button type="button" class="btn btn-warning btn-sm"><i class="fa fa-comments-o" aria-hidden="true"></i> See Notes</button>
+					<button type="button" class="btn btn-warning btn-sm"><i class="fa fa-comments-o" aria-hidden="true"></i> 
+						<cfif isDate(qGetHostApplications.noteDate)>
+							#DATEFORMAT(qGetHostApplications.noteDate, 'm/dd/yy')#
+						<cfelse>
+							See Notes
+						</cfif>
+						</button>
 				</cfif>
 				
 				</a>
