@@ -21,7 +21,7 @@
         <cfset regionID= CLIENT.regionID />
     </cfif>
     <cfparam name="keyword" default="">
-    <cfparam name="orderby" default="familyLastName">
+    <cfparam name="orderby" default="">
     <cfparam name="recordsToShow" default="25">
 
 	<cfif CLIENT.usertype GT 4>
