@@ -365,6 +365,9 @@
     </cfquery>
     
 </cfsilent>
+
+<cfhtmlhead text="<title>Student:#qGetStudentInfo.firstname# #qGetStudentInfo.middlename# #qGetStudentInfo.familylastname# (###qGetStudentInfo.studentID#)</title>">
+
 <style type="text/css">
 .alertRed{
     margin-left:auto;
