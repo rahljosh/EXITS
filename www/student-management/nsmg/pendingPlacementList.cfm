@@ -130,7 +130,6 @@
             s.hostid, 
             s.studentid, 
             s.uniqueID,
-           
             s.firstname AS studentFirstName, 
             s.familylastname AS studentLastName, 
             s.regionAssigned, 
@@ -160,39 +159,68 @@
             facilitator.firstname as FacilitatorFirst,
             facilitator.lastname as FacilitatorLast,
 			facilitator.userID as FacilitatorID,
-            advisor.userID AS advisorID,   
+            advisor.userID AS advisorID, 
+            sh.secondVisitRepID,  
             sh.historyID,
+            sh.doc_school_accept_date,
             sh.compliance_school_accept_date,
+            sh.doc_host_app_page1_date,
             sh.compliance_host_app_page1_date,
+            sh.doc_host_app_page2_date,
             sh.compliance_host_app_page2_date,
+            sh.doc_letter_rec_date,
             sh.compliance_letter_rec_date,
+            sh.doc_photos_rec_date,
             sh.compliance_photos_rec_date,
+            sh.doc_bedroom_photo,
             sh.compliance_bedroom_photo,
+            sh.doc_bathroom_photo,
             sh.compliance_bathroom_photo,
+            sh.doc_kitchen_photo,
             sh.compliance_kitchen_photo,
+            sh.doc_living_room_photo,
             sh.compliance_living_room_photo,
+            sh.doc_outside_photo,
             sh.compliance_outside_photo,
+            sh.doc_rules_rec_date,
             sh.compliance_rules_rec_date,
+            sh.doc_rules_sign_date,
             sh.compliance_rules_sign_date,
+            sh.doc_school_profile_rec,
             sh.compliance_school_profile_rec,
+            sh.doc_income_ver_date,
             sh.compliance_income_ver_date,
+            sh.doc_conf_host_rec,
             sh.compliance_conf_host_rec,
+            sh.doc_date_of_visit,
             sh.compliance_date_of_visit,
+            sh.doc_ref_form_1,
             sh.compliance_ref_form_1,
+            sh.doc_ref_check1,
             sh.compliance_ref_check1,
+            sh.doc_ref_form_2,
             sh.compliance_ref_form_2,
+            sh.doc_ref_check2,
             sh.compliance_ref_check2,
-            sht.doublePlacementHostFamilyDateCompliance,
+            sh.doc_single_ref_form_1,
             sh.compliance_single_ref_form_1,
+            sh.doc_single_ref_form_2,
             sh.compliance_single_ref_form_2,
-
-            sht.isDoublePlacementPaperworkRequired,
-            sht.doublePlacementParentsDateCompliance,
-            sht.doublePlacementStudentDateCompliance,
-
+            sh.doc_single_place_auth,
             sh.compliance_single_place_auth,
+            sh.doc_single_parents_sign_date,
             sh.compliance_single_parents_sign_date,
+            sh.doc_single_student_sign_date,
             sh.compliance_single_student_sign_date,
+            sh.hfSupervisingDistance,
+            
+            sht_doubleplacement.isDoublePlacementPaperworkRequired,
+            sht_doubleplacement.doublePlacementParentsDateSigned,
+            sht_doubleplacement.doublePlacementParentsDateCompliance,
+            sht_doubleplacement.doublePlacementStudentDateSigned,
+            sht_doubleplacement.doublePlacementStudentDateCompliance,
+            sht_doubleplacement.doublePlacementHostFamilyDateCompliance,
+            sht_doubleplacement.doublePlacementHostFamilyDateSigned,
 
             placrep.firstname AS placeRepFirstName,
             placrep.lastname AS placeRepLastName,
@@ -253,6 +281,9 @@
                   ) shtMax ON (shtMax.historyID = sh.historyID AND shtMax.studentID = s.studentID)
         LEFT OUTER JOIN
             smg_hosthistorytracking sht ON sht.id = shtMax.id
+
+        LEFT OUTER JOIN smg_hosthistorytracking sht_doubleplacement ON sht_doubleplacement.historyID = sh.historyID 
+            AND sht_doubleplacement.fieldName = 'doublePlacementID'
 
         LEFT JOIN smg_host_children ON (smg_host_children.hostID = h.hostID 
             AND liveAtHome = 'yes' 
@@ -317,35 +348,76 @@
             AND (compliance_ref_form_2 IS NOT NULL AND compliance_ref_form_2 <> '')
             AND (compliance_ref_check2 IS NOT NULL AND compliance_ref_check2 <> '')
 
+            AND (doc_school_accept_date IS NOT NULL AND doc_school_accept_date <> '')
+            AND (doc_host_app_page1_date IS NOT NULL AND doc_host_app_page1_date <> '')
+            AND (doc_host_app_page2_date IS NOT NULL AND doc_host_app_page2_date <> '')
+            AND (doc_letter_rec_date IS NOT NULL AND doc_letter_rec_date <> '')
+            AND (doc_photos_rec_date IS NOT NULL AND doc_photos_rec_date <> '')
+            AND (doc_bedroom_photo IS NOT NULL AND doc_bedroom_photo <> '')
+            AND (doc_bathroom_photo IS NOT NULL AND doc_bathroom_photo <> '')
+            AND (doc_kitchen_photo IS NOT NULL AND doc_kitchen_photo <> '')
+            AND (doc_living_room_photo IS NOT NULL AND doc_living_room_photo <> '')
+            AND (doc_outside_photo IS NOT NULL AND doc_outside_photo <> '')
+            AND (doc_rules_rec_date IS NOT NULL AND doc_rules_rec_date <> '')
+            AND (doc_rules_sign_date IS NOT NULL AND doc_rules_sign_date <> '')
+            AND (doc_school_profile_rec IS NOT  NULL AND doc_school_profile_rec <> '')
+            AND (doc_income_ver_date IS NOT NULL AND doc_income_ver_date <> '')
+            AND (doc_conf_host_rec IS NOT NULL AND doc_conf_host_rec <> '')
+            AND (doc_date_of_visit IS NOT NULL AND doc_date_of_visit <> '')
+            AND (doc_ref_form_1 IS NOT NULL AND doc_ref_form_1 <> '')
+            AND (doc_ref_check1 IS NOT NULL AND doc_ref_check1 <> '')
+            AND (doc_ref_form_2 IS NOT NULL AND doc_ref_form_2 <> '')
+            AND (doc_ref_check2 IS NOT NULL AND doc_ref_check2 <> '')
+
+            AND (hfSupervisingDistance < 120)
+
             AND ((fatherFirstName IS NOT NULL AND fatherFirstName <> '' AND motherFirstName IS NOT NULL AND motherFirstName <> '')
                 OR ((fatherFirstName IS NULL OR fatherFirstName = '' OR motherFirstName IS NULL OR motherFirstName = '')
                 AND (childid = 0 OR childid IS NULL OR childid = '')
                 AND compliance_single_ref_form_1 IS NOT NULL 
                 AND compliance_single_ref_form_1 <> ''
                 AND compliance_single_ref_form_2 IS NOT NULL 
-                AND compliance_single_ref_form_2 <> ''))
+                AND compliance_single_ref_form_2 <> ''
+                AND doc_single_ref_form_1 IS NOT NULL 
+                AND doc_single_ref_form_1 <> ''
+                AND doc_single_ref_form_2 IS NOT NULL 
+                AND doc_single_ref_form_2 <> ''))
                 
-            AND ((sht.isDoublePlacementPaperworkRequired = 0 OR sht.isDoublePlacementPaperworkRequired IS NULL)
-                OR (sht.isDoublePlacementPaperworkRequired = 1
-                AND sht.doublePlacementHostFamilyDateCompliance IS NOT NULL 
-                AND sht.doublePlacementHostFamilyDateCompliance <> ''))
+            AND ((sht_doubleplacement.isDoublePlacementPaperworkRequired = 0 OR sht_doubleplacement.isDoublePlacementPaperworkRequired IS NULL)
+                OR (sht_doubleplacement.isDoublePlacementPaperworkRequired = 1
+                    AND sht_doubleplacement.doublePlacementHostFamilyDateCompliance IS NOT NULL 
+                    AND sht_doubleplacement.doublePlacementHostFamilyDateCompliance <> ''
+                    AND sht_doubleplacement.doublePlacementHostFamilyDateSigned IS NOT NULL 
+                    AND sht_doubleplacement.doublePlacementHostFamilyDateSigned <> ''))
 
-            AND ((sht.isDoublePlacementPaperworkRequired = 0 OR sht.isDoublePlacementPaperworkRequired IS NULL)
-                OR (sht.isDoublePlacementPaperworkRequired = 1
-                AND sht.doublePlacementParentsDateCompliance IS NOT NULL 
-                AND sht.doublePlacementParentsDateCompliance <> ''
-                AND sht.doublePlacementStudentDateCompliance IS NOT NULL 
-                AND sht.doublePlacementStudentDateCompliance = ''))
+            AND ((sht_doubleplacement.isDoublePlacementPaperworkRequired = 0 OR sht_doubleplacement.isDoublePlacementPaperworkRequired IS NULL)
+                OR (sht_doubleplacement.isDoublePlacementPaperworkRequired = 1
+                    AND sht_doubleplacement.doublePlacementParentsDateCompliance IS NOT NULL 
+                    AND sht_doubleplacement.doublePlacementParentsDateCompliance <> ''
+                    AND sht_doubleplacement.doublePlacementStudentDateCompliance IS NOT NULL 
+                    AND sht_doubleplacement.doublePlacementStudentDateCompliance = ''
+                    AND sht_doubleplacement.doublePlacementParentsDateSigned IS NOT NULL 
+                    AND sht_doubleplacement.doublePlacementParentsDateSigned <> ''
+                    AND sht_doubleplacement.doublePlacementStudentDateSigned IS NOT NULL 
+                    AND sht_doubleplacement.doublePlacementStudentDateSigned = ''))
             
             AND ((fatherFirstName IS NOT NULL AND fatherFirstName <> '' AND motherFirstName IS NOT NULL AND motherFirstName <> '')
                 OR ((fatherFirstName IS NULL OR fatherFirstName = '' OR motherFirstName IS NULL OR motherFirstName = '')
-                AND (childid = 0 OR childid IS NULL OR childid = '')
-                AND compliance_single_place_auth IS NOT NULL 
-                AND compliance_single_place_auth <> ''
-                AND compliance_single_parents_sign_date IS NOT NULL 
-                AND compliance_single_parents_sign_date <> ''
-                AND compliance_single_student_sign_date IS NOT NULL 
-                AND compliance_single_student_sign_date <> ''))
+                    AND (childid = 0 OR childid IS NULL OR childid = '')
+                    AND compliance_single_place_auth IS NOT NULL 
+                    AND compliance_single_place_auth <> ''
+                    AND compliance_single_parents_sign_date IS NOT NULL 
+                    AND compliance_single_parents_sign_date <> ''
+                    AND compliance_single_student_sign_date IS NOT NULL 
+                    AND compliance_single_student_sign_date <> ''
+                    AND doc_single_place_auth IS NOT NULL 
+                    AND doc_single_place_auth <> ''
+                    AND doc_single_parents_sign_date IS NOT NULL 
+                    AND doc_single_parents_sign_date <> ''
+                    AND doc_single_student_sign_date IS NOT NULL 
+                    AND doc_single_student_sign_date <> ''))
+
+            AND (sh.secondVisitRepID IS NOT NULL AND sh.secondVisitRepID > 0)
 
         <cfelseif URL.pending_status EQ 'saf_and_hf'>
             AND (((compliance_school_accept_date IS NULL OR compliance_school_accept_date = '')
@@ -367,26 +439,57 @@
                 OR (compliance_ref_form_1 IS NULL OR compliance_ref_form_1 = '')
                 OR (compliance_ref_check1 IS NULL OR compliance_ref_check1 = '')
                 OR (compliance_ref_form_2 IS NULL OR compliance_ref_form_2 = '')
-                OR (compliance_ref_check2 IS NULL OR compliance_ref_check2 = ''))
+                OR (compliance_ref_check2 IS NULL OR compliance_ref_check2 = '')
+
+                OR (doc_school_accept_date IS NULL OR doc_school_accept_date = '')
+                OR (doc_host_app_page1_date IS NULL OR doc_host_app_page1_date = '')
+                OR (doc_host_app_page2_date IS NULL OR doc_host_app_page2_date = '')
+                OR (doc_letter_rec_date IS NULL OR doc_letter_rec_date = '')
+                OR (doc_photos_rec_date IS NULL OR doc_photos_rec_date = '')
+                OR (doc_bedroom_photo IS NULL OR doc_bedroom_photo = '')
+                OR (doc_bathroom_photo IS NULL OR doc_bathroom_photo = '')
+                OR (doc_kitchen_photo IS NULL OR doc_kitchen_photo = '')
+                OR (doc_living_room_photo IS NULL OR doc_living_room_photo = '')
+                OR (doc_outside_photo IS NULL OR doc_outside_photo = '')
+                OR (doc_rules_rec_date IS NULL OR doc_rules_rec_date = '')
+                OR (doc_rules_sign_date IS NULL OR doc_rules_sign_date = '')
+                OR (doc_school_profile_rec IS  NULL OR doc_school_profile_rec = '')
+                OR (doc_income_ver_date IS NULL OR doc_income_ver_date = '')
+                OR (doc_conf_host_rec IS NULL OR doc_conf_host_rec = '')
+                OR (doc_date_of_visit IS NULL OR doc_date_of_visit = '')
+                OR (doc_ref_form_1 IS NULL OR doc_ref_form_1 = '')
+                OR (doc_ref_check1 IS NULL OR doc_ref_check1 = '')
+                OR (doc_ref_form_2 IS NULL OR doc_ref_form_2 = '')
+                OR (doc_ref_check2 IS NULL OR doc_ref_check2 = ''))
 
                 OR (((fatherFirstName IS NULL OR fatherFirstName = '' OR motherFirstName IS NULL OR motherFirstName = '')
                     AND (childid = 0 OR childid IS NULL OR childid = ''))
                     AND ((compliance_single_ref_form_1 IS NULL OR compliance_single_ref_form_1 = '')
-                        OR (compliance_single_ref_form_2 IS NULL OR compliance_single_ref_form_2 = '')))
+                        OR (compliance_single_ref_form_2 IS NULL OR compliance_single_ref_form_2 = '')
+                        OR (doc_single_ref_form_1 IS NULL OR doc_single_ref_form_1 = '')
+                        OR (doc_single_ref_form_2 IS NULL OR doc_single_ref_form_2 = '')))
                 
-                OR ((sht.isDoublePlacementPaperworkRequired = 1)
-                    AND (doublePlacementHostFamilyDateCompliance IS NULL OR doublePlacementHostFamilyDateCompliance = '')))
+                OR ((sht_doubleplacement.isDoublePlacementPaperworkRequired = 1)
+                    AND (sht_doubleplacement.doublePlacementHostFamilyDateCompliance IS NULL OR sht_doubleplacement.doublePlacementHostFamilyDateCompliance = ''
+                        OR sht_doubleplacement.doublePlacementHostFamilyDateSigned IS NULL OR sht_doubleplacement.doublePlacementHostFamilyDateSigned = ''))
+                
+                OR (hfSupervisingDistance >= 120)
+
+                OR (sh.secondVisitRepID IS NULL OR sh.secondVisitRepID = 0))
 
         <cfelseif URL.pending_status EQ 'int_agent'>
-            AND ((sht.isDoublePlacementPaperworkRequired = 1
-                AND (sht.doublePlacementParentsDateCompliance IS NULL OR sht.doublePlacementParentsDateCompliance = ''
-                    OR sht.doublePlacementStudentDateCompliance IS NULL OR sht.doublePlacementStudentDateCompliance = ''))
+            AND ((sht_doubleplacement.isDoublePlacementPaperworkRequired = 1
+                AND (sht_doubleplacement.doublePlacementParentsDateCompliance IS NULL OR sht_doubleplacement.doublePlacementParentsDateCompliance = ''
+                    OR sht_doubleplacement.doublePlacementStudentDateCompliance IS NULL OR sht_doubleplacement.doublePlacementStudentDateCompliance = ''))
             
                 OR ((fatherFirstName IS NULL OR fatherFirstName = '' OR motherFirstName IS NULL OR motherFirstName = '')
                     AND (childid = 0 OR childid IS NULL OR childid = '')
                     AND (compliance_single_place_auth IS NULL OR compliance_single_place_auth = ''
                         OR compliance_single_parents_sign_date IS NULL OR compliance_single_parents_sign_date = ''
-                        OR compliance_single_student_sign_date IS NULL OR compliance_single_student_sign_date = '')))
+                        OR compliance_single_student_sign_date IS NULL OR compliance_single_student_sign_date = ''
+                        OR doc_single_place_auth IS NULL OR doc_single_place_auth = ''
+                        OR doc_single_parents_sign_date IS NULL OR doc_single_parents_sign_date = ''
+                        OR doc_single_student_sign_date IS NULL OR doc_single_student_sign_date = '')))
         </cfif>
 
 
@@ -628,7 +731,7 @@
 
                 <option value="?curdoc=pendingPlacementList&pending_status=to_approve&preAypCamp=#URL.preAypCamp#&regionid=0&facilitator=#URL.facilitator#&programid=#URL.programID#&toEmail=#URL.toEmail#&activeRep=#URL.activeRep#" <cfif URL.pending_status EQ 'to_approve'> selected="selected" </cfif> >Review & Approve</option>
 
-                <option value="?curdoc=pendingPlacementList&pending_status=saf_and_hf&preAypCamp=#URL.preAypCamp#&regionid=#URL.regionid#&facilitator=#URL.facilitator#&programid=#URL.programID#&toEmail=#URL.toEmail#&activeRep=#URL.activeRep#" <cfif URL.pending_status EQ 'saf_and_hf'> selected="selected" </cfif> >SAF and/or HF info</option>
+                <option value="?curdoc=pendingPlacementList&pending_status=saf_and_hf&preAypCamp=#URL.preAypCamp#&regionid=#URL.regionid#&facilitator=#URL.facilitator#&programid=#URL.programID#&toEmail=#URL.toEmail#&activeRep=#URL.activeRep#" <cfif URL.pending_status EQ 'saf_and_hf'> selected="selected" </cfif> >Missing SAF, HF App Info, Sec.Visit Rep and/or Rep within 120mi</option>
 
                 <cfif APPLICATION.CFC.USER.isOfficeUser()>
                     <option value="?curdoc=pendingPlacementList&pending_status=int_agent&preAypCamp=#URL.preAypCamp#&regionid=#URL.regionid#&facilitator=#URL.facilitator#&programid=#URL.programID#&toEmail=#URL.toEmail#&activeRep=#URL.activeRep#" <cfif URL.pending_status EQ 'int_agent'> selected="selected" </cfif> >International Agent</option>
@@ -767,7 +870,7 @@
         <cfset totalShown = 0 />
         <cfloop query="qGetPendingHosts">
         
-			<cfscript>
+			<!---<cfscript>
 				// Set Default Value
 				vTimeOnPending = '';
 				
@@ -816,7 +919,8 @@
                     }
 				
 				}
-				
+            </cfscript>--->
+			<cfscript>
 				// Set Default Value
 				vDisplayStudent = true;
 				
@@ -825,18 +929,37 @@
 					vDisplayStudent = true;
 				}
             </cfscript>
+
+            <cfif NOT isDate(qGetPendingHosts.datePISEmailed) 
+                AND APPLICATION.CFC.USER.isOfficeUser()
+                AND ((VAL(qGetPendingHosts.isDoublePlacementPaperworkRequired)
+                        AND (NOT isDate(qGetPendingHosts.doublePlacementParentsDateCompliance)
+                        OR NOT isDate(qGetPendingHosts.doublePlacementStudentDateCompliance)
+                        OR NOT isDate(qGetPendingHosts.doublePlacementParentsDateSigned)
+                        OR NOT isDate(qGetPendingHosts.doublePlacementStudentDateSigned)))
+
+                    OR ((LEN(qGetPendingHosts.fatherFirstName) EQ 0 OR LEN(qGetPendingHosts.motherFirstName) EQ 0)
+                        AND qGetPendingHosts.totalChildren EQ 0
+                        AND (NOT isDate(qGetPendingHosts.compliance_single_place_auth)
+                            OR NOT isDate(qGetPendingHosts.compliance_single_parents_sign_date)
+                            OR NOT isDate(qGetPendingHosts.compliance_single_student_sign_date)
+                            OR NOT isDate(qGetPendingHosts.doc_single_place_auth)
+                            OR NOT isDate(qGetPendingHosts.doc_single_parents_sign_date)
+                            OR NOT isDate(qGetPendingHosts.doc_single_student_sign_date))))>
+                <cfset vDisplayEmailLink = true />
+            <cfelse>
+                <cfset vDisplayEmailLink = false />
+            </cfif>
         	
             <cfif vDisplayStudent AND 
                     (URL.toEmail EQ '' 
-                    OR (VAL(URL.toEmail) EQ 1 
-                        AND NOT isDate(qGetPendingHosts.datePISEmailed) 
-                        AND VAL(vDisplayEmailLink)
-                    )
-                    OR (VAL(URL.toEmail) EQ 0
-                        AND (isDate(qGetPendingHosts.datePISEmailed) 
-                            OR NOT VAL(vDisplayEmailLink))
-                    )
-                    )>
+                        OR (VAL(URL.toEmail) EQ 1 
+                            AND vDisplayEmailLink
+                        )
+                        OR (VAL(URL.toEmail) EQ 0
+                            AND NOT vDisplayEmailLink)
+                        )
+                    >
 
                     <cfset totalShown = totalShown + 1 />
             
@@ -874,7 +997,16 @@
 							</cfif>
 						</a>
 					</td>
-                    <td class="sectionHeader">#vTimeOnPending#</td>
+                    <td class="sectionHeader">
+                        <cfif NOT isDate(qGetPendingHosts.datePISEmailed) 
+                            AND APPLICATION.CFC.USER.isOfficeUser()
+                            AND vDisplayEmailLink>
+                            <a href="reports/placementInfoSheet.cfm?uniqueID=#qGetPendingHosts.uniqueID#&closeModal=1" class="jQueryModalPL">[Email]</a>
+                        </cfif>
+                        <cfif isDate(qGetPendingHosts.datePISEmailed) >
+                            #dateFormat(qGetPendingHosts.datePISEmailed, 'm/dd/yy')#
+                        </cfif>
+                    </td>
                     <td class="sectionHeader">
                         
                         <cfswitch expression="#qGetPendingHosts.host_fam_approved#">
@@ -966,7 +1098,8 @@
                         <strong>#APPLICATION.CFC.UDF.calculateTimePassed(dateStarted=qGetPendingHosts.date_host_fam_approved, dateEnded=now())#</strong>
                     </td>
                     <td class="sectionHeader">
-                        <cfif NOT isDate(qGetPendingHosts.compliance_school_accept_date)>
+                        <cfif NOT isDate(qGetPendingHosts.compliance_school_accept_date)
+                            OR NOT isDate(qGetPendingHosts.doc_school_accept_date)>
                             - SAF<br />
                         </cfif>
 
@@ -990,13 +1123,25 @@
                             OR NOT isDate(qGetPendingHosts.compliance_ref_form_2)
                             OR NOT isDate(qGetPendingHosts.compliance_ref_check2)
 
-                            OR (LEN(qGetPendingHosts.fatherFirstName) EQ 0 OR LEN(qGetPendingHosts.motherFirstName) EQ 0)
-                                AND qGetPendingHosts.totalChildren EQ 0
-                                AND (NOT isDate(qGetPendingHosts.compliance_single_ref_form_1)
-                                    OR NOT isDate(qGetPendingHosts.compliance_single_ref_form_2))
-
-                            OR (VAL(qGetPendingHosts.isDoublePlacementPaperworkRequired) 
-                                AND NOT isDate(qGetPendingHosts.doublePlacementHostFamilyDateCompliance))>
+                            OR NOT isDate(qGetPendingHosts.doc_host_app_page1_date)
+                            OR NOT isDate(qGetPendingHosts.doc_host_app_page2_date)
+                            OR NOT isDate(qGetPendingHosts.doc_letter_rec_date)
+                            OR NOT isDate(qGetPendingHosts.doc_photos_rec_date)
+                            OR NOT isDate(qGetPendingHosts.doc_bedroom_photo)
+                            OR NOT isDate(qGetPendingHosts.doc_bathroom_photo)
+                            OR NOT isDate(qGetPendingHosts.doc_kitchen_photo)
+                            OR NOT isDate(qGetPendingHosts.doc_living_room_photo)
+                            OR NOT isDate(qGetPendingHosts.doc_outside_photo)
+                            OR NOT isDate(qGetPendingHosts.doc_rules_rec_date)
+                            OR NOT isDate(qGetPendingHosts.doc_rules_sign_date)
+                            OR NOT isDate(qGetPendingHosts.doc_school_profile_rec)
+                            OR NOT isDate(qGetPendingHosts.doc_income_ver_date)
+                            OR NOT isDate(qGetPendingHosts.doc_conf_host_rec)
+                            OR NOT isDate(qGetPendingHosts.doc_date_of_visit)
+                            OR NOT isDate(qGetPendingHosts.doc_ref_form_1)
+                            OR NOT isDate(qGetPendingHosts.doc_ref_check1)
+                            OR NOT isDate(qGetPendingHosts.doc_ref_form_2)
+                            OR NOT isDate(qGetPendingHosts.doc_ref_check2)>
 
                             - HF App Info<br />
                         </cfif>
@@ -1004,20 +1149,25 @@
                         <cfif (LEN(qGetPendingHosts.fatherFirstName) EQ 0 OR LEN(qGetPendingHosts.motherFirstName) EQ 0)
                             AND qGetPendingHosts.totalChildren EQ 0
                             AND (NOT isDate(qGetPendingHosts.compliance_single_ref_form_1)
-                                OR NOT isDate(qGetPendingHosts.compliance_single_ref_form_2))>
+                                OR NOT isDate(qGetPendingHosts.compliance_single_ref_form_2)
+                                OR NOT isDate(qGetPendingHosts.doc_single_ref_form_1)
+                                OR NOT isDate(qGetPendingHosts.doc_single_ref_form_2))>
 
                             - HF Single Person References<br />
                         </cfif>
 
                         <cfif VAL(qGetPendingHosts.isDoublePlacementPaperworkRequired) 
-                                AND NOT isDate(qGetPendingHosts.doublePlacementHostFamilyDateCompliance)>
+                                AND (NOT isDate(qGetPendingHosts.doublePlacementHostFamilyDateCompliance)
+                                    OR NOT isDate(qGetPendingHosts.doublePlacementHostFamilyDateSigned))>
 
                             - HF Double Placement<br />
                         </cfif>
 
                         <cfif VAL(qGetPendingHosts.isDoublePlacementPaperworkRequired)
                                 AND (NOT isDate(qGetPendingHosts.doublePlacementParentsDateCompliance)
-                                OR NOT isDate(qGetPendingHosts.doublePlacementStudentDateCompliance))>
+                                OR NOT isDate(qGetPendingHosts.doublePlacementStudentDateCompliance)
+                                OR NOT isDate(qGetPendingHosts.doublePlacementParentsDateSigned)
+                                OR NOT isDate(qGetPendingHosts.doublePlacementStudentDateSigned))>
                             - IA Double Placement <br />
                         </cfif>
 
@@ -1025,8 +1175,19 @@
                                 AND qGetPendingHosts.totalChildren EQ 0
                                 AND (NOT isDate(qGetPendingHosts.compliance_single_place_auth)
                                     OR NOT isDate(qGetPendingHosts.compliance_single_parents_sign_date)
-                                    OR NOT isDate(qGetPendingHosts.compliance_single_student_sign_date))>
-                            - IA Single Person Placement
+                                    OR NOT isDate(qGetPendingHosts.compliance_single_student_sign_date)
+                                    OR NOT isDate(qGetPendingHosts.doc_single_place_auth)
+                                    OR NOT isDate(qGetPendingHosts.doc_single_parents_sign_date)
+                                    OR NOT isDate(qGetPendingHosts.doc_single_student_sign_date))>
+                            - IA Single Person Placement <br />
+                        </cfif>
+
+                        <cfif VAL(qGetPendingHosts.hfSupervisingDistance) GT 120 >
+                            - Super. Rep Distance
+                        </cfif>
+
+                        <cfif NOT VAL(secondVisitRepID)>
+                            - Second Visit Rep.
                         </cfif>
 
                     </td>

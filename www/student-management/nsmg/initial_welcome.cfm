@@ -283,36 +283,66 @@
         SELECT DISTINCT s.hostid, sh.isRelocation, sh.datePISEmailed, s.studentid, sh.doc_school_accept_date, s.uniqueID,
             s.aypenglish, sh.datePlaced, sh.isRelocation,sh.compliance_school_accept_date, h.fatherFirstName, 
             h.motherFirstName,
+            sh.secondVisitRepID,
+            sh.doc_school_accept_date,
+            sh.compliance_school_accept_date,
+            sh.doc_host_app_page1_date,
             sh.compliance_host_app_page1_date,
+            sh.doc_host_app_page2_date,
             sh.compliance_host_app_page2_date,
+            sh.doc_letter_rec_date,
             sh.compliance_letter_rec_date,
+            sh.doc_photos_rec_date,
             sh.compliance_photos_rec_date,
+            sh.doc_bedroom_photo,
             sh.compliance_bedroom_photo,
+            sh.doc_bathroom_photo,
             sh.compliance_bathroom_photo,
+            sh.doc_kitchen_photo,
             sh.compliance_kitchen_photo,
+            sh.doc_living_room_photo,
             sh.compliance_living_room_photo,
+            sh.doc_outside_photo,
             sh.compliance_outside_photo,
+            sh.doc_rules_rec_date,
             sh.compliance_rules_rec_date,
+            sh.doc_rules_sign_date,
             sh.compliance_rules_sign_date,
+            sh.doc_school_profile_rec,
             sh.compliance_school_profile_rec,
+            sh.doc_income_ver_date,
             sh.compliance_income_ver_date,
+            sh.doc_conf_host_rec,
             sh.compliance_conf_host_rec,
+            sh.doc_date_of_visit,
             sh.compliance_date_of_visit,
+            sh.doc_ref_form_1,
             sh.compliance_ref_form_1,
+            sh.doc_ref_check1,
             sh.compliance_ref_check1,
+            sh.doc_ref_form_2,
             sh.compliance_ref_form_2,
+            sh.doc_ref_check2,
             sh.compliance_ref_check2,
-            sht.doublePlacementHostFamilyDateCompliance,
+            sh.doc_single_ref_form_1,
             sh.compliance_single_ref_form_1,
+            sh.doc_single_ref_form_2,
             sh.compliance_single_ref_form_2,
-
-            sht.isDoublePlacementPaperworkRequired,
-            sht.doublePlacementParentsDateCompliance,
-            sht.doublePlacementStudentDateCompliance,
-
+            sh.doc_single_place_auth,
             sh.compliance_single_place_auth,
+            sh.doc_single_parents_sign_date,
             sh.compliance_single_parents_sign_date,
+            sh.doc_single_student_sign_date,
             sh.compliance_single_student_sign_date,
+            sh.hfSupervisingDistance,
+            sht_doubleplacement.doublePlacementHostFamilyDateCompliance,
+            sht_doubleplacement.doublePlacementHostFamilyDateSigned,
+            sht_doubleplacement.isDoublePlacementPaperworkRequired,
+            sht_doubleplacement.doublePlacementParentsDateSigned,
+            sht_doubleplacement.doublePlacementParentsDateCompliance,
+            sht_doubleplacement.doublePlacementStudentDateSigned,
+            sht_doubleplacement.doublePlacementStudentDateCompliance,
+
             count(childid) AS totalChildren   
         FROM smg_students s
         INNER JOIN smg_hosts h ON s.hostid = h.hostid
@@ -337,6 +367,9 @@
                   ) shtMax ON (shtMax.historyID = sh.historyID AND shtMax.studentID = s.studentID)
         LEFT OUTER JOIN
             smg_hosthistorytracking sht ON sht.id = shtMax.id
+
+        LEFT OUTER JOIN smg_hosthistorytracking sht_doubleplacement ON sht_doubleplacement.historyID = sh.historyID 
+            AND sht_doubleplacement.fieldName = 'doublePlacementID'
 
         LEFT JOIN smg_host_children ON (smg_host_children.hostID = h.hostID 
             AND liveAtHome = 'yes' 
@@ -413,7 +446,7 @@
     <cfset totalShown = 0 />
     <cfset toEmailIDs = '' />
     <cfloop query="qGetPendingHosts">
-        <cfscript>
+        <!---<cfscript>
             vDisplayEmailLink = 0;
                     
             // Do not check compliance for Wayne Brewer - Page will load quicker
@@ -431,8 +464,26 @@
                 }
             
             }
-        </cfscript>
-        <cfif NOT isDate(qGetPendingHosts.datePISEmailed) AND VAL(vDisplayEmailLink)>
+        </cfscript>--->
+
+
+        <cfif NOT isDate(qGetPendingHosts.datePISEmailed) 
+                AND APPLICATION.CFC.USER.isOfficeUser()
+                AND ((VAL(qGetPendingHosts.isDoublePlacementPaperworkRequired)
+                        AND (NOT isDate(qGetPendingHosts.doublePlacementParentsDateCompliance)
+                        OR NOT isDate(qGetPendingHosts.doublePlacementStudentDateCompliance)
+                        OR NOT isDate(qGetPendingHosts.doublePlacementParentsDateSigned)
+                        OR NOT isDate(qGetPendingHosts.doublePlacementStudentDateSigned)))
+
+                    OR ((LEN(qGetPendingHosts.fatherFirstName) EQ 0 OR LEN(qGetPendingHosts.motherFirstName) EQ 0)
+                        AND qGetPendingHosts.totalChildren EQ 0
+                        AND (NOT isDate(qGetPendingHosts.compliance_single_place_auth)
+                            OR NOT isDate(qGetPendingHosts.compliance_single_parents_sign_date)
+                            OR NOT isDate(qGetPendingHosts.compliance_single_student_sign_date)
+                            OR NOT isDate(qGetPendingHosts.doc_single_place_auth)
+                            OR NOT isDate(qGetPendingHosts.doc_single_parents_sign_date)
+                            OR NOT isDate(qGetPendingHosts.doc_single_student_sign_date))))>
+
             <cfset totalShown = totalShown + 1 />
             <cfif totalShown GT 1>
                 <cfset toEmailIDs = toEmailIDs & ", " />
@@ -465,25 +516,60 @@
             AND (compliance_ref_form_2 IS NOT NULL AND compliance_ref_form_2 <> '')
             AND (compliance_ref_check2 IS NOT NULL AND compliance_ref_check2 <> '')
 
+            AND (doc_school_accept_date IS NOT NULL AND doc_school_accept_date <> '')
+            AND (doc_host_app_page1_date IS NOT NULL AND doc_host_app_page1_date <> '')
+            AND (doc_host_app_page2_date IS NOT NULL AND doc_host_app_page2_date <> '')
+            AND (doc_letter_rec_date IS NOT NULL AND doc_letter_rec_date <> '')
+            AND (doc_photos_rec_date IS NOT NULL AND doc_photos_rec_date <> '')
+            AND (doc_bedroom_photo IS NOT NULL AND doc_bedroom_photo <> '')
+            AND (doc_bathroom_photo IS NOT NULL AND doc_bathroom_photo <> '')
+            AND (doc_kitchen_photo IS NOT NULL AND doc_kitchen_photo <> '')
+            AND (doc_living_room_photo IS NOT NULL AND doc_living_room_photo <> '')
+            AND (doc_outside_photo IS NOT NULL AND doc_outside_photo <> '')
+            AND (doc_rules_rec_date IS NOT NULL AND doc_rules_rec_date <> '')
+            AND (doc_rules_sign_date IS NOT NULL AND doc_rules_sign_date <> '')
+            AND (doc_school_profile_rec IS NOT  NULL AND doc_school_profile_rec <> '')
+            AND (doc_income_ver_date IS NOT NULL AND doc_income_ver_date <> '')
+            AND (doc_conf_host_rec IS NOT NULL AND doc_conf_host_rec <> '')
+            AND (doc_date_of_visit IS NOT NULL AND doc_date_of_visit <> '')
+            AND (doc_ref_form_1 IS NOT NULL AND doc_ref_form_1 <> '')
+            AND (doc_ref_check1 IS NOT NULL AND doc_ref_check1 <> '')
+            AND (doc_ref_form_2 IS NOT NULL AND doc_ref_form_2 <> '')
+            AND (doc_ref_check2 IS NOT NULL AND doc_ref_check2 <> '')
+
+            AND hfSupervisingDistance < 120
+
+            AND (secondVisitRepID IS NOT NULL AND secondVisitRepID > 0)
+
             AND ((fatherFirstName IS NOT NULL AND fatherFirstName <> '' AND motherFirstName IS NOT NULL AND motherFirstName <> '')
                 OR ((fatherFirstName IS NULL OR fatherFirstName = '' OR motherFirstName IS NULL OR motherFirstName = '')
                 AND (totalChildren = 0 OR totalChildren IS NULL)
                 AND compliance_single_ref_form_1 IS NOT NULL 
                 AND compliance_single_ref_form_1 <> ''
                 AND compliance_single_ref_form_2 IS NOT NULL 
-                AND compliance_single_ref_form_2 <> ''))
+                AND compliance_single_ref_form_2 <> ''
+                AND doc_single_ref_form_1 IS NOT NULL 
+                AND doc_single_ref_form_1 <> ''
+                AND doc_single_ref_form_2 IS NOT NULL 
+                AND doc_single_ref_form_2 <> ''))
                 
             AND ((isDoublePlacementPaperworkRequired = 0 OR isDoublePlacementPaperworkRequired IS NULL)
                 OR (isDoublePlacementPaperworkRequired = 1
                 AND doublePlacementHostFamilyDateCompliance IS NOT NULL 
-                AND doublePlacementHostFamilyDateCompliance <> ''))
+                AND doublePlacementHostFamilyDateCompliance <> ''
+                AND doublePlacementHostFamilyDateSigned IS NOT NULL 
+                AND doublePlacementHostFamilyDateSigned <> ''))
 
             AND ((isDoublePlacementPaperworkRequired = 0 OR isDoublePlacementPaperworkRequired IS NULL)
                 OR (isDoublePlacementPaperworkRequired = 1
                 AND doublePlacementParentsDateCompliance IS NOT NULL 
                 AND doublePlacementParentsDateCompliance <> ''
                 AND doublePlacementStudentDateCompliance IS NOT NULL 
-                AND doublePlacementStudentDateCompliance = ''))
+                AND doublePlacementStudentDateCompliance = ''
+                AND doublePlacementParentsDateSigned IS NOT NULL 
+                AND doublePlacementParentsDateSigned <> ''
+                AND doublePlacementStudentDateSigned IS NOT NULL 
+                AND doublePlacementStudentDateSigned = ''))
             
             AND ((fatherFirstName IS NOT NULL AND fatherFirstName <> '' AND motherFirstName IS NOT NULL AND motherFirstName <> '')
                 OR ((fatherFirstName IS NULL OR fatherFirstName = '' OR motherFirstName IS NULL OR motherFirstName = '')
@@ -493,7 +579,13 @@
                 AND compliance_single_parents_sign_date IS NOT NULL 
                 AND compliance_single_parents_sign_date <> ''
                 AND compliance_single_student_sign_date IS NOT NULL 
-                AND compliance_single_student_sign_date <> ''))
+                AND compliance_single_student_sign_date <> ''
+                AND doc_single_place_auth IS NOT NULL 
+                AND doc_single_place_auth <> ''
+                AND doc_single_parents_sign_date IS NOT NULL 
+                AND doc_single_parents_sign_date <> ''
+                AND doc_single_student_sign_date IS NOT NULL 
+                AND doc_single_student_sign_date <> ''))
     </cfquery>
 
     <cfquery dbtype="query" name="qGetPendingHostsPreAYP">
@@ -505,8 +597,7 @@
     <cfquery dbtype="query" name="qGetPendingHostsSafAndHF">
         SELECT count(hostID) AS total
         FROM qGetPendingHosts
-        WHERE datePlaced IS NULL
-            AND (((compliance_school_accept_date IS NULL OR compliance_school_accept_date = '')
+        WHERE  (((compliance_school_accept_date IS NULL OR compliance_school_accept_date = '')
                 OR (compliance_host_app_page1_date IS NULL OR compliance_host_app_page1_date = '')
                 OR (compliance_host_app_page2_date IS NULL OR compliance_host_app_page2_date = '')
                 OR (compliance_letter_rec_date IS NULL OR compliance_letter_rec_date = '')
@@ -525,22 +616,49 @@
                 OR (compliance_ref_form_1 IS NULL OR compliance_ref_form_1 = '')
                 OR (compliance_ref_check1 IS NULL OR compliance_ref_check1 = '')
                 OR (compliance_ref_form_2 IS NULL OR compliance_ref_form_2 = '')
-                OR (compliance_ref_check2 IS NULL OR compliance_ref_check2 = ''))
+                OR (compliance_ref_check2 IS NULL OR compliance_ref_check2 = '')
+
+                OR (doc_school_accept_date IS NULL OR doc_school_accept_date = '')
+                OR (doc_host_app_page1_date IS NULL OR doc_host_app_page1_date = '')
+                OR (doc_host_app_page2_date IS NULL OR doc_host_app_page2_date = '')
+                OR (doc_letter_rec_date IS NULL OR doc_letter_rec_date = '')
+                OR (doc_photos_rec_date IS NULL OR doc_photos_rec_date = '')
+                OR (doc_bedroom_photo IS NULL OR doc_bedroom_photo = '')
+                OR (doc_bathroom_photo IS NULL OR doc_bathroom_photo = '')
+                OR (doc_kitchen_photo IS NULL OR doc_kitchen_photo = '')
+                OR (doc_living_room_photo IS NULL OR doc_living_room_photo = '')
+                OR (doc_outside_photo IS NULL OR doc_outside_photo = '')
+                OR (doc_rules_rec_date IS NULL OR doc_rules_rec_date = '')
+                OR (doc_rules_sign_date IS NULL OR doc_rules_sign_date = '')
+                OR (doc_school_profile_rec IS  NULL OR doc_school_profile_rec = '')
+                OR (doc_income_ver_date IS NULL OR doc_income_ver_date = '')
+                OR (doc_conf_host_rec IS NULL OR doc_conf_host_rec = '')
+                OR (doc_date_of_visit IS NULL OR doc_date_of_visit = '')
+                OR (doc_ref_form_1 IS NULL OR doc_ref_form_1 = '')
+                OR (doc_ref_check1 IS NULL OR doc_ref_check1 = '')
+                OR (doc_ref_form_2 IS NULL OR doc_ref_form_2 = '')
+                OR (doc_ref_check2 IS NULL OR doc_ref_check2 = ''))
 
                 OR (((fatherFirstName IS NULL OR fatherFirstName = '' OR motherFirstName IS NULL OR motherFirstName = '')
                     AND (totalChildren = 0 OR totalChildren IS NULL))
                     AND ((compliance_single_ref_form_1 IS NULL OR compliance_single_ref_form_1 = '')
-                        OR (compliance_single_ref_form_2 IS NULL OR compliance_single_ref_form_2 = '')))
+                        OR (compliance_single_ref_form_2 IS NULL OR compliance_single_ref_form_2 = '')
+                        OR (doc_single_ref_form_1 IS NULL OR doc_single_ref_form_1 = '')
+                        OR (doc_single_ref_form_2 IS NULL OR doc_single_ref_form_2 = '')))
                 
                 OR ((isDoublePlacementPaperworkRequired = 1)
-                    AND (doublePlacementHostFamilyDateCompliance IS NULL OR doublePlacementHostFamilyDateCompliance = '')))
+                    AND (doublePlacementHostFamilyDateCompliance IS NULL OR doublePlacementHostFamilyDateCompliance = ''
+                        OR doublePlacementHostFamilyDateSigned IS NULL OR doublePlacementHostFamilyDateSigned = ''))
+
+                OR (hfSupervisingDistance >= 120)
+
+                OR (secondVisitRepID IS  NULL OR secondVisitRepID = 0))
     </cfquery>
 
     <cfquery dbtype="query" name="qGetPendingHostsIntAgent">
         SELECT count(hostID) AS total
         FROM qGetPendingHosts
-        WHERE datePlaced IS NULL
-            AND ((isDoublePlacementPaperworkRequired = 1
+        WHERE ((isDoublePlacementPaperworkRequired = 1
                 AND (doublePlacementParentsDateCompliance IS NULL OR doublePlacementParentsDateCompliance = ''
                     OR doublePlacementStudentDateCompliance IS NULL OR doublePlacementStudentDateCompliance = ''))
             
@@ -548,7 +666,10 @@
                     AND (totalChildren = 0 OR totalChildren IS NULL)
                     AND (compliance_single_place_auth IS NULL OR compliance_single_place_auth = ''
                         OR compliance_single_parents_sign_date IS NULL OR compliance_single_parents_sign_date = ''
-                        OR compliance_single_student_sign_date IS NULL OR compliance_single_student_sign_date = '')))
+                        OR compliance_single_student_sign_date IS NULL OR compliance_single_student_sign_date = ''
+                        OR doc_single_place_auth IS NULL OR doc_single_place_auth = ''
+                        OR doc_single_parents_sign_date IS NULL OR doc_single_parents_sign_date = ''
+                        OR doc_single_student_sign_date IS NULL OR doc_single_student_sign_date = '')))
     </cfquery>
 
 
@@ -874,7 +995,7 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                                 <cfif APPLICATION.CFC.USER.isOfficeUser()>
                                     <a href="index.cfm?curdoc=pendingPlacementList&toEmail=1">
                                         <li style="padding:8px; font-size: 12px; background-color:##eee">
-                                            Email PIS <span class="highlightNumber<cfif NOT VAL(totalShown)>OFF</cfif>">#totalShown#</span>
+                                            Present PIS to Inter.Rep <span class="highlightNumber<cfif NOT VAL(totalShown)>OFF</cfif>">#totalShown#</span>
                                         </li>
                                     </a>
                                 </cfif>
@@ -886,14 +1007,14 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                                 </a>
                                 <a href="index.cfm?curdoc=pendingPlacementList&pending_status=saf_and_hf">
                                     <li style="padding:8px; font-size: 12px; <cfif APPLICATION.CFC.USER.isOfficeUser()>background-color:##eee</cfif>">
-                                        Missing SAF and/or HF Info <span  class="highlightNumber<cfif NOT VAL(qGetPendingHostsSafAndHF.total)>OFF</cfif>">#VAL(qGetPendingHostsSafAndHF.total)#</span>
+                                        Missing SAF, HF App Info, Sec.Visit Rep and/or Rep within 120mi <span  class="highlightNumber<cfif NOT VAL(qGetPendingHostsSafAndHF.total)>OFF</cfif>">#VAL(qGetPendingHostsSafAndHF.total)#</span>
                                     </li>
                                 </a>
                                 
                                 <cfif APPLICATION.CFC.USER.isOfficeUser()>
                                     <a href="index.cfm?curdoc=pendingPlacementList&pending_status=int_agent">
                                         <li style="padding:8px; font-size: 12px">
-                                            Missing Docs from Inter.Reps <span class="highlightNumber<cfif NOT VAL(qGetPendingHostsIntAgent.total)>OFF</cfif>">#VAL(qGetPendingHostsIntAgent.total)#</span>
+                                            Missing Docs from Inter.Rep <span class="highlightNumber<cfif NOT VAL(qGetPendingHostsIntAgent.total)>OFF</cfif>">#VAL(qGetPendingHostsIntAgent.total)#</span>
                                         </li>
                                     </a>
                                 </cfif>
