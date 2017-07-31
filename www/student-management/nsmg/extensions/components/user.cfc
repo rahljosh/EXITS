@@ -2868,6 +2868,7 @@
 
 	<cffunction name="generateTraincasterLoginLink" access="public" returntype="string" output="No" hint="Generates a traincaster login link">
     	<cfargument name="uniqueID" type="string" hint="uniqueID is required">
+
 		
 		<cfscript>
 			/***************************************************************************************************
@@ -2889,8 +2890,6 @@
 			training_link = '';
             </cfscript>
           
-    
-          
             <cfset training_link = "https://dos.gyrus.com/gyrusaim/auth/externallogin?externalToken">
 		
 			<cfif CLIENT.companyID EQ 10 >
@@ -2904,6 +2903,8 @@
                 <cfset OrgCode = "ISE">
                 <cfset SuperviserCode = "Manager Group: International Student Exchange">
 			</cfif>
+			
+			
 			<!----Check if User exists, if they do, reset the password to match what we think it should.---->
             <cfprocessingdirective suppresswhitespace="Yes"> 
 			<cfcontent type="text/xml; charset=utf-8"> 
@@ -2936,8 +2937,8 @@
             
             <!----This is where we are checking if soemthing is found.   If found, update password, if not, insert a new record---->
             <cfset Results = XMLParse(objGet.FileContent)>
-          
-          	<Cfset expirationDate = #DateFormat(DateAdd("yyyy",1,now()))#>
+          	
+          	<Cfset expirationDate = #DateFormat(DateAdd("yyyy",1,now()),'mm-dd-yyyy')#>
            	 <cfif structKeyExists(Results.Employees, "Employee")>
             		<!----Updated the users info ---->
  					<cfprocessingdirective suppresswhitespace="Yes"> 
@@ -2950,7 +2951,8 @@
                                     <LastName><cfoutput>#qGetUserInfo.lastname#</cfoutput></LastName>
                                     <UserName><cfoutput>#qGetUserInfo.email#</cfoutput></UserName>
                                     <Email><cfoutput>#qGetUserInfo.email#</cfoutput></Email>
-                                    <ExpirationDate>#expirationDate#</ExpirationDate>
+                                    <ExpirationDate><cfoutput>#expirationDate#</cfoutput></ExpirationDate>
+                                    <TerminationDate><cfoutput>#expirationDate#</cfoutput></TerminationDate>
                                     <OrganizationCode><cfoutput>#OrgCode#</cfoutput></OrganizationCode>
                                      <Supervisors>
                                         <Supervisor>
@@ -2993,7 +2995,7 @@
                                 <LastName><cfoutput>#qGetUserInfo.lastname#</cfoutput></LastName>
                                 <UserName><cfoutput>#qGetUserInfo.email#</cfoutput></UserName>
                                 <Email><cfoutput>#qGetUserInfo.email#</cfoutput></Email>
-                                <ExpirationDate>12/31/9999</ExpirationDate>
+                                <ExpirationDate><cfoutput>#expirationDate#</cfoutput></ExpirationDate>
                                 <OrganizationCode><cfoutput>#OrgCode#</cfoutput></OrganizationCode>
                                  <Supervisors>
                                     <Supervisor>
@@ -3216,7 +3218,7 @@
 							<cfcontent type="text/xml; charset=utf-8"> 
 							<cfxml variable="xmlobject"> 
 							<Root>
-							 <cfloop query="gyrusUsers">
+							 <cfloop query="getUser">
 							   <Employee>
 								<EmployeeNumber><cfoutput>#getUser.email#</cfoutput></EmployeeNumber>
 								<FirstName><cfoutput>#getUser.firstname#</cfoutput></FirstName>
