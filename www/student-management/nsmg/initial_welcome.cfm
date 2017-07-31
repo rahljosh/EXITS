@@ -343,7 +343,8 @@
             sht_doubleplacement.doublePlacementStudentDateSigned,
             sht_doubleplacement.doublePlacementStudentDateCompliance,
 
-            count(childid) AS totalChildren   
+            count(shc.childid) AS totalChildren,
+            shc.childid
         FROM smg_students s
         INNER JOIN smg_hosts h ON s.hostid = h.hostid
         INNER JOIN smg_programs p ON p.programid = s.programid
@@ -371,9 +372,9 @@
         LEFT OUTER JOIN smg_hosthistorytracking sht_doubleplacement ON sht_doubleplacement.historyID = sh.historyID 
             AND sht_doubleplacement.fieldName = 'doublePlacementID'
 
-        LEFT JOIN smg_host_children ON (smg_host_children.hostID = h.hostID 
-            AND liveAtHome = 'yes' 
-            AND smg_host_children.isDeleted = 0)
+        LEFT JOIN smg_host_children shc ON (shc.hostID = h.hostID 
+            AND shc.liveAtHome = 'yes' 
+            AND shc.isDeleted = 0)
         WHERE s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
             AND s.host_fam_approved > <cfqueryparam cfsqltype="cf_sql_integer" value="4">   
                 
@@ -542,16 +543,18 @@
             AND (secondVisitRepID IS NOT NULL AND secondVisitRepID > 0)
 
             AND ((fatherFirstName IS NOT NULL AND fatherFirstName <> '' AND motherFirstName IS NOT NULL AND motherFirstName <> '')
+                OR ((fatherFirstName IS NULL OR fatherFirstName = '' OR motherFirstName IS NULL OR motherFirstName = '') 
+                    AND totalChildren > 0)
                 OR ((fatherFirstName IS NULL OR fatherFirstName = '' OR motherFirstName IS NULL OR motherFirstName = '')
-                AND (totalChildren = 0 OR totalChildren IS NULL)
-                AND compliance_single_ref_form_1 IS NOT NULL 
-                AND compliance_single_ref_form_1 <> ''
-                AND compliance_single_ref_form_2 IS NOT NULL 
-                AND compliance_single_ref_form_2 <> ''
-                AND doc_single_ref_form_1 IS NOT NULL 
-                AND doc_single_ref_form_1 <> ''
-                AND doc_single_ref_form_2 IS NOT NULL 
-                AND doc_single_ref_form_2 <> ''))
+                    AND (totalChildren = 0 OR totalChildren IS NULL)
+                    AND compliance_single_ref_form_1 IS NOT NULL 
+                    AND compliance_single_ref_form_1 <> ''
+                    AND compliance_single_ref_form_2 IS NOT NULL 
+                    AND compliance_single_ref_form_2 <> ''
+                    AND doc_single_ref_form_1 IS NOT NULL 
+                    AND doc_single_ref_form_1 <> ''
+                    AND doc_single_ref_form_2 IS NOT NULL 
+                    AND doc_single_ref_form_2 <> ''))
                 
             AND ((isDoublePlacementPaperworkRequired = 0 OR isDoublePlacementPaperworkRequired IS NULL)
                 OR (isDoublePlacementPaperworkRequired = 1
@@ -565,27 +568,29 @@
                 AND doublePlacementParentsDateCompliance IS NOT NULL 
                 AND doublePlacementParentsDateCompliance <> ''
                 AND doublePlacementStudentDateCompliance IS NOT NULL 
-                AND doublePlacementStudentDateCompliance = ''
+                AND doublePlacementStudentDateCompliance <> ''
                 AND doublePlacementParentsDateSigned IS NOT NULL 
                 AND doublePlacementParentsDateSigned <> ''
                 AND doublePlacementStudentDateSigned IS NOT NULL 
-                AND doublePlacementStudentDateSigned = ''))
+                AND doublePlacementStudentDateSigned <> ''))
             
             AND ((fatherFirstName IS NOT NULL AND fatherFirstName <> '' AND motherFirstName IS NOT NULL AND motherFirstName <> '')
+                OR ((fatherFirstName IS NULL OR fatherFirstName = '' OR motherFirstName IS NULL OR motherFirstName = '') 
+                    AND totalChildren > 0)
                 OR ((fatherFirstName IS NULL OR fatherFirstName = '' OR motherFirstName IS NULL OR motherFirstName = '')
-                AND (totalChildren = 0 OR totalChildren IS NULL)
-                AND compliance_single_place_auth IS NOT NULL 
-                AND compliance_single_place_auth <> ''
-                AND compliance_single_parents_sign_date IS NOT NULL 
-                AND compliance_single_parents_sign_date <> ''
-                AND compliance_single_student_sign_date IS NOT NULL 
-                AND compliance_single_student_sign_date <> ''
-                AND doc_single_place_auth IS NOT NULL 
-                AND doc_single_place_auth <> ''
-                AND doc_single_parents_sign_date IS NOT NULL 
-                AND doc_single_parents_sign_date <> ''
-                AND doc_single_student_sign_date IS NOT NULL 
-                AND doc_single_student_sign_date <> ''))
+                    AND (totalChildren = 0 OR totalChildren IS NULL)
+                    AND compliance_single_place_auth IS NOT NULL 
+                    AND compliance_single_place_auth <> ''
+                    AND compliance_single_parents_sign_date IS NOT NULL 
+                    AND compliance_single_parents_sign_date <> ''
+                    AND compliance_single_student_sign_date IS NOT NULL 
+                    AND compliance_single_student_sign_date <> ''
+                    AND doc_single_place_auth IS NOT NULL 
+                    AND doc_single_place_auth <> ''
+                    AND doc_single_parents_sign_date IS NOT NULL 
+                    AND doc_single_parents_sign_date <> ''
+                    AND doc_single_student_sign_date IS NOT NULL 
+                    AND doc_single_student_sign_date <> ''))
     </cfquery>
 
     <cfquery dbtype="query" name="qGetPendingHostsPreAYP">
@@ -896,7 +901,7 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
                      	</span> 
                     </div> <!-- end top --> 
                     
-                    <div class="rdbox">
+                    <div class="rdbox" style="margin-bottom: 0">
                         <cfinclude template="welcome_includes/hostAppsOffice.cfm">
                     </div>
                     
