@@ -1213,6 +1213,8 @@
         <cfargument name="active_rep" default="" hint="active_rep is not required">
         <cfargument name="ny_office" default="" hint="ny_office is not required">
       	<cfargument name="currently_hosting" default="2" hint="currently_hosting is not required">
+        <cfargument name="used_for_relocation" default="0" hint="used_for_relocation is not required">
+
       	<cfset vPreviousSeason = #ARGUMENTS.seasonID# - 1>
         <cfquery 
 
@@ -1364,44 +1366,29 @@
                          <!--- Total of students hosting --->
                         
                         (
-                            SELECT 
-                                COUNT(hostid) as totalCount
-                            FROM 
-                                smg_students 
-                            LEFT JOIN 
-                            	smg_programs on smg_programs.programid = smg_students.programid
-                            WHERE
-                                smg_students.hostID = h.hostID
-
-                           	AND
-                                smg_programs.seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">  
-                           	AND
-                           		canceldate is NULL
+                            SELECT COUNT(hostid) as totalCount
+                            FROM smg_students 
+                            LEFT JOIN smg_programs on smg_programs.programid = smg_students.programid
+                            WHERE smg_students.hostID = h.hostID
+                                AND smg_programs.seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">  
+                           	    AND canceldate is NULL
                         ) as totalNumberCurrentStudents,
                         (
-                            SELECT 
-                                COUNT(hostid) as totalCount
-                            FROM 
-                                smg_students 
-                            LEFT JOIN 
-                            	smg_programs on smg_programs.programid = smg_students.programid
+                            SELECT COUNT(hostid) as totalCount
+                            FROM smg_students 
+                            LEFT JOIN smg_programs on smg_programs.programid = smg_students.programid
                             WHERE
                                 smg_students.hostID = h.hostID
-                            AND
-                                smg_programs.seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#vPreviousSeason#">  
-                           	AND
-                           		canceldate is NULL
+                                AND smg_programs.seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#vPreviousSeason#">  
+                           	    AND canceldate is NULL
                         ) as totalNumberPrevousAppStudents,
                          (
-                            SELECT 
-                                COUNT(hostid) as totalCount
-                            FROM 
-                                smg_host_app_season 
+                            SELECT COUNT(hostid) as totalCount
+                            FROM smg_host_app_season 
                        
-                            WHERE
-                                smg_host_app_season.hostID = h.hostID
-							AND 
-                          		smg_host_app_season.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#vPreviousSeason#">  
+                            WHERE smg_host_app_season.hostID = h.hostID
+					           AND smg_host_app_season.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#vPreviousSeason#">
+                               AND smg_host_app_season.applicationStatusID = 3  
                            
                         ) as PreviousHostAppSeason,
                         <!--- Host Season-based approval status --->
@@ -1418,10 +1405,15 @@
                     FROM 
                         smg_hosts h
                   	<!--- Host Season-based approval status --->
-                    <cfif LEN(ARGUMENTS.statusID)>
+                    <cfif LEN(ARGUMENTS.statusID) AND VAL(ARGUMENTS.statusID) NEQ 9999>
                     	INNER JOIN smg_host_app_season ON smg_host_app_season.hostID = h.hostID
                         	AND smg_host_app_season.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
                             AND smg_host_app_season.applicationStatusID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.statusID)#">
+                    <!--- Approved Host family without Students --->
+                    <cfelseif VAL(ARGUMENTS.statusID) EQ 9999>
+                        INNER JOIN smg_host_app_season ON smg_host_app_season.hostID = h.hostID
+                            AND smg_host_app_season.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
+                            AND smg_host_app_season.applicationStatusID = <cfqueryparam cfsqltype="cf_sql_integer" value="3">
                    	<cfelse>
                     	LEFT OUTER JOIN smg_host_app_season ON smg_host_app_season.hostID = h.hostID
                         	AND smg_host_app_season.seasonID = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">
@@ -1449,6 +1441,16 @@
                     	smg_notes on smg_notes.hostAppID = smg_host_app_season.ID
                     WHERE
                         1 = 1 
+
+                    <cfif VAL(ARGUMENTS.statusID) EQ 9999>
+                        AND (SELECT COUNT(hostid) as totalCount
+                            FROM smg_students 
+                            LEFT JOIN smg_programs on smg_programs.programid = smg_students.programid
+                            WHERE smg_students.hostID = h.hostID
+                                AND smg_programs.seasonid = <cfqueryparam cfsqltype="cf_sql_integer" value="#VAL(ARGUMENTS.seasonID)#">  
+                                AND canceldate is NULL) = 0
+                    </cfif>
+
                     <!----Show only assigned to an Active Rep---->
                     <Cfif val(ARGUMENTS.active_rep) eq 1>
                     AND 
@@ -1540,8 +1542,25 @@
 				<!--- Regional Manager Info --->
                 LEFT OUTER JOIN
                     smg_users rm ON rm.userID = regionalManagerID
-                             
-             	<Cfif ARGUMENTS.currently_hosting eq 1>
+
+                <!--- Used for Relocation --->
+             	<cfif ARGUMENTS.used_for_relocation eq 1>
+                    WHERE totalNumberCurrentStudents = 0 
+                        AND totalNumberPrevousAppStudents > 0 
+                        AND PreviousHostAppSeason = 0
+
+                <!--- NOT Used for Relocation --->
+                <cfelseif ARGUMENTS.used_for_relocation eq 2>
+                    WHERE (totalNumberCurrentStudents = 0 and totalNumberPrevousAppStudents = 0 and PreviousHostAppSeason = 0)  
+                    OR (totalNumberCurrentStudents = 0 and (totalNumberPrevousAppStudents > 0 and PreviousHostAppSeason > 0))  
+                    OR (totalNumberCurrentStudents = 0 and (totalNumberPrevousAppStudents = 0 and PreviousHostAppSeason > 0))
+                
+                <!--- Hosting --->
+                <cfelseif ARGUMENTS.used_for_relocation eq 3>
+                    WHERE totalNumberCurrentStudents > 0
+                </cfif>
+
+                <!---
                    	WHERE 
                    		totalNumberCurrentStudents > 0
 				<Cfelseif ARGUMENTS.currently_hosting eq 2>
@@ -1555,15 +1574,16 @@
 					WHERE
 						(totalNumberCurrentStudents = 0 and totalNumberPrevousAppStudents  > 0 and PreviousHostAppSeason = 0 )   
 				</Cfif>	  
+                --->
                          
                 ORDER BY 
                     appUpdated
-                    <cfif val(ARGUMENTS.statusID) eq 3>
+                    <cfif val(ARGUMENTS.statusID) eq 3 OR val(ARGUMENTS.statusID) eq 9999>
                      DESC
 					</cfif>
 				
 		</cfquery>
-		
+
 		<cfreturn qGetApplicationList>
 	</cffunction>
     <!---End of Basics for Host App List---->
