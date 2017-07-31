@@ -239,7 +239,8 @@
 			) AS placementAction,
 			notes.appNotes,
             notes.dateUpdated AS noteDate,
-            count(childid) AS totalChildren                  	
+            count(shc.childid) AS totalChildren ,
+            shc.childid                 	
 		FROM 
         	smg_students s
 		INNER JOIN 
@@ -285,9 +286,9 @@
         LEFT OUTER JOIN smg_hosthistorytracking sht_doubleplacement ON sht_doubleplacement.historyID = sh.historyID 
             AND sht_doubleplacement.fieldName = 'doublePlacementID'
 
-        LEFT JOIN smg_host_children ON (smg_host_children.hostID = h.hostID 
-            AND liveAtHome = 'yes' 
-            AND smg_host_children.isDeleted = 0)
+        LEFT OUTER JOIN smg_host_children shc ON (shc.hostID = h.hostID 
+            AND shc.liveAtHome = 'yes' 
+            AND shc.isDeleted = 0)
         WHERE 
         	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
         AND 
@@ -372,16 +373,18 @@
             AND (hfSupervisingDistance < 120)
 
             AND ((fatherFirstName IS NOT NULL AND fatherFirstName <> '' AND motherFirstName IS NOT NULL AND motherFirstName <> '')
+                OR ((fatherFirstName IS NULL OR fatherFirstName = '' OR motherFirstName IS NULL OR motherFirstName = '') 
+                    AND childid > 0)
                 OR ((fatherFirstName IS NULL OR fatherFirstName = '' OR motherFirstName IS NULL OR motherFirstName = '')
-                AND (childid = 0 OR childid IS NULL OR childid = '')
-                AND compliance_single_ref_form_1 IS NOT NULL 
-                AND compliance_single_ref_form_1 <> ''
-                AND compliance_single_ref_form_2 IS NOT NULL 
-                AND compliance_single_ref_form_2 <> ''
-                AND doc_single_ref_form_1 IS NOT NULL 
-                AND doc_single_ref_form_1 <> ''
-                AND doc_single_ref_form_2 IS NOT NULL 
-                AND doc_single_ref_form_2 <> ''))
+                    AND (childid = 0 OR childid IS NULL OR childid = '')
+                    AND compliance_single_ref_form_1 IS NOT NULL 
+                    AND compliance_single_ref_form_1 <> ''
+                    AND compliance_single_ref_form_2 IS NOT NULL 
+                    AND compliance_single_ref_form_2 <> ''
+                    AND doc_single_ref_form_1 IS NOT NULL 
+                    AND doc_single_ref_form_1 <> ''
+                    AND doc_single_ref_form_2 IS NOT NULL 
+                    AND doc_single_ref_form_2 <> ''))
                 
             AND ((sht_doubleplacement.isDoublePlacementPaperworkRequired = 0 OR sht_doubleplacement.isDoublePlacementPaperworkRequired IS NULL)
                 OR (sht_doubleplacement.isDoublePlacementPaperworkRequired = 1
@@ -395,13 +398,15 @@
                     AND sht_doubleplacement.doublePlacementParentsDateCompliance IS NOT NULL 
                     AND sht_doubleplacement.doublePlacementParentsDateCompliance <> ''
                     AND sht_doubleplacement.doublePlacementStudentDateCompliance IS NOT NULL 
-                    AND sht_doubleplacement.doublePlacementStudentDateCompliance = ''
+                    AND sht_doubleplacement.doublePlacementStudentDateCompliance <> ''
                     AND sht_doubleplacement.doublePlacementParentsDateSigned IS NOT NULL 
                     AND sht_doubleplacement.doublePlacementParentsDateSigned <> ''
                     AND sht_doubleplacement.doublePlacementStudentDateSigned IS NOT NULL 
-                    AND sht_doubleplacement.doublePlacementStudentDateSigned = ''))
+                    AND sht_doubleplacement.doublePlacementStudentDateSigned <> ''))
             
             AND ((fatherFirstName IS NOT NULL AND fatherFirstName <> '' AND motherFirstName IS NOT NULL AND motherFirstName <> '')
+                OR ((fatherFirstName IS NULL OR fatherFirstName = '' OR motherFirstName IS NULL OR motherFirstName = '') 
+                    AND childid > 0)
                 OR ((fatherFirstName IS NULL OR fatherFirstName = '' OR motherFirstName IS NULL OR motherFirstName = '')
                     AND (childid = 0 OR childid IS NULL OR childid = '')
                     AND compliance_single_place_auth IS NOT NULL 
