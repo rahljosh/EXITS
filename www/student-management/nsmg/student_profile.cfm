@@ -91,6 +91,8 @@
 	<cfdirectory directory="#AppPath.onlineApp.parentLetter#" name="parentLetter" filter="#qGetStudentInfo.studentid#.*">    
 
 </cfsilent>
+
+
 <Cfquery name="studentReligion" datasource="#application.dsn#">
 select religionname
 from smg_religions
@@ -103,6 +105,16 @@ where religionid = #qGetStudentInfo.religiousaffiliation#
 </cfif>
 
 <cfoutput>
+<cfif client.userid eq 1>
+	<cfdump var="#qGetStudentInfo#"></cfdump>
+	<cfdump var="#parentLetter#"></cfdump>
+	<cfdump var="#studentLetter#"></cfdump>
+	<!--- Attach Parents Letter --->
+                    <cfif parentLetter.recordcount>
+                       #AppPath.onlineApp.parentLetter##parentLetter.name#
+                     #AppPath.onlineApp.studentLetter##studentLetter.name#
+                    </cfif>
+</cfif>
 
 <!--- Save Profile into a variable --->
 <cfsavecontent variable="studentProfile">
