@@ -122,7 +122,7 @@
 			</cfoutput>
         </cfsavecontent>
             
-		<cfmail to="#ARGUMENTS.email_to#" from="#ARGUMENTS.email_from#" replyto="#ARGUMENTS.email_replyto#" cc="#ARGUMENTS.email_cc#" bcc="#ARGUMENTS.email_bcc#" subject="#ARGUMENTS.email_subject#" type="html">
+		<cfmail to="#ARGUMENTS.email_to#" from="#CLIENT.support_email#" replyto="#ARGUMENTS.email_from#" cc="#ARGUMENTS.email_cc#" bcc="#ARGUMENTS.email_bcc#" subject="#ARGUMENTS.email_subject#" type="html">
 			
             <!--- Attach File --->
 			<cfif LEN(ARGUMENTS.email_file)>
@@ -131,7 +131,8 @@
 
             <!--- Attach File 2 --->
 			<cfif LEN(ARGUMENTS.email_file2)>
-				<cfmailparam disposition="attachment" file="#ARGUMENTS.email_file2#">                
+				<cfmailparam disposition="attachment" file="#ARGUMENTS.email_file2#">  
+                     
             </cfif>
 
             <!--- Attach File 3 --->
