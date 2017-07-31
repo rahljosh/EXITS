@@ -188,29 +188,7 @@
 	<td class="style1" colspan="2"><cfif qGetStudentInfo.hostid is qGetDoublePlacementInfo.hostid><u>#get_hf.city#, #get_hf.state# #get_hf.zip#</u><cfelse>__________________________________________________ </cfif></td>
 </tr>
 <tr><td>&nbsp;</td></tr>
-<tr>
-	<td class="style1" align="right">School Name: </td>
-	<td class="style1" colspan="2"><cfif qGetStudentInfo.schoolid is qGetDoublePlacementInfo.schoolid><u>#get_school.schoolname#</u><cfelse>__________________________________________________ </cfif></td>
-</tr>
-<tr>
-	<td class="style1" align="right">School: </td>
-	<td class="style1">___________________________________________<br><font size="-1"><font size="-1">signature</font></font> </td>
-	<td class="style1">______________<br>title </td>
-</tr>
-<tr valign="top">
-	<td class="style1" align="right">Print Name: </td>
-	<td class="style1">___________________________________________ </td>
-	<td class="style1"><cfoutput><u>#dateFormat(now(), 'mmm. dd, yyyy')#</u><br>date</cfoutput> </td>
-</tr>
-<tr>
-	<td class="style1" align="right">Address: </td>
-	<td class="style1" colspan="2"><cfif qGetStudentInfo.schoolid is qGetDoublePlacementInfo.schoolid><u>#get_school.address#</u><cfelse>__________________________________________________ </cfif></td>
-</tr>
-<tr>
-	<td class="style1" align="right">&nbsp;</td>
-	<td class="style1" colspan="2"><cfif qGetStudentInfo.schoolid is qGetDoublePlacementInfo.schoolid><u>#get_school.city#, #get_school.state# #get_school.zip#</u><cfelse>__________________________________________________ </cfif></td>
-</tr>
-<tr><td><br></td></tr>
+
 <tr><td class="style1" colspan="2">
 	<div align="justify">
 		By signing this, we agree that the two students listed above will live with the above host
