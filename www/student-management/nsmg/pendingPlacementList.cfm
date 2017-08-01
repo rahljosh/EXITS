@@ -240,7 +240,9 @@
 			notes.appNotes,
             notes.dateUpdated AS noteDate,
             count(shc.childid) AS totalChildren ,
-            shc.childid                 	
+            shc.childid,
+            count(ah.id) AS totalCompNotes,
+            ah.id AS compNoteID             	
 		FROM 
         	smg_students s
 		INNER JOIN 
@@ -289,6 +291,12 @@
         LEFT OUTER JOIN smg_host_children shc ON (shc.hostID = h.hostID 
             AND shc.liveAtHome = 'yes' 
             AND shc.isDeleted = 0)
+
+        LEFT OUTER JOIN applicationhistory ah ON ah.applicationID = #APPLICATION.CONSTANTS.TYPE.EXITS#
+            AND ah.foreignTable = "smg_hosthistorycompliance"
+            AND ah.foreignID = sh.historyID
+            AND ah.isResolved = 0
+
         WHERE 
         	s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
         AND 
@@ -423,6 +431,7 @@
                     AND doc_single_student_sign_date <> ''))
 
             AND (sh.secondVisitRepID IS NOT NULL AND sh.secondVisitRepID > 0)
+            AND (ah.id = 0 OR ah.id IS NULL)
 
         <cfelseif URL.pending_status EQ 'saf_and_hf'>
             AND (((compliance_school_accept_date IS NULL OR compliance_school_accept_date = '')
@@ -479,8 +488,8 @@
                         OR sht_doubleplacement.doublePlacementHostFamilyDateSigned IS NULL OR sht_doubleplacement.doublePlacementHostFamilyDateSigned = ''))
                 
                 OR (hfSupervisingDistance >= 120)
-
-                OR (sh.secondVisitRepID IS NULL OR sh.secondVisitRepID = 0))
+                OR (sh.secondVisitRepID IS NULL OR sh.secondVisitRepID = 0)
+                OR (ah.id > 0))
 
         <cfelseif URL.pending_status EQ 'int_agent'>
             AND ((sht_doubleplacement.isDoublePlacementPaperworkRequired = 1
@@ -736,10 +745,10 @@
 
                 <option value="?curdoc=pendingPlacementList&pending_status=to_approve&preAypCamp=#URL.preAypCamp#&regionid=0&facilitator=#URL.facilitator#&programid=#URL.programID#&toEmail=#URL.toEmail#&activeRep=#URL.activeRep#" <cfif URL.pending_status EQ 'to_approve'> selected="selected" </cfif> >Review & Approve</option>
 
-                <option value="?curdoc=pendingPlacementList&pending_status=saf_and_hf&preAypCamp=#URL.preAypCamp#&regionid=#URL.regionid#&facilitator=#URL.facilitator#&programid=#URL.programID#&toEmail=#URL.toEmail#&activeRep=#URL.activeRep#" <cfif URL.pending_status EQ 'saf_and_hf'> selected="selected" </cfif> >Missing SAF, HF App Info, Sec.Visit Rep and/or Rep within 120mi</option>
+                <option value="?curdoc=pendingPlacementList&pending_status=saf_and_hf&preAypCamp=#URL.preAypCamp#&regionid=#URL.regionid#&facilitator=#URL.facilitator#&programid=#URL.programID#&toEmail=#URL.toEmail#&activeRep=#URL.activeRep#" <cfif URL.pending_status EQ 'saf_and_hf'> selected="selected" </cfif> >Missing Items from Field</option>
 
                 <cfif APPLICATION.CFC.USER.isOfficeUser()>
-                    <option value="?curdoc=pendingPlacementList&pending_status=int_agent&preAypCamp=#URL.preAypCamp#&regionid=#URL.regionid#&facilitator=#URL.facilitator#&programid=#URL.programID#&toEmail=#URL.toEmail#&activeRep=#URL.activeRep#" <cfif URL.pending_status EQ 'int_agent'> selected="selected" </cfif> >International Agent</option>
+                    <option value="?curdoc=pendingPlacementList&pending_status=int_agent&preAypCamp=#URL.preAypCamp#&regionid=#URL.regionid#&facilitator=#URL.facilitator#&programid=#URL.programID#&toEmail=#URL.toEmail#&activeRep=#URL.activeRep#" <cfif URL.pending_status EQ 'int_agent'> selected="selected" </cfif> >Missing Docs from Inter.Rep</option>
                 </cfif>
 
             </select>
@@ -1194,6 +1203,11 @@
                         <cfif NOT VAL(secondVisitRepID)>
                             - Second Visit Rep.
                         </cfif>
+
+                        <cfif totalCompNotes GT 0>
+                            - Comp. Notes
+                        </cfif>
+
 
                     </td>
                 </tr>
