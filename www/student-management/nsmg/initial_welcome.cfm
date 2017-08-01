@@ -344,7 +344,9 @@
             sht_doubleplacement.doublePlacementStudentDateCompliance,
 
             count(shc.childid) AS totalChildren,
-            shc.childid
+            shc.childid,
+            count(ah.id) AS totalCompNotes,
+            ah.id AS compNoteID 
         FROM smg_students s
         INNER JOIN smg_hosts h ON s.hostid = h.hostid
         INNER JOIN smg_programs p ON p.programid = s.programid
@@ -375,6 +377,12 @@
         LEFT JOIN smg_host_children shc ON (shc.hostID = h.hostID 
             AND shc.liveAtHome = 'yes' 
             AND shc.isDeleted = 0)
+        
+        LEFT OUTER JOIN applicationhistory ah ON ah.applicationID = #APPLICATION.CONSTANTS.TYPE.EXITS#
+            AND ah.foreignTable = "smg_hosthistorycompliance"
+            AND ah.foreignID = sh.historyID
+            AND ah.isResolved = 0
+
         WHERE s.active = <cfqueryparam cfsqltype="cf_sql_integer" value="1">
             AND s.host_fam_approved > <cfqueryparam cfsqltype="cf_sql_integer" value="4">   
                 
@@ -591,6 +599,8 @@
                     AND doc_single_parents_sign_date <> ''
                     AND doc_single_student_sign_date IS NOT NULL 
                     AND doc_single_student_sign_date <> ''))
+
+            AND (compNoteID = 0 OR compNoteID IS NULL)
     </cfquery>
 
     <cfquery dbtype="query" name="qGetPendingHostsPreAYP">
@@ -657,7 +667,8 @@
 
                 OR (hfSupervisingDistance >= 120)
 
-                OR (secondVisitRepID IS  NULL OR secondVisitRepID = 0))
+                OR (secondVisitRepID IS  NULL OR secondVisitRepID = 0)
+                OR (compNoteID > 0))
     </cfquery>
 
     <cfquery dbtype="query" name="qGetPendingHostsIntAgent">
@@ -1007,19 +1018,19 @@ background-image: linear-gradient(to top, #FFFFFF 0%, #CCCCCC 100%);
 
                                 <a href="index.cfm?curdoc=pendingPlacementList&preAypCamp=#qAYPEnglishCamps#">
                                     <li style="padding:8px; font-size: 12px;<cfif NOT APPLICATION.CFC.USER.isOfficeUser()>background-color:##eee</cfif>">
-                                        Pre-AYP Students <span class="highlightNumber<cfif NOT VAL(qGetPendingHostsPreAYP.total)>OFF</cfif>">#VAL(qGetPendingHostsPreAYP.total)#</span>
+                                        Expedite Pre-AYP Students <span class="highlightNumber<cfif NOT VAL(qGetPendingHostsPreAYP.total)>OFF</cfif>">#VAL(qGetPendingHostsPreAYP.total)#</span>
                                     </li>
                                 </a>
                                 <a href="index.cfm?curdoc=pendingPlacementList&pending_status=saf_and_hf">
                                     <li style="padding:8px; font-size: 12px; <cfif APPLICATION.CFC.USER.isOfficeUser()>background-color:##eee</cfif>">
-                                        Missing SAF, HF App Info, Sec.Visit Rep and/or Rep within 120mi <span  class="highlightNumber<cfif NOT VAL(qGetPendingHostsSafAndHF.total)>OFF</cfif>">#VAL(qGetPendingHostsSafAndHF.total)#</span>
+                                        Get Missing Items from Field <span  class="highlightNumber<cfif NOT VAL(qGetPendingHostsSafAndHF.total)>OFF</cfif>">#VAL(qGetPendingHostsSafAndHF.total)#</span>
                                     </li>
                                 </a>
                                 
                                 <cfif APPLICATION.CFC.USER.isOfficeUser()>
                                     <a href="index.cfm?curdoc=pendingPlacementList&pending_status=int_agent">
                                         <li style="padding:8px; font-size: 12px">
-                                            Missing Docs from Inter.Rep <span class="highlightNumber<cfif NOT VAL(qGetPendingHostsIntAgent.total)>OFF</cfif>">#VAL(qGetPendingHostsIntAgent.total)#</span>
+                                            Secure Missing Docs from Inter.Rep <span class="highlightNumber<cfif NOT VAL(qGetPendingHostsIntAgent.total)>OFF</cfif>">#VAL(qGetPendingHostsIntAgent.total)#</span>
                                         </li>
                                     </a>
                                 </cfif>
