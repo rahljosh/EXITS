@@ -1164,7 +1164,7 @@
                             <cfset todayDate = NOW()> 
                             
                             <cfloop query="qGetHoldStatuses">
-                                <cfif qGetStudentHoldStatuses.hold_status_id EQ 2 AND Month(todayDate) EQ 8>
+                                <cfif qGetHoldStatuses.id EQ 2 AND Month(todayDate) EQ 8>
                                     <!--- NOT SHOW --->
                                 <cfelse>
                                 <option value="#qGetHoldStatuses.id#" <cfif qGetStudentHoldStatuses.hold_status_id EQ qGetHoldStatuses.id> selected</cfif>>#qGetHoldStatuses.name#</option>
