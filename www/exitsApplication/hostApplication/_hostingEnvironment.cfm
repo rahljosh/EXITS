@@ -4,9 +4,7 @@
 	Author:		Marcus Melo
 	Date:		November 19, 2012
 	Desc:		Community Profile Page
-
 	Updated:	
-
 ----- ------------------------------------------------------------------------- --->
 
 <cfsilent>
@@ -38,17 +36,15 @@
     <cfparam name="FORM.dietaryRestriction" default="">
     <cfparam name="FORM.threesquares" default="">
 	<cfparam name="FORM.internetConnections" default="">
+	<cfparam name="FORM.utilities" default="">
 	<cfscript>
 		if ( VAL(URL.animalID) ) {
 			FORM.animalID = URL.animalID;	
 		}
-
 		// Get Host Pets
 		qGetPetsList = APPLICATION.CFC.HOST.getHostPets(hostID=APPLICATION.CFC.SESSION.getHostSession().ID);
-
 		// Get Host Pets
 		qGetPetDetails = APPLICATION.CFC.HOST.getHostPets(hostID=APPLICATION.CFC.SESSION.getHostSession().ID,animalID=VAL(FORM.animalID));
-
 		// Get Host Members
 		qGetHostMembers = APPLICATION.CFC.HOST.getHostMemberByID(hostID=APPLICATION.CFC.SESSION.getHostSession().ID);
 	</cfscript>
@@ -160,20 +156,13 @@
     
 		<cfscript>
 			// Data Validation
-
 			// Double Placement
 			if ( NOT LEN(FORM.acceptDoublePlacement) ) {
 				SESSION.formErrors.Add("Please indicate if you would be willing to host more than 1 student");
 			}
-
 			// Allergies
 			if ( NOT LEN(FORM.pet_allergies) ) {
 				SESSION.formErrors.Add("Please indicate if you would be willing to host a student who is allergic to animals");
-			}
-
-			// Room Sharing
-			if (NOT LEN(FORM.sharingBedroom) ) {
-				SESSION.formErrors.Add("Please indicate if the student is going to share a bedroom");
 			}
 			
 			// Family Smokes
@@ -195,30 +184,31 @@
 			if ( FORM.famDietRest EQ 1 AND NOT LEN(FORM.famDietRestDesc) ) {
 				SESSION.formErrors.Add("You have indicated that someone in your family follows a dietary restriction but have not describe it");
 			}
-
 			// Student Follow Dietary Restrictions
 			if ( NOT LEN(FORM.stuDietRest) ) {
 				SESSION.formErrors.Add("Please indicate if the student is to follow any dietary restrictions");
 			}
-
 			// Student Follow Dietary Description
 			if ( FORM.stuDietRest EQ 1 AND NOT LEN(FORM.stuDietRestDesc) ) {
 				SESSION.formErrors.Add("You have indicated the student is to follow a dietary restriction but have not describe it");
 			}
-
 			// Hosting a student with dietary resctriction
 			if ( NOT LEN(FORM.dietaryRestriction) ) {
 				SESSION.formErrors.Add("Please indicate if you would have problems hosting a student with dietary restrictions");
 			}
-
 			// Three Squares
 			if ( NOT LEN(FORM.threesquares) ) {
 				SESSION.formErrors.Add("Please indicate if you are prepared to provide three (3) quality meals per day");
 			}
 			
-			// Student Follow Dietary Restrictions
+			// Internet
 			if ( NOT LEN(FORM.internetConnection) ) {
 				SESSION.formErrors.Add("Please indicate the type of internet connection you have in your home.");
+			}
+       
+       		// Utilities
+			if ( NOT LEN(FORM.utilities) ) {
+				SESSION.formErrors.Add("Please indicate the type of utilities in your home.");
 			}
         </cfscript>
         
@@ -230,7 +220,6 @@
 				if ( FORM.hostSmokes EQ "no" ) {
 					FORM.smokeConditions = "";
 				}
-
 				if ( NOT VAL(FORM.famDietRest) ) {
 					FORM.famDietRestDesc = "";
 				}
@@ -255,7 +244,8 @@
                     threesquares = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.threesquares#">,
                     internetConnection = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.internetConnection#">,
 					acceptDoublePlacement = <cfqueryparam cfsqltype="cf_sql_bit" value="#FORM.acceptDoublePlacement#">,
-					sharingBedroom = '#FORM.sharingBedroom#'
+					sharingBedroom = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.sharingBedroom#">,
+					utilities = <cfqueryparam cfsqltype="cf_sql_varchar" value="#FORM.utilities#">
                 WHERE 
                 	hostID = <cfqueryparam cfsqltype="cf_sql_integer" value="#APPLICATION.CFC.SESSION.getHostSession().ID#">
             </cfquery>
@@ -275,7 +265,6 @@
 			FORM.animalType = qGetPetDetails.animalType;
 			FORM.number = qGetPetDetails.number;
 			FORM.indoor = qGetPetDetails.indoor;
-
 			FORM.pet_allergies = qGetHostFamilyInfo.pet_allergies;
             FORM.hostSmokes = qGetHostFamilyInfo.hostSmokes;
             FORM.smokeConditions = qGetHostFamilyInfo.smokeconditions;
@@ -285,10 +274,11 @@
             FORM.stuDietRestDesc = qGetHostFamilyInfo.stuDietRestDesc;
             FORM.dietaryRestriction = qGetHostFamilyInfo.dietaryRestriction;
             FORM.threesquares = qGetHostFamilyInfo.threesquares;
+            FORM.sharingBedroom = qGetHostFamilyInfo.sharingBedroom;
 			FORM.internetConnection = qGetHostFamilyInfo.internetConnection;
-			
+			FORM.utilities = qGetHostFamilyInfo.utilities;
 			FORM.acceptDoublePlacement = qGetHostFamilyInfo.acceptDoublePlacement;
-			FORM.sharingBedroom = qGetHostFamilyInfo.sharingBedroom;
+			
         </cfscript>
     
     </cfif>
@@ -474,7 +464,7 @@
                 </td>
             </tr>
         </table> <br />
-    
+  
     	<h3>Smoking</h3>
         
         <table width="100%" cellspacing="0" cellpadding="2" class="border" border="0">
@@ -573,7 +563,23 @@
 				</td>          
             </tr>
         </table> <br />
-        
+<h3>Utilities</h3>
+    
+        <table width="100%" cellspacing="0" cellpadding="2" class="border">
+            <tr bgcolor="##deeaf3">
+                <td>
+                	What type of utilities do you have in your home? <span class="required">*</span>
+                    
+                </td>
+                <td>
+                   <select name="utilities">
+                   <option value=""></option>
+                   <option value="All Public" <Cfif form.utilities is 'All Public'>selected</cfif>>All Public (Power, Water, Gas, Sewer)</option>
+                   <option value="Some Public" <Cfif form.utilities is 'Some Public'>selected</cfif>>Some Public (at least power)</option>
+                   <option value="No Public Utilities" <Cfif form.utilities is 'No Public Utilities'>selected</cfif>>No Public Utilities</option>
+				</td>          
+            </tr>
+        </table> <br />
         <!--- Check if FORM submission is allowed --->
         <cfif APPLICATION.CFC.UDF.allowFormSubmission(section=URL.section)>
             <table border="0" cellpadding="4" cellspacing="0" width="100%" class="section">
